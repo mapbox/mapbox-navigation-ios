@@ -1,11 +1,3 @@
-//
-//  Geometry.swift
-//  Voyage
-//
-//  Created by Bobby Sudekum on 8/30/16.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import CoreLocation
 
 typealias LocationRadians = Double
@@ -49,7 +41,7 @@ struct RadianCoordinate2D {
         let otherLatitude = asin(sin(latitude) * cos(distance)
             + cos(latitude) * sin(distance) * cos(direction))
         let otherLongitude = longitude + atan2(sin(direction) * sin(distance) * cos(latitude),
-                                               cos(distance) - sin(latitude) * sin(otherLatitude))
+            cos(distance) - sin(latitude) * sin(otherLatitude))
         return RadianCoordinate2D(latitude: otherLatitude, longitude: otherLongitude)
     }
 }
@@ -104,7 +96,7 @@ func intersection(line1: LineSegment, _ line2: LineSegment) -> CLLocationCoordin
     
     /// Intersection when the lines are cast infinitely in both directions.
     let intersection = CLLocationCoordinate2D(latitude: line1.0.latitude + a * (line1.1.latitude - line1.0.latitude),
-                                              longitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude))
+        longitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude))
     
     /// True if line 1 is finite and line 2 is infinite.
     let intersectsWithLine1 = a > 0 && a < 1
@@ -187,7 +179,7 @@ func distanceAlongPolyline(polyline: [CLLocationCoordinate2D], start: CLLocation
     let startVertex = start != nil ? closestCoordinateOnPolyline(polyline, toCoordinate: start!, includeDistanceToNextCoordinate: true) : nil
     let endVertex = end != nil ? closestCoordinateOnPolyline(polyline, toCoordinate: end!, includeDistanceToNextCoordinate: true) : nil
     var vertices = (startVertex ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0),
-                    endVertex ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0))
+        endVertex ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0))
     
     var length: CLLocationDistance = vertices.0.distance + vertices.1.distance
     if vertices.0.index > vertices.1.index {
@@ -230,7 +222,7 @@ func polylineWithinDistance(polyline: [CLLocationCoordinate2D], location: CLLoca
         }
     }
     
-    //    var candidateVertices = distance > 0 ? polyline.suffixFrom(startVertex!.index) : polyline.prefixThrough(startVertex!.index).reverse()
+//    var candidateVertices = distance > 0 ? polyline.suffixFrom(startVertex!.index) : polyline.prefixThrough(startVertex!.index).reverse()
     if distance > 0 {
         for vertex in polyline.suffixFrom(startVertex!.index) {
             if !addVertex(vertex) {
