@@ -239,3 +239,9 @@ func polylineWithinDistance(polyline: [CLLocationCoordinate2D], location: CLLoca
     assert(round(cumulativeDistance) <= round(abs(distance)))
     return vertices
 }
+
+@warn_unused_result
+public func wrap(value: Double, min minValue: Double, max maxValue: Double) -> Double {
+    let d = maxValue - minValue
+    return fmod((fmod((value - minValue), d) + d), d) + minValue
+}
