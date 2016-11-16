@@ -1,4 +1,5 @@
 import CoreLocation
+import MapboxDirections
 
 typealias LocationRadians = Double
 typealias RadianDistance = Double
@@ -97,7 +98,7 @@ func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoord
     
     /// Intersection when the lines are cast infinitely in both directions.
     let intersection = CLLocationCoordinate2D(latitude: line1.0.latitude + a * (line1.1.latitude - line1.0.latitude),
-        longitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude))
+                                              longitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude))
     
     /// True if line 1 is finite and line 2 is infinite.
     let intersectsWithLine1 = a > 0 && a < 1
@@ -181,7 +182,7 @@ func distance(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
     let startVertex = start != nil ? closestCoordinate(on: polyline, to: start!, includeDistanceToNextCoordinate: true) : nil
     let endVertex = end != nil ? closestCoordinate(on: polyline, to: end!, includeDistanceToNextCoordinate: true) : nil
     var vertices = (startVertex ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0),
-        endVertex ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0))
+                    endVertex ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0))
     
     var length: CLLocationDistance = vertices.0.distance + vertices.1.distance
     if vertices.0.index > vertices.1.index {
@@ -224,7 +225,7 @@ func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocat
         }
     }
     
-//    var candidateVertices = distance > 0 ? polyline.suffixFrom(startVertex!.index) : polyline.prefixThrough(startVertex!.index).reverse()
+    //    var candidateVertices = distance > 0 ? polyline.suffixFrom(startVertex!.index) : polyline.prefixThrough(startVertex!.index).reverse()
     if distance > 0 {
         for vertex in polyline.suffix(from: startVertex!.index) {
             if !addVertex(vertex) {
@@ -246,3 +247,14 @@ public func wrap(_ value: Double, min minValue: Double, max maxValue: Double) ->
     let d = maxValue - minValue
     return fmod((fmod((value - minValue), d) + d), d) + minValue
 }
+
+extension CLLocation {
+    /// Returns a Boolean value indicating whether the receiver is within a given distance of a route step, inclusive.
+    func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
+        guard let closestCoordinate = closestCoordinate(on: routeStep.coordinates!, to: coordinate) else {
+            return true
+        }
+        return closestCoordinate.distance < maximumDistance
+    }
+}
+

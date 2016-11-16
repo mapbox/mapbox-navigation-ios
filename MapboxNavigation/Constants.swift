@@ -1,0 +1,26 @@
+import Foundation
+import CoreLocation
+
+public let NavigationControllerProgressDidChangeNotificationProgressKey = "progress"
+public let NavigationControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = "seconds"
+
+public let NavigationControllerNotificationApproachingIncident = "incident"
+public let NavigationControllerAlertLevelDidChangeNotificationRouteProgressKey = "progress"
+public let NavigationControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey = "distance"
+public let NavigationControllerAlertLevelDidChangeNotificationDistanceToIncidentKey = "distance"
+
+public let NavigationControllerMaximumMetersBeforeRecalculating: CLLocationDistance = 50
+public let NavigationControllerMaximumAllowedDegreeOffsetForTurnCompletion: Double = 30
+
+public let NavigationControllerMediumAlertInterval: TimeInterval = 70
+public let NavigationControllerHighAlertInterval: TimeInterval = 15
+public let NavigationControllerManeuverZoneRadius: CLLocationDistance = 40
+
+public let NavigationControllerMinimumDistanceForMediumAlert: CLLocationDistance = 400
+public let NavigationControllerMinimumDistanceForHighAlert: CLLocationDistance = 100
+
+public let NavigationControllerDeadReckoningTimeInterval:TimeInterval = 1.0
+
+public let NavigationControllerProgressDidChange = Notification.Name("NavigationControllerProgressDidChange")
+public let NavigationControllerAlertLevelDidChange = Notification.Name("NavigationControllerAlertLevelDidChange")
+public let NavigationControllerShouldReroute = Notification.Name("NavigationControllerShouldReroute")
