@@ -1,3 +1,11 @@
+//
+//  MBNavigation.swift
+//  MapboxNavigation
+//
+//  Created by Bobby Sudekum on 11/16/16.
+//  Copyright © 2016 Mapbox. All rights reserved.
+//
+
 import CoreLocation
 
 typealias LocationRadians = Double
@@ -223,7 +231,8 @@ func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocat
             return false
         }
     }
-
+    
+    //    var candidateVertices = distance > 0 ? polyline.suffixFrom(startVertex!.index) : polyline.prefixThrough(startVertex!.index).reverse()
     if distance > 0 {
         for vertex in polyline.suffix(from: startVertex!.index) {
             if !addVertex(vertex) {
