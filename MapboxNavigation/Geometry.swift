@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import MapboxDirections
 
 typealias LocationRadians = Double
 typealias RadianDistance = Double
@@ -254,3 +255,14 @@ public func wrap(_ value: Double, min minValue: Double, max maxValue: Double) ->
     let d = maxValue - minValue
     return fmod((fmod((value - minValue), d) + d), d) + minValue
 }
+
+extension CLLocation {
+    /// Returns a Boolean value indicating whether the receiver is within a given distance of a route step, inclusive.
+    func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
+        guard let closestCoordinate = closestCoordinate(on: routeStep.coordinates!, to: coordinate) else {
+            return true
+        }
+        return closestCoordinate.distance < maximumDistance
+    }
+}
+
