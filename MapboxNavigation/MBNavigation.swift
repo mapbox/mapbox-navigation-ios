@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-open class Navigation: NSObject {
+open class NavigationController: NSObject {
     public var locationManager = CLLocationManager()
     public var routeProgress: RouteProgress
     
@@ -39,7 +39,7 @@ open class Navigation: NSObject {
     }
 }
 
-extension Navigation: CLLocationManagerDelegate {
+extension NavigationController: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
             return

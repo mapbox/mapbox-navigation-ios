@@ -11,14 +11,16 @@ import MapboxNavigation
 import MapboxDirections
 import Mapbox
 import CoreLocation
+import AVFoundation
 
-class ViewController: UIViewController, MGLMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
 
-    var activeRoute: Route?
     var destination: CLLocationCoordinate2D?
     var directions = Directions(accessToken: "pk.eyJ1IjoiYm9iYnlzdWQiLCJhIjoiTi16MElIUSJ9.Clrqck--7WmHeqqvtFdYig")
-    var navigation: Navigation?
-    let distanceFormatter = DistanceFormatter(approximate: true)
+    var navigation: NavigationController?
+    
+    let lengthFormatter = LengthFormatter()
+    lazy var speechSynth = AVSpeechSynthesizer()
     
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var instructionLabel: UILabel!
@@ -27,7 +29,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        distanceFormatter.unitStyle = .medium
+        lengthFormatter.unitStyle = .short
         mapView.userTrackingMode = .follow
         resumeNotifications()
     }
@@ -47,9 +49,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: NavigationControllerNotification.alertLevelDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: NavigationControllerNotification.progressDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: NavigationControllerNotification.rerouted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: NavigationControllerNotification.alertLevelDidChange, object: navigationController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: NavigationControllerNotification.progressDidChange, object: navigationController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: NavigationControllerNotification.rerouted, object: navigationController)
     }
     
     func suspendNotifications() {
@@ -58,21 +60,42 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         NotificationCenter.default.removeObserver(self, name: NavigationControllerNotification.rerouted, object: nil)
     }
     
+    // When the alert level changes, this signals the user is ready for a voice announcement
     func alertLevelDidChange(_ notification: NSNotification) {
+        let routeProgress = notification.userInfo![NavigationControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
+        var text: String
+
+        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
+            // Don't give full instruction with distance if the alert type is high
+            if alertLevel == .high {
+                text = upComingStep.instructions
+            } else {
+                text = "In \(lengthFormatter.string(fromMeters: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)) \(upComingStep.instructions)"
+            }
+        } else {
+            text = "In \(lengthFormatter.string(fromMeters: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)) \(routeProgress.currentLegProgress.currentStep.instructions)"
+        }
         
+        let utterance = AVSpeechUtterance(string: text)
+        speechSynth.delegate = self
+        speechSynth.speak(utterance)
     }
     
+    // Notifications sent on all location updates
     func progressDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![NavigationControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
 
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             instructionView.isHidden = false
-            instructionLabel.text = "In \(distanceFormatter.string(from: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)) \(upComingStep.instructions)"
+            instructionLabel.text = "In \(lengthFormatter.string(fromMeters: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)) \(upComingStep.instructions)"
         } else {
             instructionView.isHidden = true
         }
     }
     
+    // Fired when the user is no longer on the route.
+    // A new route should be fetched at this time.
     func rerouted(_ notification: NSNotification) {
         getRoute()
     }
@@ -96,7 +119,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     func startNavigation(_ route: Route) {
         mapView.userTrackingMode = .followWithCourse
-        navigation = Navigation(route: route)
+        navigation = NavigationController(route: route)
         navigation?.resume()
     }
 }
