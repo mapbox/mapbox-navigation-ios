@@ -90,7 +90,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
                 self?.mapView.addAnnotation(line)
                 
                 self?.startNavigation(route)
-                
             }
         }
     }
