@@ -19,6 +19,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var directions = Directions(accessToken: "pk.eyJ1IjoiYm9iYnlzdWQiLCJhIjoiTi16MElIUSJ9.Clrqck--7WmHeqqvtFdYig")
     var navigation: Navigation?
     let distanceFormatter = DistanceFormatter(approximate: true)
+    
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var instructionView: UIView!
@@ -33,6 +34,16 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     override func viewDidDisappear(_ animated: Bool) {
         suspendNotifications()
+        navigation?.suspend()
+    }
+    
+    @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
+        guard sender.state == .began else {
+            return
+        }
+        
+        destination = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
+        getRoute()
     }
     
     func resumeNotifications() {
@@ -45,15 +56,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         NotificationCenter.default.removeObserver(self, name: NavigationControllerNotification.alertLevelDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: NavigationControllerNotification.progressDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: NavigationControllerNotification.rerouted, object: nil)
-    }
-    
-    @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
-        guard sender.state == .began else {
-            return
-        }
-        
-        destination = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
-        getRoute()
     }
     
     func alertLevelDidChange(_ notification: NSNotification) {
@@ -78,7 +80,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func getRoute() {
         let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination!])
         options.includesSteps = true
-        options.includesSteps = true
+        options.routeShapeResolution = .full
         
         _ = directions.calculate(options) { [weak self] (waypoints, routes, error) in
             if let route = routes?.first {
@@ -98,6 +100,5 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         navigation = Navigation(route: route)
         navigation?.resume()
     }
-    
 }
 

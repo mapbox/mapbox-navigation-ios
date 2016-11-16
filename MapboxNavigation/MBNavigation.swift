@@ -48,14 +48,12 @@ extension Navigation: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.alertUserLevel != .arrive else {
             // Don't advance nor check progress if the user has arrived at their destination
             suspend()
-            NotificationCenter.default.post(name: NavigationControllerNotification.progressDidChange, object: self, userInfo: [
-                NavigationControllerProgressDidChangeNotificationProgressKey: routeProgress,
-                ])
+            NotificationCenter.default.post(name: NavigationControllerNotification.progressDidChange, object: self, userInfo: [ NavigationControllerProgressDidChangeNotificationProgressKey: routeProgress])
             return
         }
         
         guard userIsOnRoute(location) else {
-            reCalculateRoute(location)
+            NotificationCenter.default.post(name: NavigationControllerNotification.rerouted, object: self, userInfo: [NavigationControllerNotification.rerouted : "rerouted"])
             return
         }
         
@@ -80,15 +78,11 @@ extension Navigation: CLLocationManagerDelegate {
     }
     
     func userIsOnRoute(_ location: CLLocation) -> Bool {
+        // Find future location of user
         let metersInFrontOfUser = location.speed * NavigationControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
         return newLocation.isWithin(NavigationControllerMaximumMetersBeforeRecalculating, of: routeProgress.currentLegProgress.currentStep)
-    }
-
-    
-    func reCalculateRoute(_ location: CLLocation) {
-        NotificationCenter.default.post(name: NavigationControllerNotification.rerouted, object: self, userInfo: [NavigationControllerNotification.rerouted : "rerouted"])
     }
     
     func sendVoiceAlert(distance: CLLocationDistance) {
