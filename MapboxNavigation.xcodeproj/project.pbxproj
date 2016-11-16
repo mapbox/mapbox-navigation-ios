@@ -9,11 +9,10 @@
 /* Begin PBXBuildFile section */
 		C54974471DDBEDD30072E120 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54974461DDBEDD30072E120 /* AppDelegate.swift */; };
 		C54974491DDBEDD30072E120 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54974481DDBEDD30072E120 /* ViewController.swift */; };
-		C549744C1DDBEDD30072E120 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C549744A1DDBEDD30072E120 /* Main.storyboard */; };
-		C549744E1DDBEDD30072E120 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C549744D1DDBEDD30072E120 /* Assets.xcassets */; };
-		C54974511DDBEDD30072E120 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C549744F1DDBEDD30072E120 /* LaunchScreen.storyboard */; };
 		C549745C1DDBEDD30072E120 /* MapboxNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C549745B1DDBEDD30072E120 /* MapboxNavigationTests.swift */; };
 		C54974671DDBEDD30072E120 /* MapboxNavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54974661DDBEDD30072E120 /* MapboxNavigationUITests.swift */; };
+		C54974751DDBEFE70072E120 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54974741DDBEFE70072E120 /* Geometry.swift */; };
+		C54974771DDBF0060072E120 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54974761DDBF0060072E120 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,9 +36,6 @@
 		C54974431DDBEDD30072E120 /* MapboxNavigation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxNavigation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54974461DDBEDD30072E120 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C54974481DDBEDD30072E120 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		C549744B1DDBEDD30072E120 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		C549744D1DDBEDD30072E120 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C54974501DDBEDD30072E120 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C54974521DDBEDD30072E120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C54974571DDBEDD30072E120 /* MapboxNavigationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C549745B1DDBEDD30072E120 /* MapboxNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationTests.swift; sourceTree = "<group>"; };
@@ -47,6 +43,8 @@
 		C54974621DDBEDD30072E120 /* MapboxNavigationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54974661DDBEDD30072E120 /* MapboxNavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationUITests.swift; sourceTree = "<group>"; };
 		C54974681DDBEDD30072E120 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C54974741DDBEFE70072E120 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		C54974761DDBF0060072E120 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,10 +97,9 @@
 			children = (
 				C54974461DDBEDD30072E120 /* AppDelegate.swift */,
 				C54974481DDBEDD30072E120 /* ViewController.swift */,
-				C549744A1DDBEDD30072E120 /* Main.storyboard */,
-				C549744D1DDBEDD30072E120 /* Assets.xcassets */,
-				C549744F1DDBEDD30072E120 /* LaunchScreen.storyboard */,
 				C54974521DDBEDD30072E120 /* Info.plist */,
+				C54974741DDBEFE70072E120 /* Geometry.swift */,
+				C54974761DDBF0060072E120 /* Constants.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -235,9 +232,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C54974511DDBEDD30072E120 /* LaunchScreen.storyboard in Resources */,
-				C549744E1DDBEDD30072E120 /* Assets.xcassets in Resources */,
-				C549744C1DDBEDD30072E120 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,7 +257,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C54974491DDBEDD30072E120 /* ViewController.swift in Sources */,
+				C54974751DDBEFE70072E120 /* Geometry.swift in Sources */,
 				C54974471DDBEDD30072E120 /* AppDelegate.swift in Sources */,
+				C54974771DDBF0060072E120 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,25 +293,6 @@
 			targetProxy = C54974631DDBEDD30072E120 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		C549744A1DDBEDD30072E120 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C549744B1DDBEDD30072E120 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		C549744F1DDBEDD30072E120 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C54974501DDBEDD30072E120 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		C54974691DDBEDD30072E120 /* Debug */ = {
@@ -414,7 +391,6 @@
 		C549746C1DDBEDD30072E120 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -427,7 +403,6 @@
 		C549746D1DDBEDD30072E120 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
