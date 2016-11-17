@@ -41,12 +41,12 @@ extension NavigationController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.alertUserLevel != .arrive else {
             // Don't advance nor check progress if the user has arrived at their destination
             suspend()
-            NotificationCenter.default.post(name: NavigationControllerNotification.progressDidChange, object: self, userInfo: [ NavigationControllerProgressDidChangeNotificationProgressKey: routeProgress])
+            NotificationCenter.default.post(name: NavigationControllerProgressDidChange, object: self, userInfo: [ NavigationControllerProgressDidChangeNotificationProgressKey: routeProgress])
             return
         }
         
         guard userIsOnRoute(location) else {
-            NotificationCenter.default.post(name: NavigationControllerNotification.rerouted, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: NavigationControllerShouldReroute, object: self, userInfo: nil)
             return
         }
         
@@ -60,7 +60,7 @@ extension NavigationController: CLLocationManagerDelegate {
                 currentStepProgress.distanceTraveled = distanceTraveled
                 let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
                 let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-                NotificationCenter.default.post(name: NavigationControllerNotification.progressDidChange, object: self, userInfo: [
+                NotificationCenter.default.post(name: NavigationControllerProgressDidChange, object: self, userInfo: [
                     NavigationControllerProgressDidChangeNotificationProgressKey: routeProgress,
                     NavigationControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
                     ])
@@ -83,7 +83,7 @@ extension NavigationController: CLLocationManagerDelegate {
             NavigationControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
             NavigationControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: distance
             ] as [String : Any]
-        NotificationCenter.default.post(name: NavigationControllerNotification.alertLevelDidChange, object: self, userInfo: userInfo as [AnyHashable: Any])
+        NotificationCenter.default.post(name: NavigationControllerAlertLevelDidChange, object: self, userInfo: userInfo as [AnyHashable: Any])
     }
     
     func monitorStepProgress(_ location: CLLocation) {
@@ -128,9 +128,9 @@ extension NavigationController: CLLocationManagerDelegate {
                 routeProgress.currentLegProgress.stepIndex += 1
                 alertLevel = .low
             }
-        } else if secondsToEndOfStep <= NavigationControllerHighAlertNumberOfSeconds && routeProgress.currentLegProgress.currentStep.distance > NavigationControllerMinimumDistanceForHighAlert {
+        } else if secondsToEndOfStep <= NavigationControllerHighAlertInterval && routeProgress.currentLegProgress.currentStep.distance > NavigationControllerMinimumDistanceForHighAlert {
             alertLevel = .high
-        } else if secondsToEndOfStep <= NavigationControllerMediumAlertNumberOfSeconds &&
+        } else if secondsToEndOfStep <= NavigationControllerMediumAlertInterval &&
             // Don't alert if the route segment is shorter than X
             // However, if it's the beginning of the route
             // There needs to be an alert

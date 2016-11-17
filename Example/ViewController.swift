@@ -49,15 +49,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: NavigationControllerNotification.alertLevelDidChange, object: navigationController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: NavigationControllerNotification.progressDidChange, object: navigationController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: NavigationControllerNotification.rerouted, object: navigationController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: NavigationControllerAlertLevelDidChange, object: navigationController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: NavigationControllerProgressDidChange, object: navigationController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: NavigationControllerShouldReroute, object: navigationController)
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: NavigationControllerNotification.alertLevelDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NavigationControllerNotification.progressDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NavigationControllerNotification.rerouted, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NavigationControllerAlertLevelDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NavigationControllerProgressDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NavigationControllerShouldReroute, object: nil)
     }
     
     // When the alert level changes, this signals the user is ready for a voice announcement

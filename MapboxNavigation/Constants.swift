@@ -12,9 +12,8 @@ public let NavigationControllerAlertLevelDidChangeNotificationDistanceToIncident
 public let NavigationControllerMaximumMetersBeforeRecalculating: CLLocationDistance = 50
 public let NavigationControllerMaximumAllowedDegreeOffsetForTurnCompletion: Double = 30
 
-// Alert distances
-public let NavigationControllerMediumAlertNumberOfSeconds: Double = 70
-public let NavigationControllerHighAlertNumberOfSeconds: Double = 15
+public let NavigationControllerMediumAlertInterval: TimeInterval = 70
+public let NavigationControllerHighAlertInterval: TimeInterval = 15
 public let NavigationControllerManeuverZoneRadius: CLLocationDistance = 40
 
 public let NavigationControllerMinimumDistanceForMediumAlert: CLLocationDistance = 400
@@ -22,8 +21,6 @@ public let NavigationControllerMinimumDistanceForHighAlert: CLLocationDistance =
 
 public let NavigationControllerDeadReckoningTimeInterval:TimeInterval = 1.0
 
-public struct NavigationControllerNotification {
-    static public let progressDidChange = Notification.Name("NavigationControllerProgressDidChange")
-    static public let alertLevelDidChange = Notification.Name("NavigationControllerAlertLevelDidChange")
-    static public let rerouted = Notification.Name("NavigationControllerShouldRerouted")
-}
+public let NavigationControllerProgressDidChange = Notification.Name("NavigationControllerProgressDidChange")
+public let NavigationControllerAlertLevelDidChange = Notification.Name("NavigationControllerAlertLevelDidChange")
+public let NavigationControllerShouldReroute = Notification.Name("NavigationControllerShouldReroute")
