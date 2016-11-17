@@ -106,14 +106,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         options.routeShapeResolution = .full
         
         _ = directions.calculate(options) { [weak self] (waypoints, routes, error) in
-            if let route = routes?.first {
-                self?.mapView.removeAnnotations(self?.mapView.annotations ?? [])
-                var routeCoordinates = route.coordinates!
-                let line = MGLPolyline(coordinates: &routeCoordinates, count: route.coordinateCount)
-                self?.mapView.addAnnotation(line)
-                
-                self?.startNavigation(route)
+            guard let route = routes?.first else {
+                return
             }
+            self?.mapView.removeAnnotations(self?.mapView.annotations ?? [])
+            var routeCoordinates = route.coordinates!
+            let line = MGLPolyline(coordinates: &routeCoordinates, count: route.coordinateCount)
+            self?.mapView.addAnnotation(line)
+            
+            self?.startNavigation(route)
         }
     }
     

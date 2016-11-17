@@ -39,7 +39,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
 
-  s.dependency = 'Mapbox-iOS-SDK', :podspec => 'https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0-beta.3/platform/ios/Mapbox-iOS-SDK-symbols.podspec'
   s.dependency = 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => '117f155dcf6295e01be9f927399b7deedf983294'
 
 end

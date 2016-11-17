@@ -1,15 +1,8 @@
-//
-//  MBNavigation.swift
-//  MapboxNavigation
-//
-//  Created by Bobby Sudekum on 11/16/16.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import Foundation
 import CoreLocation
 import MapboxDirections
 
+@objc(MBNavigationController)
 open class NavigationController: NSObject {
     public var locationManager = CLLocationManager()
     public var routeProgress: RouteProgress
@@ -53,7 +46,7 @@ extension NavigationController: CLLocationManagerDelegate {
         }
         
         guard userIsOnRoute(location) else {
-            NotificationCenter.default.post(name: NavigationControllerNotification.rerouted, object: self, userInfo: [NavigationControllerNotification.rerouted : "rerouted"])
+            NotificationCenter.default.post(name: NavigationControllerNotification.rerouted, object: self, userInfo: nil)
             return
         }
         

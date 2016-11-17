@@ -19,8 +19,8 @@
 		C5C94C181DDCD0BE0097296A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBEB1DDCC7920011824B /* ViewController.swift */; };
 		C5C94C1A1DDCD1510097296A /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		C5C94C1B1DDCD22B0097296A /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = C5ADFBCC1DDCC7840011824B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C5C94C1C1DDCD2340097296A /* MBNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* MBNavigation.swift */; };
-		C5C94C1D1DDCD2370097296A /* MBRouteProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFB1DDCC9AD0011824B /* MBRouteProgress.swift */; };
+		C5C94C1C1DDCD2340097296A /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* NavigationController.swift */; };
+		C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */; };
 		C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,8 +58,8 @@
 		C5ADFBF01DDCC7920011824B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C5ADFBF31DDCC7920011824B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C5ADFBF51DDCC7920011824B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C5ADFBF91DDCC9580011824B /* MBNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MBNavigation.swift; sourceTree = "<group>"; };
-		C5ADFBFB1DDCC9AD0011824B /* MBRouteProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MBRouteProgress.swift; sourceTree = "<group>"; };
+		C5ADFBF91DDCC9580011824B /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgress.swift; sourceTree = "<group>"; };
 		C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -141,8 +141,8 @@
 			isa = PBXGroup;
 			children = (
 				C5ADFBCC1DDCC7840011824B /* MapboxNavigation.h */,
-				C5ADFBF91DDCC9580011824B /* MBNavigation.swift */,
-				C5ADFBFB1DDCC9AD0011824B /* MBRouteProgress.swift */,
+				C5ADFBF91DDCC9580011824B /* NavigationController.swift */,
+				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
 				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
@@ -450,9 +450,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5C94C1C1DDCD2340097296A /* MBNavigation.swift in Sources */,
+				C5C94C1C1DDCD2340097296A /* NavigationController.swift in Sources */,
 				C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */,
-				C5C94C1D1DDCD2370097296A /* MBRouteProgress.swift in Sources */,
+				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
