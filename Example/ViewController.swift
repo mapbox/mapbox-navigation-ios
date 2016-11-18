@@ -16,7 +16,7 @@ import AVFoundation
 class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
 
     var destination: CLLocationCoordinate2D?
-    var directions = Directions(accessToken: "pk.eyJ1IjoiYm9iYnlzdWQiLCJhIjoiTi16MElIUSJ9.Clrqck--7WmHeqqvtFdYig")
+    let directions = Directions.shared
     var navigation: NavigationController?
     
     let lengthFormatter = LengthFormatter()
