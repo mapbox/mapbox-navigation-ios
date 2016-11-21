@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation.swift"
-  s.version = "0.0.0"
+  s.version = "0.0.1"
   s.summary = "Mapbox Navigation library"
 
   s.description  = <<-DESC
@@ -39,6 +39,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
 
-  s.dependency = 'MapboxDirections.swift'
-
+  s.dependency 'MapboxDirections.swift'
 end
