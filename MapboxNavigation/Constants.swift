@@ -1,26 +1,26 @@
 import Foundation
 import CoreLocation
 
-public let NavigationControllerProgressDidChangeNotificationProgressKey = "progress"
-public let NavigationControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = "seconds"
+public let RouteControllerProgressDidChangeNotificationProgressKey = "progress"
+public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = "seconds"
 
-public let NavigationControllerNotificationApproachingIncident = "incident"
-public let NavigationControllerAlertLevelDidChangeNotificationRouteProgressKey = "progress"
-public let NavigationControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey = "distance"
-public let NavigationControllerAlertLevelDidChangeNotificationDistanceToIncidentKey = "distance"
+public let RouteControllerNotificationApproachingIncident = "incident"
+public let RouteControllerAlertLevelDidChangeNotificationRouteProgressKey = "progress"
+public let RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey = "distance"
+public let RouteControllerAlertLevelDidChangeNotificationDistanceToIncidentKey = "distance"
 
-public let NavigationControllerMaximumMetersBeforeRecalculating: CLLocationDistance = 50
-public let NavigationControllerMaximumAllowedDegreeOffsetForTurnCompletion: Double = 30
+public let RouteControllerMaximumMetersBeforeRecalculating: CLLocationDistance = 50
+public let RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion: Double = 30
 
-public let NavigationControllerMediumAlertInterval: TimeInterval = 70
-public let NavigationControllerHighAlertInterval: TimeInterval = 15
-public let NavigationControllerManeuverZoneRadius: CLLocationDistance = 40
+public let RouteControllerMediumAlertInterval: TimeInterval = 70
+public let RouteControllerHighAlertInterval: TimeInterval = 15
+public let RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
-public let NavigationControllerMinimumDistanceForMediumAlert: CLLocationDistance = 400
-public let NavigationControllerMinimumDistanceForHighAlert: CLLocationDistance = 100
+public let RouteControllerMinimumDistanceForMediumAlert: CLLocationDistance = 400
+public let RouteControllerMinimumDistanceForHighAlert: CLLocationDistance = 100
 
-public let NavigationControllerDeadReckoningTimeInterval:TimeInterval = 1.0
+public let RouteControllerDeadReckoningTimeInterval:TimeInterval = 1.0
 
-public let NavigationControllerProgressDidChange = Notification.Name("NavigationControllerProgressDidChange")
-public let NavigationControllerAlertLevelDidChange = Notification.Name("NavigationControllerAlertLevelDidChange")
-public let NavigationControllerShouldReroute = Notification.Name("NavigationControllerShouldReroute")
+public let RouteControllerProgressDidChange = Notification.Name("RouteControllerProgressDidChange")
+public let RouteControllerAlertLevelDidChange = Notification.Name("RouteControllerAlertLevelDidChange")
+public let RouteControllerShouldReroute = Notification.Name("RouteControllerShouldReroute")

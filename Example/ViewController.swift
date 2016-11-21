@@ -17,7 +17,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
 
     var destination: CLLocationCoordinate2D?
     let directions = Directions.shared
-    var navigation: NavigationController?
+    var navigation: RouteController?
     
     let lengthFormatter = LengthFormatter()
     lazy var speechSynth = AVSpeechSynthesizer()
@@ -49,20 +49,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: NavigationControllerAlertLevelDidChange, object: navigationController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: NavigationControllerProgressDidChange, object: navigationController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: NavigationControllerShouldReroute, object: navigationController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: NavigationControllerAlertLevelDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NavigationControllerProgressDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NavigationControllerShouldReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: navigation)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: navigation)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: navigation)
     }
     
     // When the alert level changes, this signals the user is ready for a voice announcement
     func alertLevelDidChange(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![NavigationControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         var text: String
 
@@ -84,7 +84,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     // Notifications sent on all location updates
     func progressDidChange(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![NavigationControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
 
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             instructionView.isHidden = false
@@ -121,7 +121,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     func startNavigation(_ route: Route) {
         mapView.userTrackingMode = .followWithCourse
-        navigation = NavigationController(route: route)
+        navigation = RouteController(route: route)
         navigation?.resume()
     }
 }
