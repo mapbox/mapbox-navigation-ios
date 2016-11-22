@@ -78,13 +78,14 @@ extension RouteController: CLLocationManagerDelegate {
         return newLocation.isWithin(RouteControllerMaximumMetersBeforeRecalculating, of: routeProgress.currentLegProgress.currentStep)
     }
     
-    func sendVoiceAlert(distance: CLLocationDistance) {
-        let userInfo = [
+    func sendVoiceAlert(distance: CLLocationDistance, isFirstAlertForStep: Bool = false) {
+        NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: [
             RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
-            RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: distance
-            ] as [String : Any]
-        NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: userInfo as [AnyHashable: Any])
+            RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: distance,
+            RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey: isFirstAlertForStep
+            ])
     }
+
     
     func monitorStepProgress(_ location: CLLocation) {
         // Force an announcement when the user begins a route
@@ -92,7 +93,8 @@ extension RouteController: CLLocationManagerDelegate {
         
         let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-        var courseMatchesManeuverFinalHeading: Bool = false
+        var courseMatchesManeuverFinalHeading = false
+        var isFirstAlertForStep = false
         
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
         // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
@@ -126,7 +128,10 @@ extension RouteController: CLLocationManagerDelegate {
                 alertLevel = .arrive
             } else if courseMatchesManeuverFinalHeading {
                 routeProgress.currentLegProgress.stepIndex += 1
-                alertLevel = .low
+                let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
+                let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
+                alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
+                isFirstAlertForStep = true
             }
         } else if secondsToEndOfStep <= RouteControllerHighAlertInterval && routeProgress.currentLegProgress.currentStep.distance > RouteControllerMinimumDistanceForHighAlert {
             alertLevel = .high
@@ -142,7 +147,7 @@ extension RouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.alertUserLevel = alertLevel
             // Use fresh user location distance to end of step
             // since the step could of changed
-            sendVoiceAlert(distance: distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate))
+            sendVoiceAlert(distance: distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate), isFirstAlertForStep: isFirstAlertForStep)
         }
     }
 }
