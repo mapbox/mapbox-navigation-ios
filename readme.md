@@ -11,5 +11,3 @@ MapboxNavigation.swift provides an API to add turn by turn navigation to your ap
 1. Depending on what is emitted, your app should react accordingly
 
 A simple implementation can be viewed in the [Example app](./ViewController.swift).
-
-![](https://cldup.com/Oc-CC_2XS2.png)
