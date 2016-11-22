@@ -3,6 +3,7 @@ import CoreLocation
 
 public let RouteControllerProgressDidChangeNotificationProgressKey = "progress"
 public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = "seconds"
+public let RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey = "first"
 
 public let RouteControllerNotificationApproachingIncident = "incident"
 public let RouteControllerAlertLevelDidChangeNotificationRouteProgressKey = "progress"
