@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 
 public let RouteControllerProgressDidChangeNotificationProgressKey = "progress"
+public let RouteControllerProgressDidChangeNotificationLocationKey = "location"
 public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = "seconds"
 public let RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey = "first"
 

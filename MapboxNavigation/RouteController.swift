@@ -38,10 +38,17 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
+        let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
+        let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
+        
         guard routeProgress.currentLegProgress.alertUserLevel != .arrive else {
             // Don't advance nor check progress if the user has arrived at their destination
             suspend()
-            NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [ RouteControllerProgressDidChangeNotificationProgressKey: routeProgress])
+            NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
+                RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
+                RouteControllerProgressDidChangeNotificationLocationKey: location,
+                RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
+                ])
             return
         }
         
@@ -58,10 +65,9 @@ extension RouteController: CLLocationManagerDelegate {
             let distanceTraveled = currentStep.distance - remainingDistance
             if distanceTraveled != currentStepProgress.distanceTraveled {
                 currentStepProgress.distanceTraveled = distanceTraveled
-                let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
-                let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
                 NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
                     RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
+                    RouteControllerProgressDidChangeNotificationLocationKey: location,
                     RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
                     ])
             }
@@ -78,7 +84,7 @@ extension RouteController: CLLocationManagerDelegate {
         return newLocation.isWithin(RouteControllerMaximumMetersBeforeRecalculating, of: routeProgress.currentLegProgress.currentStep)
     }
     
-    func sendVoiceAlert(distance: CLLocationDistance, isFirstAlertForStep: Bool = false) {
+    func sendVoiceAlert(distance: CLLocationDistance, isFirstAlertForStep: Bool? = false) {
         NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: [
             RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
             RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: distance,
