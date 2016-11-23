@@ -2,11 +2,32 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
+/*
+ RouteController helps user navigate along a route.
+ */
+
 @objc(MBRouteController)
 open class RouteController: NSObject {
+    
+    /*
+     Monitor users location along route.
+
+     The variable can be provided by the developer so options on it can be set.
+    */
     public var locationManager = CLLocationManager()
+    
+    
+    /*
+     `routeProgress` is a class containing all progress information of user along the route, leg and step.
+    */
     public var routeProgress: RouteProgress
     
+    
+    /*
+     Intializes a new `RouteController`.
+     
+     - parameter Route: A `Route` object representing the users route it will follow.
+     */
     public init(route: Route) {
         self.routeProgress = RouteProgress(route: route)
         super.init()
@@ -21,11 +42,19 @@ open class RouteController: NSObject {
         suspend()
     }
     
+    /*
+     Starts monitoring user location along route.
+     
+     Will continue monitoring until `suspend()` is called.
+     */
     public func resume() {
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
     }
     
+    /*
+     Stops monitoring users location along route.
+     */
     public func suspend() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
