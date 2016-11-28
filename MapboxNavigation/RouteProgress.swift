@@ -61,7 +61,7 @@ open class RouteProgress {
     
     public var currentLegProgress: RouteLegProgress!
     
-    init(route: Route, legIndex: Int = 0) {
+    public init(route: Route, legIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
         currentLegProgress = RouteLegProgress(leg: currentLeg)
@@ -157,7 +157,7 @@ open class RouteLegProgress {
     
     public var currentStepProgress: RouteStepProgress
     
-    init(leg: RouteLeg, stepIndex: Int = 0) {
+    public init(leg: RouteLeg, stepIndex: Int = 0) {
         self.leg = leg
         self.stepIndex = stepIndex
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex])
@@ -182,7 +182,7 @@ open class RouteStepProgress {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
     
-    init(step: RouteStep) {
+    public init(step: RouteStep) {
         self.step = step
     }
 }

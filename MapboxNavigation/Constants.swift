@@ -11,6 +11,8 @@ public let RouteControllerAlertLevelDidChangeNotificationRouteProgressKey = "pro
 public let RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey = "distance"
 public let RouteControllerAlertLevelDidChangeNotificationDistanceToIncidentKey = "distance"
 
+public let RouteControllerNotificationShouldRerouteKey = "reroute"
+
 public let RouteControllerMaximumMetersBeforeRecalculating: CLLocationDistance = 50
 public let RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion: Double = 30
 

@@ -82,7 +82,9 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         guard userIsOnRoute(location) else {
-            NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: [
+                RouteControllerNotificationShouldRerouteKey: location
+                ])
             return
         }
         
