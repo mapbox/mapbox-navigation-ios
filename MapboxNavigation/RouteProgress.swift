@@ -1,20 +1,54 @@
 import Foundation
 import MapboxDirections
 
+
+/*
+ `AlertLevel` is used to control when and the type of alert notification the user should recieve.
+*/
 public enum AlertLevel: Int {
+    
+    
     case none
+    
+    
+    /*
+     The user has started the route.
+     */
     case depart
+    
+    
+    /*
+     The user has recently completed a step.
+    */
     case low
+    
+    
+    /*
+     The user is approaching the maneuver.
+    */
     case medium
+    
+    
+    /*
+     The user is at or very close to the maneuver point
+    */
     case high
+    
+    
+    /*
+     The user has completed the route.
+    */
     case arrive
 }
+
 
 /*
  `routeProgress` contains all progress information of user along the route, leg and step.
  */
 open class RouteProgress {
     public let route: Route
+
+
     public var legIndex: Int {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
@@ -22,14 +56,15 @@ open class RouteProgress {
             currentLegProgress = RouteLegProgress(leg: currentLeg)
         }
     }
-    
+
+
     /*
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
      */
     public var currentLeg: RouteLeg {
         return route.legs[legIndex]
     }
-    
+
     
     /*
      Total distance traveled by user along all legs.
@@ -38,12 +73,14 @@ open class RouteProgress {
         return route.legs.prefix(upTo: legIndex).map { $0.distance }.reduce(0, +) + currentLegProgress.distanceTraveled
     }
     
+
     /*
      Total seconds remaining on all legs
      */
     public var durationRemaining: CLLocationDistance {
         return route.legs.suffix(from: legIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentLegProgress.durationRemaining
     }
+
     
     /*
      Number between 0 and 1 representing how far along the `Route` the user has traveled.
@@ -51,15 +88,18 @@ open class RouteProgress {
     public var fractionTraveled: Double {
         return distanceTraveled / route.distance
     }
-    
+
+
     /*
      Total distance remaining in meters along route.
      */
     public var distanceRemaining: CLLocationDistance {
         return route.distance - distanceTraveled
     }
+
     
     public var currentLegProgress: RouteLegProgress!
+
     
     public init(route: Route, legIndex: Int = 0) {
         self.route = route
@@ -76,7 +116,8 @@ open class RouteLegProgress {
             currentStepProgress = RouteStepProgress(step: currentStep)
         }
     }
-    
+
+
     /*
      Total distance traveled in meters along current leg
      */
@@ -91,42 +132,18 @@ open class RouteLegProgress {
     public var durationRemaining: TimeInterval {
         return leg.steps.suffix(from: stepIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
     }
-    
+
+
     /*
     Number between 0 and 1 representing how far along the current leg the user has traveled.
     */
     public var fractionTraveled: Double {
         return distanceTraveled / leg.distance
     }
+
     
     public var alertUserLevel: AlertLevel = .none
-    
-    
-    /*
-     Returns number representing current `Step` for the leg the user is on.
-     */
-    public var currentStep: RouteStep {
-        return leg.steps[stepIndex]
-    }
-    
-    /*
-     Returns the upcoming `Step`.
-     
-     If there is no upcoming step, nil is returned.
-     */
-    public var upComingStep: RouteStep? {
-        guard stepIndex + 1 < leg.steps.endIndex else {
-            return nil
-        }
-        return leg.steps[stepIndex + 1]
-    }
-    
-    public var followOnStep: RouteStep? {
-        guard stepIndex + 2 < leg.steps.endIndex else {
-            return nil
-        }
-        return leg.steps[stepIndex + 2]
-    }
+
     
     public func stepBefore(_ step: RouteStep) -> RouteStep? {
         guard let index = leg.steps.index(of: step) else {
@@ -148,15 +165,47 @@ open class RouteLegProgress {
         return nil
     }
     
+    
+    /*
+     Returns number representing current `Step` for the leg the user is on.
+     */
+    public var currentStep: RouteStep {
+        return leg.steps[stepIndex]
+    }
+
+
+    /*
+     Returns the upcoming `Step`.
+     
+     If there is no upcoming step, nil is returned.
+     */
+    public var upComingStep: RouteStep? {
+        guard stepIndex + 1 < leg.steps.endIndex else {
+            return nil
+        }
+        return leg.steps[stepIndex + 1]
+    }
+
+
+    public var followOnStep: RouteStep? {
+        guard stepIndex + 2 < leg.steps.endIndex else {
+            return nil
+        }
+        return leg.steps[stepIndex + 2]
+    }
+
+
     /*
      Return bool whether step provided is the current `Step` the user is on.
     */
     public func isCurrentStep(_ step: RouteStep) -> Bool {
         return leg.steps.index(of: step) == stepIndex
     }
-    
+
+
     public var currentStepProgress: RouteStepProgress
-    
+
+
     public init(leg: RouteLeg, stepIndex: Int = 0) {
         self.leg = leg
         self.stepIndex = stepIndex
@@ -165,9 +214,10 @@ open class RouteLegProgress {
 }
 
 open class RouteStepProgress {
-    
+
     public let step: RouteStep
-    
+
+
     /*
      Returns distance user has traveled along current step.
     */
@@ -183,15 +233,18 @@ open class RouteStepProgress {
     public var distanceRemaining: CLLocationDistance {
         return step.distance - distanceTraveled
     }
-    
+
+
     public var fractionTraveled: Double {
         return distanceTraveled / step.distance
     }
-    
+
+
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
-    
+
+
     public init(step: RouteStep) {
         self.step = step
     }
