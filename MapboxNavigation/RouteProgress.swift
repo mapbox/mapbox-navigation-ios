@@ -167,8 +167,18 @@ open class RouteLegProgress {
 open class RouteStepProgress {
     
     public let step: RouteStep
+    
+    /*
+     Returns distance user has traveled along current step.
+    */
     public var distanceTraveled: CLLocationDistance = 0
+    
+    
+    /*
+     Returns distance from user to end of step.
+    */
     public var userDistanceToManeuverLocation: CLLocationDistance? = nil
+    
     
     public var distanceRemaining: CLLocationDistance {
         return step.distance - distanceTraveled
