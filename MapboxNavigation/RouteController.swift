@@ -115,15 +115,6 @@ extension RouteController: CLLocationManagerDelegate {
         return newLocation.isWithin(RouteControllerMaximumMetersBeforeRecalculating, of: routeProgress.currentLegProgress.currentStep)
     }
     
-    func sendVoiceAlert(distance: CLLocationDistance, isFirstAlertForStep: Bool? = false) {
-        NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: [
-            RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
-            RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: distance,
-            RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey: isFirstAlertForStep
-            ])
-    }
-
-    
     func monitorStepProgress(_ location: CLLocation) {
         // Force an announcement when the user begins a route
         var alertLevel: AlertLevel = routeProgress.currentLegProgress.alertUserLevel == .none ? .depart : routeProgress.currentLegProgress.alertUserLevel
@@ -184,7 +175,13 @@ extension RouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.alertUserLevel = alertLevel
             // Use fresh user location distance to end of step
             // since the step could of changed
-            sendVoiceAlert(distance: distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate), isFirstAlertForStep: isFirstAlertForStep)
+            let userDistance = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
+            
+            NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: [
+                RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
+                RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance,
+                RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey: isFirstAlertForStep
+                ])
         }
     }
 }
