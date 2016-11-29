@@ -13,10 +13,14 @@ import Mapbox
 import CoreLocation
 import AVFoundation
 
+// A Mapbox access token is required to use the Directions API.
+// https://www.mapbox.com/help/create-api-access-token/
+let MapboxAccessToken = "Your Mapbox access token"
+
 class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
 
     var destination: CLLocationCoordinate2D?
-    let directions = Directions.shared
+    let directions = Directions(accessToken: MapboxAccessToken)
     var navigation: RouteController?
     
     let lengthFormatter = LengthFormatter()
@@ -28,6 +32,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        MGLAccountManager.setAccessToken(MapboxAccessToken)
         
         lengthFormatter.unitStyle = .short
         mapView.userTrackingMode = .follow
