@@ -18,16 +18,12 @@ let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], profileIde
 
 let waitForInterval: TimeInterval = 5
 
-let navigation = RouteController(route: route)
-
 class MapboxNavigationTests: XCTestCase {
     
-    override func setUp() {
-        navigation.resume()
-    }
-    
     func testDepart() {
-        let depart = createLocation(CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+        let navigation = RouteController(route: route)
+        navigation.resume()
+        let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
         self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 3)
@@ -45,6 +41,8 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testMediumAlert() {
+        let navigation = RouteController(route: route)
+        navigation.resume()
         let user = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789107313165275, longitude: -122.43219584226608), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
         
         self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
@@ -64,7 +62,9 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testShouldReroute() {
-        let reroutePoint = createLocation(CLLocationCoordinate2D(latitude: 38, longitude: -123))
+        let navigation = RouteController(route: route)
+        navigation.resume()
+        let reroutePoint = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
         self.expectation(forNotification: RouteControllerShouldReroute.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
@@ -78,8 +78,3 @@ class MapboxNavigationTests: XCTestCase {
         waitForExpectations(timeout: waitForInterval)
     }
 }
-
-func createLocation(_ location: CLLocationCoordinate2D) -> CLLocation {
-    return CLLocation(coordinate: location, altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
-}
-
