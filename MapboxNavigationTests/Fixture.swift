@@ -1,7 +1,7 @@
 import XCTest
 import Foundation
 
-internal class Fixture {
+class Fixture {
     class func stringFromFileNamed(name: String) -> String {
         guard let path = Bundle(for: self).path(forResource: name, ofType: "json") else {
             XCTAssert(false, "Fixture \(name) not found.")
