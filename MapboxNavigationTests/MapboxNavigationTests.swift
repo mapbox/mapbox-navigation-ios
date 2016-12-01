@@ -7,30 +7,79 @@
 //
 
 import XCTest
+import MapboxDirections
 @testable import MapboxNavigation
+
+let response = Fixture.JSONFromFileNamed(name: "route")
+let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
+let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], profileIdentifier: MBDirectionsProfileIdentifierAutomobile)
+
+let waitForInterval: TimeInterval = 5
+
+let navigation = RouteController(route: route)
 
 class MapboxNavigationTests: XCTestCase {
     
     override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        navigation.resume()
     }
     
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    func testDepart() {
+        let depart = createLocation(CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+        
+        self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
+            XCTAssertEqual(notification.userInfo?.count, 3)
+            
+            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+            let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as! Bool
+            
+            return routeProgress.currentLegProgress.alertUserLevel == .depart && userDistance == 384.64338068497193 && firstAlert == false
         }
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
+        
+        waitForExpectations(timeout: waitForInterval)
     }
     
+    func testMediumAlert() {
+        let user = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789107313165275, longitude: -122.43219584226608), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
+        
+        self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
+            XCTAssertEqual(notification.userInfo?.count, 3)
+            
+            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+            let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as! Bool
+            
+            return routeProgress.currentLegProgress.alertUserLevel == .low && userDistance == 1784.8625361440224 && firstAlert == true
+        }
+        
+        navigation.routeProgress.currentLegProgress.stepIndex = 1
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [user])
+        
+        waitForExpectations(timeout: waitForInterval)
+    }
+    
+    func testShouldReroute() {
+        let reroutePoint = createLocation(CLLocationCoordinate2D(latitude: 38, longitude: -123))
+        
+        self.expectation(forNotification: RouteControllerShouldReroute.rawValue, object: navigation) { (notification) -> Bool in
+            XCTAssertEqual(notification.userInfo?.count, 1)
+            
+            let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
+            return location == reroutePoint
+        }
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint])
+        
+        waitForExpectations(timeout: waitForInterval)
+    }
 }
+
+func createLocation(_ location: CLLocationCoordinate2D) -> CLLocation {
+    return CLLocation(coordinate: location, altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
+}
+
