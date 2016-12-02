@@ -40,7 +40,7 @@ class MapboxNavigationTests: XCTestCase {
         waitForExpectations(timeout: waitForInterval)
     }
     
-    func testMediumAlert() {
+    func testLowAlert() {
         let navigation = RouteController(route: route)
         navigation.resume()
         let user = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789107313165275, longitude: -122.43219584226608), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
@@ -52,11 +52,35 @@ class MapboxNavigationTests: XCTestCase {
             let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
             let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as! Bool
             
-            return routeProgress.currentLegProgress.alertUserLevel == .low && userDistance == 1784.8625361440224 && firstAlert == true
+            return routeProgress.currentLegProgress.alertUserLevel == .low && routeProgress.currentLegProgress.stepIndex == 2 && userDistance == 1784.8625361440224 && firstAlert == true
         }
         
         navigation.routeProgress.currentLegProgress.stepIndex = 1
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [user])
+        
+        waitForExpectations(timeout: waitForInterval)
+    }
+    
+    func testMediumAlert() {
+        let navigation = RouteController(route: route)
+        navigation.resume()
+        
+        let user = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789107313165275, longitude: -122.43219584226608), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
+        let user2 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.7916, longitude: -122.4128), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [user])
+        navigation.routeProgress.currentLegProgress.stepIndex = 3
+        
+        self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
+            XCTAssertEqual(notification.userInfo?.count, 3)
+            
+            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+            let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as! Bool
+            
+            return routeProgress.currentLegProgress.alertUserLevel == .low && routeProgress.currentLegProgress.stepIndex == 2 && userDistance == 1784.8625361440224 && firstAlert == true
+        }
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [user2])
         
         waitForExpectations(timeout: waitForInterval)
     }
