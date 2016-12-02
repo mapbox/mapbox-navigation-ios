@@ -10,6 +10,7 @@
 		1B000252D16008A0262FD3F4 /* Pods_MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 076C69A42791C495EF2C1163 /* Pods_MapboxNavigation.framework */; };
 		47D50B8A5FA08F93A6F3F292 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4487194DED61BB1B2786B134 /* Pods_Example.framework */; };
 		9DBD07862115A3A305AE1FD2 /* Pods_MapboxNavigationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EFEB33CFE9251A637268CBC /* Pods_MapboxNavigationTests.framework */; };
+		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
 		C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */; };
 		C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09D21DEF636C00BE3C5C /* Fixture.swift */; };
@@ -47,6 +48,7 @@
 		44F5B5858F4F3C6E8629687F /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		5E2204AA56B6D81AE298EC6F /* Pods-MapboxNavigation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigation.release.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigation/Pods-MapboxNavigation.release.xcconfig"; sourceTree = "<group>"; };
 		9AE1C8F0F16C5C687BFC8C06 /* Pods-MapboxNavigation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigation/Pods-MapboxNavigation.debug.xcconfig"; sourceTree = "<group>"; };
+		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryTests.swift; sourceTree = "<group>"; };
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		C52D09D21DEF636C00BE3C5C /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
@@ -168,10 +170,11 @@
 			isa = PBXGroup;
 			children = (
 				C52D09CF1DEF5E5F00BE3C5C /* Fixtures */,
-				C5ADFBD71DDCC7840011824B /* MapboxNavigationTests.swift */,
-				C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */,
-				C5ADFBD91DDCC7840011824B /* Info.plist */,
 				C52D09D21DEF636C00BE3C5C /* Fixture.swift */,
+				C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */,
+				C5ADFBD71DDCC7840011824B /* MapboxNavigationTests.swift */,
+				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
+				C5ADFBD91DDCC7840011824B /* Info.plist */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -481,6 +484,7 @@
 			files = (
 				C5ADFBD81DDCC7840011824B /* MapboxNavigationTests.swift in Sources */,
 				C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */,
+				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
 				C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
