@@ -4,21 +4,30 @@ import CoreLocation
 @testable import MapboxNavigation
 
 class GeometryTests: XCTestCase {
+    /*
     let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
     let point2 = CLLocationCoordinate2D(latitude: -10, longitude: -10)
     let point3 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
     let point4 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
     let point5 = CLLocationCoordinate2D(latitude: 30, longitude: 30)
-    
+    */
     func testClosestCoordinate() {
-        let line = [point3, point4]
+        let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
+        let point2 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
+        let point3 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
+        
+        let line = [point2, point3]
         
         let closestPoint = closestCoordinate(on: line, to: point1)
-        XCTAssertEqual(closestPoint!.coordinate, point4)
+        XCTAssertEqual(closestPoint!.coordinate, point3)
     }
     
     func testPolyline() {
-        let line = [point3, point4]
+        let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
+        let point2 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
+        let point3 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
+        
+        let line = [point2, point3]
         
         let a = polyline(along: line)
         XCTAssertEqual(a.count, 2)
@@ -27,23 +36,25 @@ class GeometryTests: XCTestCase {
         
         let b = polyline(along: line, from: CLLocationCoordinate2D(latitude: 25, longitude: 25), to: CLLocationCoordinate2D(latitude: 40, longitude: 40))
         XCTAssertEqual(b.count, 2)
-        XCTAssertEqual(b.first, point3)
-        XCTAssertEqual(b.last, point4)
+        XCTAssertEqual(b.first, point2)
+        XCTAssertEqual(b.last, point3)
         
         let c = polyline(along: line, within: 20, of: point1)
         XCTAssertEqual(c.count, 2)
-        XCTAssertEqual(c.first, point4)
-        XCTAssertEqual(c.last, point4)
+        XCTAssertEqual(c.first, point3)
+        XCTAssertEqual(c.last, point3)
     }
     
     func testDistance() {
-        let line = [point3, point4]
+        let point1 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
+        let point2 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
+        let line = [point1, point2]
         
         let a = distance(along: line)
-        XCTAssertEqual(round(a), 2928304)
+        XCTAssertEqualWithAccuracy(a, 2928304, accuracy: 1)
         
         let b = distance(along: line, from: CLLocationCoordinate2D(latitude: 30, longitude: 30), to: CLLocationCoordinate2D(latitude: 40, longitude: 40))
-        XCTAssertEqual(round(b), 1435783)
+        XCTAssertEqualWithAccuracy(b, 1435783, accuracy: 1)
     }
     
     func testWrap() {
@@ -55,27 +66,30 @@ class GeometryTests: XCTestCase {
     }
     
     func testCLLocationCoordinate2() {
+        let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
+        let point2 = CLLocationCoordinate2D(latitude: -10, longitude: -10)
         let a = point1.direction(to: point2)
-        XCTAssertEqual(round(a), -128)
+        XCTAssertEqualWithAccuracy(a, -128, accuracy: 1)
         
         let b = point1.coordinate(at: 20, facing: 20)
-        XCTAssertEqual(round(b.latitude), 35)
-        XCTAssertEqual(round(b.longitude), 35)
+        XCTAssertEqualWithAccuracy(b.latitude, 35, accuracy: 0.1)
+        XCTAssertEqualWithAccuracy(b.longitude, 35, accuracy: 0.1)
     }
     
     func testIntersection() {
+        let point1 = CLLocationCoordinate2D(latitude: 30, longitude: 30)
         let a = intersection((CLLocationCoordinate2D(latitude: 20, longitude: 20), CLLocationCoordinate2D(latitude: 40, longitude: 40)), (CLLocationCoordinate2D(latitude: 20, longitude: 40), CLLocationCoordinate2D(latitude: 40, longitude: 20)))
-        XCTAssertEqual(a, point5)
+        XCTAssertEqual(a, point1)
     }
     
     func testCLLocationDegrees() {
         let degree: CLLocationDegrees = 100
         let a = degree.toRadians()
-        XCTAssertEqual(round(a), 2)
+        XCTAssertEqualWithAccuracy(a, 2, accuracy: 1)
         
         let radian: LocationRadians = 4
         let b = radian.toDegrees()
-        XCTAssertEqual(round(b), 229)
+        XCTAssertEqualWithAccuracy(b, 229, accuracy: 1)
     }
 }
 

@@ -28,11 +28,11 @@ class MapboxNavigationTests: XCTestCase {
         self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 3)
             
-            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
             let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
-            let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as! Bool
+            let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as? Bool
             
-            return routeProgress.currentLegProgress.alertUserLevel == .depart && userDistance == 384.64338068497193 && firstAlert == false
+            return routeProgress != nil && routeProgress?.currentLegProgress.alertUserLevel == .depart && userDistance == 384.64338068497193 && firstAlert == false
         }
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
@@ -48,11 +48,11 @@ class MapboxNavigationTests: XCTestCase {
         self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 3)
             
-            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
-            let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as! Bool
+            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
+            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as? CLLocationDistance
+            let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as? Bool
             
-            return routeProgress.currentLegProgress.alertUserLevel == .low && routeProgress.currentLegProgress.stepIndex == 2 && userDistance == 1784.8625361440224 && firstAlert == true
+            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 2 && userDistance == 1784.8625361440224 && firstAlert == true
         }
         
         navigation.routeProgress.currentLegProgress.stepIndex = 1
@@ -69,7 +69,7 @@ class MapboxNavigationTests: XCTestCase {
         self.expectation(forNotification: RouteControllerShouldReroute.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
             
-            let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
+            let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as? CLLocation
             return location == reroutePoint
         }
         
