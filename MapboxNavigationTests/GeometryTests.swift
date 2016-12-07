@@ -111,7 +111,7 @@ class GeometryTests: XCTestCase {
         let dist = distance(along: line)
         let increment = dist / metersPerMile / 10
         for i in 0..<10 {
-            let point = polyline(along: line, within: increment * Double(i) * metersPerMile, of: line[0]).last
+            let point = coordinate(at: increment * Double(i) * metersPerMile, fromStartOf: line)
             XCTAssertNotNil(point)
             if let point = point {
                 let snapped = closestCoordinate(on: line, to: point)
@@ -128,7 +128,7 @@ class GeometryTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 37.72003306385638, longitude: -122.45717525482178),
             CLLocationCoordinate2D(latitude: 37.718242366859215, longitude: -122.45717525482178),
         ]
-        let pointAlong = polyline(along: line, within: 0.019 / metersPerMile, of: line[0]).last
+        let pointAlong = coordinate(at: 0.019 * metersPerMile, fromStartOf: line)
         XCTAssertNotNil(pointAlong)
         if let point = pointAlong {
             let snapped = closestCoordinate(on: line, to: point)
@@ -160,22 +160,22 @@ class GeometryTests: XCTestCase {
         }
     }
     
-    func testPolylineAlong() {
+    func testCoordinateAlong() {
         // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/test.js
         
         let json = Fixture.JSONFromFileNamed(name: "dc-line")
         let line = ((json["geometry"] as! [String: Any])["coordinates"] as! [[Double]]).map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) }
         
         let pointsAlong = [
-            polyline(along: line, within: 1 * metersPerMile, of: line[0]),
-            polyline(along: line, within: 1.2 * metersPerMile, of: line[0]),
-            polyline(along: line, within: 1.4 * metersPerMile, of: line[0]),
-            polyline(along: line, within: 1.6 * metersPerMile, of: line[0]),
-            polyline(along: line, within: 1.8 * metersPerMile, of: line[0]),
-            polyline(along: line, within: 2 * metersPerMile, of: line[0]),
-            polyline(along: line, within: 100 * metersPerMile, of: line[0]),
-            polyline(along: line, within: 0, of: line[0]),
-        ].map { $0.last }
+            coordinate(at: 1 * metersPerMile, fromStartOf: line),
+            coordinate(at: 1.2 * metersPerMile, fromStartOf: line),
+            coordinate(at: 1.4 * metersPerMile, fromStartOf: line),
+            coordinate(at: 1.6 * metersPerMile, fromStartOf: line),
+            coordinate(at: 1.8 * metersPerMile, fromStartOf: line),
+            coordinate(at: 2 * metersPerMile, fromStartOf: line),
+            coordinate(at: 100 * metersPerMile, fromStartOf: line),
+            coordinate(at: 0, fromStartOf: line),
+        ]
         for point in pointsAlong {
             XCTAssertNotNil(point)
         }
@@ -183,7 +183,7 @@ class GeometryTests: XCTestCase {
         XCTAssertEqual(pointsAlong[7], pointsAlong[7])
     }
     
-    func testDistance() {
+    func testDistanceAlong() {
         let point1 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
         let point2 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
         let line = [point1, point2]

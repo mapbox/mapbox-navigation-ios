@@ -199,7 +199,31 @@ func distance(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
     return length
 }
 
-// turf-along
+/// Returns a coordinate along a polyline at a certain distance from the start of the polyline.
+func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/index.js
+    var traveled: CLLocationDistance = 0
+    for i in 0..<polyline.count {
+        guard distance < traveled || i < polyline.count - 1 else {
+            break
+        }
+        
+        if traveled >= distance {
+            let overshoot = distance - traveled
+            if overshoot == 0 {
+                return polyline[i]
+            }
+            
+            let direction = polyline[i].direction(to: polyline[i - 1]) - 180
+            return polyline[i].coordinate(at: overshoot, facing: direction)
+        }
+        
+        traveled += polyline[i] - polyline[i + 1]
+    }
+    
+    return polyline.last
+}
+
 func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocationDistance, of coordinate: CLLocationCoordinate2D) -> [CLLocationCoordinate2D] {
     let startVertex = closestCoordinate(on: polyline, to: coordinate)
     guard startVertex != nil && distance != 0 else {
