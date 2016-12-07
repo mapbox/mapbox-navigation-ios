@@ -52,7 +52,7 @@ class MapboxNavigationTests: XCTestCase {
             let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as? CLLocationDistance
             let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as? Bool
             
-            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 2 && userDistance == 1788.3273644959561 && firstAlert == true
+            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 2 && userDistance == 1784.8625361440224 && firstAlert == true
         }
         
         navigation.routeProgress.currentLegProgress.stepIndex = 1
