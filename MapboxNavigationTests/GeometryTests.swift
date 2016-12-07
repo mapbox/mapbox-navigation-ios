@@ -31,7 +31,7 @@ class GeometryTests: XCTestCase {
         ]
         for point in points {
             snapped = closestCoordinate(on: line, to: point)
-            XCTAssertEqual(point, snapped?.coordinate, "point behind start should move to first vertex")
+            XCTAssertEqual(line.first, snapped?.coordinate, "point behind start should move to first vertex")
         }
         
         // turf-point-on-line - points in front of last point
@@ -48,7 +48,7 @@ class GeometryTests: XCTestCase {
         ]
         for point in points {
             snapped = closestCoordinate(on: line, to: point)
-            XCTAssertEqual(point, snapped?.coordinate, "point behind start should move to last vertex")
+            XCTAssertEqual(line.last, snapped?.coordinate, "point behind start should move to last vertex")
         }
         
         // turf-point-on-line - points on joints
@@ -86,7 +86,7 @@ class GeometryTests: XCTestCase {
             ]
         ];
         for line in lines {
-            for point in points {
+            for point in line {
                 snapped = closestCoordinate(on: line, to: point)
                 XCTAssertEqual(point, snapped?.coordinate, "point on joint should stay in place")
             }
