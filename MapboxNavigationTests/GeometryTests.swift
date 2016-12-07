@@ -3,16 +3,161 @@ import XCTest
 import CoreLocation
 @testable import MapboxNavigation
 
+let metersPerMile: CLLocationDistance = 1_609.344
+
 class GeometryTests: XCTestCase {
     func testClosestCoordinate() {
-        let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
-        let point2 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
-        let point3 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
+        // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/test/test.js#L117-L118
         
-        let line = [point2, point3]
+        // turf-point-on-line - first point
+        var line = [
+            CLLocationCoordinate2D(latitude: 37.72003306385638, longitude: -122.45717525482178),
+            CLLocationCoordinate2D(latitude: 37.718242366859215, longitude: -122.45717525482178),
+        ]
+        let point = CLLocationCoordinate2D(latitude: 37.72003306385638, longitude: -122.45717525482178)
+        var snapped = closestCoordinate(on: line, to: point)
+        XCTAssertEqual(point, snapped?.coordinate, "point on start should not move")
         
-        let closestPoint = closestCoordinate(on: line, to: point1)
-        XCTAssertEqual(closestPoint!.coordinate, CLLocationCoordinate2D(latitude: 34.583587335233545, longitude: 34.583587335233545))
+        // turf-point-on-line - points behind first point
+        line = [
+            CLLocationCoordinate2D(latitude: 37.72003306385638, longitude: -122.45717525482178),
+            CLLocationCoordinate2D(latitude: 37.718242366859215, longitude: -122.45717525482178),
+        ]
+        var points = [
+            CLLocationCoordinate2D(latitude: 37.72009306385638, longitude: -122.45717525482178),
+            CLLocationCoordinate2D(latitude: 37.82009306385638, longitude: -122.45717525482178),
+            CLLocationCoordinate2D(latitude: 37.72009306385638, longitude: -122.45716525482178),
+            CLLocationCoordinate2D(latitude: 37.72009306385638, longitude: -122.45516525482178),
+        ]
+        for point in points {
+            snapped = closestCoordinate(on: line, to: point)
+            XCTAssertEqual(point, snapped?.coordinate, "point behind start should move to first vertex")
+        }
+        
+        // turf-point-on-line - points in front of last point
+        line = [
+            CLLocationCoordinate2D(latitude: 37.72125936929241, longitude: -122.45616137981413),
+            CLLocationCoordinate2D(latitude: 37.72003306385638, longitude: -122.45717525482178),
+            CLLocationCoordinate2D(latitude: 37.718242366859215, longitude: -122.45717525482178),
+        ]
+        points = [
+            CLLocationCoordinate2D(latitude: 37.71814052497085, longitude: -122.45696067810057),
+            CLLocationCoordinate2D(latitude: 37.71813203814049, longitude: -122.4573630094528),
+            CLLocationCoordinate2D(latitude: 37.71797927502795, longitude: -122.45730936527252),
+            CLLocationCoordinate2D(latitude: 37.71704571582896, longitude: -122.45718061923981),
+        ]
+        for point in points {
+            snapped = closestCoordinate(on: line, to: point)
+            XCTAssertEqual(point, snapped?.coordinate, "point behind start should move to last vertex")
+        }
+        
+        // turf-point-on-line - points on joints
+        let lines = [
+            [
+                CLLocationCoordinate2D(latitude: 37.72125936929241, longitude: -122.45616137981413),
+                CLLocationCoordinate2D(latitude: 37.72003306385638, longitude: -122.45717525482178),
+                CLLocationCoordinate2D(latitude: 37.718242366859215, longitude: -122.45717525482178)
+            ],
+            [
+                CLLocationCoordinate2D(latitude: 31.728167146023935, longitude: 26.279296875),
+                CLLocationCoordinate2D(latitude: 32.69486597787505, longitude: 21.796875),
+                CLLocationCoordinate2D(latitude: 29.99300228455108, longitude: 18.80859375),
+                CLLocationCoordinate2D(latitude: 33.137551192346145, longitude: 12.919921874999998),
+                CLLocationCoordinate2D(latitude: 35.60371874069731, longitude: 10.1953125),
+                CLLocationCoordinate2D(latitude: 36.527294814546245, longitude: 4.921875),
+                CLLocationCoordinate2D(latitude: 36.527294814546245, longitude: -1.669921875),
+                CLLocationCoordinate2D(latitude: 34.74161249883172, longitude: -5.44921875),
+                CLLocationCoordinate2D(latitude: 32.99023555965106, longitude: -8.7890625)
+            ],
+            [
+                CLLocationCoordinate2D(latitude: 51.52204224896724, longitude: -0.10919809341430663),
+                CLLocationCoordinate2D(latitude: 51.521942114455435, longitude: -0.10923027992248535),
+                CLLocationCoordinate2D(latitude: 51.52186200668747, longitude: -0.10916590690612793),
+                CLLocationCoordinate2D(latitude: 51.52177522311313, longitude: -0.10904788970947266),
+                CLLocationCoordinate2D(latitude: 51.521601655468345, longitude: -0.10886549949645996),
+                CLLocationCoordinate2D(latitude: 51.52138135712038, longitude: -0.10874748229980469),
+                CLLocationCoordinate2D(latitude: 51.5206870765674, longitude: -0.10855436325073242),
+                CLLocationCoordinate2D(latitude: 51.52027984939518, longitude: -0.10843634605407713),
+                CLLocationCoordinate2D(latitude: 51.519952729849024, longitude: -0.10839343070983887),
+                CLLocationCoordinate2D(latitude: 51.51957887606202, longitude: -0.10817885398864746),
+                CLLocationCoordinate2D(latitude: 51.51928513164789, longitude: -0.10814666748046874),
+                CLLocationCoordinate2D(latitude: 51.518624199789016, longitude: -0.10789990425109863),
+                CLLocationCoordinate2D(latitude: 51.51778299991493, longitude: -0.10759949684143065)
+            ]
+        ];
+        for line in lines {
+            for point in points {
+                snapped = closestCoordinate(on: line, to: point)
+                XCTAssertEqual(point, snapped?.coordinate, "point on joint should stay in place")
+            }
+        }
+        
+        // turf-point-on-line - points on top of line
+        line = [
+            CLLocationCoordinate2D(latitude: 51.52204224896724, longitude: -0.10919809341430663),
+            CLLocationCoordinate2D(latitude: 51.521942114455435, longitude: -0.10923027992248535),
+            CLLocationCoordinate2D(latitude: 51.52186200668747, longitude: -0.10916590690612793),
+            CLLocationCoordinate2D(latitude: 51.52177522311313, longitude: -0.10904788970947266),
+            CLLocationCoordinate2D(latitude: 51.521601655468345, longitude: -0.10886549949645996),
+            CLLocationCoordinate2D(latitude: 51.52138135712038, longitude: -0.10874748229980469),
+            CLLocationCoordinate2D(latitude: 51.5206870765674, longitude: -0.10855436325073242),
+            CLLocationCoordinate2D(latitude: 51.52027984939518, longitude: -0.10843634605407713),
+            CLLocationCoordinate2D(latitude: 51.519952729849024, longitude: -0.10839343070983887),
+            CLLocationCoordinate2D(latitude: 51.51957887606202, longitude: -0.10817885398864746),
+            CLLocationCoordinate2D(latitude: 51.51928513164789, longitude: -0.10814666748046874),
+            CLLocationCoordinate2D(latitude: 51.518624199789016, longitude: -0.10789990425109863),
+            CLLocationCoordinate2D(latitude: 51.51778299991493, longitude: -0.10759949684143065),
+        ]
+        let dist = distance(along: line)
+        let increment = dist / metersPerMile / 10
+        for i in 0..<10 {
+            let point = polyline(along: line, within: increment * Double(i) * metersPerMile, of: line[0]).last
+            XCTAssertNotNil(point)
+            if let point = point {
+                let snapped = closestCoordinate(on: line, to: point)
+                XCTAssertNotNil(snapped)
+                if let snapped = snapped {
+                    let shift = point - snapped.coordinate
+                    XCTAssertLessThan(shift / metersPerMile, 0.000001, "point should not shift far")
+                }
+            }
+        }
+        
+        // turf-point-on-line - point along line
+        line = [
+            CLLocationCoordinate2D(latitude: 37.72003306385638, longitude: -122.45717525482178),
+            CLLocationCoordinate2D(latitude: 37.718242366859215, longitude: -122.45717525482178),
+        ]
+        let pointAlong = polyline(along: line, within: 0.019 / metersPerMile, of: line[0]).last
+        XCTAssertNotNil(pointAlong)
+        if let point = pointAlong {
+            let snapped = closestCoordinate(on: line, to: point)
+            XCTAssertNotNil(snapped)
+            if let snapped = snapped {
+                let shift = point - snapped.coordinate
+                XCTAssertLessThan(shift / metersPerMile, 0.00001, "point should not shift far")
+            }
+        }
+        
+        // turf-point-on-line - points on sides of lines
+        line = [
+            CLLocationCoordinate2D(latitude: 37.72125936929241, longitude: -122.45616137981413),
+            CLLocationCoordinate2D(latitude: 37.718242366859215, longitude: -122.45717525482178),
+        ]
+        points = [
+            CLLocationCoordinate2D(latitude: 37.71881098149625, longitude: -122.45702505111694),
+            CLLocationCoordinate2D(latitude: 37.719235317933844, longitude: -122.45733618736267),
+            CLLocationCoordinate2D(latitude: 37.72027068864082, longitude: -122.45686411857605),
+            CLLocationCoordinate2D(latitude: 37.72063561093274, longitude: -122.45652079582213),
+        ]
+        for point in points {
+            let snapped = closestCoordinate(on: line, to: point)
+            XCTAssertNotNil(snapped)
+            if let snapped = snapped {
+                XCTAssertNotEqual(snapped.coordinate, points.first, "point should not snap to first vertex")
+                XCTAssertNotEqual(snapped.coordinate, points.last, "point should not snap to last vertex")
+            }
+        }
     }
     
     func testPolyline() {
