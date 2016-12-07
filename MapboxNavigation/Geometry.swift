@@ -97,8 +97,8 @@ func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoord
     let b = numerator2 / denominator
     
     /// Intersection when the lines are cast infinitely in both directions.
-    let intersection = CLLocationCoordinate2D(latitude: line1.0.latitude + a * (line1.1.latitude - line1.0.latitude),
-                                              longitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude))
+    let intersection = CLLocationCoordinate2D(latitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude),
+                                              longitude: line1.0.latitude + a * (line1.1.latitude - line1.0.latitude))
     
     /// True if line 1 is finite and line 2 is infinite.
     let intersectsWithLine1 = a > 0 && a < 1
