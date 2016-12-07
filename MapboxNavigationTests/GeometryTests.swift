@@ -160,26 +160,27 @@ class GeometryTests: XCTestCase {
         }
     }
     
-    func testPolyline() {
-        let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
-        let point2 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
-        let point3 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
+    func testPolylineAlong() {
+        // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/test.js
         
-        let line = [point2, point3]
+        let json = Fixture.JSONFromFileNamed(name: "dc-line")
+        let line = ((json["geometry"] as! [String: Any])["coordinates"] as! [[Double]]).map { CLLocationCoordinate2D(latitude: $0[0], longitude: $0[1]) }
         
-        let a = polyline(along: line)
-        XCTAssertEqual(a.count, 2)
-        XCTAssertEqual(a.first, line.first)
-        XCTAssertEqual(a.last, line.last)
-        
-        let b = polyline(along: line, from: CLLocationCoordinate2D(latitude: 25, longitude: 25), to: CLLocationCoordinate2D(latitude: 40, longitude: 40))
-        XCTAssertEqual(b.count, 1)
-        XCTAssertEqual(b.first, point3)
-        
-        let c = polyline(along: line, within: 20, of: point1)
-        XCTAssertEqual(c.count, 2)
-        XCTAssertEqual(c.first, CLLocationCoordinate2D(latitude: 34.583587335233545, longitude: 34.583587335233545))
-        XCTAssertEqual(c.last, CLLocationCoordinate2D(latitude: 34.58373113960792, longitude: 34.583718442762901))
+        let pointsAlong = [
+            polyline(along: line, within: 1 * metersPerMile, of: line[0]),
+            polyline(along: line, within: 1.2 * metersPerMile, of: line[0]),
+            polyline(along: line, within: 1.4 * metersPerMile, of: line[0]),
+            polyline(along: line, within: 1.6 * metersPerMile, of: line[0]),
+            polyline(along: line, within: 1.8 * metersPerMile, of: line[0]),
+            polyline(along: line, within: 2 * metersPerMile, of: line[0]),
+            polyline(along: line, within: 100 * metersPerMile, of: line[0]),
+            polyline(along: line, within: 0, of: line[0]),
+        ].map { $0.last }
+        for point in pointsAlong {
+            XCTAssertNotNil(point)
+        }
+        XCTAssertEqual(pointsAlong.count, 8)
+        XCTAssertEqual(pointsAlong[7], pointsAlong[7])
     }
     
     func testDistance() {
