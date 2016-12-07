@@ -180,7 +180,17 @@ class GeometryTests: XCTestCase {
             XCTAssertNotNil(point)
         }
         XCTAssertEqual(pointsAlong.count, 8)
-        XCTAssertEqual(pointsAlong[7], pointsAlong[7])
+        XCTAssertEqual(pointsAlong.last!, line.first!)
+    }
+    
+    func testDistance() {
+        let point1 = CLLocationCoordinate2D(latitude: 39.984, longitude: -75.343)
+        let point2 = CLLocationCoordinate2D(latitude: 39.123, longitude: -75.534)
+        let line = [point1, point2]
+        
+        // https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-distance/test.js
+        let a = distance(along: line)
+        XCTAssertEqualWithAccuracy(a, 97_159.57803131901, accuracy: 1)
     }
     
     func testDistanceAlong() {
@@ -189,10 +199,10 @@ class GeometryTests: XCTestCase {
         let line = [point1, point2]
         
         let a = distance(along: line)
-        XCTAssertEqualWithAccuracy(a, 2928304, accuracy: 1)
+        XCTAssertEqualWithAccuracy(a, 2_928_304, accuracy: 1)
         
         let b = distance(along: line, from: CLLocationCoordinate2D(latitude: 30, longitude: 30), to: CLLocationCoordinate2D(latitude: 40, longitude: 40))
-        XCTAssertEqualWithAccuracy(b, 1534694, accuracy: 1)
+        XCTAssertEqualWithAccuracy(b, 1_534_694, accuracy: 1)
     }
     
     func testWrap() {
