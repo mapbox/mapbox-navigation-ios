@@ -193,6 +193,38 @@ class GeometryTests: XCTestCase {
         XCTAssertEqualWithAccuracy(a, 97_159.57803131901, accuracy: 1)
     }
     
+    func testPolylineAlong() {
+        // https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-line-slice/test.js
+        
+        // turf-line-slice -- line1
+        let line1 = [
+            CLLocationCoordinate2D(latitude: 22.466878364528448, longitude: -97.88131713867188),
+            CLLocationCoordinate2D(latitude: 22.175960091218524, longitude: -97.82089233398438),
+            CLLocationCoordinate2D(latitude: 21.8704201873689, longitude: -97.6190185546875),
+        ]
+        var start = CLLocationCoordinate2D(latitude: 22.254624939561698, longitude: -97.79617309570312)
+        var stop = CLLocationCoordinate2D(latitude: 22.057641623615734, longitude: -97.72750854492188)
+        var sliced = polyline(along: line1, from: start, to: stop)
+        let line1Out = [
+            CLLocationCoordinate2D(latitude: 22.466878364528448, longitude: -97.88131713867188),
+            CLLocationCoordinate2D(latitude: 22.175960091218524, longitude: -97.82089233398438),
+            CLLocationCoordinate2D(latitude: 21.8704201873689, longitude: -97.6190185546875),
+        ]
+        XCTAssertEqual(sliced.count, 3)
+        XCTAssertEqual(sliced, line1Out)
+        
+        // turf-line-slice -- vertical
+        let vertical = [
+            CLLocationCoordinate2D(latitude: 38.70582415504791, longitude: -121.25447809696198),
+            CLLocationCoordinate2D(latitude: 38.709767459877554, longitude: -121.25449419021606),
+        ]
+        start = CLLocationCoordinate2D(latitude: 38.70582415504791, longitude: -121.25447809696198)
+        stop = CLLocationCoordinate2D(latitude: 38.70634324369764, longitude: -121.25447809696198)
+        sliced = polyline(along: vertical, from: start, to: stop)
+        XCTAssertEqual(sliced.count, 2, "no duplicated coords")
+        XCTAssertNotEqual(sliced.first, sliced.last, "vertical slice should not collapse to first coordinate")
+    }
+    
     func testDistanceAlong() {
         let point1 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
         let point2 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
