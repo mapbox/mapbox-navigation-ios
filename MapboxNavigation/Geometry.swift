@@ -133,9 +133,12 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
         let distances = (coordinate - segment.0, coordinate - segment.1)
         let direction = segment.0.direction(to: segment.1)
         
-        let perpendicularPoint1 = coordinate.coordinate(at: far, facing: direction + 90)
-        let perpendicularPoint2 = coordinate.coordinate(at: far, facing: direction - 90)
-        let intersectionPoint = lineIntersects(line1StartX: perpendicularPoint1.latitude, line1StartY: perpendicularPoint1.longitude, line1EndX: perpendicularPoint2.latitude, line1EndY: perpendicularPoint2.longitude, line2StartX: segment.0.latitude, line2StartY: segment.0.longitude, line2EndX: segment.1.latitude, line2EndY: segment.1.longitude)
+        var perpendicularPoint = coordinate.coordinate(at: far, facing: direction + 90)
+        var intersectionPoint = intersection((coordinate, perpendicularPoint), segment)
+        if intersectionPoint == nil {
+            perpendicularPoint = coordinate.coordinate(at: far, facing: direction - 90)
+            intersectionPoint = intersection((coordinate, perpendicularPoint), segment)
+        }
         var intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
         
         if distances.0 < closestCoordinate?.distance ?? CLLocationDistanceMax {
@@ -252,44 +255,5 @@ extension CLLocation {
             return true
         }
         return closestCoordinate.distance < maximumDistance
-    }
-}
-
-func lineIntersects(line1StartX: Double, line1StartY: Double, line1EndX: Double, line1EndY: Double, line2StartX: Double, line2StartY: Double, line2EndX: Double, line2EndY: Double) -> CLLocationCoordinate2D? {
-    var result = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-    
-    var onLine1 = false
-    var onLine2 = false
-
-    let denominator = ((line2EndY - line2StartY) * (line1EndX - line1StartX)) - ((line2EndX - line2StartX) * (line1EndY - line1StartY))
-    
-    if (denominator == 0) {
-        return nil;
-    }
-    
-    var a = line1StartY - line2StartY;
-    var b = line1StartX - line2StartX;
-    let numerator1 = ((line2EndX - line2StartX) * a) - ((line2EndY - line2StartY) * b);
-    let numerator2 = ((line1EndX - line1StartX) * a) - ((line1EndY - line1StartY) * b);
-    a = numerator1 / denominator;
-    b = numerator2 / denominator;
-    
-    // if we cast these lines infinitely in both directions, they intersect here:
-    result.latitude = line1StartX + (a * (line1EndX - line1StartX));
-    result.longitude = line1StartY + (a * (line1EndY - line1StartY));
-    
-    // if line1 is a segment and line2 is infinite, they intersect if:
-    if (a > 0 && a < 1) {
-        onLine1 = true;
-    }
-    // if line2 is a segment and line1 is infinite, they intersect if:
-    if (b > 0 && b < 1) {
-        onLine2 = true;
-    }
-    // if line1 and line2 are segments, they intersect if both of the above are true
-    if (onLine1 && onLine2) {
-        return result;
-    } else {
-        return nil;
     }
 }
