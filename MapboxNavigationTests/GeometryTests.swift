@@ -4,13 +4,6 @@ import CoreLocation
 @testable import MapboxNavigation
 
 class GeometryTests: XCTestCase {
-    /*
-    let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
-    let point2 = CLLocationCoordinate2D(latitude: -10, longitude: -10)
-    let point3 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
-    let point4 = CLLocationCoordinate2D(latitude: 40, longitude: 40)
-    let point5 = CLLocationCoordinate2D(latitude: 30, longitude: 30)
-    */
     func testClosestCoordinate() {
         let point1 = CLLocationCoordinate2D(latitude: 35, longitude: 35)
         let point2 = CLLocationCoordinate2D(latitude: 20, longitude: 20)
@@ -19,7 +12,7 @@ class GeometryTests: XCTestCase {
         let line = [point2, point3]
         
         let closestPoint = closestCoordinate(on: line, to: point1)
-        XCTAssertEqual(closestPoint!.coordinate, point3)
+        XCTAssertEqual(closestPoint!.coordinate, CLLocationCoordinate2D(latitude: 34.583587335233545, longitude: 34.583587335233545))
     }
     
     func testPolyline() {
@@ -35,14 +28,13 @@ class GeometryTests: XCTestCase {
         XCTAssertEqual(a.last, line.last)
         
         let b = polyline(along: line, from: CLLocationCoordinate2D(latitude: 25, longitude: 25), to: CLLocationCoordinate2D(latitude: 40, longitude: 40))
-        XCTAssertEqual(b.count, 2)
-        XCTAssertEqual(b.first, point2)
-        XCTAssertEqual(b.last, point3)
+        XCTAssertEqual(b.count, 1)
+        XCTAssertEqual(b.first, point3)
         
         let c = polyline(along: line, within: 20, of: point1)
         XCTAssertEqual(c.count, 2)
-        XCTAssertEqual(c.first, point3)
-        XCTAssertEqual(c.last, point3)
+        XCTAssertEqual(c.first, CLLocationCoordinate2D(latitude: 34.583587335233545, longitude: 34.583587335233545))
+        XCTAssertEqual(c.last, CLLocationCoordinate2D(latitude: 34.58373113960792, longitude: 34.583718442762901))
     }
     
     func testDistance() {
@@ -54,7 +46,7 @@ class GeometryTests: XCTestCase {
         XCTAssertEqualWithAccuracy(a, 2928304, accuracy: 1)
         
         let b = distance(along: line, from: CLLocationCoordinate2D(latitude: 30, longitude: 30), to: CLLocationCoordinate2D(latitude: 40, longitude: 40))
-        XCTAssertEqualWithAccuracy(b, 1435783, accuracy: 1)
+        XCTAssertEqualWithAccuracy(b, 1534694, accuracy: 1)
     }
     
     func testWrap() {
