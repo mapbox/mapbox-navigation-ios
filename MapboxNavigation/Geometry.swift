@@ -82,7 +82,7 @@ typealias LineSegment = (CLLocationCoordinate2D, CLLocationCoordinate2D)
 
 /// Returns the intersection of two line segments.
 func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoordinate2D? {
-    // Ported from https://github.com/Turfjs/turf-point-on-line/blob/3807292c7882389829c2c5bac68fe6da662f2390/index.js, in turn adapted from http://jsfiddle.net/justin_c_rounds/Gd2S2/light/
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js, in turn adapted from http://jsfiddle.net/justin_c_rounds/Gd2S2/light/
     let denominator = ((line2.1.latitude - line2.0.latitude) * (line1.1.longitude - line1.0.longitude))
         - ((line2.1.longitude - line2.0.longitude) * (line1.1.latitude - line1.0.latitude))
     guard denominator != 0 else {
@@ -97,8 +97,8 @@ func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoord
     let b = numerator2 / denominator
     
     /// Intersection when the lines are cast infinitely in both directions.
-    let intersection = CLLocationCoordinate2D(latitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude),
-                                              longitude: line1.0.latitude + a * (line1.1.latitude - line1.0.latitude))
+    let intersection = CLLocationCoordinate2D(latitude: line1.0.latitude + a * (line1.1.latitude - line1.0.latitude),
+                                              longitude: line1.0.longitude + a * (line1.1.longitude - line1.0.longitude))
     
     /// True if line 1 is finite and line 2 is infinite.
     let intersectsWithLine1 = a > 0 && a < 1
@@ -115,7 +115,7 @@ struct CoordinateAlongPolyline {
 
 /// Returns the geographic coordinate along the polyline that is closest to the given coordinate as the crow flies. The returned coordinate may not correspond to one of the polyline’s vertices, but it always lies along the polyline.
 func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D, includeDistanceToNextCoordinate: Bool = false) -> CoordinateAlongPolyline? {
-    // Ported from https://github.com/Turfjs/turf-point-on-line/blob/3807292c7882389829c2c5bac68fe6da662f2390/index.js
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
     let polyline = polyline, coordinate = coordinate
     guard !polyline.isEmpty else {
         return nil
@@ -124,21 +124,17 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
         return CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: coordinate - polyline.first!)
     }
     
-    // Turf uses a thousand miles, but a thousand kilometers will do.
-    let far: CLLocationDistance = 1_000_000
     var closestCoordinate: CoordinateAlongPolyline?
     
     for var index in 0..<polyline.count - 1 {
         let segment = (polyline[index], polyline[index + 1])
         let distances = (coordinate - segment.0, coordinate - segment.1)
-        let direction = segment.0.direction(to: segment.1)
         
-        var perpendicularPoint = coordinate.coordinate(at: far, facing: direction + 90)
-        var intersectionPoint = intersection((coordinate, perpendicularPoint), segment)
-        if intersectionPoint == nil {
-            perpendicularPoint = coordinate.coordinate(at: far, facing: direction - 90)
-            intersectionPoint = intersection((coordinate, perpendicularPoint), segment)
-        }
+        let maxDistance = max(distances.0, distances.1)
+        let direction = segment.0.direction(to: segment.1)
+        let perpendicularPoint1 = coordinate.coordinate(at: maxDistance, facing: direction + 90)
+        let perpendicularPoint2 = coordinate.coordinate(at: maxDistance, facing: direction - 90)
+        let intersectionPoint = intersection((perpendicularPoint1, perpendicularPoint2), segment)
         var intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
         
         if distances.0 < closestCoordinate?.distance ?? CLLocationDistanceMax {
