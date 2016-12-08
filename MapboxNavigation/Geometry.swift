@@ -135,21 +135,15 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
         let perpendicularPoint1 = coordinate.coordinate(at: maxDistance, facing: direction + 90)
         let perpendicularPoint2 = coordinate.coordinate(at: maxDistance, facing: direction - 90)
         let intersectionPoint = intersection((perpendicularPoint1, perpendicularPoint2), segment)
-        var intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
+        let intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
         
         if distances.0 < closestCoordinate?.distance ?? CLLocationDistanceMax {
             closestCoordinate = CoordinateAlongPolyline(coordinate: segment.0, index: index, distance: distances.0)
         }
         if distances.1 < closestCoordinate?.distance ?? CLLocationDistanceMax {
-            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index + 1, distance: distances.1)
+            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index, distance: distances.1)
         }
         if intersectionDistance != nil && intersectionDistance! < closestCoordinate?.distance ?? CLLocationDistanceMax {
-            if includeDistanceToNextCoordinate {
-                intersectionDistance! += intersectionPoint! - segment.1
-                index += 1
-            } else if distances.1 < distances.0 {
-                index += 1
-            }
             closestCoordinate = CoordinateAlongPolyline(coordinate: intersectionPoint!, index: index, distance: intersectionDistance!)
         }
     }
@@ -166,13 +160,18 @@ func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
     
     let startVertex = (start != nil ? closestCoordinate(on: polyline, to: start!, includeDistanceToNextCoordinate: true) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0)
     let endVertex = (end != nil ? closestCoordinate(on: polyline, to: end!, includeDistanceToNextCoordinate: true) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0)
-    let ends: (Array<CLLocationCoordinate2D>.Index, Array<CLLocationCoordinate2D>.Index)
+    let ends: (CoordinateAlongPolyline, CoordinateAlongPolyline)
     if startVertex.index <= endVertex.index {
-        ends = (startVertex.index, endVertex.index)
+        ends = (startVertex, endVertex)
     } else {
-        ends = (endVertex.index, startVertex.index)
+        ends = (endVertex, startVertex)
     }
-    return Array(polyline[ends.0...ends.1])
+    
+    var coords = ends.0.index == ends.1.index ? [] : Array(polyline[ends.0.index + 1...ends.1.index])
+    coords.insert(ends.0.coordinate, at: 0)
+    coords.append(ends.1.coordinate)
+    
+    return coords
 }
 
 /// Returns the distance along a slice of a polyline with the given endpoints.
