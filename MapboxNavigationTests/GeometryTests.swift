@@ -206,12 +206,18 @@ class GeometryTests: XCTestCase {
         var stop = CLLocationCoordinate2D(latitude: 22.057641623615734, longitude: -97.72750854492188)
         var sliced = polyline(along: line1, from: start, to: stop)
         let line1Out = [
-            CLLocationCoordinate2D(latitude: 22.466878364528448, longitude: -97.88131713867188),
+            CLLocationCoordinate2D(latitude: 22.247393614241204, longitude: -97.83572934173804),
             CLLocationCoordinate2D(latitude: 22.175960091218524, longitude: -97.82089233398438),
-            CLLocationCoordinate2D(latitude: 21.8704201873689, longitude: -97.6190185546875),
+            CLLocationCoordinate2D(latitude: 22.051208078134735, longitude: -97.7384672234217),
         ]
+        XCTAssertEqualWithAccuracy(line1Out.first!.latitude, 22.247393614241204, accuracy: 0.001)
+        XCTAssertEqualWithAccuracy(line1Out.first!.longitude, -97.83572934173804, accuracy: 0.001)
+        
+        XCTAssertEqual(line1Out[1], line1[1])
+        
+        XCTAssertEqualWithAccuracy(line1Out.last!.latitude, 22.051208078134735, accuracy: 0.001)
+        XCTAssertEqualWithAccuracy(line1Out.last!.longitude, -97.7384672234217, accuracy: 0.001)
         XCTAssertEqual(sliced.count, 3)
-        XCTAssertEqual(sliced, line1Out)
         
         // turf-line-slice -- vertical
         let vertical = [
