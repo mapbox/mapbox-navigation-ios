@@ -114,7 +114,7 @@ struct CoordinateAlongPolyline {
 }
 
 /// Returns the geographic coordinate along the polyline that is closest to the given coordinate as the crow flies. The returned coordinate may not correspond to one of the polyline’s vertices, but it always lies along the polyline.
-func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D, includeDistanceToNextCoordinate: Bool = false) -> CoordinateAlongPolyline? {
+func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D) -> CoordinateAlongPolyline? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
     let polyline = polyline, coordinate = coordinate
     guard !polyline.isEmpty else {
@@ -158,8 +158,8 @@ func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
         return []
     }
     
-    let startVertex = (start != nil ? closestCoordinate(on: polyline, to: start!, includeDistanceToNextCoordinate: true) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0)
-    let endVertex = (end != nil ? closestCoordinate(on: polyline, to: end!, includeDistanceToNextCoordinate: true) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0)
+    let startVertex = (start != nil ? closestCoordinate(on: polyline, to: start!) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0)
+    let endVertex = (end != nil ? closestCoordinate(on: polyline, to: end!) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0)
     let ends: (CoordinateAlongPolyline, CoordinateAlongPolyline)
     if startVertex.index <= endVertex.index {
         ends = (startVertex, endVertex)
@@ -181,8 +181,8 @@ func distance(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
         return 0
     }
     
-    let startVertex = start != nil ? closestCoordinate(on: polyline, to: start!, includeDistanceToNextCoordinate: true) : nil
-    let endVertex = end != nil ? closestCoordinate(on: polyline, to: end!, includeDistanceToNextCoordinate: true) : nil
+    let startVertex = start != nil ? closestCoordinate(on: polyline, to: start!) : nil
+    let endVertex = end != nil ? closestCoordinate(on: polyline, to: end!) : nil
     var vertices = (startVertex ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0),
                     endVertex ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0))
     
