@@ -32,7 +32,7 @@ class MapboxNavigationTests: XCTestCase {
             let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
             let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as? Bool
             
-            return routeProgress != nil && routeProgress?.currentLegProgress.alertUserLevel == .depart && userDistance == 384.64338068497193 && firstAlert == false
+            return routeProgress != nil && routeProgress?.currentLegProgress.alertUserLevel == .depart && round(userDistance) == 384 && firstAlert == false
         }
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
@@ -49,10 +49,10 @@ class MapboxNavigationTests: XCTestCase {
             XCTAssertEqual(notification.userInfo?.count, 3)
             
             let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
-            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as? CLLocationDistance
+            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
             let firstAlert = notification.userInfo![RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey] as? Bool
             
-            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 2 && userDistance == 1784.8625361440224 && firstAlert == true
+            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 2 && round(userDistance) == 1785 && firstAlert == true
         }
         
         navigation.routeProgress.currentLegProgress.stepIndex = 1
