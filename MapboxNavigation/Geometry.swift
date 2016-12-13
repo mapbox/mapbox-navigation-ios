@@ -180,15 +180,13 @@ func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordi
     guard !line.isEmpty else {
         return 0
     }
-
-    var length: CLLocationDistance = 0
     
     let sliced = polyline(along: line, from: start, to: end)
-    for index in 0..<sliced.count - 1 {
-        length += sliced[index] - sliced[index + 1]
-    }
     
-    return length
+    // Zip together the starts and ends of each segment, then map those pairs of coordinates to the distances between them, then take the sum.
+    let distance = zip(sliced.prefix(upTo: sliced.count - 1), sliced.suffix(from: 1)).map(-).reduce(0, +)
+    
+    return distance
 }
 
 /// Returns a coordinate along a polyline at a certain distance from the start of the polyline.
