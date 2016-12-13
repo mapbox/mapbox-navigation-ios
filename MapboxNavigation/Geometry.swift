@@ -82,7 +82,7 @@ typealias LineSegment = (CLLocationCoordinate2D, CLLocationCoordinate2D)
 
 /// Returns the intersection of two line segments.
 func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoordinate2D? {
-    // Ported from https://github.com/Turfjs/turf-point-on-line/blob/3807292c7882389829c2c5bac68fe6da662f2390/index.js, in turn adapted from http://jsfiddle.net/justin_c_rounds/Gd2S2/light/
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js, in turn adapted from http://jsfiddle.net/justin_c_rounds/Gd2S2/light/
     let denominator = ((line2.1.latitude - line2.0.latitude) * (line1.1.longitude - line1.0.longitude))
         - ((line2.1.longitude - line2.0.longitude) * (line1.1.latitude - line1.0.latitude))
     guard denominator != 0 else {
@@ -114,8 +114,8 @@ struct CoordinateAlongPolyline {
 }
 
 /// Returns the geographic coordinate along the polyline that is closest to the given coordinate as the crow flies. The returned coordinate may not correspond to one of the polyline’s vertices, but it always lies along the polyline.
-func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D, includeDistanceToNextCoordinate: Bool = false) -> CoordinateAlongPolyline? {
-    // Ported from https://github.com/Turfjs/turf-point-on-line/blob/3807292c7882389829c2c5bac68fe6da662f2390/index.js
+func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D) -> CoordinateAlongPolyline? {
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
     let polyline = polyline, coordinate = coordinate
     guard !polyline.isEmpty else {
         return nil
@@ -124,36 +124,26 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
         return CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: coordinate - polyline.first!)
     }
     
-    // Turf uses a thousand miles, but a thousand kilometers will do.
-    let far: CLLocationDistance = 1_000_000
     var closestCoordinate: CoordinateAlongPolyline?
     
-    for var index in 0..<polyline.count - 1 {
+    for index in 0..<polyline.count - 1 {
         let segment = (polyline[index], polyline[index + 1])
         let distances = (coordinate - segment.0, coordinate - segment.1)
-        let direction = segment.0.direction(to: segment.1)
         
-        var perpendicularPoint = coordinate.coordinate(at: far, facing: direction + 90)
-        var intersectionPoint = intersection((coordinate, perpendicularPoint), segment)
-        if intersectionPoint == nil {
-            perpendicularPoint = coordinate.coordinate(at: far, facing: direction - 90)
-            intersectionPoint = intersection((coordinate, perpendicularPoint), segment)
-        }
-        var intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
+        let maxDistance = max(distances.0, distances.1)
+        let direction = segment.0.direction(to: segment.1)
+        let perpendicularPoint1 = coordinate.coordinate(at: maxDistance, facing: direction + 90)
+        let perpendicularPoint2 = coordinate.coordinate(at: maxDistance, facing: direction - 90)
+        let intersectionPoint = intersection((perpendicularPoint1, perpendicularPoint2), segment)
+        let intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
         
         if distances.0 < closestCoordinate?.distance ?? CLLocationDistanceMax {
             closestCoordinate = CoordinateAlongPolyline(coordinate: segment.0, index: index, distance: distances.0)
         }
         if distances.1 < closestCoordinate?.distance ?? CLLocationDistanceMax {
-            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index + 1, distance: distances.1)
+            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index, distance: distances.1)
         }
         if intersectionDistance != nil && intersectionDistance! < closestCoordinate?.distance ?? CLLocationDistanceMax {
-            if includeDistanceToNextCoordinate {
-                intersectionDistance! += intersectionPoint! - segment.1
-                index += 1
-            } else if distances.1 < distances.0 {
-                index += 1
-            }
             closestCoordinate = CoordinateAlongPolyline(coordinate: intersectionPoint!, index: index, distance: intersectionDistance!)
         }
     }
@@ -163,43 +153,67 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
 
 /// Returns a subset of the polyline between the given coordinates.
 func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> [CLLocationCoordinate2D] {
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-line-slice/index.js
     guard !polyline.isEmpty else {
         return []
     }
     
-    let startVertex = (start != nil ? closestCoordinate(on: polyline, to: start!, includeDistanceToNextCoordinate: true) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0)
-    let endVertex = (end != nil ? closestCoordinate(on: polyline, to: end!, includeDistanceToNextCoordinate: true) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0)
-    return Array(polyline[startVertex.index...endVertex.index])
+    let startVertex = (start != nil ? closestCoordinate(on: polyline, to: start!) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0)
+    let endVertex = (end != nil ? closestCoordinate(on: polyline, to: end!) : nil) ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0)
+    let ends: (CoordinateAlongPolyline, CoordinateAlongPolyline)
+    if startVertex.index <= endVertex.index {
+        ends = (startVertex, endVertex)
+    } else {
+        ends = (endVertex, startVertex)
+    }
+    
+    var coords = ends.0.index == ends.1.index ? [] : Array(polyline[ends.0.index + 1...ends.1.index])
+    coords.insert(ends.0.coordinate, at: 0)
+    coords.append(ends.1.coordinate)
+    
+    return coords
 }
 
 /// Returns the distance along a slice of a polyline with the given endpoints.
-func distance(along polyline: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> CLLocationDistance {
-    // Ported from https://github.com/Turfjs/turf-line-slice/blob/b3985348bf3ea1507107641ad59ec1533023285b/index.js
-    guard !polyline.isEmpty else {
+func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> CLLocationDistance {
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-line-slice/index.js
+    guard !line.isEmpty else {
         return 0
     }
     
-    let startVertex = start != nil ? closestCoordinate(on: polyline, to: start!, includeDistanceToNextCoordinate: true) : nil
-    let endVertex = end != nil ? closestCoordinate(on: polyline, to: end!, includeDistanceToNextCoordinate: true) : nil
-    var vertices = (startVertex ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0),
-                    endVertex ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0))
+    let sliced = polyline(along: line, from: start, to: end)
     
-    var length: CLLocationDistance = vertices.0.distance + vertices.1.distance
-    if vertices.0.index > vertices.1.index {
-        vertices = (vertices.1, vertices.0)
-    } else if vertices.0.index == vertices.1.index {
-        return length
-    }
+    // Zip together the starts and ends of each segment, then map those pairs of coordinates to the distances between them, then take the sum.
+    let distance = zip(sliced.prefix(upTo: sliced.count - 1), sliced.suffix(from: 1)).map(-).reduce(0, +)
     
-    if vertices.0.index != vertices.1.index {
-        for index in vertices.0.index..<vertices.1.index {
-            length += polyline[index + 1] - polyline[index]
-        }
-    }
-    return length
+    return distance
 }
 
-// turf-along
+/// Returns a coordinate along a polyline at a certain distance from the start of the polyline.
+func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
+    // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/index.js
+    var traveled: CLLocationDistance = 0
+    for i in 0..<polyline.count {
+        guard distance < traveled || i < polyline.count - 1 else {
+            break
+        }
+        
+        if traveled >= distance {
+            let overshoot = distance - traveled
+            if overshoot == 0 {
+                return polyline[i]
+            }
+            
+            let direction = polyline[i].direction(to: polyline[i - 1]) - 180
+            return polyline[i].coordinate(at: overshoot, facing: direction)
+        }
+        
+        traveled += polyline[i] - polyline[i + 1]
+    }
+    
+    return polyline.last
+}
+
 func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocationDistance, of coordinate: CLLocationCoordinate2D) -> [CLLocationCoordinate2D] {
     let startVertex = closestCoordinate(on: polyline, to: coordinate)
     guard startVertex != nil && distance != 0 else {
@@ -257,4 +271,3 @@ extension CLLocation {
         return closestCoordinate.distance < maximumDistance
     }
 }
-
