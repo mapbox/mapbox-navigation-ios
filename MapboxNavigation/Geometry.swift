@@ -126,7 +126,7 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
     
     var closestCoordinate: CoordinateAlongPolyline?
     
-    for var index in 0..<polyline.count - 1 {
+    for index in 0..<polyline.count - 1 {
         let segment = (polyline[index], polyline[index + 1])
         let distances = (coordinate - segment.0, coordinate - segment.1)
         
@@ -175,29 +175,19 @@ func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
 }
 
 /// Returns the distance along a slice of a polyline with the given endpoints.
-func distance(along polyline: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> CLLocationDistance {
+func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> CLLocationDistance {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-line-slice/index.js
-    guard !polyline.isEmpty else {
+    guard !line.isEmpty else {
         return 0
     }
+
+    var length: CLLocationDistance = 0
     
-    let startVertex = start != nil ? closestCoordinate(on: polyline, to: start!) : nil
-    let endVertex = end != nil ? closestCoordinate(on: polyline, to: end!) : nil
-    var vertices = (startVertex ?? CoordinateAlongPolyline(coordinate: polyline.first!, index: 0, distance: 0),
-                    endVertex ?? CoordinateAlongPolyline(coordinate: polyline.last!, index: polyline.indices.last!, distance: 0))
-    
-    var length: CLLocationDistance = vertices.0.distance + vertices.1.distance
-    if vertices.0.index > vertices.1.index {
-        vertices = (vertices.1, vertices.0)
-    } else if vertices.0.index == vertices.1.index {
-        return length
+    let sliced = polyline(along: line, from: start, to: end)
+    for index in 0..<sliced.count - 1 {
+        length += sliced[index] - sliced[index + 1]
     }
     
-    if vertices.0.index != vertices.1.index {
-        for index in vertices.0.index..<vertices.1.index {
-            length += polyline[index + 1] - polyline[index]
-        }
-    }
     return length
 }
 

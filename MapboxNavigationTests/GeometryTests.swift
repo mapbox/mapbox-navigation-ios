@@ -239,8 +239,10 @@ class GeometryTests: XCTestCase {
         let a = distance(along: line)
         XCTAssertEqualWithAccuracy(a, 2_928_304, accuracy: 1)
         
+        
+        // Adapted from: https://gist.github.com/bsudekum/2604b72ae42b6f88aa55398b2ff0dc22
         let b = distance(along: line, from: CLLocationCoordinate2D(latitude: 30, longitude: 30), to: CLLocationCoordinate2D(latitude: 40, longitude: 40))
-        XCTAssertEqualWithAccuracy(b, 1_534_694, accuracy: 1)
+        XCTAssertEqualWithAccuracy(b, 1_546_971, accuracy: 1)
     }
     
     func testWrap() {
