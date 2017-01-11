@@ -7,7 +7,9 @@ import MapboxDirections
 */
 public enum AlertLevel: Int {
     
-    
+    /*
+     Default `AlertLevel`
+    */
     case none
     
     
@@ -48,7 +50,9 @@ public enum AlertLevel: Int {
 open class RouteProgress {
     public let route: Route
 
-
+    /*
+     Index representing current leg
+     */
     public var legIndex: Int {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
@@ -110,6 +114,11 @@ open class RouteProgress {
 
 open class RouteLegProgress {
     public let leg: RouteLeg
+    
+    
+    /*
+     Index representing the current step
+    */
     public var stepIndex: Int {
         didSet {
             assert(stepIndex >= 0 && stepIndex < leg.steps.endIndex)
@@ -135,7 +144,7 @@ open class RouteLegProgress {
 
 
     /*
-    Number between 0 and 1 representing how far along the current leg the user has traveled.
+     Number between 0 and 1 representing how far along the current leg the user has traveled.
     */
     public var fractionTraveled: Double {
         return distanceTraveled / leg.distance
@@ -177,7 +186,7 @@ open class RouteLegProgress {
     /*
      Returns the upcoming `Step`.
      
-     If there is no upcoming step, nil is returned.
+     If there is no `upcomingStep`, nil is returned.
      */
     public var upComingStep: RouteStep? {
         guard stepIndex + 1 < leg.steps.endIndex else {
@@ -186,7 +195,11 @@ open class RouteLegProgress {
         return leg.steps[stepIndex + 1]
     }
 
-
+    /*
+     Returns step 2 steps ahead.
+     
+     If there is no `followOnStep`, nil is returned.
+    */
     public var followOnStep: RouteStep? {
         guard stepIndex + 2 < leg.steps.endIndex else {
             return nil
@@ -214,7 +227,6 @@ open class RouteLegProgress {
 }
 
 open class RouteStepProgress {
-
     public let step: RouteStep
 
 
@@ -229,17 +241,24 @@ open class RouteStepProgress {
     */
     public var userDistanceToManeuverLocation: CLLocationDistance? = nil
     
-    
+    /*
+     Total distance in meters remaining on current stpe
+     */
     public var distanceRemaining: CLLocationDistance {
         return step.distance - distanceTraveled
     }
 
-
+    /*
+     Number between 0 and 1 representing fraction of current step traveled
+    */
     public var fractionTraveled: Double {
         return distanceTraveled / step.distance
     }
 
 
+    /*
+     Number of seconds remaining on current step
+     */
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
