@@ -12,6 +12,15 @@ MapboxNavigation.swift provides an API to add turn by turn navigation to your ap
 
 A simple implementation can be viewed in the [Example app](./Example/ViewController.swift).
 
+## Gist of how this works
+
+`RouteController` is given a route. Internally, MapboxNavigation.swift is comparing the route to the users location and looking at 3 principle pieces:
+
+1. Is the user on or off the route?
+1. How far along the step is the user?
+1. Does the user need to be alerted about an upcoming maneuver?
+
+The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via `NSNotification`.
 
 ## Notifications
 
