@@ -5,7 +5,7 @@
 @import MapboxDirections;
 @import Mapbox;
 
-@interface ViewController ()
+@interface ViewController () <AVSpeechSynthesizerDelegate>
 @property (nonatomic, weak) IBOutlet MGLMapView *mapView;
 @property (nonatomic, assign) CLLocationCoordinate2D destination;
 @property (nonatomic) MBDirections *directions;
@@ -16,11 +16,7 @@
 
 @implementation ViewController
 
-static NSString *MBXTempAlertDidChange = @"RouteControllerAlertLevelDidChange";
-static NSString *MBXTempProgressDidChange = @"RouteControllerProgressDidChange";
-static NSString *MBXTempShouldReRoute = @"RouteControllerShouldReroute";
 static NSString *MBXTempProfileIdentifierAutomobileAvoidingTraffic = @"mapbox/driving-traffic";
-static NSString *MBXTempRouteControllerAlertLevelDidChangeNotificationRouteProgressKey = @"progress";
 
 static NSString *MapboxAccessToken = @"Your Mapbox access token";
 
@@ -37,6 +33,8 @@ static NSString *MapboxAccessToken = @"Your Mapbox access token";
     self.lengthFormatter = [[NSLengthFormatter alloc] init];
     self.lengthFormatter.unitStyle = NSFormattingUnitStyleShort;
     
+    self.speechSynth = [[AVSpeechSynthesizer alloc] init];
+    self.speechSynth.delegate = self;
     [self resumeNotifications];
 }
 
@@ -58,25 +56,42 @@ static NSString *MapboxAccessToken = @"Your Mapbox access token";
 }
 
 - (void)resumeNotifications {
-    // TODO: Bridge notification names to Objective-C
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBXTempAlertDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBXTempProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rerouted:) name:MBXTempShouldReRoute object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerAlertLevelDidChange object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerNotificationProgressDidChange object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rerouted:) name:MBRouteControllerShouldReroute object:_navigation];
 }
 
 - (void)suspendNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBXTempAlertDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBXTempProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBXTempShouldReRoute object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerAlertLevelDidChange object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerNotificationProgressDidChange object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerShouldReroute object:_navigation];
 }
 
 - (void)alertLevelDidChange:(NSNotification *)notification {
-    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBXTempRouteControllerAlertLevelDidChangeNotificationRouteProgressKey];
-    // TODO: Bridge MBAlertProgress to Objective-C
+    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerNotificationProgressDidChange];
+    MBRouteStep *upcomingStep = routeProgress.currentLegProgress.upComingStep;
+    
+    NSString *text = nil;
+    if (upcomingStep) {
+        MBAlertLevel alertLevel = routeProgress.currentLegProgress.alertUserLevel;
+        if (alertLevel == MBAlertLevelHigh) {
+            text = upcomingStep.instructions;
+        } else {
+            text = [NSString stringWithFormat:@"In %@ %@",
+                    [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
+                    upcomingStep.instructions];
+        }
+    } else {
+        text = [NSString stringWithFormat:@"In %@ %@",
+                [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
+                routeProgress.currentLegProgress.currentStep.instructions];
+    }
+    
+    [self.speechSynth speakUtterance:[AVSpeechUtterance speechUtteranceWithString:text]];
 }
 
 - (void)progressDidChange:(NSNotification *)notification {
-    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBXTempRouteControllerAlertLevelDidChangeNotificationRouteProgressKey];
+    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey];
     MBRouteStep *upcomingStep = routeProgress.currentLegProgress.upComingStep;
     if (upcomingStep) {
         NSLog(@"In %@ %@", [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
@@ -96,7 +111,7 @@ static NSString *MapboxAccessToken = @"Your Mapbox access token";
     options.includesSteps = YES;
     options.routeShapeResolution = MBRouteShapeResolutionFull;
     
-    [self.directions calculateDirectionsWithOptions:options completionHandler:^(NSArray<MBWaypoint *> * _Nullable waypoints, NSArray<MBRoute *> * _Nullable routes, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [self.directions calculateDirectionsWithOptions:options completionHandler:^(NSArray<MBWaypoint *> * _Nullable waypoints, NSArray<MBRoute *> * _Nullable routes, NSError * _Nullable error) {
         if (!routes.firstObject) {
             return;
         }
@@ -118,6 +133,8 @@ static NSString *MapboxAccessToken = @"Your Mapbox access token";
         
         [self startNavigation:route];
     }];
+    
+    [task resume];
 }
 
 - (void)startNavigation:(MBRoute *)route {

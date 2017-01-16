@@ -5,6 +5,7 @@ import MapboxDirections
 /*
  `AlertLevel` is used to control when and the type of alert notification the user should recieve.
 */
+@objc(MBAlertLevel)
 public enum AlertLevel: Int {
     
     /*
