@@ -14,6 +14,10 @@ target 'MapboxNavigationTests' do
     shared_pods
 end
 
-target 'Example' do
+target 'Example-Swift' do
+    shared_pods
+end
+
+target 'Example-Objective-C' do
     shared_pods
 end
