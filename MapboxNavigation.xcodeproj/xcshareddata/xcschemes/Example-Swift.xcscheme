@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C5ADFBE61DDCC7920011824B"
-               BuildableName = "Example.app"
-               BlueprintName = "Example"
+               BuildableName = "Example-Swift.app"
+               BlueprintName = "Example-Swift"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C5ADFBE61DDCC7920011824B"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BuildableName = "Example-Swift.app"
+            BlueprintName = "Example-Swift"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,8 +56,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C5ADFBE61DDCC7920011824B"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BuildableName = "Example-Swift.app"
+            BlueprintName = "Example-Swift"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -75,8 +75,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C5ADFBE61DDCC7920011824B"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BuildableName = "Example-Swift.app"
+            BlueprintName = "Example-Swift"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

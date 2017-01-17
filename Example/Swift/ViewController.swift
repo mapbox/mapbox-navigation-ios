@@ -15,7 +15,7 @@ import AVFoundation
 
 // A Mapbox access token is required to use the Directions API.
 // https://www.mapbox.com/help/create-api-access-token/
-let MapboxAccessToken = "Your Mapbox access token"
+let MapboxAccessToken = "<#Your Mapbox access token#>"
 
 class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
 

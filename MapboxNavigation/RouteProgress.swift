@@ -5,6 +5,7 @@ import MapboxDirections
 /*
  `AlertLevel` is used to control when and the type of alert notification the user should recieve.
 */
+@objc(MBAlertLevel)
 public enum AlertLevel: Int {
     
     /*
@@ -47,7 +48,8 @@ public enum AlertLevel: Int {
 /*
  `routeProgress` contains all progress information of user along the route, leg and step.
  */
-open class RouteProgress {
+@objc(MBRouteProgress)
+open class RouteProgress: NSObject {
     public let route: Route
 
     /*
@@ -108,11 +110,13 @@ open class RouteProgress {
     public init(route: Route, legIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
+        super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg)
     }
 }
 
-open class RouteLegProgress {
+@objc(MBRouteLegProgress)
+open class RouteLegProgress: NSObject {
     public let leg: RouteLeg
     
     
@@ -226,7 +230,9 @@ open class RouteLegProgress {
     }
 }
 
-open class RouteStepProgress {
+@objc(MBRouteStepProgress)
+open class RouteStepProgress: NSObject {
+
     public let step: RouteStep
 
 
