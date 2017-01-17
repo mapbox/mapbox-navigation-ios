@@ -7,6 +7,8 @@
 
 @interface ViewController () <AVSpeechSynthesizerDelegate>
 @property (nonatomic, weak) IBOutlet MGLMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIView *instructionsView;
+@property (weak, nonatomic) IBOutlet UILabel *instructionsLabel;
 @property (nonatomic, assign) CLLocationCoordinate2D destination;
 @property (nonatomic) MBDirections *directions;
 @property (nonatomic) MBRouteController *navigation;
@@ -93,8 +95,12 @@ static NSString *MapboxAccessToken = @"<#Your Mapbox access token#>";
     MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey];
     MBRouteStep *upcomingStep = routeProgress.currentLegProgress.upComingStep;
     if (upcomingStep) {
-        NSLog(@"In %@ %@", [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
-              upcomingStep.instructions);
+        self.instructionsView.hidden = NO;
+        self.instructionsLabel.text = [NSString stringWithFormat:@"In %@ %@",
+                                       [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
+                                       upcomingStep.instructions];
+    } else {
+        self.instructionsView.hidden = YES;
     }
 }
 
