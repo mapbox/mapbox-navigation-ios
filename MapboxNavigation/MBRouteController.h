@@ -1,7 +1,16 @@
 #import <Foundation/Foundation.h>
 
-static NSString *MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey = @"progress";
 
-static NSString *MBRouteControllerNotificationProgressDidChange = @"RouteControllerProgressDidChange";
-static NSString *MBRouteControllerAlertLevelDidChange = @"RouteControllerAlertLevelDidChange";
-static NSString *MBRouteControllerShouldReroute = @"RouteControllerShouldReroute";
+extern NSString *const MBRouteControllerProgressDidChangeNotificationProgressKey;
+extern NSString *const MBRouteControllerProgressDidChangeNotificationLocationKey;
+extern NSString *const MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey;
+extern NSString *const MBRouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey;
+
+extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey;
+extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey;
+
+extern NSString *const MBRouteControllerNotificationShouldRerouteKey;
+
+extern NSString *const MBRouteControllerNotificationProgressDidChange;
+extern NSString *const MBRouteControllerAlertLevelDidChange;
+extern NSString *const MBRouteControllerShouldReroute;

@@ -1,5 +1,4 @@
 #import <Foundation/Foundation.h>
-#import <CoreLocation/CoreLocation.h>
 
 //! Project version number for MapboxNavigation.
 FOUNDATION_EXPORT double MapboxNavigationVersionNumber;

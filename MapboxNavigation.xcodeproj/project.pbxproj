@@ -14,6 +14,7 @@
 		3592C7881E2CF526003064CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3592C7861E2CF526003064CB /* Main.storyboard */; };
 		3592C78A1E2CF526003064CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3592C7891E2CF526003064CB /* Assets.xcassets */; };
 		3592C78D1E2CF526003064CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3592C78B1E2CF526003064CB /* LaunchScreen.storyboard */; };
+		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70713445B0EB6C76CB7A86B3 /* Pods_Example_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E310830DBF3EFED3E9A072A /* Pods_Example_Swift.framework */; };
 		7B3374BE69A9F7B41373D13E /* Pods_Example_Objective_C.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E2526C2EBC58F2BE52847EF /* Pods_Example_Objective_C.framework */; };
@@ -61,6 +62,7 @@
 		3592C7891E2CF526003064CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Example/Objective-C/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
 		3592C78C1E2CF526003064CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3592C78E1E2CF526003064CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Example/Objective-C/Info.plist"; sourceTree = SOURCE_ROOT; };
+		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
 		3EFEB33CFE9251A637268CBC /* Pods_MapboxNavigationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42E070CD0F41178773D7F5FB /* Pods-MapboxNavigationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigationTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigationTests/Pods-MapboxNavigationTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -125,7 +127,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47D50B8A5FA08F93A6F3F292 /* Pods_Example.framework in Frameworks */,
 				C5C94C1A1DDCD1510097296A /* MapboxNavigation.framework in Frameworks */,
 				70713445B0EB6C76CB7A86B3 /* Pods_Example_Swift.framework in Frameworks */,
 			);
@@ -227,6 +228,7 @@
 			children = (
 				C5ADFBCC1DDCC7840011824B /* MapboxNavigation.h */,
 				35D457A61E2D253100A89946 /* MBRouteController.h */,
+				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
 				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
 				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
@@ -372,7 +374,7 @@
 					C5ADFBC81DDCC7840011824B = {
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = GJZR2MEM28;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					C5ADFBD11DDCC7840011824B = {
@@ -632,6 +634,7 @@
 			files = (
 				C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */,
 				C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */,
+				35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */,
 			);
