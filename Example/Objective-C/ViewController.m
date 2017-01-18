@@ -18,7 +18,6 @@
 
 @implementation ViewController
 
-static NSString *MBXTempProfileIdentifierAutomobileAvoidingTraffic = @"mapbox/driving-traffic";
 static NSString *MapboxAccessToken = @"<#Your Mapbox access token#>";
 
 - (void)viewDidLoad {
@@ -112,7 +111,7 @@ static NSString *MapboxAccessToken = @"<#Your Mapbox access token#>";
     NSArray<MBWaypoint *> *waypoints = @[[[MBWaypoint alloc] initWithCoordinate:self.mapView.userLocation.coordinate coordinateAccuracy:-1 name:nil],
                                          [[MBWaypoint alloc] initWithCoordinate:self.destination coordinateAccuracy:-1 name:nil]];
     
-    MBRouteOptions *options = [[MBRouteOptions alloc] initWithWaypoints:waypoints profileIdentifier:MBXTempProfileIdentifierAutomobileAvoidingTraffic];
+    MBRouteOptions *options = [[MBRouteOptions alloc] initWithWaypoints:waypoints profileIdentifier:MBDirectionsProfileIdentifierAutomobileAvoidingTraffic];
     options.includesSteps = YES;
     options.routeShapeResolution = MBRouteShapeResolutionFull;
     
