@@ -1,16 +1,16 @@
 PODS:
-  - Mapbox-iOS-SDK (3.4.0-beta.7-symbols)
+  - Mapbox-iOS-SDK-symbols (3.4.0-rc.1-symbols)
   - MapboxDirections.swift (0.6.0):
     - Polyline (~> 4.0.0)
   - Polyline (4.0.0)
 
 DEPENDENCIES:
-  - Mapbox-iOS-SDK (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0-beta.7/platform/ios/Mapbox-iOS-SDK-symbols.podspec`)
+  - Mapbox-iOS-SDK-symbols (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0-rc.1/platform/ios/Mapbox-iOS-SDK-symbols.podspec`)
   - MapboxDirections.swift (from `https://github.com/mapbox/MapboxDirections.swift.git`, commit `ceaf58b780fc17ea44a9150041b602d017c1e567`)
 
 EXTERNAL SOURCES:
-  Mapbox-iOS-SDK:
-    :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0-beta.7/platform/ios/Mapbox-iOS-SDK-symbols.podspec
+  Mapbox-iOS-SDK-symbols:
+    :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0-rc.1/platform/ios/Mapbox-iOS-SDK-symbols.podspec
   MapboxDirections.swift:
     :commit: ceaf58b780fc17ea44a9150041b602d017c1e567
     :git: https://github.com/mapbox/MapboxDirections.swift.git
@@ -21,10 +21,10 @@ CHECKOUT OPTIONS:
     :git: https://github.com/mapbox/MapboxDirections.swift.git
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: de477a618e364552cc1ca867c4602ef3b5c46ffa
+  Mapbox-iOS-SDK-symbols: bc87efa7ae4c14c65b42bdbaa75973b4934fc7cc
   MapboxDirections.swift: 4acd753d0079bae4f2fae2b2cbda98922909de09
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
 
-PODFILE CHECKSUM: 53a90412a8dd1453b8cfe332930391d02e80434e
+PODFILE CHECKSUM: 7e3dfb94d4f4342b4c58f46080de411549df8440
 
 COCOAPODS: 1.1.1

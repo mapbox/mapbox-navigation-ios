@@ -39,6 +39,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         
         MGLAccountManager.setAccessToken(MapboxAccessToken)
         
+        mapView.delegate = self
+        
         lengthFormatter.unitStyle = .short
         mapView.userTrackingMode = .follow
         resumeNotifications()
@@ -63,7 +65,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         }
         
         destination = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
-        getRoute(isReroute: false)
+        getRoute(forRerouting: false)
     }
     
     func resumeNotifications() {
@@ -81,7 +83,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
         if mode == .followWithCourse {
             startNavigationButton.titleLabel?.text = "End Navigation"
-        } else {
+        } else if mode == .none {
             startNavigationButton.titleLabel?.text = "Start Navigation"
         }
     }
@@ -123,10 +125,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     // Fired when the user is no longer on the route.
     // A new route should be fetched at this time.
     func rerouted(_ notification: NSNotification) {
-        getRoute(isReroute: true)
+        getRoute(forRerouting: true)
     }
     
-    func getRoute(isReroute: Bool) {
+    func getRoute(forRerouting: Bool) {
         let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination!])
         options.includesSteps = true
         options.routeShapeResolution = .full
@@ -155,7 +157,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             
             
             // Don't fit bounds and show button if rerouting
-            if !isReroute {
+            if !forRerouting {
                 self?.mapView.setVisibleCoordinateBounds(MGLPolyline(coordinates: &coordinates, count: UInt(coordinates.count)).overlayBounds, edgePadding: edgePadding, animated: true)
                 self?.startNavigationButton.isHidden = false
             }
