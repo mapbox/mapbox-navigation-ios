@@ -16,6 +16,8 @@ import AVFoundation
 // A Mapbox access token is required to use the Directions API.
 // https://www.mapbox.com/help/create-api-access-token/
 let MapboxAccessToken = "<#Your Mapbox access token#>"
+let sourceIdentifier = "sourceIdentifier"
+let layerIdentifier = "layerIdentifier"
 
 class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
 
@@ -25,15 +27,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     let lengthFormatter = LengthFormatter()
     lazy var speechSynth = AVSpeechSynthesizer()
+    var isInNavigationMode = false
+    var userRoute: Route?
     
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var instructionView: UIView!
+    @IBOutlet weak var toggleNavigationButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         MGLAccountManager.setAccessToken(MapboxAccessToken)
+        
+        mapView.delegate = self
         
         lengthFormatter.unitStyle = .short
         mapView.userTrackingMode = .follow
@@ -54,6 +61,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         getRoute()
     }
     
+    @IBAction func didToggleNavigation(_ sender: Any) {
+        if isInNavigationMode {
+            endNavigation()
+        } else {
+            startNavigation(userRoute!)
+        }
+        isInNavigationMode = !isInNavigationMode
+    }
+    
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
         NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
@@ -66,21 +82,30 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: navigation)
     }
     
+    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
+        if mode == .followWithCourse {
+            toggleNavigationButton.setTitle("End Navigation", for: .normal)
+        } else {
+            toggleNavigationButton.setTitle("Start Navigation", for: .normal)
+        }
+    }
+    
     // When the alert level changes, this signals the user is ready for a voice announcement
     func alertLevelDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         var text: String
 
+        let distance = roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             // Don't give full instruction with distance if the alert type is high
             if alertLevel == .high {
                 text = upComingStep.instructions
             } else {
-                text = "In \(lengthFormatter.string(fromMeters: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)) \(upComingStep.instructions)"
+                text = "In \(distance) meters \(upComingStep.instructions)"
             }
         } else {
-            text = "In \(lengthFormatter.string(fromMeters: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)) \(routeProgress.currentLegProgress.currentStep.instructions)"
+            text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
         }
         
         let utterance = AVSpeechUtterance(string: text)
@@ -94,7 +119,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
 
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             instructionView.isHidden = false
-            instructionLabel.text = "In \(lengthFormatter.string(fromMeters: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)) \(upComingStep.instructions)"
+            instructionLabel.text = "In \(roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining))m \(upComingStep.instructions)"
         } else {
             instructionView.isHidden = true
         }
@@ -103,6 +128,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     // Fired when the user is no longer on the route.
     // A new route should be fetched at this time.
     func rerouted(_ notification: NSNotification) {
+        speechSynth.stopSpeaking(at: .word)
         getRoute()
     }
     
@@ -113,22 +139,85 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         options.profileIdentifier = MBDirectionsProfileIdentifierAutomobileAvoidingTraffic
         
         _ = directions.calculate(options) { [weak self] (waypoints, routes, error) in
+            guard error == nil else {
+                print(error!)
+                return
+            }
             guard let route = routes?.first else {
                 return
             }
-            self?.mapView.removeAnnotations(self?.mapView.annotations ?? [])
-            var routeCoordinates = route.coordinates!
-            let line = MGLPolyline(coordinates: &routeCoordinates, count: route.coordinateCount)
-            self?.mapView.addAnnotation(line)
+            guard let style = self?.mapView.style else {
+                return
+            }
             
-            self?.startNavigation(route)
+            self?.userRoute = route
+            self?.toggleNavigationButton.isHidden = false
+            
+            // Remove old destination marker
+            self?.removeRoutesFromMap()
+            
+            // Add destination marker
+            let destinationMarker = MGLPointAnnotation()
+            destinationMarker.coordinate = route.coordinates!.last!
+            self?.mapView.addAnnotation(destinationMarker)
+            
+            let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: route.coordinateCount)
+            let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
+            let line = MGLLineStyleLayer(identifier: layerIdentifier, source: geoJSONSource)
+            
+            
+            // Style the line
+            line.lineColor = MGLStyleValue(rawValue: UIColor(red:0.00, green:0.45, blue:0.74, alpha:0.9))
+            line.lineWidth = MGLStyleValue(rawValue: 5)
+            line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+            line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+
+            // Add source and layer
+            style.addSource(geoJSONSource)
+            for layer in style.layers.reversed() {
+                if !(layer is MGLSymbolStyleLayer) {
+                    style.insertLayer(line, above: layer)
+                    return
+                }
+            }
         }
     }
     
     func startNavigation(_ route: Route) {
+        let camera = mapView.camera
+        camera.pitch = 40
+        mapView.setCamera(camera, animated: false)
         mapView.userTrackingMode = .followWithCourse
         navigation = RouteController(route: route)
         navigation?.resume()
+    }
+    
+    func endNavigation() {
+        instructionView.isHidden = true
+        toggleNavigationButton.isHidden = true
+        mapView.userTrackingMode = .none
+        let camera = mapView.camera
+        camera.pitch = 0
+        mapView.setCamera(camera, animated: true)
+        removeRoutesFromMap()
+        navigation?.suspend()
+    }
+    
+    func removeRoutesFromMap() {
+        guard let style = mapView.style else {
+            return
+        }
+        if let line = style.layer(withIdentifier: layerIdentifier) {
+            style.removeLayer(line)
+        }
+        if let source = style.source(withIdentifier: sourceIdentifier) {
+            style.removeSource(source)
+        }
+        mapView.removeAnnotations(mapView.annotations ?? [])
+    }
+    
+    func roundToTens(_ x: CLLocationDistance) -> Int {
+        return 10 * Int(round(x / 10.0))
     }
 }
 
