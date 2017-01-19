@@ -14,9 +14,9 @@ A simple implementation can be viewed in the [Example app](./Example/ViewControl
 
 ## Installation
 
-You'll need to install two projects, `MapboxNavigation.swift` and `MapboxDirections.swift`
+You'll need to install two pods, `MapboxNavigation.swift` and `MapboxDirections.swift`
 
-#### Cocoapods
+#### CocoaPods
 
 Add the following lines to your Podfile:
 
