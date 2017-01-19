@@ -12,6 +12,19 @@ MapboxNavigation.swift provides an API to add turn by turn navigation to your ap
 
 A simple implementation can be viewed in the [Example app](./Example/ViewController.swift).
 
+## Installation
+
+You'll need to install two projects, `MapboxNavigation.swift` and `MapboxDirections.swift`
+
+#### Cocoapods
+
+Add the follow lines to you Podfile:
+
+```sh
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.1'
+pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :tag => 'v0.6.0'
+```
+
 ## Gist of how this works
 
 `RouteController` is given a route. Internally, MapboxNavigation.swift is comparing the route to the users location and looking at 3 principle pieces:
