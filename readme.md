@@ -1,5 +1,7 @@
 # MapboxNavigation.swift
 
+![](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)
+
 MapboxNavigation.swift provides an API to add turn by turn navigation to your app. The basic workflow of how it fits into your app:
 
 1. Provide `RouteController` with a [route](https://github.com/mapbox/MapboxDirections.swift)
