@@ -10,7 +10,7 @@ MapboxNavigation.swift provides an API to add turn by turn navigation to your ap
  * The user should be rerouted
 1. Depending on what is emitted, your app should react accordingly
 
-A simple implementation can be viewed in the [Example app](./Example/ViewController.swift).
+A simple implementation can be viewed in the example app — available in [Objective-C](./Example/Objective-C/ViewController.m) or [Swift](./Example/Swift/ViewController.swift).
 
 ## Gist of how this works
 
