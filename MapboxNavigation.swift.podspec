@@ -39,4 +39,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
 
+  s.dependency "MapboxDirections.swift"
+
 end
