@@ -13,7 +13,6 @@ import Mapbox
 import CoreLocation
 import AVFoundation
 
-// https://www.mapbox.com/help/create-api-access-token/
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 

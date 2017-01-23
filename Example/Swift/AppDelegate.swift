@@ -9,7 +9,8 @@
 import UIKit
 import Mapbox
 
-// A Mapbox access token is required to use the Directions API.
+// A Mapbox access token is required.
+// https://www.mapbox.com/help/create-api-access-token/
 let MapboxAccessToken = "<#Your Mapbox access token#>"
 
 @UIApplicationMain
