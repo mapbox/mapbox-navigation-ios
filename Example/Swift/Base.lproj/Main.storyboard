@@ -61,7 +61,7 @@
                                     <constraint firstAttribute="trailing" secondItem="v1J-hQ-lOT" secondAttribute="trailing" constant="30" id="naI-pR-eIs"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/bobbysud/ciuud50um00h22inovaz7cts2"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/streets-v10"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="latitude">
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>

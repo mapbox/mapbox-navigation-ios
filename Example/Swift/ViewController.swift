@@ -13,9 +13,7 @@ import Mapbox
 import CoreLocation
 import AVFoundation
 
-// A Mapbox access token is required to use the Directions API.
 // https://www.mapbox.com/help/create-api-access-token/
-let MapboxAccessToken = "<#Your Mapbox access token#>"
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
@@ -37,8 +35,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        MGLAccountManager.setAccessToken(MapboxAccessToken)
         
         mapView.delegate = self
         
@@ -108,9 +104,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
         }
         
-        let utterance = AVSpeechUtterance(string: text)
-        speechSynth.delegate = self
-        speechSynth.speak(utterance)
+        speak(text)
     }
     
     // Notifications sent on all location updates
@@ -129,10 +123,21 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     // A new route should be fetched at this time.
     func rerouted(_ notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)
-        getRoute()
+        
+        getRoute {
+            /*
+             **IMPORTANT**
+             
+             When rerouting, you need to give the RouteController a new route.
+             Otherwise, it will continue to compare the user to the old route and continually reroute the user.
+             */
+            self.navigation?.routeProgress = RouteProgress(route: self.userRoute!)
+        }
+
+        speak("Rerouted")
     }
     
-    func getRoute() {
+    func getRoute(didFinish: (()->())? = nil) {
         let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination!])
         options.includesSteps = true
         options.routeShapeResolution = .full
@@ -165,7 +170,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
             let line = MGLLineStyleLayer(identifier: layerIdentifier, source: geoJSONSource)
             
-            
             // Style the line
             line.lineColor = MGLStyleValue(rawValue: UIColor(red:0.00, green:0.45, blue:0.74, alpha:0.9))
             line.lineWidth = MGLStyleValue(rawValue: 5)
@@ -177,10 +181,18 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) {
                     style.insertLayer(line, above: layer)
-                    return
+                    break
                 }
             }
+            
+            didFinish?()
         }
+    }
+    
+    func speak(_ text: String) {
+        let utterance = AVSpeechUtterance(string: text)
+        speechSynth.delegate = self
+        speechSynth.speak(utterance)
     }
     
     func startNavigation(_ route: Route) {

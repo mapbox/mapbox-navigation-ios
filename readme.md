@@ -73,3 +73,11 @@ Alert levels indicate the type of announcement that should be given. The enum ty
 * `medium` - Emitted when the user has [70 seconds](https://github.com/mapbox/MapboxNavigation.swift/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L15) remaining on the route.
 * `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/MapboxNavigation.swift/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
 * `arrive` - Emitted when the user arrives at destination
+
+## Rerouting
+
+In the event of a reroute, it's necessary to update the current route with a new route. Once fetched, you can update the current route by:
+
+```swift
+navigation.routeProgress = RouteProgress(route: newRoute)
+```
