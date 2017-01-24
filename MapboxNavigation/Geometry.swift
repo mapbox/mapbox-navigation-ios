@@ -1,11 +1,11 @@
 import CoreLocation
 import MapboxDirections
 
-typealias LocationRadians = Double
-typealias RadianDistance = Double
-typealias RadianDirection = Double
+public typealias LocationRadians = Double
+public typealias RadianDistance = Double
+public typealias RadianDirection = Double
 
-extension CLLocationDegrees {
+public extension CLLocationDegrees {
     func toRadians() -> LocationRadians {
         return self * M_PI / 180.0
     }
@@ -17,7 +17,7 @@ extension CLLocationDegrees {
 
 let metersPerRadian = 6_373_000.0
 
-struct RadianCoordinate2D {
+public struct RadianCoordinate2D {
     var latitude: LocationRadians
     var longitude: LocationRadians
     
@@ -60,7 +60,7 @@ struct RadianCoordinate2D {
 /*
  Returns the Haversine distance between two coordinates measured in radians.
  */
-func -(left: RadianCoordinate2D, right: RadianCoordinate2D) -> RadianDistance {
+public func -(left: RadianCoordinate2D, right: RadianCoordinate2D) -> RadianDistance {
     let a = pow(sin((right.latitude - left.latitude) / 2), 2)
         + pow(sin((right.longitude - left.longitude) / 2), 2) * cos(left.latitude) * cos(right.latitude)
     return 2 * atan2(sqrt(a), sqrt(1 - a))
@@ -70,12 +70,12 @@ func -(left: RadianCoordinate2D, right: RadianCoordinate2D) -> RadianDistance {
 /*
  Returns the Haversine distance between two coordinates measured in degrees.
  */
-func -(left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> CLLocationDistance {
+public func -(left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> CLLocationDistance {
     return (RadianCoordinate2D(left) - RadianCoordinate2D(right)) * metersPerRadian
 }
 
 
-extension CLLocationCoordinate2D {
+public extension CLLocationCoordinate2D {
     init(_ radianCoordinate: RadianCoordinate2D) {
         latitude = radianCoordinate.latitude.toDegrees()
         longitude = radianCoordinate.longitude.toDegrees()
@@ -94,13 +94,13 @@ extension CLLocationCoordinate2D {
 }
 
 
-typealias LineSegment = (CLLocationCoordinate2D, CLLocationCoordinate2D)
+public typealias LineSegment = (CLLocationCoordinate2D, CLLocationCoordinate2D)
 
 
 /* 
  Returns the intersection of two line segments.
  */
-func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoordinate2D? {
+public func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoordinate2D? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js, in turn adapted from http://jsfiddle.net/justin_c_rounds/Gd2S2/light/
     let denominator = ((line2.1.latitude - line2.0.latitude) * (line1.1.longitude - line1.0.longitude))
         - ((line2.1.longitude - line2.0.longitude) * (line1.1.latitude - line1.0.latitude))
@@ -127,7 +127,7 @@ func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoord
 }
 
 
-struct CoordinateAlongPolyline {
+public struct CoordinateAlongPolyline {
     let coordinate: Array<CLLocationCoordinate2D>.Element
     let index: Array<CLLocationCoordinate2D>.Index
     let distance: CLLocationDistance
@@ -139,7 +139,7 @@ struct CoordinateAlongPolyline {
  
  The returned coordinate may not correspond to one of the polyline’s vertices, but it always lies along the polyline.
 */
-func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D) -> CoordinateAlongPolyline? {
+public func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D) -> CoordinateAlongPolyline? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
     let polyline = polyline, coordinate = coordinate
     guard !polyline.isEmpty else {
@@ -180,7 +180,7 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
 /*
  Returns a subset of the polyline between given coordinates.
  */
-func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> [CLLocationCoordinate2D] {
+public func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> [CLLocationCoordinate2D] {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-line-slice/index.js
     guard !polyline.isEmpty else {
         return []
@@ -206,7 +206,7 @@ func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
 /*
  Returns the distance along a slice of a polyline with the given endpoints.
  */
-func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> CLLocationDistance {
+public func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> CLLocationDistance {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-line-slice/index.js
     guard !line.isEmpty else {
         return 0
@@ -224,7 +224,7 @@ func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordi
 /*
  Returns a coordinate along a polyline at a certain distance from the start of the polyline.
  */
-func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
+public func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/index.js
     var traveled: CLLocationDistance = 0
     for i in 0..<polyline.count {
@@ -304,7 +304,7 @@ public func wrap(_ value: Double, min minValue: Double, max maxValue: Double) ->
 }
 
 
-extension CLLocation {
+public extension CLLocation {
     /*
      Returns a Boolean value indicating whether the receiver is within a given distance of a route step, inclusive.
     */
