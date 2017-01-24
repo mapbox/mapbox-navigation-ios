@@ -2,7 +2,7 @@
 
 [![](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/6fc45a7e2817b859#/builds)
 
-![](https://cldup.com/dqBDqDrVyu.gif)
+![](https://cldup.com/Th0sa6Vnvf.gif)
 > *Example app guiding the user along a route*
 
 MapboxNavigation.swift provides an API to add turn by turn navigation to your app. The basic workflow of how it fits into your app:
