@@ -129,7 +129,7 @@ extension RouteController: CLLocationManagerDelegate {
         if let finalHeading = routeProgress.currentLegProgress.upComingStep?.finalHeading {
             let finalHeadingNormalized = wrap(finalHeading, min: 0, max: 360)
             let userHeadingNormalized = wrap(location.course, min: 0, max: 360)
-            courseMatchesManeuverFinalHeading = abs((finalHeadingNormalized - userHeadingNormalized) - 360) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
+            courseMatchesManeuverFinalHeading = abs((finalHeadingNormalized - userHeadingNormalized)) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion || abs((finalHeadingNormalized - userHeadingNormalized) - 360) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
         }
         
         if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
