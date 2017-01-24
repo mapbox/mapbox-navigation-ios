@@ -44,19 +44,27 @@
                                         </constraints>
                                     </view>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Sl-bV-xyU">
-                                        <rect key="frame" x="132" y="629" width="111" height="30"/>
+                                        <rect key="frame" x="132" y="615" width="111" height="30"/>
                                         <state key="normal" title="Start Navigation"/>
                                         <connections>
                                             <action selector="didToggleNavigation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gd6-mu-4Zl"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press map to select a route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hk0-SM-2Wl">
+                                        <rect key="frame" x="62" y="619" width="251" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Hk0-SM-2Wl" secondAttribute="bottom" constant="27" id="7Oc-HJ-zKe"/>
                                     <constraint firstItem="v1J-hQ-lOT" firstAttribute="top" secondItem="A3N-JT-loC" secondAttribute="top" constant="30" id="C2f-Dr-1w4"/>
                                     <constraint firstItem="8Sl-bV-xyU" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="FIj-BC-6LP"/>
-                                    <constraint firstAttribute="bottom" secondItem="8Sl-bV-xyU" secondAttribute="bottom" constant="8" id="LOb-l9-Iql"/>
+                                    <constraint firstAttribute="bottom" secondItem="8Sl-bV-xyU" secondAttribute="bottom" constant="22" id="LOb-l9-Iql"/>
+                                    <constraint firstItem="Hk0-SM-2Wl" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="O4U-Pg-RJR"/>
                                     <constraint firstItem="v1J-hQ-lOT" firstAttribute="leading" secondItem="A3N-JT-loC" secondAttribute="leading" constant="30" id="UID-OP-Deu"/>
                                     <constraint firstAttribute="trailing" secondItem="v1J-hQ-lOT" secondAttribute="trailing" constant="30" id="naI-pR-eIs"/>
                                 </constraints>
@@ -88,6 +96,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="howToBeginLabel" destination="Hk0-SM-2Wl" id="iU7-G1-DBc"/>
                         <outlet property="instructionLabel" destination="LhY-oz-zsE" id="Juy-cM-l3n"/>
                         <outlet property="instructionView" destination="v1J-hQ-lOT" id="qR9-CZ-Eye"/>
                         <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
