@@ -6,11 +6,11 @@ public typealias RadianDistance = Double
 public typealias RadianDirection = Double
 
 public extension CLLocationDegrees {
-    func toRadians() -> LocationRadians {
+    public func toRadians() -> LocationRadians {
         return self * M_PI / 180.0
     }
     
-    func toDegrees() -> CLLocationDirection {
+    public func toDegrees() -> CLLocationDirection {
         return self * 180.0 / M_PI
     }
 }
@@ -35,7 +35,7 @@ public struct RadianCoordinate2D {
     /*
      Returns direction given two coordinates.
     */
-    func direction(to coordinate: RadianCoordinate2D) -> RadianDirection {
+    public func direction(to coordinate: RadianCoordinate2D) -> RadianDirection {
         let a = sin(coordinate.longitude - longitude) * cos(coordinate.latitude)
         let b = cos(latitude) * sin(coordinate.latitude)
             - sin(latitude) * cos(coordinate.latitude) * cos(coordinate.longitude - longitude)
@@ -46,7 +46,7 @@ public struct RadianCoordinate2D {
     /*
      Returns coordinate at a given distance and direction away from coordinate.
     */
-    func coordinate(at distance: RadianDistance, facing direction: RadianDirection) -> RadianCoordinate2D {
+    public func coordinate(at distance: RadianDistance, facing direction: RadianDirection) -> RadianCoordinate2D {
         let distance = distance, direction = direction
         let otherLatitude = asin(sin(latitude) * cos(distance)
             + cos(latitude) * sin(distance) * cos(direction))
@@ -82,12 +82,12 @@ public extension CLLocationCoordinate2D {
     }
     
     /// Returns the direction from the receiver to the given coordinate.
-    func direction(to coordinate: CLLocationCoordinate2D) -> CLLocationDirection {
+    public func direction(to coordinate: CLLocationCoordinate2D) -> CLLocationDirection {
         return RadianCoordinate2D(self).direction(to: RadianCoordinate2D(coordinate)).toDegrees()
     }
     
     /// Returns a coordinate a certain Haversine distance away in the given direction.
-    func coordinate(at distance: CLLocationDistance, facing direction: CLLocationDirection) -> CLLocationCoordinate2D {
+    public func coordinate(at distance: CLLocationDistance, facing direction: CLLocationDirection) -> CLLocationCoordinate2D {
         let radianCoordinate = RadianCoordinate2D(self).coordinate(at: distance / metersPerRadian, facing: direction.toRadians())
         return CLLocationCoordinate2D(radianCoordinate)
     }
