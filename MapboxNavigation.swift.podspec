@@ -41,4 +41,8 @@ Pod::Spec.new do |s|
 
   s.dependency "MapboxDirections.swift"
 
+  s.xcconfig = {
+    "SWIFT_VERSION" => "3.0"
+  }
+
 end
