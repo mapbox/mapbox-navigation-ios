@@ -320,7 +320,7 @@ extension CLLocation {
 /*
  Returns the smallest angle between two angles
  */
-func smallestAngle(alpha: Double, beta: Double) -> Double {
-    let phi = abs(beta - alpha).truncatingRemainder(dividingBy: 360);
-    return phi > 180 ? 360 - phi : phi;
+func smallestAngle(alpha: CLLocationDegrees, beta: CLLocationDegrees) -> CLLocationDegrees {
+    let phi = abs(beta - alpha).truncatingRemainder(dividingBy: 360)
+    return phi > 180 ? 360 - phi : phi
 }
