@@ -21,12 +21,12 @@ public struct RadianCoordinate2D {
     var latitude: LocationRadians
     var longitude: LocationRadians
     
-    init(latitude: LocationRadians, longitude: LocationRadians) {
+    public init(latitude: LocationRadians, longitude: LocationRadians) {
         self.latitude = latitude
         self.longitude = longitude
     }
     
-    init(_ degreeCoordinate: CLLocationCoordinate2D) {
+    public init(_ degreeCoordinate: CLLocationCoordinate2D) {
         latitude = degreeCoordinate.latitude.toRadians()
         longitude = degreeCoordinate.longitude.toRadians()
     }
@@ -128,9 +128,9 @@ public func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocati
 
 
 public struct CoordinateAlongPolyline {
-    let coordinate: Array<CLLocationCoordinate2D>.Element
-    let index: Array<CLLocationCoordinate2D>.Index
-    let distance: CLLocationDistance
+    public let coordinate: Array<CLLocationCoordinate2D>.Element
+    public let index: Array<CLLocationCoordinate2D>.Index
+    public let distance: CLLocationDistance
 }
 
 
@@ -252,7 +252,7 @@ public func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [C
 /*
  Returns a coordinate along a polyline with x units away from a coordinate
  */
-func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocationDistance, of coordinate: CLLocationCoordinate2D) -> [CLLocationCoordinate2D] {
+public func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocationDistance, of coordinate: CLLocationCoordinate2D) -> [CLLocationCoordinate2D] {
     let startVertex = closestCoordinate(on: polyline, to: coordinate)
     guard startVertex != nil && distance != 0 else {
         return []
