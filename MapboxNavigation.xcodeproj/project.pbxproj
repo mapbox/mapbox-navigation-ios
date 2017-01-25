@@ -23,6 +23,7 @@
 		C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */; };
 		C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09D21DEF636C00BE3C5C /* Fixture.swift */; };
+		C55A00781E3831B900A3DE92 /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D6BAC1DDCF2AE00387F53 /* Constants.swift */; };
 		C5ADFBD81DDCC7840011824B /* MapboxNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBD71DDCC7840011824B /* MapboxNavigationTests.swift */; };
 		C5ADFBEA1DDCC7920011824B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBE91DDCC7920011824B /* AppDelegate.swift */; };
@@ -30,7 +31,6 @@
 		C5ADFBF11DDCC7920011824B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C5ADFBF01DDCC7920011824B /* Assets.xcassets */; };
 		C5ADFBF41DDCC7920011824B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C5ADFBF21DDCC7920011824B /* LaunchScreen.storyboard */; };
 		C5C94C181DDCD0BE0097296A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBEB1DDCC7920011824B /* ViewController.swift */; };
-		C5C94C1A1DDCD1510097296A /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		C5C94C1B1DDCD22B0097296A /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = C5ADFBCC1DDCC7840011824B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* RouteController.swift */; };
 		C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */; };
@@ -39,6 +39,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C55A00791E3831B900A3DE92 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
+			remoteInfo = MapboxNavigation;
+		};
 		C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -47,6 +54,20 @@
 			remoteInfo = MapboxNavigation;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C55A007B1E3831B900A3DE92 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C55A00781E3831B900A3DE92 /* MapboxNavigation.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		076C69A42791C495EF2C1163 /* Pods_MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -127,7 +148,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5C94C1A1DDCD1510097296A /* MapboxNavigation.framework in Frameworks */,
 				70713445B0EB6C76CB7A86B3 /* Pods_Example_Swift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -346,10 +366,12 @@
 				C5ADFBE51DDCC7920011824B /* Resources */,
 				3345DA755046C9524D201B48 /* [CP] Embed Pods Frameworks */,
 				B772C5EA47503FC9D98235EC /* [CP] Copy Pods Resources */,
+				C55A007B1E3831B900A3DE92 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C55A007A1E3831B900A3DE92 /* PBXTargetDependency */,
 			);
 			name = "Example-Swift";
 			productName = Example;
@@ -663,6 +685,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C55A007A1E3831B900A3DE92 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
+			targetProxy = C55A00791E3831B900A3DE92 /* PBXContainerItemProxy */;
+		};
 		C5ADFBD51DDCC7840011824B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
@@ -916,6 +943,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 431AF2244C2C620ABC2BE602 /* Pods-Example-Swift.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Swift/Info.plist";
@@ -930,6 +958,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9724AB936EF4DA9D522A32DE /* Pods-Example-Swift.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Swift/Info.plist";
