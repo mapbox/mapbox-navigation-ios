@@ -31,6 +31,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var instructionView: UIView!
     @IBOutlet weak var toggleNavigationButton: UIButton!
+    @IBOutlet weak var howToBeginLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,6 +157,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             
             self?.userRoute = route
             self?.toggleNavigationButton.isHidden = false
+            self?.howToBeginLabel.isHidden = true
             
             // Remove old destination marker
             self?.removeRoutesFromMap()
@@ -206,6 +208,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     func endNavigation() {
         instructionView.isHidden = true
         toggleNavigationButton.isHidden = true
+        howToBeginLabel.isHidden = false
         mapView.userTrackingMode = .none
         let camera = mapView.camera
         camera.pitch = 0
