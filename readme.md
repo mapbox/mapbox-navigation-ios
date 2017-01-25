@@ -30,8 +30,6 @@ pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirection
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
 ```
 
-Then add `MapboxNavigation.framework` under `Embedded Binaries` on the `General tab`.
-
 ## Gist of how this works
 
 `RouteController` is given a route. Internally, MapboxNavigation.swift is comparing the route to the users location and looking at 3 principle pieces:
