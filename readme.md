@@ -81,3 +81,10 @@ In the event of a reroute, it's necessary to update the current route with a new
 ```swift
 navigation.routeProgress = RouteProgress(route: newRoute)
 ```
+
+## Running the example app
+
+1. If running in the simulator, you can simulate the user location by selecting `Debug` -> `Location` -> `City Bicycle Ride`
+1. Long press any where on a map. This is where you will be routed to.
+1. Press `Start Navigation` to begin
+1. Press `Stop Navigation` to end
