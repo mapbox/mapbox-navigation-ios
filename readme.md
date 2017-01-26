@@ -56,7 +56,6 @@ This library relies heavily on the class `NSNotification` for letting the develo
 * Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver. See [Alerts](#Alert levels). Notification contains 3 keys:
   * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
   * `RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey` - `CLLocationDistance` - The users snapped distance to the end of the route.
-  * `RouteControllerProgressDidChangeNotificationIsFirstAlertForStepKey` - `Bool` - Whether or not the alert level has already changed once on this step.
 
 ### `RouteControllerShouldReroute`
 
