@@ -10,3 +10,8 @@ target 'Example-Swift' do
   platform :ios, '8.0'
   shared_pods
 end
+
+target 'Example-Objective-C' do
+  platform :ios, '8.0'
+  shared_pods
+end

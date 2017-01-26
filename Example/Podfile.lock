@@ -31,6 +31,6 @@ SPEC CHECKSUMS:
   MapboxNavigation.swift: df0f4fbcdc1a281abbedfacb930683845d3c7e34
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
 
-PODFILE CHECKSUM: 3d4f5d6bb25adb3e3d0cb42bd29c99b32da683bb
+PODFILE CHECKSUM: 336d579030dc82241d9cafbcddb8b6086a00b04f
 
 COCOAPODS: 1.2.0.rc.1
