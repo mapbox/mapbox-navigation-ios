@@ -79,6 +79,7 @@ In the event of a reroute, it's necessary to update the current route with a new
 
 ```swift
 navigation.routeProgress = RouteProgress(route: newRoute)
+navigation.routeProgress.currentLegProgress.stepIndex = 0
 ```
 
 ## Running the example app
