@@ -1,6 +1,7 @@
 # MapboxNavigation.swift
 
 [![](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/6fc45a7e2817b859#/builds)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ![](https://cldup.com/Th0sa6Vnvf.gif)
 > *Example app guiding the user along a route*
@@ -17,17 +18,25 @@ MapboxNavigation.swift provides an API to add turn by turn navigation to your ap
 
 A simple implementation can be viewed in the example app — available in [Objective-C](./Example/Objective-C/ViewController.m) or [Swift](./Example/Swift/ViewController.swift).
 
-## Installation
+## Installation options
+
+#### [CocoaPods](https://cocoapods.org/)
 
 You'll need to install two pods, `MapboxNavigation.swift` and `MapboxDirections.swift`
-
-#### CocoaPods
 
 Add the following lines to your Podfile:
 
 ```ruby
 pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => 'ceaf58b780fc17ea44a9150041b602d017c1e567'
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
+```
+
+#### [Carthage](https://github.com/carthage/carthage)
+
+Add the following line to your Cartfile:
+
+```ruby
+github "mapbox/MapboxNavigation.swift" "swift3"
 ```
 
 ## Gist of how this works
