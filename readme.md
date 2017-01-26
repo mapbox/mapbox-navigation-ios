@@ -91,6 +91,10 @@ In the event of a reroute, it's necessary to update the current route with a new
 navigation.routeProgress = RouteProgress(route: newRoute)
 ```
 
+## Examples
+
+We provide examples in Swift and Objective-C. Run `pod install` from the Example folder and open `Example.xcworkspace` to try it out.
+
 ## Running the example app
 
 1. If running in the simulator, you can simulate the user location by selecting `Debug` -> `Location` -> `City Bicycle Ride`
