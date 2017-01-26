@@ -36,7 +36,7 @@ pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigatio
 Add the following line to your Cartfile:
 
 ```ruby
-github "mapbox/MapboxNavigation.swift" "swift3"
+github "mapbox/MapboxNavigation.swift"
 ```
 
 ## Gist of how this works
