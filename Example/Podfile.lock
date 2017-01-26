@@ -2,7 +2,7 @@ PODS:
   - Mapbox-iOS-SDK-symbols (3.4.0-symbols)
   - MapboxDirections.swift (0.6.0):
     - Polyline (~> 4.0.0)
-  - MapboxNavigation.swift (0.0.3):
+  - MapboxNavigation.swift (0.0.4):
     - MapboxDirections.swift
   - Polyline (4.0.0)
 
@@ -28,7 +28,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Mapbox-iOS-SDK-symbols: bd2654585472ca25fe89e9adfc11ef5550020f84
   MapboxDirections.swift: 4acd753d0079bae4f2fae2b2cbda98922909de09
-  MapboxNavigation.swift: df0f4fbcdc1a281abbedfacb930683845d3c7e34
+  MapboxNavigation.swift: 281f0f3dc01bbd06732aac30c769af0dd2948689
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
 
 PODFILE CHECKSUM: 336d579030dc82241d9cafbcddb8b6086a00b04f

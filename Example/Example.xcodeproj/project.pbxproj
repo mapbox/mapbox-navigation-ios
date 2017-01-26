@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		354620B51E3A4FBF00BAD0B3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 354620B41E3A4FBF00BAD0B3 /* main.m */; };
 		35A7DB721E39FA1F000BAB5C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A7DB711E39FA1F000BAB5C /* AppDelegate.swift */; };
 		35A7DB741E39FA1F000BAB5C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A7DB731E39FA1F000BAB5C /* ViewController.swift */; };
 		35A7DB771E39FA1F000BAB5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35A7DB751E39FA1F000BAB5C /* Main.storyboard */; };
 		35A7DB791E39FA1F000BAB5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35A7DB781E39FA1F000BAB5C /* Assets.xcassets */; };
 		35A7DB7C1E39FA1F000BAB5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35A7DB7A1E39FA1F000BAB5C /* LaunchScreen.storyboard */; };
-		35A7DBCA1E3A0382000BAB5C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35A7DBC91E3A0382000BAB5C /* main.m */; };
 		35A7DBCD1E3A0382000BAB5C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35A7DBCC1E3A0382000BAB5C /* AppDelegate.m */; };
 		35A7DBD01E3A0382000BAB5C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35A7DBCF1E3A0382000BAB5C /* ViewController.m */; };
 		35A7DBD31E3A0382000BAB5C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35A7DBD11E3A0382000BAB5C /* Main.storyboard */; };
@@ -24,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		2F7BF92AD83264B84F70B6EC /* Pods_Example_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		354620B41E3A4FBF00BAD0B3 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35A7DB6E1E39FA1F000BAB5C /* Example-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		35A7DB711E39FA1F000BAB5C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = ../Swift/AppDelegate.swift; sourceTree = "<group>"; };
 		35A7DB731E39FA1F000BAB5C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = ../Swift/ViewController.swift; sourceTree = "<group>"; };
@@ -32,7 +33,6 @@
 		35A7DB7B1E39FA1F000BAB5C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35A7DB7D1E39FA1F000BAB5C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Swift/Info.plist; sourceTree = "<group>"; };
 		35A7DBC61E3A0382000BAB5C /* Example-Objective-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Objective-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		35A7DBC91E3A0382000BAB5C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "../Objective-C/main.m"; sourceTree = "<group>"; };
 		35A7DBCB1E3A0382000BAB5C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "../Objective-C/AppDelegate.h"; sourceTree = "<group>"; };
 		35A7DBCC1E3A0382000BAB5C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = "../Objective-C/AppDelegate.m"; sourceTree = "<group>"; };
 		35A7DBCE1E3A0382000BAB5C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = "../Objective-C/ViewController.h"; sourceTree = "<group>"; };
@@ -91,7 +91,8 @@
 		35A7DB651E39FA1F000BAB5C = {
 			isa = PBXGroup;
 			children = (
-				35A7DB701E39FA1F000BAB5C /* Example */,
+				35A7DB921E39FA6C000BAB5C /* Objective-C */,
+				35A7DB911E39FA59000BAB5C /* Swift */,
 				35A7DB6F1E39FA1F000BAB5C /* Products */,
 				2D1F4B3BE7479A0FF65F3EB6 /* Pods */,
 				1BB7ADE271A04651FC64B00D /* Frameworks */,
@@ -107,15 +108,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		35A7DB701E39FA1F000BAB5C /* Example */ = {
-			isa = PBXGroup;
-			children = (
-				35A7DB921E39FA6C000BAB5C /* Objective-C */,
-				35A7DB911E39FA59000BAB5C /* Swift */,
-			);
-			path = Example;
-			sourceTree = "<group>";
-		};
 		35A7DB911E39FA59000BAB5C /* Swift */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,8 +118,8 @@
 				35A7DB7A1E39FA1F000BAB5C /* LaunchScreen.storyboard */,
 				35A7DB7D1E39FA1F000BAB5C /* Info.plist */,
 			);
-			name = Swift;
-			sourceTree = "<group>";
+			path = Swift;
+			sourceTree = SOURCE_ROOT;
 		};
 		35A7DB921E39FA6C000BAB5C /* Objective-C */ = {
 			isa = PBXGroup;
@@ -136,22 +128,13 @@
 				35A7DBCC1E3A0382000BAB5C /* AppDelegate.m */,
 				35A7DBCE1E3A0382000BAB5C /* ViewController.h */,
 				35A7DBCF1E3A0382000BAB5C /* ViewController.m */,
+				354620B41E3A4FBF00BAD0B3 /* main.m */,
 				35A7DBD11E3A0382000BAB5C /* Main.storyboard */,
 				35A7DBD41E3A0382000BAB5C /* Assets.xcassets */,
 				35A7DBD61E3A0382000BAB5C /* LaunchScreen.storyboard */,
 				35A7DBD91E3A0382000BAB5C /* Info.plist */,
-				35A7DBC81E3A0382000BAB5C /* Supporting Files */,
 			);
-			name = "Objective-C";
-			sourceTree = "<group>";
-		};
-		35A7DBC81E3A0382000BAB5C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				35A7DBC91E3A0382000BAB5C /* main.m */,
-			);
-			name = "Supporting Files";
-			path = "Example-Objective-C";
+			path = "Objective-C";
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
@@ -369,8 +352,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				35A7DBD01E3A0382000BAB5C /* ViewController.m in Sources */,
+				354620B51E3A4FBF00BAD0B3 /* main.m in Sources */,
 				35A7DBCD1E3A0382000BAB5C /* AppDelegate.m in Sources */,
-				35A7DBCA1E3A0382000BAB5C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
