@@ -133,8 +133,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
              */
             self.navigation?.routeProgress = RouteProgress(route: self.userRoute!)
         }
-
-        speak("Rerouted")
     }
     
     func getRoute(didFinish: (()->())? = nil) {
