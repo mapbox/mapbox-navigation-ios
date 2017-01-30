@@ -35,7 +35,7 @@ struct RadianCoordinate2D {
     /*
      Returns direction given two coordinates.
     */
-    func direction(to coordinate: RadianCoordinate2D) -> RadianDirection {
+    func direction(to coordinate: RadianCoordinate2D, roundUpToNextCoordinate: Bool = false) -> RadianDirection {
         let a = sin(coordinate.longitude - longitude) * cos(coordinate.latitude)
         let b = cos(latitude) * sin(coordinate.latitude)
             - sin(latitude) * cos(coordinate.latitude) * cos(coordinate.longitude - longitude)
@@ -46,7 +46,7 @@ struct RadianCoordinate2D {
     /*
      Returns coordinate at a given distance and direction away from coordinate.
     */
-    func coordinate(at distance: RadianDistance, facing direction: RadianDirection) -> RadianCoordinate2D {
+    func coordinate(at distance: RadianDistance, facing direction: RadianDirection, roundUpToNextCoordinate: Bool = false) -> RadianCoordinate2D {
         let distance = distance, direction = direction
         let otherLatitude = asin(sin(latitude) * cos(distance)
             + cos(latitude) * sin(distance) * cos(direction))
@@ -82,13 +82,13 @@ extension CLLocationCoordinate2D {
     }
     
     /// Returns the direction from the receiver to the given coordinate.
-    func direction(to coordinate: CLLocationCoordinate2D) -> CLLocationDirection {
+    func direction(to coordinate: CLLocationCoordinate2D, roundUpToNextCoordinate: Bool = false) -> CLLocationDirection {
         return RadianCoordinate2D(self).direction(to: RadianCoordinate2D(coordinate)).toDegrees()
     }
     
     /// Returns a coordinate a certain Haversine distance away in the given direction.
     func coordinate(at distance: CLLocationDistance, facing direction: CLLocationDirection, roundUpToNextCoordinate: Bool = false) -> CLLocationCoordinate2D {
-        let radianCoordinate = RadianCoordinate2D(self).coordinate(at: distance / metersPerRadian, facing: direction.toRadians())
+        let radianCoordinate = RadianCoordinate2D(self).coordinate(at: distance / metersPerRadian, facing: direction.toRadians(), roundUpToNextCoordinate: roundUpToNextCoordinate)
         return CLLocationCoordinate2D(radianCoordinate)
     }
 }
