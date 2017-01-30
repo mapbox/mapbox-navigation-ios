@@ -35,7 +35,7 @@ struct RadianCoordinate2D {
     /*
      Returns direction given two coordinates.
     */
-    func direction(to coordinate: RadianCoordinate2D, roundUpToNextCoordinate: Bool = false) -> RadianDirection {
+    func direction(to coordinate: RadianCoordinate2D) -> RadianDirection {
         let a = sin(coordinate.longitude - longitude) * cos(coordinate.latitude)
         let b = cos(latitude) * sin(coordinate.latitude)
             - sin(latitude) * cos(coordinate.latitude) * cos(coordinate.longitude - longitude)
