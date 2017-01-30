@@ -151,7 +151,7 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
     
     var closestCoordinate: CoordinateAlongPolyline?
     
-    for index in 0..<polyline.count - 1 {
+    for var index in 0..<polyline.count - 1 {
         let segment = (polyline[index], polyline[index + 1])
         let distances = (coordinate - segment.0, coordinate - segment.1)
         
@@ -161,6 +161,10 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
         let perpendicularPoint2 = coordinate.coordinate(at: maxDistance, facing: direction - 90)
         let intersectionPoint = intersection((perpendicularPoint1, perpendicularPoint2), segment)
         let intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
+        
+        if distances.1 < distances.0 {
+            index += 1
+        }
         
         if distances.0 < closestCoordinate?.distance ?? CLLocationDistanceMax {
             closestCoordinate = CoordinateAlongPolyline(coordinate: segment.0, index: index, distance: distances.0)
