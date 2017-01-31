@@ -37,6 +37,11 @@
                BlueprintName = "MapboxNavigationTests"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "MapboxNavigationTests/testLowAlert()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

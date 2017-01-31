@@ -130,8 +130,17 @@ extension RouteController: CLLocationManagerDelegate {
             let userHeadingNormalized = wrap(location.course, min: 0, max: 360)
             courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
         }
-        
-        if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
+
+        // When departing, `userSnapToStepDistanceFromManeuver` is most often less than `RouteControllerManeuverZoneRadius`
+        // since the user will most often be at the beginning of the route, in the maneuver zone
+        if alertLevel == .depart && userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
+            // If the user is close to the maneuver location,
+            // don't give a depature instruction.
+            // Instead, give a `.high` alert.
+            if secondsToEndOfStep <= RouteControllerHighAlertInterval {
+                alertLevel = .high
+            }
+        } else if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
             let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
