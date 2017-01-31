@@ -42,7 +42,7 @@ class MapboxNavigationTests: XCTestCase {
     func testLowAlert() {
         let navigation = RouteController(route: route)
         navigation.resume()
-        let user = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.79163, longitude: -122.412479), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 261, speed: 10, timestamp: Date())
+        let user = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789118, longitude: -122.432209), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
         
         self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 2)
@@ -50,10 +50,10 @@ class MapboxNavigationTests: XCTestCase {
             let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
             let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
             
-            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 1 && round(userDistance) == 1758
+            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 2 && round(userDistance) == 1758
         }
         
-        navigation.routeProgress.currentLegProgress.stepIndex = 0
+        navigation.routeProgress.currentLegProgress.stepIndex = 2
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [user])
         
         waitForExpectations(timeout: waitForInterval)
