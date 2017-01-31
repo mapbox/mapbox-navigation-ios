@@ -133,7 +133,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         // When departing, `userSnapToStepDistanceFromManeuver` is most often less than `RouteControllerManeuverZoneRadius`
         // since the user will most often be at the beginning of the route, in the maneuver zone
-        if alertLevel == .depart && userSnapToStepDistanceFromManeuver >= RouteControllerManeuverZoneRadius {
+        if alertLevel == .depart && userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             // If the user is close to the maneuver location,
             // don't give a depature instruction.
             // Instead, give a `.high` alert.
