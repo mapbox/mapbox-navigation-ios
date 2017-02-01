@@ -45,8 +45,8 @@ struct RadianCoordinate2D {
     
     /*
      Returns coordinate at a given distance and direction away from coordinate.
-    */
-    func coordinate(at distance: RadianDistance, facing direction: RadianDirection, roundUpToNextCoordinate: Bool = false) -> RadianCoordinate2D {
+     */
+    func coordinate(at distance: RadianDistance, facing direction: RadianDirection) -> RadianCoordinate2D {
         let distance = distance, direction = direction
         let otherLatitude = asin(sin(latitude) * cos(distance)
             + cos(latitude) * sin(distance) * cos(direction))
@@ -82,13 +82,13 @@ extension CLLocationCoordinate2D {
     }
     
     /// Returns the direction from the receiver to the given coordinate.
-    func direction(to coordinate: CLLocationCoordinate2D, roundUpToNextCoordinate: Bool = false) -> CLLocationDirection {
+    func direction(to coordinate: CLLocationCoordinate2D) -> CLLocationDirection {
         return RadianCoordinate2D(self).direction(to: RadianCoordinate2D(coordinate)).toDegrees()
     }
     
     /// Returns a coordinate a certain Haversine distance away in the given direction.
-    func coordinate(at distance: CLLocationDistance, facing direction: CLLocationDirection, roundUpToNextCoordinate: Bool = false) -> CLLocationCoordinate2D {
-        let radianCoordinate = RadianCoordinate2D(self).coordinate(at: distance / metersPerRadian, facing: direction.toRadians(), roundUpToNextCoordinate: roundUpToNextCoordinate)
+    func coordinate(at distance: CLLocationDistance, facing direction: CLLocationDirection) -> CLLocationCoordinate2D {
+        let radianCoordinate = RadianCoordinate2D(self).coordinate(at: distance / metersPerRadian, facing: direction.toRadians())
         return CLLocationCoordinate2D(radianCoordinate)
     }
 }
@@ -138,8 +138,8 @@ struct CoordinateAlongPolyline {
  Returns the geographic coordinate along the polyline that is closest to the given coordinate as the crow flies.
  
  The returned coordinate may not correspond to one of the polyline’s vertices, but it always lies along the polyline.
-*/
-func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D, roundUpToNextCoordinate: Bool = false) -> CoordinateAlongPolyline? {
+ */
+func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D) -> CoordinateAlongPolyline? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
     let polyline = polyline, coordinate = coordinate
     guard !polyline.isEmpty else {
@@ -151,7 +151,7 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
     
     var closestCoordinate: CoordinateAlongPolyline?
     
-    for var index in 0..<polyline.count - 1 {
+    for index in 0..<polyline.count - 1 {
         let segment = (polyline[index], polyline[index + 1])
         let distances = (coordinate - segment.0, coordinate - segment.1)
         
@@ -162,15 +162,11 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
         let intersectionPoint = intersection((perpendicularPoint1, perpendicularPoint2), segment)
         let intersectionDistance: CLLocationDistance? = intersectionPoint != nil ? coordinate - intersectionPoint! : nil
         
-        if distances.1 < distances.0 && roundUpToNextCoordinate {
-            index += 1
-        }
-        
         if distances.0 < closestCoordinate?.distance ?? CLLocationDistanceMax {
             closestCoordinate = CoordinateAlongPolyline(coordinate: segment.0, index: index, distance: distances.0)
         }
         if distances.1 < closestCoordinate?.distance ?? CLLocationDistanceMax {
-            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index, distance: distances.1)
+            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index + 1, distance: distances.1)
         }
         if intersectionDistance != nil && intersectionDistance! < closestCoordinate?.distance ?? CLLocationDistanceMax {
             closestCoordinate = CoordinateAlongPolyline(coordinate: intersectionPoint!, index: index, distance: intersectionDistance!)
@@ -228,7 +224,7 @@ func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordi
 /*
  Returns a coordinate along a polyline at a certain distance from the start of the polyline.
  */
-func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D], roundUpToNextCoordinate: Bool = false) -> CLLocationCoordinate2D? {
+func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/index.js
     var traveled: CLLocationDistance = 0
     for i in 0..<polyline.count {
@@ -243,7 +239,7 @@ func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocati
             }
             
             let direction = polyline[i].direction(to: polyline[i - 1]) - 180
-            return polyline[i].coordinate(at: overshoot, facing: direction, roundUpToNextCoordinate: roundUpToNextCoordinate)
+            return polyline[i].coordinate(at: overshoot, facing: direction)
         }
         
         traveled += polyline[i] - polyline[i + 1]
@@ -256,8 +252,8 @@ func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocati
 /*
  Returns a coordinate along a polyline with x units away from a coordinate
  */
-func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocationDistance, of coordinate: CLLocationCoordinate2D, roundUpToNextCoordinate: Bool = false) -> [CLLocationCoordinate2D] {
-    let startVertex = closestCoordinate(on: polyline, to: coordinate, roundUpToNextCoordinate: roundUpToNextCoordinate)
+func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocationDistance, of coordinate: CLLocationCoordinate2D) -> [CLLocationCoordinate2D] {
+    let startVertex = closestCoordinate(on: polyline, to: coordinate)
     guard startVertex != nil && distance != 0 else {
         return []
     }
