@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Route View Controller-->
+        <scene sceneID="Cs3-hm-Rck">
+            <objects>
+                <viewController modalTransitionStyle="crossDissolve" id="2bw-kK-8r6" customClass="RouteViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="THp-y6-1qy"/>
+                        <viewControllerLayoutGuide type="bottom" id="6js-v8-urs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="p8Y-fK-F6C">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8F-ce-HhC">
+                                <rect key="frame" x="0.0" y="20" width="375" height="323.5"/>
+                                <connections>
+                                    <segue destination="3z2-H5-unA" kind="embed" identifier="RouteMapViewController" id="xe9-So-jlT"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRq-fK-Z45">
+                                <rect key="frame" x="0.0" y="343.5" width="375" height="323.5"/>
+                                <connections>
+                                    <segue destination="kIa-c9-1zL" kind="embed" identifier="RouteTableViewController" id="GhH-LH-REi"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="B8F-ce-HhC" secondAttribute="trailing" id="1I3-wZ-P3A"/>
+                            <constraint firstItem="6js-v8-urs" firstAttribute="top" secondItem="XRq-fK-Z45" secondAttribute="bottom" id="1sS-ov-QfF"/>
+                            <constraint firstAttribute="trailing" secondItem="XRq-fK-Z45" secondAttribute="trailing" id="4o1-pQ-mlS"/>
+                            <constraint firstItem="B8F-ce-HhC" firstAttribute="leading" secondItem="p8Y-fK-F6C" secondAttribute="leading" id="5VD-kA-GJ7"/>
+                            <constraint firstItem="B8F-ce-HhC" firstAttribute="height" secondItem="XRq-fK-Z45" secondAttribute="height" id="CxQ-dO-pwW"/>
+                            <constraint firstItem="XRq-fK-Z45" firstAttribute="top" secondItem="B8F-ce-HhC" secondAttribute="bottom" id="WK7-IC-dNV"/>
+                            <constraint firstItem="B8F-ce-HhC" firstAttribute="top" secondItem="THp-y6-1qy" secondAttribute="bottom" id="kpz-ob-zyg"/>
+                            <constraint firstItem="XRq-fK-Z45" firstAttribute="leading" secondItem="p8Y-fK-F6C" secondAttribute="leading" id="lva-Nu-RGk"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f9e-om-j7A" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3214" y="126"/>
+        </scene>
+        <!--Delegate-->
+        <scene sceneID="UYQ-T8-Kjj">
+            <objects>
+                <viewController id="3z2-H5-unA" customClass="RouteMapViewController" customModule="MapboxNavigationUI" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ZZK-63-0V1"/>
+                        <viewControllerLayoutGuide type="bottom" id="fVn-1d-beh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Gvo-VD-DXF">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MapView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
+                                <subviews>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yQ4-ig-aIN">
+                                        <rect key="frame" x="124" y="166" width="134" height="44"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="D6k-mC-uye"/>
+                                            <constraint firstAttribute="width" constant="134" id="S8H-gY-axx"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                                        <inset key="contentEdgeInsets" minX="-8" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <inset key="titleEdgeInsets" minX="16" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="Recenter" image="recenter"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="whiteButton" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="hasBorder" value="NO"/>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="hasShadow" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="recenter:" destination="3z2-H5-unA" eventType="touchUpInside" id="Qzd-Ij-fUb"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.90196078430000004" green="0.89019607840000003" blue="0.87450980389999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" red="0.30819286639999999" green="0.1233434544" blue="0.47417303859999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="yQ4-ig-aIN" firstAttribute="centerX" secondItem="nNr-30-cGD" secondAttribute="centerX" constant="3.5" id="7jk-0e-px2"/>
+                                    <constraint firstAttribute="bottom" secondItem="yQ4-ig-aIN" secondAttribute="bottom" constant="114" id="Ocm-nV-pGj"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="3z2-H5-unA" id="7Np-mq-yjP"/>
+                                </connections>
+                            </view>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" userLabel="Maneuver View">
+                                <rect key="frame" x="0.0" y="8" width="375" height="104"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="104" id="z8N-zg-uyY"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="fR7-CF-mSs" kind="embed" identifier="RouteManeuverPageViewController" id="qxW-Lo-FU3"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
+                            <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
+                            <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
+                            <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="ZZK-63-0V1" secondAttribute="bottom" constant="8" id="UGs-ir-CUT"/>
+                            <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
+                            <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
+                            <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="mapView" destination="nNr-30-cGD" id="iAR-yv-G9p"/>
+                        <outlet property="recenterButton" destination="yQ4-ig-aIN" id="dQa-gg-KMM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VoA-f6-EWh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4007" y="-112"/>
+        </scene>
+        <!--Route Maneuver Page View Controller-->
+        <scene sceneID="MEC-Rr-Kca">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="fR7-CF-mSs" customClass="RouteManeuverPageViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="343" height="96"/>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8NQ-lY-6C3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4770" y="-404"/>
+        </scene>
+        <!--Route Maneuver View Controller-->
+        <scene sceneID="Ew6-Fn-9Vm">
+            <objects>
+                <viewController storyboardIdentifier="RouteManeuverViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Cuq-Dg-ZIW" customClass="RouteManeuverViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="SNT-La-SlU"/>
+                        <viewControllerLayoutGuide type="bottom" id="aWU-Rn-uss"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pTy-lh-WI1">
+                        <rect key="frame" x="0.0" y="0.0" width="343" height="170"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h67-zB-BKz" userLabel="instructionView">
+                                <rect key="frame" x="20" y="0.0" width="303" height="113"/>
+                                <subviews>
+                                    <view alpha="0.75" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="dvV-hd-Sbg" customClass="TurnArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                        <rect key="frame" x="10" y="31.5" width="50" height="50"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="80X-15-Wvm"/>
+                                            <constraint firstAttribute="height" constant="50" id="Enp-GX-jcG"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                <real key="value" value="1.3"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yJp-ub-NDb" userLabel="Gravity View">
+                                        <rect key="frame" x="70" y="18" width="223" height="77"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="0.0" width="223" height="45.5"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="38"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DO NOT TRANSLATE">
+                                                        <attributes>
+                                                            <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                                        <integer key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Elm St NW" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="45.5" width="223" height="31.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                                <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DO NOT TRANSLATE">
+                                                        <attributes>
+                                                            <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                                        <integer key="value" value="1"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="u1L-N9-mMS" firstAttribute="leading" secondItem="BR8-8N-Rhk" secondAttribute="leading" id="EcL-0P-TCH"/>
+                                            <constraint firstAttribute="trailing" secondItem="u1L-N9-mMS" secondAttribute="trailing" id="If1-Ol-nOd"/>
+                                            <constraint firstItem="BR8-8N-Rhk" firstAttribute="trailing" secondItem="u1L-N9-mMS" secondAttribute="trailing" id="OXf-Im-SLc"/>
+                                            <constraint firstAttribute="bottom" secondItem="BR8-8N-Rhk" secondAttribute="bottom" id="WPn-LT-9TY"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45.5" id="YrV-S4-cgu"/>
+                                            <constraint firstItem="BR8-8N-Rhk" firstAttribute="top" secondItem="u1L-N9-mMS" secondAttribute="bottom" id="hsw-Hw-xQt"/>
+                                            <constraint firstItem="u1L-N9-mMS" firstAttribute="top" secondItem="yJp-ub-NDb" secondAttribute="top" id="kfT-2d-dxc"/>
+                                            <constraint firstItem="BR8-8N-Rhk" firstAttribute="leading" secondItem="yJp-ub-NDb" secondAttribute="leading" id="wvz-Fj-7MY"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Fv-nY-OMF" userLabel="StackViewContainer">
+                                        <rect key="frame" x="-3" y="129" width="310" height="40"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7">
+                                                <rect key="frame" x="0.0" y="0.0" width="310" height="40"/>
+                                                <subviews>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-3z-hNh" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="5" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="9u5-JM-rz5"/>
+                                                            <constraint firstAttribute="width" constant="30" id="fvl-d7-GBY"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xwq-ce-lBE" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="35" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="Yj3-WT-VYi"/>
+                                                            <constraint firstAttribute="width" constant="30" id="dF8-Bf-M2X"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eHe-aK-9BX" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="65" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="D5v-3d-Jeh"/>
+                                                            <constraint firstAttribute="width" constant="30" id="tq0-e4-YFe"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="tg6-zK-yeN" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="95" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="30" id="MCS-vE-znn"/>
+                                                            <constraint firstAttribute="height" constant="30" id="cfn-Ge-Det"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1SY-R8-0Ga" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="125" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="30" id="IYA-R3-E7i"/>
+                                                            <constraint firstAttribute="height" constant="30" id="puW-Rk-hfY"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="wG2-Wg-gPO" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="155" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="30" id="SCC-vU-ZoY"/>
+                                                            <constraint firstAttribute="height" constant="30" id="gcm-Hm-TXN"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="y28-An-Esx" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="185" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="30" id="DsZ-2f-pEu"/>
+                                                            <constraint firstAttribute="height" constant="30" id="k78-y0-rs3"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="W9A-Qo-Q2I" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="215" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="18o-rV-gwp"/>
+                                                            <constraint firstAttribute="width" constant="30" id="g9V-Ve-yIw"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Q0R-gA-tRA" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="245" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="CMh-Oa-n2C"/>
+                                                            <constraint firstAttribute="width" constant="30" id="D0i-De-FJJ"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="WfH-xJ-3Pp" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="275" y="5" width="30" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="DAD-7R-XgQ"/>
+                                                            <constraint firstAttribute="width" constant="30" id="KBW-jn-JyL"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <edgeInsets key="layoutMargins" top="5" left="5" bottom="5" right="5"/>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="b4Z-dg-EH7" secondAttribute="trailing" id="0Zo-od-zBF"/>
+                                            <constraint firstItem="b4Z-dg-EH7" firstAttribute="centerX" secondItem="7Fv-nY-OMF" secondAttribute="centerX" id="4Bd-Aw-S81"/>
+                                            <constraint firstAttribute="bottom" secondItem="b4Z-dg-EH7" secondAttribute="bottom" id="HKc-xd-uOS"/>
+                                            <constraint firstItem="b4Z-dg-EH7" firstAttribute="leading" secondItem="7Fv-nY-OMF" secondAttribute="leading" id="dQS-s7-Ka0"/>
+                                            <constraint firstItem="b4Z-dg-EH7" firstAttribute="top" secondItem="7Fv-nY-OMF" secondAttribute="top" id="g95-b2-ag3"/>
+                                        </constraints>
+                                        <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.99030783119999999" green="0.99866314420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstItem="7Fv-nY-OMF" firstAttribute="centerX" secondItem="h67-zB-BKz" secondAttribute="centerX" id="BvF-Iy-PO1"/>
+                                    <constraint firstItem="yJp-ub-NDb" firstAttribute="centerY" secondItem="h67-zB-BKz" secondAttribute="centerY" id="DVL-rd-NQu"/>
+                                    <constraint firstItem="dvV-hd-Sbg" firstAttribute="centerY" secondItem="h67-zB-BKz" secondAttribute="centerY" id="EF2-BP-8mc"/>
+                                    <constraint firstItem="dvV-hd-Sbg" firstAttribute="top" relation="greaterThanOrEqual" secondItem="h67-zB-BKz" secondAttribute="top" constant="4" id="N8k-BY-X3H"/>
+                                    <constraint firstItem="yJp-ub-NDb" firstAttribute="leading" secondItem="dvV-hd-Sbg" secondAttribute="trailing" constant="10" id="OmC-4q-NoQ"/>
+                                    <constraint firstItem="dvV-hd-Sbg" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="10" id="PsH-6T-oqv"/>
+                                    <constraint firstItem="7Fv-nY-OMF" firstAttribute="top" relation="greaterThanOrEqual" secondItem="dvV-hd-Sbg" secondAttribute="bottom" constant="4" id="Rdx-sH-5in"/>
+                                    <constraint firstItem="7Fv-nY-OMF" firstAttribute="top" secondItem="yJp-ub-NDb" secondAttribute="bottom" constant="34" id="bF5-fv-UKb"/>
+                                    <constraint firstAttribute="trailing" secondItem="yJp-ub-NDb" secondAttribute="trailing" constant="10" id="bha-a1-lw5"/>
+                                    <constraint firstItem="yJp-ub-NDb" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" constant="18" id="jIZ-nc-Dxo"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="52"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="h67-zB-BKz" secondAttribute="trailing" constant="20" id="DkR-Vc-y6P"/>
+                            <constraint firstItem="h67-zB-BKz" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" id="Vca-hQ-KCJ"/>
+                            <constraint firstItem="h67-zB-BKz" firstAttribute="leading" secondItem="pTy-lh-WI1" secondAttribute="leading" constant="20" id="iiI-Gx-FLd"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="343" height="170"/>
+                    <connections>
+                        <outlet property="distanceLabel" destination="u1L-N9-mMS" id="trZ-xg-0er"/>
+                        <outlet property="instructionsView" destination="h67-zB-BKz" id="lI2-tx-yjB"/>
+                        <outlet property="stackViewContainer" destination="7Fv-nY-OMF" id="73h-Ih-lpJ"/>
+                        <outlet property="streetLabel" destination="BR8-8N-Rhk" id="ypb-Nm-TKX"/>
+                        <outlet property="turnArrowView" destination="dvV-hd-Sbg" id="PDr-bK-tVy"/>
+                        <outletCollection property="laneViews" destination="0bs-3z-hNh" collectionClass="NSMutableArray" id="gIC-6g-fER"/>
+                        <outletCollection property="laneViews" destination="xwq-ce-lBE" collectionClass="NSMutableArray" id="edh-jJ-BPi"/>
+                        <outletCollection property="laneViews" destination="eHe-aK-9BX" collectionClass="NSMutableArray" id="0wZ-NE-CA8"/>
+                        <outletCollection property="laneViews" destination="tg6-zK-yeN" collectionClass="NSMutableArray" id="aE6-0M-fIe"/>
+                        <outletCollection property="laneViews" destination="1SY-R8-0Ga" collectionClass="NSMutableArray" id="8WT-ue-gmg"/>
+                        <outletCollection property="laneViews" destination="wG2-Wg-gPO" collectionClass="NSMutableArray" id="7hU-ro-LNg"/>
+                        <outletCollection property="laneViews" destination="y28-An-Esx" collectionClass="NSMutableArray" id="Niu-3d-E1l"/>
+                        <outletCollection property="laneViews" destination="W9A-Qo-Q2I" collectionClass="NSMutableArray" id="e9a-yU-B7J"/>
+                        <outletCollection property="laneViews" destination="Q0R-gA-tRA" collectionClass="NSMutableArray" id="8Nq-Qg-9uE"/>
+                        <outletCollection property="laneViews" destination="WfH-xJ-3Pp" collectionClass="NSMutableArray" id="euA-IF-yiA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iiH-rk-KIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4770" y="-210"/>
+        </scene>
+        <!--Route Table View Controller-->
+        <scene sceneID="rc4-rm-VzX">
+            <objects>
+                <viewController storyboardIdentifier="RouteTableViewIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kIa-c9-1zL" customClass="RouteTableViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dPf-IQ-kzY"/>
+                        <viewControllerLayoutGuide type="bottom" id="RNX-I0-vhR"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="o7f-N6-6rQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="meX-oz-5Hs">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="293"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RouteTableViewCellId" rowHeight="118" id="6gn-fK-aZY" customClass="RouteTableViewCell" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="118"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6gn-fK-aZY" id="th9-AU-lrv">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="118"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view clearsContextBeforeDrawing="NO" alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gqs-fG-dsb">
+                                                    <rect key="frame" x="8" y="40" width="50" height="50"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="IvO-Ya-D7A"/>
+                                                        <constraint firstAttribute="width" constant="50" id="zRu-fY-JHW"/>
+                                                    </constraints>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="subtitleLabel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7x-Wj-c7z">
+                                                    <rect key="frame" x="58" y="48" width="99" height="60"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.58039215690000001" green="0.58039215690000001" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <attributedString key="userComments">
+                                                        <fragment content="DO NOT TRANSLATE">
+                                                            <attributes>
+                                                                <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                                            <integer key="value" value="2"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="titleLabel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcw-K2-mfp">
+                                                    <rect key="frame" x="58" y="25" width="67" height="20"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                    <attributedString key="userComments">
+                                                        <fragment content="DO NOT TRANSLATE">
+                                                            <attributes>
+                                                                <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                                            <integer key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uu2-ej-daK">
+                                                    <rect key="frame" x="16" y="8" width="343" height="1"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="1" id="bEv-mt-Xie"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="dashedLength">
+                                                            <integer key="value" value="2"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="dashedGap">
+                                                            <integer key="value" value="3"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </view>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="fcw-K2-mfp" firstAttribute="top" secondItem="Uu2-ej-daK" secondAttribute="bottom" constant="16" id="Ac2-mN-LvO"/>
+                                                <constraint firstItem="fcw-K2-mfp" firstAttribute="leading" secondItem="Gqs-fG-dsb" secondAttribute="trailing" id="Dyf-g6-bOz"/>
+                                                <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="fcw-K2-mfp" secondAttribute="trailing" constant="8" id="FG8-Lc-6xa"/>
+                                                <constraint firstAttribute="topMargin" secondItem="Uu2-ej-daK" secondAttribute="top" id="MPx-X6-dSs"/>
+                                                <constraint firstItem="Uu2-ej-daK" firstAttribute="leading" secondItem="th9-AU-lrv" secondAttribute="leadingMargin" constant="8" id="Z9Z-ly-ivH"/>
+                                                <constraint firstItem="Gqs-fG-dsb" firstAttribute="centerY" secondItem="th9-AU-lrv" secondAttribute="centerY" constant="6" id="h0v-YM-Gtq"/>
+                                                <constraint firstItem="fcw-K2-mfp" firstAttribute="leading" secondItem="w7x-Wj-c7z" secondAttribute="leading" id="iBf-2E-i25"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Uu2-ej-daK" secondAttribute="trailing" constant="8" id="iYH-3G-BRw"/>
+                                                <constraint firstItem="Gqs-fG-dsb" firstAttribute="leading" secondItem="th9-AU-lrv" secondAttribute="leading" constant="8" id="mlj-0n-aFb"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="w7x-Wj-c7z" secondAttribute="bottom" constant="2" id="n6p-Hc-vD8"/>
+                                                <constraint firstItem="w7x-Wj-c7z" firstAttribute="top" secondItem="fcw-K2-mfp" secondAttribute="bottom" constant="3" id="wkg-Ui-kIl"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="subtitleLabel" destination="w7x-Wj-c7z" id="AjP-Pn-Rh4"/>
+                                            <outlet property="titleLabel" destination="fcw-K2-mfp" id="bCh-Vs-Gs8"/>
+                                            <outlet property="turnArrowView" destination="Gqs-fG-dsb" id="gpV-uD-w4v"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="kIa-c9-1zL" id="WCj-AM-TKH"/>
+                                    <outlet property="delegate" destination="kIa-c9-1zL" id="jKi-0w-Mhu"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="meX-oz-5Hs" firstAttribute="leading" secondItem="o7f-N6-6rQ" secondAttribute="leading" id="QoL-Xd-w61"/>
+                            <constraint firstAttribute="top" secondItem="meX-oz-5Hs" secondAttribute="top" id="UN6-wb-j0d"/>
+                            <constraint firstAttribute="bottom" secondItem="meX-oz-5Hs" secondAttribute="bottom" constant="30" id="jUJ-wH-I9N"/>
+                            <constraint firstAttribute="trailing" secondItem="meX-oz-5Hs" secondAttribute="trailing" id="oAt-Nm-aYN"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="headerView" destination="eu5-2S-xpm" id="5gW-Kt-g0v"/>
+                        <outlet property="tableView" destination="meX-oz-5Hs" id="IGD-za-lCJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vUo-Ag-frn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="bHS-Pq-Ysg" userLabel="Exit" sceneMemberID="exit"/>
+                <view contentMode="scaleToFill" id="eu5-2S-xpm" customClass="RouteTableViewHeaderView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="0.0" width="371" height="106"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MEj-M2-Aqd">
+                            <rect key="frame" x="0.0" y="0.0" width="100" height="3"/>
+                            <color key="backgroundColor" red="0.55182963610000002" green="0.348516196" blue="0.72650402780000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="100" id="Dyb-zf-R8A"/>
+                                <constraint firstAttribute="height" constant="3" id="XWE-Ju-Xz5"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l2B-fb-Dkb" customClass="StyleButton" customModule="MapboxNavigationUI" customModuleProvider="target">
+                            <rect key="frame" x="275" y="37" width="78" height="40"/>
+                            <color key="backgroundColor" red="0.70588235290000001" green="0.23529411759999999" blue="0.19215686269999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="xK5-tu-mEt"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <inset key="contentEdgeInsets" minX="12" minY="0.0" maxX="12" maxY="0.0"/>
+                            <state key="normal" title="Cancel">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <segue destination="bHS-Pq-Ysg" kind="unwind" unwindAction="unwindToPreview:" id="W0T-iy-F8H"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                            <rect key="frame" x="18" y="26" width="93" height="31"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="30"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                            <attributedString key="userComments">
+                                <fragment content="DO NOT TRANSLATE">
+                                    <attributes>
+                                        <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <imageView userInteractionEnabled="NO" alpha="0.25" contentMode="center" horizontalHuggingPriority="251" verticalCompressionResistancePriority="749" image="scroll" translatesAutoresizingMaskIntoConstraints="NO" id="Ocd-S3-D0H">
+                            <rect key="frame" x="178" y="12" width="16" height="16"/>
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Arrive at 10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                            <rect key="frame" x="18" y="61" width="136" height="24"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                            <attributedString key="userComments">
+                                <fragment content="DO NOT TRANSLATE">
+                                    <attributes>
+                                        <font key="NSFont" metaFont="smallSystem"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                    <integer key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="8.3 mi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-ya-mrD" userLabel="distanceRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                            <rect key="frame" x="123" y="27" width="81" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="29"/>
+                            <color key="textColor" red="0.60179937490000002" green="0.60179937490000002" blue="0.60179937490000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                            <attributedString key="userComments">
+                                <fragment content="DO NOT TRANSLATE">
+                                    <attributes>
+                                        <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                    <integer key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="HRl-MT-kqB" firstAttribute="top" secondItem="eu5-2S-xpm" secondAttribute="top" constant="61" id="0QJ-0r-cKx"/>
+                        <constraint firstItem="MEj-M2-Aqd" firstAttribute="top" secondItem="eu5-2S-xpm" secondAttribute="top" id="3A2-8d-UlI"/>
+                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6dE-ya-mrD" secondAttribute="trailing" constant="2" id="6Ww-s0-YH1"/>
+                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="centerY" secondItem="eu5-2S-xpm" secondAttribute="centerY" constant="4" id="DfI-BO-TdB"/>
+                        <constraint firstItem="MEj-M2-Aqd" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" id="ZC8-MR-XH9"/>
+                        <constraint firstItem="82H-sg-SOL" firstAttribute="top" secondItem="eu5-2S-xpm" secondAttribute="top" constant="26" id="aDc-I4-Qcb"/>
+                        <constraint firstItem="6dE-ya-mrD" firstAttribute="baseline" secondItem="82H-sg-SOL" secondAttribute="baseline" id="b9g-9v-bad"/>
+                        <constraint firstItem="Ocd-S3-D0H" firstAttribute="centerX" secondItem="eu5-2S-xpm" secondAttribute="centerX" id="bhq-j0-ugw"/>
+                        <constraint firstItem="HRl-MT-kqB" firstAttribute="leading" secondItem="82H-sg-SOL" secondAttribute="leading" id="cCb-33-Qxw"/>
+                        <constraint firstAttribute="trailing" secondItem="l2B-fb-Dkb" secondAttribute="trailing" constant="18" id="gYj-gb-phz"/>
+                        <constraint firstItem="Ocd-S3-D0H" firstAttribute="top" secondItem="eu5-2S-xpm" secondAttribute="top" constant="12" id="joX-ny-E0y"/>
+                        <constraint firstItem="HRl-MT-kqB" firstAttribute="top" secondItem="82H-sg-SOL" secondAttribute="bottom" constant="4" id="oJl-ZQ-uaE"/>
+                        <constraint firstItem="6dE-ya-mrD" firstAttribute="leading" secondItem="82H-sg-SOL" secondAttribute="trailing" constant="12" id="tkr-Z0-5C8"/>
+                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="HRl-MT-kqB" secondAttribute="trailing" constant="2" id="wIB-2g-U4a"/>
+                        <constraint firstItem="82H-sg-SOL" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="18" id="xZi-qh-acM"/>
+                        <constraint firstItem="6dE-ya-mrD" firstAttribute="top" secondItem="82H-sg-SOL" secondAttribute="top" constant="1" id="yIk-NH-4CS"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="progress">
+                            <real key="value" value="0.5"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="distanceRemaining" destination="6dE-ya-mrD" id="Qg0-hZ-tkK"/>
+                        <outlet property="etaLabel" destination="HRl-MT-kqB" id="Nvg-Jp-KsB"/>
+                        <outlet property="progressBar" destination="MEj-M2-Aqd" id="2U4-W6-rv9"/>
+                        <outlet property="progressBarWidthConstraint" destination="Dyb-zf-R8A" id="Jz1-i2-QOe"/>
+                        <outlet property="timeRemaining" destination="82H-sg-SOL" id="tfh-39-juV"/>
+                    </connections>
+                </view>
+            </objects>
+            <point key="canvasLocation" x="4007" y="467"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="recenter" width="16" height="16"/>
+        <image name="scroll" width="16" height="16"/>
+    </resources>
+</document>

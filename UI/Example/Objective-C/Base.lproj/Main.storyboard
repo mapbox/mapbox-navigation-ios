@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D17a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X5o-6Y-yo1" customClass="MGLMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="hlo-fZ-gUJ" appends="YES" id="ycc-1o-2ZG"/>
+                                </connections>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sBM-NO-zIk">
+                                <rect key="frame" x="30" y="30" width="315" height="80"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Utc-y1-Iha">
+                                        <rect key="frame" x="8" y="30" width="307" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Utc-y1-Iha" secondAttribute="trailing" id="Ib9-d1-CH2"/>
+                                    <constraint firstItem="Utc-y1-Iha" firstAttribute="centerX" secondItem="sBM-NO-zIk" secondAttribute="centerX" constant="4" id="UIX-xm-vHd"/>
+                                    <constraint firstItem="Utc-y1-Iha" firstAttribute="centerY" secondItem="sBM-NO-zIk" secondAttribute="centerY" id="gj7-Bd-Huc"/>
+                                    <constraint firstItem="Utc-y1-Iha" firstAttribute="leading" secondItem="sBM-NO-zIk" secondAttribute="leading" constant="8" id="lnb-ZV-hbU"/>
+                                    <constraint firstAttribute="height" constant="80" id="nTE-Gi-vy1"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="X5o-6Y-yo1" secondAttribute="bottom" id="8Z9-5t-M4m"/>
+                            <constraint firstItem="X5o-6Y-yo1" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="CTp-Sz-jti"/>
+                            <constraint firstItem="sBM-NO-zIk" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="30" id="HL9-d7-ssp"/>
+                            <constraint firstItem="sBM-NO-zIk" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="30" id="HRi-jc-Iow"/>
+                            <constraint firstItem="X5o-6Y-yo1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="JR0-K2-7uj"/>
+                            <constraint firstAttribute="trailing" secondItem="sBM-NO-zIk" secondAttribute="trailing" constant="30" id="N8i-VD-qaR"/>
+                            <constraint firstAttribute="trailing" secondItem="X5o-6Y-yo1" secondAttribute="trailing" id="csh-ZA-ol7"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="instructionsLabel" destination="Utc-y1-Iha" id="fD1-Uc-OE7"/>
+                        <outlet property="instructionsView" destination="sBM-NO-zIk" id="QlJ-Ng-v4Z"/>
+                        <outlet property="mapView" destination="X5o-6Y-yo1" id="mhJ-rm-dAI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="hlo-fZ-gUJ">
+                    <connections>
+                        <action selector="didLongPress:" destination="BYZ-38-t0r" id="c5y-u3-UpV"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-436" y="103"/>
+        </scene>
+    </scenes>
+</document>

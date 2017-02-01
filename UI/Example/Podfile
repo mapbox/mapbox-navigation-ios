@@ -1,0 +1,17 @@
+use_frameworks!
+
+def shared_pods
+  pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :branch => 'swift3'
+  pod 'MapboxNavigation.swift', :path => '../../'
+  pod 'MapboxNavigationUI.swift', :path => '..'
+end
+
+target 'Example-Swift' do
+  platform :ios, '9.0'
+  shared_pods
+end
+
+target 'Example-Objective-C' do
+  platform :ios, '9.0'
+  shared_pods
+end
