@@ -217,7 +217,7 @@ class GeometryTests: XCTestCase {
         
         XCTAssertEqualWithAccuracy(line1Out.last!.latitude, 22.051208078134735, accuracy: 0.001)
         XCTAssertEqualWithAccuracy(line1Out.last!.longitude, -97.7384672234217, accuracy: 0.001)
-        XCTAssertEqual(sliced.count, 3)
+        XCTAssertEqual(sliced.count, 2)
         
         // turf-line-slice -- vertical
         let vertical = [
