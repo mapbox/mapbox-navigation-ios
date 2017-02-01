@@ -45,7 +45,7 @@ struct RadianCoordinate2D {
     
     /*
      Returns coordinate at a given distance and direction away from coordinate.
-     */
+    */
     func coordinate(at distance: RadianDistance, facing direction: RadianDirection) -> RadianCoordinate2D {
         let distance = distance, direction = direction
         let otherLatitude = asin(sin(latitude) * cos(distance)
@@ -138,7 +138,7 @@ struct CoordinateAlongPolyline {
  Returns the geographic coordinate along the polyline that is closest to the given coordinate as the crow flies.
  
  The returned coordinate may not correspond to one of the polyline’s vertices, but it always lies along the polyline.
- */
+*/
 func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D) -> CoordinateAlongPolyline? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
     let polyline = polyline, coordinate = coordinate
