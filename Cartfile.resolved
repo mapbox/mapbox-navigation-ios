@@ -1,2 +1,3 @@
 github "superpeteblaze/Polyline" "19ff9581d8ff7e2d1c57afd6df3999dc1b5414b4"
+github "aws/aws-sdk-ios" "2.5.0"
 github "mapbox/MapboxDirections.swift" "581f246ae4f821a62af6bbe8c4ea1aac67b0cf9b"

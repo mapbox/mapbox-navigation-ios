@@ -1,1 +1,2 @@
+github "aws/aws-sdk-ios"
 github "mapbox/MapboxDirections.swift" "swift3"

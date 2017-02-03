@@ -21,6 +21,7 @@
 		35A7DBD51E3A0382000BAB5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35A7DBD41E3A0382000BAB5C /* Assets.xcassets */; };
 		35A7DBD81E3A0382000BAB5C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35A7DBD61E3A0382000BAB5C /* LaunchScreen.storyboard */; };
 		BDA0DDC26E6BDDC8190EACDC /* Pods_Example_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F7BF92AD83264B84F70B6EC /* Pods_Example_Swift.framework */; };
+		C5FF92631E44130E00A6E301 /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5FF92621E44130E00A6E301 /* Instructions.plist */; };
 		D2C5E921C062412DEFC12998 /* Pods_Example_Objective_C.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D6D7AE908BC1D387E05C8B8 /* Pods_Example_Objective_C.framework */; };
 /* End PBXBuildFile section */
 
@@ -70,6 +71,7 @@
 		82F5C6C0B0CA4B6DCF45F457 /* Pods-Example-Objective-C.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Objective-C.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example-Objective-C/Pods-Example-Objective-C.debug.xcconfig"; sourceTree = "<group>"; };
 		9D6D7AE908BC1D387E05C8B8 /* Pods_Example_Objective_C.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Objective_C.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A4B6F04F8F2AC46B4E8D57EB /* Pods-Example-Objective-C.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Objective-C.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example-Objective-C/Pods-Example-Objective-C.release.xcconfig"; sourceTree = "<group>"; };
+		C5FF92621E44130E00A6E301 /* Instructions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Instructions.plist; sourceTree = "<group>"; };
 		E5A12A8B88045AE63B3037DA /* Pods-Example-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example-Swift/Pods-Example-Swift.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -172,6 +174,7 @@
 		35A7DB911E39FA59000BAB5C /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				C5FF92621E44130E00A6E301 /* Instructions.plist */,
 				35A7DB711E39FA1F000BAB5C /* AppDelegate.swift */,
 				35A7DB731E39FA1F000BAB5C /* ViewController.swift */,
 				35A7DB751E39FA1F000BAB5C /* Main.storyboard */,
@@ -352,6 +355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35A7DB7C1E39FA1F000BAB5C /* LaunchScreen.storyboard in Resources */,
+				C5FF92631E44130E00A6E301 /* Instructions.plist in Resources */,
 				35A7DB791E39FA1F000BAB5C /* Assets.xcassets in Resources */,
 				35A7DB771E39FA1F000BAB5C /* Main.storyboard in Resources */,
 			);
@@ -764,6 +768,7 @@
 				354620C81E3A543A00BAD0B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		354620D41E3A545100BAD0B3 /* Build configuration list for PBXNativeTarget "Example-Objective-C Tests" */ = {
 			isa = XCConfigurationList;
@@ -772,6 +777,7 @@
 				354620D61E3A545100BAD0B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		35A7DB691E39FA1F000BAB5C /* Build configuration list for PBXProject "Example" */ = {
 			isa = XCConfigurationList;

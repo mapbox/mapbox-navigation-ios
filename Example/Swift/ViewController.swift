@@ -24,6 +24,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     let lengthFormatter = LengthFormatter()
     lazy var speechSynth = AVSpeechSynthesizer()
+    var routeVoiceController = RouteVoiceController()
     var isInNavigationMode = false
     var userRoute: Route?
     
@@ -46,6 +47,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     override func viewDidDisappear(_ animated: Bool) {
         suspendNotifications()
         navigation?.suspend()
+        routeVoiceController.suspendNotifications()
     }
     
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -104,7 +106,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
         }
         
-        speak(text)
+//        speak(text)
     }
     
     // Notifications sent on all location updates
