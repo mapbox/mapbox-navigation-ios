@@ -6,25 +6,57 @@ import AWSPolly
 public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     lazy var speechSynth = AVSpeechSynthesizer()
+    let audioPlayer = AVPlayer()
     let maneuverVoiceDistanceFormatter = DistanceFormatter(approximate: true, forVoiceUse: true)
     let routeStepFormatter = RouteStepFormatter()
     var recentlyAnnouncedRouteStep: RouteStep?
-    var announcementTimer: Timer!
     var fallbackText: String!
-    let audioPlayer = AVPlayer()
+    var useDefaultVoice: Bool
     
-    let AwsRegion = AWSRegionType.USEast1
     
-    public override init() {
+    /**
+     Volume of audioPlayer. Used only for Polly instructions.
+     */
+    public var volume: Float {
+        get {
+            return audioPlayer.volume
+        }
+        set {
+            audioPlayer.volume = newValue
+        }
+    }
+    
+    
+    /**
+     Forces Polly voice to always be of specified type. If not set, a localized voice will be used
+     */
+    public var globalVoiceId: AWSPollyVoiceId?
+    
+    
+    /**
+     SSML option which controls at which speed Polly instructions are read.
+     */
+    public var instructionVoiceSpeedRate = 1.08
+    
+    
+    /**
+     SSML option that specifies the voice loudness.
+     */
+    public var instructionVoiceVolume = "x-loud"
+    
+    
+    public init(regionType: AWSRegionType = AWSRegionType.USEast1, identityPoolId: String?) {
+        if let identityPoolId = identityPoolId {
+            self.useDefaultVoice = false
+            let credentialsProvider = AWSCognitoCredentialsProvider(regionType:regionType, identityPoolId: identityPoolId)
+            let configuration = AWSServiceConfiguration(region:regionType, credentialsProvider:credentialsProvider)
+            AWSServiceManager.default().defaultServiceConfiguration = configuration
+        } else {
+            self.useDefaultVoice = true
+        }
         super.init()
         maneuverVoiceDistanceFormatter.unitStyle = .long
         resumeNotifications()
-        
-        let credentialsProvider = AWSCognitoCredentialsProvider(regionType:.USEast1, identityPoolId: "")
-        let configuration = AWSServiceConfiguration(region:.USEast1, credentialsProvider:credentialsProvider)
-        AWSServiceManager.default().defaultServiceConfiguration = configuration
-        
-        audioPlayer.volume = 3
     }
     
     deinit {
@@ -47,17 +79,12 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
-    func reRoute(notification: NSNotification) {
+    public func stopVoice() {
         speechSynth.stopSpeaking(at: .word)
     }
     
-    func startAnnouncementTimer() {
-        announcementTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(resetAnnouncementTimer), userInfo: nil, repeats: false)
-    }
-    
-    func resetAnnouncementTimer() {
-        recentlyAnnouncedRouteStep = nil
-        announcementTimer.invalidate()
+    func reRoute(notification: NSNotification) {
+        stopVoice()
     }
     
     func audioPlayerDidFinishPlaying(notification: NSNotification) {
@@ -96,7 +123,6 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
     
-    
     func alertLevelDidChange(notification: NSNotification) {
         guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
             assert(false)
@@ -111,12 +137,14 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             return
         }
         
-        let text = speechString(notification: notification, markUpWithSSML: true)
-        speak(text, notification: notification)
-        
-        // Set recentlyAnnouncedRouteStep to the current step and start the buffer timer
+        // Set recentlyAnnouncedRouteStep to the current step
         recentlyAnnouncedRouteStep = routeProgress.currentLegProgress.currentStep
-        startAnnouncementTimer()
+
+        if useDefaultVoice {
+            speakFallBack(speechString(notification: notification, markUpWithSSML: false))
+        } else {
+            speakWithPolly(speechString(notification: notification, markUpWithSSML: true))
+        }
     }
     
     func speechString(notification: NSNotification, markUpWithSSML: Bool) -> String {
@@ -185,7 +213,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         return road
     }
     
-    func speak(_ text: String, notification: NSNotification) {
+    func speakWithPolly(_ text: String) {
         assert(!text.isEmpty)
         
         speechSynth.delegate = self
@@ -200,32 +228,33 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             countryCode = langs[1]
         }
         
-        fallbackText = speechString(notification: notification, markUpWithSSML: false)
-        
-        switch (langCode, countryCode) {
-        case ("de", _):
-            input.voiceId = .marlene
-        case ("en", "GB"), ("en", "CA"):
-            input.voiceId = .joanna
-        case ("en", "AU"):
-            input.voiceId = .nicole
-        case ("en", "IN"):
-            input.voiceId = .raveena
-        case ("en", _):
-            input.voiceId = .joanna
-        case ("fr", _):
-            input.voiceId = .celine
-        case ("nl", _):
-            input.voiceId = .lotte
-        default:
-            speakFallBack(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
-            return
+        if let voiceId = globalVoiceId {
+            input.voiceId = voiceId
+        } else {
+            switch (langCode, countryCode) {
+            case ("de", _):
+                input.voiceId = .marlene
+            case ("en", "GB"), ("en", "CA"):
+                input.voiceId = .joanna
+            case ("en", "AU"):
+                input.voiceId = .nicole
+            case ("en", "IN"):
+                input.voiceId = .raveena
+            case ("en", _):
+                input.voiceId = .joanna
+            case ("fr", _):
+                input.voiceId = .celine
+            case ("nl", _):
+                input.voiceId = .lotte
+            default:
+                input.voiceId = .joanna
+                return
+            }
         }
         
-        input.text = "<speak><prosody volume='x-loud' rate='1.08'>\(text)</prosody></speak>"
+        input.text = "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(text)</prosody></speak>"
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
-        
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
             guard let strongSelf = self else {
                 return nil
@@ -244,6 +273,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             if let currentItem = strongSelf.audioPlayer.currentItem {
                 currentItem.removeObserver(strongSelf, forKeyPath: "status")
             }
+            
             let playerItem = AVPlayerItem(url: url as URL)
             strongSelf.audioPlayer.replaceCurrentItem(with: playerItem)
             
@@ -253,13 +283,14 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
     
-    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "status" {
             do {
                 try duckAudio()
             } catch {
                 print(error)
             }
+            
             if let error = audioPlayer.currentItem?.error {
                 self.speakFallBack(fallbackText, error: error.localizedDescription)
             } else {
@@ -269,7 +300,12 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     
-    func speakFallBack(_ text: String, error: String) {
+    func speakFallBack(_ text: String, error: String? = nil) {
+        // Note why it failed
+        if let error = error {
+            print(error)
+        }
+        
         let utterance = AVSpeechUtterance(string: text)
         
         // change the rate of speech for iOS 8
