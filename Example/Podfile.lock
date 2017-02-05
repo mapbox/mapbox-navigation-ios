@@ -1,24 +1,34 @@
 PODS:
-  - Mapbox-iOS-SDK-symbols (3.4.0-symbols)
+  - Mapbox-iOS-SDK (3.4.1)
   - MapboxDirections.swift (0.6.0):
     - Polyline (~> 4.0.0)
   - MapboxNavigation.swift (0.0.4):
     - MapboxDirections.swift
+  - MapboxNavigationUI.swift (0.0.1):
+    - Mapbox-iOS-SDK
+    - MapboxDirections.swift
+    - MapboxNavigation.swift
+    - Pulley
+    - SDWebImage
   - Polyline (4.0.0)
+  - Pulley (1.3.0)
+  - SDWebImage (4.0.0):
+    - SDWebImage/Core (= 4.0.0)
+  - SDWebImage/Core (4.0.0)
 
 DEPENDENCIES:
-  - Mapbox-iOS-SDK-symbols (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0/platform/ios/Mapbox-iOS-SDK-symbols.podspec`)
   - MapboxDirections.swift (from `https://github.com/mapbox/MapboxDirections.swift.git`, branch `swift3`)
   - MapboxNavigation.swift (from `..`)
+  - MapboxNavigationUI.swift (from `../UI/`)
 
 EXTERNAL SOURCES:
-  Mapbox-iOS-SDK-symbols:
-    :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0/platform/ios/Mapbox-iOS-SDK-symbols.podspec
   MapboxDirections.swift:
     :branch: swift3
     :git: https://github.com/mapbox/MapboxDirections.swift.git
   MapboxNavigation.swift:
     :path: ".."
+  MapboxNavigationUI.swift:
+    :path: "../UI/"
 
 CHECKOUT OPTIONS:
   MapboxDirections.swift:
@@ -26,11 +36,14 @@ CHECKOUT OPTIONS:
     :git: https://github.com/mapbox/MapboxDirections.swift.git
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK-symbols: bd2654585472ca25fe89e9adfc11ef5550020f84
+  Mapbox-iOS-SDK: 9c0d23e9a3784e6c9e45af4339898e4598b5b09b
   MapboxDirections.swift: 4acd753d0079bae4f2fae2b2cbda98922909de09
   MapboxNavigation.swift: 281f0f3dc01bbd06732aac30c769af0dd2948689
+  MapboxNavigationUI.swift: e6794cfb9411bfa156a96cddf341724d4f2c60cb
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
+  Pulley: 5123ca4b89cd89e3c7ac92b643f892aa7738f374
+  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
 
-PODFILE CHECKSUM: 336d579030dc82241d9cafbcddb8b6086a00b04f
+PODFILE CHECKSUM: 963010270b490ff9c7509c8a6c6ffcafc660c605
 
-COCOAPODS: 1.2.0.rc.1
+COCOAPODS: 1.2.0
