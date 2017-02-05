@@ -8,6 +8,7 @@
 
 import UIKit
 import MapboxNavigation
+import MapboxNavigationUI
 import MapboxDirections
 import Mapbox
 import CoreLocation
@@ -195,12 +196,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     func startNavigation(_ route: Route) {
+        /*
         let camera = mapView.camera
         camera.pitch = 40
         mapView.setCamera(camera, animated: false)
         mapView.userTrackingMode = .followWithCourse
         navigation = RouteController(route: route)
-        navigation?.resume()
+        navigation?.resume()*/
+        let navigationViewController = RouteViewController(route: route)
+        present(navigationViewController, animated: true, completion: nil)
     }
     
     func endNavigation() {
