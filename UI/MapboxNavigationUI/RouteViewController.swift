@@ -7,42 +7,57 @@ import Pulley
 
 public class RouteViewController: PulleyViewController {
     
-    var route: Route!
+    public var route: Route!
     var routeController: RouteController!
+    var tableViewController: RouteTableViewController?
     
-    required public init(route: Route) {
-        self.route = route
+    public class func create(route: Route) -> RouteViewController {
+        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let controller = storyboard.instantiateInitialViewController() as! RouteViewController
+        controller.route = route
+        return controller
+    }
+    
+    override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if routeController == nil {
             routeController = RouteController(route: route)
         }
-        
-        let mapViewController = RouteMapViewController(routeController)
-        let tableViewController = RouteViewController.navigationStoryboard().instantiateViewController(withIdentifier: "RouteTableViewIdentifier") as! RouteTableViewController
-        
-        super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
-    }
-    
-    class func navigationStoryboard() -> UIStoryboard {
-        let bundle = Bundle(for: RouteViewController.self)
-        let resourceBundlePath = "\(bundle.bundlePath)/MapboxNavigationUI.bundle"
-        let resourceBundle = Bundle(path: resourceBundlePath)
-        return UIStoryboard(name: "Navigation", bundle: resourceBundle)
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        let tableViewController = RouteViewController.navigationStoryboard().instantiateViewController(withIdentifier: "RouteTableViewIdentifier") as! RouteTableViewController
-        super.init(contentViewController: self, drawerViewController: tableViewController)
-    }
-    
-    required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
-        assertionFailure("Not implemented")
-        super.init(contentViewController: contentViewController, drawerViewController: drawerViewController)
+        switch segue.identifier ?? "" {
+        case "RouteMapViewController":
+            if let controller = segue.destination as? RouteMapViewController {
+                controller.routeController = routeController
+            }
+        case "RouteTableViewController":
+            if let controller = segue.destination as? RouteTableViewController {
+                tableViewController = controller
+                controller.routeController = routeController
+            }
+        default:
+            break
+        }
     }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = .red
+        self.drawerCornerRadius = 0
+        self.delegate = self
     }
-    
+}
+
+extension RouteViewController: PulleyDelegate {
+    public func drawerPositionDidChange(drawer: PulleyViewController) {
+        switch drawer.drawerPosition {
+        case .open:
+            tableViewController?.tableView.isScrollEnabled = true
+            break
+        case .partiallyRevealed:
+            tableViewController?.tableView.isScrollEnabled = true
+            break
+        case .collapsed:
+            tableViewController?.tableView.isScrollEnabled = false
+            break
+        case .closed:
+            break
+        }
+    }
 }

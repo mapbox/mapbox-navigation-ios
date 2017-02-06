@@ -39,7 +39,7 @@ SPEC CHECKSUMS:
   Mapbox-iOS-SDK: 9c0d23e9a3784e6c9e45af4339898e4598b5b09b
   MapboxDirections.swift: 4acd753d0079bae4f2fae2b2cbda98922909de09
   MapboxNavigation.swift: 281f0f3dc01bbd06732aac30c769af0dd2948689
-  MapboxNavigationUI.swift: e6794cfb9411bfa156a96cddf341724d4f2c60cb
+  MapboxNavigationUI.swift: df4fd994b5395106976ca6f92ead2246202aff19
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
   Pulley: 5123ca4b89cd89e3c7ac92b643f892aa7738f374
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41

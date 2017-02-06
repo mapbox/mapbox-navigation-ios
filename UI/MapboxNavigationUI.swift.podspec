@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.ios.resource_bundle = { "MapboxNavigationUI" => 'Resources/*.storyboard' }
+  s.ios.resource_bundle = { "MapboxNavigationUI" => 'Resources/*.{xcassets,lproj,storyboard}' }
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 

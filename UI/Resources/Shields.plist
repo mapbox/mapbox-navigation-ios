@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>I</key>
+	<string>I-{ref}.svg</string>
+	<key>US</key>
+	<string>US {ref}.svg</string>
+	<key>SR</key>
+	<string>Ellipse sign {ref}.svg</string>
+	<key>SH</key>
+	<string>Ellipse sign {ref}.svg</string>
+	<key>CR</key>
+	<string>County {ref}.svg</string>
+	<key>CH</key>
+	<string>County {ref}.svg</string>
+	<key>CTH</key>
+	<string>County {ref}.svg</string>
+	<key>PR</key>
+	<string>County {ref} jct.svg</string>
+	<key>AK</key>
+	<string>Alaska {ref}.svg</string>
+	<key>AL</key>
+	<string>Alabama {ref}.svg</string>
+	<key>AR</key>
+	<string>Arkansas {ref}.svg</string>
+	<key>AZ</key>
+	<string>Arizona {ref}.svg</string>
+	<key>CA</key>
+	<string>California {ref}.svg</string>
+	<key>CO</key>
+	<string>Colorado {ref}.svg</string>
+	<key>CT</key>
+	<string>Connecticut Highway {ref}.svg</string>
+	<key>DC</key>
+	<string>DC {ref}.svg</string>
+	<key>DE</key>
+	<string>Elongated circle {ref}.svg</string>
+	<key>IA</key>
+	<string>Elongated circle {ref}.svg</string>
+	<key>KY</key>
+	<string>Elongated circle {ref}.svg</string>
+	<key>FL</key>
+	<string>Florida {ref}.svg</string>
+	<key>GA</key>
+	<string>Georgia {ref}.svg</string>
+	<key>HI</key>
+	<string>HI-{ref}.svg</string>
+	<key>ID</key>
+	<string>ID-{ref}.svg</string>
+	<key>IL</key>
+	<string>Illinois {ref}.svg</string>
+	<key>IN</key>
+	<string>Indiana {ref}.svg</string>
+	<key>KS</key>
+	<string>K-{ref}.svg</string>
+	<key>LA</key>
+	<string>Louisiana {ref}.svg</string>
+	<key>MA</key>
+	<string>MA Route {ref}.svg</string>
+	<key>ME</key>
+	<string>MA Route {ref}.svg</string>
+	<key>MD</key>
+	<string>MD Route {ref}.svg</string>
+	<key>MI</key>
+	<string>M-{ref}.svg</string>
+	<key>MN</key>
+	<string>MN-{ref}.svg</string>
+	<key>MO</key>
+	<string>MO-{ref}.svg</string>
+	<key>MS</key>
+	<string>Ellipse sign {ref}.svg</string>
+	<key>NJ</key>
+	<string>Ellipse sign {ref}.svg</string>
+	<key>MT</key>
+	<string>MT-{ref}.svg</string>
+	<key>NC</key>
+	<string>NC {ref}.svg</string>
+	<key>ND</key>
+	<string>ND-{ref} (2015).svg</string>
+	<key>NE</key>
+	<string>N-{ref}.svg</string>
+	<key>NH</key>
+	<string>NH Route {ref}.svg</string>
+	<key>NM</key>
+	<string>New Mexico {ref}.svg</string>
+	<key>NV</key>
+	<string>Nevada {ref}.svg</string>
+	<key>NY</key>
+	<string>NY-{ref}.svg</string>
+	<key>OH</key>
+	<string>OH-{ref}.svg</string>
+	<key>OK</key>
+	<string>Oklahoma State Highway {ref}.svg</string>
+	<key>OR</key>
+	<string>OR {ref}.svg</string>
+	<key>PA</key>
+	<string>PA-{ref}.svg</string>
+	<key>RI</key>
+	<string>Rhode Island {ref}.svg</string>
+	<key>SC</key>
+	<string>South Carolina {ref}.svg</string>
+	<key>SD</key>
+	<string>SD {ref}.svg</string>
+	<key>TN</key>
+	<string>Tennessee {ref}.svg</string>
+	<key>TX</key>
+	<string>Texas {ref}.svg</string>
+	<key>Loop</key>
+	<string>Texas Loop {ref}.svg</string>
+	<key>Spur</key>
+	<string>Texas Spur {ref}.svg</string>
+	<key>Toll</key>
+	<string>Toll Texas {ref} new.svg</string>
+	<key>BW</key>
+	<string>Texas Beltway {ref}.svg</string>
+	<key>FM</key>
+	<string>Texas FM {ref}.svg</string>
+	<key>RM</key>
+	<string>Texas RM {ref}.svg</string>
+	<key>NASA</key>
+	<string>Texas NASA Road {ref}.svg</string>
+	<key>UT</key>
+	<string>Utah SR {ref}.svg</string>
+	<key>VA</key>
+	<string>Virginia {ref}.svg</string>
+	<key>VT</key>
+	<string>Vermont {ref}.svg</string>
+	<key>WA</key>
+	<string>WA-{ref}.svg</string>
+	<key>WI</key>
+	<string>WIS {ref}.svg</string>
+	<key>WV</key>
+	<string>WV-{ref}.svg</string>
+	<key>WY</key>
+	<string>WY-{ref}.svg</string>
+</dict>
+</plist>
