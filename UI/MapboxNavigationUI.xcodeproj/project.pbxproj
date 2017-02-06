@@ -7,6 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35201DFF1E488E510086E92A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35201DFE1E488E510086E92A /* Assets.xcassets */; };
+		35201E011E489ECB0086E92A /* StyleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E001E489ECB0086E92A /* StyleButton.swift */; };
+		35201E031E489ED00086E92A /* StyleKitArrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E021E489ED00086E92A /* StyleKitArrows.swift */; };
+		35201E071E489ED90086E92A /* StyleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E041E489ED90086E92A /* StyleLabel.swift */; };
+		35201E081E489ED90086E92A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E051E489ED90086E92A /* Theme.swift */; };
+		35201E091E489ED90086E92A /* TurnArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E061E489ED90086E92A /* TurnArrowView.swift */; };
+		35201E0B1E489EEE0086E92A /* ManeuverDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E0A1E489EEE0086E92A /* ManeuverDirection.swift */; };
+		35201E0D1E489F0B0086E92A /* RouteTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E0C1E489F0B0086E92A /* RouteTableViewHeaderView.swift */; };
+		35201E0F1E489F1A0086E92A /* LaneArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E0E1E489F1A0086E92A /* LaneArrowView.swift */; };
+		35201E131E48A33B0086E92A /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E121E48A33B0086E92A /* UIView.swift */; };
+		35201E171E48A5E20086E92A /* RouteStepFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E161E48A5E20086E92A /* RouteStepFormatter.swift */; };
+		35201E191E48A5F20086E92A /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E181E48A5F20086E92A /* DistanceFormatter.swift */; };
+		35201E1B1E48A6780086E92A /* OSRMTextInstructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E1A1E48A6780086E92A /* OSRMTextInstructions.swift */; };
+		35201E361E48A8200086E92A /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E1F1E48A8200086E92A /* Instructions.plist */; };
+		35201E391E48A8200086E92A /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E261E48A8200086E92A /* Instructions.plist */; };
+		35201E3C1E48A8200086E92A /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E2D1E48A8200086E92A /* Instructions.plist */; };
+		35201E411E48A8B00086E92A /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E401E48A8B00086E92A /* String.swift */; };
+		35201E431E48AAE00086E92A /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E421E48AAE00086E92A /* Bundle.swift */; };
+		35201E451E48B0810086E92A /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E441E48B0810086E92A /* DashedLineView.swift */; };
+		35201E471E48B4D10086E92A /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E461E48B4D10086E92A /* Shields.plist */; };
 		355DBF391E43386400671CDD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 355DBF381E43386400671CDD /* Info.plist */; };
 		355DBF3B1E433B9C00671CDD /* RouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355DBF3A1E433B9C00671CDD /* RouteViewController.swift */; };
 		357E31F11E437C8A0072C0F9 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357E31EE1E437C8A0072C0F9 /* RouteTableViewCell.swift */; };
@@ -33,6 +53,26 @@
 
 /* Begin PBXFileReference section */
 		076C69A42791C495EF2C1163 /* Pods_MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		35201DFE1E488E510086E92A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		35201E001E489ECB0086E92A /* StyleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleButton.swift; sourceTree = "<group>"; };
+		35201E021E489ED00086E92A /* StyleKitArrows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKitArrows.swift; sourceTree = "<group>"; };
+		35201E041E489ED90086E92A /* StyleLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleLabel.swift; sourceTree = "<group>"; };
+		35201E051E489ED90086E92A /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		35201E061E489ED90086E92A /* TurnArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnArrowView.swift; sourceTree = "<group>"; };
+		35201E0A1E489EEE0086E92A /* ManeuverDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManeuverDirection.swift; sourceTree = "<group>"; };
+		35201E0C1E489F0B0086E92A /* RouteTableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewHeaderView.swift; sourceTree = "<group>"; };
+		35201E0E1E489F1A0086E92A /* LaneArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaneArrowView.swift; sourceTree = "<group>"; };
+		35201E121E48A33B0086E92A /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		35201E161E48A5E20086E92A /* RouteStepFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepFormatter.swift; sourceTree = "<group>"; };
+		35201E181E48A5F20086E92A /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
+		35201E1A1E48A6780086E92A /* OSRMTextInstructions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSRMTextInstructions.swift; sourceTree = "<group>"; };
+		35201E201E48A8200086E92A /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Instructions.plist; sourceTree = "<group>"; };
+		35201E271E48A8200086E92A /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = de; path = Instructions.plist; sourceTree = "<group>"; };
+		35201E2E1E48A8200086E92A /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = Instructions.plist; sourceTree = "<group>"; };
+		35201E401E48A8B00086E92A /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		35201E421E48AAE00086E92A /* Bundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		35201E441E48B0810086E92A /* DashedLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
+		35201E461E48B4D10086E92A /* Shields.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Shields.plist; sourceTree = "<group>"; };
 		355DBF381E43386400671CDD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		355DBF3A1E433B9C00671CDD /* RouteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteViewController.swift; sourceTree = "<group>"; };
 		357E31EE1E437C8A0072C0F9 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
@@ -73,10 +113,70 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		35201E101E48A32C0086E92A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				35201E421E48AAE00086E92A /* Bundle.swift */,
+				35201E401E48A8B00086E92A /* String.swift */,
+				35201E121E48A33B0086E92A /* UIView.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		35201E111E48A3300086E92A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				35201E441E48B0810086E92A /* DashedLineView.swift */,
+				35201E0E1E489F1A0086E92A /* LaneArrowView.swift */,
+				35201E001E489ECB0086E92A /* StyleButton.swift */,
+				35201E061E489ED90086E92A /* TurnArrowView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		35201E151E48A5D70086E92A /* Formatters */ = {
+			isa = PBXGroup;
+			children = (
+				35201E181E48A5F20086E92A /* DistanceFormatter.swift */,
+				35201E1A1E48A6780086E92A /* OSRMTextInstructions.swift */,
+				35201E161E48A5E20086E92A /* RouteStepFormatter.swift */,
+			);
+			name = Formatters;
+			sourceTree = "<group>";
+		};
+		35201E1C1E48A8200086E92A /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				35201E1F1E48A8200086E92A /* Instructions.plist */,
+			);
+			path = Base.lproj;
+			sourceTree = "<group>";
+		};
+		35201E251E48A8200086E92A /* de.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				35201E261E48A8200086E92A /* Instructions.plist */,
+			);
+			path = de.lproj;
+			sourceTree = "<group>";
+		};
+		35201E281E48A8200086E92A /* zh-Hans.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				35201E2D1E48A8200086E92A /* Instructions.plist */,
+			);
+			path = "zh-Hans.lproj";
+			sourceTree = "<group>";
+		};
 		357E321D1E44CF370072C0F9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				35201E461E48B4D10086E92A /* Shields.plist */,
+				35201E1C1E48A8200086E92A /* Base.lproj */,
+				35201E251E48A8200086E92A /* de.lproj */,
+				35201E281E48A8200086E92A /* zh-Hans.lproj */,
 				357E321E1E44CF370072C0F9 /* Navigation.storyboard */,
+				35201DFE1E488E510086E92A /* Assets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -118,13 +218,21 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxNavigationUI */ = {
 			isa = PBXGroup;
 			children = (
-				355DBF3A1E433B9C00671CDD /* RouteViewController.swift */,
-				357E31EE1E437C8A0072C0F9 /* RouteTableViewCell.swift */,
-				357E31EF1E437C8A0072C0F9 /* RoutePageViewController.swift */,
+				35201E151E48A5D70086E92A /* Formatters */,
+				35201E111E48A3300086E92A /* Views */,
+				35201E101E48A32C0086E92A /* Extensions */,
+				355DBF381E43386400671CDD /* Info.plist */,
+				35201E0A1E489EEE0086E92A /* ManeuverDirection.swift */,
 				357E31F01E437C8A0072C0F9 /* RouteManeuverViewController.swift */,
 				357E31F41E437C900072C0F9 /* RouteMapViewController.swift */,
+				357E31EF1E437C8A0072C0F9 /* RoutePageViewController.swift */,
+				357E31EE1E437C8A0072C0F9 /* RouteTableViewCell.swift */,
 				357E31F51E437C900072C0F9 /* RouteTableViewController.swift */,
-				355DBF381E43386400671CDD /* Info.plist */,
+				35201E0C1E489F0B0086E92A /* RouteTableViewHeaderView.swift */,
+				355DBF3A1E433B9C00671CDD /* RouteViewController.swift */,
+				35201E021E489ED00086E92A /* StyleKitArrows.swift */,
+				35201E041E489ED90086E92A /* StyleLabel.swift */,
+				35201E051E489ED90086E92A /* Theme.swift */,
 			);
 			path = MapboxNavigationUI;
 			sourceTree = "<group>";
@@ -216,6 +324,8 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				"zh-Hans",
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -233,7 +343,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35201E471E48B4D10086E92A /* Shields.plist in Resources */,
+				35201E391E48A8200086E92A /* Instructions.plist in Resources */,
 				357E321F1E44CF370072C0F9 /* Navigation.storyboard in Resources */,
+				35201E361E48A8200086E92A /* Instructions.plist in Resources */,
+				35201E3C1E48A8200086E92A /* Instructions.plist in Resources */,
+				35201DFF1E488E510086E92A /* Assets.xcassets in Resources */,
 				355DBF391E43386400671CDD /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -252,11 +367,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35201E411E48A8B00086E92A /* String.swift in Sources */,
 				355DBF3B1E433B9C00671CDD /* RouteViewController.swift in Sources */,
+				35201E011E489ECB0086E92A /* StyleButton.swift in Sources */,
+				35201E171E48A5E20086E92A /* RouteStepFormatter.swift in Sources */,
+				35201E091E489ED90086E92A /* TurnArrowView.swift in Sources */,
 				357E31F21E437C8A0072C0F9 /* RoutePageViewController.swift in Sources */,
 				357E31F11E437C8A0072C0F9 /* RouteTableViewCell.swift in Sources */,
 				357E31F31E437C8A0072C0F9 /* RouteManeuverViewController.swift in Sources */,
+				35201E0F1E489F1A0086E92A /* LaneArrowView.swift in Sources */,
+				35201E191E48A5F20086E92A /* DistanceFormatter.swift in Sources */,
+				35201E0B1E489EEE0086E92A /* ManeuverDirection.swift in Sources */,
 				357E31F61E437C900072C0F9 /* RouteMapViewController.swift in Sources */,
+				35201E071E489ED90086E92A /* StyleLabel.swift in Sources */,
+				35201E431E48AAE00086E92A /* Bundle.swift in Sources */,
+				35201E131E48A33B0086E92A /* UIView.swift in Sources */,
+				35201E081E489ED90086E92A /* Theme.swift in Sources */,
+				35201E031E489ED00086E92A /* StyleKitArrows.swift in Sources */,
+				35201E0D1E489F0B0086E92A /* RouteTableViewHeaderView.swift in Sources */,
+				35201E451E48B0810086E92A /* DashedLineView.swift in Sources */,
+				35201E1B1E48A6780086E92A /* OSRMTextInstructions.swift in Sources */,
 				357E31F71E437C900072C0F9 /* RouteTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +407,33 @@
 			targetProxy = C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		35201E1F1E48A8200086E92A /* Instructions.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35201E201E48A8200086E92A /* Base */,
+			);
+			name = Instructions.plist;
+			sourceTree = "<group>";
+		};
+		35201E261E48A8200086E92A /* Instructions.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35201E271E48A8200086E92A /* de */,
+			);
+			name = Instructions.plist;
+			sourceTree = "<group>";
+		};
+		35201E2D1E48A8200086E92A /* Instructions.plist */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35201E2E1E48A8200086E92A /* zh-Hans */,
+			);
+			name = Instructions.plist;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		C5ADFBDB1DDCC7840011824B /* Debug */ = {

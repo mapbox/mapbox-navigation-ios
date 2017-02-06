@@ -1,6 +1,5 @@
 //
 //  ManeuverDirection.swift
-//  Voyage
 //
 //  Created by Qian Gao on 10/18/16.
 //  Copyright © 2016 Mapbox. All rights reserved.

@@ -6,7 +6,7 @@ protocol RoutePageViewControllerDelegate {
     func currentStep() -> RouteStep
     func stepBefore(_ step: RouteStep) -> RouteStep?
     func stepAfter(_ step: RouteStep) -> RouteStep?
-    func routePageViewController(_ controller: RoutePageViewController, willTransitionTo routeManeuverViewController: RouteManeuverViewController)
+    func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController)
 }
 
 class RoutePageViewController: UIPageViewController {
@@ -18,10 +18,17 @@ class RoutePageViewController: UIPageViewController {
         super.viewDidLoad()
         dataSource = self
         delegate = self
+        view.clipsToBounds = false
+        // Disable clipsToBounds on the hidden UIQueuingScrollView to render the shadows properly
+        view.subviews.first?.clipsToBounds = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        setupRoutePageViewController()
+    }
+    
+    func didReRoute(_ notification: NSNotification) {
         setupRoutePageViewController()
     }
     
@@ -38,7 +45,8 @@ class RoutePageViewController: UIPageViewController {
             return nil
         }
         
-        let controller = RouteManeuverViewController()
+        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let controller = storyboard.instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         controller.step = step
         return controller
     }

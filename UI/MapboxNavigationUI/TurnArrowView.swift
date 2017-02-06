@@ -11,7 +11,6 @@ class TurnArrowView: UIView {
     var step: RouteStep? {
         didSet {
             imageView.isHidden = true
-            /* TODO: Fix Shields.plist
             if showsShield, let components = step?.codes?.first?.components(separatedBy: " "), components.count > 1 {
                 let network = components[0]
                 let number = components[1]
@@ -23,7 +22,7 @@ class TurnArrowView: UIView {
                         self?.imageView.isHidden = false
                     }
                 }
-            }*/
+            }
             setNeedsDisplay()
         }
     }

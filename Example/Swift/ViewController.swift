@@ -203,8 +203,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         mapView.userTrackingMode = .followWithCourse
         navigation = RouteController(route: route)
         navigation?.resume()*/
-        let navigationViewController = RouteViewController(route: route)
-        present(navigationViewController, animated: true, completion: nil)
+        //let navigationViewController = RouteViewController(route: route)
+        let controller = RouteViewController.create(route: route)
+        present(controller, animated: true, completion: nil)
     }
     
     func endNavigation() {

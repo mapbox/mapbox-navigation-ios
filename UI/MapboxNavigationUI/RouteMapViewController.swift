@@ -2,60 +2,72 @@ import UIKit
 import Mapbox
 import MapboxNavigation
 import MapboxDirections
+import SDWebImage
+
+var ShieldImageNamesByPrefix: [String: String] = {
+    guard let plistPath = Bundle.navigationUI.path(forResource: "Shields", ofType: "plist") else {
+        return [:]
+    }
+    return NSDictionary(contentsOfFile: plistPath) as! [String: String]
+}()
 
 class RouteMapViewController: UIViewController {
 
-    var mapView: MGLMapView!
+    @IBOutlet weak var mapView: MGLMapView!
+    @IBOutlet weak var recenterButton: UIButton!
+    
+    let distanceFormatter = DistanceFormatter(approximate: true)
     var pageViewController: RoutePageViewController!
     weak var routeController: RouteController!
     
-    init(_ routeController: RouteController) {
-        self.routeController = routeController
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupMapView()
-        setupPageViewController()
-    }
-    
-    func setupMapView() {
-        mapView = MGLMapView(frame: view.bounds)
-        mapView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        view.addSubview(mapView)
-    }
-    
-    func setupPageViewController() {
-        // Add the RoutePageViewController as a child to this view controller.
-        pageViewController = RoutePageViewController()
-        pageViewController.maneuverDelegate = self
-        pageViewController.willMove(toParentViewController: self)
-        addChildViewController(pageViewController)
-        view.addSubview(pageViewController.view)
-        pageViewController.didMove(toParentViewController: self)
-        
-        // Setup constraints
-        let views = ["pageView": pageViewController.view]
-        let pageView = pageViewController.view
-        pageView?.translatesAutoresizingMaskIntoConstraints = false
-        
-        let top = NSLayoutConstraint(item: pageView, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 10)
-        let left = NSLayoutConstraint(item: pageView, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1, constant: 10)
-        let right = NSLayoutConstraint(item: pageView, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1, constant: -10)
-        let height = NSLayoutConstraint(item: pageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 104)
-        
-        view.addConstraints([top, left, height, right])
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier ?? "" {
+        case "RoutePageViewController":
+            if let controller = segue.destination as? RoutePageViewController {
+                pageViewController = controller
+                controller.maneuverDelegate = self
+            }
+        default:
+            break
+        }
     }
 }
 
+extension RouteMapViewController: MGLMapViewDelegate {
+    
+}
+
 extension RouteMapViewController: RoutePageViewControllerDelegate {
-    func routePageViewController(_ controller: RoutePageViewController, willTransitionTo routeManeuverViewController: RouteManeuverViewController) {
-        // TODO: layout view
+    func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
+        let step = maneuverViewController.step
+        let destinations = step?.destinations?.joined(separator: "\n")
+        
+        maneuverViewController.streetLabel.text = step?.names?.first ?? destinations
+        // TODO: Fix distance formatter
+        maneuverViewController.distanceLabel.text = distanceFormatter.string(from: step!.distance)
+        maneuverViewController.turnArrowView.step = step
+        
+        if let allLanes = step?.intersections?.first?.approachLanes, let usableLanes = step?.intersections?.first?.usableApproachLanes {
+            for (i, lane) in allLanes.enumerated() {
+                guard i < maneuverViewController.laneViews.count else {
+                    return
+                }
+                let laneView = maneuverViewController.laneViews[i]
+                laneView.isHidden = false
+                laneView.lane = lane
+                laneView.maneuverDirection = step?.maneuverDirection
+                laneView.isValid = usableLanes.contains(i as Int)
+                laneView.setNeedsDisplay()
+            }
+        } else {
+            maneuverViewController.stackViewContainer.isHidden = true
+        }
+        
+        if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
+            mapView.userTrackingMode = .followWithCourse
+        } else {
+            mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
+        }
     }
 
     func stepBefore(_ step: RouteStep) -> RouteStep? {
@@ -69,6 +81,4 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
     func currentStep() -> RouteStep {
         return routeController.routeProgress.currentLegProgress.currentStep
     }
-    
-    
 }

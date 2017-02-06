@@ -47,6 +47,10 @@
                             <constraint firstItem="XRq-fK-Z45" firstAttribute="leading" secondItem="p8Y-fK-F6C" secondAttribute="leading" id="lva-Nu-RGk"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="drawerContentContainerView" destination="XRq-fK-Z45" id="mD8-aq-Lgt"/>
+                        <outlet property="primaryContentContainerView" destination="B8F-ce-HhC" id="vWw-vR-pEo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f9e-om-j7A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -64,10 +68,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MapView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                            <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MGLMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
                                 <subviews>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yQ4-ig-aIN">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yQ4-ig-aIN" customClass="StyleButton" customModule="MapboxNavigationUI" customModuleProvider="target">
                                         <rect key="frame" x="124" y="166" width="134" height="44"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -107,7 +111,7 @@
                                     <constraint firstAttribute="height" constant="104" id="z8N-zg-uyY"/>
                                 </constraints>
                                 <connections>
-                                    <segue destination="fR7-CF-mSs" kind="embed" identifier="RouteManeuverPageViewController" id="qxW-Lo-FU3"/>
+                                    <segue destination="fR7-CF-mSs" kind="embed" identifier="RoutePageViewController" id="qxW-Lo-FU3"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -131,10 +135,10 @@
             </objects>
             <point key="canvasLocation" x="4007" y="-112"/>
         </scene>
-        <!--Route Maneuver Page View Controller-->
+        <!--Route Page View Controller-->
         <scene sceneID="MEC-Rr-Kca">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="fR7-CF-mSs" customClass="RouteManeuverPageViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="fR7-CF-mSs" customClass="RoutePageViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="343" height="96"/>
                 </pageViewController>
@@ -448,7 +452,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="118"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view clearsContextBeforeDrawing="NO" alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gqs-fG-dsb">
+                                                <view clearsContextBeforeDrawing="NO" alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gqs-fG-dsb" customClass="TurnArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
                                                     <rect key="frame" x="8" y="40" width="50" height="50"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -456,7 +460,7 @@
                                                         <constraint firstAttribute="width" constant="50" id="zRu-fY-JHW"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="subtitleLabel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7x-Wj-c7z">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="subtitleLabel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7x-Wj-c7z" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
                                                     <rect key="frame" x="58" y="48" width="99" height="60"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.58039215690000001" green="0.58039215690000001" blue="0.58039215690000001" alpha="1" colorSpace="calibratedRGB"/>
@@ -475,7 +479,7 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="titleLabel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcw-K2-mfp">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="titleLabel" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcw-K2-mfp" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
                                                     <rect key="frame" x="58" y="25" width="67" height="20"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
@@ -494,7 +498,7 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uu2-ej-daK">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uu2-ej-daK" customClass="DashedLineView" customModule="MapboxNavigationUI" customModuleProvider="target">
                                                     <rect key="frame" x="16" y="8" width="343" height="1"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -599,7 +603,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <imageView userInteractionEnabled="NO" alpha="0.25" contentMode="center" horizontalHuggingPriority="251" verticalCompressionResistancePriority="749" image="scroll" translatesAutoresizingMaskIntoConstraints="NO" id="Ocd-S3-D0H">
-                            <rect key="frame" x="178" y="12" width="16" height="16"/>
+                            <rect key="frame" x="173" y="12" width="26" height="4"/>
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Arrive at 10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
@@ -679,6 +683,6 @@
     </scenes>
     <resources>
         <image name="recenter" width="16" height="16"/>
-        <image name="scroll" width="16" height="16"/>
+        <image name="scroll" width="26" height="4"/>
     </resources>
 </document>
