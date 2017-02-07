@@ -33,6 +33,11 @@ public class RouteViewController: PulleyViewController {
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if routeController == nil {
             routeController = RouteController(route: route)
+            
+            if Bundle.main.backgroundModeLocationSupported {
+                routeController.locationManager.activityType = .automotiveNavigation
+                routeController.locationManager.allowsBackgroundLocationUpdates = true
+            }
         }
         switch segue.identifier ?? "" {
         case "RouteMapViewController":
