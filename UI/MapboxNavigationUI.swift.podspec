@@ -44,6 +44,7 @@ Pod::Spec.new do |s|
 
   s.dependency "MapboxNavigation.swift"
   s.dependency "MapboxDirections.swift"
+  s.dependency "MapboxGeocoder.swift"
   s.dependency "Mapbox-iOS-SDK"
   s.dependency "Pulley"
   s.dependency "SDWebImage"

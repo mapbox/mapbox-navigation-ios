@@ -7,7 +7,7 @@ class StyleButton: UIButton {
     var defaultTint: Bool = false {
         didSet {
             if defaultTint {
-                backgroundColor = .defaultTint
+                backgroundColor = Theme.shared.tintColor
             }
         }
     }
@@ -16,8 +16,8 @@ class StyleButton: UIButton {
         didSet {
             if whiteButton {
                 backgroundColor = UIColor.white
-                self.setTitleColor(.defaultTint, for: .normal)
-                self.tintColor = .defaultTint
+                self.setTitleColor(Theme.shared.tintColor, for: .normal)
+                self.tintColor = Theme.shared.tintColor
             }
         }
     }
@@ -26,7 +26,7 @@ class StyleButton: UIButton {
         didSet {
             if hasBorder {
                 self.layer.borderWidth = 1
-                self.layer.borderColor = UIColor.defaultTint.cgColor
+                self.layer.borderColor = Theme.shared.tintColor.cgColor
             }
         }
     }

@@ -17,11 +17,12 @@ import AVFoundation
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate, RouteViewControllerDelegate {
 
-    var destination: CLLocationCoordinate2D?
+    var destination: MGLPointAnnotation?
     let directions = Directions(accessToken: MapboxAccessToken)
     var navigation: RouteController?
+    var routeViewController: RouteViewController?
     
     let lengthFormatter = LengthFormatter()
     lazy var speechSynth = AVSpeechSynthesizer()
@@ -54,7 +55,14 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             return
         }
         
-        destination = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
+        if let destination = destination {
+            mapView.removeAnnotation(destination)
+        }
+        
+        destination = MGLPointAnnotation()
+        destination?.coordinate = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
+        mapView.addAnnotation(destination!)
+        
         getRoute()
     }
     
@@ -137,7 +145,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     func getRoute(didFinish: (()->())? = nil) {
-        let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination!])
+        guard let destination = destination else { return }
+        
+        let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination.coordinate])
         options.includesSteps = true
         options.routeShapeResolution = .full
         options.profileIdentifier = MBDirectionsProfileIdentifierAutomobileAvoidingTraffic
@@ -158,13 +168,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             self?.toggleNavigationButton.isHidden = false
             self?.howToBeginLabel.isHidden = true
             
-            // Remove old destination marker
             self?.removeRoutesFromMap()
-            
-            // Add destination marker
-            let destinationMarker = MGLPointAnnotation()
-            destinationMarker.coordinate = route.coordinates!.last!
-            self?.mapView.addAnnotation(destinationMarker)
             
             let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: route.coordinateCount)
             let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
@@ -196,16 +200,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     func startNavigation(_ route: Route) {
-        /*
-        let camera = mapView.camera
-        camera.pitch = 40
-        mapView.setCamera(camera, animated: false)
-        mapView.userTrackingMode = .followWithCourse
-        navigation = RouteController(route: route)
-        navigation?.resume()*/
-        //let navigationViewController = RouteViewController(route: route)
-        let controller = RouteViewController.create(route: route)
-        present(controller, animated: true, completion: nil)
+        routeViewController = RouteViewController.create(route: route)
+        routeViewController!.routeDelegate = self
+        present(routeViewController!, animated: true, completion: nil)
+    }
+    
+    func routeViewControllerDidTapCancel() {
+        routeViewController?.dismiss(animated: true, completion: nil)
     }
     
     func endNavigation() {
@@ -230,7 +231,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         if let source = style.source(withIdentifier: sourceIdentifier) {
             style.removeSource(source)
         }
-        mapView.removeAnnotations(mapView.annotations ?? [])
     }
     
     func roundToTens(_ x: CLLocationDistance) -> Int {
