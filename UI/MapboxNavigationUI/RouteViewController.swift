@@ -2,19 +2,31 @@ import UIKit
 import MapboxNavigation
 import MapboxNavigationUI
 import MapboxDirections
+import Mapbox
 import Pulley
 
+public protocol RouteViewControllerDelegate {
+    func routeViewControllerDidTapCancel()
+}
 
 public class RouteViewController: PulleyViewController {
     
     public var route: Route!
+    public var destination: MGLAnnotation!
+    public var routeDelegate: RouteViewControllerDelegate?
+    
     var routeController: RouteController!
     var tableViewController: RouteTableViewController?
     
     public class func create(route: Route) -> RouteViewController {
+        let destination = MGLPointAnnotation()
+        destination.coordinate = route.coordinates!.last!
+        
         let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
         let controller = storyboard.instantiateInitialViewController() as! RouteViewController
         controller.route = route
+        controller.destination = destination
+        
         return controller
     }
     
@@ -26,11 +38,13 @@ public class RouteViewController: PulleyViewController {
         case "RouteMapViewController":
             if let controller = segue.destination as? RouteMapViewController {
                 controller.routeController = routeController
+                controller.delegate = self
             }
         case "RouteTableViewController":
             if let controller = segue.destination as? RouteTableViewController {
-                tableViewController = controller
+                controller.headerView.delegate = self
                 controller.routeController = routeController
+                tableViewController = controller
             }
         default:
             break
@@ -41,6 +55,18 @@ public class RouteViewController: PulleyViewController {
         super.viewDidLoad()
         self.drawerCornerRadius = 0
         self.delegate = self
+    }
+}
+
+extension RouteViewController: RouteMapViewControllerDelegate {
+    internal func routeDestination() -> MGLAnnotation {
+        return destination
+    }
+}
+
+extension RouteViewController: RouteTableViewHeaderViewDelegate {
+    func didTapCancel() {
+        routeDelegate?.routeViewControllerDidTapCancel()
     }
 }
 

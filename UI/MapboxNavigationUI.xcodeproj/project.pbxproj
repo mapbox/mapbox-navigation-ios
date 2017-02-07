@@ -39,6 +39,10 @@
 		35A7DBEF1E3A1DF7000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
 		35A7DC101E3A2670000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
 		35A7DC111E3A2673000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
+		35B34F701E49F4B90006A3DA /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F6F1E49F4B90006A3DA /* MGLMapView.swift */; };
+		35B34F721E49F6A50006A3DA /* Placemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F711E49F6A50006A3DA /* Placemark.swift */; };
+		35B34F741E49F9080006A3DA /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F731E49F9080006A3DA /* Directions.swift */; };
+		35B34F761E4A30DD0006A3DA /* ArrowStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F751E4A30DD0006A3DA /* ArrowStyleLayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +87,10 @@
 		357E321E1E44CF370072C0F9 /* Navigation.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Navigation.storyboard; sourceTree = "<group>"; };
 		35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
 		35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
+		35B34F6F1E49F4B90006A3DA /* MGLMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLMapView.swift; sourceTree = "<group>"; };
+		35B34F711E49F6A50006A3DA /* Placemark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placemark.swift; sourceTree = "<group>"; };
+		35B34F731E49F9080006A3DA /* Directions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
+		35B34F751E4A30DD0006A3DA /* ArrowStyleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrowStyleLayer.swift; sourceTree = "<group>"; };
 		3EFEB33CFE9251A637268CBC /* Pods_MapboxNavigationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4487194DED61BB1B2786B134 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E2526C2EBC58F2BE52847EF /* Pods_Example_Objective_C.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Objective_C.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,8 +125,12 @@
 			isa = PBXGroup;
 			children = (
 				35201E421E48AAE00086E92A /* Bundle.swift */,
+				35B34F731E49F9080006A3DA /* Directions.swift */,
+				35B34F6F1E49F4B90006A3DA /* MGLMapView.swift */,
+				35B34F711E49F6A50006A3DA /* Placemark.swift */,
 				35201E401E48A8B00086E92A /* String.swift */,
 				35201E121E48A33B0086E92A /* UIView.swift */,
+				35B34F751E4A30DD0006A3DA /* ArrowStyleLayer.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -374,6 +386,7 @@
 				35201E091E489ED90086E92A /* TurnArrowView.swift in Sources */,
 				357E31F21E437C8A0072C0F9 /* RoutePageViewController.swift in Sources */,
 				357E31F11E437C8A0072C0F9 /* RouteTableViewCell.swift in Sources */,
+				35B34F741E49F9080006A3DA /* Directions.swift in Sources */,
 				357E31F31E437C8A0072C0F9 /* RouteManeuverViewController.swift in Sources */,
 				35201E0F1E489F1A0086E92A /* LaneArrowView.swift in Sources */,
 				35201E191E48A5F20086E92A /* DistanceFormatter.swift in Sources */,
@@ -383,8 +396,11 @@
 				35201E431E48AAE00086E92A /* Bundle.swift in Sources */,
 				35201E131E48A33B0086E92A /* UIView.swift in Sources */,
 				35201E081E489ED90086E92A /* Theme.swift in Sources */,
+				35B34F701E49F4B90006A3DA /* MGLMapView.swift in Sources */,
+				35B34F761E4A30DD0006A3DA /* ArrowStyleLayer.swift in Sources */,
 				35201E031E489ED00086E92A /* StyleKitArrows.swift in Sources */,
 				35201E0D1E489F0B0086E92A /* RouteTableViewHeaderView.swift in Sources */,
+				35B34F721E49F6A50006A3DA /* Placemark.swift in Sources */,
 				35201E451E48B0810086E92A /* DashedLineView.swift in Sources */,
 				35201E1B1E48A6780086E92A /* OSRMTextInstructions.swift in Sources */,
 				357E31F71E437C900072C0F9 /* RouteTableViewController.swift in Sources */,

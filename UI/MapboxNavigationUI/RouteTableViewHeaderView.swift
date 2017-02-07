@@ -1,5 +1,9 @@
 import UIKit
 
+protocol RouteTableViewHeaderViewDelegate {
+    func didTapCancel()
+}
+
 @IBDesignable
 class RouteTableViewHeaderView: UIView {
     
@@ -8,6 +12,13 @@ class RouteTableViewHeaderView: UIView {
     @IBOutlet weak var distanceRemaining: StyleLabel!
     @IBOutlet weak var timeRemaining: StyleLabel!
     @IBOutlet weak var etaLabel: StyleLabel!
+    
+    var delegate: RouteTableViewHeaderViewDelegate?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        progressBar.backgroundColor = Theme.shared.tintColor
+    }
     
     override var intrinsicContentSize: CGSize {
         get {
@@ -24,5 +35,9 @@ class RouteTableViewHeaderView: UIView {
                 setNeedsUpdateConstraints()
             }
         }
+    }
+    
+    @IBAction func didTapCancel(_ sender: Any) {
+        delegate?.didTapCancel()
     }
 }

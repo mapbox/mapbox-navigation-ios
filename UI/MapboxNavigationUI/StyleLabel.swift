@@ -13,13 +13,13 @@ class StyleLabel: UILabel {
         didSet {
             switch textStyle {
             case .primary:
-                textColor = .primaryText
+                textColor = Theme.shared.primaryTextColor
                 break
             case .secondary:
-                textColor = .secondaryText
+                textColor = Theme.shared.secondaryTextColor
                 break
             case .highlighted:
-                textColor = .defaultTint
+                textColor = Theme.shared.tintColor
                 break
             }
         }
@@ -31,5 +31,4 @@ class StyleLabel: UILabel {
             textStyle = TextStyle(rawValue: inspectableTextStyle)!
         }
     }
-    
 }

@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -238,7 +237,7 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="9u5-JM-rz5"/>
-                                                            <constraint firstAttribute="width" constant="30" id="fvl-d7-GBY"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="fvl-d7-GBY"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="scale">
@@ -251,7 +250,7 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="Yj3-WT-VYi"/>
-                                                            <constraint firstAttribute="width" constant="30" id="dF8-Bf-M2X"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="dF8-Bf-M2X"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="scale">
@@ -264,7 +263,7 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="D5v-3d-Jeh"/>
-                                                            <constraint firstAttribute="width" constant="30" id="tq0-e4-YFe"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="tq0-e4-YFe"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="scale">
@@ -276,7 +275,7 @@
                                                         <rect key="frame" x="95" y="5" width="30" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="30" id="MCS-vE-znn"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="MCS-vE-znn"/>
                                                             <constraint firstAttribute="height" constant="30" id="cfn-Ge-Det"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
@@ -289,7 +288,7 @@
                                                         <rect key="frame" x="125" y="5" width="30" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="30" id="IYA-R3-E7i"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="IYA-R3-E7i"/>
                                                             <constraint firstAttribute="height" constant="30" id="puW-Rk-hfY"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
@@ -302,7 +301,7 @@
                                                         <rect key="frame" x="155" y="5" width="30" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="30" id="SCC-vU-ZoY"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="SCC-vU-ZoY"/>
                                                             <constraint firstAttribute="height" constant="30" id="gcm-Hm-TXN"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
@@ -315,7 +314,7 @@
                                                         <rect key="frame" x="185" y="5" width="30" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="30" id="DsZ-2f-pEu"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="DsZ-2f-pEu"/>
                                                             <constraint firstAttribute="height" constant="30" id="k78-y0-rs3"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
@@ -329,7 +328,7 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="18o-rV-gwp"/>
-                                                            <constraint firstAttribute="width" constant="30" id="g9V-Ve-yIw"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="g9V-Ve-yIw"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="scale">
@@ -342,7 +341,7 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="CMh-Oa-n2C"/>
-                                                            <constraint firstAttribute="width" constant="30" id="D0i-De-FJJ"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="D0i-De-FJJ"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="scale">
@@ -355,7 +354,7 @@
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="DAD-7R-XgQ"/>
-                                                            <constraint firstAttribute="width" constant="30" id="KBW-jn-JyL"/>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="KBW-jn-JyL"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="scale">
@@ -555,7 +554,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vUo-Ag-frn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="bHS-Pq-Ysg" userLabel="Exit" sceneMemberID="exit"/>
                 <view contentMode="scaleToFill" id="eu5-2S-xpm" customClass="RouteTableViewHeaderView" customModule="MapboxNavigationUI" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="371" height="106"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -580,7 +578,7 @@
                                 <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <connections>
-                                <segue destination="bHS-Pq-Ysg" kind="unwind" unwindAction="unwindToPreview:" id="W0T-iy-F8H"/>
+                                <action selector="didTapCancel:" destination="eu5-2S-xpm" eventType="touchUpInside" id="jlK-wc-cri"/>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
