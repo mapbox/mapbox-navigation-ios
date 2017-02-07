@@ -8,6 +8,15 @@ extension Bundle {
             return Bundle(path: resourceBundlePath)!
         }
     }
+    
+    var backgroundModeLocationSupported: Bool {
+        get {
+            if let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] {
+                return modes.contains("location")
+            }
+            return false
+        }
+    }
 }
 
 var ShieldImageNamesByPrefix: [String: String] = {
