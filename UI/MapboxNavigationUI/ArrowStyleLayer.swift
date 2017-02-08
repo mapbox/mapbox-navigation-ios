@@ -5,8 +5,8 @@ import MapboxNavigation
 
 class ArrowStyleLayer {
     
-    class func add(nextStep: RouteProgress,
-                   mapView: MGLMapView,
+    class func add(to mapView: MGLMapView,
+                   nextStep: RouteProgress,
                    currentManeuverArrowStrokePolylines: inout [ArrowFillPolyline],
                    currentManeuverArrowPolylines: inout [ArrowFillPolyline]) {
         
@@ -67,7 +67,7 @@ class ArrowStyleLayer {
             arrow.lineJoin = MGLStyleValue(rawValue: join)
             
             arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
-            arrowStroke.lineColor = MGLStyleValue(rawValue: Theme.shared.tintColor)
+            arrowStroke.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintColor)
             mapView.style?.addSource(arrowSourceStroke)
             mapView.style?.addSource(arrowSource)
             

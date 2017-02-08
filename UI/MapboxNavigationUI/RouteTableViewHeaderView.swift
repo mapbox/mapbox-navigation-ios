@@ -17,7 +17,7 @@ class RouteTableViewHeaderView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        progressBar.backgroundColor = Theme.shared.tintColor
+        progressBar.backgroundColor = NavigationUI.shared.tintColor
     }
     
     override var intrinsicContentSize: CGSize {

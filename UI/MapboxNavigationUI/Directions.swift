@@ -19,7 +19,6 @@ extension RouteOptions {
         options.routeShapeResolution = .full
         options.profileIdentifier = profileIdentifier ?? MBDirectionsProfileIdentifierAutomobileAvoidingTraffic
         
-        
         if let heading = heading, heading >= 0, let firstWaypoint = options.waypoints.first {
             firstWaypoint.heading = heading
             firstWaypoint.headingAccuracy = 90

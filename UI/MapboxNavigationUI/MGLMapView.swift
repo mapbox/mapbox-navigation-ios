@@ -44,9 +44,9 @@ extension MGLMapView {
         let line = MGLLineStyleLayer(identifier: routeLayerIdentifier, source: geoJSONSource)
         let lineCasing = MGLLineStyleLayer(identifier: routeLayerCasingIdentifier, source: geoJSONSource)
         
-        line.lineColor = MGLStyleValue(rawValue: Theme.shared.tintStrokeColor.withAlphaComponent(0.6))
+        line.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor.withAlphaComponent(0.6))
         line.lineWidth = MGLStyleValue(rawValue: 5)
-        lineCasing.lineColor = MGLStyleValue(rawValue: Theme.shared.tintStrokeColor)
+        lineCasing.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor)
         lineCasing.lineWidth = MGLStyleValue(rawValue: 9)
         
         let cap = NSValue(mglLineCap: .round)

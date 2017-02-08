@@ -1,5 +1,6 @@
-import Foundation
-
+import UIKit
+import MapboxDirections
+import Mapbox
 
 extension UIColor {
     fileprivate class var defaultTint: UIColor { get { return #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) } }
@@ -9,8 +10,9 @@ extension UIColor {
     fileprivate class var defaultLine: UIColor { get { return #colorLiteral(red: 151.0/255.0, green: 151.0/255.0, blue: 151.0/255.0, alpha: 0.6) } }
 }
 
-public class Theme: NSObject {
-    public static let shared = Theme()
+public class NavigationUI: NSObject {
+    
+    public static let shared = NavigationUI()
     
     fileprivate var _tintColor: UIColor?
     fileprivate var _tintStrokeColor: UIColor?
@@ -20,26 +22,40 @@ public class Theme: NSObject {
     
     public var tintColor: UIColor {
         get { return _tintColor ?? .defaultTint }
-        set { _tintColor = tintColor }
+        set { _tintColor = newValue }
     }
     
     public var tintStrokeColor: UIColor {
         get { return _tintStrokeColor ?? .defaultTintStroke }
-        set { _tintStrokeColor = tintStrokeColor }
+        set { _tintStrokeColor = newValue }
     }
     
     public var primaryTextColor: UIColor {
         get { return _primaryTextColor ?? .defaultPrimaryText }
-        set { _primaryTextColor = primaryTextColor }
+        set { _primaryTextColor = newValue }
     }
     
     public var secondaryTextColor: UIColor {
         get { return _secondaryTextColor ?? .defaultSecondaryText }
-        set { _secondaryTextColor = secondaryTextColor }
+        set { _secondaryTextColor = newValue }
     }
     
     public var lineColor: UIColor {
         get { return _lineColor ?? .defaultLine }
-        set { _lineColor = lineColor }
+        set { _lineColor = newValue }
+    }
+    
+    public class func instantiate(route: Route, directions: Directions) -> RouteViewController {
+        let destination = MGLPointAnnotation()
+        destination.coordinate = route.coordinates!.last!
+        
+        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let controller = storyboard.instantiateInitialViewController() as! RouteViewController
+        
+        controller.route = route
+        controller.destination = destination
+        controller.directions = directions
+        
+        return controller
     }
 }

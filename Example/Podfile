@@ -4,7 +4,7 @@ def shared_pods
   pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :branch => 'swift3'
   pod 'MapboxGeocoder.swift', :git => 'https://github.com/mapbox/MapboxGeocoder.swift.git', :branch => 'swift3'
   pod 'MapboxNavigation.swift', :path => '..'
-  pod 'MapboxNavigationUI.swift', :path => '../UI/'
+  pod 'MapboxNavigationUI.swift', :path => '..'
 end
 
 target 'Example-Swift' do

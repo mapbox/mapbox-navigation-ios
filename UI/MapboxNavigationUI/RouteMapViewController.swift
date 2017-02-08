@@ -17,33 +17,27 @@ import SDWebImage
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
-// TODO: Delete this
-
 protocol RouteMapViewControllerDelegate: NSObjectProtocol {
     func routeDestination() -> MGLAnnotation
 }
 
 struct RouteControllerNotification {
-    static let approachingIncident = Notification.Name("RouteControllerApproachingIncident")
     static let didReceiveNewRoute = Notification.Name("RouteControllerDidReceiveNewRoute")
 }
-
-let RouteControllerNotificationApproachingIncident = "approach"
-let RouteControllerAlertLevelDidChangeNotificationDistanceToIncidentKey = "distance"
 
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var recenterButton: UIButton!
     
-    var route: Route { return routeController.routeProgress.route }
-    
     let routeStepFormatter = RouteStepFormatter()
     
-    weak var routeController: RouteController!
-    //var routeVoiceController: RouteVoiceController!
+    var route: Route { return routeController.routeProgress.route }
     var routePageViewController: RoutePageViewController!
+    var directions: Directions!
+    
+    weak var routeController: RouteController!
     weak var delegate: RouteMapViewControllerDelegate?
-    var directions = Directions(accessToken: MapboxAccessToken)
+    
     var routeTask: URLSessionDataTask?
     
     var currentManeuverArrowPolylines: [ArrowFillPolyline] = []
@@ -57,13 +51,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
         
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        mapView.tintColor = Theme.shared.tintColor
+        mapView.tintColor = NavigationUI.shared.tintColor
         
         let camera = mapView.camera
         camera.altitude = 1_000
@@ -74,10 +67,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        UIApplication.shared.isIdleTimerDisabled = true
-        
-        //routeVoiceController = RouteVoiceController()
-        
         mapView.compassView.isHidden = true
         
         if let destination = delegate?.routeDestination() {
@@ -85,12 +74,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         }
         
         resumeNotifications()
-        
-        //routeController.locationManager.activityType = .automotiveNavigation
-        //routeController.locationManager.allowsBackgroundLocationUpdates = true
-        
-        // Start navigation
-        routeController.resume()
         
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: .initial, context: nil)
     }
@@ -110,13 +93,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        UIApplication.shared.isIdleTimerDisabled = false
-        
-        routeController.suspend()
         webImageManager.cancelAll()
-        
-        // routeVoiceController.suspendNotifications()
-        // routeVoiceController = nil
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -131,10 +108,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         NotificationCenter.default.removeObserver(self)
     }
     
-    func closeIncidentView() {
-        mapView.deselectAnnotation(mapView.selectedAnnotations.first, animated: false)
-    }
-    
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.userTrackingMode = .followWithCourse
         if let viewController = routePageViewController.routeManeuverViewController(with: currentStep()) {
@@ -146,11 +119,11 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
         if annotation is ArrowStrokePolyline {
-            return Theme.shared.tintStrokeColor
+            return NavigationUI.shared.tintStrokeColor
         } else if annotation is ArrowFillPolyline {
             return .white
         } else {
-            return Theme.shared.tintColor
+            return NavigationUI.shared.tintColor
         }
     }
     
@@ -206,10 +179,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             return
         }
         
-        let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination.coordinate])
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.profileIdentifier = MBDirectionsProfileIdentifierAutomobileAvoidingTraffic
+        let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course)
         
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             if let route = routes?.first {
@@ -261,7 +231,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
                 controller?.distanceLabel.text = distanceFormatter.string(from: distanceRemaining)
                 
                 if let name = upComingStep.names?.first ?? destinations, let ref = upComingStep.codes?.first {
-                    let foregroundColor = Theme.shared.secondaryTextColor
+                    let foregroundColor = NavigationUI.shared.secondaryTextColor
                     let attributes = [
                         NSForegroundColorAttributeName: foregroundColor,
                         NSFontAttributeName: controller?.streetLabel.font,
@@ -343,13 +313,9 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             return
         }
         
-        guard let style = mapView.style else {
-            return
-        }
-        
         ArrowStyleLayer.remove(from: mapView)
-        ArrowStyleLayer.add(nextStep: nextStep,
-                            mapView: mapView,
+        ArrowStyleLayer.add(to: mapView,
+                            nextStep: nextStep,
                             currentManeuverArrowStrokePolylines: &currentManeuverArrowStrokePolylines,
                             currentManeuverArrowPolylines: &currentManeuverArrowPolylines)
     }
