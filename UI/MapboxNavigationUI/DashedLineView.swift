@@ -5,7 +5,7 @@ class DashedLineView: UIView {
 
     @IBInspectable var dashedLength: CGFloat = 4 { didSet { updateProperties() } }
     @IBInspectable var dashedGap: CGFloat = 4 { didSet { updateProperties() } }
-    @IBInspectable var lineColor: UIColor = Theme.shared.lineColor { didSet { updateProperties() } }
+    @IBInspectable var lineColor: UIColor = NavigationUI.shared.lineColor { didSet { updateProperties() } }
 
     let dashedLineLayer = CAShapeLayer()
 

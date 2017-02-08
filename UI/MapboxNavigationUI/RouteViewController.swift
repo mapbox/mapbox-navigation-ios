@@ -5,29 +5,30 @@ import MapboxDirections
 import Mapbox
 import Pulley
 
-public protocol RouteViewControllerDelegate {
-    func routeViewControllerDidTapCancel()
-}
 
 public class RouteViewController: PulleyViewController {
-    
     public var route: Route!
     public var destination: MGLAnnotation!
-    public var routeDelegate: RouteViewControllerDelegate?
+    public var directions: Directions!
+    
+    public var didTapCancelHandler:()->Void={}
     
     var routeController: RouteController!
     var tableViewController: RouteTableViewController?
     
-    public class func create(route: Route) -> RouteViewController {
-        let destination = MGLPointAnnotation()
-        destination.coordinate = route.coordinates!.last!
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
-        let controller = storyboard.instantiateInitialViewController() as! RouteViewController
-        controller.route = route
-        controller.destination = destination
+        UIApplication.shared.isIdleTimerDisabled = true
+        routeController.resume()
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
-        return controller
+        UIApplication.shared.isIdleTimerDisabled = false
+        routeController.suspend()
     }
     
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -39,11 +40,13 @@ public class RouteViewController: PulleyViewController {
                 routeController.locationManager.allowsBackgroundLocationUpdates = true
             }
         }
+        
         switch segue.identifier ?? "" {
         case "RouteMapViewController":
             if let controller = segue.destination as? RouteMapViewController {
                 controller.routeController = routeController
                 controller.delegate = self
+                controller.directions = directions
             }
         case "RouteTableViewController":
             if let controller = segue.destination as? RouteTableViewController {
@@ -71,7 +74,7 @@ extension RouteViewController: RouteMapViewControllerDelegate {
 
 extension RouteViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
-        routeDelegate?.routeViewControllerDidTapCancel()
+        didTapCancelHandler()
     }
 }
 

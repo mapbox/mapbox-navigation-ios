@@ -130,7 +130,6 @@
 				35B34F711E49F6A50006A3DA /* Placemark.swift */,
 				35201E401E48A8B00086E92A /* String.swift */,
 				35201E121E48A33B0086E92A /* UIView.swift */,
-				35B34F751E4A30DD0006A3DA /* ArrowStyleLayer.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -138,10 +137,12 @@
 		35201E111E48A3300086E92A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				35201E041E489ED90086E92A /* StyleLabel.swift */,
 				35201E441E48B0810086E92A /* DashedLineView.swift */,
 				35201E0E1E489F1A0086E92A /* LaneArrowView.swift */,
 				35201E001E489ECB0086E92A /* StyleButton.swift */,
 				35201E061E489ED90086E92A /* TurnArrowView.swift */,
+				35B34F751E4A30DD0006A3DA /* ArrowStyleLayer.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -243,7 +244,6 @@
 				35201E0C1E489F0B0086E92A /* RouteTableViewHeaderView.swift */,
 				355DBF3A1E433B9C00671CDD /* RouteViewController.swift */,
 				35201E021E489ED00086E92A /* StyleKitArrows.swift */,
-				35201E041E489ED90086E92A /* StyleLabel.swift */,
 				35201E051E489ED90086E92A /* Theme.swift */,
 			);
 			path = MapboxNavigationUI;

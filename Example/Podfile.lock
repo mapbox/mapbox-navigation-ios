@@ -22,7 +22,7 @@ DEPENDENCIES:
   - MapboxDirections.swift (from `https://github.com/mapbox/MapboxDirections.swift.git`, branch `swift3`)
   - MapboxGeocoder.swift (from `https://github.com/mapbox/MapboxGeocoder.swift.git`, branch `swift3`)
   - MapboxNavigation.swift (from `..`)
-  - MapboxNavigationUI.swift (from `../UI/`)
+  - MapboxNavigationUI.swift (from `..`)
 
 EXTERNAL SOURCES:
   MapboxDirections.swift:
@@ -34,7 +34,7 @@ EXTERNAL SOURCES:
   MapboxNavigation.swift:
     :path: ".."
   MapboxNavigationUI.swift:
-    :path: "../UI/"
+    :path: ".."
 
 CHECKOUT OPTIONS:
   MapboxDirections.swift:
@@ -49,11 +49,11 @@ SPEC CHECKSUMS:
   MapboxDirections.swift: 4acd753d0079bae4f2fae2b2cbda98922909de09
   MapboxGeocoder.swift: 04f80b3856e5cd1ff0af9910dbf14d27058ce906
   MapboxNavigation.swift: 281f0f3dc01bbd06732aac30c769af0dd2948689
-  MapboxNavigationUI.swift: 674b40886554c321d3e447fe5381dde2801fc9eb
+  MapboxNavigationUI.swift: 15931f1a6d3a2ec1fe898df7afe95d94301c30b5
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
   Pulley: 5123ca4b89cd89e3c7ac92b643f892aa7738f374
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
 
-PODFILE CHECKSUM: 9d6c6955d4fd5f829566651ac80567f045a58cbd
+PODFILE CHECKSUM: db9f9b9c749f629c573bbe7be5fd4e8cb7c04ec7
 
 COCOAPODS: 1.2.0

@@ -13,13 +13,13 @@ class StyleLabel: UILabel {
         didSet {
             switch textStyle {
             case .primary:
-                textColor = Theme.shared.primaryTextColor
+                textColor = NavigationUI.shared.primaryTextColor
                 break
             case .secondary:
-                textColor = Theme.shared.secondaryTextColor
+                textColor = NavigationUI.shared.secondaryTextColor
                 break
             case .highlighted:
-                textColor = Theme.shared.tintColor
+                textColor = NavigationUI.shared.tintColor
                 break
             }
         }
