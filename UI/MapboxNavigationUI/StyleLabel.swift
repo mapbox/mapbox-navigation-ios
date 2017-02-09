@@ -1,15 +1,15 @@
 import UIKit
 
-enum TextStyle: Int {
+public enum TextStyle: Int {
     case primary = 1
     case secondary = 2
     case highlighted = 3
 }
 
 @IBDesignable
-class StyleLabel: UILabel {
+public class StyleLabel: UILabel {
 
-    var textStyle: TextStyle = .primary {
+    public var textStyle: TextStyle = .primary {
         didSet {
             switch textStyle {
             case .primary:
@@ -26,7 +26,7 @@ class StyleLabel: UILabel {
     }
     
     @IBInspectable
-    var inspectableTextStyle: Int = 1 {
+    public var inspectableTextStyle: Int = 1 {
         didSet {
             textStyle = TextStyle(rawValue: inspectableTextStyle)!
         }

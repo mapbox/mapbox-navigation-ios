@@ -17,10 +17,6 @@ import SDWebImage
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
-protocol RouteMapViewControllerDelegate: NSObjectProtocol {
-    func routeDestination() -> MGLAnnotation
-}
-
 struct RouteControllerNotification {
     static let didReceiveNewRoute = Notification.Name("RouteControllerDidReceiveNewRoute")
 }
@@ -34,9 +30,10 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var route: Route { return routeController.routeProgress.route }
     var routePageViewController: RoutePageViewController!
     var directions: Directions!
+    var destination: MGLAnnotation!
+    var pendingCamera: MGLMapCamera?
     
     weak var routeController: RouteController!
-    weak var delegate: RouteMapViewControllerDelegate?
     
     var routeTask: URLSessionDataTask?
     
@@ -69,8 +66,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         mapView.compassView.isHidden = true
         
-        if let destination = delegate?.routeDestination() {
-            mapView.addAnnotation(destination)
+        mapView.addAnnotation(destination)
+        
+        if let camera = pendingCamera {
+            camera.altitude = 1_000
+            camera.pitch = 45
+            mapView.camera = camera
         }
         
         resumeNotifications()
@@ -174,10 +175,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     func didReRoute(_ notification: Notification) {
         let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
         routeTask?.cancel()
-        
-        guard let destination = delegate?.routeDestination() else {
-            return
-        }
         
         let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course)
         
@@ -330,7 +327,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             
             // Remove all outstanding notifications from notification center.
             // This will only work if it's set to 1 and then back to 0.
-            // This way, there is always just one Voyage notification.
+            // This way, there is always just one notification.
             UIApplication.shared.applicationIconBadgeNumber = 0
             UIApplication.shared.applicationIconBadgeNumber = 1
             

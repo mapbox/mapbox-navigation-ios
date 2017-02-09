@@ -1,15 +1,15 @@
 import UIKit
 
 @IBDesignable
-class DashedLineView: UIView {
+public class DashedLineView: UIView {
 
-    @IBInspectable var dashedLength: CGFloat = 4 { didSet { updateProperties() } }
-    @IBInspectable var dashedGap: CGFloat = 4 { didSet { updateProperties() } }
-    @IBInspectable var lineColor: UIColor = NavigationUI.shared.lineColor { didSet { updateProperties() } }
+    @IBInspectable public var dashedLength: CGFloat = 4 { didSet { updateProperties() } }
+    @IBInspectable public var dashedGap: CGFloat = 4 { didSet { updateProperties() } }
+    @IBInspectable public var lineColor: UIColor = NavigationUI.shared.lineColor { didSet { updateProperties() } }
 
     let dashedLineLayer = CAShapeLayer()
 
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         if dashedLineLayer.superlayer == nil {
             layer.addSublayer(dashedLineLayer)
         }

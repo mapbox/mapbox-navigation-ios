@@ -8,7 +8,7 @@ let routeLayerIdentifier = "routeLayerIdentifier"
 let routeLayerCasingIdentifier = "routeLayerCasingIdentifier"
 
 extension MGLMapView {
-    func show(_ placemark: GeocodedPlacemark) {
+    public func show(_ placemark: GeocodedPlacemark) {
         if let bounds = placemark.coordinateBounds {
             setVisibleCoordinateBounds(bounds, animated: true)
         } else {
@@ -16,7 +16,7 @@ extension MGLMapView {
         }
     }
     
-    func annotate(_ routes: [Route], clearMap: Bool) {
+    public func annotate(_ routes: [Route], clearMap: Bool) {
         
         // We don't support alternative routes at this point
         guard let route = routes.first, var coordinates = route.coordinates else {
@@ -64,6 +64,32 @@ extension MGLMapView {
                 style.insertLayer(line, above: layer)
                 style.insertLayer(lineCasing, below: line)
                 return
+            }
+        }
+    }
+    
+    public var showsTraffic: Bool {
+        get {
+            if let style = style {
+                for layer in style.layers {
+                    if let l = layer as? MGLForegroundStyleLayer {
+                        if l.sourceIdentifier == "mapbox://mapbox.mapbox-traffic-v1" {
+                            return l.isVisible
+                        }
+                    }
+                }
+            }
+            return false
+        }
+        set {
+            if let style = style {
+                for layer in style.layers {
+                    if let layer = layer as? MGLForegroundStyleLayer {
+                        if layer.sourceIdentifier == "mapbox://mapbox.mapbox-traffic-v1" {
+                            layer.isVisible = newValue
+                        }
+                    }
+                }
             }
         }
     }

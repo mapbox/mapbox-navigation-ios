@@ -5,17 +5,50 @@ import MapboxDirections
 import Mapbox
 import Pulley
 
-
+/**
+ `RouteViewController` is fully featured, turn by turn navigation UI.
+ 
+ It provides step by step instructions, an overview of all steps
+ for the given route and support for basic styling.
+ */
 public class RouteViewController: PulleyViewController {
+    
+    /// A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route!
+    
+    // TODO:
     public var destination: MGLAnnotation!
+    
+    // TODO:
     public var directions: Directions!
     
+    /**
+     `pendingCamera` is an optional `MGLMapCamera` you can use to improve
+     the initial transition from a previous viewport and prevent a trigger
+     from an excessive significant location update.
+     */
+    public var pendingCamera: MGLMapCamera?
+    
+    // TODO:
+    public var origin: MGLAnnotation?
+    
+    /**
+     `didTapCancelHandler` is a closure that will be called when a user
+     taps the cancel button.
+     */
     public var didTapCancelHandler:()->Void={}
     
     var routeController: RouteController!
     var tableViewController: RouteTableViewController?
+    var mapViewController: RouteMapViewController?
     
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
+        fatalError("init(contentViewController:drawerViewController:) has not been implemented")
+    }
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -45,8 +78,9 @@ public class RouteViewController: PulleyViewController {
         case "RouteMapViewController":
             if let controller = segue.destination as? RouteMapViewController {
                 controller.routeController = routeController
-                controller.delegate = self
+                controller.destination = destination
                 controller.directions = directions
+                mapViewController = controller
             }
         case "RouteTableViewController":
             if let controller = segue.destination as? RouteTableViewController {
@@ -63,12 +97,6 @@ public class RouteViewController: PulleyViewController {
         super.viewDidLoad()
         self.drawerCornerRadius = 0
         self.delegate = self
-    }
-}
-
-extension RouteViewController: RouteMapViewControllerDelegate {
-    internal func routeDestination() -> MGLAnnotation {
-        return destination
     }
 }
 

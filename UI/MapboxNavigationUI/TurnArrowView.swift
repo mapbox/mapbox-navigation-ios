@@ -4,11 +4,11 @@ import MapboxNavigation
 import SDWebImage
 
 @IBDesignable
-class TurnArrowView: UIView {
+public class TurnArrowView: UIView {
     var imageView: UIImageView!
     
     var showsShield = true
-    var step: RouteStep? {
+    public var step: RouteStep? {
         didSet {
             imageView.isHidden = true
             if showsShield, let components = step?.codes?.first?.components(separatedBy: " "), components.count > 1 {
@@ -26,12 +26,14 @@ class TurnArrowView: UIView {
             setNeedsDisplay()
         }
     }
-    var isStart = false {
+    
+    public var isStart = false {
         didSet {
             setNeedsDisplay()
         }
     }
-    var isEnd = false {
+    
+    public var isEnd = false {
         didSet {
             setNeedsDisplay()
         }
@@ -44,7 +46,7 @@ class TurnArrowView: UIView {
         }
     }
     
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
         
         imageView = UIImageView(frame: bounds.insetBy(dx: 8, dy: 8))
@@ -53,7 +55,7 @@ class TurnArrowView: UIView {
         addSubview(imageView)
     }
     
-    override func draw(_ rect: CGRect) {
+    override public func draw(_ rect: CGRect) {
         super.draw(rect)
         
         transform = CGAffineTransform.identity
