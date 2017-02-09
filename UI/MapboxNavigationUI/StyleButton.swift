@@ -1,7 +1,7 @@
 import UIKit
 
 @IBDesignable
-class StyleButton: UIButton {
+public class StyleButton: UIButton {
     
     @IBInspectable
     var defaultTint: Bool = false {
@@ -42,7 +42,7 @@ class StyleButton: UIButton {
         }
     }
     
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = 6
     }

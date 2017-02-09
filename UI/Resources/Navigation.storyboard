@@ -92,7 +92,6 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.90196078430000004" green="0.89019607840000003" blue="0.87450980389999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="tintColor" red="0.30819286639999999" green="0.1233434544" blue="0.47417303859999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="yQ4-ig-aIN" firstAttribute="centerX" secondItem="nNr-30-cGD" secondAttribute="centerX" constant="3.5" id="7jk-0e-px2"/>
                                     <constraint firstAttribute="bottom" secondItem="yQ4-ig-aIN" secondAttribute="bottom" constant="114" id="Ocm-nV-pGj"/>
@@ -560,7 +559,7 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MEj-M2-Aqd">
                             <rect key="frame" x="0.0" y="0.0" width="100" height="3"/>
-                            <color key="backgroundColor" red="0.55182963610000002" green="0.348516196" blue="0.72650402780000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="100" id="Dyb-zf-R8A"/>
                                 <constraint firstAttribute="height" constant="3" id="XWE-Ju-Xz5"/>

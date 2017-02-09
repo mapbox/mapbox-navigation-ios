@@ -15,11 +15,6 @@ class RouteTableViewHeaderView: UIView {
     
     var delegate: RouteTableViewHeaderViewDelegate?
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        progressBar.backgroundColor = NavigationUI.shared.tintColor
-    }
-    
     override var intrinsicContentSize: CGSize {
         get {
             return CGSize(width: bounds.width, height: 106)
@@ -31,6 +26,7 @@ class RouteTableViewHeaderView: UIView {
     var progress: CGFloat = 0 {
         didSet {
             if (progressBarWidthConstraint != nil) {
+                progressBar.backgroundColor = NavigationUI.shared.tintColor
                 progressBarWidthConstraint.constant = bounds.width * progress
                 setNeedsUpdateConstraints()
             }
