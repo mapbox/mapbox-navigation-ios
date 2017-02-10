@@ -132,6 +132,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
              Otherwise, it will continue to compare the user to the old route and continually reroute the user.
              */
             self.navigation?.routeProgress = RouteProgress(route: self.userRoute!)
+            self.navigation?.routeProgress.currentLegProgress.stepIndex = 0
         }
     }
     
