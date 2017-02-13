@@ -14,6 +14,10 @@ public class NavigationUI: NSObject {
     
     public static let shared = NavigationUI()
     
+    override public class func initialize() {
+        _ = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+    }
+    
     fileprivate var _tintColor: UIColor?
     fileprivate var _tintStrokeColor: UIColor?
     fileprivate var _primaryTextColor: UIColor?

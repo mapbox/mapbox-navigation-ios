@@ -12,7 +12,7 @@
         <!--Route View Controller-->
         <scene sceneID="Cs3-hm-Rck">
             <objects>
-                <viewController modalTransitionStyle="crossDissolve" id="2bw-kK-8r6" customClass="RouteViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RouteViewController" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2bw-kK-8r6" customClass="RouteViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="THp-y6-1qy"/>
                         <viewControllerLayoutGuide type="bottom" id="6js-v8-urs"/>
@@ -24,13 +24,13 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8F-ce-HhC">
                                 <rect key="frame" x="0.0" y="20" width="375" height="323.5"/>
                                 <connections>
-                                    <segue destination="3z2-H5-unA" kind="embed" identifier="RouteMapViewController" id="xe9-So-jlT"/>
+                                    <segue destination="3z2-H5-unA" kind="embed" identifier="MapViewControllerSegueIdentifier" id="xe9-So-jlT"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRq-fK-Z45">
                                 <rect key="frame" x="0.0" y="343.5" width="375" height="323.5"/>
                                 <connections>
-                                    <segue destination="kIa-c9-1zL" kind="embed" identifier="RouteTableViewController" id="GhH-LH-REi"/>
+                                    <segue destination="kIa-c9-1zL" kind="embed" identifier="TableViewControllerSegueIdentifier" id="GhH-LH-REi"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -55,10 +55,10 @@
             </objects>
             <point key="canvasLocation" x="3214" y="126"/>
         </scene>
-        <!--Delegate-->
+        <!--Route Map View Controller-->
         <scene sceneID="UYQ-T8-Kjj">
             <objects>
-                <viewController id="3z2-H5-unA" customClass="RouteMapViewController" customModule="MapboxNavigationUI" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RouteMapViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3z2-H5-unA" customClass="RouteMapViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ZZK-63-0V1"/>
                         <viewControllerLayoutGuide type="bottom" id="fVn-1d-beh"/>
@@ -99,9 +99,6 @@
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
                                 </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <outlet property="delegate" destination="3z2-H5-unA" id="7Np-mq-yjP"/>
-                                </connections>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" userLabel="Maneuver View">
                                 <rect key="frame" x="0.0" y="8" width="375" height="104"/>
@@ -125,8 +122,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="mapView" destination="nNr-30-cGD" id="iAR-yv-G9p"/>
-                        <outlet property="recenterButton" destination="yQ4-ig-aIN" id="dQa-gg-KMM"/>
+                        <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
+                        <outlet property="recenterButton" destination="yQ4-ig-aIN" id="sww-Jx-zpo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VoA-f6-EWh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -425,12 +422,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iiH-rk-KIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4770" y="-210"/>
+            <point key="canvasLocation" x="4769" y="-234"/>
         </scene>
         <!--Route Table View Controller-->
         <scene sceneID="rc4-rm-VzX">
             <objects>
-                <viewController storyboardIdentifier="RouteTableViewIdentifier" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kIa-c9-1zL" customClass="RouteTableViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RouteTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kIa-c9-1zL" customClass="RouteTableViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dPf-IQ-kzY"/>
                         <viewControllerLayoutGuide type="bottom" id="RNX-I0-vhR"/>

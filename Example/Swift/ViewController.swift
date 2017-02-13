@@ -200,14 +200,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     func startNavigation(_ route: Route) {
-        
         let controller = NavigationUI.instantiate(route: route, directions: directions)
         controller.pendingCamera = mapView.camera
         present(controller, animated: true, completion: nil)
-        
-        controller.didTapCancelHandler = {
-            controller.dismiss(animated: true, completion: nil)
-        }
     }
     
     func endNavigation() {
