@@ -25,10 +25,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var recenterButton: UIButton!
     
+    var routePageViewController: RoutePageViewController!
+    
     let routeStepFormatter = RouteStepFormatter()
     
     var route: Route { return routeController.routeProgress.route }
-    var routePageViewController: RoutePageViewController!
+    
     var directions: Directions!
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera?
@@ -52,13 +54,9 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
         
-        recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        mapView.delegate = self
         mapView.tintColor = NavigationUI.shared.tintColor
-        
-        let camera = mapView.camera
-        camera.altitude = 1_000
-        camera.pitch = 45
-        mapView.camera = camera
+        recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -177,14 +175,17 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         routeTask?.cancel()
         
         let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course)
-        
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
             if let route = routes?.first {
-                self?.routeController.routeProgress = RouteProgress(route: route)
-                self?.routeController.routeProgress.currentLegProgress.stepIndex = 0
-                self?.giveLocalNotification(self!.routeController.routeProgress.currentLegProgress.currentStep)
-                self?.mapView.annotate([route], clearMap: true)
-                self?.mapView.userTrackingMode = .followWithCourse
+                strongSelf.routeController.routeProgress = RouteProgress(route: route)
+                strongSelf.routeController.routeProgress.currentLegProgress.stepIndex = 0
+                strongSelf.giveLocalNotification(self!.routeController.routeProgress.currentLegProgress.currentStep)
+                strongSelf.mapView.annotate([route], clearMap: true)
+                strongSelf.mapView.userTrackingMode = .followWithCourse
                 
                 // Tell UI elements to update
                 NotificationCenter.default.post(name:RouteControllerNotification.didReceiveNewRoute, object: self, userInfo: nil)

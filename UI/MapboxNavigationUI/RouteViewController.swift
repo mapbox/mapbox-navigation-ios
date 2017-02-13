@@ -1,6 +1,5 @@
 import UIKit
 import MapboxNavigation
-import MapboxNavigationUI
 import MapboxDirections
 import Mapbox
 import Pulley
@@ -32,12 +31,6 @@ public class RouteViewController: PulleyViewController {
     // TODO:
     public var origin: MGLAnnotation?
     
-    /**
-     `didTapCancelHandler` is a closure that will be called when a user
-     taps the cancel button.
-     */
-    public var didTapCancelHandler:()->Void={}
-    
     var routeController: RouteController!
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
@@ -65,24 +58,16 @@ public class RouteViewController: PulleyViewController {
     }
     
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if routeController == nil {
-            routeController = RouteController(route: route)
-            
-            if Bundle.main.backgroundModeLocationSupported {
-                routeController.locationManager.activityType = .automotiveNavigation
-                routeController.locationManager.allowsBackgroundLocationUpdates = true
-            }
-        }
-        
+        setupRouteController()
         switch segue.identifier ?? "" {
-        case "RouteMapViewController":
+        case "MapViewControllerSegueIdentifier":
             if let controller = segue.destination as? RouteMapViewController {
                 controller.routeController = routeController
                 controller.destination = destination
                 controller.directions = directions
                 mapViewController = controller
             }
-        case "RouteTableViewController":
+        case "TableViewControllerSegueIdentifier":
             if let controller = segue.destination as? RouteTableViewController {
                 controller.headerView.delegate = self
                 controller.routeController = routeController
@@ -90,6 +75,17 @@ public class RouteViewController: PulleyViewController {
             }
         default:
             break
+        }
+    }
+    
+    func setupRouteController() {
+        if routeController == nil {
+            routeController = RouteController(route: route)
+            
+            if Bundle.main.backgroundModeLocationSupported {
+                routeController.locationManager.activityType = .automotiveNavigation
+                routeController.locationManager.allowsBackgroundLocationUpdates = true
+            }
         }
     }
     
@@ -102,7 +98,7 @@ public class RouteViewController: PulleyViewController {
 
 extension RouteViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
-        didTapCancelHandler()
+        dismiss(animated: true, completion: nil)
     }
 }
 
