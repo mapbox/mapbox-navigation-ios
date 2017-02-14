@@ -10,6 +10,7 @@ extension UIColor {
     fileprivate class var defaultLine: UIColor { get { return #colorLiteral(red: 151.0/255.0, green: 151.0/255.0, blue: 151.0/255.0, alpha: 0.6) } }
 }
 
+@objc(MBNavigationUI)
 public class NavigationUI: NSObject {
     
     public static let shared = NavigationUI()

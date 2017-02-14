@@ -12,7 +12,7 @@
         <!--Route View Controller-->
         <scene sceneID="Cs3-hm-Rck">
             <objects>
-                <viewController storyboardIdentifier="RouteViewController" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2bw-kK-8r6" customClass="RouteViewController" customModule="MapboxNavigationUI" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RouteViewController" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2bw-kK-8r6" customClass="MBRouteViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="THp-y6-1qy"/>
                         <viewControllerLayoutGuide type="bottom" id="6js-v8-urs"/>
@@ -154,10 +154,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h67-zB-BKz" userLabel="instructionView">
-                                <rect key="frame" x="20" y="0.0" width="303" height="113"/>
+                                <rect key="frame" x="20" y="0.0" width="303" height="114"/>
                                 <subviews>
                                     <view alpha="0.75" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="dvV-hd-Sbg" customClass="TurnArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="31.5" width="50" height="50"/>
+                                        <rect key="frame" x="10" y="32" width="50" height="50"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="80X-15-Wvm"/>
@@ -170,10 +170,10 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yJp-ub-NDb" userLabel="Gravity View">
-                                        <rect key="frame" x="70" y="18" width="223" height="77"/>
+                                        <rect key="frame" x="70" y="18" width="223" height="78"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="223" height="45.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="223" height="46"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="38"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -192,7 +192,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Elm St NW" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="45.5" width="223" height="31.5"/>
+                                                <rect key="frame" x="0.0" y="46" width="223" height="32"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                                 <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -226,10 +226,10 @@
                                         <rect key="frame" x="-3" y="129" width="310" height="40"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="40"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="10" height="10"/>
                                                 <subviews>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-3z-hNh" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="5" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="9u5-JM-rz5"/>
@@ -242,7 +242,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xwq-ce-lBE" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="35" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="Yj3-WT-VYi"/>
@@ -255,7 +255,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eHe-aK-9BX" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="65" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="D5v-3d-Jeh"/>
@@ -268,7 +268,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="tg6-zK-yeN" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="95" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="MCS-vE-znn"/>
@@ -281,7 +281,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1SY-R8-0Ga" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="125" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="IYA-R3-E7i"/>
@@ -294,7 +294,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="wG2-Wg-gPO" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="155" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="SCC-vU-ZoY"/>
@@ -307,7 +307,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="y28-An-Esx" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="185" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="DsZ-2f-pEu"/>
@@ -320,7 +320,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="W9A-Qo-Q2I" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="215" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="18o-rV-gwp"/>
@@ -333,7 +333,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Q0R-gA-tRA" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="245" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="CMh-Oa-n2C"/>
@@ -346,7 +346,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="WfH-xJ-3Pp" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="275" y="5" width="30" height="30"/>
+                                                        <rect key="frame" x="-167" y="-130" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="DAD-7R-XgQ"/>
