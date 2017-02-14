@@ -12,13 +12,21 @@ import Pulley
  */
 public class RouteViewController: PulleyViewController {
     
-    /// A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+    // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route!
     
-    // TODO:
+    /** 
+     `destination` is an instance of `MGLAnnotation` that will be showned on
+     on the destination of your route. The last coordinate of the route will be
+     used if no destination is given.
+    */
     public var destination: MGLAnnotation!
     
-    // TODO:
+    /**
+     `directions` is an instance of `Directions` need for rerouting.
+     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+     for further information.
+     */
     public var directions: Directions!
     
     /**
@@ -28,7 +36,9 @@ public class RouteViewController: PulleyViewController {
      */
     public var pendingCamera: MGLMapCamera?
     
-    // TODO:
+    /**
+     `origin` is an instance of `MGLAnnotation` representing the origin of your route.
+     */
     public var origin: MGLAnnotation?
     
     var routeController: RouteController!
@@ -40,7 +50,9 @@ public class RouteViewController: PulleyViewController {
     }
     
     required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
-        fatalError("init(contentViewController:drawerViewController:) has not been implemented")
+        fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
+                   "Use NavigationUI.instantiate(route:directions:) if you are instantiating programmatically " +
+                   "or a storyboard reference to Navigation if you are using storyboards.")
     }
     
     public override func viewWillAppear(_ animated: Bool) {

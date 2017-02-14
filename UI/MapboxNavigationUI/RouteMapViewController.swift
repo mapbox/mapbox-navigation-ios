@@ -116,26 +116,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         }
     }
     
-    func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
-        if annotation is ArrowStrokePolyline {
-            return NavigationUI.shared.tintStrokeColor
-        } else if annotation is ArrowFillPolyline {
-            return .white
-        } else {
-            return NavigationUI.shared.tintColor
-        }
-    }
-    
-    func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
-        if annotation is ArrowStrokePolyline {
-            return 7
-        } else if annotation is ArrowFillPolyline {
-            return 6
-        } else {
-            return 8
-        }
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier ?? "" {
         case "RoutePageViewController":
@@ -340,6 +320,26 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 // MARK: MGLMapViewDelegate
 
 extension RouteMapViewController: MGLMapViewDelegate {
+    func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
+        if annotation is ArrowStrokePolyline {
+            return NavigationUI.shared.tintStrokeColor
+        } else if annotation is ArrowFillPolyline {
+            return .white
+        } else {
+            return NavigationUI.shared.tintColor
+        }
+    }
+    
+    func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
+        if annotation is ArrowStrokePolyline {
+            return 7
+        } else if annotation is ArrowFillPolyline {
+            return 6
+        } else {
+            return 8
+        }
+    }
+    
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
         if resetTrackingModeTimer != nil {
             resetTrackingModeTimer.invalidate()
