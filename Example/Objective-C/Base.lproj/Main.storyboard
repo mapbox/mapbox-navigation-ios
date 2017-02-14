@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D17a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -63,6 +63,7 @@
                         <outlet property="instructionsLabel" destination="Utc-y1-Iha" id="fD1-Uc-OE7"/>
                         <outlet property="instructionsView" destination="sBM-NO-zIk" id="QlJ-Ng-v4Z"/>
                         <outlet property="mapView" destination="X5o-6Y-yo1" id="mhJ-rm-dAI"/>
+                        <segue destination="hvP-3P-Yih" kind="presentation" identifier="StartNavigation" id="o0l-Y2-s2N"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -73,6 +74,14 @@
                 </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-436" y="103"/>
+        </scene>
+        <!--Navigation-->
+        <scene sceneID="QgB-cn-TrA">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="org.cocoapods.MapboxNavigationUI" id="hvP-3P-Yih" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="On0-O3-mdF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="153" y="103"/>
         </scene>
     </scenes>
 </document>

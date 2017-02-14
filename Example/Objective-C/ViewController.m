@@ -3,6 +3,7 @@
 @import AVFoundation;
 @import MapboxNavigation;
 @import MapboxDirections;
+@import MapboxNavigationUI;
 @import Mapbox;
 
 @interface ViewController () <AVSpeechSynthesizerDelegate>
@@ -11,6 +12,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *instructionsLabel;
 @property (nonatomic, assign) CLLocationCoordinate2D destination;
 @property (nonatomic) MBDirections *directions;
+@property (nonatomic) MBRoute *route;
 @property (nonatomic) MBRouteController *navigation;
 @property (nonatomic) NSLengthFormatter *lengthFormatter;
 @property (nonatomic) AVSpeechSynthesizer *speechSynth;
@@ -136,16 +138,25 @@ static NSString *MapboxAccessToken = @"<#Your Mapbox access token#>";
         
         free(routeCoordinates);
         
+        self.route = route;
+        
         [self startNavigation:route];
     }];
     
     [task resume];
 }
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"StartNavigation"]) {
+        MBRouteViewController *controller = (MBRouteViewController *)[segue destinationViewController];
+        controller.route = self.route;
+        controller.directions = self.directions;
+    }
+}
+
 - (void)startNavigation:(MBRoute *)route {
-    self.mapView.userTrackingMode = MGLUserTrackingModeFollowWithCourse;
-    self.navigation = [[MBRouteController alloc] initWithRoute:route];
-    [self.navigation resume];
+    [[MBNavigationUI shared] setTintColor:[UIColor redColor]];
+    [self performSegueWithIdentifier:@"StartNavigation" sender:self];
 }
 
 @end
