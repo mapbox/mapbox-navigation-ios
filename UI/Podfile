@@ -1,0 +1,15 @@
+use_frameworks!
+
+def shared_pods
+  pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => 'ceaf58b780fc17ea44a9150041b602d017c1e567'
+  pod 'MapboxGeocoder.swift', :git => 'https://github.com/mapbox/MapboxGeocoder.swift.git', :branch => 'swift3'
+  pod 'MapboxNavigation.swift', :path => '..'
+  pod 'Mapbox-iOS-SDK', :podspec => 'https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.1/platform/ios/Mapbox-iOS-SDK.podspec'
+  pod 'Pulley', '~> 1.3.0'
+  pod 'SDWebImage', '~> 4.0.0'
+end
+
+target 'MapboxNavigationUI' do
+  platform :ios, '9.0'
+  shared_pods
+end

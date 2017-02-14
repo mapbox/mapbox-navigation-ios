@@ -1,0 +1,53 @@
+PODS:
+  - Mapbox-iOS-SDK (3.4.1)
+  - MapboxDirections.swift (0.6.0):
+    - Polyline (~> 4.0.0)
+  - MapboxGeocoder.swift (0.5.1)
+  - MapboxNavigation.swift (0.0.4):
+    - MapboxDirections.swift
+  - Polyline (4.0.0)
+  - Pulley (1.3.0)
+  - SDWebImage (4.0.0):
+    - SDWebImage/Core (= 4.0.0)
+  - SDWebImage/Core (4.0.0)
+
+DEPENDENCIES:
+  - Mapbox-iOS-SDK (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.1/platform/ios/Mapbox-iOS-SDK.podspec`)
+  - MapboxDirections.swift (from `https://github.com/mapbox/MapboxDirections.swift.git`, commit `ceaf58b780fc17ea44a9150041b602d017c1e567`)
+  - MapboxGeocoder.swift (from `https://github.com/mapbox/MapboxGeocoder.swift.git`, branch `swift3`)
+  - MapboxNavigation.swift (from `..`)
+  - Pulley (~> 1.3.0)
+  - SDWebImage (~> 4.0.0)
+
+EXTERNAL SOURCES:
+  Mapbox-iOS-SDK:
+    :podspec: https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.1/platform/ios/Mapbox-iOS-SDK.podspec
+  MapboxDirections.swift:
+    :commit: ceaf58b780fc17ea44a9150041b602d017c1e567
+    :git: https://github.com/mapbox/MapboxDirections.swift.git
+  MapboxGeocoder.swift:
+    :branch: swift3
+    :git: https://github.com/mapbox/MapboxGeocoder.swift.git
+  MapboxNavigation.swift:
+    :path: ".."
+
+CHECKOUT OPTIONS:
+  MapboxDirections.swift:
+    :commit: ceaf58b780fc17ea44a9150041b602d017c1e567
+    :git: https://github.com/mapbox/MapboxDirections.swift.git
+  MapboxGeocoder.swift:
+    :commit: d1b168acc87378ee400065918a17e3f707e036d1
+    :git: https://github.com/mapbox/MapboxGeocoder.swift.git
+
+SPEC CHECKSUMS:
+  Mapbox-iOS-SDK: 9c0d23e9a3784e6c9e45af4339898e4598b5b09b
+  MapboxDirections.swift: 4acd753d0079bae4f2fae2b2cbda98922909de09
+  MapboxGeocoder.swift: 04f80b3856e5cd1ff0af9910dbf14d27058ce906
+  MapboxNavigation.swift: 281f0f3dc01bbd06732aac30c769af0dd2948689
+  Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
+  Pulley: 5123ca4b89cd89e3c7ac92b643f892aa7738f374
+  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
+
+PODFILE CHECKSUM: 061d6fe3f09a51301b046f85d81d87a40af7b9a7
+
+COCOAPODS: 1.2.0
