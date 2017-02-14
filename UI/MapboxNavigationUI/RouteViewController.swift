@@ -4,13 +4,17 @@ import MapboxDirections
 import Mapbox
 import Pulley
 
+@objc(MBNavigationPulleyViewController)
+public class NavigationPulleyViewController: PulleyViewController {}
+
 /**
  `RouteViewController` is fully featured, turn by turn navigation UI.
  
  It provides step by step instructions, an overview of all steps
  for the given route and support for basic styling.
  */
-public class RouteViewController: PulleyViewController {
+@objc(MBRouteViewController)
+public class RouteViewController: NavigationPulleyViewController {
     
     // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route!
@@ -98,6 +102,12 @@ public class RouteViewController: PulleyViewController {
                 routeController.locationManager.activityType = .automotiveNavigation
                 routeController.locationManager.allowsBackgroundLocationUpdates = true
             }
+        }
+        
+        if destination == nil {
+            let annotation = MGLPointAnnotation()
+            annotation.coordinate = route.coordinates!.last!
+            destination = annotation
         }
     }
     
