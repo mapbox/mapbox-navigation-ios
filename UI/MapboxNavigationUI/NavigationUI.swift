@@ -24,31 +24,43 @@ public class NavigationUI: NSObject {
     fileprivate var _secondaryTextColor: UIColor?
     fileprivate var _lineColor: UIColor?
     
+    // Used for guidance arrow, highlighted text and progress bars.
     public var tintColor: UIColor {
         get { return _tintColor ?? .defaultTint }
         set { _tintColor = newValue }
     }
     
+    // Used for guidance arrow.
     public var tintStrokeColor: UIColor {
         get { return _tintStrokeColor ?? .defaultTintStroke }
         set { _tintStrokeColor = newValue }
     }
     
+    // Used for titles and prioritized information.
     public var primaryTextColor: UIColor {
         get { return _primaryTextColor ?? .defaultPrimaryText }
         set { _primaryTextColor = newValue }
     }
     
+    // Used for subtitles, distances and accessory labels.
     public var secondaryTextColor: UIColor {
         get { return _secondaryTextColor ?? .defaultSecondaryText }
         set { _secondaryTextColor = newValue }
     }
     
+    // Used for separators in table views.
     public var lineColor: UIColor {
         get { return _lineColor ?? .defaultLine }
         set { _lineColor = newValue }
     }
     
+    /**
+     Instantiates a `RouteViewController` providing turn by turn navigation for
+     the given route. A `direction` object is needed for potential rerouting.
+     
+     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+     for further information.
+     */
     public class func instantiate(route: Route, directions: Directions) -> RouteViewController {
         let destination = MGLPointAnnotation()
         destination.coordinate = route.coordinates!.last!
