@@ -29,7 +29,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var currentManeuverArrowPolylines: [ArrowFillPolyline] = []
     var currentManeuverArrowStrokePolylines: [ArrowFillPolyline] = []
     let distanceFormatter = DistanceFormatter(approximate: true)
-    let secondsBeforeResetTrackingMode:TimeInterval = 25.0
     
     var resetTrackingModeTimer: Timer!
     
@@ -114,7 +113,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
     
     func startResetTrackingModeTimer() {
-        resetTrackingModeTimer = Timer.scheduledTimer(timeInterval: secondsBeforeResetTrackingMode, target: self, selector: #selector(trackingModeTimerDone), userInfo: nil, repeats: false)
+        resetTrackingModeTimer = Timer.scheduledTimer(timeInterval: MBSecondsBeforeResetTrackingMode, target: self, selector: #selector(trackingModeTimerDone), userInfo: nil, repeats: false)
     }
     
     func trackingModeTimerDone() {
