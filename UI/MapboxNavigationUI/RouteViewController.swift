@@ -81,6 +81,7 @@ public class RouteViewController: NavigationPulleyViewController {
                 controller.routeController = routeController
                 controller.destination = destination
                 controller.directions = directions
+                controller.pendingCamera = pendingCamera
                 mapViewController = controller
             }
         case "TableViewControllerSegueIdentifier":
