@@ -1,11 +1,3 @@
-//
-//  RouteViewController.swift
-//  Voyage
-//
-//  Created by Minh Nguyen on 2016-08-23.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import UIKit
 import Mapbox
 import MapboxDirections

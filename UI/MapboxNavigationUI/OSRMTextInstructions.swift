@@ -1,10 +1,3 @@
-//
-//  OSRMTextInstructions.swift
-//
-//  Created by Johan Uhle on 01.11.16.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import Foundation
 import MapboxDirections
 

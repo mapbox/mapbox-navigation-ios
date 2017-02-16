@@ -1,10 +1,3 @@
-//
-//  String.swift
-//
-//  Created by Minh Nguyen on 2016-10-14.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import Foundation
 
 extension String {
