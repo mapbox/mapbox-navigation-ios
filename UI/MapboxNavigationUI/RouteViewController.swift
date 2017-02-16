@@ -45,11 +45,21 @@ public class RouteViewController: NavigationPulleyViewController {
      */
     public var origin: MGLAnnotation?
     
-    /*
+    /**
      `sendNotifications` toggle sending of UILocalNotification upon upcoming
      steps when application is in the background.
      */
     public var sendNotifications: Bool = true
+    
+    /**
+     `didExitNavigationHandler` is called when the this controller is dismissed.
+     */
+    public var didDismissNavigationHandler: (() -> ())?
+    
+    /**
+     `willExitNavigationHandler` is called when the cancel button is tapped.
+     */
+    public var willDismissNavigationHandler: (() -> ())?
     
     var routeController: RouteController!
     var tableViewController: RouteTableViewController?
@@ -212,7 +222,10 @@ public class RouteViewController: NavigationPulleyViewController {
 
 extension RouteViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
-        dismiss(animated: true, completion: nil)
+        self.willDismissNavigationHandler?()
+        dismiss(animated: true, completion: {
+            self.didDismissNavigationHandler?()
+        })
     }
 }
 
