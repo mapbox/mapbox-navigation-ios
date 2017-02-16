@@ -174,9 +174,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.
         let controller = NavigationUI.instantiate(route: route, directions: directions)
-        
-        // Set the new views camera so it does not start at 0,0,0
-        controller.pendingCamera = mapView.camera
         present(controller, animated: true, completion: nil)
     }
     

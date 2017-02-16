@@ -53,6 +53,9 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.addAnnotation(destination)
         
         if let camera = pendingCamera {
+            mapView.camera = camera
+        } else {
+            let camera = mapView.camera
             camera.altitude = 1_000
             camera.pitch = 45
             mapView.camera = camera
