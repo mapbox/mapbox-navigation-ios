@@ -45,6 +45,12 @@ public class RouteViewController: NavigationPulleyViewController {
      */
     public var origin: MGLAnnotation?
     
+    /*
+     `sendNotifications` toggle sending of UILocalNotification upon upcoming
+     steps when application is in the background.
+     */
+    public var sendNotifications: Bool = true
+    
     var routeController: RouteController!
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
@@ -146,21 +152,22 @@ public class RouteViewController: NavigationPulleyViewController {
     }
     
     func giveLocalNotification(_ step: RouteStep) {
-        if UIApplication.shared.applicationState == .background {
-            let notification = UILocalNotification()
-            notification.alertBody = routeStepFormatter.string(for: step)
-            notification.fireDate = Date()
-            
-            UIApplication.shared.cancelAllLocalNotifications()
-            
-            // Remove all outstanding notifications from notification center.
-            // This will only work if it's set to 1 and then back to 0.
-            // This way, there is always just one notification.
-            UIApplication.shared.applicationIconBadgeNumber = 0
-            UIApplication.shared.applicationIconBadgeNumber = 1
-            
-            UIApplication.shared.scheduleLocalNotification(notification)
-        }
+        guard sendNotifications else { return }
+        guard UIApplication.shared.applicationState == .background else { return }
+        
+        let notification = UILocalNotification()
+        notification.alertBody = routeStepFormatter.string(for: step)
+        notification.fireDate = Date()
+        
+        UIApplication.shared.cancelAllLocalNotifications()
+        
+        // Remove all outstanding notifications from notification center.
+        // This will only work if it's set to 1 and then back to 0.
+        // This way, there is always just one notification.
+        UIApplication.shared.applicationIconBadgeNumber = 0
+        UIApplication.shared.applicationIconBadgeNumber = 1
+        
+        UIApplication.shared.scheduleLocalNotification(notification)
     }
     
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
