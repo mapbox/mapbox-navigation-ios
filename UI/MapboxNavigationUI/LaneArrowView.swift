@@ -1,10 +1,3 @@
-//
-//  LaneArrowView.swift
-//
-//  Created by Bobby Sudekum on 11/8/16.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import Foundation
 import MapboxDirections
 

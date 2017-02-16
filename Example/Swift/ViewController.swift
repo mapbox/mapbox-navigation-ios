@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  Example
-//
-//  Created by Bobby Sudekum on 11/16/16.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import UIKit
 import MapboxNavigation
 import MapboxNavigationUI
