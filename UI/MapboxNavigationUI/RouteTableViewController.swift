@@ -18,7 +18,6 @@ class RouteTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        resumeNotifications()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -29,11 +28,6 @@ class RouteTableViewController: UIViewController {
         dateComponentsFormatter.unitsStyle = .short
         
         headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        suspendNotifications()
     }
     
     func setupTableView() {
@@ -60,29 +54,16 @@ class RouteTableViewController: UIViewController {
         }
     }
     
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reRoute(_:)), name: RouteControllerNotification.didReceiveNewRoute, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_:)), name: RouteControllerNotification.didReceiveNewRoute, object: routeController)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerNotification.didReceiveNewRoute, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
-    }
-    
-    func progressDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+    func notifyDidChange(routeProgress: RouteProgress) {
         headerView.progress = CGFloat(routeProgress.fractionTraveled)
         showETA(routeProgress: routeProgress)
     }
     
-    func reRoute(_ notification: Notification) {
+    func notifyDidReroute() {
         tableView.reloadData()
     }
     
-    func alertLevelDidChange( _ notifcation: Notification) {
+    func notifyAlertLevelDidChange() {
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             tableView.reloadRows(at: visibleIndexPaths, with: .fade)
         }
