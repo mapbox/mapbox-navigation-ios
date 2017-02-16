@@ -24,25 +24,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3N-JT-loC" customClass="MGLMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="v1J-hQ-lOT">
-                                        <rect key="frame" x="30" y="30" width="315" height="80"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LhY-oz-zsE">
-                                                <rect key="frame" x="8" y="30" width="307" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstItem="LhY-oz-zsE" firstAttribute="centerX" secondItem="v1J-hQ-lOT" secondAttribute="centerX" constant="4" id="1SV-65-dzz"/>
-                                            <constraint firstAttribute="trailing" secondItem="LhY-oz-zsE" secondAttribute="trailing" id="CQg-p2-G8I"/>
-                                            <constraint firstItem="LhY-oz-zsE" firstAttribute="centerY" secondItem="v1J-hQ-lOT" secondAttribute="centerY" id="agk-0n-eb7"/>
-                                            <constraint firstAttribute="height" constant="80" id="edX-1Y-w0h"/>
-                                            <constraint firstItem="LhY-oz-zsE" firstAttribute="leading" secondItem="v1J-hQ-lOT" secondAttribute="leading" constant="8" id="x5W-f0-ov0"/>
-                                        </constraints>
-                                    </view>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Sl-bV-xyU">
                                         <rect key="frame" x="132" y="615" width="111" height="30"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.75" colorSpace="calibratedRGB"/>
@@ -63,12 +44,9 @@
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Hk0-SM-2Wl" secondAttribute="bottom" constant="27" id="7Oc-HJ-zKe"/>
-                                    <constraint firstItem="v1J-hQ-lOT" firstAttribute="top" secondItem="A3N-JT-loC" secondAttribute="top" constant="30" id="C2f-Dr-1w4"/>
                                     <constraint firstItem="8Sl-bV-xyU" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="FIj-BC-6LP"/>
                                     <constraint firstAttribute="bottom" secondItem="8Sl-bV-xyU" secondAttribute="bottom" constant="22" id="LOb-l9-Iql"/>
                                     <constraint firstItem="Hk0-SM-2Wl" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="O4U-Pg-RJR"/>
-                                    <constraint firstItem="v1J-hQ-lOT" firstAttribute="leading" secondItem="A3N-JT-loC" secondAttribute="leading" constant="30" id="UID-OP-Deu"/>
-                                    <constraint firstAttribute="trailing" secondItem="v1J-hQ-lOT" secondAttribute="trailing" constant="30" id="naI-pR-eIs"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/streets-v10"/>
@@ -99,8 +77,6 @@
                     </view>
                     <connections>
                         <outlet property="howToBeginLabel" destination="Hk0-SM-2Wl" id="iU7-G1-DBc"/>
-                        <outlet property="instructionLabel" destination="LhY-oz-zsE" id="Juy-cM-l3n"/>
-                        <outlet property="instructionView" destination="v1J-hQ-lOT" id="qR9-CZ-Eye"/>
                         <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
                         <outlet property="toggleNavigationButton" destination="8Sl-bV-xyU" id="LwJ-MX-oWU"/>
                         <segue destination="dYn-UD-FHX" kind="presentation" identifier="StartNavigation" id="CX3-Eh-kHD"/>
