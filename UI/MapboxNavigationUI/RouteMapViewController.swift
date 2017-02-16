@@ -9,16 +9,13 @@ import SDWebImage
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
-struct RouteControllerNotification {
-    static let didReceiveNewRoute = Notification.Name("RouteControllerDidReceiveNewRoute")
-}
 
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var recenterButton: UIButton!
     
     var routePageViewController: RoutePageViewController!
-    
+    var routeTableViewController: RouteTableViewController!
     let routeStepFormatter = RouteStepFormatter()
     
     var route: Route { return routeController.routeProgress.route }
@@ -28,8 +25,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var pendingCamera: MGLMapCamera?
     
     weak var routeController: RouteController!
-    
-    var routeTask: URLSessionDataTask?
     
     var currentManeuverArrowPolylines: [ArrowFillPolyline] = []
     var currentManeuverArrowStrokePolylines: [ArrowFillPolyline] = []
@@ -63,8 +58,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             camera.pitch = 45
             mapView.camera = camera
         }
-        
-        resumeNotifications()
         
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: .initial, context: nil)
     }
@@ -128,67 +121,25 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.userTrackingMode = .followWithCourse
     }
     
-    // MARK: Route controller notifications
-    
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.didReRoute(_:)), name: RouteControllerShouldReroute, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
+    func notifyDidReroute(route: Route) {
+        mapView.annotate([route], clearMap: true)
+        mapView.userTrackingMode = .followWithCourse
     }
     
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
-    }
-    
-    func didReRoute(_ notification: Notification) {
-        let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
-        routeTask?.cancel()
-        
-        let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course)
-        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
-            guard let strongSelf = self else {
-                return
-            }
-            
-            if let route = routes?.first {
-                strongSelf.routeController.routeProgress = RouteProgress(route: route)
-                strongSelf.routeController.routeProgress.currentLegProgress.stepIndex = 0
-                strongSelf.giveLocalNotification(self!.routeController.routeProgress.currentLegProgress.currentStep)
-                strongSelf.mapView.annotate([route], clearMap: true)
-                strongSelf.mapView.userTrackingMode = .followWithCourse
-                
-                // Tell UI elements to update
-                NotificationCenter.default.post(name:RouteControllerNotification.didReceiveNewRoute, object: self, userInfo: nil)
-            }
-        })
-    }
-    
-    func alertLevelDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+    func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
             updateArrowAnnotations(nextStep: routeProgress)
         } else {
             ArrowStyleLayer.remove(from: mapView)
         }
-        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
-        
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
-            giveLocalNotification(upComingStep)
-        }
     }
     
-    func progressDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
-        let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
+    func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         let stepProgress = routeController.routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         let controller = routePageViewController.currentManeuverPage
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            let routeStepFormatter = RouteStepFormatter()
             controller?.streetLabel.text = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
             controller?.distanceLabel.text = nil
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
@@ -288,24 +239,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
                             nextStep: nextStep,
                             currentManeuverArrowStrokePolylines: &currentManeuverArrowStrokePolylines,
                             currentManeuverArrowPolylines: &currentManeuverArrowPolylines)
-    }
-    
-    func giveLocalNotification(_ step: RouteStep) {
-        if UIApplication.shared.applicationState == .background {
-            let notification = UILocalNotification()
-            notification.alertBody = routeStepFormatter.string(for: step)
-            notification.fireDate = Date()
-            
-            UIApplication.shared.cancelAllLocalNotifications()
-            
-            // Remove all outstanding notifications from notification center.
-            // This will only work if it's set to 1 and then back to 0.
-            // This way, there is always just one notification.
-            UIApplication.shared.applicationIconBadgeNumber = 0
-            UIApplication.shared.applicationIconBadgeNumber = 1
-            
-            UIApplication.shared.scheduleLocalNotification(notification)
-        }
     }
 }
 

@@ -49,6 +49,9 @@ public class RouteViewController: NavigationPulleyViewController {
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     
+    var routeTask: URLSessionDataTask?
+    let routeStepFormatter = RouteStepFormatter()
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -57,6 +60,18 @@ public class RouteViewController: NavigationPulleyViewController {
         fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
                    "Use NavigationUI.instantiate(route:directions:) if you are instantiating programmatically " +
                    "or a storyboard reference to Navigation if you are using storyboards.")
+    }
+    
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        resumeNotifications()
+        self.drawerCornerRadius = 0
+        self.delegate = self
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        suspendNotifications()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -71,6 +86,81 @@ public class RouteViewController: NavigationPulleyViewController {
         
         UIApplication.shared.isIdleTimerDisabled = false
         routeController.suspend()
+    }
+    
+    // MARK: Route controller notifications
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.shouldReroute(notification:)), name: RouteControllerShouldReroute, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
+    }
+    
+    func progressDidChange(notification: NSNotification) {
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
+        let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
+
+        mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
+        tableViewController?.notifyDidChange(routeProgress: routeProgress)
+    }
+    
+    func shouldReroute(notification: NSNotification) {
+        let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
+        routeTask?.cancel()
+        
+        let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course)
+        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if let route = routes?.first {
+                strongSelf.routeController.routeProgress = RouteProgress(route: route)
+                strongSelf.routeController.routeProgress.currentLegProgress.stepIndex = 0
+                
+                strongSelf.giveLocalNotification(strongSelf.routeController.routeProgress.currentLegProgress.currentStep)
+                
+                strongSelf.mapViewController?.notifyDidReroute(route: route)
+                strongSelf.tableViewController?.notifyDidReroute()
+            }
+        })
+    }
+    
+    func alertLevelDidChange(notification: NSNotification) {
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
+        
+        mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
+        tableViewController?.notifyAlertLevelDidChange()
+        
+        if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
+            giveLocalNotification(upComingStep)
+        }
+    }
+    
+    func giveLocalNotification(_ step: RouteStep) {
+        if UIApplication.shared.applicationState == .background {
+            let notification = UILocalNotification()
+            notification.alertBody = routeStepFormatter.string(for: step)
+            notification.fireDate = Date()
+            
+            UIApplication.shared.cancelAllLocalNotifications()
+            
+            // Remove all outstanding notifications from notification center.
+            // This will only work if it's set to 1 and then back to 0.
+            // This way, there is always just one notification.
+            UIApplication.shared.applicationIconBadgeNumber = 0
+            UIApplication.shared.applicationIconBadgeNumber = 1
+            
+            UIApplication.shared.scheduleLocalNotification(notification)
+        }
     }
     
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -110,12 +200,6 @@ public class RouteViewController: NavigationPulleyViewController {
             annotation.coordinate = route.coordinates!.last!
             destination = annotation
         }
-    }
-    
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-        self.drawerCornerRadius = 0
-        self.delegate = self
     }
 }
 
