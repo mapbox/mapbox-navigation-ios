@@ -23,15 +23,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     let directions = Directions(accessToken: MapboxAccessToken)
     var navigation: RouteController?
     var routeViewController: RouteViewController?
-    
-    let lengthFormatter = LengthFormatter()
     lazy var speechSynth = AVSpeechSynthesizer()
-    var isInNavigationMode = false
     var userRoute: Route?
     
     @IBOutlet weak var mapView: MGLMapView!
-    @IBOutlet weak var instructionLabel: UILabel!
-    @IBOutlet weak var instructionView: UIView!
     @IBOutlet weak var toggleNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     
@@ -40,12 +35,11 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         
         mapView.delegate = self
         
-        lengthFormatter.unitStyle = .short
         mapView.userTrackingMode = .follow
         resumeNotifications()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    deinit {
         suspendNotifications()
         navigation?.suspend()
     }
@@ -67,12 +61,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     @IBAction func didToggleNavigation(_ sender: Any) {
-        if isInNavigationMode {
-            endNavigation()
-        } else {
-            startNavigation(userRoute!)
-        }
-        isInNavigationMode = !isInNavigationMode
+        startNavigation(userRoute!)
     }
     
     func resumeNotifications() {
@@ -87,15 +76,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: navigation)
     }
     
-    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if mode == .followWithCourse {
-            toggleNavigationButton.setTitle("End Navigation", for: .normal)
-        } else {
-            toggleNavigationButton.setTitle("Start Navigation", for: .normal)
-        }
-    }
-    
-    // When the alert level changes, this signals the user is ready for a voice announcement
+    // Notification sent when the alert level changes. This signals the user is ready for a new voice announcement.
     func alertLevelDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
@@ -112,27 +93,30 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         } else {
             text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
         }
-        
-        speak(text)
+
+        let utterance = AVSpeechUtterance(string: text)
+        speechSynth.delegate = self
+        speechSynth.speak(utterance)
     }
     
     // Notifications sent on all location updates
     func progressDidChange(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-            instructionView.isHidden = false
-            instructionLabel.text = "In \(roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining))m \(upComingStep.instructions)"
-        } else {
-            instructionView.isHidden = true
-        }
+        // If you are not using MapboxNavigationUI,
+        // this would be a good time to update UI elements.
+        // You can grab the current routeProgress like:
+        // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
     }
     
-    // Fired when the user is no longer on the route.
-    // A new route should be fetched at this time.
+    // Notification sent when the user is determined to be off the current route
     func rerouted(_ notification: NSNotification) {
+        
+        // Interrupt the current instruction
         speechSynth.stopSpeaking(at: .word)
         
+        //
+        // If you're not using MapboxNavigationUI,
+        // this is how you'd handle fetching a new route and setting it as the active route
+        /*
         getRoute {
             /*
              **IMPORTANT**
@@ -193,28 +177,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         }
     }
     
-    func speak(_ text: String) {
-        let utterance = AVSpeechUtterance(string: text)
-        speechSynth.delegate = self
-        speechSynth.speak(utterance)
-    }
-    
     func startNavigation(_ route: Route) {
+        // Pass through a
+        // 1. the route the user will take
+        // 2. A `Directions` class, used for rerouting.
         let controller = NavigationUI.instantiate(route: route, directions: directions)
+        
+        // Set the new views camera so it does not start at 0,0,0
         controller.pendingCamera = mapView.camera
         present(controller, animated: true, completion: nil)
-    }
-    
-    func endNavigation() {
-        instructionView.isHidden = true
-        toggleNavigationButton.isHidden = true
-        howToBeginLabel.isHidden = false
-        mapView.userTrackingMode = .none
-        let camera = mapView.camera
-        camera.pitch = 0
-        mapView.setCamera(camera, animated: true)
-        removeRoutesFromMap()
-        navigation?.suspend()
     }
     
     func removeRoutesFromMap() {
