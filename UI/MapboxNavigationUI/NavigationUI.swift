@@ -2,6 +2,8 @@ import UIKit
 import MapboxDirections
 import Mapbox
 
+let MBSecondsBeforeResetTrackingMode:TimeInterval = 25.0
+
 extension UIColor {
     fileprivate class var defaultTint: UIColor { get { return #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) } }
     fileprivate class var defaultTintStroke: UIColor { get { return #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1) } }
