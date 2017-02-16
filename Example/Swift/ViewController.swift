@@ -175,6 +175,14 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         // 2. A `Directions` class, used for rerouting.
         let controller = NavigationUI.instantiate(route: route, directions: directions)
         present(controller, animated: true, completion: nil)
+        
+        controller.willDismissNavigationHandler = {
+            // Navigation UI will be dismissed
+        }
+        
+        controller.didDismissNavigationHandler = {
+            // Navigation UI did get dismissed
+        }
     }
     
     func removeRoutesFromMap() {
