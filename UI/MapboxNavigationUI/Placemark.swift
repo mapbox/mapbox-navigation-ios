@@ -4,7 +4,7 @@ import Mapbox
 
 let distanceFormatter = DistanceFormatter()
 
-extension MapboxGeocoder.GeocodedPlacemark {
+extension GeocodedPlacemark {
     
     func localizedDistance(to destination: CLLocation, unitStyle: Formatter.UnitStyle) -> String {
         let distance = location.distance(from: destination)
