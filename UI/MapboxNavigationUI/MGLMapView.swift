@@ -3,9 +3,9 @@ import Mapbox
 import MapboxDirections
 import MapboxGeocoder
 
-let sourceIdentifier = "routeSourceID"
-let routeLayerIdentifier = "routeLayerIdentifier"
-let routeLayerCasingIdentifier = "routeLayerCasingIdentifier"
+let sourceIdentifier = "routeSource"
+let routeLayerIdentifier = "routeLayer"
+let routeLayerCasingIdentifier = "routeLayerCasing"
 
 extension MGLMapView {
     public func show(_ placemark: GeocodedPlacemark) {
