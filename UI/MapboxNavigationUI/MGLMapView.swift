@@ -17,8 +17,6 @@ extension MGLMapView {
     }
     
     public func annotate(_ routes: [Route], clearMap: Bool) {
-        
-        // We don't support alternative routes at this point
         guard let route = routes.first, var coordinates = route.coordinates else {
             return
         }

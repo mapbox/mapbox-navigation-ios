@@ -7,6 +7,10 @@ import Pulley
 @objc(MBNavigationPulleyViewController)
 public class NavigationPulleyViewController: PulleyViewController {}
 
+public protocol RouteViewControllerDelegate {
+    func routeViewControllerDidCancelNavigation(_:RouteViewController)
+}
+
 /**
  `RouteViewController` is fully featured, turn by turn navigation UI.
  
@@ -46,20 +50,15 @@ public class RouteViewController: NavigationPulleyViewController {
     public var origin: MGLAnnotation?
     
     /**
+     The receiver’s delegate.
+     */
+    public var navigationDelegate: RouteViewControllerDelegate?
+    
+    /**
      `sendNotifications` toggle sending of UILocalNotification upon upcoming
      steps when application is in the background.
      */
     public var sendNotifications: Bool = true
-    
-    /**
-     `didExitNavigationHandler` is called when the this controller is dismissed.
-     */
-    public var didDismissNavigationHandler: (() -> ())?
-    
-    /**
-     `willExitNavigationHandler` is called when the cancel button is tapped.
-     */
-    public var willDismissNavigationHandler: (() -> ())?
     
     var routeController: RouteController!
     var tableViewController: RouteTableViewController?
@@ -222,10 +221,11 @@ public class RouteViewController: NavigationPulleyViewController {
 
 extension RouteViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
-        self.willDismissNavigationHandler?()
-        dismiss(animated: true, completion: {
-            self.didDismissNavigationHandler?()
-        })
+        if navigationDelegate?.routeViewControllerDidCancelNavigation(self) != nil {
+            // The receiver should handle dismissal of the RouteViewController
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
     }
 }
 
