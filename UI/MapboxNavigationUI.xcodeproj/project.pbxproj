@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A6727B34A8C6F53914D3035 /* Pods_MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C64583718C3C19A76D2AB0DA /* Pods_MapboxNavigationUI.framework */; };
 		35201DFF1E488E510086E92A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35201DFE1E488E510086E92A /* Assets.xcassets */; };
 		35201E011E489ECB0086E92A /* StyleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E001E489ECB0086E92A /* StyleButton.swift */; };
 		35201E031E489ED00086E92A /* StyleKitArrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E021E489ED00086E92A /* StyleKitArrows.swift */; };
@@ -20,32 +19,63 @@
 		35201E171E48A5E20086E92A /* RouteStepFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E161E48A5E20086E92A /* RouteStepFormatter.swift */; };
 		35201E191E48A5F20086E92A /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E181E48A5F20086E92A /* DistanceFormatter.swift */; };
 		35201E1B1E48A6780086E92A /* OSRMTextInstructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E1A1E48A6780086E92A /* OSRMTextInstructions.swift */; };
-		35201E361E48A8200086E92A /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E1F1E48A8200086E92A /* Instructions.plist */; };
-		35201E391E48A8200086E92A /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E261E48A8200086E92A /* Instructions.plist */; };
-		35201E3C1E48A8200086E92A /* Instructions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E2D1E48A8200086E92A /* Instructions.plist */; };
 		35201E411E48A8B00086E92A /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E401E48A8B00086E92A /* String.swift */; };
 		35201E431E48AAE00086E92A /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E421E48AAE00086E92A /* Bundle.swift */; };
 		35201E451E48B0810086E92A /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35201E441E48B0810086E92A /* DashedLineView.swift */; };
 		35201E471E48B4D10086E92A /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35201E461E48B4D10086E92A /* Shields.plist */; };
 		355C837A1E534F3C00DA3A25 /* NavigationUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355C83791E534F3C00DA3A25 /* NavigationUI.swift */; };
 		355DBF3B1E433B9C00671CDD /* RouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355DBF3A1E433B9C00671CDD /* RouteViewController.swift */; };
+		357D67651E576737000B4B23 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 357D67641E576737000B4B23 /* Mapbox.framework */; };
+		357D67661E576739000B4B23 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
+		357D67681E576740000B4B23 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 357D67671E576740000B4B23 /* MapboxGeocoder.framework */; };
+		357D676A1E576745000B4B23 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 357D67691E576745000B4B23 /* MapboxNavigation.framework */; };
+		357D676B1E57674B000B4B23 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
+		357D676D1E57674E000B4B23 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 357D676C1E57674E000B4B23 /* SDWebImage.framework */; };
+		357D676F1E576869000B4B23 /* Pulley.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 357D676E1E576869000B4B23 /* Pulley.framework */; };
 		357E31F11E437C8A0072C0F9 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357E31EE1E437C8A0072C0F9 /* RouteTableViewCell.swift */; };
 		357E31F21E437C8A0072C0F9 /* RoutePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357E31EF1E437C8A0072C0F9 /* RoutePageViewController.swift */; };
 		357E31F31E437C8A0072C0F9 /* RouteManeuverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357E31F01E437C8A0072C0F9 /* RouteManeuverViewController.swift */; };
 		357E31F61E437C900072C0F9 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357E31F41E437C900072C0F9 /* RouteMapViewController.swift */; };
 		357E31F71E437C900072C0F9 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357E31F51E437C900072C0F9 /* RouteTableViewController.swift */; };
 		357E321F1E44CF370072C0F9 /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 357E321E1E44CF370072C0F9 /* Navigation.storyboard */; };
-		35A7DBED1E3A1DF5000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
-		35A7DBEF1E3A1DF7000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
 		35A7DC101E3A2670000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
 		35A7DC111E3A2673000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
 		35B34F701E49F4B90006A3DA /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F6F1E49F4B90006A3DA /* MGLMapView.swift */; };
 		35B34F721E49F6A50006A3DA /* Placemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F711E49F6A50006A3DA /* Placemark.swift */; };
 		35B34F741E49F9080006A3DA /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F731E49F9080006A3DA /* Directions.swift */; };
 		35B34F761E4A30DD0006A3DA /* ArrowStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B34F751E4A30DD0006A3DA /* ArrowStyleLayer.swift */; };
+		35F109D91E5B85BB00636A4E /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35F109CD1E5B855500636A4E /* MapboxNavigation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		35F109CC1E5B855500636A4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 35F109C71E5B855500636A4E /* MapboxNavigation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5ADFBC91DDCC7840011824B;
+			remoteInfo = MapboxNavigation;
+		};
+		35F109CE1E5B855500636A4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 35F109C71E5B855500636A4E /* MapboxNavigation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5ADFBD21DDCC7840011824B;
+			remoteInfo = MapboxNavigationTests;
+		};
+		35F109D51E5B855E00636A4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 35F109D01E5B855E00636A4E /* MapboxNavigation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5ADFBC91DDCC7840011824B;
+			remoteInfo = MapboxNavigation;
+		};
+		35F109D71E5B855E00636A4E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 35F109D01E5B855E00636A4E /* MapboxNavigation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5ADFBD21DDCC7840011824B;
+			remoteInfo = MapboxNavigationTests;
+		};
 		C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -80,18 +110,25 @@
 		355C83791E534F3C00DA3A25 /* NavigationUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationUI.swift; sourceTree = "<group>"; };
 		355DBF381E43386400671CDD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		355DBF3A1E433B9C00671CDD /* RouteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteViewController.swift; sourceTree = "<group>"; };
+		357D67641E576737000B4B23 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
+		357D67671E576740000B4B23 /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
+		357D67691E576745000B4B23 /* MapboxNavigation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxNavigation.framework; path = Carthage/Build/iOS/MapboxNavigation.framework; sourceTree = "<group>"; };
+		357D676C1E57674E000B4B23 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
+		357D676E1E576869000B4B23 /* Pulley.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pulley.framework; path = Carthage/Build/iOS/Pulley.framework; sourceTree = "<group>"; };
 		357E31EE1E437C8A0072C0F9 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		357E31EF1E437C8A0072C0F9 /* RoutePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutePageViewController.swift; sourceTree = "<group>"; };
 		357E31F01E437C8A0072C0F9 /* RouteManeuverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteManeuverViewController.swift; sourceTree = "<group>"; };
 		357E31F41E437C900072C0F9 /* RouteMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMapViewController.swift; sourceTree = "<group>"; };
 		357E31F51E437C900072C0F9 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
-		357E321E1E44CF370072C0F9 /* Navigation.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Navigation.storyboard; sourceTree = "<group>"; };
+		357E321E1E44CF370072C0F9 /* Navigation.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Navigation.storyboard; path = ../Navigation.storyboard; sourceTree = "<group>"; };
 		35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
 		35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
 		35B34F6F1E49F4B90006A3DA /* MGLMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLMapView.swift; sourceTree = "<group>"; };
 		35B34F711E49F6A50006A3DA /* Placemark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placemark.swift; sourceTree = "<group>"; };
 		35B34F731E49F9080006A3DA /* Directions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 		35B34F751E4A30DD0006A3DA /* ArrowStyleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrowStyleLayer.swift; sourceTree = "<group>"; };
+		35F109C71E5B855500636A4E /* MapboxNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MapboxNavigation.xcodeproj; path = ../MapboxNavigation.xcodeproj; sourceTree = "<group>"; };
+		35F109D01E5B855E00636A4E /* MapboxNavigation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MapboxNavigation.xcodeproj; path = ../MapboxNavigation.xcodeproj; sourceTree = "<group>"; };
 		3EFEB33CFE9251A637268CBC /* Pods_MapboxNavigationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4487194DED61BB1B2786B134 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E2526C2EBC58F2BE52847EF /* Pods_Example_Objective_C.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Objective_C.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,9 +144,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35A7DBED1E3A1DF5000BAB5C /* MapboxDirections.framework in Frameworks */,
-				35A7DBEF1E3A1DF7000BAB5C /* Polyline.framework in Frameworks */,
-				0A6727B34A8C6F53914D3035 /* Pods_MapboxNavigationUI.framework in Frameworks */,
+				357D67651E576737000B4B23 /* Mapbox.framework in Frameworks */,
+				357D67661E576739000B4B23 /* MapboxDirections.framework in Frameworks */,
+				35F109D91E5B85BB00636A4E /* MapboxNavigation.framework in Frameworks */,
+				357D67681E576740000B4B23 /* MapboxGeocoder.framework in Frameworks */,
+				357D676A1E576745000B4B23 /* MapboxNavigation.framework in Frameworks */,
+				357D676B1E57674B000B4B23 /* Polyline.framework in Frameworks */,
+				357D676D1E57674E000B4B23 /* SDWebImage.framework in Frameworks */,
+				357D676F1E576869000B4B23 /* Pulley.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,6 +206,7 @@
 		35201E1C1E48A8200086E92A /* Base.lproj */ = {
 			isa = PBXGroup;
 			children = (
+				357E321E1E44CF370072C0F9 /* Navigation.storyboard */,
 				35201E1F1E48A8200086E92A /* Instructions.plist */,
 			);
 			path = Base.lproj;
@@ -192,15 +235,33 @@
 				35201E1C1E48A8200086E92A /* Base.lproj */,
 				35201E251E48A8200086E92A /* de.lproj */,
 				35201E281E48A8200086E92A /* zh-Hans.lproj */,
-				357E321E1E44CF370072C0F9 /* Navigation.storyboard */,
 				35201DFE1E488E510086E92A /* Assets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		35F109C81E5B855500636A4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				35F109CD1E5B855500636A4E /* MapboxNavigation.framework */,
+				35F109CF1E5B855500636A4E /* MapboxNavigationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		35F109D11E5B855E00636A4E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				35F109D61E5B855E00636A4E /* MapboxNavigation.framework */,
+				35F109D81E5B855E00636A4E /* MapboxNavigationTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		7AE3952B1C15B869B74B4F23 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				35F109C71E5B855500636A4E /* MapboxNavigation.xcodeproj */,
 				326BA4F2854BA280DD1C3810 /* Pods-MapboxNavigationUI.debug.xcconfig */,
 				C5F9929D035C5BEF4295C68A /* Pods-MapboxNavigationUI.release.xcconfig */,
 			);
@@ -210,6 +271,11 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				357D676E1E576869000B4B23 /* Pulley.framework */,
+				357D676C1E57674E000B4B23 /* SDWebImage.framework */,
+				357D67691E576745000B4B23 /* MapboxNavigation.framework */,
+				357D67671E576740000B4B23 /* MapboxGeocoder.framework */,
+				357D67641E576737000B4B23 /* Mapbox.framework */,
 				35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */,
 				35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */,
 				4487194DED61BB1B2786B134 /* Pods_Example.framework */,
@@ -225,6 +291,7 @@
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
+				35F109D01E5B855E00636A4E /* MapboxNavigation.xcodeproj */,
 				C5ADFBCB1DDCC7840011824B /* MapboxNavigationUI */,
 				C5ADFBD61DDCC7840011824B /* MapboxNavigationUITests */,
 				357E321D1E44CF370072C0F9 /* Resources */,
@@ -289,12 +356,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C5ADFBDD1DDCC7840011824B /* Build configuration list for PBXNativeTarget "MapboxNavigationUI" */;
 			buildPhases = (
-				7BB11CD465A8BDCD8F732E76 /* [CP] Check Pods Manifest.lock */,
 				C5ADFBC41DDCC7840011824B /* Sources */,
 				C5ADFBC61DDCC7840011824B /* Headers */,
 				C5ADFBC71DDCC7840011824B /* Resources */,
 				35A7DBEB1E3A1C59000BAB5C /* Frameworks */,
-				6F9DB7FDF042021317502E5E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -359,6 +424,16 @@
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 35F109C81E5B855500636A4E /* Products */;
+					ProjectRef = 35F109C71E5B855500636A4E /* MapboxNavigation.xcodeproj */;
+				},
+				{
+					ProductGroup = 35F109D11E5B855E00636A4E /* Products */;
+					ProjectRef = 35F109D01E5B855E00636A4E /* MapboxNavigation.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				C5ADFBC81DDCC7840011824B /* MapboxNavigationUI */,
@@ -367,16 +442,44 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		35F109CD1E5B855500636A4E /* MapboxNavigation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MapboxNavigation.framework;
+			remoteRef = 35F109CC1E5B855500636A4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		35F109CF1E5B855500636A4E /* MapboxNavigationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MapboxNavigationTests.xctest;
+			remoteRef = 35F109CE1E5B855500636A4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		35F109D61E5B855E00636A4E /* MapboxNavigation.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MapboxNavigation.framework;
+			remoteRef = 35F109D51E5B855E00636A4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		35F109D81E5B855E00636A4E /* MapboxNavigationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MapboxNavigationTests.xctest;
+			remoteRef = 35F109D71E5B855E00636A4E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		C5ADFBC71DDCC7840011824B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				35201E471E48B4D10086E92A /* Shields.plist in Resources */,
-				35201E391E48A8200086E92A /* Instructions.plist in Resources */,
 				357E321F1E44CF370072C0F9 /* Navigation.storyboard in Resources */,
-				35201E361E48A8200086E92A /* Instructions.plist in Resources */,
-				35201E3C1E48A8200086E92A /* Instructions.plist in Resources */,
 				35201DFF1E488E510086E92A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -389,39 +492,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		6F9DB7FDF042021317502E5E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MapboxNavigationUI/Pods-MapboxNavigationUI-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7BB11CD465A8BDCD8F732E76 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C5ADFBC41DDCC7840011824B /* Sources */ = {
