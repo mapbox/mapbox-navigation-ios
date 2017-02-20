@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import MapboxDirections
 
 class LaneArrowView: UIView {
