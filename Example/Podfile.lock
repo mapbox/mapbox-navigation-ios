@@ -38,10 +38,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   MapboxDirections.swift:
-    :commit: c15cdb466c4ee104f1cc1b44969f7a7c64671f3f
+    :commit: 1e5802b7dc5628b04b54bfc2444ea8e6c882e086
     :git: https://github.com/mapbox/MapboxDirections.swift.git
   MapboxGeocoder.swift:
-    :commit: 6a4645bf8b19a1cb3703894141fc1bfe5d316d12
+    :commit: 6257e0cabf23e76bab55ea22a73a9c1177b1d970
     :git: https://github.com/mapbox/MapboxGeocoder.swift.git
 
 SPEC CHECKSUMS:
@@ -49,7 +49,7 @@ SPEC CHECKSUMS:
   MapboxDirections.swift: 9dd982fb42be70a284b1ce208a67258478ff3182
   MapboxGeocoder.swift: 373400365d7c1e875b7ff6bb5a95683e47b84788
   MapboxNavigation.swift: 281f0f3dc01bbd06732aac30c769af0dd2948689
-  MapboxNavigationUI.swift: 15931f1a6d3a2ec1fe898df7afe95d94301c30b5
+  MapboxNavigationUI.swift: 0225d1da369d421a0018f792f792acd62cbf0934
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
   Pulley: 99a45ad8aba14dafb2c6f4f16cb9667eb41c0919
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
