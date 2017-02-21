@@ -26,8 +26,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     weak var routeController: RouteController!
     
-    var currentManeuverArrowPolylines: [ArrowFillPolyline] = []
-    var currentManeuverArrowStrokePolylines: [ArrowFillPolyline] = []
     let distanceFormatter = DistanceFormatter(approximate: true)
     
     var resetTrackingModeTimer: Timer!
@@ -130,9 +128,9 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            updateArrowAnnotations(nextStep: routeProgress)
+            updateArrowAnnotations(routeProgress)
         } else {
-            ArrowStyleLayer.remove(from: mapView)
+            mapView.removeArrow()
         }
     }
     
@@ -231,16 +229,13 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         }
     }
     
-    func updateArrowAnnotations(nextStep: RouteProgress) {
-        guard nextStep.currentLegProgress.upComingStep != nil else {
+    func updateArrowAnnotations(_ routeProgress: RouteProgress) {
+        guard routeProgress.currentLegProgress.upComingStep != nil else {
             return
         }
         
-        ArrowStyleLayer.remove(from: mapView)
-        ArrowStyleLayer.add(to: mapView,
-                            nextStep: nextStep,
-                            currentManeuverArrowStrokePolylines: &currentManeuverArrowStrokePolylines,
-                            currentManeuverArrowPolylines: &currentManeuverArrowPolylines)
+        mapView.removeArrow()
+        mapView.addArrow(routeProgress)
     }
 }
 
