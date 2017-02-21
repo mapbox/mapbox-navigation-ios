@@ -9,7 +9,7 @@ class ArrowStyleLayer {
                    nextStep: RouteProgress,
                    currentManeuverArrowStrokePolylines: inout [ArrowFillPolyline],
                    currentManeuverArrowPolylines: inout [ArrowFillPolyline]) {
-        
+        /*
         let maneuverCoordinate = nextStep.currentLegProgress.upComingStep?.maneuverLocation
         let polylineCoordinates = nextStep.route.coordinates
         
@@ -73,7 +73,7 @@ class ArrowStyleLayer {
             
             mapView.style?.addLayer(arrow)
             mapView.style?.insertLayer(arrowStroke, below: arrow)
-        }
+        }*/
     }
     
     class func remove(from mapView: MGLMapView) {

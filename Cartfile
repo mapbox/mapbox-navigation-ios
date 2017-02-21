@@ -1,1 +1,6 @@
-github "mapbox/MapboxDirections.swift" "swift3"
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 3.4
+github "mapbox/MapboxDirections.swift" "master"
+github "Mapbox/MapboxGeocoder.swift" "master"
+github "52inc/Pulley" "master"
+github "rs/SDWebImage" "master"
+
