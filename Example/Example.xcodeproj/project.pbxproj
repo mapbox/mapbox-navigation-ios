@@ -710,7 +710,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -724,7 +723,6 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.navigation.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -764,6 +762,7 @@
 				354620C81E3A543A00BAD0B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		354620D41E3A545100BAD0B3 /* Build configuration list for PBXNativeTarget "Example-Objective-C Tests" */ = {
 			isa = XCConfigurationList;
@@ -772,6 +771,7 @@
 				354620D61E3A545100BAD0B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		35A7DB691E39FA1F000BAB5C /* Build configuration list for PBXProject "Example" */ = {
 			isa = XCConfigurationList;
