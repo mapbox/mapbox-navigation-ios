@@ -1,9 +1,9 @@
 use_frameworks!
 
 def shared_pods
-  pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :branch => 'swift3'
+  pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => '1e5802b7dc5628b04b54bfc2444ea8e6c882e086'
   pod 'MapboxNavigation.swift', :path => '..'
-  pod 'Mapbox-iOS-SDK-symbols', :podspec => 'https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0/platform/ios/Mapbox-iOS-SDK-symbols.podspec'
+  pod 'Mapbox-iOS-SDK', '~> 3.4'
 end
 
 target 'Example-Swift' do

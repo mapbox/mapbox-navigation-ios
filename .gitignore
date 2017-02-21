@@ -1,4 +1,4 @@
-MapboxNavigation.xcworkspace
+Example/MapboxNavigation.xcworkspace
 
 .DS_Store
 
@@ -8,7 +8,7 @@ xcuserdata
 *.xcuserstate
 *.xcscmblueprint
 
-Pods/
+Example/Pods/
 
 Carthage/Build
 Carthage/Checkouts
