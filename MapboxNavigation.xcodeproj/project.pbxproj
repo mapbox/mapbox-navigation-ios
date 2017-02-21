@@ -386,7 +386,7 @@
 		C5ADFBC01DDCC7840011824B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0810;
+				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
@@ -423,8 +423,8 @@
 			projectRoot = "";
 			targets = (
 				C5ADFBC81DDCC7840011824B /* MapboxNavigation */,
-				C5ADFBD11DDCC7840011824B /* MapboxNavigationTests */,
 				351BEBD61E5BCC28006FE110 /* MapboxNavigationUI */,
+				C5ADFBD11DDCC7840011824B /* MapboxNavigationTests */,
 			);
 		};
 /* End PBXProject section */
