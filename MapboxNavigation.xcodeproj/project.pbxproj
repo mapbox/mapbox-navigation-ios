@@ -28,7 +28,6 @@
 		351BEC021E5BCC63006FE110 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBF01E5BCC63006FE110 /* UIView.swift */; };
 		351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC031E5BCC6C006FE110 /* LaneArrowView.swift */; };
 		351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */; };
-		351BEC0C1E5BCC72006FE110 /* ArrowStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC071E5BCC72006FE110 /* ArrowStyleLayer.swift */; };
 		351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC081E5BCC72006FE110 /* Bundle.swift */; };
 		351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC091E5BCC72006FE110 /* DashedLineView.swift */; };
 		351BEC0F1E5BCC72006FE110 /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0A1E5BCC72006FE110 /* Directions.swift */; };
@@ -75,7 +74,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		076C69A42791C495EF2C1163 /* Pods_MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxNavigationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		351BEBD91E5BCC28006FE110 /* MapboxNavigationUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxNavigationUI.h; sourceTree = "<group>"; };
 		351BEBDA1E5BCC28006FE110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,7 +97,6 @@
 		351BEBF01E5BCC63006FE110 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		351BEC031E5BCC6C006FE110 /* LaneArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaneArrowView.swift; sourceTree = "<group>"; };
 		351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManeuverDirection.swift; sourceTree = "<group>"; };
-		351BEC071E5BCC72006FE110 /* ArrowStyleLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrowStyleLayer.swift; sourceTree = "<group>"; };
 		351BEC081E5BCC72006FE110 /* Bundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		351BEC091E5BCC72006FE110 /* DashedLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
 		351BEC0A1E5BCC72006FE110 /* Directions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
@@ -118,10 +115,6 @@
 		35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
-		3EFEB33CFE9251A637268CBC /* Pods_MapboxNavigationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4487194DED61BB1B2786B134 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E2526C2EBC58F2BE52847EF /* Pods_Example_Objective_C.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Objective_C.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6E310830DBF3EFED3E9A072A /* Pods_Example_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryTests.swift; sourceTree = "<group>"; };
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
@@ -177,8 +170,6 @@
 		351BEBD81E5BCC28006FE110 /* MapboxNavigationUI */ = {
 			isa = PBXGroup;
 			children = (
-				351BEC201E5BD4DC006FE110 /* Supporting files */,
-				351BEC071E5BCC72006FE110 /* ArrowStyleLayer.swift */,
 				351BEC081E5BCC72006FE110 /* Bundle.swift */,
 				351BEC091E5BCC72006FE110 /* DashedLineView.swift */,
 				351BEC0A1E5BCC72006FE110 /* Directions.swift */,
@@ -202,6 +193,7 @@
 				351BEBEC1E5BCC63006FE110 /* StyleButton.swift */,
 				351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */,
 				351BEBEE1E5BCC63006FE110 /* StyleLabel.swift */,
+				351BEC201E5BD4DC006FE110 /* Supporting files */,
 				351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */,
 				351BEBF01E5BCC63006FE110 /* UIView.swift */,
 			);
@@ -239,11 +231,6 @@
 				351BEC111E5BCD90006FE110 /* Mapbox.framework */,
 				35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */,
 				35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */,
-				4487194DED61BB1B2786B134 /* Pods_Example.framework */,
-				076C69A42791C495EF2C1163 /* Pods_MapboxNavigation.framework */,
-				3EFEB33CFE9251A637268CBC /* Pods_MapboxNavigationTests.framework */,
-				4E2526C2EBC58F2BE52847EF /* Pods_Example_Objective_C.framework */,
-				6E310830DBF3EFED3E9A072A /* Pods_Example_Swift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -484,7 +471,6 @@
 				351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */,
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				351BEC101E5BCC72006FE110 /* DistanceFormatter.swift in Sources */,
-				351BEC0C1E5BCC72006FE110 /* ArrowStyleLayer.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				351BEBF31E5BCC63006FE110 /* OSRMTextInstructions.swift in Sources */,
 				351BEC001E5BCC63006FE110 /* StyleLabel.swift in Sources */,
@@ -702,6 +688,7 @@
 				);
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mapbox.MapboxNavigation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -726,6 +713,7 @@
 				);
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Mapbox.MapboxNavigation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
