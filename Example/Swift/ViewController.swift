@@ -139,7 +139,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination!])
         options.includesSteps = true
         options.routeShapeResolution = .full
-        options.profileIdentifier = MBDirectionsProfileIdentifierAutomobileAvoidingTraffic
+        options.profileIdentifier = .automobileAvoidingTraffic
         
         _ = directions.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {

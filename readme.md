@@ -27,7 +27,7 @@ You'll need to install two pods, `MapboxNavigation.swift` and `MapboxDirections.
 Add the following lines to your Podfile:
 
 ```ruby
-pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => 'ceaf58b780fc17ea44a9150041b602d017c1e567'
+pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => '1e5802b7dc5628b04b54bfc2444ea8e6c882e086'
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
 ```
 
