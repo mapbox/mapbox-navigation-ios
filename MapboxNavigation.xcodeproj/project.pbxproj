@@ -49,6 +49,7 @@
 		35A7DC101E3A2670000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
 		35A7DC111E3A2673000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
+		35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
 		C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */; };
@@ -64,6 +65,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		35CEA3571E5CEBBC009F2255 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
+			remoteInfo = MapboxNavigation;
+		};
 		C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -137,12 +145,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				351BEC181E5BCDFB006FE110 /* SDWebImage.framework in Frameworks */,
 				351BEC121E5BCD90006FE110 /* Mapbox.framework in Frameworks */,
-				351BEC131E5BCD93006FE110 /* MapboxDirections.framework in Frameworks */,
-				351BEC1A1E5BD019006FE110 /* MapboxGeocoder.framework in Frameworks */,
 				351BEC141E5BCD97006FE110 /* Polyline.framework in Frameworks */,
 				351BEC161E5BCD9B006FE110 /* Pulley.framework in Frameworks */,
-				351BEC181E5BCDFB006FE110 /* SDWebImage.framework in Frameworks */,
+				351BEC131E5BCD93006FE110 /* MapboxDirections.framework in Frameworks */,
+				351BEC1A1E5BD019006FE110 /* MapboxGeocoder.framework in Frameworks */,
+				35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +337,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				35CEA3581E5CEBBC009F2255 /* PBXTargetDependency */,
 			);
 			name = MapboxNavigationUI;
 			productName = MapboxNavigationUI;
@@ -509,6 +519,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		35CEA3581E5CEBBC009F2255 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
+			targetProxy = 35CEA3571E5CEBBC009F2255 /* PBXContainerItemProxy */;
+		};
 		C5ADFBD51DDCC7840011824B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
