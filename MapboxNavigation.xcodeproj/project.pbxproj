@@ -548,7 +548,7 @@
 				);
 				INFOPLIST_FILE = MapboxNavigationUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -574,7 +574,7 @@
 				);
 				INFOPLIST_FILE = MapboxNavigationUI/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -777,6 +777,7 @@
 				351BEBDD1E5BCC28006FE110 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C5ADFBC31DDCC7840011824B /* Build configuration list for PBXProject "MapboxNavigation" */ = {
 			isa = XCConfigurationList;
