@@ -30,24 +30,65 @@
 		351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC091E5BCC72006FE110 /* DashedLineView.swift */; };
 		351BEC0F1E5BCC72006FE110 /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0A1E5BCC72006FE110 /* Directions.swift */; };
 		351BEC101E5BCC72006FE110 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
-		351BEC121E5BCD90006FE110 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEC111E5BCD90006FE110 /* Mapbox.framework */; };
-		351BEC131E5BCD93006FE110 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
-		351BEC141E5BCD97006FE110 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
-		351BEC161E5BCD9B006FE110 /* Pulley.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEC151E5BCD9B006FE110 /* Pulley.framework */; };
-		351BEC181E5BCDFB006FE110 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEC171E5BCDFB006FE110 /* SDWebImage.framework */; };
-		351BEC1A1E5BD019006FE110 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEC191E5BD019006FE110 /* MapboxGeocoder.framework */; };
 		351BEC231E5BD519006FE110 /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC221E5BD519006FE110 /* Navigation.storyboard */; };
 		351BEC251E5BD522006FE110 /* de.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC241E5BD522006FE110 /* de.lproj */; };
 		351BEC271E5BD529006FE110 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC261E5BD529006FE110 /* Base.lproj */; };
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
 		351BEC2B1E5BD538006FE110 /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2A1E5BD538006FE110 /* Shields.plist */; };
 		351BEC2D1E5BD541006FE110 /* zh-Hans.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2C1E5BD541006FE110 /* zh-Hans.lproj */; };
-		358D14551E5E28B200ADE590 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14541E5E28B200ADE590 /* OSRMTextInstructions.framework */; };
-		35A7DBED1E3A1DF5000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
-		35A7DBEF1E3A1DF7000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
-		35A7DC101E3A2670000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
-		35A7DC111E3A2673000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
+		352BBC3B1E5E6A0C00703DF1 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
+		352BBC3C1E5E6A1A00703DF1 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
+		352BBC3D1E5E6A1D00703DF1 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; };
+		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
+		352BBC411E5E6CC100703DF1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34B1E5E418D0004CA57 /* main.m */; };
+		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
+		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
+		358D146B1E5E3B7700ADE590 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 358D14691E5E3B7700ADE590 /* Main.storyboard */; };
+		358D146D1E5E3B7700ADE590 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 358D146C1E5E3B7700ADE590 /* Assets.xcassets */; };
+		358D14701E5E3B7700ADE590 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 358D146E1E5E3B7700ADE590 /* LaunchScreen.storyboard */; };
+		358D148C1E5E3CAC00ADE590 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; };
+		358D148D1E5E3CAC00ADE590 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14941E5E3CB600ADE590 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
+		358D14951E5E3CB600ADE590 /* MapboxDirections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14961E5E3CB600ADE590 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; };
+		358D14971E5E3CB600ADE590 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14981E5E3CB600ADE590 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */; };
+		358D14991E5E3CB600ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D149A1E5E3CB600ADE590 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; };
+		358D149B1E5E3CB600ADE590 /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D149C1E5E3CB600ADE590 /* Pulley.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14921E5E3CB600ADE590 /* Pulley.framework */; };
+		358D149D1E5E3CB600ADE590 /* Pulley.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14921E5E3CB600ADE590 /* Pulley.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D149E1E5E3CB600ADE590 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; };
+		358D149F1E5E3CB600ADE590 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14A01E5E3CC200ADE590 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
+		358D14A11E5E3CC200ADE590 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
+		358D14AA1E5E3FDC00ADE590 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 358D14A91E5E3FDC00ADE590 /* main.m */; };
+		358D14BD1E5E401700ADE590 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
+		358D14BE1E5E401700ADE590 /* MapboxDirections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14BF1E5E401700ADE590 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; };
+		358D14C01E5E401700ADE590 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14C11E5E401700ADE590 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */; };
+		358D14C21E5E401700ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14C31E5E401700ADE590 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; };
+		358D14C41E5E401700ADE590 /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14C51E5E401700ADE590 /* Pulley.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14921E5E3CB600ADE590 /* Pulley.framework */; };
+		358D14C61E5E401700ADE590 /* Pulley.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14921E5E3CB600ADE590 /* Pulley.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14C71E5E401700ADE590 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; };
+		358D14C81E5E401700ADE590 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14C91E5E401700ADE590 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; };
+		358D14CA1E5E401700ADE590 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		358D14CC1E5E401C00ADE590 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
+		358D14CD1E5E401C00ADE590 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
+		35C6A34E1E5E418D0004CA57 /* AppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 35C6A3461E5E418D0004CA57 /* AppDelegate.h */; };
+		35C6A3511E5E418D0004CA57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3481E5E418D0004CA57 /* Assets.xcassets */; };
+		35C6A3521E5E418D0004CA57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3481E5E418D0004CA57 /* Assets.xcassets */; };
+		35C6A3531E5E418D0004CA57 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3491E5E418D0004CA57 /* Base.lproj */; };
+		35C6A3541E5E418D0004CA57 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3491E5E418D0004CA57 /* Base.lproj */; };
+		35C6A3551E5E418D0004CA57 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A34A1E5E418D0004CA57 /* Info.plist */; };
+		35C6A3561E5E418D0004CA57 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A34A1E5E418D0004CA57 /* Info.plist */; };
+		35C6A3591E5E418D0004CA57 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35C6A34C1E5E418D0004CA57 /* ViewController.h */; };
+		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
@@ -64,6 +105,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
+			remoteInfo = "Example-Swift";
+		};
 		35CEA3571E5CEBBC009F2255 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -79,6 +127,43 @@
 			remoteInfo = MapboxNavigation;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		358D14781E5E3C1500ADE590 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				358D14971E5E3CB600ADE590 /* MapboxGeocoder.framework in Embed Frameworks */,
+				358D149B1E5E3CB600ADE590 /* Polyline.framework in Embed Frameworks */,
+				358D14991E5E3CB600ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */,
+				358D149D1E5E3CB600ADE590 /* Pulley.framework in Embed Frameworks */,
+				358D149F1E5E3CB600ADE590 /* SDWebImage.framework in Embed Frameworks */,
+				358D148D1E5E3CAC00ADE590 /* Mapbox.framework in Embed Frameworks */,
+				358D14951E5E3CB600ADE590 /* MapboxDirections.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		358D14CB1E5E401700ADE590 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				358D14CA1E5E401700ADE590 /* Mapbox.framework in Embed Frameworks */,
+				358D14BE1E5E401700ADE590 /* MapboxDirections.framework in Embed Frameworks */,
+				358D14C61E5E401700ADE590 /* Pulley.framework in Embed Frameworks */,
+				358D14C01E5E401700ADE590 /* MapboxGeocoder.framework in Embed Frameworks */,
+				358D14C41E5E401700ADE590 /* Polyline.framework in Embed Frameworks */,
+				358D14C81E5E401700ADE590 /* SDWebImage.framework in Embed Frameworks */,
+				358D14C21E5E401700ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxNavigationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -106,20 +191,37 @@
 		351BEC091E5BCC72006FE110 /* DashedLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
 		351BEC0A1E5BCC72006FE110 /* Directions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 		351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
-		351BEC111E5BCD90006FE110 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
-		351BEC151E5BCD9B006FE110 /* Pulley.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pulley.framework; path = Carthage/Build/iOS/Pulley.framework; sourceTree = "<group>"; };
-		351BEC171E5BCDFB006FE110 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
-		351BEC191E5BD019006FE110 /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
 		351BEC221E5BD519006FE110 /* Navigation.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Navigation.storyboard; path = Resources/Navigation.storyboard; sourceTree = "<group>"; };
 		351BEC241E5BD522006FE110 /* de.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = de.lproj; path = Resources/de.lproj; sourceTree = "<group>"; };
 		351BEC261E5BD529006FE110 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = Resources/Base.lproj; sourceTree = "<group>"; };
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		351BEC2A1E5BD538006FE110 /* Shields.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Shields.plist; path = Resources/Shields.plist; sourceTree = "<group>"; };
 		351BEC2C1E5BD541006FE110 /* zh-Hans.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "zh-Hans.lproj"; path = "Resources/zh-Hans.lproj"; sourceTree = "<group>"; };
-		358D14541E5E28B200ADE590 /* OSRMTextInstructions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSRMTextInstructions.framework; path = Carthage/Build/iOS/OSRMTextInstructions.framework; sourceTree = "<group>"; };
-		35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
-		35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
+		358D14631E5E3B7700ADE590 /* Example-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		358D14651E5E3B7700ADE590 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		358D14671E5E3B7700ADE590 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		358D146A1E5E3B7700ADE590 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		358D146C1E5E3B7700ADE590 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		358D146F1E5E3B7700ADE590 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		358D14711E5E3B7700ADE590 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		358D148B1E5E3CAC00ADE590 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
+		358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
+		358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
+		358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSRMTextInstructions.framework; path = Carthage/Build/iOS/OSRMTextInstructions.framework; sourceTree = "<group>"; };
+		358D14911E5E3CB600ADE590 /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
+		358D14921E5E3CB600ADE590 /* Pulley.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pulley.framework; path = Carthage/Build/iOS/Pulley.framework; sourceTree = "<group>"; };
+		358D14931E5E3CB600ADE590 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
+		358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Objective-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		358D14A91E5E3FDC00ADE590 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
+		35C6A3461E5E418D0004CA57 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "Example/Example-Objective-C/AppDelegate.h"; sourceTree = SOURCE_ROOT; };
+		35C6A3471E5E418D0004CA57 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = "Example/Example-Objective-C/AppDelegate.m"; sourceTree = SOURCE_ROOT; };
+		35C6A3481E5E418D0004CA57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Example/Example-Objective-C/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
+		35C6A3491E5E418D0004CA57 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = "Example/Example-Objective-C/Base.lproj"; sourceTree = SOURCE_ROOT; };
+		35C6A34A1E5E418D0004CA57 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Example/Example-Objective-C/Info.plist"; sourceTree = SOURCE_ROOT; };
+		35C6A34B1E5E418D0004CA57 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Example/Example-Objective-C/main.m"; sourceTree = SOURCE_ROOT; };
+		35C6A34C1E5E418D0004CA57 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = "Example/Example-Objective-C/ViewController.h"; sourceTree = SOURCE_ROOT; };
+		35C6A34D1E5E418D0004CA57 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = "Example/Example-Objective-C/ViewController.m"; sourceTree = SOURCE_ROOT; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryTests.swift; sourceTree = "<group>"; };
@@ -143,14 +245,39 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				351BEC181E5BCDFB006FE110 /* SDWebImage.framework in Frameworks */,
-				351BEC121E5BCD90006FE110 /* Mapbox.framework in Frameworks */,
-				351BEC141E5BCD97006FE110 /* Polyline.framework in Frameworks */,
-				351BEC161E5BCD9B006FE110 /* Pulley.framework in Frameworks */,
-				358D14551E5E28B200ADE590 /* OSRMTextInstructions.framework in Frameworks */,
-				351BEC131E5BCD93006FE110 /* MapboxDirections.framework in Frameworks */,
-				351BEC1A1E5BD019006FE110 /* MapboxGeocoder.framework in Frameworks */,
 				35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		358D14601E5E3B7700ADE590 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				358D14A01E5E3CC200ADE590 /* MapboxNavigation.framework in Frameworks */,
+				358D14A11E5E3CC200ADE590 /* MapboxNavigationUI.framework in Frameworks */,
+				358D14961E5E3CB600ADE590 /* MapboxGeocoder.framework in Frameworks */,
+				358D149A1E5E3CB600ADE590 /* Polyline.framework in Frameworks */,
+				358D14981E5E3CB600ADE590 /* OSRMTextInstructions.framework in Frameworks */,
+				358D149C1E5E3CB600ADE590 /* Pulley.framework in Frameworks */,
+				358D149E1E5E3CB600ADE590 /* SDWebImage.framework in Frameworks */,
+				358D148C1E5E3CAC00ADE590 /* Mapbox.framework in Frameworks */,
+				358D14941E5E3CB600ADE590 /* MapboxDirections.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		358D14A31E5E3FDC00ADE590 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				358D14CC1E5E401C00ADE590 /* MapboxNavigation.framework in Frameworks */,
+				358D14CD1E5E401C00ADE590 /* MapboxNavigationUI.framework in Frameworks */,
+				358D14C91E5E401700ADE590 /* Mapbox.framework in Frameworks */,
+				358D14BD1E5E401700ADE590 /* MapboxDirections.framework in Frameworks */,
+				358D14C51E5E401700ADE590 /* Pulley.framework in Frameworks */,
+				358D14BF1E5E401700ADE590 /* MapboxGeocoder.framework in Frameworks */,
+				358D14C31E5E401700ADE590 /* Polyline.framework in Frameworks */,
+				358D14C71E5E401700ADE590 /* SDWebImage.framework in Frameworks */,
+				358D14C11E5E401700ADE590 /* OSRMTextInstructions.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,8 +285,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35A7DBED1E3A1DF5000BAB5C /* MapboxDirections.framework in Frameworks */,
-				35A7DBEF1E3A1DF7000BAB5C /* Polyline.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,8 +292,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35A7DC101E3A2670000BAB5C /* MapboxDirections.framework in Frameworks */,
-				35A7DC111E3A2673000BAB5C /* Polyline.framework in Frameworks */,
+				352BBC3B1E5E6A0C00703DF1 /* MapboxNavigation.framework in Frameworks */,
+				352BBC3C1E5E6A1A00703DF1 /* MapboxDirections.framework in Frameworks */,
+				352BBC3D1E5E6A1D00703DF1 /* Polyline.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,16 +354,54 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		358D14641E5E3B7700ADE590 /* Example-Swift */ = {
+			isa = PBXGroup;
+			children = (
+				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
+				358D14671E5E3B7700ADE590 /* ViewController.swift */,
+				358D14691E5E3B7700ADE590 /* Main.storyboard */,
+				358D146C1E5E3B7700ADE590 /* Assets.xcassets */,
+				358D146E1E5E3B7700ADE590 /* LaunchScreen.storyboard */,
+				358D14711E5E3B7700ADE590 /* Info.plist */,
+			);
+			name = "Example-Swift";
+			path = "Example/Example-Swift";
+			sourceTree = "<group>";
+		};
+		358D14A71E5E3FDC00ADE590 /* Example-Objective-C */ = {
+			isa = PBXGroup;
+			children = (
+				35C6A3461E5E418D0004CA57 /* AppDelegate.h */,
+				35C6A3471E5E418D0004CA57 /* AppDelegate.m */,
+				35C6A3481E5E418D0004CA57 /* Assets.xcassets */,
+				35C6A3491E5E418D0004CA57 /* Base.lproj */,
+				35C6A34A1E5E418D0004CA57 /* Info.plist */,
+				35C6A34B1E5E418D0004CA57 /* main.m */,
+				35C6A34C1E5E418D0004CA57 /* ViewController.h */,
+				35C6A34D1E5E418D0004CA57 /* ViewController.m */,
+				358D14A81E5E3FDC00ADE590 /* Supporting Files */,
+			);
+			path = "Example-Objective-C";
+			sourceTree = "<group>";
+		};
+		358D14A81E5E3FDC00ADE590 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				358D14A91E5E3FDC00ADE590 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				358D14541E5E28B200ADE590 /* OSRMTextInstructions.framework */,
-				351BEC191E5BD019006FE110 /* MapboxGeocoder.framework */,
-				351BEC171E5BCDFB006FE110 /* SDWebImage.framework */,
-				351BEC151E5BCD9B006FE110 /* Pulley.framework */,
-				351BEC111E5BCD90006FE110 /* Mapbox.framework */,
-				35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */,
-				35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */,
+				358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */,
+				358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */,
+				358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */,
+				358D14911E5E3CB600ADE590 /* Polyline.framework */,
+				358D14921E5E3CB600ADE590 /* Pulley.framework */,
+				358D14931E5E3CB600ADE590 /* SDWebImage.framework */,
+				358D148B1E5E3CAC00ADE590 /* Mapbox.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -257,6 +421,8 @@
 				C5ADFBCB1DDCC7840011824B /* MapboxNavigation */,
 				C5ADFBD61DDCC7840011824B /* MapboxNavigationTests */,
 				351BEBD81E5BCC28006FE110 /* MapboxNavigationUI */,
+				358D14641E5E3B7700ADE590 /* Example-Swift */,
+				358D14A71E5E3FDC00ADE590 /* Example-Objective-C */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
 			);
@@ -268,6 +434,8 @@
 				C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */,
 				C5ADFBD21DDCC7840011824B /* MapboxNavigationTests.xctest */,
 				351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */,
+				358D14631E5E3B7700ADE590 /* Example-Swift.app */,
+				358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -316,7 +484,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				35D457A71E2D253100A89946 /* MBRouteController.h in Headers */,
+				35C6A3591E5E418D0004CA57 /* ViewController.h in Headers */,
 				C5C94C1B1DDCD22B0097296A /* MapboxNavigation.h in Headers */,
+				35C6A34E1E5E418D0004CA57 /* AppDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +511,42 @@
 			productName = MapboxNavigationUI;
 			productReference = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		358D14621E5E3B7700ADE590 /* Example-Swift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example-Swift" */;
+			buildPhases = (
+				358D145F1E5E3B7700ADE590 /* Sources */,
+				358D14601E5E3B7700ADE590 /* Frameworks */,
+				358D14611E5E3B7700ADE590 /* Resources */,
+				358D14781E5E3C1500ADE590 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Example-Swift";
+			productName = "Example-Swift";
+			productReference = 358D14631E5E3B7700ADE590 /* Example-Swift.app */;
+			productType = "com.apple.product-type.application";
+		};
+		358D14A51E5E3FDC00ADE590 /* Example-Objective-C */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 358D14BA1E5E3FDC00ADE590 /* Build configuration list for PBXNativeTarget "Example-Objective-C" */;
+			buildPhases = (
+				358D14A21E5E3FDC00ADE590 /* Sources */,
+				358D14A31E5E3FDC00ADE590 /* Frameworks */,
+				358D14A41E5E3FDC00ADE590 /* Resources */,
+				358D14CB1E5E401700ADE590 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Example-Objective-C";
+			productName = "Example-Objective-C";
+			productReference = 358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */;
+			productType = "com.apple.product-type.application";
 		};
 		C5ADFBC81DDCC7840011824B /* MapboxNavigation */ = {
 			isa = PBXNativeTarget;
@@ -367,11 +573,13 @@
 				C5ADFBCE1DDCC7840011824B /* Sources */,
 				C5ADFBCF1DDCC7840011824B /* Frameworks */,
 				C5ADFBD01DDCC7840011824B /* Resources */,
+				352BBC3A1E5E69A700703DF1 /* Carthage copy frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				C5ADFBD51DDCC7840011824B /* PBXTargetDependency */,
+				352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */,
 			);
 			name = MapboxNavigationTests;
 			productName = MapboxNavigationTests;
@@ -392,6 +600,16 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = GJZR2MEM28;
 						LastSwiftMigration = 0820;
+						ProvisioningStyle = Automatic;
+					};
+					358D14621E5E3B7700ADE590 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = GJZR2MEM28;
+						ProvisioningStyle = Automatic;
+					};
+					358D14A51E5E3FDC00ADE590 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = GJZR2MEM28;
 						ProvisioningStyle = Automatic;
 					};
 					C5ADFBC81DDCC7840011824B = {
@@ -423,6 +641,8 @@
 				C5ADFBC81DDCC7840011824B /* MapboxNavigation */,
 				351BEBD61E5BCC28006FE110 /* MapboxNavigationUI */,
 				C5ADFBD11DDCC7840011824B /* MapboxNavigationTests */,
+				358D14621E5E3B7700ADE590 /* Example-Swift */,
+				358D14A51E5E3FDC00ADE590 /* Example-Objective-C */,
 			);
 		};
 /* End PBXProject section */
@@ -441,10 +661,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		358D14611E5E3B7700ADE590 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				358D14701E5E3B7700ADE590 /* LaunchScreen.storyboard in Resources */,
+				358D146D1E5E3B7700ADE590 /* Assets.xcassets in Resources */,
+				358D146B1E5E3B7700ADE590 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		358D14A41E5E3FDC00ADE590 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35C6A3541E5E418D0004CA57 /* Base.lproj in Resources */,
+				35C6A3521E5E418D0004CA57 /* Assets.xcassets in Resources */,
+				35C6A3561E5E418D0004CA57 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C5ADFBC71DDCC7840011824B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35C6A3531E5E418D0004CA57 /* Base.lproj in Resources */,
+				35C6A3511E5E418D0004CA57 /* Assets.xcassets in Resources */,
+				35C6A3551E5E418D0004CA57 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,6 +701,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		352BBC3A1E5E69A700703DF1 /* Carthage copy frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
+			);
+			name = "Carthage copy frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		351BEBD21E5BCC28006FE110 /* Sources */ = {
@@ -489,6 +751,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		358D145F1E5E3B7700ADE590 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
+				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		358D14A21E5E3FDC00ADE590 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */,
+				35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */,
+				352BBC411E5E6CC100703DF1 /* main.m in Sources */,
+				358D14AA1E5E3FDC00ADE590 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C5ADFBC41DDCC7840011824B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -515,6 +797,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
+			targetProxy = 352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */;
+		};
 		35CEA3581E5CEBBC009F2255 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
@@ -526,6 +813,25 @@
 			targetProxy = C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		358D14691E5E3B7700ADE590 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				358D146A1E5E3B7700ADE590 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		358D146E1E5E3B7700ADE590 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				358D146F1E5E3B7700ADE590 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		351BEBDC1E5BCC28006FE110 /* Debug */ = {
@@ -577,6 +883,80 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		358D14721E5E3B7700ADE590 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Swift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		358D14731E5E3B7700ADE590 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Swift/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+		358D14BB1E5E3FDC00ADE590 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Objective-C/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		358D14BC1E5E3FDC00ADE590 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Objective-C/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -774,6 +1154,24 @@
 			buildConfigurations = (
 				351BEBDC1E5BCC28006FE110 /* Debug */,
 				351BEBDD1E5BCC28006FE110 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example-Swift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				358D14721E5E3B7700ADE590 /* Debug */,
+				358D14731E5E3B7700ADE590 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		358D14BA1E5E3FDC00ADE590 /* Build configuration list for PBXNativeTarget "Example-Objective-C" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				358D14BB1E5E3FDC00ADE590 /* Debug */,
+				358D14BC1E5E3FDC00ADE590 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

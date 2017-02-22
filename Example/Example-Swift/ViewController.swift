@@ -10,7 +10,7 @@ let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
 class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
-
+    
     var destination: MGLPointAnnotation?
     let directions = Directions(accessToken: MapboxAccessToken)
     var navigation: RouteController?
@@ -73,7 +73,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         var text: String
-
+        
         let distance = roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             // Don't give full instruction with distance if the alert type is high
@@ -85,7 +85,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         } else {
             text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
         }
-
+        
         let utterance = AVSpeechUtterance(string: text)
         speechSynth.delegate = self
         speechSynth.speak(utterance)
@@ -109,15 +109,16 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         // If you're not using MapboxNavigationUI,
         // this is how you'd handle fetching a new route and setting it as the active route
         /*
-        getRoute {
-            /*
-             **IMPORTANT**
-             
-             When rerouting, you need to give the RouteController a new route.
-             Otherwise, it will continue to compare the user to the old route and continually reroute the user.
-             */
-            self.navigation?.routeProgress = RouteProgress(route: self.userRoute!)
-        }
+         getRoute {
+         /*
+         **IMPORTANT**
+         
+         When rerouting, you need to give the RouteController a new route.
+         Otherwise, it will continue to compare the user to the old route and continually reroute the user.
+         */
+         self.navigation?.routeProgress = RouteProgress(route: self.userRoute!)
+         }
+         */
     }
     
     func getRoute(didFinish: (()->())? = nil) {
@@ -155,7 +156,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             line.lineWidth = MGLStyleValue(rawValue: 5)
             line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
             line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-
+            
             // Add source and layer
             style.addSource(geoJSONSource)
             for layer in style.layers.reversed() {
