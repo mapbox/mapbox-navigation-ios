@@ -10,7 +10,6 @@
 		351BEBDB1E5BCC28006FE110 /* MapboxNavigationUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 351BEBD91E5BCC28006FE110 /* MapboxNavigationUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* NavigationUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* NavigationUI.swift */; };
-		351BEBF31E5BCC63006FE110 /* OSRMTextInstructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE11E5BCC63006FE110 /* OSRMTextInstructions.swift */; };
 		351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */; };
 		351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */; };
 		351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */; };
@@ -43,6 +42,7 @@
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
 		351BEC2B1E5BD538006FE110 /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2A1E5BD538006FE110 /* Shields.plist */; };
 		351BEC2D1E5BD541006FE110 /* zh-Hans.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2C1E5BD541006FE110 /* zh-Hans.lproj */; };
+		358D14551E5E28B200ADE590 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14541E5E28B200ADE590 /* OSRMTextInstructions.framework */; };
 		35A7DBED1E3A1DF5000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
 		35A7DBEF1E3A1DF7000BAB5C /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */; };
 		35A7DC101E3A2670000BAB5C /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */; };
@@ -86,7 +86,6 @@
 		351BEBDA1E5BCC28006FE110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLMapView.swift; sourceTree = "<group>"; };
 		351BEBE01E5BCC63006FE110 /* NavigationUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationUI.swift; sourceTree = "<group>"; };
-		351BEBE11E5BCC63006FE110 /* OSRMTextInstructions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSRMTextInstructions.swift; sourceTree = "<group>"; };
 		351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteManeuverViewController.swift; sourceTree = "<group>"; };
 		351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMapViewController.swift; sourceTree = "<group>"; };
 		351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutePageViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +116,7 @@
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		351BEC2A1E5BD538006FE110 /* Shields.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Shields.plist; path = Resources/Shields.plist; sourceTree = "<group>"; };
 		351BEC2C1E5BD541006FE110 /* zh-Hans.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "zh-Hans.lproj"; path = "Resources/zh-Hans.lproj"; sourceTree = "<group>"; };
+		358D14541E5E28B200ADE590 /* OSRMTextInstructions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSRMTextInstructions.framework; path = Carthage/Build/iOS/OSRMTextInstructions.framework; sourceTree = "<group>"; };
 		35A7DBEC1E3A1DF5000BAB5C /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
 		35A7DBEE1E3A1DF7000BAB5C /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
@@ -147,6 +147,7 @@
 				351BEC121E5BCD90006FE110 /* Mapbox.framework in Frameworks */,
 				351BEC141E5BCD97006FE110 /* Polyline.framework in Frameworks */,
 				351BEC161E5BCD9B006FE110 /* Pulley.framework in Frameworks */,
+				358D14551E5E28B200ADE590 /* OSRMTextInstructions.framework in Frameworks */,
 				351BEC131E5BCD93006FE110 /* MapboxDirections.framework in Frameworks */,
 				351BEC1A1E5BD019006FE110 /* MapboxGeocoder.framework in Frameworks */,
 				35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */,
@@ -186,7 +187,6 @@
 				351BEBD91E5BCC28006FE110 /* MapboxNavigationUI.h */,
 				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
 				351BEBE01E5BCC63006FE110 /* NavigationUI.swift */,
-				351BEBE11E5BCC63006FE110 /* OSRMTextInstructions.swift */,
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
 				351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */,
@@ -231,6 +231,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				358D14541E5E28B200ADE590 /* OSRMTextInstructions.framework */,
 				351BEC191E5BD019006FE110 /* MapboxGeocoder.framework */,
 				351BEC171E5BCDFB006FE110 /* SDWebImage.framework */,
 				351BEC151E5BCD9B006FE110 /* Pulley.framework */,
@@ -479,7 +480,6 @@
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				351BEC101E5BCC72006FE110 /* DistanceFormatter.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
-				351BEBF31E5BCC63006FE110 /* OSRMTextInstructions.swift in Sources */,
 				351BEC001E5BCC63006FE110 /* StyleLabel.swift in Sources */,
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */,
