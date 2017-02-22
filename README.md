@@ -100,3 +100,61 @@ We provide examples in Swift and Objective-C. Run `pod install` from the Example
 1. Long press any where on a map. This is where you will be routed to.
 1. Press `Start Navigation` to begin
 1. Press `Stop Navigation` to end
+
+----
+
+# MapboxNavigationUI.swift
+
+[![](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/6fc45a7e2817b859#/builds)
+
+MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn navigation to their iOS application.
+
+|![](https://cloud.githubusercontent.com/assets/764476/22738709/c23dc02e-ee08-11e6-98ff-e003a06dbe87.png) | ![](https://cloud.githubusercontent.com/assets/764476/22749696/8937b2fa-ee2e-11e6-8bf6-6ea593269b9e.png) |
+| --- | --- |
+
+### Examples
+We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open `Example/Example.xcworkspace` to try it out.
+
+**Instantiating a navigation UI (RouteViewController)**
+
+```swift
+let viewController = NavigationUI.routeViewController(for: route, directions: directions)
+present(viewController, animated: true, completion: nil)
+```
+
+- `route` the initial route you want to navigate.
+- `directions` a [Direction](https://github.com/mapbox/MapboxDirections.swift) instance needed for re-routing when the user goes off route.
+
+**Basic styling**
+
+![screenshot 2017-02-08 18 24 38](https://cloud.githubusercontent.com/assets/764476/22748895/e2a5fdc2-ee2b-11e6-8d1c-1cbe2fed18ad.png)
+
+## Installation options
+
+#### [CocoaPods](https://cocoapods.org/)
+
+You'll need to install three pods, `MapboxNavigationUI.swift`, `MapboxNavigation.swift`  and `MapboxDirections.swift`
+
+Add the following lines to your Podfile:
+
+```ruby
+pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => 'ceaf58b780fc17ea44a9150041b602d017c1e567'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
+```
+
+#### [Carthage](https://github.com/Carthage/Carthage)
+
+1: Add the following line to your `Cartfile`:
+
+```
+github "mapbox/MapboxNavigation.swift"
+```
+2: Run:
+
+```
+carthage update --platform ios
+```
+
+3: 
+Drag all frameworks (located in Carthage/Build/iOS) into Embedded Frameworks.
