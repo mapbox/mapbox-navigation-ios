@@ -173,7 +173,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         // Pass through a
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.
-        let viewController = NavigationUI.instantiate(route: route, directions: directions)
+        let viewController = NavigationUI.routeViewController(for: route, directions: directions)
         present(viewController, animated: true, completion: nil)
     }
     

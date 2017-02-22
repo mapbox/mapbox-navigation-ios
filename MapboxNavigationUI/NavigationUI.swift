@@ -64,7 +64,7 @@ public class NavigationUI: NSObject {
      See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
      for further information.
      */
-    public class func instantiate(route: Route, directions: Directions) -> RouteViewController {
+    public class func routeViewController(for route: Route, directions: Directions) -> RouteViewController {
         let destination = MGLPointAnnotation()
         destination.coordinate = route.coordinates!.last!
         
