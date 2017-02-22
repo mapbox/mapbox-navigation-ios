@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35A7DBC51E3A0382000BAB5C"
+               BlueprintIdentifier = "358D14A51E5E3FDC00ADE590"
                BuildableName = "Example-Objective-C.app"
                BlueprintName = "Example-Objective-C"
-               ReferencedContainer = "container:Example.xcodeproj">
+               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,34 +28,14 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35A7DBAE1E39FF88000BAB5C"
-               BuildableName = "Example-Objective-CTests.xctest"
-               BlueprintName = "Example-Objective-CTests"
-               ReferencedContainer = "container:Example.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "354620CC1E3A545100BAD0B3"
-               BuildableName = "Example-Objective-C Tests.xctest"
-               BlueprintName = "Example-Objective-C Tests"
-               ReferencedContainer = "container:Example.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35A7DBC51E3A0382000BAB5C"
+            BlueprintIdentifier = "358D14A51E5E3FDC00ADE590"
             BuildableName = "Example-Objective-C.app"
             BlueprintName = "Example-Objective-C"
-            ReferencedContainer = "container:Example.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -75,10 +55,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35A7DBC51E3A0382000BAB5C"
+            BlueprintIdentifier = "358D14A51E5E3FDC00ADE590"
             BuildableName = "Example-Objective-C.app"
             BlueprintName = "Example-Objective-C"
-            ReferencedContainer = "container:Example.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -94,10 +74,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35A7DBC51E3A0382000BAB5C"
+            BlueprintIdentifier = "358D14A51E5E3FDC00ADE590"
             BuildableName = "Example-Objective-C.app"
             BlueprintName = "Example-Objective-C"
-            ReferencedContainer = "container:Example.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

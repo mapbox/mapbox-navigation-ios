@@ -1,6 +1,6 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.4.2"
 github "52inc/Pulley" "fe817b3b7c4363cf16382ceb645d565900f4cf64"
-github "frederoni/osrm-text-instructions.swift" "3bd4e7e5e593e85a758dfc3a305b16a769cdf85b"
+github "frederoni/osrm-text-instructions.swift" "666303349250910185417cedd6424a83cf4cc69d"
 github "mapbox/MapboxDirections.swift" "0f72b8d0c6c51b4f735ec441cd04bbb58e1ca966"
 github "mapbox/MapboxGeocoder.swift" "dea8b5f6ac5e28c1a3dea530c10df51ba31605a9"
 github "raphaelmor/Polyline" "f86f34dac9aae7e027fd9f62c2e01dd77f1ee312"

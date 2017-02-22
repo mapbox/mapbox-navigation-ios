@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35A7DB6D1E39FA1F000BAB5C"
+               BlueprintIdentifier = "358D14621E5E3B7700ADE590"
                BuildableName = "Example-Swift.app"
                BlueprintName = "Example-Swift"
-               ReferencedContainer = "container:Example.xcodeproj">
+               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,24 +28,14 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "354620BE1E3A543A00BAD0B3"
-               BuildableName = "Example-Swift Tests.xctest"
-               BlueprintName = "Example-Swift Tests"
-               ReferencedContainer = "container:Example.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35A7DB6D1E39FA1F000BAB5C"
+            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
             BuildableName = "Example-Swift.app"
             BlueprintName = "Example-Swift"
-            ReferencedContainer = "container:Example.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,10 +55,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35A7DB6D1E39FA1F000BAB5C"
+            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
             BuildableName = "Example-Swift.app"
             BlueprintName = "Example-Swift"
-            ReferencedContainer = "container:Example.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -84,10 +74,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "35A7DB6D1E39FA1F000BAB5C"
+            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
             BuildableName = "Example-Swift.app"
             BlueprintName = "Example-Swift"
-            ReferencedContainer = "container:Example.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

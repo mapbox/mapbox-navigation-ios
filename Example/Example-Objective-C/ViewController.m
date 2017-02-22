@@ -21,7 +21,7 @@
 @implementation ViewController
 
 static NSString *MBXTempProfileIdentifierAutomobileAvoidingTraffic = @"mapbox/driving-traffic";
-static NSString *MapboxAccessToken = @"<#Your Mapbox access token#>";
+static NSString *MapboxAccessToken = @"<#MapboxAccessToken#>";
 
 - (void)viewDidLoad {
     [super viewDidLoad];

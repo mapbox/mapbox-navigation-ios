@@ -1,17 +1,14 @@
 //
 //  AppDelegate.swift
-//  Example
+//  Example-Swift
 //
-//  Created by Bobby Sudekum on 11/16/16.
-//  Copyright © 2016 Mapbox. All rights reserved.
+//  Created by Fredrik Karlsson on 2/22/17.
+//  Copyright © 2017 Mapbox. All rights reserved.
 //
 
 import UIKit
-import Mapbox
 
-// A Mapbox access token is required.
-// https://www.mapbox.com/help/create-api-access-token/
-let MapboxAccessToken = "<#Your Mapbox access token#>"
+let MapboxAccessToken = "<#MapboxAccessToken#>"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -21,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        MGLAccountManager.setAccessToken(MapboxAccessToken)
         return true
     }
 
