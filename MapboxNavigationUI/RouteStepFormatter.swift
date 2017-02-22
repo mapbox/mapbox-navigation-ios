@@ -1,6 +1,7 @@
 import Foundation
 import Mapbox
 import MapboxDirections
+import OSRMTextInstructions
 
 class RouteStepFormatter: Formatter {
     let instructions = OSRMInstructionFormatter(version: "v5")
