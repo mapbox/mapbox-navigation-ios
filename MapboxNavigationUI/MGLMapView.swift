@@ -9,13 +9,6 @@ let routeLayerIdentifier = "routeLayer"
 let routeLayerCasingIdentifier = "routeLayerCasing"
 
 extension MGLMapView {
-    public func show(_ placemark: GeocodedPlacemark) {
-        if let bounds = placemark.coordinateBounds {
-            setVisibleCoordinateBounds(bounds, animated: true)
-        } else {
-            setCenter(placemark.location.coordinate, zoomLevel: placemark.preferredZoomLevel, animated: true)
-        }
-    }
     
     public func annotate(_ routes: [Route], clearMap: Bool) {
         guard let route = routes.first, var coordinates = route.coordinates else {

@@ -11,7 +11,6 @@
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* NavigationUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* NavigationUI.swift */; };
 		351BEBF31E5BCC63006FE110 /* OSRMTextInstructions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE11E5BCC63006FE110 /* OSRMTextInstructions.swift */; };
-		351BEBF41E5BCC63006FE110 /* Placemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE21E5BCC63006FE110 /* Placemark.swift */; };
 		351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */; };
 		351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */; };
 		351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */; };
@@ -88,7 +87,6 @@
 		351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLMapView.swift; sourceTree = "<group>"; };
 		351BEBE01E5BCC63006FE110 /* NavigationUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationUI.swift; sourceTree = "<group>"; };
 		351BEBE11E5BCC63006FE110 /* OSRMTextInstructions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSRMTextInstructions.swift; sourceTree = "<group>"; };
-		351BEBE21E5BCC63006FE110 /* Placemark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placemark.swift; sourceTree = "<group>"; };
 		351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteManeuverViewController.swift; sourceTree = "<group>"; };
 		351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMapViewController.swift; sourceTree = "<group>"; };
 		351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutePageViewController.swift; sourceTree = "<group>"; };
@@ -189,7 +187,6 @@
 				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
 				351BEBE01E5BCC63006FE110 /* NavigationUI.swift */,
 				351BEBE11E5BCC63006FE110 /* OSRMTextInstructions.swift */,
-				351BEBE21E5BCC63006FE110 /* Placemark.swift */,
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
 				351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */,
@@ -485,7 +482,6 @@
 				351BEBF31E5BCC63006FE110 /* OSRMTextInstructions.swift in Sources */,
 				351BEC001E5BCC63006FE110 /* StyleLabel.swift in Sources */,
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
-				351BEBF41E5BCC63006FE110 /* Placemark.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
