@@ -73,7 +73,7 @@ public class RouteViewController: NavigationPulleyViewController {
     
     required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
         fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
-                   "Use NavigationUI.instantiate(route:directions:) if you are instantiating programmatically " +
+                   "Use NavigationUI.routeViewController(for:directions:) if you are instantiating programmatically " +
                    "or a storyboard reference to Navigation if you are using storyboards.")
     }
     
@@ -106,9 +106,9 @@ public class RouteViewController: NavigationPulleyViewController {
     // MARK: Route controller notifications
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.shouldReroute(notification:)), name: RouteControllerShouldReroute, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(shouldReroute(notification:)), name: RouteControllerShouldReroute, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
     }
     
     func suspendNotifications() {

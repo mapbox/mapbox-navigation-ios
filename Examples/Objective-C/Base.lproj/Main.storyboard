@@ -11,7 +11,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example_Objective_C" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -21,7 +21,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3N-JT-loC" customClass="MGLMapView">
-                                <rect key="frame" x="-32" y="13" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Sl-bV-xyU">
                                         <rect key="frame" x="132" y="615" width="111" height="30"/>
@@ -85,6 +85,7 @@
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Tey-e2-Fxu">
                     <connections>
                         <action selector="didLongPress:" destination="BYZ-38-t0r" id="NHG-Kd-gSa"/>
+                        <outlet property="delegate" destination="BYZ-38-t0r" id="5qE-cn-RmB"/>
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
@@ -93,7 +94,7 @@
         <!--Navigation-->
         <scene sceneID="Cg8-0l-4UG">
             <objects>
-                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="MapboxNavigationUI" id="dYn-UD-FHX" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="com.mapbox.MapboxNavigationUI" id="dYn-UD-FHX" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RhK-y2-JnK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="646" y="35"/>
