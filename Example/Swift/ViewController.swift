@@ -11,19 +11,19 @@ import MapboxNavigation
 import MapboxDirections
 import Mapbox
 import CoreLocation
-import AVFoundation
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate {
 
     var destination: CLLocationCoordinate2D?
     let directions = Directions(accessToken: MapboxAccessToken)
     var navigation: RouteController?
-    
-    let lengthFormatter = LengthFormatter()
-    lazy var speechSynth = AVSpeechSynthesizer()
+
+    // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer
+    // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
+    var routeVoiceController = RouteVoiceController(identityPoolId: "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>")
     var isInNavigationMode = false
     var userRoute: Route?
     
@@ -37,8 +37,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         super.viewDidLoad()
         
         mapView.delegate = self
-        
-        lengthFormatter.unitStyle = .short
         mapView.userTrackingMode = .follow
         resumeNotifications()
     }
@@ -46,6 +44,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     override func viewDidDisappear(_ animated: Bool) {
         suspendNotifications()
         navigation?.suspend()
+        routeVoiceController.suspendNotifications()
     }
     
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -88,23 +87,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     // When the alert level changes, this signals the user is ready for a voice announcement
     func alertLevelDidChange(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
-        var text: String
-
-        let distance = roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-            // Don't give full instruction with distance if the alert type is high
-            if alertLevel == .high {
-                text = upComingStep.instructions
-            } else {
-                text = "In \(distance) meters \(upComingStep.instructions)"
-            }
-        } else {
-            text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
-        }
-        
-        speak(text)
+        // Do something when the alert level changes.
+        // Internally, we're using this method for voice alerts.
     }
     
     // Notifications sent on all location updates
@@ -122,8 +106,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     // Fired when the user is no longer on the route.
     // A new route should be fetched at this time.
     func rerouted(_ notification: NSNotification) {
-        speechSynth.stopSpeaking(at: .word)
-        
         getRoute {
             /*
              **IMPORTANT**
@@ -188,12 +170,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         }
     }
     
-    func speak(_ text: String) {
-        let utterance = AVSpeechUtterance(string: text)
-        speechSynth.delegate = self
-        speechSynth.speak(utterance)
-    }
-    
     func startNavigation(_ route: Route) {
         let camera = mapView.camera
         camera.pitch = 40
@@ -212,7 +188,11 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         camera.pitch = 0
         mapView.setCamera(camera, animated: true)
         removeRoutesFromMap()
+        
         navigation?.suspend()
+        
+        routeVoiceController.suspendNotifications()
+        routeVoiceController.stopVoice()
     }
     
     func removeRoutesFromMap() {

@@ -39,7 +39,9 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
 
+  s.dependency "OSRMTextInstructions"
   s.dependency "MapboxDirections.swift"
+  s.dependency "AWSPolly"
 
   s.xcconfig = {
     "SWIFT_VERSION" => "3.0"
