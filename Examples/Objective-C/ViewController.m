@@ -8,8 +8,8 @@
 
 @interface ViewController () <AVSpeechSynthesizerDelegate>
 @property (nonatomic, weak) IBOutlet MGLMapView *mapView;
-@property (weak, nonatomic) IBOutlet UIView *instructionsView;
-@property (weak, nonatomic) IBOutlet UILabel *instructionsLabel;
+@property (weak, nonatomic) IBOutlet UIButton *toggleNavigationButton;
+@property (weak, nonatomic) IBOutlet UILabel *howToBeginLabel;
 @property (nonatomic, assign) CLLocationCoordinate2D destination;
 @property (nonatomic) MBDirections *directions;
 @property (nonatomic) MBRoute *route;
@@ -20,17 +20,12 @@
 
 @implementation ViewController
 
-static NSString *MBXTempProfileIdentifierAutomobileAvoidingTraffic = @"mapbox/driving-traffic";
-static NSString *MapboxAccessToken = @"<#MapboxAccessToken#>";
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+
+    [self.mapView setStyleURL:[MGLStyle streetsStyleURLWithVersion:9]];
     
-    [MGLAccountManager setAccessToken:MapboxAccessToken];
-    self.directions = [[MBDirections alloc] initWithAccessToken:MapboxAccessToken];
-    
-    [self.mapView setStyleURL:[MGLStyle streetsStyleURLWithVersion:8]];
     self.mapView.userTrackingMode = MGLUserTrackingModeFollow;
     
     self.lengthFormatter = [[NSLengthFormatter alloc] init];
@@ -94,16 +89,10 @@ static NSString *MapboxAccessToken = @"<#MapboxAccessToken#>";
 }
 
 - (void)progressDidChange:(NSNotification *)notification {
-    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey];
-    MBRouteStep *upcomingStep = routeProgress.currentLegProgress.upComingStep;
-    if (upcomingStep) {
-        self.instructionsView.hidden = NO;
-        self.instructionsLabel.text = [NSString stringWithFormat:@"In %@ %@",
-                                       [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
-                                       upcomingStep.instructions];
-    } else {
-        self.instructionsView.hidden = YES;
-    }
+    // If you are not using MapboxNavigationUI,
+    // this would be a good time to update UI elements.
+    // You can grab the current routeProgress like:
+    // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
 }
 
 - (void)rerouted:(NSNotification *)notification {
@@ -114,11 +103,12 @@ static NSString *MapboxAccessToken = @"<#MapboxAccessToken#>";
     NSArray<MBWaypoint *> *waypoints = @[[[MBWaypoint alloc] initWithCoordinate:self.mapView.userLocation.coordinate coordinateAccuracy:-1 name:nil],
                                          [[MBWaypoint alloc] initWithCoordinate:self.destination coordinateAccuracy:-1 name:nil]];
     
-    MBRouteOptions *options = [[MBRouteOptions alloc] initWithWaypoints:waypoints profileIdentifier:MBXTempProfileIdentifierAutomobileAvoidingTraffic];
+    MBRouteOptions *options = [[MBRouteOptions alloc] initWithWaypoints:waypoints profileIdentifier:MBDirectionsProfileIdentifierAutomobileAvoidingTraffic];
     options.includesSteps = YES;
     options.routeShapeResolution = MBRouteShapeResolutionFull;
     
-    NSURLSessionDataTask *task = [self.directions calculateDirectionsWithOptions:options completionHandler:^(NSArray<MBWaypoint *> * _Nullable waypoints, NSArray<MBRoute *> * _Nullable routes, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [[MBDirections sharedDirections] calculateDirectionsWithOptions:options completionHandler:^(NSArray<MBWaypoint *> * _Nullable waypoints, NSArray<MBRoute *> * _Nullable routes, NSError * _Nullable error) {
+        
         if (!routes.firstObject) {
             return;
         }

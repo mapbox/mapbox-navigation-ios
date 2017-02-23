@@ -7,12 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35002D531E5F52920090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 358D14A91E5E3FDC00ADE590 /* main.m */; };
-		35002D541E5F52EB0090E733 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B711E21E5E7E85001EDA8D /* LaunchScreen.storyboard */; };
-		35002D551E5F52EB0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B711E41E5E7E85001EDA8D /* Main.storyboard */; };
-		35002D561E5F52EB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3481E5E418D0004CA57 /* Assets.xcassets */; };
-		35002D571E5F52EB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3491E5E418D0004CA57 /* Base.lproj */; };
-		35002D581E5F52EB0090E733 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A34A1E5E418D0004CA57 /* Info.plist */; };
+		35002D5E1E5F6ABB0090E733 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5D1E5F6ABB0090E733 /* Info.plist */; };
+		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
+		35002D621E5F6ADB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D601E5F6ADB0090E733 /* Base.lproj */; };
+		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
+		35002D6E1E5F6C7F0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6A1E5F6C7F0090E733 /* Assets.xcassets */; };
+		35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6B1E5F6C7F0090E733 /* Base.lproj */; };
+		35002D701E5F6C7F0090E733 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6C1E5F6C7F0090E733 /* Info.plist */; };
+		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
+		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
+		35002D771E5F6ED00090E733 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
+		35002D781E5F6ED00090E733 /* MapboxNavigationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35002D7B1E5F6EDB0090E733 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
+		35002D7C1E5F6EDB0090E733 /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		351BEBDB1E5BCC28006FE110 /* MapboxNavigationUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 351BEBD91E5BCC28006FE110 /* MapboxNavigationUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* NavigationUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* NavigationUI.swift */; };
@@ -85,12 +92,7 @@
 		358D14CD1E5E401C00ADE590 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
 		35B711D21E5E7AD2001EDA8D /* MapboxNavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B711D11E5E7AD2001EDA8D /* MapboxNavigationUITests.swift */; };
 		35B711D41E5E7AD2001EDA8D /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
-		35B711E61E5E7E85001EDA8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B711E21E5E7E85001EDA8D /* LaunchScreen.storyboard */; };
-		35B711E71E5E7E85001EDA8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B711E41E5E7E85001EDA8D /* Main.storyboard */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
-		35C6A3521E5E418D0004CA57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3481E5E418D0004CA57 /* Assets.xcassets */; };
-		35C6A3541E5E418D0004CA57 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3491E5E418D0004CA57 /* Base.lproj */; };
-		35C6A3561E5E418D0004CA57 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A34A1E5E418D0004CA57 /* Info.plist */; };
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -108,6 +110,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		35002D791E5F6ED00090E733 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
+			remoteInfo = MapboxNavigationUI;
+		};
+		35002D7D1E5F6EDB0090E733 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
+			remoteInfo = MapboxNavigation;
+		};
 		352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -179,8 +195,10 @@
 				358D14CA1E5E401700ADE590 /* Mapbox.framework in Embed Frameworks */,
 				358D14BE1E5E401700ADE590 /* MapboxDirections.framework in Embed Frameworks */,
 				358D14C61E5E401700ADE590 /* Pulley.framework in Embed Frameworks */,
+				35002D7C1E5F6EDB0090E733 /* MapboxNavigation.framework in Embed Frameworks */,
 				358D14C01E5E401700ADE590 /* MapboxGeocoder.framework in Embed Frameworks */,
 				358D14C41E5E401700ADE590 /* Polyline.framework in Embed Frameworks */,
+				35002D781E5F6ED00090E733 /* MapboxNavigationUI.framework in Embed Frameworks */,
 				358D14C81E5E401700ADE590 /* SDWebImage.framework in Embed Frameworks */,
 				358D14C21E5E401700ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */,
 			);
@@ -190,6 +208,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		35002D601E5F6ADB0090E733 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
+		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		35002D6A1E5F6C7F0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		35002D6B1E5F6C7F0090E733 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
+		35002D6C1E5F6C7F0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35002D6D1E5F6C7F0090E733 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		35002D751E5F6CD30090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxNavigationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		351BEBD91E5BCC28006FE110 /* MapboxNavigationUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxNavigationUI.h; sourceTree = "<group>"; };
 		351BEBDA1E5BCC28006FE110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -238,18 +265,12 @@
 		358D14921E5E3CB600ADE590 /* Pulley.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pulley.framework; path = Carthage/Build/iOS/Pulley.framework; sourceTree = "<group>"; };
 		358D14931E5E3CB600ADE590 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Objective-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		358D14A91E5E3FDC00ADE590 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35B711CF1E5E7AD2001EDA8D /* MapboxNavigationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B711D11E5E7AD2001EDA8D /* MapboxNavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationUITests.swift; sourceTree = "<group>"; };
 		35B711D31E5E7AD2001EDA8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		35B711E31E5E7E85001EDA8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		35B711E51E5E7E85001EDA8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
 		35C6A3461E5E418D0004CA57 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		35C6A3471E5E418D0004CA57 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		35C6A3481E5E418D0004CA57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		35C6A3491E5E418D0004CA57 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
-		35C6A34A1E5E418D0004CA57 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35C6A34C1E5E418D0004CA57 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		35C6A34D1E5E418D0004CA57 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
@@ -322,6 +343,8 @@
 				358D14C31E5E401700ADE590 /* Polyline.framework in Frameworks */,
 				358D14C71E5E401700ADE590 /* SDWebImage.framework in Frameworks */,
 				358D14C11E5E401700ADE590 /* OSRMTextInstructions.framework in Frameworks */,
+				35002D7B1E5F6EDB0090E733 /* MapboxNavigation.framework in Frameworks */,
+				35002D771E5F6ED00090E733 /* MapboxNavigationUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,6 +376,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		35002D721E5F6C830090E733 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				35002D661E5F6B1B0090E733 /* Main.storyboard */,
+				35002D5F1E5F6ADB0090E733 /* Assets.xcassets */,
+				35002D601E5F6ADB0090E733 /* Base.lproj */,
+				35002D5D1E5F6ABB0090E733 /* Info.plist */,
+			);
+			name = "Supporting files";
+			sourceTree = "<group>";
+		};
+		35002D731E5F6C8F0090E733 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				35002D6A1E5F6C7F0090E733 /* Assets.xcassets */,
+				35002D6B1E5F6C7F0090E733 /* Base.lproj */,
+				35002D6C1E5F6C7F0090E733 /* Info.plist */,
+				35002D6D1E5F6C7F0090E733 /* main.m */,
+				35002D741E5F6CD30090E733 /* Main.storyboard */,
+			);
+			name = "Supporting files";
+			sourceTree = "<group>";
+		};
 		351BEBD81E5BCC28006FE110 /* MapboxNavigationUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -429,37 +475,25 @@
 		358D14641E5E3B7700ADE590 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				35002D721E5F6C830090E733 /* Supporting files */,
 				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
 			);
 			name = Swift;
-			path = Examples;
+			path = Examples/Swift;
 			sourceTree = "<group>";
 		};
 		358D14A71E5E3FDC00ADE590 /* Objective-C */ = {
 			isa = PBXGroup;
 			children = (
+				35002D731E5F6C8F0090E733 /* Supporting files */,
 				35C6A3461E5E418D0004CA57 /* AppDelegate.h */,
 				35C6A3471E5E418D0004CA57 /* AppDelegate.m */,
 				35C6A34C1E5E418D0004CA57 /* ViewController.h */,
 				35C6A34D1E5E418D0004CA57 /* ViewController.m */,
 			);
 			name = "Objective-C";
-			path = Examples;
-			sourceTree = "<group>";
-		};
-		358D14A81E5E3FDC00ADE590 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				35B711E21E5E7E85001EDA8D /* LaunchScreen.storyboard */,
-				35B711E41E5E7E85001EDA8D /* Main.storyboard */,
-				35C6A3481E5E418D0004CA57 /* Assets.xcassets */,
-				35C6A3491E5E418D0004CA57 /* Base.lproj */,
-				35C6A34A1E5E418D0004CA57 /* Info.plist */,
-				358D14A91E5E3FDC00ADE590 /* main.m */,
-			);
-			name = "Supporting Files";
-			path = Examples;
+			path = "Examples/Objective-C";
 			sourceTree = "<group>";
 		};
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationUITests */ = {
@@ -476,7 +510,6 @@
 			children = (
 				358D14641E5E3B7700ADE590 /* Swift */,
 				358D14A71E5E3FDC00ADE590 /* Objective-C */,
-				358D14A81E5E3FDC00ADE590 /* Supporting Files */,
 				352BBC481E5E78D700703DF1 /* SwiftTests */,
 				352BBC561E5E78EA00703DF1 /* Objective-CTests */,
 			);
@@ -670,6 +703,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				35002D7A1E5F6ED00090E733 /* PBXTargetDependency */,
+				35002D7E1E5F6EDB0090E733 /* PBXTargetDependency */,
 			);
 			name = "Example-Objective-C";
 			productName = "Example-Objective-C";
@@ -846,11 +881,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35002D541E5F52EB0090E733 /* LaunchScreen.storyboard in Resources */,
-				35002D551E5F52EB0090E733 /* Main.storyboard in Resources */,
-				35002D561E5F52EB0090E733 /* Assets.xcassets in Resources */,
-				35002D571E5F52EB0090E733 /* Base.lproj in Resources */,
-				35002D581E5F52EB0090E733 /* Info.plist in Resources */,
+				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
+				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
+				35002D621E5F6ADB0090E733 /* Base.lproj in Resources */,
+				35002D5E1E5F6ABB0090E733 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -858,11 +892,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35C6A3541E5E418D0004CA57 /* Base.lproj in Resources */,
-				35B711E71E5E7E85001EDA8D /* Main.storyboard in Resources */,
-				35B711E61E5E7E85001EDA8D /* LaunchScreen.storyboard in Resources */,
-				35C6A3521E5E418D0004CA57 /* Assets.xcassets in Resources */,
-				35C6A3561E5E418D0004CA57 /* Info.plist in Resources */,
+				35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */,
+				35002D6E1E5F6C7F0090E733 /* Assets.xcassets in Resources */,
+				35002D701E5F6C7F0090E733 /* Info.plist in Resources */,
+				35002D761E5F6CD30090E733 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -991,7 +1024,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */,
-				35002D531E5F52920090E733 /* main.m in Sources */,
+				35002D711E5F6C7F0090E733 /* main.m in Sources */,
 				35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1030,6 +1063,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		35002D7A1E5F6ED00090E733 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigationUI */;
+			targetProxy = 35002D791E5F6ED00090E733 /* PBXContainerItemProxy */;
+		};
+		35002D7E1E5F6EDB0090E733 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
+			targetProxy = 35002D7D1E5F6EDB0090E733 /* PBXContainerItemProxy */;
+		};
 		352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
@@ -1063,18 +1106,18 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		35B711E21E5E7E85001EDA8D /* LaunchScreen.storyboard */ = {
+		35002D661E5F6B1B0090E733 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				35B711E31E5E7E85001EDA8D /* Base */,
+				35002D671E5F6B1B0090E733 /* Base */,
 			);
-			name = LaunchScreen.storyboard;
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		35B711E41E5E7E85001EDA8D /* Main.storyboard */ = {
+		35002D741E5F6CD30090E733 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				35B711E51E5E7E85001EDA8D /* Base */,
+				35002D751E5F6CD30090E733 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1086,7 +1129,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -1205,7 +1248,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
@@ -1223,7 +1266,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
@@ -1244,7 +1287,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Objective-C/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
@@ -1262,7 +1305,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Objective-C/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
@@ -1404,7 +1447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;

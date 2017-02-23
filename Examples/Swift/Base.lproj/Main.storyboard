@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Example_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3N-JT-loC" customClass="MGLMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <subviews>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Sl-bV-xyU">
+                                        <rect key="frame" x="132" y="615" width="111" height="30"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.75" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Start Navigation"/>
+                                        <connections>
+                                            <action selector="didToggleNavigation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gd6-mu-4Zl"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press map to select a route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hk0-SM-2Wl">
+                                        <rect key="frame" x="62" y="619" width="251" height="21"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.75" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Hk0-SM-2Wl" secondAttribute="bottom" constant="27" id="7Oc-HJ-zKe"/>
+                                    <constraint firstItem="8Sl-bV-xyU" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="FIj-BC-6LP"/>
+                                    <constraint firstAttribute="bottom" secondItem="8Sl-bV-xyU" secondAttribute="bottom" constant="22" id="LOb-l9-Iql"/>
+                                    <constraint firstItem="Hk0-SM-2Wl" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="O4U-Pg-RJR"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/streets-v10"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="latitude">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="longitude">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="zoomLevel">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Tey-e2-Fxu" appends="YES" id="gi9-4K-f5d"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="A3N-JT-loC" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="BVa-uD-YOz"/>
+                            <constraint firstItem="A3N-JT-loC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="UoZ-PE-6rl"/>
+                            <constraint firstAttribute="trailing" secondItem="A3N-JT-loC" secondAttribute="trailing" id="a1N-bP-ay4"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="A3N-JT-loC" secondAttribute="bottom" id="iAW-RV-9er"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="howToBeginLabel" destination="Hk0-SM-2Wl" id="iU7-G1-DBc"/>
+                        <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
+                        <outlet property="toggleNavigationButton" destination="8Sl-bV-xyU" id="LwJ-MX-oWU"/>
+                        <segue destination="dYn-UD-FHX" kind="presentation" identifier="StartNavigation" id="CX3-Eh-kHD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Tey-e2-Fxu">
+                    <connections>
+                        <action selector="didLongPress:" destination="BYZ-38-t0r" id="NHG-Kd-gSa"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="24.800000000000001" y="35.532233883058474"/>
+        </scene>
+        <!--Navigation-->
+        <scene sceneID="Cg8-0l-4UG">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="MapboxNavigationUI" id="dYn-UD-FHX" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RhK-y2-JnK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="646" y="35"/>
+        </scene>
+    </scenes>
+</document>
