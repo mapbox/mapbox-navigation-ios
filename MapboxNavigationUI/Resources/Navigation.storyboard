@@ -22,13 +22,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B8F-ce-HhC">
-                                <rect key="frame" x="0.0" y="20" width="375" height="324"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="323.5"/>
                                 <connections>
                                     <segue destination="3z2-H5-unA" kind="embed" identifier="MapViewControllerSegueIdentifier" id="xe9-So-jlT"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XRq-fK-Z45">
-                                <rect key="frame" x="0.0" y="344" width="375" height="323"/>
+                                <rect key="frame" x="0.0" y="343.5" width="375" height="323.5"/>
                                 <connections>
                                     <segue destination="kIa-c9-1zL" kind="embed" identifier="TableViewControllerSegueIdentifier" id="GhH-LH-REi"/>
                                 </connections>
@@ -64,7 +64,7 @@
                         <viewControllerLayoutGuide type="bottom" id="fVn-1d-beh"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Gvo-VD-DXF">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MGLMapView">
@@ -98,6 +98,7 @@
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/streets-v10"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" userLabel="Maneuver View">
@@ -433,7 +434,7 @@
                         <viewControllerLayoutGuide type="bottom" id="RNX-I0-vhR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="o7f-N6-6rQ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="323"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="meX-oz-5Hs">

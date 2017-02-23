@@ -23,9 +23,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-
-    [self.mapView setStyleURL:[MGLStyle streetsStyleURLWithVersion:9]];
-    
     self.mapView.userTrackingMode = MGLUserTrackingModeFollow;
     
     self.lengthFormatter = [[NSLengthFormatter alloc] init];
@@ -140,7 +137,7 @@
     if ([segue.identifier isEqualToString:@"StartNavigation"]) {
         MBRouteViewController *controller = (MBRouteViewController *)[segue destinationViewController];
         controller.route = self.route;
-        controller.directions = self.directions;
+        controller.directions = [MBDirections sharedDirections];
     }
 }
 
