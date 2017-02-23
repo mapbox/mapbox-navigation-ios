@@ -41,6 +41,7 @@
 		352BBC3D1E5E6A1D00703DF1 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; };
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
 		352BBC411E5E6CC100703DF1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34B1E5E418D0004CA57 /* main.m */; };
+		352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		358D146B1E5E3B7700ADE590 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 358D14691E5E3B7700ADE590 /* Main.storyboard */; };
@@ -62,7 +63,6 @@
 		358D149F1E5E3CB600ADE590 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		358D14A01E5E3CC200ADE590 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		358D14A11E5E3CC200ADE590 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
-		358D14AA1E5E3FDC00ADE590 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 358D14A91E5E3FDC00ADE590 /* main.m */; };
 		358D14BD1E5E401700ADE590 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
 		358D14BE1E5E401700ADE590 /* MapboxDirections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		358D14BF1E5E401700ADE590 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; };
@@ -728,6 +728,7 @@
 			files = (
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				351BEBFE1E5BCC63006FE110 /* StyleButton.swift in Sources */,
+				352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */,
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
 				351BEBFD1E5BCC63006FE110 /* String.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
@@ -767,7 +768,6 @@
 				352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */,
 				35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */,
 				352BBC411E5E6CC100703DF1 /* main.m in Sources */,
-				358D14AA1E5E3FDC00ADE590 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -890,6 +890,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -897,9 +898,9 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Swift/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -915,9 +916,9 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Swift/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.navigation;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -928,6 +929,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -935,7 +937,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Objective-C/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -953,7 +955,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Objective-C/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
