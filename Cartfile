@@ -1,6 +1,6 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 3.4
-github "mapbox/MapboxDirections.swift" "master"
-github "mapbox/MapboxGeocoder.swift" "master"
-github "52inc/Pulley" "master"
-github "rs/SDWebImage" "master"
-github "Project-OSRM/osrm-text-instructions.swift" "master"
+github "mapbox/MapboxDirections.swift" ~> 0.8
+github "mapbox/MapboxGeocoder.swift" ~> 0.6
+github "52inc/Pulley" ~> 1.3.1
+github "rs/SDWebImage" ~> 4.0
+github "Project-OSRM/osrm-text-instructions.swift" ~> 0.0.1
