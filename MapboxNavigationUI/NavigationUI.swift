@@ -14,12 +14,7 @@ extension UIColor {
 
 @objc(MBNavigationUI)
 public class NavigationUI: NSObject {
-    
     public static let shared = NavigationUI()
-    
-    override public class func initialize() {
-        _ = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
-    }
     
     fileprivate var _tintColor: UIColor?
     fileprivate var _tintStrokeColor: UIColor?
@@ -27,31 +22,31 @@ public class NavigationUI: NSObject {
     fileprivate var _secondaryTextColor: UIColor?
     fileprivate var _lineColor: UIColor?
     
-    // Used for guidance arrow, highlighted text and progress bars.
+    /// Used for guidance arrow, highlighted text and progress bars.
     public var tintColor: UIColor {
         get { return _tintColor ?? .defaultTint }
         set { _tintColor = newValue }
     }
     
-    // Used for guidance arrow.
+    /// Used for guidance arrow.
     public var tintStrokeColor: UIColor {
         get { return _tintStrokeColor ?? .defaultTintStroke }
         set { _tintStrokeColor = newValue }
     }
     
-    // Used for titles and prioritized information.
+    /// Used for titles and prioritized information.
     public var primaryTextColor: UIColor {
         get { return _primaryTextColor ?? .defaultPrimaryText }
         set { _primaryTextColor = newValue }
     }
     
-    // Used for subtitles, distances and accessory labels.
+    /// Used for subtitles, distances and accessory labels.
     public var secondaryTextColor: UIColor {
         get { return _secondaryTextColor ?? .defaultSecondaryText }
         set { _secondaryTextColor = newValue }
     }
     
-    // Used for separators in table views.
+    /// Used for separators in table views.
     public var lineColor: UIColor {
         get { return _lineColor ?? .defaultLine }
         set { _lineColor = newValue }
@@ -64,7 +59,7 @@ public class NavigationUI: NSObject {
      See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
      for further information.
      */
-    public class func routeViewController(for route: Route, directions: Directions) -> RouteViewController {
+    public class func routeViewController(for route: Route, directions: Directions = Directions.shared) -> RouteViewController {
         let destination = MGLPointAnnotation()
         destination.coordinate = route.coordinates!.last!
         
