@@ -42,11 +42,10 @@
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
 		352BBC411E5E6CC100703DF1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34B1E5E418D0004CA57 /* main.m */; };
 		352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
+		352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */; };
+		352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
-		358D146B1E5E3B7700ADE590 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 358D14691E5E3B7700ADE590 /* Main.storyboard */; };
-		358D146D1E5E3B7700ADE590 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 358D146C1E5E3B7700ADE590 /* Assets.xcassets */; };
-		358D14701E5E3B7700ADE590 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 358D146E1E5E3B7700ADE590 /* LaunchScreen.storyboard */; };
 		358D148C1E5E3CAC00ADE590 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; };
 		358D148D1E5E3CAC00ADE590 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		358D14941E5E3CB600ADE590 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
@@ -79,15 +78,17 @@
 		358D14CA1E5E401700ADE590 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		358D14CC1E5E401C00ADE590 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		358D14CD1E5E401C00ADE590 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
+		35B711D21E5E7AD2001EDA8D /* MapboxNavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B711D11E5E7AD2001EDA8D /* MapboxNavigationUITests.swift */; };
+		35B711D41E5E7AD2001EDA8D /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
+		35B711DD1E5E7C69001EDA8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 358D146C1E5E3B7700ADE590 /* Assets.xcassets */; };
+		35B711DE1E5E7C87001EDA8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 358D14691E5E3B7700ADE590 /* Main.storyboard */; };
+		35B711DF1E5E7C87001EDA8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 358D146E1E5E3B7700ADE590 /* LaunchScreen.storyboard */; };
+		35B711E61E5E7E85001EDA8D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B711E21E5E7E85001EDA8D /* LaunchScreen.storyboard */; };
+		35B711E71E5E7E85001EDA8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35B711E41E5E7E85001EDA8D /* Main.storyboard */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
-		35C6A34E1E5E418D0004CA57 /* AppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 35C6A3461E5E418D0004CA57 /* AppDelegate.h */; };
-		35C6A3511E5E418D0004CA57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3481E5E418D0004CA57 /* Assets.xcassets */; };
 		35C6A3521E5E418D0004CA57 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3481E5E418D0004CA57 /* Assets.xcassets */; };
-		35C6A3531E5E418D0004CA57 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3491E5E418D0004CA57 /* Base.lproj */; };
 		35C6A3541E5E418D0004CA57 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A3491E5E418D0004CA57 /* Base.lproj */; };
-		35C6A3551E5E418D0004CA57 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A34A1E5E418D0004CA57 /* Info.plist */; };
 		35C6A3561E5E418D0004CA57 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35C6A34A1E5E418D0004CA57 /* Info.plist */; };
-		35C6A3591E5E418D0004CA57 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35C6A34C1E5E418D0004CA57 /* ViewController.h */; };
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -111,6 +112,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
 			remoteInfo = "Example-Swift";
+		};
+		352BBC4C1E5E78D700703DF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
+			remoteInfo = "Example-Swift";
+		};
+		352BBC5A1E5E78EA00703DF1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 358D14A51E5E3FDC00ADE590;
+			remoteInfo = "Example-Objective-C";
+		};
+		35B711D51E5E7AD2001EDA8D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
+			remoteInfo = MapboxNavigationUI;
 		};
 		35CEA3571E5CEBBC009F2255 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -197,6 +219,12 @@
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		351BEC2A1E5BD538006FE110 /* Shields.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Shields.plist; path = Resources/Shields.plist; sourceTree = "<group>"; };
 		351BEC2C1E5BD541006FE110 /* zh-Hans.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "zh-Hans.lproj"; path = "Resources/zh-Hans.lproj"; sourceTree = "<group>"; };
+		352BBC471E5E78D700703DF1 /* Example-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example_SwiftTests.swift; sourceTree = "<group>"; };
+		352BBC4B1E5E78D700703DF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		352BBC551E5E78EA00703DF1 /* Example-Objective-CTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example-Objective-CTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Example_Objective_CTests.m; sourceTree = "<group>"; };
+		352BBC591E5E78EA00703DF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		358D14631E5E3B7700ADE590 /* Example-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		358D14651E5E3B7700ADE590 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		358D14671E5E3B7700ADE590 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -213,15 +241,20 @@
 		358D14931E5E3CB600ADE590 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Objective-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		358D14A91E5E3FDC00ADE590 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		35B711CF1E5E7AD2001EDA8D /* MapboxNavigationUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		35B711D11E5E7AD2001EDA8D /* MapboxNavigationUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationUITests.swift; sourceTree = "<group>"; };
+		35B711D31E5E7AD2001EDA8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35B711E31E5E7E85001EDA8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		35B711E51E5E7E85001EDA8D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
-		35C6A3461E5E418D0004CA57 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = "Example/Example-Objective-C/AppDelegate.h"; sourceTree = SOURCE_ROOT; };
-		35C6A3471E5E418D0004CA57 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = "Example/Example-Objective-C/AppDelegate.m"; sourceTree = SOURCE_ROOT; };
-		35C6A3481E5E418D0004CA57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Example/Example-Objective-C/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
-		35C6A3491E5E418D0004CA57 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Base.lproj; path = "Example/Example-Objective-C/Base.lproj"; sourceTree = SOURCE_ROOT; };
-		35C6A34A1E5E418D0004CA57 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Example/Example-Objective-C/Info.plist"; sourceTree = SOURCE_ROOT; };
-		35C6A34B1E5E418D0004CA57 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Example/Example-Objective-C/main.m"; sourceTree = SOURCE_ROOT; };
-		35C6A34C1E5E418D0004CA57 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = "Example/Example-Objective-C/ViewController.h"; sourceTree = SOURCE_ROOT; };
-		35C6A34D1E5E418D0004CA57 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = "Example/Example-Objective-C/ViewController.m"; sourceTree = SOURCE_ROOT; };
+		35C6A3461E5E418D0004CA57 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		35C6A3471E5E418D0004CA57 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		35C6A3481E5E418D0004CA57 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		35C6A3491E5E418D0004CA57 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
+		35C6A34A1E5E418D0004CA57 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35C6A34B1E5E418D0004CA57 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		35C6A34C1E5E418D0004CA57 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		35C6A34D1E5E418D0004CA57 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryTests.swift; sourceTree = "<group>"; };
@@ -246,6 +279,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		352BBC441E5E78D700703DF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		352BBC521E5E78EA00703DF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +332,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35B711CC1E5E7AD2001EDA8D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35B711D41E5E7AD2001EDA8D /* MapboxNavigationUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,7 +409,27 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		358D14641E5E3B7700ADE590 /* Example-Swift */ = {
+		352BBC481E5E78D700703DF1 /* SwiftTests */ = {
+			isa = PBXGroup;
+			children = (
+				352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */,
+				352BBC4B1E5E78D700703DF1 /* Info.plist */,
+			);
+			name = SwiftTests;
+			path = Examples/SwiftTests;
+			sourceTree = "<group>";
+		};
+		352BBC561E5E78EA00703DF1 /* Objective-CTests */ = {
+			isa = PBXGroup;
+			children = (
+				352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */,
+				352BBC591E5E78EA00703DF1 /* Info.plist */,
+			);
+			name = "Objective-CTests";
+			path = "Examples/Objective-CTests";
+			sourceTree = "<group>";
+		};
+		358D14641E5E3B7700ADE590 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
 				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
@@ -364,15 +439,17 @@
 				358D146E1E5E3B7700ADE590 /* LaunchScreen.storyboard */,
 				358D14711E5E3B7700ADE590 /* Info.plist */,
 			);
-			name = "Example-Swift";
-			path = "Example/Example-Swift";
+			name = Swift;
+			path = "Examples/Example-Swift";
 			sourceTree = "<group>";
 		};
-		358D14A71E5E3FDC00ADE590 /* Example-Objective-C */ = {
+		358D14A71E5E3FDC00ADE590 /* Objective-C */ = {
 			isa = PBXGroup;
 			children = (
 				35C6A3461E5E418D0004CA57 /* AppDelegate.h */,
 				35C6A3471E5E418D0004CA57 /* AppDelegate.m */,
+				35B711E21E5E7E85001EDA8D /* LaunchScreen.storyboard */,
+				35B711E41E5E7E85001EDA8D /* Main.storyboard */,
 				35C6A3481E5E418D0004CA57 /* Assets.xcassets */,
 				35C6A3491E5E418D0004CA57 /* Base.lproj */,
 				35C6A34A1E5E418D0004CA57 /* Info.plist */,
@@ -381,7 +458,8 @@
 				35C6A34D1E5E418D0004CA57 /* ViewController.m */,
 				358D14A81E5E3FDC00ADE590 /* Supporting Files */,
 			);
-			path = "Example-Objective-C";
+			name = "Objective-C";
+			path = "Examples/Example-Objective-C";
 			sourceTree = "<group>";
 		};
 		358D14A81E5E3FDC00ADE590 /* Supporting Files */ = {
@@ -390,6 +468,26 @@
 				358D14A91E5E3FDC00ADE590 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		35B711D01E5E7AD2001EDA8D /* MapboxNavigationUITests */ = {
+			isa = PBXGroup;
+			children = (
+				35B711D11E5E7AD2001EDA8D /* MapboxNavigationUITests.swift */,
+				35B711D31E5E7AD2001EDA8D /* Info.plist */,
+			);
+			path = MapboxNavigationUITests;
+			sourceTree = "<group>";
+		};
+		35B711DB1E5E7B70001EDA8D /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				358D14641E5E3B7700ADE590 /* Swift */,
+				358D14A71E5E3FDC00ADE590 /* Objective-C */,
+				352BBC481E5E78D700703DF1 /* SwiftTests */,
+				352BBC561E5E78EA00703DF1 /* Objective-CTests */,
+			);
+			name = Examples;
 			sourceTree = "<group>";
 		};
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
@@ -418,11 +516,11 @@
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
+				35B711DB1E5E7B70001EDA8D /* Examples */,
 				C5ADFBCB1DDCC7840011824B /* MapboxNavigation */,
 				C5ADFBD61DDCC7840011824B /* MapboxNavigationTests */,
 				351BEBD81E5BCC28006FE110 /* MapboxNavigationUI */,
-				358D14641E5E3B7700ADE590 /* Example-Swift */,
-				358D14A71E5E3FDC00ADE590 /* Example-Objective-C */,
+				35B711D01E5E7AD2001EDA8D /* MapboxNavigationUITests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
 			);
@@ -436,6 +534,9 @@
 				351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */,
 				358D14631E5E3B7700ADE590 /* Example-Swift.app */,
 				358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */,
+				352BBC471E5E78D700703DF1 /* Example-SwiftTests.xctest */,
+				352BBC551E5E78EA00703DF1 /* Example-Objective-CTests.xctest */,
+				35B711CF1E5E7AD2001EDA8D /* MapboxNavigationUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -484,9 +585,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35D457A71E2D253100A89946 /* MBRouteController.h in Headers */,
-				35C6A3591E5E418D0004CA57 /* ViewController.h in Headers */,
 				C5C94C1B1DDCD22B0097296A /* MapboxNavigation.h in Headers */,
-				35C6A34E1E5E418D0004CA57 /* AppDelegate.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,6 +610,42 @@
 			productName = MapboxNavigationUI;
 			productReference = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		352BBC461E5E78D700703DF1 /* Example-SwiftTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 352BBC4E1E5E78D700703DF1 /* Build configuration list for PBXNativeTarget "Example-SwiftTests" */;
+			buildPhases = (
+				352BBC431E5E78D700703DF1 /* Sources */,
+				352BBC441E5E78D700703DF1 /* Frameworks */,
+				352BBC451E5E78D700703DF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				352BBC4D1E5E78D700703DF1 /* PBXTargetDependency */,
+			);
+			name = "Example-SwiftTests";
+			productName = "Example-SwiftTests";
+			productReference = 352BBC471E5E78D700703DF1 /* Example-SwiftTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		352BBC541E5E78EA00703DF1 /* Example-Objective-CTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 352BBC5C1E5E78EA00703DF1 /* Build configuration list for PBXNativeTarget "Example-Objective-CTests" */;
+			buildPhases = (
+				352BBC511E5E78EA00703DF1 /* Sources */,
+				352BBC521E5E78EA00703DF1 /* Frameworks */,
+				352BBC531E5E78EA00703DF1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				352BBC5B1E5E78EA00703DF1 /* PBXTargetDependency */,
+			);
+			name = "Example-Objective-CTests";
+			productName = "Example-Objective-CTests";
+			productReference = 352BBC551E5E78EA00703DF1 /* Example-Objective-CTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		358D14621E5E3B7700ADE590 /* Example-Swift */ = {
 			isa = PBXNativeTarget;
@@ -547,6 +682,25 @@
 			productName = "Example-Objective-C";
 			productReference = 358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */;
 			productType = "com.apple.product-type.application";
+		};
+		35B711CE1E5E7AD2001EDA8D /* MapboxNavigationUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 35B711D71E5E7AD2001EDA8D /* Build configuration list for PBXNativeTarget "MapboxNavigationUITests" */;
+			buildPhases = (
+				35B711CB1E5E7AD2001EDA8D /* Sources */,
+				35B711CC1E5E7AD2001EDA8D /* Frameworks */,
+				35B711CD1E5E7AD2001EDA8D /* Resources */,
+				35B711DA1E5E7AEC001EDA8D /* Carthage copy frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				35B711D61E5E7AD2001EDA8D /* PBXTargetDependency */,
+			);
+			name = MapboxNavigationUITests;
+			productName = MapboxNavigationUITests;
+			productReference = 35B711CF1E5E7AD2001EDA8D /* MapboxNavigationUITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		C5ADFBC81DDCC7840011824B /* MapboxNavigation */ = {
 			isa = PBXNativeTarget;
@@ -602,12 +756,29 @@
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
+					352BBC461E5E78D700703DF1 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = GJZR2MEM28;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 358D14621E5E3B7700ADE590;
+					};
+					352BBC541E5E78EA00703DF1 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = GJZR2MEM28;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 358D14A51E5E3FDC00ADE590;
+					};
 					358D14621E5E3B7700ADE590 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = GJZR2MEM28;
 						ProvisioningStyle = Automatic;
 					};
 					358D14A51E5E3FDC00ADE590 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = GJZR2MEM28;
+						ProvisioningStyle = Automatic;
+					};
+					35B711CE1E5E7AD2001EDA8D = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = GJZR2MEM28;
 						ProvisioningStyle = Automatic;
@@ -643,6 +814,9 @@
 				C5ADFBD11DDCC7840011824B /* MapboxNavigationTests */,
 				358D14621E5E3B7700ADE590 /* Example-Swift */,
 				358D14A51E5E3FDC00ADE590 /* Example-Objective-C */,
+				352BBC461E5E78D700703DF1 /* Example-SwiftTests */,
+				352BBC541E5E78EA00703DF1 /* Example-Objective-CTests */,
+				35B711CE1E5E7AD2001EDA8D /* MapboxNavigationUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -661,13 +835,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		352BBC451E5E78D700703DF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		352BBC531E5E78EA00703DF1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		358D14611E5E3B7700ADE590 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358D14701E5E3B7700ADE590 /* LaunchScreen.storyboard in Resources */,
-				358D146D1E5E3B7700ADE590 /* Assets.xcassets in Resources */,
-				358D146B1E5E3B7700ADE590 /* Main.storyboard in Resources */,
+				35B711DE1E5E7C87001EDA8D /* Main.storyboard in Resources */,
+				35B711DF1E5E7C87001EDA8D /* LaunchScreen.storyboard in Resources */,
+				35B711DD1E5E7C69001EDA8D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,8 +864,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				35C6A3541E5E418D0004CA57 /* Base.lproj in Resources */,
+				35B711E71E5E7E85001EDA8D /* Main.storyboard in Resources */,
+				35B711E61E5E7E85001EDA8D /* LaunchScreen.storyboard in Resources */,
 				35C6A3521E5E418D0004CA57 /* Assets.xcassets in Resources */,
 				35C6A3561E5E418D0004CA57 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35B711CD1E5E7AD2001EDA8D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -685,9 +882,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35C6A3531E5E418D0004CA57 /* Base.lproj in Resources */,
-				35C6A3511E5E418D0004CA57 /* Assets.xcassets in Resources */,
-				35C6A3551E5E418D0004CA57 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -710,6 +904,26 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
+			);
+			name = "Carthage copy frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		35B711DA1E5E7AEC001EDA8D /* Carthage copy frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/OSRMTextInstructions.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Pulley.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 			);
 			name = "Carthage copy frameworks";
@@ -752,6 +966,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		352BBC431E5E78D700703DF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		352BBC511E5E78EA00703DF1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		358D145F1E5E3B7700ADE590 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -768,6 +998,14 @@
 				352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */,
 				35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */,
 				352BBC411E5E6CC100703DF1 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		35B711CB1E5E7AD2001EDA8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				35B711D21E5E7AD2001EDA8D /* MapboxNavigationUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -802,6 +1040,21 @@
 			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
 			targetProxy = 352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */;
 		};
+		352BBC4D1E5E78D700703DF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
+			targetProxy = 352BBC4C1E5E78D700703DF1 /* PBXContainerItemProxy */;
+		};
+		352BBC5B1E5E78EA00703DF1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 358D14A51E5E3FDC00ADE590 /* Example-Objective-C */;
+			targetProxy = 352BBC5A1E5E78EA00703DF1 /* PBXContainerItemProxy */;
+		};
+		35B711D61E5E7AD2001EDA8D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigationUI */;
+			targetProxy = 35B711D51E5E7AD2001EDA8D /* PBXContainerItemProxy */;
+		};
 		35CEA3581E5CEBBC009F2255 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
@@ -829,6 +1082,22 @@
 				358D146F1E5E3B7700ADE590 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		35B711E21E5E7E85001EDA8D /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35B711E31E5E7E85001EDA8D /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		35B711E41E5E7E85001EDA8D /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				35B711E51E5E7E85001EDA8D /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -886,6 +1155,66 @@
 			};
 			name = Release;
 		};
+		352BBC4F1E5E78D700703DF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				INFOPLIST_FILE = Examples/SwiftTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-SwiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example-Swift.app/Example-Swift";
+			};
+			name = Debug;
+		};
+		352BBC501E5E78D700703DF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				INFOPLIST_FILE = Examples/SwiftTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-SwiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example-Swift.app/Example-Swift";
+			};
+			name = Release;
+		};
+		352BBC5D1E5E78EA00703DF1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				INFOPLIST_FILE = "Examples/Objective-CTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-CTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example-Objective-C.app/Example-Objective-C";
+			};
+			name = Debug;
+		};
+		352BBC5E1E5E78EA00703DF1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				INFOPLIST_FILE = "Examples/Objective-CTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-CTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example-Objective-C.app/Example-Objective-C";
+			};
+			name = Release;
+		};
 		358D14721E5E3B7700ADE590 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -897,7 +1226,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Swift/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Example-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
@@ -915,7 +1244,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Swift/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Example-Swift/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
@@ -936,7 +1265,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Objective-C/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Example-Objective-C/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
@@ -954,11 +1283,38 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Example/Example-Objective-C/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Example-Objective-C/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Objective-C";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		35B711D81E5E7AD2001EDA8D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				INFOPLIST_FILE = MapboxNavigationUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		35B711D91E5E7AD2001EDA8D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				INFOPLIST_FILE = MapboxNavigationUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1160,6 +1516,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		352BBC4E1E5E78D700703DF1 /* Build configuration list for PBXNativeTarget "Example-SwiftTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				352BBC4F1E5E78D700703DF1 /* Debug */,
+				352BBC501E5E78D700703DF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		352BBC5C1E5E78EA00703DF1 /* Build configuration list for PBXNativeTarget "Example-Objective-CTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				352BBC5D1E5E78EA00703DF1 /* Debug */,
+				352BBC5E1E5E78EA00703DF1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example-Swift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1177,6 +1551,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		35B711D71E5E7AD2001EDA8D /* Build configuration list for PBXNativeTarget "MapboxNavigationUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35B711D81E5E7AD2001EDA8D /* Debug */,
+				35B711D91E5E7AD2001EDA8D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		C5ADFBC31DDCC7840011824B /* Build configuration list for PBXProject "MapboxNavigation" */ = {
 			isa = XCConfigurationList;
