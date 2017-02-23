@@ -2,16 +2,17 @@ use_frameworks!
 
 def shared_pods
   pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :branch => 'swift3'
-  pod 'MapboxNavigation.swift', :path => '..'
+  pod 'MapboxNavigation.swift', :path => '../'
   pod 'Mapbox-iOS-SDK-symbols', :podspec => 'https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0/platform/ios/Mapbox-iOS-SDK-symbols.podspec'
+  pod 'OSRMTextInstructions', :git => "https://github.com/Project-OSRM/osrm-text-instructions.swift.git"
 end
 
 target 'Example-Swift' do
-  platform :ios, '8.0'
+  platform :ios, '9.0'
   shared_pods
 end
 
 target 'Example-Objective-C' do
-  platform :ios, '8.0'
+  platform :ios, '9.0'
   shared_pods
 end

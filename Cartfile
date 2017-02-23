@@ -1,2 +1,3 @@
 github "aws/aws-sdk-ios"
 github "mapbox/MapboxDirections.swift" "swift3"
+github "Project-OSRM/OSRMTextInstructions.swift"

@@ -1,19 +1,23 @@
 PODS:
-  - AWSCore (2.5.0)
-  - AWSPolly (2.5.0):
-    - AWSCore (= 2.5.0)
+  - AWSCore (2.5.1)
+  - AWSPolly (2.5.1):
+    - AWSCore (= 2.5.1)
   - Mapbox-iOS-SDK-symbols (3.4.0-symbols)
-  - MapboxDirections.swift (0.6.0):
-    - Polyline (~> 4.0.0)
+  - MapboxDirections.swift (0.7.0):
+    - Polyline (~> 4.0)
   - MapboxNavigation.swift (0.0.4):
     - AWSPolly
+    - MapboxDirections.swift
+    - OSRMTextInstructions
+  - OSRMTextInstructions (0.0.1):
     - MapboxDirections.swift
   - Polyline (4.0.0)
 
 DEPENDENCIES:
   - Mapbox-iOS-SDK-symbols (from `https://raw.githubusercontent.com/mapbox/mapbox-gl-native/ios-v3.4.0/platform/ios/Mapbox-iOS-SDK-symbols.podspec`)
   - MapboxDirections.swift (from `https://github.com/mapbox/MapboxDirections.swift.git`, branch `swift3`)
-  - MapboxNavigation.swift (from `..`)
+  - MapboxNavigation.swift (from `../`)
+  - OSRMTextInstructions (from `https://github.com/Project-OSRM/osrm-text-instructions.swift.git`)
 
 EXTERNAL SOURCES:
   Mapbox-iOS-SDK-symbols:
@@ -22,21 +26,27 @@ EXTERNAL SOURCES:
     :branch: swift3
     :git: https://github.com/mapbox/MapboxDirections.swift.git
   MapboxNavigation.swift:
-    :path: ".."
+    :path: ../
+  OSRMTextInstructions:
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
 
 CHECKOUT OPTIONS:
   MapboxDirections.swift:
-    :commit: 581f246ae4f821a62af6bbe8c4ea1aac67b0cf9b
+    :commit: 5384a42d8d18ff8e2e4520064f0bbc8da560c89d
     :git: https://github.com/mapbox/MapboxDirections.swift.git
+  OSRMTextInstructions:
+    :commit: 97023c55cab697b9892dc035f2c4143f73823231
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
 
 SPEC CHECKSUMS:
-  AWSCore: e9839d27ceaa2db75934a9c418630ce63c23e347
-  AWSPolly: 44acb7cb95a030aa18a8ef135619ea6a9e65a5d8
+  AWSCore: 71ca929a42c68ca7d645fcfa1e41ea0ff792a275
+  AWSPolly: 3a7bd938d44b3ebfaf079cf8afa524a2748bedcf
   Mapbox-iOS-SDK-symbols: bd2654585472ca25fe89e9adfc11ef5550020f84
-  MapboxDirections.swift: 4acd753d0079bae4f2fae2b2cbda98922909de09
-  MapboxNavigation.swift: b23fa587a8ff4a0d4f04eb4a93ac6017dc9c3950
+  MapboxDirections.swift: 62af6da47205a797de82be36641a26d0844ca99b
+  MapboxNavigation.swift: f39246fcd3420b2aadfbb92b146144e5b8d7b294
+  OSRMTextInstructions: f253e4311da3103a9160e11e7728299533684283
   Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
 
-PODFILE CHECKSUM: 336d579030dc82241d9cafbcddb8b6086a00b04f
+PODFILE CHECKSUM: 77a3ff15e06821f03ab53ee592092a7f8853c126
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0
