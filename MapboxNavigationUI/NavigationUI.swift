@@ -12,6 +12,10 @@ extension UIColor {
     fileprivate class var defaultLine: UIColor { get { return #colorLiteral(red: 151.0/255.0, green: 151.0/255.0, blue: 151.0/255.0, alpha: 0.6) } }
 }
 
+/**
+ `NavigationUI` lets you apply basic styling to some of
+ the MapboxNavigationUI elements.
+ */
 @objc(MBNavigationUI)
 public class NavigationUI: NSObject {
     public static let shared = NavigationUI()
@@ -53,8 +57,9 @@ public class NavigationUI: NSObject {
     }
     
     /**
-     Instantiates a `RouteViewController` providing turn by turn navigation for
-     the given route. A `direction` object is needed for potential rerouting.
+     Convenient factory method for instantiating a `RouteViewController`,
+     providing turn by turn navigation for the given route.
+     A optional `direction` object is needed for potential rerouting.
      
      See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
      for further information.
