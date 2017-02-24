@@ -11,22 +11,36 @@ let layerIdentifier = "layerIdentifier"
 
 class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
     
+    let routeStepFormatter = RouteStepFormatter()
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
     var routeViewController: RouteViewController?
-    lazy var speechSynth = AVSpeechSynthesizer()
-    var userRoute: Route?
+    var userRoute: Route? {
+        didSet {
+            howToBeginLabel.isHidden = userRoute != nil
+            navigationButton.isEnabled = userRoute != nil
+            navigationUIButton.isEnabled = userRoute != nil
+        }
+    }
     
+    var isNavigating: Bool { get { return navigation != nil } }
+    
+    lazy var speechSynth = AVSpeechSynthesizer()
+    
+    @IBOutlet weak var instructionsLabel: UILabel!
+    @IBOutlet weak var navigationButton: UIButton!
+    @IBOutlet weak var navigationUIButton: UIButton!
     @IBOutlet weak var mapView: MGLMapView!
-    @IBOutlet weak var toggleNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        automaticallyAdjustsScrollViewInsets = false
         mapView.delegate = self
-        
         mapView.userTrackingMode = .follow
+        mapView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 48, right: 0)
+        mapView.compassView.isHidden = true
         resumeNotifications()
     }
     
@@ -51,14 +65,51 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         getRoute()
     }
     
-    @IBAction func didToggleNavigation(_ sender: Any) {
-        startNavigation(userRoute!)
+    @IBAction func didTapNavigateButton(_ sender: Any) {
+        if isNavigating {
+            stopNavigation()
+        } else {
+            startNavigation()
+        }
+    }
+    
+    @IBAction func didTapNavigationUIButton(_ sender: Any) {
+        let viewController = NavigationUI.routeViewController(for: userRoute!)
+        viewController.pendingCamera = mapView.camera
+        present(viewController, animated: true, completion: nil)
+    }
+    
+    func startNavigation() {
+        navigation = RouteController(route: userRoute!)
+        navigation?.resume()
+        mapView.userTrackingMode = .followWithCourse
+        mapView.camera.pitch = 45
+        navigationButton.setTitle("Stop navigation", for: .normal)
+        instructionsLabel.isHidden = false
+    }
+    
+    func stopNavigation() {
+        navigation?.suspend()
+        navigation = nil
+        userRoute = nil
+        
+        mapView.userTrackingMode = .follow
+        mapView.resetNorth()
+        mapView.camera.pitch = 0
+        navigationButton.setTitle("Start navigation", for: .normal)
+        
+        if let annotations = mapView.annotations {
+            mapView.removeAnnotations(annotations)
+        }
+        
+        removeRoutesFromMap()
+        instructionsLabel.isHidden = true
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
     }
     
     func suspendNotifications() {
@@ -92,10 +143,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     // Notifications sent on all location updates
     func progressDidChange(_ notification: NSNotification) {
-        // If you are not using MapboxNavigationUI,
-        // this would be a good time to update UI elements.
-        // You can grab the current routeProgress like:
-        // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let distance = roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)
+        instructionsLabel.text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
     }
     
     // Notification sent when the user is determined to be off the current route
@@ -141,9 +191,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             }
             
             self?.userRoute = route
-            self?.toggleNavigationButton.isHidden = false
-            self?.howToBeginLabel.isHidden = true
-            
             self?.removeRoutesFromMap()
             
             let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: route.coordinateCount)
@@ -167,14 +214,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
             
             didFinish?()
         }
-    }
-    
-    func startNavigation(_ route: Route) {
-        // Pass through a
-        // 1. the route the user will take
-        // 2. A `Directions` class, used for rerouting.
-        let viewController = NavigationUI.routeViewController(for: route)
-        present(viewController, animated: true, completion: nil)
     }
     
     func removeRoutesFromMap() {

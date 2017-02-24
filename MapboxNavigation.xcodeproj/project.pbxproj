@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35002D5E1E5F6ABB0090E733 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5D1E5F6ABB0090E733 /* Info.plist */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D621E5F6ADB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D601E5F6ADB0090E733 /* Base.lproj */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		35002D6E1E5F6C7F0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6A1E5F6C7F0090E733 /* Assets.xcassets */; };
 		35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6B1E5F6C7F0090E733 /* Base.lproj */; };
-		35002D701E5F6C7F0090E733 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6C1E5F6C7F0090E733 /* Info.plist */; };
 		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
 		35002D771E5F6ED00090E733 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
@@ -49,6 +47,8 @@
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
 		351BEC2B1E5BD538006FE110 /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2A1E5BD538006FE110 /* Shields.plist */; };
 		351BEC2D1E5BD541006FE110 /* zh-Hans.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2C1E5BD541006FE110 /* zh-Hans.lproj */; };
+		352944701E61068C008EB40D /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		352944741E61068C008EB40D /* MapboxNavigationUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		352BBC3B1E5E6A0C00703DF1 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		352BBC3C1E5E6A1A00703DF1 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
 		352BBC3D1E5E6A1D00703DF1 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; };
@@ -72,8 +72,6 @@
 		358D149D1E5E3CB600ADE590 /* Pulley.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14921E5E3CB600ADE590 /* Pulley.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		358D149E1E5E3CB600ADE590 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; };
 		358D149F1E5E3CB600ADE590 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D14A01E5E3CC200ADE590 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
-		358D14A11E5E3CC200ADE590 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
 		358D14BD1E5E401700ADE590 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
 		358D14BE1E5E401700ADE590 /* MapboxDirections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		358D14BF1E5E401700ADE590 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; };
@@ -123,6 +121,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
 			remoteInfo = MapboxNavigation;
+		};
+		352944711E61068C008EB40D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
+			remoteInfo = MapboxNavigation;
+		};
+		352944751E61068C008EB40D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
+			remoteInfo = MapboxNavigationUI;
 		};
 		352BBC3E1E5E6ADC00703DF1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -179,7 +191,9 @@
 				358D149B1E5E3CB600ADE590 /* Polyline.framework in Embed Frameworks */,
 				358D14991E5E3CB600ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */,
 				358D149D1E5E3CB600ADE590 /* Pulley.framework in Embed Frameworks */,
+				352944741E61068C008EB40D /* MapboxNavigationUI.framework in Embed Frameworks */,
 				358D149F1E5E3CB600ADE590 /* SDWebImage.framework in Embed Frameworks */,
+				352944701E61068C008EB40D /* MapboxNavigation.framework in Embed Frameworks */,
 				358D148D1E5E3CAC00ADE590 /* Mapbox.framework in Embed Frameworks */,
 				358D14951E5E3CB600ADE590 /* MapboxDirections.framework in Embed Frameworks */,
 			);
@@ -318,8 +332,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358D14A01E5E3CC200ADE590 /* MapboxNavigation.framework in Frameworks */,
-				358D14A11E5E3CC200ADE590 /* MapboxNavigationUI.framework in Frameworks */,
 				358D14961E5E3CB600ADE590 /* MapboxGeocoder.framework in Frameworks */,
 				358D149A1E5E3CB600ADE590 /* Polyline.framework in Frameworks */,
 				358D14981E5E3CB600ADE590 /* OSRMTextInstructions.framework in Frameworks */,
@@ -685,6 +697,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				352944721E61068C008EB40D /* PBXTargetDependency */,
+				352944761E61068C008EB40D /* PBXTargetDependency */,
 			);
 			name = "Example-Swift";
 			productName = "Example-Swift";
@@ -884,7 +898,6 @@
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
 				35002D621E5F6ADB0090E733 /* Base.lproj in Resources */,
-				35002D5E1E5F6ABB0090E733 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -894,7 +907,6 @@
 			files = (
 				35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */,
 				35002D6E1E5F6C7F0090E733 /* Assets.xcassets in Resources */,
-				35002D701E5F6C7F0090E733 /* Info.plist in Resources */,
 				35002D761E5F6CD30090E733 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1072,6 +1084,16 @@
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
 			targetProxy = 35002D7D1E5F6EDB0090E733 /* PBXContainerItemProxy */;
+		};
+		352944721E61068C008EB40D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
+			targetProxy = 352944711E61068C008EB40D /* PBXContainerItemProxy */;
+		};
+		352944761E61068C008EB40D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigationUI */;
+			targetProxy = 352944751E61068C008EB40D /* PBXContainerItemProxy */;
 		};
 		352BBC3F1E5E6ADC00703DF1 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1278,7 +1300,6 @@
 		358D14BB1E5E3FDC00ADE590 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
@@ -1298,7 +1319,6 @@
 		358D14BC1E5E3FDC00ADE590 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = (
