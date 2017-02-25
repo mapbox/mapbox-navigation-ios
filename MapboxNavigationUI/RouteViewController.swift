@@ -205,7 +205,7 @@ public class RouteViewController: NavigationPulleyViewController {
         if routeController == nil {
             routeController = RouteController(route: route)
             
-            if Bundle.main.backgroundModeLocationSupported {
+            if Bundle.main.isLocationBackgroundModeSupported {
                 routeController.locationManager.activityType = .automotiveNavigation
                 routeController.locationManager.allowsBackgroundLocationUpdates = true
             }
