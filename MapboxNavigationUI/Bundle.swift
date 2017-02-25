@@ -5,7 +5,7 @@ extension Bundle {
         get { return Bundle(for: NavigationUI.self) }
     }
     
-    var backgroundModeLocationSupported: Bool {
+    var isLocationBackgroundModeSupported: Bool {
         get {
             if let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] {
                 return modes.contains("location")
