@@ -1,0 +1,17 @@
+[submodule "Carthage/Checkouts/MapboxGeocoder.swift"]
+	path = Carthage/Checkouts/MapboxGeocoder.swift
+	url = https://github.com/mapbox/MapboxGeocoder.swift.git
+[submodule "Carthage/Checkouts/Polyline"]
+	path = Carthage/Checkouts/Polyline
+	url = https://github.com/raphaelmor/Polyline.git
+[submodule "Carthage/Checkouts/MapboxDirections.swift"]
+	path = Carthage/Checkouts/MapboxDirections.swift
+	url = https://github.com/mapbox/MapboxDirections.swift.git
+[submodule "Carthage/Checkouts/osrm-text-instructions.swift"]
+	url = https://github.com/Project-OSRM/osrm-text-instructions.swift.git
+[submodule "Carthage/Checkouts/Pulley"]
+	path = Carthage/Checkouts/Pulley
+	url = https://github.com/52inc/Pulley.git
+[submodule "Carthage/Checkouts/SDWebImage"]
+	path = Carthage/Checkouts/SDWebImage
+	url = https://github.com/rs/SDWebImage.git
