@@ -1,4 +1,3 @@
-
 import UIKit
 import MapboxNavigation
 import MapboxNavigationUI
@@ -60,9 +59,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
     }
     
     func suspendNotifications() {

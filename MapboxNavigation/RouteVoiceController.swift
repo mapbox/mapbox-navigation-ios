@@ -68,9 +68,9 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reRoute(notification:)), name: RouteControllerShouldReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector:#selector(self.audioPlayerDidFinishPlaying(notification:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: audioPlayer.currentItem)
+        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reRoute(notification:)), name: RouteControllerShouldReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector:#selector(audioPlayerDidFinishPlaying(notification:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: audioPlayer.currentItem)
     }
     
     public func suspendNotifications() {
