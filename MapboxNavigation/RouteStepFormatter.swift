@@ -20,7 +20,7 @@ public class RouteStepFormatter: Formatter {
         
         return instructions.string(for: step, modifyValueByKey: { (key, value) -> String in
             switch key {
-            case OSRMTokenType.wayName, OSRMTokenType.destination, OSRMTokenType.rotaryName:
+            case .wayName, .destination, .rotaryName:
                 return "<say-as interpret-as=\"address\">\(value.addingXMLEscapes)</say-as>"
             default:
                 return value
