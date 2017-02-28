@@ -4,22 +4,24 @@ import MapboxNavigationUI
 import MapboxDirections
 import Mapbox
 import CoreLocation
-import AVFoundation
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate {
     
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
     var routeViewController: RouteViewController?
-    lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
     
     @IBOutlet weak var mapView: MGLMapView!
     @IBOutlet weak var toggleNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
+    
+    // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer
+    // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
+    var routeVoiceController = RouteVoiceController(identityPoolId: "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +34,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     deinit {
         suspendNotifications()
-        navigation?.suspend()
+        routeVoiceController.suspendNotifications()
+        navigation?.suspendLocationUpdates()
     }
     
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -56,9 +59,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
     }
     
     func suspendNotifications() {
@@ -67,27 +70,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: navigation)
     }
     
-    // Notification sent when the alert level changes. This signals the user is ready for a new voice announcement.
+    // Notification sent when the alert level changes.
     func alertLevelDidChange(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
-        var text: String
-        
-        let distance = roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-            // Don't give full instruction with distance if the alert type is high
-            if alertLevel == .high {
-                text = upComingStep.instructions
-            } else {
-                text = "In \(distance) meters \(upComingStep.instructions)"
-            }
-        } else {
-            text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
-        }
-        
-        let utterance = AVSpeechUtterance(string: text)
-        speechSynth.delegate = self
-        speechSynth.speak(utterance)
+        // Good place to give alerts about maneuver. These announcements are handled by `RouteVoiceController`
     }
     
     // Notifications sent on all location updates
@@ -100,10 +85,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
     
     // Notification sent when the user is determined to be off the current route
     func rerouted(_ notification: NSNotification) {
-        
-        // Interrupt the current instruction
-        speechSynth.stopSpeaking(at: .word)
-        
         //
         // If you're not using MapboxNavigationUI,
         // this is how you'd handle fetching a new route and setting it as the active route
@@ -193,4 +174,3 @@ class ViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthesizerD
         return 10 * Int(round(x / 10.0))
     }
 }
-

@@ -100,7 +100,7 @@ public class RouteViewController: NavigationPulleyViewController {
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
-        routeController.suspend()
+        routeController.suspendLocationUpdates()
     }
     
     // MARK: Route controller notifications

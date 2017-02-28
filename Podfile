@@ -10,8 +10,9 @@ target 'MapboxNavigationUI' do
   pod 'MapboxDirections.swift', '~> 0.8'
   pod 'MapboxGeocoder.swift', '~> 0.6'
   pod 'SDWebImage', '~> 4.0.0-beta2'
-  pod 'OSRMTextInstructions', :git => "git@github.com:Project-OSRM/osrm-text-instructions.swift.git", :branch => "master"
+  pod 'OSRMTextInstructions', :git => 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git', :commit => 'bdd962bf5593f951bbbbd26435f732a829dacda7'
   pod 'Pulley', '~> 1.3'
+  pod 'AWSPolly', '~> 2.5'
 end
 
 target 'Example-Swift' do
