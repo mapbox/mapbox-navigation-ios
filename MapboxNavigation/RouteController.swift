@@ -39,7 +39,7 @@ open class RouteController: NSObject {
     }
     
     deinit {
-        suspend()
+        suspendLocationUpdates()
     }
     
     /*
@@ -55,7 +55,7 @@ open class RouteController: NSObject {
     /*
      Stops monitoring users location along route.
      */
-    public func suspend() {
+    public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
     }
@@ -72,7 +72,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         guard routeProgress.currentLegProgress.alertUserLevel != .arrive else {
             // Don't advance nor check progress if the user has arrived at their destination
-            suspend()
+            suspendLocationUpdates()
             NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
                 RouteControllerProgressDidChangeNotificationLocationKey: location,

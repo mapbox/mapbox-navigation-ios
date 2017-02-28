@@ -58,22 +58,6 @@
 		352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
-		358D148C1E5E3CAC00ADE590 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; };
-		358D148D1E5E3CAC00ADE590 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148B1E5E3CAC00ADE590 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D14941E5E3CB600ADE590 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
-		358D14951E5E3CB600ADE590 /* MapboxDirections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D14961E5E3CB600ADE590 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; };
-		358D14971E5E3CB600ADE590 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D14981E5E3CB600ADE590 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */; };
-		358D14991E5E3CB600ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14901E5E3CB600ADE590 /* OSRMTextInstructions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D149A1E5E3CB600ADE590 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; };
-		358D149B1E5E3CB600ADE590 /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D149C1E5E3CB600ADE590 /* Pulley.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14921E5E3CB600ADE590 /* Pulley.framework */; };
-		358D149D1E5E3CB600ADE590 /* Pulley.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14921E5E3CB600ADE590 /* Pulley.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D149E1E5E3CB600ADE590 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; };
-		358D149F1E5E3CB600ADE590 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14931E5E3CB600ADE590 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		358D14A01E5E3CC200ADE590 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
-		358D14A11E5E3CC200ADE590 /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
 		358D14BD1E5E401700ADE590 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
 		358D14BE1E5E401700ADE590 /* MapboxDirections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		358D14BF1E5E401700ADE590 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148F1E5E3CB600ADE590 /* MapboxGeocoder.framework */; };
@@ -96,10 +80,14 @@
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35CEA3561E5CEB2F009F2255 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		436AE9C84F7ABAC6B6E55977 /* Pods_Example_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617718AB249D12D099A3CE8E /* Pods_Example_Swift.framework */; };
 		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
 		C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */; };
 		C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09D21DEF636C00BE3C5C /* Fixture.swift */; };
+		C561DF551E64F7C2004137B8 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561DF541E64F7C2004137B8 /* DistanceFormatter.swift */; };
+		C561DF571E64F7D3004137B8 /* RouteStepFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561DF561E64F7D3004137B8 /* RouteStepFormatter.swift */; };
+		C561DF591E64F7F0004137B8 /* RouteStepVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561DF581E64F7F0004137B8 /* RouteStepVoiceController.swift */; };
 		C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D6BAC1DDCF2AE00387F53 /* Constants.swift */; };
 		C5ADFBD81DDCC7840011824B /* MapboxNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBD71DDCC7840011824B /* MapboxNavigationTests.swift */; };
 		C5C94C1B1DDCD22B0097296A /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = C5ADFBCC1DDCC7840011824B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -169,23 +157,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		358D14781E5E3C1500ADE590 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				358D14971E5E3CB600ADE590 /* MapboxGeocoder.framework in Embed Frameworks */,
-				358D149B1E5E3CB600ADE590 /* Polyline.framework in Embed Frameworks */,
-				358D14991E5E3CB600ADE590 /* OSRMTextInstructions.framework in Embed Frameworks */,
-				358D149D1E5E3CB600ADE590 /* Pulley.framework in Embed Frameworks */,
-				358D149F1E5E3CB600ADE590 /* SDWebImage.framework in Embed Frameworks */,
-				358D148D1E5E3CAC00ADE590 /* Mapbox.framework in Embed Frameworks */,
-				358D14951E5E3CB600ADE590 /* MapboxDirections.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		358D14CB1E5E401700ADE590 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -274,10 +245,16 @@
 		35C6A34C1E5E418D0004CA57 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		35C6A34D1E5E418D0004CA57 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
+		617718AB249D12D099A3CE8E /* Pods_Example_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A219C63C10BA98643EA76535 /* Pods-Example-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Swift.debug.xcconfig"; path = "Examples/Swift/Pods/Target Support Files/Pods-Example-Swift/Pods-Example-Swift.debug.xcconfig"; sourceTree = "<group>"; };
+		A3E888300B48D8110D577BB6 /* Pods-Example-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Swift.release.xcconfig"; path = "Examples/Swift/Pods/Target Support Files/Pods-Example-Swift/Pods-Example-Swift.release.xcconfig"; sourceTree = "<group>"; };
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryTests.swift; sourceTree = "<group>"; };
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		C52D09D21DEF636C00BE3C5C /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
+		C561DF541E64F7C2004137B8 /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
+		C561DF561E64F7D3004137B8 /* RouteStepFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepFormatter.swift; sourceTree = "<group>"; };
+		C561DF581E64F7F0004137B8 /* RouteStepVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepVoiceController.swift; sourceTree = "<group>"; };
 		C58D6BAC1DDCF2AE00387F53 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5ADFBCC1DDCC7840011824B /* MapboxNavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxNavigation.h; sourceTree = "<group>"; };
@@ -318,15 +295,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				358D14A01E5E3CC200ADE590 /* MapboxNavigation.framework in Frameworks */,
-				358D14A11E5E3CC200ADE590 /* MapboxNavigationUI.framework in Frameworks */,
-				358D14961E5E3CB600ADE590 /* MapboxGeocoder.framework in Frameworks */,
-				358D149A1E5E3CB600ADE590 /* Polyline.framework in Frameworks */,
-				358D14981E5E3CB600ADE590 /* OSRMTextInstructions.framework in Frameworks */,
-				358D149C1E5E3CB600ADE590 /* Pulley.framework in Frameworks */,
-				358D149E1E5E3CB600ADE590 /* SDWebImage.framework in Frameworks */,
-				358D148C1E5E3CAC00ADE590 /* Mapbox.framework in Frameworks */,
-				358D14941E5E3CB600ADE590 /* MapboxDirections.framework in Frameworks */,
+				436AE9C84F7ABAC6B6E55977 /* Pods_Example_Swift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -516,6 +485,15 @@
 			name = Examples;
 			sourceTree = "<group>";
 		};
+		3BA6B09D57BF0E797384C496 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A219C63C10BA98643EA76535 /* Pods-Example-Swift.debug.xcconfig */,
+				A3E888300B48D8110D577BB6 /* Pods-Example-Swift.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -526,6 +504,7 @@
 				358D14921E5E3CB600ADE590 /* Pulley.framework */,
 				358D14931E5E3CB600ADE590 /* SDWebImage.framework */,
 				358D148B1E5E3CAC00ADE590 /* Mapbox.framework */,
+				617718AB249D12D099A3CE8E /* Pods_Example_Swift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -549,6 +528,7 @@
 				35B711D01E5E7AD2001EDA8D /* MapboxNavigationUITests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
+				3BA6B09D57BF0E797384C496 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -575,6 +555,9 @@
 				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
 				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
+				C561DF541E64F7C2004137B8 /* DistanceFormatter.swift */,
+				C561DF561E64F7D3004137B8 /* RouteStepFormatter.swift */,
+				C561DF581E64F7F0004137B8 /* RouteStepVoiceController.swift */,
 				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
@@ -677,10 +660,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 358D14741E5E3B7700ADE590 /* Build configuration list for PBXNativeTarget "Example-Swift" */;
 			buildPhases = (
+				F6CCD8DA23E5159F66242372 /* [CP] Check Pods Manifest.lock */,
 				358D145F1E5E3B7700ADE590 /* Sources */,
 				358D14601E5E3B7700ADE590 /* Frameworks */,
 				358D14611E5E3B7700ADE590 /* Resources */,
-				358D14781E5E3C1500ADE590 /* Embed Frameworks */,
+				533EA484CFAAFEC48B548ED8 /* [CP] Embed Pods Frameworks */,
+				518D2EBDC7EEFDA0C3701878 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -961,6 +946,51 @@
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
+		518D2EBDC7EEFDA0C3701878 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Examples/Swift/Pods/Target Support Files/Pods-Example-Swift/Pods-Example-Swift-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		533EA484CFAAFEC48B548ED8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Examples/Swift/Pods/Target Support Files/Pods-Example-Swift/Pods-Example-Swift-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F6CCD8DA23E5159F66242372 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1044,7 +1074,10 @@
 				C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */,
 				C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */,
 				35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */,
+				C561DF571E64F7D3004137B8 /* RouteStepFormatter.swift in Sources */,
+				C561DF551E64F7C2004137B8 /* DistanceFormatter.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
+				C561DF591E64F7F0004137B8 /* RouteStepVoiceController.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1239,6 +1272,7 @@
 		};
 		358D14721E5E3B7700ADE590 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A219C63C10BA98643EA76535 /* Pods-Example-Swift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1259,6 +1293,7 @@
 		};
 		358D14731E5E3B7700ADE590 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3E888300B48D8110D577BB6 /* Pods-Example-Swift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
