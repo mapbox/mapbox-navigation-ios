@@ -27,7 +27,7 @@ DEPENDENCIES:
   - MapboxGeocoder.swift (~> 0.6)
   - MapboxNavigation.swift (from `.`)
   - MapboxNavigationUI.swift (from `.`)
-  - OSRMTextInstructions (from `git@github.com:Project-OSRM/osrm-text-instructions.swift.git`, branch `master`)
+  - OSRMTextInstructions (from `https://github.com/Project-OSRM/osrm-text-instructions.swift.git`, branch `master`)
   - Pulley (~> 1.3)
   - SDWebImage (~> 4.0.0-beta2)
 
@@ -38,12 +38,12 @@ EXTERNAL SOURCES:
     :path: .
   OSRMTextInstructions:
     :branch: master
-    :git: git@github.com:Project-OSRM/osrm-text-instructions.swift.git
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
 
 CHECKOUT OPTIONS:
   OSRMTextInstructions:
     :commit: 97023c55cab697b9892dc035f2c4143f73823231
-    :git: git@github.com:Project-OSRM/osrm-text-instructions.swift.git
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
 
 SPEC CHECKSUMS:
   Mapbox-iOS-SDK: d2c567fee32d316044ec925c8bcfb74a92d57ec9
@@ -56,6 +56,6 @@ SPEC CHECKSUMS:
   Pulley: 99a45ad8aba14dafb2c6f4f16cb9667eb41c0919
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
 
-PODFILE CHECKSUM: dee1feba0d6ff1421c272f13c41e4df4ed21fb03
+PODFILE CHECKSUM: 70228a286939e9b759380b86a4801de64a7e0051
 
 COCOAPODS: 1.2.0
