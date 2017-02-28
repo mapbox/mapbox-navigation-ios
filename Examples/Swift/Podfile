@@ -1,0 +1,16 @@
+platform :ios, '9.0'
+use_frameworks!
+
+project '../../MapboxNavigation.xcodeproj'
+
+def shared_pods
+    pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => '955970285f7dee31b2c130023d7b383be51ab190'
+    pod 'OSRMTextInstructions', :git => 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git', :commit => '6be90e29e7b8e9be3ceb0b1b5a2fa668b04bcb00'
+    pod 'AWSPolly', '~> 2.5'
+    pod 'MapboxNavigation.swift', :path => '../../'
+    pod 'MapboxNavigationUI.swift', :path => '../../'
+end
+
+target 'Example-Swift' do
+    shared_pods
+end

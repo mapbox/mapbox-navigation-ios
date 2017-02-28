@@ -1,0 +1,72 @@
+PODS:
+  - AWSCore (2.5.1)
+  - AWSPolly (2.5.1):
+    - AWSCore (= 2.5.1)
+  - Mapbox-iOS-SDK (3.4.2)
+  - MapboxDirections.swift (0.8.0):
+    - Polyline (~> 4.0)
+  - MapboxGeocoder.swift (0.6.0)
+  - MapboxNavigation.swift (0.0.4):
+    - AWSPolly
+    - MapboxDirections.swift
+    - OSRMTextInstructions
+    - Polyline
+  - MapboxNavigationUI.swift (0.0.1):
+    - Mapbox-iOS-SDK
+    - MapboxDirections.swift
+    - MapboxGeocoder.swift
+    - MapboxNavigation.swift
+    - OSRMTextInstructions
+    - Pulley
+    - SDWebImage
+  - OSRMTextInstructions (0.0.1):
+    - MapboxDirections.swift
+  - Polyline (4.0.0)
+  - Pulley (1.3.1)
+  - SDWebImage (4.0.0):
+    - SDWebImage/Core (= 4.0.0)
+  - SDWebImage/Core (4.0.0)
+
+DEPENDENCIES:
+  - AWSPolly (~> 2.5)
+  - MapboxDirections.swift (from `https://github.com/mapbox/MapboxDirections.swift.git`, commit `955970285f7dee31b2c130023d7b383be51ab190`)
+  - MapboxNavigation.swift (from `../../`)
+  - MapboxNavigationUI.swift (from `../../`)
+  - OSRMTextInstructions (from `https://github.com/Project-OSRM/osrm-text-instructions.swift.git`, commit `6be90e29e7b8e9be3ceb0b1b5a2fa668b04bcb00`)
+
+EXTERNAL SOURCES:
+  MapboxDirections.swift:
+    :commit: 955970285f7dee31b2c130023d7b383be51ab190
+    :git: https://github.com/mapbox/MapboxDirections.swift.git
+  MapboxNavigation.swift:
+    :path: ../../
+  MapboxNavigationUI.swift:
+    :path: ../../
+  OSRMTextInstructions:
+    :commit: 6be90e29e7b8e9be3ceb0b1b5a2fa668b04bcb00
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
+
+CHECKOUT OPTIONS:
+  MapboxDirections.swift:
+    :commit: 955970285f7dee31b2c130023d7b383be51ab190
+    :git: https://github.com/mapbox/MapboxDirections.swift.git
+  OSRMTextInstructions:
+    :commit: 6be90e29e7b8e9be3ceb0b1b5a2fa668b04bcb00
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
+
+SPEC CHECKSUMS:
+  AWSCore: 71ca929a42c68ca7d645fcfa1e41ea0ff792a275
+  AWSPolly: 3a7bd938d44b3ebfaf079cf8afa524a2748bedcf
+  Mapbox-iOS-SDK: d2c567fee32d316044ec925c8bcfb74a92d57ec9
+  MapboxDirections.swift: b745973e23a70e024e1391936210c959f5883443
+  MapboxGeocoder.swift: dd6783c5262b4ebb1cf5f2662b56cea94a90f67d
+  MapboxNavigation.swift: a2793e55efeb142823ffa78d796bb91986942c06
+  MapboxNavigationUI.swift: 804566de765489c61a7455106f8fdd28a51fcce6
+  OSRMTextInstructions: f253e4311da3103a9160e11e7728299533684283
+  Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
+  Pulley: 99a45ad8aba14dafb2c6f4f16cb9667eb41c0919
+  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
+
+PODFILE CHECKSUM: 9fe3a5a52e8740ea2efffc65eff0eb9871d1e44c
+
+COCOAPODS: 1.2.0
