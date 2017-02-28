@@ -1,0 +1,61 @@
+PODS:
+  - Mapbox-iOS-SDK (3.4.2)
+  - MapboxDirections.swift (0.8.0):
+    - Polyline (~> 4.0)
+  - MapboxGeocoder.swift (0.6.0)
+  - MapboxNavigation.swift (0.0.4):
+    - MapboxDirections.swift
+  - MapboxNavigationUI.swift (0.0.1):
+    - Mapbox-iOS-SDK
+    - MapboxDirections.swift
+    - MapboxGeocoder.swift
+    - MapboxNavigation.swift
+    - OSRMTextInstructions
+    - Pulley
+    - SDWebImage
+  - OSRMTextInstructions (0.0.1):
+    - MapboxDirections.swift
+  - Polyline (4.0.0)
+  - Pulley (1.3.1)
+  - SDWebImage (4.0.0):
+    - SDWebImage/Core (= 4.0.0)
+  - SDWebImage/Core (4.0.0)
+
+DEPENDENCIES:
+  - Mapbox-iOS-SDK (~> 3.4)
+  - MapboxDirections.swift (~> 0.8)
+  - MapboxGeocoder.swift (~> 0.6)
+  - MapboxNavigation.swift (from `.`)
+  - MapboxNavigationUI.swift (from `.`)
+  - OSRMTextInstructions (from `git@github.com:Project-OSRM/osrm-text-instructions.swift.git`, branch `master`)
+  - Pulley (~> 1.3)
+  - SDWebImage (~> 4.0.0-beta2)
+
+EXTERNAL SOURCES:
+  MapboxNavigation.swift:
+    :path: .
+  MapboxNavigationUI.swift:
+    :path: .
+  OSRMTextInstructions:
+    :branch: master
+    :git: git@github.com:Project-OSRM/osrm-text-instructions.swift.git
+
+CHECKOUT OPTIONS:
+  OSRMTextInstructions:
+    :commit: 97023c55cab697b9892dc035f2c4143f73823231
+    :git: git@github.com:Project-OSRM/osrm-text-instructions.swift.git
+
+SPEC CHECKSUMS:
+  Mapbox-iOS-SDK: d2c567fee32d316044ec925c8bcfb74a92d57ec9
+  MapboxDirections.swift: 242f12da1a6530f436d5fe5b4d9fc38cf2f9b1d0
+  MapboxGeocoder.swift: dd6783c5262b4ebb1cf5f2662b56cea94a90f67d
+  MapboxNavigation.swift: 281f0f3dc01bbd06732aac30c769af0dd2948689
+  MapboxNavigationUI.swift: 804566de765489c61a7455106f8fdd28a51fcce6
+  OSRMTextInstructions: f253e4311da3103a9160e11e7728299533684283
+  Polyline: c6de7430bf6ff0bfff1f087343597b83b38fdb69
+  Pulley: 99a45ad8aba14dafb2c6f4f16cb9667eb41c0919
+  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
+
+PODFILE CHECKSUM: dee1feba0d6ff1421c272f13c41e4df4ed21fb03
+
+COCOAPODS: 1.2.0
