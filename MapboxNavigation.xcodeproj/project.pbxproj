@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		310E67F36165F62A5FE43D7F /* Pods_NavigationUI_MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EB67FBC83BF3938A5959DAC /* Pods_NavigationUI_MapboxNavigationUI.framework */; };
 		35002D5E1E5F6ABB0090E733 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5D1E5F6ABB0090E733 /* Info.plist */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D621E5F6ADB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D601E5F6ADB0090E733 /* Base.lproj */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		35002D6E1E5F6C7F0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6A1E5F6C7F0090E733 /* Assets.xcassets */; };
 		35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6B1E5F6C7F0090E733 /* Base.lproj */; };
-		35002D701E5F6C7F0090E733 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6C1E5F6C7F0090E733 /* Info.plist */; };
 		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
 		351BEBDB1E5BCC28006FE110 /* MapboxNavigationUI.h in Headers */ = {isa = PBXBuildFile; fileRef = 351BEBD91E5BCC28006FE110 /* MapboxNavigationUI.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -45,9 +45,6 @@
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
 		351BEC2B1E5BD538006FE110 /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2A1E5BD538006FE110 /* Shields.plist */; };
 		351BEC2D1E5BD541006FE110 /* zh-Hans.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2C1E5BD541006FE110 /* zh-Hans.lproj */; };
-		352BBC3B1E5E6A0C00703DF1 /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxNavigation.framework */; };
-		352BBC3C1E5E6A1A00703DF1 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D148E1E5E3CB600ADE590 /* MapboxDirections.framework */; };
-		352BBC3D1E5E6A1D00703DF1 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 358D14911E5E3CB600ADE590 /* Polyline.framework */; };
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
 		352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
 		352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */; };
@@ -55,12 +52,10 @@
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		35B711D21E5E7AD2001EDA8D /* MapboxNavigationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B711D11E5E7AD2001EDA8D /* MapboxNavigationUITests.swift */; };
-		35B711D41E5E7AD2001EDA8D /* MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigationUI.framework */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B26D8936455E2C3FC3DF859B /* Pods_MapboxNavigationUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8707FA39C3537FA78805C6C /* Pods_MapboxNavigationUI.framework */; };
-		BEE087334605C3765C858CC7 /* Pods_MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F470EBDC37477ED66C6E0015 /* Pods_MapboxNavigation.framework */; };
+		79FFA0EACB68D7EBB431F9B4 /* Pods_Navigation_MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF17F46BF5BF15A9CE28B6AA /* Pods_Navigation_MapboxNavigation.framework */; };
 		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
 		C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */; };
 		C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
@@ -71,7 +66,9 @@
 		C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* RouteController.swift */; };
 		C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */; };
 		C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
+		CD39B8EE12428B44E103F759 /* Pods_Navigation_MapboxNavigationTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168210C6EFF88C7944C8C1EF /* Pods_Navigation_MapboxNavigationTests.framework */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
+		E2A9217C58B895E69EC3A710 /* Pods_NavigationUI_MapboxNavigationUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA269A95C663FC5818FD58DB /* Pods_NavigationUI_MapboxNavigationUITests.framework */; };
 		E6407FFBF81C8A097D5902DE /* Pods_Example_Objective_C.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326DCC1C8CB292D2E72278B /* Pods_Example_Objective_C.framework */; };
 		F057A26E0601A4EC105351C1 /* Pods_Example_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EC8D9DF36089BDD47DBA44C /* Pods_Example_Swift.framework */; };
 /* End PBXBuildFile section */
@@ -105,13 +102,6 @@
 			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
 			remoteInfo = MapboxNavigationUI;
 		};
-		35CEA3571E5CEBBC009F2255 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
-			remoteInfo = MapboxNavigation;
-		};
 		C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -123,9 +113,12 @@
 
 /* Begin PBXFileReference section */
 		058C4279F5ED75FCDFABBD4E /* Pods-Example-Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Swift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example-Swift/Pods-Example-Swift.debug.xcconfig"; sourceTree = "<group>"; };
+		0EB67FBC83BF3938A5959DAC /* Pods_NavigationUI_MapboxNavigationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NavigationUI_MapboxNavigationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		168210C6EFF88C7944C8C1EF /* Pods_Navigation_MapboxNavigationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Navigation_MapboxNavigationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E6F5A1252DE9903EAA845BC /* Pods-MapboxNavigationUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigationUI.release.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigationUI/Pods-MapboxNavigationUI.release.xcconfig"; sourceTree = "<group>"; };
 		1EC8D9DF36089BDD47DBA44C /* Pods_Example_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34276EFE49BB48092D04EA28 /* Pods-Example-Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Swift.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example-Swift/Pods-Example-Swift.release.xcconfig"; sourceTree = "<group>"; };
+		34FDD10EA1848DFC2FC89F2C /* Pods-NavigationUI-MapboxNavigationUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavigationUI-MapboxNavigationUI.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavigationUI-MapboxNavigationUI/Pods-NavigationUI-MapboxNavigationUI.debug.xcconfig"; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D601E5F6ADB0090E733 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
@@ -192,12 +185,21 @@
 		35C6A34C1E5E418D0004CA57 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		35C6A34D1E5E418D0004CA57 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
+		3DC867A02182A43D4FF19027 /* Pods-MapboxNavigationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigationTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigationTests/Pods-MapboxNavigationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		4FCBBC8339B645ED3D362FAC /* Pods-Example-Objective-C.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Objective-C.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example-Objective-C/Pods-Example-Objective-C.debug.xcconfig"; sourceTree = "<group>"; };
 		5326DCC1C8CB292D2E72278B /* Pods_Example_Objective_C.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example_Objective_C.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		678BAB2E9DE4625332B488BB /* Pods-Navigation-MapboxNavigationTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Navigation-MapboxNavigationTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Navigation-MapboxNavigationTests/Pods-Navigation-MapboxNavigationTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7272F6FD1CA9D18942714619 /* Pods-MapboxNavigation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigation.release.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigation/Pods-MapboxNavigation.release.xcconfig"; sourceTree = "<group>"; };
+		770034BE95E781998E13AACE /* Pods-Navigation-MapboxNavigation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Navigation-MapboxNavigation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Navigation-MapboxNavigation/Pods-Navigation-MapboxNavigation.debug.xcconfig"; sourceTree = "<group>"; };
 		8C988BE862E3BEA40C130439 /* Pods-MapboxNavigationUI.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigationUI.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigationUI/Pods-MapboxNavigationUI.debug.xcconfig"; sourceTree = "<group>"; };
 		9B55AD2C342EF8C5408FCB69 /* Pods-Example-Objective-C.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example-Objective-C.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example-Objective-C/Pods-Example-Objective-C.release.xcconfig"; sourceTree = "<group>"; };
+		9B57A61618CD2998215A9C12 /* Pods-Navigation-MapboxNavigation.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Navigation-MapboxNavigation.release.xcconfig"; path = "Pods/Target Support Files/Pods-Navigation-MapboxNavigation/Pods-Navigation-MapboxNavigation.release.xcconfig"; sourceTree = "<group>"; };
+		B8227176620895115537EBCA /* Pods-NavigationUI-MapboxNavigationUI.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavigationUI-MapboxNavigationUI.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavigationUI-MapboxNavigationUI/Pods-NavigationUI-MapboxNavigationUI.release.xcconfig"; sourceTree = "<group>"; };
 		B8707FA39C3537FA78805C6C /* Pods_MapboxNavigationUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigationUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBCBB0231958027223025C47 /* Pods-Navigation-MapboxNavigationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Navigation-MapboxNavigationTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Navigation-MapboxNavigationTests/Pods-Navigation-MapboxNavigationTests.release.xcconfig"; sourceTree = "<group>"; };
+		BDE27F6AFA5E56EEBE25756A /* Pods-NavigationUI-MapboxNavigationUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavigationUI-MapboxNavigationUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-NavigationUI-MapboxNavigationUITests/Pods-NavigationUI-MapboxNavigationUITests.release.xcconfig"; sourceTree = "<group>"; };
+		BF17F46BF5BF15A9CE28B6AA /* Pods_Navigation_MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Navigation_MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C4EF07207FEA223FB4B28DBD /* Pods-NavigationUI-MapboxNavigationUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NavigationUI-MapboxNavigationUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-NavigationUI-MapboxNavigationUITests/Pods-NavigationUI-MapboxNavigationUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryTests.swift; sourceTree = "<group>"; };
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
@@ -212,9 +214,12 @@
 		C5ADFBF91DDCC9580011824B /* RouteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteController.swift; sourceTree = "<group>"; };
 		C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgress.swift; sourceTree = "<group>"; };
 		C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		C9E104A224C8104A03EC6D3C /* Pods-MapboxNavigationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigationTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigationTests/Pods-MapboxNavigationTests.release.xcconfig"; sourceTree = "<group>"; };
 		D5B43A2877DC1F7FA3CB7F54 /* Pods-MapboxNavigation.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapboxNavigation.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapboxNavigation/Pods-MapboxNavigation.debug.xcconfig"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
+		E23C8F3E4F88D0649BB6DC8B /* Pods_MapboxNavigationTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigationTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F470EBDC37477ED66C6E0015 /* Pods_MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA269A95C663FC5818FD58DB /* Pods_NavigationUI_MapboxNavigationUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NavigationUI_MapboxNavigationUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,7 +227,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B26D8936455E2C3FC3DF859B /* Pods_MapboxNavigationUI.framework in Frameworks */,
+				310E67F36165F62A5FE43D7F /* Pods_NavigationUI_MapboxNavigationUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,7 +265,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BEE087334605C3765C858CC7 /* Pods_MapboxNavigation.framework in Frameworks */,
+				79FFA0EACB68D7EBB431F9B4 /* Pods_Navigation_MapboxNavigation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,7 +273,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35B711D41E5E7AD2001EDA8D /* MapboxNavigationUI.framework in Frameworks */,
+				E2A9217C58B895E69EC3A710 /* Pods_NavigationUI_MapboxNavigationUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,9 +281,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				352BBC3B1E5E6A0C00703DF1 /* MapboxNavigation.framework in Frameworks */,
-				352BBC3C1E5E6A1A00703DF1 /* MapboxDirections.framework in Frameworks */,
-				352BBC3D1E5E6A1D00703DF1 /* Polyline.framework in Frameworks */,
+				CD39B8EE12428B44E103F759 /* Pods_Navigation_MapboxNavigationTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,6 +439,16 @@
 				1E6F5A1252DE9903EAA845BC /* Pods-MapboxNavigationUI.release.xcconfig */,
 				4FCBBC8339B645ED3D362FAC /* Pods-Example-Objective-C.debug.xcconfig */,
 				9B55AD2C342EF8C5408FCB69 /* Pods-Example-Objective-C.release.xcconfig */,
+				3DC867A02182A43D4FF19027 /* Pods-MapboxNavigationTests.debug.xcconfig */,
+				C9E104A224C8104A03EC6D3C /* Pods-MapboxNavigationTests.release.xcconfig */,
+				770034BE95E781998E13AACE /* Pods-Navigation-MapboxNavigation.debug.xcconfig */,
+				9B57A61618CD2998215A9C12 /* Pods-Navigation-MapboxNavigation.release.xcconfig */,
+				678BAB2E9DE4625332B488BB /* Pods-Navigation-MapboxNavigationTests.debug.xcconfig */,
+				BBCBB0231958027223025C47 /* Pods-Navigation-MapboxNavigationTests.release.xcconfig */,
+				34FDD10EA1848DFC2FC89F2C /* Pods-NavigationUI-MapboxNavigationUI.debug.xcconfig */,
+				B8227176620895115537EBCA /* Pods-NavigationUI-MapboxNavigationUI.release.xcconfig */,
+				C4EF07207FEA223FB4B28DBD /* Pods-NavigationUI-MapboxNavigationUITests.debug.xcconfig */,
+				BDE27F6AFA5E56EEBE25756A /* Pods-NavigationUI-MapboxNavigationUITests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -454,6 +467,11 @@
 				1EC8D9DF36089BDD47DBA44C /* Pods_Example_Swift.framework */,
 				F470EBDC37477ED66C6E0015 /* Pods_MapboxNavigation.framework */,
 				B8707FA39C3537FA78805C6C /* Pods_MapboxNavigationUI.framework */,
+				E23C8F3E4F88D0649BB6DC8B /* Pods_MapboxNavigationTests.framework */,
+				BF17F46BF5BF15A9CE28B6AA /* Pods_Navigation_MapboxNavigation.framework */,
+				168210C6EFF88C7944C8C1EF /* Pods_Navigation_MapboxNavigationTests.framework */,
+				0EB67FBC83BF3938A5959DAC /* Pods_NavigationUI_MapboxNavigationUI.framework */,
+				FA269A95C663FC5818FD58DB /* Pods_NavigationUI_MapboxNavigationUITests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -561,7 +579,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				35CEA3581E5CEBBC009F2255 /* PBXTargetDependency */,
 			);
 			name = MapboxNavigationUI;
 			productName = MapboxNavigationUI;
@@ -648,10 +665,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 35B711D71E5E7AD2001EDA8D /* Build configuration list for PBXNativeTarget "MapboxNavigationUITests" */;
 			buildPhases = (
+				B12FFD2134C0C8B3B4ED1C05 /* [CP] Check Pods Manifest.lock */,
 				35B711CB1E5E7AD2001EDA8D /* Sources */,
 				35B711CC1E5E7AD2001EDA8D /* Frameworks */,
 				35B711CD1E5E7AD2001EDA8D /* Resources */,
-				35B711DA1E5E7AEC001EDA8D /* Carthage copy frameworks */,
+				877473EE967B8467EFF3933D /* [CP] Embed Pods Frameworks */,
+				5A75C7D8B776F311D29909D3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -687,10 +706,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C5ADFBE01DDCC7840011824B /* Build configuration list for PBXNativeTarget "MapboxNavigationTests" */;
 			buildPhases = (
+				27CA7164E39B15EC0272A3E6 /* [CP] Check Pods Manifest.lock */,
 				C5ADFBCE1DDCC7840011824B /* Sources */,
 				C5ADFBCF1DDCC7840011824B /* Frameworks */,
 				C5ADFBD01DDCC7840011824B /* Resources */,
-				352BBC3A1E5E69A700703DF1 /* Carthage copy frameworks */,
+				C785526008C4C3D757BB0DF6 /* [CP] Embed Pods Frameworks */,
+				264BCC8F072E96605EA547C9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -829,7 +850,6 @@
 			files = (
 				35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */,
 				35002D6E1E5F6C7F0090E733 /* Assets.xcassets in Resources */,
-				35002D701E5F6C7F0090E733 /* Info.plist in Resources */,
 				35002D761E5F6CD30090E733 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -875,7 +895,22 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		2A5C2A191EB361D231B5C16A /* [CP] Check Pods Manifest.lock */ = {
+		264BCC8F072E96605EA547C9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Navigation-MapboxNavigationTests/Pods-Navigation-MapboxNavigationTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		27CA7164E39B15EC0272A3E6 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -890,41 +925,20 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		352BBC3A1E5E69A700703DF1 /* Carthage copy frameworks */ = {
+		2A5C2A191EB361D231B5C16A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 			);
-			name = "Carthage copy frameworks";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		35B711DA1E5E7AEC001EDA8D /* Carthage copy frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/OSRMTextInstructions.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Pulley.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
-			);
-			name = "Carthage copy frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 		36A081FC49F4FC7831AE6583 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -953,7 +967,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MapboxNavigation/Pods-MapboxNavigation-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Navigation-MapboxNavigation/Pods-Navigation-MapboxNavigation-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4B40121B62D90CD956D1F974 /* [CP] Check Pods Manifest.lock */ = {
@@ -971,6 +985,36 @@
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
+		5A75C7D8B776F311D29909D3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NavigationUI-MapboxNavigationUITests/Pods-NavigationUI-MapboxNavigationUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		877473EE967B8467EFF3933D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NavigationUI-MapboxNavigationUITests/Pods-NavigationUI-MapboxNavigationUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8FBB24BDB64BFD7564DD7EEC /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -983,7 +1027,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MapboxNavigationUI/Pods-MapboxNavigationUI-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-NavigationUI-MapboxNavigationUI/Pods-NavigationUI-MapboxNavigationUI-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9C4447653DC4F7D857C5C1B3 /* [CP] Embed Pods Frameworks */ = {
@@ -1016,6 +1060,21 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Example-Objective-C/Pods-Example-Objective-C-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B12FFD2134C0C8B3B4ED1C05 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		B524BDDCA616DE88071B6A4D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1044,6 +1103,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C785526008C4C3D757BB0DF6 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Navigation-MapboxNavigationTests/Pods-Navigation-MapboxNavigationTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1168,11 +1242,6 @@
 			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigationUI */;
 			targetProxy = 35B711D51E5E7AD2001EDA8D /* PBXContainerItemProxy */;
 		};
-		35CEA3581E5CEBBC009F2255 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
-			targetProxy = 35CEA3571E5CEBBC009F2255 /* PBXContainerItemProxy */;
-		};
 		C5ADFBD51DDCC7840011824B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxNavigation */;
@@ -1202,7 +1271,7 @@
 /* Begin XCBuildConfiguration section */
 		351BEBDC1E5BCC28006FE110 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8C988BE862E3BEA40C130439 /* Pods-MapboxNavigationUI.debug.xcconfig */;
+			baseConfigurationReference = 34FDD10EA1848DFC2FC89F2C /* Pods-NavigationUI-MapboxNavigationUI.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1227,7 +1296,7 @@
 		};
 		351BEBDD1E5BCC28006FE110 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1E6F5A1252DE9903EAA845BC /* Pods-MapboxNavigationUI.release.xcconfig */;
+			baseConfigurationReference = B8227176620895115537EBCA /* Pods-NavigationUI-MapboxNavigationUI.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -1376,6 +1445,7 @@
 		};
 		35B711D81E5E7AD2001EDA8D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4EF07207FEA223FB4B28DBD /* Pods-NavigationUI-MapboxNavigationUITests.debug.xcconfig */;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -1390,6 +1460,7 @@
 		};
 		35B711D91E5E7AD2001EDA8D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BDE27F6AFA5E56EEBE25756A /* Pods-NavigationUI-MapboxNavigationUITests.release.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				INFOPLIST_FILE = MapboxNavigationUITests/Info.plist;
@@ -1506,7 +1577,7 @@
 		};
 		C5ADFBDE1DDCC7840011824B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D5B43A2877DC1F7FA3CB7F54 /* Pods-MapboxNavigation.debug.xcconfig */;
+			baseConfigurationReference = 770034BE95E781998E13AACE /* Pods-Navigation-MapboxNavigation.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1515,10 +1586,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1532,7 +1600,7 @@
 		};
 		C5ADFBDF1DDCC7840011824B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7272F6FD1CA9D18942714619 /* Pods-MapboxNavigation.release.xcconfig */;
+			baseConfigurationReference = 9B57A61618CD2998215A9C12 /* Pods-Navigation-MapboxNavigation.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
@@ -1541,10 +1609,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = MapboxNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -1557,6 +1622,7 @@
 		};
 		C5ADFBE11DDCC7840011824B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 678BAB2E9DE4625332B488BB /* Pods-Navigation-MapboxNavigationTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
@@ -1574,6 +1640,7 @@
 		};
 		C5ADFBE21DDCC7840011824B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBCBB0231958027223025C47 /* Pods-Navigation-MapboxNavigationTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
