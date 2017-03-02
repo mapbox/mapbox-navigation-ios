@@ -37,7 +37,7 @@
     [super viewDidDisappear:animated];
     
     [self suspendNotifications];
-    [self.navigation suspend];
+    [self.navigation suspendLocationUpdates];
 }
 
 - (IBAction)didLongPress:(UILongPressGestureRecognizer *)sender {

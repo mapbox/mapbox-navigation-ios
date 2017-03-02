@@ -27,29 +27,32 @@ PODS:
   - SDWebImage/Core (4.0.0)
 
 DEPENDENCIES:
-  - AWSPolly (~> 2.5)
-  - Mapbox-iOS-SDK (~> 3.4)
-  - MapboxDirections.swift (~> 0.8)
-  - MapboxGeocoder.swift (~> 0.6)
-  - MapboxNavigation.swift (from `.`)
-  - MapboxNavigationUI.swift (from `.`)
-  - OSRMTextInstructions (from `https://github.com/Project-OSRM/osrm-text-instructions.swift.git`, commit `bdd962bf5593f951bbbbd26435f732a829dacda7`)
-  - Pulley (~> 1.3)
-  - SDWebImage (~> 4.0.0-beta2)
+  - MapboxGeocoder.swift (~> 0.6.0)
+  - MapboxNavigation.swift (from `https://github.com/mapbox/MapboxNavigation.swift.git`, branch `overhaul`)
+  - MapboxNavigationUI.swift (from `https://github.com/mapbox/MapboxNavigation.swift.git`, branch `overhaul`)
+  - OSRMTextInstructions (from `https://github.com/Project-OSRM/osrm-text-instructions.swift`, branch `master`)
 
 EXTERNAL SOURCES:
   MapboxNavigation.swift:
-    :path: .
+    :branch: overhaul
+    :git: https://github.com/mapbox/MapboxNavigation.swift.git
   MapboxNavigationUI.swift:
-    :path: .
+    :branch: overhaul
+    :git: https://github.com/mapbox/MapboxNavigation.swift.git
   OSRMTextInstructions:
-    :commit: bdd962bf5593f951bbbbd26435f732a829dacda7
-    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
+    :branch: master
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift
 
 CHECKOUT OPTIONS:
+  MapboxNavigation.swift:
+    :commit: fd6a2d43bbc49b76c9d3935897939441cbf22c1a
+    :git: https://github.com/mapbox/MapboxNavigation.swift.git
+  MapboxNavigationUI.swift:
+    :commit: fd6a2d43bbc49b76c9d3935897939441cbf22c1a
+    :git: https://github.com/mapbox/MapboxNavigation.swift.git
   OSRMTextInstructions:
     :commit: bdd962bf5593f951bbbbd26435f732a829dacda7
-    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift.git
+    :git: https://github.com/Project-OSRM/osrm-text-instructions.swift
 
 SPEC CHECKSUMS:
   AWSCore: 71ca929a42c68ca7d645fcfa1e41ea0ff792a275
@@ -64,6 +67,6 @@ SPEC CHECKSUMS:
   Pulley: 99a45ad8aba14dafb2c6f4f16cb9667eb41c0919
   SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
 
-PODFILE CHECKSUM: 30a6317624cacea40cafc1135ddf79bf21972501
+PODFILE CHECKSUM: 2176f98a605229187fb3b333267a2562a8862d09
 
 COCOAPODS: 1.2.0

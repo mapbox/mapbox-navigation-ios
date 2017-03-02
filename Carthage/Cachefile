@@ -1,4 +1,6 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.4.2"
+--Swift version: Apple Swift version 3.0.2 (swiftlang-800.0.63 clang-800.0.42.1)
+Target: x86_64-apple-macosx10.9 --Swift version 
+ --Cartfile.resolved: binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.4.2"
 github "52inc/Pulley" "1.3.1"
 github "Project-OSRM/osrm-text-instructions.swift" "bdd962bf5593f951bbbbd26435f732a829dacda7"
 github "frederoni/aws-sdk-ios" "1a8432b03c22326fb7ed86fac978212106e2d465"
@@ -6,3 +8,4 @@ github "mapbox/MapboxDirections.swift" "v0.8.0"
 github "mapbox/MapboxGeocoder.swift" "v0.6.0"
 github "raphaelmor/Polyline" "f86f34dac9aae7e027fd9f62c2e01dd77f1ee312"
 github "rs/SDWebImage" "4.0.0"
+ --Cartfile.resolved
