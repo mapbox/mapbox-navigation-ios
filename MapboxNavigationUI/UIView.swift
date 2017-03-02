@@ -6,10 +6,16 @@ extension UIView {
     }
     
     func applyDefaultCornerRadiusShadow(cornerRadius: CGFloat? = 4, shadowOpacity: CGFloat? = 0.1) {
-        self.layer.cornerRadius = cornerRadius!
+        layer.cornerRadius = cornerRadius!
         
-        self.layer.shadowOffset = CGSize(width: 0, height: 0)
-        self.layer.shadowRadius = 4
-        self.layer.shadowOpacity = Float(shadowOpacity!)
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowRadius = 4
+        layer.shadowOpacity = Float(shadowOpacity!)
+    }
+    
+    func applyDefaultShadow(shadowOpacity: CGFloat? = 0.1) {
+        layer.shadowOffset = CGSize(width: 0, height: 0)
+        layer.shadowRadius = 4
+        layer.shadowOpacity = Float(shadowOpacity!)
     }
 }

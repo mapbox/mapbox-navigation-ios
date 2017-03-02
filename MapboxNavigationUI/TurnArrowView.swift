@@ -5,24 +5,8 @@ import SDWebImage
 
 @IBDesignable
 public class TurnArrowView: UIView {
-    var imageView: UIImageView!
-    
-    var showsShield = true
     public var step: RouteStep? {
         didSet {
-            imageView.isHidden = true
-            if showsShield, let components = step?.codes?.first?.components(separatedBy: " "), components.count > 1 {
-                let network = components[0]
-                let number = components[1]
-                if var imageName = ShieldImageNamesByPrefix[network] {
-                    imageName = imageName.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "{ref}", with: number)
-                    let url = URL(string: "https://commons.wikimedia.org/w/thumb.php?f=\(imageName)&w=\(imageView.bounds.width * UIScreen.main.scale)")
-                    imageView.sd_setImage(with: url) { [weak self] (image, error, cacheType, url) in
-                        self?.setNeedsDisplay()
-                        self?.imageView.isHidden = false
-                    }
-                }
-            }
             setNeedsDisplay()
         }
     }
@@ -46,15 +30,6 @@ public class TurnArrowView: UIView {
         }
     }
     
-    override public func awakeFromNib() {
-        super.awakeFromNib()
-        
-        imageView = UIImageView(frame: bounds.insetBy(dx: 8, dy: 8))
-        imageView.translatesAutoresizingMaskIntoConstraints = true
-        imageView.contentMode = .scaleAspectFit
-        addSubview(imageView)
-    }
-    
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
         
@@ -65,10 +40,6 @@ public class TurnArrowView: UIView {
             } else if isEnd {
                 StyleKitArrows.drawDestination(scale: scale)
             }
-            return
-        }
-        
-        guard imageView.isHidden else {
             return
         }
         
