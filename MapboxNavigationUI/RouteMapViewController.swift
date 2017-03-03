@@ -40,6 +40,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         mapView.delegate = self
         mapView.tintColor = NavigationUI.shared.tintColor
+        recenterButton.tintColor = NavigationUI.shared.tintColor
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
     }
     
@@ -47,7 +48,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         super.viewWillAppear(animated)
         
         mapView.compassView.isHidden = true
-        
         mapView.addAnnotation(destination)
         
         if let camera = pendingCamera {
