@@ -112,7 +112,13 @@ extension RouteController: CLLocationManagerDelegate {
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        return newLocation.isWithin(RouteControllerMaximumDistanceBeforeRecalculating, of: routeProgress.currentLegProgress.currentStep)
+        var radius = RouteControllerMaximumDistanceBeforeRecalculating
+        
+        if 0...RouteControllerMaximumDistanceBeforeRecalculating ~= location.horizontalAccuracy {
+            radius = location.horizontalAccuracy + RouteControllerHorizontalAccuracyAnomaly
+        }
+        
+        return newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
     }
     
     func monitorStepProgress(_ location: CLLocation) {
