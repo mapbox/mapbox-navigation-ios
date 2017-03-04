@@ -15,7 +15,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var routeViewController: RouteViewController?
     var userRoute: Route?
     
-    @IBOutlet weak var mapView: MGLMapView!
+    @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var toggleNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     

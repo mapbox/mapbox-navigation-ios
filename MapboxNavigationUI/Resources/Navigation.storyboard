@@ -67,7 +67,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MGLMapView">
+                            <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="NavigationMapView" customModule="MapboxNavigationUI" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
                                 <subviews>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yQ4-ig-aIN" customClass="StyleButton" customModule="MapboxNavigationUI" customModuleProvider="target">
@@ -223,14 +223,14 @@
                                             <constraint firstItem="BR8-8N-Rhk" firstAttribute="leading" secondItem="yJp-ub-NDb" secondAttribute="leading" id="wvz-Fj-7MY"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Fv-nY-OMF" userLabel="StackViewContainer">
+                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Fv-nY-OMF" userLabel="StackViewContainer">
                                         <rect key="frame" x="-3" y="129" width="310" height="40"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7">
-                                                <rect key="frame" x="0.0" y="0.0" width="310" height="40"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7">
+                                                <rect key="frame" x="0.0" y="0.0" width="10" height="10"/>
                                                 <subviews>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-3z-hNh" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="5" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-3z-hNh" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="9u5-JM-rz5"/>
@@ -242,8 +242,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xwq-ce-lBE" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="35" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xwq-ce-lBE" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="Yj3-WT-VYi"/>
@@ -255,8 +255,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eHe-aK-9BX" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="65" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eHe-aK-9BX" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="D5v-3d-Jeh"/>
@@ -268,8 +268,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="tg6-zK-yeN" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="95" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tg6-zK-yeN" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="MCS-vE-znn"/>
@@ -281,8 +281,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1SY-R8-0Ga" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="125" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1SY-R8-0Ga" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="IYA-R3-E7i"/>
@@ -294,8 +294,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="wG2-Wg-gPO" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="155" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wG2-Wg-gPO" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="SCC-vU-ZoY"/>
@@ -307,8 +307,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="y28-An-Esx" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="185" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="y28-An-Esx" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" priority="999" constant="30" id="DsZ-2f-pEu"/>
@@ -320,8 +320,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="W9A-Qo-Q2I" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="215" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="W9A-Qo-Q2I" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="18o-rV-gwp"/>
@@ -333,8 +333,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Q0R-gA-tRA" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="245" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q0R-gA-tRA" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="CMh-Oa-n2C"/>
@@ -346,8 +346,8 @@
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
-                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="WfH-xJ-3Pp" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                        <rect key="frame" x="275" y="5" width="30" height="30"/>
+                                                    <view hidden="YES" contentMode="center" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WfH-xJ-3Pp" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                        <rect key="frame" x="-167" y="-129" width="0.0" height="30"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="30" id="DAD-7R-XgQ"/>

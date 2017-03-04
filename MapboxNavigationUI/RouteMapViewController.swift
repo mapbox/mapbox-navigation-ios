@@ -11,7 +11,7 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 
 
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
-    @IBOutlet weak var mapView: MGLMapView!
+    @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var recenterButton: UIButton!
     
     var routePageViewController: RoutePageViewController!
@@ -39,6 +39,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         automaticallyAdjustsScrollViewInsets = false
         
         mapView.delegate = self
+        mapView.navigationMapDelegate = self
         mapView.tintColor = NavigationUI.shared.tintColor
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
     }
@@ -235,6 +236,25 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         mapView.removeArrow()
         mapView.addArrow(routeProgress)
+    }
+}
+
+// MARK: NavigationMapViewDelegate
+
+extension RouteMapViewController: NavigationMapViewDelegate {
+    
+    func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
+
+        guard routeController.userIsOnRoute(location) else { return nil }
+        
+        let route = routeController.routeProgress.route
+        guard let coordinates = route.coordinates else  { return nil }
+        
+        // Snap to route
+        let snappedCoordinate = closestCoordinate(on: coordinates, to: location.coordinate)
+        guard let newCoordinate = snappedCoordinate?.coordinate else { return nil }
+        
+        return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 

@@ -107,7 +107,7 @@ extension RouteController: CLLocationManagerDelegate {
         monitorStepProgress(location)
     }
     
-    func userIsOnRoute(_ location: CLLocation) -> Bool {
+    public func userIsOnRoute(_ location: CLLocation) -> Bool {
         // Find future location of user
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
