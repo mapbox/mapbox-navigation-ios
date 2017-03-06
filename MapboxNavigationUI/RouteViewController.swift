@@ -55,6 +55,17 @@ public class RouteViewController: NavigationPulleyViewController {
     public var navigationDelegate: RouteViewControllerDelegate?
     
     /**
+     `mapView` provides access to the navigation's `MGLMapView` with all its styling capabilities.
+     
+     Note that you should not change the `mapView`'s delegate.
+     */
+    public var mapView: MGLMapView? {
+        get {
+            return mapViewController?.mapView
+        }
+    }
+    
+    /**
      `sendNotifications` toggle sending of UILocalNotification upon upcoming
      steps when application is in the background.
      */
