@@ -140,8 +140,10 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         // Set recentlyAnnouncedRouteStep to the current step
         recentlyAnnouncedRouteStep = routeProgress.currentLegProgress.currentStep
         
+        fallbackText = speechString(notification: notification, markUpWithSSML: false)
+        
         if useDefaultVoice {
-            speakFallBack(speechString(notification: notification, markUpWithSSML: false))
+            speakFallBack(fallbackText)
         } else {
             speakWithPolly(speechString(notification: notification, markUpWithSSML: true))
         }
@@ -228,28 +230,28 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             countryCode = langs[1]
         }
         
+        switch (langCode, countryCode) {
+        case ("de", _):
+            input.voiceId = .marlene
+        case ("en", "GB"), ("en", "CA"):
+            input.voiceId = .joanna
+        case ("en", "AU"):
+            input.voiceId = .nicole
+        case ("en", "IN"):
+            input.voiceId = .raveena
+        case ("en", _):
+            input.voiceId = .joanna
+        case ("fr", _):
+            input.voiceId = .celine
+        case ("nl", _):
+            input.voiceId = .lotte
+        default:
+            speakFallBack(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
+            return
+        }
+        
         if let voiceId = globalVoiceId {
             input.voiceId = voiceId
-        } else {
-            switch (langCode, countryCode) {
-            case ("de", _):
-                input.voiceId = .marlene
-            case ("en", "GB"), ("en", "CA"):
-                input.voiceId = .joanna
-            case ("en", "AU"):
-                input.voiceId = .nicole
-            case ("en", "IN"):
-                input.voiceId = .raveena
-            case ("en", _):
-                input.voiceId = .joanna
-            case ("fr", _):
-                input.voiceId = .celine
-            case ("nl", _):
-                input.voiceId = .lotte
-            default:
-                input.voiceId = .joanna
-                return
-            }
         }
         
         input.text = "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(text)</prosody></speak>"
