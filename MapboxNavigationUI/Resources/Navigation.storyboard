@@ -235,7 +235,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Fv-nY-OMF" userLabel="StackViewContainer">
                                 <rect key="frame" x="0.0" y="100.5" width="343" height="40"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7" userLabel="Lane Stack View">
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7" userLabel="Lane Stack View">
                                         <rect key="frame" x="171.5" y="5" width="0.0" height="30"/>
                                         <subviews>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-3z-hNh" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
@@ -414,18 +414,18 @@
                         <outlet property="stackViewContainer" destination="7Fv-nY-OMF" id="73h-Ih-lpJ"/>
                         <outlet property="streetLabel" destination="BR8-8N-Rhk" id="ypb-Nm-TKX"/>
                         <outlet property="turnArrowView" destination="dvV-hd-Sbg" id="PDr-bK-tVy"/>
-                        <outletCollection property="laneViews" destination="Q0R-gA-tRA" collectionClass="NSMutableArray" id="8Nq-Qg-9uE"/>
-                        <outletCollection property="laneViews" destination="wG2-Wg-gPO" collectionClass="NSMutableArray" id="7hU-ro-LNg"/>
-                        <outletCollection property="laneViews" destination="0bs-3z-hNh" collectionClass="NSMutableArray" id="gIC-6g-fER"/>
-                        <outletCollection property="laneViews" destination="1SY-R8-0Ga" collectionClass="NSMutableArray" id="8WT-ue-gmg"/>
-                        <outletCollection property="laneViews" destination="eHe-aK-9BX" collectionClass="NSMutableArray" id="0wZ-NE-CA8"/>
-                        <outletCollection property="laneViews" destination="W9A-Qo-Q2I" collectionClass="NSMutableArray" id="e9a-yU-B7J"/>
-                        <outletCollection property="laneViews" destination="xwq-ce-lBE" collectionClass="NSMutableArray" id="edh-jJ-BPi"/>
-                        <outletCollection property="laneViews" destination="y28-An-Esx" collectionClass="NSMutableArray" id="Niu-3d-E1l"/>
-                        <outletCollection property="laneViews" destination="WfH-xJ-3Pp" collectionClass="NSMutableArray" id="euA-IF-yiA"/>
-                        <outletCollection property="laneViews" destination="tg6-zK-yeN" collectionClass="NSMutableArray" id="aE6-0M-fIe"/>
                         <outletCollection property="separatorViews" destination="dBm-Eb-XvC" collectionClass="NSMutableArray" id="AV3-wo-X84"/>
                         <outletCollection property="separatorViews" destination="bvZ-78-dml" collectionClass="NSMutableArray" id="k48-9a-YhP"/>
+                        <outletCollection property="laneViews" destination="0bs-3z-hNh" collectionClass="NSMutableArray" id="qgT-1m-7rY"/>
+                        <outletCollection property="laneViews" destination="xwq-ce-lBE" collectionClass="NSMutableArray" id="U8m-AZ-I35"/>
+                        <outletCollection property="laneViews" destination="eHe-aK-9BX" collectionClass="NSMutableArray" id="7Tp-U0-QXq"/>
+                        <outletCollection property="laneViews" destination="tg6-zK-yeN" collectionClass="NSMutableArray" id="tkZ-5L-Put"/>
+                        <outletCollection property="laneViews" destination="1SY-R8-0Ga" collectionClass="NSMutableArray" id="pRd-vh-fiH"/>
+                        <outletCollection property="laneViews" destination="wG2-Wg-gPO" collectionClass="NSMutableArray" id="KPS-oc-eyi"/>
+                        <outletCollection property="laneViews" destination="y28-An-Esx" collectionClass="NSMutableArray" id="5cG-Xi-CoI"/>
+                        <outletCollection property="laneViews" destination="W9A-Qo-Q2I" collectionClass="NSMutableArray" id="ckJ-uK-WoH"/>
+                        <outletCollection property="laneViews" destination="Q0R-gA-tRA" collectionClass="NSMutableArray" id="Jc9-yJ-H7N"/>
+                        <outletCollection property="laneViews" destination="WfH-xJ-3Pp" collectionClass="NSMutableArray" id="mTU-sr-uRy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iiH-rk-KIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
