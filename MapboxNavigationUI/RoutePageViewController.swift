@@ -28,7 +28,7 @@ class RoutePageViewController: UIPageViewController {
         setupRoutePageViewController()
     }
     
-    func didReRoute(_ notification: NSNotification) {
+    func notifyDidReRoute() {
         setupRoutePageViewController()
     }
     
