@@ -94,11 +94,9 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.userTrackingMode = .followWithCourse
-        if let viewController = routePageViewController.routeManeuverViewController(with: currentStep()) {
-            routePageViewController.setViewControllers([viewController], direction: .reverse, animated: true, completion: nil)
-            routePageViewController(routePageViewController, willTransitionTo: viewController)
-            routePageViewController.currentManeuverPage = viewController
-        }
+        
+        // Recenter also resets the current page. Same behavior as rerouting.
+        routePageViewController.notifyDidReRoute()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -122,6 +120,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
     
     func notifyDidReroute(route: Route) {
+        routePageViewController.notifyDidReRoute()
         mapView.annotate([route], clearMap: true)
         mapView.userTrackingMode = .followWithCourse
     }
