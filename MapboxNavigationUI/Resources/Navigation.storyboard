@@ -570,51 +570,53 @@
                                 <constraint firstAttribute="height" constant="3" id="XWE-Ju-Xz5"/>
                             </constraints>
                         </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="oQN-zT-Ik8">
-                            <rect key="frame" x="20" y="12.5" width="87" height="55"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="87" height="33.5"/>
-                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                    <attributedString key="userComments">
-                                        <fragment content="DO NOT TRANSLATE">
-                                            <attributes>
-                                                <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                            </attributes>
-                                        </fragment>
-                                    </attributedString>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
-                                            <integer key="value" value="1"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="8.3 mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-ya-mrD" userLabel="distanceRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="33.5" width="51" height="21.5"/>
-                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
-                                    <color key="textColor" red="0.60179937490000002" green="0.60179937490000002" blue="0.60179937490000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                    <attributedString key="userComments">
-                                        <fragment content="DO NOT TRANSLATE">
-                                            <attributes>
-                                                <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                            </attributes>
-                                        </fragment>
-                                    </attributedString>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
-                                            <integer key="value" value="2"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                </label>
-                            </subviews>
-                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                            <rect key="frame" x="10" y="9.5" width="87" height="33.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                            <attributedString key="userComments">
+                                <fragment content="DO NOT TRANSLATE">
+                                    <attributes>
+                                        <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                    <integer key="value" value="1"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nqY-xY-Iz0" userLabel="Vertical Separator">
+                            <rect key="frame" x="0.0" y="43" width="371" height="0.0"/>
+                            <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <constraints>
+                                <constraint firstAttribute="height" id="ViC-Ik-gLk"/>
+                            </constraints>
+                        </view>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="8.3 mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-ya-mrD" userLabel="distanceRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                            <rect key="frame" x="10" y="43" width="51" height="21.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                            <color key="textColor" red="0.60179937490000002" green="0.60179937490000002" blue="0.60179937490000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                            <attributedString key="userComments">
+                                <fragment content="DO NOT TRANSLATE">
+                                    <attributes>
+                                        <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                        <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                    </attributes>
+                                </fragment>
+                            </attributedString>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="inspectableTextStyle">
+                                    <integer key="value" value="2"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                            <rect key="frame" x="238.5" y="33.5" width="47.5" height="21.5"/>
+                            <rect key="frame" x="238.5" y="32.5" width="47.5" height="21.5"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -633,7 +635,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rwq-3y-Mg0" userLabel="Divider View">
-                            <rect key="frame" x="296" y="24" width="1" height="40"/>
+                            <rect key="frame" x="296" y="23" width="1" height="40"/>
                             <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="1" id="q7v-Jd-uwt"/>
@@ -641,7 +643,7 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l2B-fb-Dkb" customClass="StyleButton" customModule="MapboxNavigationUI" customModuleProvider="target">
-                            <rect key="frame" x="307" y="24" width="54" height="40"/>
+                            <rect key="frame" x="307" y="23" width="54" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="xK5-tu-mEt"/>
                             </constraints>
@@ -657,15 +659,20 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="MEj-M2-Aqd" firstAttribute="top" secondItem="eu5-2S-xpm" secondAttribute="top" id="3A2-8d-UlI"/>
+                        <constraint firstItem="6dE-ya-mrD" firstAttribute="top" secondItem="nqY-xY-Iz0" secondAttribute="bottom" id="6vR-tv-DwC"/>
                         <constraint firstItem="rwq-3y-Mg0" firstAttribute="leading" secondItem="HRl-MT-kqB" secondAttribute="trailing" constant="10" id="A39-Lw-WQZ"/>
-                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="centerY" secondItem="eu5-2S-xpm" secondAttribute="centerY" constant="4" id="DfI-BO-TdB"/>
-                        <constraint firstItem="oQN-zT-Ik8" firstAttribute="centerY" secondItem="eu5-2S-xpm" secondAttribute="centerY" id="Kfs-ap-pkW"/>
-                        <constraint firstItem="HRl-MT-kqB" firstAttribute="centerY" secondItem="rwq-3y-Mg0" secondAttribute="centerY" id="MpC-Zs-Dvp"/>
-                        <constraint firstItem="rwq-3y-Mg0" firstAttribute="centerY" secondItem="l2B-fb-Dkb" secondAttribute="centerY" id="O6z-00-Xsj"/>
-                        <constraint firstItem="oQN-zT-Ik8" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="20" id="XbO-mv-8NC"/>
                         <constraint firstItem="MEj-M2-Aqd" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" id="ZC8-MR-XH9"/>
+                        <constraint firstAttribute="trailing" secondItem="nqY-xY-Iz0" secondAttribute="trailing" id="ZcK-R7-EhS"/>
+                        <constraint firstItem="nqY-xY-Iz0" firstAttribute="top" secondItem="82H-sg-SOL" secondAttribute="bottom" id="f0p-GJ-0lq"/>
+                        <constraint firstItem="nqY-xY-Iz0" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" id="fRw-8W-bWR"/>
                         <constraint firstAttribute="trailing" secondItem="l2B-fb-Dkb" secondAttribute="trailing" constant="10" id="gYj-gb-phz"/>
+                        <constraint firstItem="nqY-xY-Iz0" firstAttribute="centerY" secondItem="eu5-2S-xpm" secondAttribute="centerY" constant="3" id="hEr-C1-pKd"/>
+                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="centerY" secondItem="nqY-xY-Iz0" secondAttribute="centerY" id="hfE-Nk-gHi"/>
+                        <constraint firstItem="rwq-3y-Mg0" firstAttribute="centerY" secondItem="nqY-xY-Iz0" secondAttribute="centerY" id="nvN-Qm-1MG"/>
                         <constraint firstItem="l2B-fb-Dkb" firstAttribute="leading" secondItem="rwq-3y-Mg0" secondAttribute="trailing" constant="10" id="pyV-PJ-nTT"/>
+                        <constraint firstItem="HRl-MT-kqB" firstAttribute="centerY" secondItem="rwq-3y-Mg0" secondAttribute="centerY" id="szt-mH-qz4"/>
+                        <constraint firstItem="6dE-ya-mrD" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="10" id="tad-qV-G1m"/>
+                        <constraint firstItem="82H-sg-SOL" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="10" id="zt1-Eq-Tuz"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="progress">
