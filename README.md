@@ -121,7 +121,7 @@ MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn naviga
 ### Examples
 We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open `MapboxNavigation.xcodeproj` to try it out.
 
-**Set up navigation UI in code**
+#### Set up navigation UI in code
 
 ```swift
 let viewController = NavigationUI.routeViewController(for: route, directions: directions)
@@ -131,7 +131,7 @@ present(viewController, animated: true, completion: nil)
 - `route` the initial route you want to navigate.
 - `directions` an optional [Direction](https://github.com/mapbox/MapboxDirections.swift) instance needed for re-routing when the user goes off route. If no directions instance is provided, a default one will be used.
 
-**Set up navigation UI in a storyboard**
+#### Set up navigation UI in a storyboard
 
 - Open the object library and drag in a `Storyboard Reference`.
 - Pick `Navigation` from the dropdown and set bundle to `com.mapbox.MapboxNavigationUI`.
