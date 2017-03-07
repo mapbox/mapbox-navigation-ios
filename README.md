@@ -1,10 +1,16 @@
-# MapboxNavigation.swift
+# MapboxNavigation
 
-[![](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/6fc45a7e2817b859#/builds)
+MapboxNavigation consists of two libraries. MapboxNavigation.swift which contains the logic needed for turn-by-turn navigation and MapboxNavigationUI.swift that provides all UI elements needed for a great navigation experience.
+
+[📱&nbsp;![iOS Build Status](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/2f82077d3f083479)
+&nbsp;&nbsp;&nbsp;
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-![](https://cldup.com/Th0sa6Vnvf.gif)
-> *Example app guiding the user along a route*
+| MapboxNavigation.swift | MapboxNavigationUI.swift |
+| :---: | :---: |
+| ![](https://cloud.githubusercontent.com/assets/764476/23326707/712a7790-fab5-11e6-9419-2aa5bd2f2c7d.png) | ![](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png) |
+
+### MapboxNavigation.swift
 
 MapboxNavigation.swift provides an API to add turn by turn navigation to your app. The basic workflow of how it fits into your app:
 
@@ -16,7 +22,7 @@ MapboxNavigation.swift provides an API to add turn by turn navigation to your ap
  * The user should be rerouted
 1. Depending on what is emitted, your app should react accordingly
 
-A simple implementation can be viewed in the example app — available in [Objective-C](./Example/Objective-C/ViewController.m) or [Swift](./Example/Swift/ViewController.swift).
+A simple implementation can be viewed in the example app — available in [Objective-C](./Examples/Objective-C/ViewController.m) or [Swift](./Examples/Swift/ViewController.swift).
 
 ## Installation options
 
@@ -109,13 +115,13 @@ We provide examples in Swift and Objective-C. Run `pod install` from the Example
 
 MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn navigation to their iOS application.
 
-|![](https://cloud.githubusercontent.com/assets/764476/22738709/c23dc02e-ee08-11e6-98ff-e003a06dbe87.png) | ![](https://cloud.githubusercontent.com/assets/764476/22749696/8937b2fa-ee2e-11e6-8bf6-6ea593269b9e.png) |
+|![](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png) | ![](https://cloud.githubusercontent.com/assets/764476/23671279/883c63ae-031f-11e7-8396-b404d18881e1.png) |
 | --- | --- |
 
 ### Examples
-We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open `Example/Example.xcworkspace` to try it out.
+We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open `MapboxNavigation.xcodeproj` to try it out.
 
-**Instantiating a navigation UI (RouteViewController)**
+#### Set up navigation UI in code
 
 ```swift
 let viewController = NavigationUI.routeViewController(for: route, directions: directions)
@@ -123,11 +129,36 @@ present(viewController, animated: true, completion: nil)
 ```
 
 - `route` the initial route you want to navigate.
-- `directions` a [Direction](https://github.com/mapbox/MapboxDirections.swift) instance needed for re-routing when the user goes off route.
+- `directions` an optional [Direction](https://github.com/mapbox/MapboxDirections.swift) instance needed for re-routing when the user goes off route. If no directions instance is provided, a default one will be used.
+
+#### Set up navigation UI in a storyboard
+
+- Open the object library and drag in a `Storyboard Reference`.
+- Pick `Navigation` from the dropdown and set bundle to `com.mapbox.MapboxNavigationUI`.
+- Set up a segue to the storyboard reference like you would to any other UIViewController.
+
+<img src="https://cloud.githubusercontent.com/assets/764476/23622518/e3cc8a86-0253-11e7-80ab-7d34302a5fe5.png" width=340>
+
+You also need to pass a route and optionally a directions instance to the `RouteViewController`. To do that, override your UIViewController's `prepare(for:sender:)`:
+
+```swift
+override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    switch segue.identifier ?? "" {
+        case "MyNavigationSegue":
+            if let controller = segue.destination as? RouteViewController {
+                controller.route = route
+                controller.directions = directions
+            }
+        default:
+            break
+    }
+}
+```
+
 
 **Basic styling**
 
-![screenshot 2017-02-08 18 24 38](https://cloud.githubusercontent.com/assets/764476/22748895/e2a5fdc2-ee2b-11e6-8d1c-1cbe2fed18ad.png)
+![](https://cloud.githubusercontent.com/assets/764476/22748895/e2a5fdc2-ee2b-11e6-8d1c-1cbe2fed18ad.png)
 
 ## Installation options
 
@@ -138,9 +169,9 @@ You'll need to install three pods, `MapboxNavigationUI.swift`, `MapboxNavigation
 Add the following lines to your Podfile:
 
 ```ruby
-pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => 'ceaf58b780fc17ea44a9150041b602d017c1e567'
+pod 'MapboxDirections.swift', '~> 0.8'
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'a368a73a7575b296886ae53b7642216c167ca8e2'
 ```
 
 #### [Carthage](https://github.com/Carthage/Carthage)
@@ -148,7 +179,7 @@ pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigat
 1: Add the following line to your `Cartfile`:
 
 ```
-github "mapbox/MapboxNavigation.swift"
+github "mapbox/MapboxNavigation.swift" "a368a73a7575b296886ae53b7642216c167ca8e2"
 ```
 2: Run:
 
@@ -157,4 +188,4 @@ carthage update --platform ios
 ```
 
 3: 
-Drag all frameworks (located in Carthage/Build/iOS) into Embedded Frameworks.
+Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
