@@ -106,7 +106,7 @@ MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn naviga
 |![](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png) | ![](https://cloud.githubusercontent.com/assets/764476/23671279/883c63ae-031f-11e7-8396-b404d18881e1.png) |
 | --- | --- |
 
-## Installation options
+### Installation options
 
 #### [CocoaPods](https://cocoapods.org/)
 
@@ -130,8 +130,7 @@ github "mapbox/MapboxNavigation.swift" "a368a73a7575b296886ae53b7642216c167ca8e2
 ```
 carthage update --platform ios
 ```
-3.
-Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
+3. Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
 
 ### Set up navigation UI in code
 
@@ -167,7 +166,9 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 }
 ```
 
-**Basic styling**
+### UI overrides and listeners
+
+#### Colors
 
 You can override the default colors in the UI.
 
@@ -176,4 +177,17 @@ NavigationUI.shared.tintColor = .red
 NavigationUI.shared.tintStrokeColor = .blue
 NavigationUI.shared.primaryTextColor = .orange
 NavigationUI.shared.secondaryTextColor = .pink
+```
+
+#### `routeControllerDidCancelNavigation`
+
+Fired when the user taps `Cancel`. Note, this delegate method should also dismiss the UI.
+
+```swift
+func routeViewControllerDidCancelNavigation(_: RouteViewController) {
+    // Do stuff now
+
+    // Also make sure to dismiss the UI!
+    routeViewController.dismiss(animated: true, completion: nil)
+}
 ```
