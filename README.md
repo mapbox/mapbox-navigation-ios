@@ -122,15 +122,15 @@ pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigat
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
-1. Add the following line to your `Cartfile`:
+1: Add the following line to your `Cartfile`:
 ```
 github "mapbox/MapboxNavigation.swift" "a368a73a7575b296886ae53b7642216c167ca8e2"
 ```
-2. Run:
+2: Run:
 ```
 carthage update --platform ios
 ```
-3. Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
+3: Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
 
 ### Set up navigation UI in code
 
