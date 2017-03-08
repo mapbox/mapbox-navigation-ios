@@ -10,21 +10,20 @@ MapboxNavigation consists of two libraries. MapboxNavigation.swift which contain
 | :---: | :---: |
 | ![](https://cloud.githubusercontent.com/assets/764476/23326707/712a7790-fab5-11e6-9419-2aa5bd2f2c7d.png) | ![](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png) |
 
-### MapboxNavigation.swift
+## Examples
 
-MapboxNavigation.swift provides an API to add turn by turn navigation to your app. The basic workflow of how it fits into your app:
+We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open MapboxNavigation.xcodeproj to try it out.
 
-1. Provide `RouteController` with a [route](https://github.com/mapbox/MapboxDirections.swift)
-1. Start the `RouteController` with `resume()` when the user should enter guidance mode
-1. MapboxNavigation.swift will then emit `NSNotification` when:
- * The use makes progress along the route
- * The user should be alerted about an upcoming maneuver
- * The user should be rerouted
-1. Depending on what is emitted, your app should react accordingly
+### Running the example app
 
-A simple implementation can be viewed in the example app — available in [Objective-C](./Examples/Objective-C/ViewController.m) or [Swift](./Examples/Swift/ViewController.swift).
+1. If running in the simulator, you can simulate the user location by selecting `Debug` -> `Location` -> `City Bicycle Ride`
+1. Long press any where on a map. This is where you will be routed to.
+1. Press `Start Navigation` to begin
+1. Press `Cancel` to end
 
-## Installation options
+## MapboxNavigation.swift
+
+### Installation options
 
 #### [CocoaPods](https://cocoapods.org/)
 
@@ -45,7 +44,7 @@ Add the following line to your Cartfile:
 github "mapbox/MapboxNavigation.swift"
 ```
 
-## Gist of how this works
+### Gist of how this works
 
 `RouteController` is given a route. Internally, MapboxNavigation.swift is comparing the route to the users location and looking at 3 principle pieces:
 
@@ -55,29 +54,29 @@ github "mapbox/MapboxNavigation.swift"
 
 The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via `NSNotification`.
 
-## Notifications
+### Notifications
 
 This library relies heavily on the class `NSNotification` for letting the developer know when events have occurred.
 
-### `RouteControllerProgressDidChange`
+#### `RouteControllerProgressDidChange`
 
 * Emitted when the user moves along the route. Notification contains 3 keys:
   * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
   * `RouteControllerProgressDidChangeNotificationLocationKey` - `CLLocation` - Current location
   * `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey` - `Double` - Given users speed and location, this is the number of seconds left to the end of the step
 
-### `RouteControllerAlertLevelDidChange`
+#### `RouteControllerAlertLevelDidChange`
 
 * Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver. See [Alerts](#Alert levels). Notification contains 3 keys:
   * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
   * `RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey` - `CLLocationDistance` - The users snapped distance to the end of the route.
 
-### `RouteControllerShouldReroute`
+#### `RouteControllerShouldReroute`
 
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
 
-## Alert levels
+### Alert levels
 
 Alert levels indicate the type of announcement that should be given. The enum types available are:
 
@@ -88,7 +87,7 @@ Alert levels indicate the type of announcement that should be given. The enum ty
 * `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/MapboxNavigation.swift/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
 * `arrive` - Emitted when the user arrives at destination
 
-## Rerouting
+### Rerouting
 
 In the event of a reroute, it's necessary to update the current route with a new route. Once fetched, you can update the current route by:
 
@@ -96,32 +95,44 @@ In the event of a reroute, it's necessary to update the current route with a new
 navigation.routeProgress = RouteProgress(route: newRoute)
 ```
 
-## Examples
-
-We provide examples in Swift and Objective-C. Run `pod install` from the Example folder and open `Example.xcworkspace` to try it out.
-
-## Running the example app
-
-1. If running in the simulator, you can simulate the user location by selecting `Debug` -> `Location` -> `City Bicycle Ride`
-1. Long press any where on a map. This is where you will be routed to.
-1. Press `Start Navigation` to begin
-1. Press `Stop Navigation` to end
-
 ----
 
-# MapboxNavigationUI.swift
+## MapboxNavigationUI.swift
 
 [![](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/6fc45a7e2817b859#/builds)
 
-MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn navigation to their iOS application.
+MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn navigation to their iOS application. You still have access to all emitted notifications identified above however, MapboxNavigationUI takes care of all the alerts, rerouting, etc.
 
 |![](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png) | ![](https://cloud.githubusercontent.com/assets/764476/23671279/883c63ae-031f-11e7-8396-b404d18881e1.png) |
 | --- | --- |
 
-### Examples
-We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open `MapboxNavigation.xcodeproj` to try it out.
+### Installation options
 
-#### Set up navigation UI in code
+#### [CocoaPods](https://cocoapods.org/)
+
+You'll need to install three pods, `MapboxNavigationUI.swift`, `MapboxNavigation.swift`  and `MapboxDirections.swift`
+
+Add the following lines to your Podfile:
+
+```ruby
+pod 'MapboxDirections.swift', '~> 0.8'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'a368a73a7575b296886ae53b7642216c167ca8e2'
+```
+
+#### [Carthage](https://github.com/Carthage/Carthage)
+
+1: Add the following line to your `Cartfile`:
+```
+github "mapbox/MapboxNavigation.swift" "a368a73a7575b296886ae53b7642216c167ca8e2"
+```
+2: Run:
+```
+carthage update --platform ios
+```
+3: Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
+
+### Set up navigation UI in code
 
 ```swift
 let viewController = NavigationUI.routeViewController(for: route, directions: directions)
@@ -131,7 +142,7 @@ present(viewController, animated: true, completion: nil)
 - `route` the initial route you want to navigate.
 - `directions` an optional [Direction](https://github.com/mapbox/MapboxDirections.swift) instance needed for re-routing when the user goes off route. If no directions instance is provided, a default one will be used.
 
-#### Set up navigation UI in a storyboard
+### Set up navigation UI in a storyboard
 
 - Open the object library and drag in a `Storyboard Reference`.
 - Pick `Navigation` from the dropdown and set bundle to `com.mapbox.MapboxNavigationUI`.
@@ -155,37 +166,28 @@ override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 }
 ```
 
+### UI overrides and listeners
 
-**Basic styling**
+#### Colors
 
-![](https://cloud.githubusercontent.com/assets/764476/22748895/e2a5fdc2-ee2b-11e6-8d1c-1cbe2fed18ad.png)
+You can override the default colors in the UI.
 
-## Installation options
-
-#### [CocoaPods](https://cocoapods.org/)
-
-You'll need to install three pods, `MapboxNavigationUI.swift`, `MapboxNavigation.swift`  and `MapboxDirections.swift`
-
-Add the following lines to your Podfile:
-
-```ruby
-pod 'MapboxDirections.swift', '~> 0.8'
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'a368a73a7575b296886ae53b7642216c167ca8e2'
+```swift
+NavigationUI.shared.tintColor = .red
+NavigationUI.shared.tintStrokeColor = .blue
+NavigationUI.shared.primaryTextColor = .orange
+NavigationUI.shared.secondaryTextColor = .pink
 ```
 
-#### [Carthage](https://github.com/Carthage/Carthage)
+#### `routeControllerDidCancelNavigation`
 
-1: Add the following line to your `Cartfile`:
+Fired when the user taps `Cancel`. Note, this delegate method should also dismiss the UI.
 
-```
-github "mapbox/MapboxNavigation.swift" "a368a73a7575b296886ae53b7642216c167ca8e2"
-```
-2: Run:
+```swift
+func routeViewControllerDidCancelNavigation(_: RouteViewController) {
+    // Do stuff now
 
+    // Also make sure to dismiss the UI!
+    routeViewController.dismiss(animated: true, completion: nil)
+}
 ```
-carthage update --platform ios
-```
-
-3: 
-Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
