@@ -12,7 +12,7 @@ MapboxNavigation consists of two libraries. MapboxNavigation.swift which contain
 
 ## Examples
 
-We provide examples in Swift and Objective-C. Run carthage update --platform ios from the root folder and open MapboxNavigation.xcodeproj to try it out.
+We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open MapboxNavigation.xcodeproj to try it out.
 
 ### Running the example app
 
