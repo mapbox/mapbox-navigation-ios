@@ -78,6 +78,8 @@ public class RouteViewController: NavigationPulleyViewController {
     var routeTask: URLSessionDataTask?
     let routeStepFormatter = RouteStepFormatter()
     
+    var lastReRouteLocation: CLLocation?
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -139,6 +141,13 @@ public class RouteViewController: NavigationPulleyViewController {
     
     func shouldReroute(notification: NSNotification) {
         let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
+        
+        if let previousLocation = lastReRouteLocation {
+            guard location.distance(from: previousLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
+                return
+            }
+        }
+        
         routeTask?.cancel()
         
         let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course)
