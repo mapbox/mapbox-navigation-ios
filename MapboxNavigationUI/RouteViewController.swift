@@ -55,6 +55,14 @@ public class RouteViewController: NavigationPulleyViewController {
     public var navigationDelegate: RouteViewControllerDelegate?
     
     /**
+     `voiceController` provides access to various speech synthesizer options.
+     
+     See `RouteVoiceController` for more information.
+     */
+    public var voiceController: RouteVoiceController? = RouteVoiceController()
+    
+    
+    /**
      `mapView` provides access to the navigation's `MGLMapView` with all its styling capabilities.
      
      Note that you should not change the `mapView`'s delegate.
@@ -86,6 +94,10 @@ public class RouteViewController: NavigationPulleyViewController {
         fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
                    "Use NavigationUI.routeViewController(for:directions:) if you are instantiating programmatically " +
                    "or a storyboard reference to Navigation if you are using storyboards.")
+    }
+    
+    deinit {
+        suspendNotifications()
     }
     
     override public func viewDidLoad() {
@@ -232,6 +244,7 @@ public class RouteViewController: NavigationPulleyViewController {
 
 extension RouteViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
+        voiceController = nil
         if navigationDelegate?.routeViewControllerDidCancelNavigation(self) != nil {
             // The receiver should handle dismissal of the RouteViewController
         } else {

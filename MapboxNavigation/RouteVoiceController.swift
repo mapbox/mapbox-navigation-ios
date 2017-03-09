@@ -11,7 +11,13 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     let routeStepFormatter = RouteStepFormatter()
     var recentlyAnnouncedRouteStep: RouteStep?
     var fallbackText: String!
-    var useDefaultVoice: Bool
+    // Use default speech synthesizer if identityPool is unset
+    var useDefaultVoice: Bool { return identityPoolId == nil }
+    
+    /**
+     A boolean value indicating whether instructions should be announced by voice or not.
+     */
+    public var isEnabled: Bool = true
     
     
     /**
@@ -45,15 +51,27 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public var instructionVoiceVolume = "x-loud"
     
     
-    public init(regionType: AWSRegionType = AWSRegionType.USEast1, identityPoolId: String?) {
-        if let identityPoolId = identityPoolId {
-            self.useDefaultVoice = false
-            let credentialsProvider = AWSCognitoCredentialsProvider(regionType:regionType, identityPoolId: identityPoolId)
-            let configuration = AWSServiceConfiguration(region:regionType, credentialsProvider:credentialsProvider)
-            AWSServiceManager.default().defaultServiceConfiguration = configuration
-        } else {
-            self.useDefaultVoice = true
+    /**
+     `regionType` specifies what AWS region to use for Polly.
+     */
+    public var regionType: AWSRegionType = .USEast1
+    
+    
+    /**
+     `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
+     You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
+     */
+    public var identityPoolId: String? {
+        didSet {
+            if let poolId = identityPoolId {
+                let credentialsProvider = AWSCognitoCredentialsProvider(regionType:regionType, identityPoolId: poolId)
+                let configuration = AWSServiceConfiguration(region:regionType, credentialsProvider:credentialsProvider)
+                AWSServiceManager.default().defaultServiceConfiguration = configuration
+            }
         }
+    }
+    
+    override public init() {
         super.init()
         maneuverVoiceDistanceFormatter.unitStyle = .long
         resumeNotifications()
@@ -216,6 +234,8 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func speakWithPolly(_ text: String) {
+        guard isEnabled == true else { return }
+        
         assert(!text.isEmpty)
         
         speechSynth.delegate = self
@@ -303,6 +323,8 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     
     func speakFallBack(_ text: String, error: String? = nil) {
+        guard isEnabled == true else { return }
+        
         // Note why it failed
         if let error = error {
             print(error)
