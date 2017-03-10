@@ -1,6 +1,7 @@
 import Foundation
 import AVFoundation
 import MapboxDirections
+import MapboxNavigation
 import AWSPolly
 
 public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
