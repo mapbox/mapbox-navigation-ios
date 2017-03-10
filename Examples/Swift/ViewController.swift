@@ -19,15 +19,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var toggleNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     
-    var routeVoiceController = RouteVoiceController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         mapView.delegate = self
-        
-        // If you want to use Polly instead of the built-in speech synthesizer, just set the identityPoolId
-        //routeVoiceController.identityPoolId = "<#Your AWS IdentityPoolId.#>"
         
         mapView.userTrackingMode = .follow
         resumeNotifications()
@@ -35,7 +31,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     deinit {
         suspendNotifications()
-        routeVoiceController.suspendNotifications()
         navigation?.suspendLocationUpdates()
     }
     
