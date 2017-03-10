@@ -49,6 +49,7 @@ Pod::Spec.new do |s|
   s.dependency "OSRMTextInstructions"
   s.dependency "Pulley"
   s.dependency "SDWebImage"
+  s.dependency "AWSPolly"
 
   s.xcconfig = {
     "SWIFT_VERSION" => "3.0"

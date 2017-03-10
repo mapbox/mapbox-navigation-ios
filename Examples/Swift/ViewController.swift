@@ -19,9 +19,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var toggleNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     
-    // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer
-    // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
-    var routeVoiceController = RouteVoiceController(identityPoolId: "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +31,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     deinit {
         suspendNotifications()
-        routeVoiceController.suspendNotifications()
         navigation?.suspendLocationUpdates()
     }
     
@@ -155,6 +151,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.
         let viewController = NavigationUI.routeViewController(for: route)
+        
+        // If you'd like to use AWS Polly, provide your IdentityPoolId below
+        // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer
+        // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
+        // viewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
+        
         present(viewController, animated: true, completion: nil)
     }
     
