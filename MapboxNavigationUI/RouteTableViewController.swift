@@ -33,13 +33,13 @@ class RouteTableViewController: UIViewController {
     func setupTableView() {
         tableView.tableHeaderView = headerView
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 106
+        tableView.estimatedRowHeight = 80
         tableView.reloadData()
     }
     
     func showETA(routeProgress: RouteProgress) {
         let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
-        headerView.etaLabel.text = String.localizedStringWithFormat(NSLocalizedString("HEADER_SUBTITLE_FORMAT", value: "Arrive at %@", comment: "1 = estimated arrival time"), dateFormatter.string(from: arrivalDate!))
+        headerView.etaLabel.text = dateFormatter.string(from: arrivalDate!)
         
         if routeProgress.durationRemaining < 5 {
             headerView.distanceRemaining.text = nil

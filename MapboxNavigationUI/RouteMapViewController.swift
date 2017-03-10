@@ -40,6 +40,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         mapView.delegate = self
         mapView.tintColor = NavigationUI.shared.tintColor
+        recenterButton.tintColor = NavigationUI.shared.tintColor
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
     }
     
@@ -47,7 +48,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         super.viewWillAppear(animated)
         
         mapView.compassView.isHidden = true
-        
         mapView.addAnnotation(destination)
         
         if let camera = pendingCamera {
@@ -136,53 +136,26 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         let stepProgress = routeController.routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
-        let controller = routePageViewController.currentManeuverPage
+        guard let controller = routePageViewController.currentManeuverPage else { return }
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            controller?.streetLabel.text = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
-            controller?.distanceLabel.text = nil
+            controller.streetLabel.text = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
+            controller.distanceLabel.text = ""
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
             let destinations = upComingStep.destinations?.joined(separator: "\n")
             
             if secondsRemaining < 5 {
-                controller?.distanceLabel.text = nil
-                controller?.streetLabel.text = upComingStep.instructions
+                controller.distanceLabel.text = ""
+                controller.streetLabel.text = upComingStep.instructions
             } else {
-                controller?.distanceLabel.text = distanceFormatter.string(from: distanceRemaining)
-                
-                if let name = upComingStep.names?.first ?? destinations, let ref = upComingStep.codes?.first {
-                    let foregroundColor = NavigationUI.shared.secondaryTextColor
-                    let attributes = [
-                        NSForegroundColorAttributeName: foregroundColor,
-                        NSFontAttributeName: controller?.streetLabel.font,
-                        ]
-                    let attributedString = NSMutableAttributedString(string: "\(name) ", attributes: attributes)
-                    let attachment = NSTextAttachment()
-                    attributedString.append(NSAttributedString(attachment: attachment))
-                    
-                    if controller?.streetLabel.attributedText?.string != attributedString.string {
-                        controller?.streetLabel.attributedText = attributedString
-                        
-                        let components = ref.components(separatedBy: " ")
-                        if components.count > 1 {
-                            shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { (image) in
-                                controller?.streetLabel.attributedText = nil
-                                if let image = image {
-                                    attachment.bounds = CGRect(x: 0, y: 0, width: image.size.width / UIScreen.main.scale, height: image.size.height / UIScreen.main.scale)
-                                    attachment.image = image
-                                }
-                                controller?.streetLabel.attributedText = attributedString
-                            }
-                            shieldAPIDataTask?.resume()
-                        }
-                    }
-                } else {
-                    controller?.streetLabel.text = upComingStep.names?.first ?? destinations
-                }
+                controller.distanceLabel.text = distanceFormatter.string(from: distanceRemaining)
+                controller.streetLabel.text = upComingStep.names?.first ?? destinations
             }
+            
+            updateShield(for: controller)
         }
         
-        controller?.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
+        controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
     }
     
     func dataTaskForShieldImage(network: String, number: String, height: CGFloat, completion: @escaping (UIImage?) -> Void) -> URLSessionDataTask? {
@@ -295,6 +268,23 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
         mapView.userTrackingMode = .followWithCourse
     }
+    
+    func updateShield(for controller: RouteManeuverViewController) {
+        let currentLegProgress = routeController.routeProgress.currentLegProgress
+        
+        guard let upComingStep = currentLegProgress?.upComingStep else { return }
+        guard let ref = upComingStep.codes?.first else { return }
+        guard controller.shieldImage == nil else { return }
+        
+        let components = ref.components(separatedBy: " ")
+        
+        if components.count > 1 {
+            shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { (image) in
+                controller.shieldImage = image
+            }
+            shieldAPIDataTask?.resume()
+        }
+    }
 }
 
 // MARK: RouteManeuverPageViewControllerDelegate
@@ -302,9 +292,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
 extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
         let step = maneuverViewController.step
-        
         let destinations = step?.destinations?.joined(separator: "\n")
         
+        maneuverViewController.shieldImage = nil
+        updateShield(for: maneuverViewController)
         maneuverViewController.streetLabel.text = step?.names?.first ?? destinations
         maneuverViewController.distanceLabel.text = distanceFormatter.string(from: step!.distance)
         maneuverViewController.turnArrowView.step = step
@@ -324,7 +315,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         } else {
             maneuverViewController.stackViewContainer.isHidden = true
         }
-        
         
         if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
             mapView.userTrackingMode = .followWithCourse

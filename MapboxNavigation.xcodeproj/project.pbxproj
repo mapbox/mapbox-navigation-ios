@@ -663,6 +663,7 @@
 				351BEBD31E5BCC28006FE110 /* Frameworks */,
 				351BEBD41E5BCC28006FE110 /* Headers */,
 				351BEBD51E5BCC28006FE110 /* Resources */,
+				35C7E0931E67AD80003ACB96 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -996,6 +997,27 @@
 				"$(SRCROOT)/Carthage/Build/iOS/AWSCore.framework",
 			);
 			name = "Carthage copy frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		35C7E0931E67AD80003ACB96 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/OSRMTextInstructions.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Pulley.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/AWSPolly.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/AWSCore.framework",
+			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;

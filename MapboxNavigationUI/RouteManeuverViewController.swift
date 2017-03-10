@@ -3,21 +3,25 @@ import MapboxDirections
 
 class RouteManeuverViewController: UIViewController {
 
+    @IBOutlet var separatorViews: [UIView]!
     @IBOutlet weak var stackViewContainer: UIView!
-    @IBOutlet weak var instructionsView: UIView!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var streetLabel: UILabel!
     @IBOutlet weak var turnArrowView: TurnArrowView!
+    @IBOutlet weak fileprivate var shieldImageView: UIImageView!
     @IBOutlet var laneViews: [LaneArrowView]!
     
     weak var step: RouteStep!
     
+    var shieldImage: UIImage? {
+        didSet {
+            shieldImageView.image = shieldImage
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        instructionsView.applyDefaultCornerRadiusShadow()
-        stackViewContainer.applyDefaultCornerRadiusShadow()
-        turnArrowView.showsShield = false
+        turnArrowView.backgroundColor = .clear
+        _ = separatorViews.flatMap( { $0.backgroundColor = NavigationUI.shared.lineColor } )
     }
-
 }
