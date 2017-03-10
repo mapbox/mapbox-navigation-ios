@@ -12,12 +12,18 @@ class RouteTableViewHeaderView: UIView {
     @IBOutlet weak var distanceRemaining: StyleLabel!
     @IBOutlet weak var timeRemaining: StyleLabel!
     @IBOutlet weak var etaLabel: StyleLabel!
+    @IBOutlet weak var dividerView: UIView!
     
     var delegate: RouteTableViewHeaderViewDelegate?
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        dividerView.backgroundColor = NavigationUI.shared.lineColor
+    }
+    
     override var intrinsicContentSize: CGSize {
         get {
-            return CGSize(width: bounds.width, height: 106)
+            return CGSize(width: bounds.width, height: 80)
         }
     }
     
