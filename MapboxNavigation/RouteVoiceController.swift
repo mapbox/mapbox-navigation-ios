@@ -142,6 +142,8 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func alertLevelDidChange(notification: NSNotification) {
+        guard isEnabled == true else { return }
+        
         guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
             assert(false)
             return
@@ -234,8 +236,6 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func speakWithPolly(_ text: String) {
-        guard isEnabled == true else { return }
-        
         assert(!text.isEmpty)
         
         speechSynth.delegate = self
@@ -323,8 +323,6 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     
     func speakFallBack(_ text: String, error: String? = nil) {
-        guard isEnabled == true else { return }
-        
         // Note why it failed
         if let error = error {
             print(error)
