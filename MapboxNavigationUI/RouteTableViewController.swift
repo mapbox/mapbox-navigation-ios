@@ -43,10 +43,14 @@ class RouteTableViewController: UIViewController {
         
         if routeProgress.durationRemaining < 5 {
             headerView.distanceRemaining.text = nil
-        } else if routeProgress.durationRemaining < 60 {
-            headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
         } else {
             headerView.distanceRemaining.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
+        }
+        
+        if routeProgress.durationRemaining < 60 {
+            headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
+        } else {
+            headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
         }
     }
     
