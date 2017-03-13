@@ -14,6 +14,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     var fallbackText: String!
     // Use default speech synthesizer if identityPool is unset
     var useDefaultVoice: Bool { return identityPoolId == nil }
+    var announcementTimer: Timer!
     
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
@@ -57,6 +58,12 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
      */
     public var regionType: AWSRegionType = .USEast1
     
+    
+    /**
+     Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
+    */
+    public var bufferBetweenAnnouncements: TimeInterval = 3
+
     
     /**
      `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
@@ -142,6 +149,15 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
     
+    func startAnnouncementTimer() {
+        announcementTimer = Timer.scheduledTimer(timeInterval: bufferBetweenAnnouncements, target: self, selector: #selector(resetAnnouncementTimer), userInfo: nil, repeats: false)
+    }
+    
+    func resetAnnouncementTimer() {
+        recentlyAnnouncedRouteStep = nil
+        announcementTimer.invalidate()
+    }
+    
     func alertLevelDidChange(notification: NSNotification) {
         guard isEnabled == true else { return }
         
@@ -168,6 +184,8 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         } else {
             speakWithPolly(speechString(notification: notification, markUpWithSSML: true))
         }
+        
+        startAnnouncementTimer()
     }
     
     func speechString(notification: NSNotification, markUpWithSSML: Bool) -> String {
