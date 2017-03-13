@@ -138,18 +138,25 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         let distanceRemaining = stepProgress.distanceRemaining
         guard let controller = routePageViewController.currentManeuverPage else { return }
         
+        controller.distanceLabel.isHidden = false
+        
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             controller.streetLabel.text = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
-            controller.distanceLabel.text = ""
+            controller.distanceLabel.isHidden = true
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
-            let destinations = upComingStep.destinations?.joined(separator: "\n")
             
-            if secondsRemaining < 5 {
-                controller.distanceLabel.text = ""
-                controller.streetLabel.text = upComingStep.instructions
-            } else {
+            if secondsRemaining > 5 {
                 controller.distanceLabel.text = distanceFormatter.string(from: distanceRemaining)
-                controller.streetLabel.text = upComingStep.names?.first ?? destinations
+            } else {
+                controller.distanceLabel.isHidden = true
+            }
+            
+            if let name = upComingStep.names?.first {
+                controller.streetLabel.text = name
+            } else if let destinations = upComingStep.destinations?.joined(separator: "\n") {
+                controller.streetLabel.text = destinations
+            } else {
+                controller.streetLabel.text = upComingStep.instructions
             }
             
             updateShield(for: controller)
@@ -292,12 +299,18 @@ extension RouteMapViewController: MGLMapViewDelegate {
 extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
         let step = maneuverViewController.step
-        let destinations = step?.destinations?.joined(separator: "\n")
         
         maneuverViewController.shieldImage = nil
         updateShield(for: maneuverViewController)
-        maneuverViewController.streetLabel.text = step?.names?.first ?? destinations
-        maneuverViewController.distanceLabel.text = distanceFormatter.string(from: step!.distance)
+        
+        if let name = step?.names?.first {
+            maneuverViewController.streetLabel.text = name
+        } else if let destinations = step?.destinations?.joined(separator: "\n") {
+            maneuverViewController.streetLabel.text = destinations
+        } else {
+            maneuverViewController.streetLabel.text = step?.instructions
+        }
+        maneuverViewController.distanceLabel.text = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : ""
         maneuverViewController.turnArrowView.step = step
         
         if let allLanes = step?.intersections?.first?.approachLanes, let usableLanes = step?.intersections?.first?.usableApproachLanes {
