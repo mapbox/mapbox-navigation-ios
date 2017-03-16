@@ -31,14 +31,13 @@ Add the following lines to your Podfile:
 
 ```ruby
 # Required
-pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => 'c5a637a201a3043c24e52f3e2c50a1657a8ffced'
+pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => '955970285f7dee31b2c130023d7b383be51ab190'
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'c5a637a201a3043c24e52f3e2c50a1657a8ffced'
 pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'c5a637a201a3043c24e52f3e2c50a1657a8ffced'
 pod 'OSRMTextInstructions', :git => 'git@github.com:Project-OSRM/osrm-text-instructions.swift.git', :commit => 'bdd962bf5593f951bbbbd26435f732a829dacda7'
 
 # Optional but, you will most likely use:
 pod 'Mapbox-iOS-SDK', '~> 3.4'
-pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirections.swift.git', :commit => '955970285f7dee31b2c130023d7b383be51ab190'
 ```
 
 #### [Carthage](https://github.com/carthage/carthage)
