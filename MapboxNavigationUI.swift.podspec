@@ -48,8 +48,8 @@ Pod::Spec.new do |s|
   s.dependency "Mapbox-iOS-SDK"
   s.dependency "OSRMTextInstructions"
   s.dependency "Pulley"
-  s.dependency "SDWebImage"
-  s.dependency "AWSPolly"
+  s.dependency "SDWebImage", "~> 4.0"
+  s.dependency "AWSPolly", "~> 2.5"
 
   s.xcconfig = {
     "SWIFT_VERSION" => "3.0"
