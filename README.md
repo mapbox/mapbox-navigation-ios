@@ -35,8 +35,6 @@ pod 'MapboxDirections.swift', :git => 'https://github.com/mapbox/MapboxDirection
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'c5a637a201a3043c24e52f3e2c50a1657a8ffced'
 pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'c5a637a201a3043c24e52f3e2c50a1657a8ffced'
 pod 'OSRMTextInstructions', :git => 'git@github.com:Project-OSRM/osrm-text-instructions.swift.git', :commit => 'bdd962bf5593f951bbbbd26435f732a829dacda7'
-pod 'AWSPolly', '~> 2.5'
-pod 'SDWebImage', '~> 4.0'
 
 # Optional but, you will most likely use:
 pod 'Mapbox-iOS-SDK', '~> 3.4'
