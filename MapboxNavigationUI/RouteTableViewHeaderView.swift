@@ -18,6 +18,12 @@ class RouteTableViewHeaderView: UIView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        //clear default values from the storyboard so user does not see a 'flash' of random values
+        distanceRemaining.text = ""
+        timeRemaining.text = ""
+        etaLabel.text = ""
+        
         dividerView.backgroundColor = NavigationUI.shared.lineColor
     }
     
