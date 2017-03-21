@@ -153,7 +153,7 @@ public class RouteViewController: NavigationPulleyViewController {
         let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
         routeTask?.cancel()
         
-        let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course)
+        let options = RouteOptions.preferredOptions(from: location.coordinate, to: destination.coordinate, heading: location.course, profileIdentifier: route.profileIdentifier)
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             guard let strongSelf = self else {
                 return
