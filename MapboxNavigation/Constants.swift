@@ -55,12 +55,17 @@ public var RouteControllerMinimumDistanceForMediumAlertCycling: CLLocationDistan
 public var RouteControllerMinimumDistanceForMediumAlertWalking: CLLocationDistance = 100
 
 public func RouteControllerMinimumDistanceForMediumAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
-    if identifier == .automobile || identifier == .automobileAvoidingTraffic {
+    switch identifier {
+    case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:
         return RouteControllerMinimumDistanceForMediumAlertDriving
-    } else if identifier == .cycling {
+    case MBDirectionsProfileIdentifier.automobile:
+        return RouteControllerMinimumDistanceForMediumAlertDriving
+    case MBDirectionsProfileIdentifier.cycling:
         return RouteControllerMinimumDistanceForMediumAlertCycling
-    } else if identifier == .walking {
+    case MBDirectionsProfileIdentifier.walking:
         return RouteControllerMinimumDistanceForMediumAlertWalking
+    default:
+        break
     }
     
     return RouteControllerMinimumDistanceForMediumAlertDriving
@@ -75,12 +80,17 @@ public var RouteControllerMinimumDistanceForHighAlertCycling: CLLocationDistance
 public var RouteControllerMinimumDistanceForHighAlertWalking: CLLocationDistance = 20
 
 public func RouteControllerMinimumDistanceForHighAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
-    if identifier == .automobile || identifier == .automobileAvoidingTraffic {
+    switch identifier {
+    case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:
         return RouteControllerMinimumDistanceForHighAlertDriving
-    } else if identifier == .cycling {
+    case MBDirectionsProfileIdentifier.automobile:
+        return RouteControllerMinimumDistanceForHighAlertDriving
+    case MBDirectionsProfileIdentifier.cycling:
         return RouteControllerMinimumDistanceForHighAlertCycling
-    } else if identifier == .walking {
+    case MBDirectionsProfileIdentifier.walking:
         return RouteControllerMinimumDistanceForHighAlertWalking
+    default:
+        break
     }
     
     return RouteControllerMinimumDistanceForHighAlertDriving
