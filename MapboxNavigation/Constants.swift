@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import MapboxDirections
 
 public let RouteControllerProgressDidChangeNotificationProgressKey = MBRouteControllerProgressDidChangeNotificationProgressKey
 public let RouteControllerProgressDidChangeNotificationLocationKey = MBRouteControllerProgressDidChangeNotificationLocationKey
@@ -49,13 +50,41 @@ public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 /*
  Distance in meters for the minimum length of a step for giving a `medium` alert.
 */
-public var RouteControllerMinimumDistanceForMediumAlert: CLLocationDistance = 400
+public var RouteControllerMinimumDistanceForMediumAlertDriving: CLLocationDistance = 400
+public var RouteControllerMinimumDistanceForMediumAlertCycling: CLLocationDistance = 200
+public var RouteControllerMinimumDistanceForMediumAlertWalking: CLLocationDistance = 100
+
+public func RouteControllerMinimumDistanceForMediumAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
+    if identifier == .automobile || identifier == .automobileAvoidingTraffic {
+        return RouteControllerMinimumDistanceForMediumAlertDriving
+    } else if identifier == .cycling {
+        return RouteControllerMinimumDistanceForMediumAlertCycling
+    } else if identifier == .walking {
+        return RouteControllerMinimumDistanceForMediumAlertWalking
+    }
+    
+    return RouteControllerMinimumDistanceForMediumAlertDriving
+}
 
 
 /*
  Distance in meters for the minimum length of a step for giving a `high` alert.
  */
-public var RouteControllerMinimumDistanceForHighAlert: CLLocationDistance = 100
+public var RouteControllerMinimumDistanceForHighAlertDriving: CLLocationDistance = 100
+public var RouteControllerMinimumDistanceForHighAlertCycling: CLLocationDistance = 60
+public var RouteControllerMinimumDistanceForHighAlertWalking: CLLocationDistance = 20
+
+public func RouteControllerMinimumDistanceForHighAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
+    if identifier == .automobile || identifier == .automobileAvoidingTraffic {
+        return RouteControllerMinimumDistanceForHighAlertDriving
+    } else if identifier == .cycling {
+        return RouteControllerMinimumDistanceForHighAlertCycling
+    } else if identifier == .walking {
+        return RouteControllerMinimumDistanceForHighAlertWalking
+    }
+    
+    return RouteControllerMinimumDistanceForHighAlertDriving
+}
 
 
 /*
