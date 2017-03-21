@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import MapboxDirections
 
 public let RouteControllerProgressDidChangeNotificationProgressKey = MBRouteControllerProgressDidChangeNotificationProgressKey
 public let RouteControllerProgressDidChangeNotificationLocationKey = MBRouteControllerProgressDidChangeNotificationLocationKey
@@ -49,13 +50,51 @@ public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 /*
  Distance in meters for the minimum length of a step for giving a `medium` alert.
 */
-public var RouteControllerMinimumDistanceForMediumAlert: CLLocationDistance = 400
+public var RouteControllerMinimumDistanceForMediumAlertDriving: CLLocationDistance = 400
+public var RouteControllerMinimumDistanceForMediumAlertCycling: CLLocationDistance = 200
+public var RouteControllerMinimumDistanceForMediumAlertWalking: CLLocationDistance = 100
+
+public func RouteControllerMinimumDistanceForMediumAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
+    switch identifier {
+    case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:
+        return RouteControllerMinimumDistanceForMediumAlertDriving
+    case MBDirectionsProfileIdentifier.automobile:
+        return RouteControllerMinimumDistanceForMediumAlertDriving
+    case MBDirectionsProfileIdentifier.cycling:
+        return RouteControllerMinimumDistanceForMediumAlertCycling
+    case MBDirectionsProfileIdentifier.walking:
+        return RouteControllerMinimumDistanceForMediumAlertWalking
+    default:
+        break
+    }
+    
+    return RouteControllerMinimumDistanceForMediumAlertDriving
+}
 
 
 /*
  Distance in meters for the minimum length of a step for giving a `high` alert.
  */
-public var RouteControllerMinimumDistanceForHighAlert: CLLocationDistance = 100
+public var RouteControllerMinimumDistanceForHighAlertDriving: CLLocationDistance = 100
+public var RouteControllerMinimumDistanceForHighAlertCycling: CLLocationDistance = 60
+public var RouteControllerMinimumDistanceForHighAlertWalking: CLLocationDistance = 20
+
+public func RouteControllerMinimumDistanceForHighAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
+    switch identifier {
+    case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:
+        return RouteControllerMinimumDistanceForHighAlertDriving
+    case MBDirectionsProfileIdentifier.automobile:
+        return RouteControllerMinimumDistanceForHighAlertDriving
+    case MBDirectionsProfileIdentifier.cycling:
+        return RouteControllerMinimumDistanceForHighAlertCycling
+    case MBDirectionsProfileIdentifier.walking:
+        return RouteControllerMinimumDistanceForHighAlertWalking
+    default:
+        break
+    }
+    
+    return RouteControllerMinimumDistanceForHighAlertDriving
+}
 
 
 /*

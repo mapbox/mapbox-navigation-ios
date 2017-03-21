@@ -118,10 +118,14 @@ extension RouteController: CLLocationManagerDelegate {
     func monitorStepProgress(_ location: CLLocation) {
         // Force an announcement when the user begins a route
         var alertLevel: AlertLevel = routeProgress.currentLegProgress.alertUserLevel == .none ? .depart : routeProgress.currentLegProgress.alertUserLevel
+        let profileIdentifier = routeProgress.route.profileIdentifier
         
         let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         var courseMatchesManeuverFinalHeading = false
+        
+        let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForHighAlert(identifier: profileIdentifier)
+        let minimumDistanceForMediumAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
         
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
         // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
@@ -168,13 +172,13 @@ extension RouteController: CLLocationManagerDelegate {
                 let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
                 alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
             }
-        } else if secondsToEndOfStep <= RouteControllerHighAlertInterval && routeProgress.currentLegProgress.currentStep.distance > RouteControllerMinimumDistanceForHighAlert {
+        } else if secondsToEndOfStep <= RouteControllerHighAlertInterval && routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForHighAlert {
             alertLevel = .high
         } else if secondsToEndOfStep <= RouteControllerMediumAlertInterval &&
             // Don't alert if the route segment is shorter than X
             // However, if it's the beginning of the route
             // There needs to be an alert
-            routeProgress.currentLegProgress.currentStep.distance > RouteControllerMinimumDistanceForMediumAlert {
+            routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForMediumAlert {
             alertLevel = .medium
         }
         

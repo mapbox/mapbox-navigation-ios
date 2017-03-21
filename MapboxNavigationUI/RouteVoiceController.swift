@@ -192,6 +192,8 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
+        let profileIdentifier = routeProgress.route.profileIdentifier
+        let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
         
         let escapeIfNecessary = {(distance: String) -> String in
             return markUpWithSSML ? distance.addingXMLEscapes : distance
@@ -222,14 +224,14 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
         // since the user will be approaching the maneuver location.
         if routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart {
-            if userDistance < RouteControllerMinimumDistanceForHighAlert {
+            if userDistance < minimumDistanceForHighAlert {
                 text = String.localizedStringWithFormat(NSLocalizedString("LINKED_WITH_DISTANCE_UTTERANCE_FORMAT", value: "%@, then in %@, %@", comment: "Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction"), currentInstruction!, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
             } else {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), escapeIfNecessary(localizeRoadDescription(step)), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             }
         } else if routeProgress.currentLegProgress.currentStep.distance > 2_000 {
             text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), escapeIfNecessary(localizeRoadDescription(step)), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
-        } else if alertLevel == .high && stepDistance < RouteControllerMinimumDistanceForHighAlert {
+        } else if alertLevel == .high && stepDistance < minimumDistanceForHighAlert {
             text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
         } else if alertLevel != .high {
             text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
