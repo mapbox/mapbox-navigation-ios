@@ -1,11 +1,3 @@
-//
-//  NavigationMapView.swift
-//  MapboxNavigation
-//
-//  Created by Bobby Sudekum on 3/21/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 import Foundation
 
 public class NavigationMapView: MGLMapView {

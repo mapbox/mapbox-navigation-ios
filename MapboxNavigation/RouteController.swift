@@ -24,6 +24,12 @@ open class RouteController: NSObject {
     
     
     /*
+     If true, the user puck is snapped to closest location on the route.
+    */
+    public var snapUserToRoute = false
+    
+    
+    /*
      Intializes a new `RouteController`.
      
      - parameter Route: A `Route` object representing the users route it will follow.

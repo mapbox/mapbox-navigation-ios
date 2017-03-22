@@ -230,9 +230,14 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let route = routeController.routeProgress.route
         guard let coordinates = route.coordinates else  { return nil }
         
-        // Snap to route
-        let snappedCoordinate = closestCoordinate(on: coordinates, to: location.coordinate)
-        guard let newCoordinate = snappedCoordinate?.coordinate else { return nil }
+        var newCoordinate = location.coordinate
+        if routeController.snapUserToRoute {
+            // Snap to route
+            let snappedCoordinate = closestCoordinate(on: coordinates, to: location.coordinate)
+            if let coordinate = snappedCoordinate?.coordinate {
+                newCoordinate = coordinate
+            }
+        }
         
         return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
     }
