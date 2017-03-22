@@ -24,6 +24,12 @@ open class RouteController: NSObject {
     
     
     /*
+     If true, the user puck is snapped to closest location on the route.
+    */
+    public var snapsUserLocationAnnotationToRoute = false
+    
+    
+    /*
      Intializes a new `RouteController`.
      
      - parameter Route: A `Route` object representing the users route it will follow.
@@ -107,12 +113,15 @@ extension RouteController: CLLocationManagerDelegate {
         monitorStepProgress(location)
     }
     
-    func userIsOnRoute(_ location: CLLocation) -> Bool {
+    public func userIsOnRoute(_ location: CLLocation) -> Bool {
         // Find future location of user
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        return newLocation.isWithin(RouteControllerMaximumDistanceBeforeRecalculating, of: routeProgress.currentLegProgress.currentStep)
+        let radius = min(RouteControllerMaximumDistanceBeforeRecalculating,
+                         location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
+
+        return newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
     }
     
     func monitorStepProgress(_ location: CLLocation) {

@@ -173,3 +173,7 @@ extension MGLMapView {
         }
     }
 }
+
+protocol NavigationMapViewDelegate {
+    func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation?
+}
