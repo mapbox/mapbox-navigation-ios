@@ -223,6 +223,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
 extension RouteMapViewController: NavigationMapViewDelegate {
     
+    @objc(navigationMapView:shouldUpdateToLocation:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
 
         guard routeController.userIsOnRoute(location) else { return nil }
