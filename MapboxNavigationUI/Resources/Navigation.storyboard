@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16E183b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -146,7 +146,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="343" height="100"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uEZ-9k-UtQ" userLabel="Info Stack View">
-                                        <rect key="frame" x="10" y="16" width="50" height="80.5"/>
+                                        <rect key="frame" x="14" y="16" width="50" height="80"/>
                                         <subviews>
                                             <view alpha="0.75" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="dvV-hd-Sbg" customClass="TurnArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -161,9 +161,9 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                             </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="50" width="50" height="30.5"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="center" lineBreakMode="wordWrap" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="50" width="50" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                                 <attributedString key="userComments">
@@ -183,8 +183,8 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Elm St NW" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.59999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                                        <rect key="frame" x="70" y="43" width="106" height="26.5"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
+                                        <rect key="frame" x="82" y="40.5" width="125" height="31.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
                                         <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                         <attributedString key="userComments">
@@ -209,7 +209,7 @@
                                         </constraints>
                                     </view>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gkj-hG-NxS">
-                                        <rect key="frame" x="301" y="40.5" width="32" height="32"/>
+                                        <rect key="frame" x="301" y="39.5" width="32" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="0ei-is-yQS"/>
                                             <constraint firstAttribute="width" constant="32" id="4qd-KG-vi7"/>
@@ -219,7 +219,7 @@
                                 <color key="backgroundColor" red="0.99030783119999999" green="0.99866314420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="gkj-hG-NxS" secondAttribute="trailing" constant="10" id="4bE-nr-TaP"/>
-                                    <constraint firstItem="BR8-8N-Rhk" firstAttribute="leading" secondItem="uEZ-9k-UtQ" secondAttribute="trailing" constant="10" id="8cv-dJ-9CM"/>
+                                    <constraint firstItem="BR8-8N-Rhk" firstAttribute="leading" secondItem="uEZ-9k-UtQ" secondAttribute="trailing" constant="18" id="8cv-dJ-9CM"/>
                                     <constraint firstAttribute="bottom" secondItem="bvZ-78-dml" secondAttribute="bottom" id="Bc5-Ji-bW4"/>
                                     <constraint firstItem="BR8-8N-Rhk" firstAttribute="centerY" secondItem="uEZ-9k-UtQ" secondAttribute="centerY" id="Gz1-kk-ofy"/>
                                     <constraint firstAttribute="height" constant="100" id="IsE-zQ-C8r"/>
@@ -229,14 +229,14 @@
                                     <constraint firstAttribute="bottom" secondItem="uEZ-9k-UtQ" secondAttribute="bottom" constant="4" id="eIU-rb-uk9"/>
                                     <constraint firstItem="gkj-hG-NxS" firstAttribute="centerY" secondItem="BR8-8N-Rhk" secondAttribute="centerY" id="eQc-fF-gEd"/>
                                     <constraint firstItem="gkj-hG-NxS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BR8-8N-Rhk" secondAttribute="trailing" constant="10" id="f6G-bn-OXa"/>
-                                    <constraint firstItem="uEZ-9k-UtQ" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="10" id="vPn-7k-ggQ"/>
+                                    <constraint firstItem="uEZ-9k-UtQ" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="14" id="vPn-7k-ggQ"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Fv-nY-OMF" userLabel="StackViewContainer">
-                                <rect key="frame" x="0.0" y="100.5" width="343" height="40"/>
+                                <rect key="frame" x="0.0" y="100" width="343" height="40"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7" userLabel="Lane Stack View">
-                                        <rect key="frame" x="171.5" y="5" width="0.0" height="30"/>
+                                        <rect key="frame" x="171" y="5" width="0.0" height="30"/>
                                         <subviews>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-3z-hNh" customClass="LaneArrowView" customModule="MapboxNavigationUI" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
@@ -571,7 +571,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                            <rect key="frame" x="10" y="9.5" width="87" height="33.5"/>
+                            <rect key="frame" x="10" y="9" width="87" height="34"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -597,7 +597,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="8.3 mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-ya-mrD" userLabel="distanceRemaining" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                            <rect key="frame" x="10" y="43" width="51" height="21.5"/>
+                            <rect key="frame" x="10" y="43" width="51" height="31"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <color key="textColor" red="0.60179937490000002" green="0.60179937490000002" blue="0.60179937490000002" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
@@ -616,7 +616,7 @@
                             </userDefinedRuntimeAttributes>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="StyleLabel" customModule="MapboxNavigationUI" customModuleProvider="target">
-                            <rect key="frame" x="238.5" y="32.5" width="47.5" height="21.5"/>
+                            <rect key="frame" x="238" y="32" width="48" height="22"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -668,6 +668,7 @@
                         <constraint firstAttribute="trailing" secondItem="l2B-fb-Dkb" secondAttribute="trailing" constant="10" id="gYj-gb-phz"/>
                         <constraint firstItem="nqY-xY-Iz0" firstAttribute="centerY" secondItem="eu5-2S-xpm" secondAttribute="centerY" constant="3" id="hEr-C1-pKd"/>
                         <constraint firstItem="l2B-fb-Dkb" firstAttribute="centerY" secondItem="nqY-xY-Iz0" secondAttribute="centerY" id="hfE-Nk-gHi"/>
+                        <constraint firstAttribute="bottom" secondItem="6dE-ya-mrD" secondAttribute="bottom" constant="6" id="mRY-1L-KXm"/>
                         <constraint firstItem="rwq-3y-Mg0" firstAttribute="centerY" secondItem="nqY-xY-Iz0" secondAttribute="centerY" id="nvN-Qm-1MG"/>
                         <constraint firstItem="l2B-fb-Dkb" firstAttribute="leading" secondItem="rwq-3y-Mg0" secondAttribute="trailing" constant="10" id="pyV-PJ-nTT"/>
                         <constraint firstItem="HRl-MT-kqB" firstAttribute="centerY" secondItem="rwq-3y-Mg0" secondAttribute="centerY" id="szt-mH-qz4"/>

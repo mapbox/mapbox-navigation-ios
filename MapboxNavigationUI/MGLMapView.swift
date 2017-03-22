@@ -1,7 +1,6 @@
 import Foundation
 import Mapbox
 import MapboxDirections
-import MapboxGeocoder
 import MapboxNavigation
 
 let sourceIdentifier = "routeSource"

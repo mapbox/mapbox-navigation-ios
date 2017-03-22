@@ -14,6 +14,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     var fallbackText: String!
     // Use default speech synthesizer if identityPool is unset
     var useDefaultVoice: Bool { return identityPoolId == nil }
+    var announcementTimer: Timer!
     
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
@@ -57,6 +58,12 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
      */
     public var regionType: AWSRegionType = .USEast1
     
+    
+    /**
+     Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
+    */
+    public var bufferBetweenAnnouncements: TimeInterval = 3
+
     
     /**
      `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
@@ -142,6 +149,15 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
     
+    func startAnnouncementTimer() {
+        announcementTimer = Timer.scheduledTimer(timeInterval: bufferBetweenAnnouncements, target: self, selector: #selector(resetAnnouncementTimer), userInfo: nil, repeats: false)
+    }
+    
+    func resetAnnouncementTimer() {
+        recentlyAnnouncedRouteStep = nil
+        announcementTimer.invalidate()
+    }
+    
     func alertLevelDidChange(notification: NSNotification) {
         guard isEnabled == true else { return }
         
@@ -168,12 +184,16 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         } else {
             speakWithPolly(speechString(notification: notification, markUpWithSSML: true))
         }
+        
+        startAnnouncementTimer()
     }
     
     func speechString(notification: NSNotification, markUpWithSSML: Bool) -> String {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
+        let profileIdentifier = routeProgress.route.profileIdentifier
+        let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
         
         let escapeIfNecessary = {(distance: String) -> String in
             return markUpWithSSML ? distance.addingXMLEscapes : distance
@@ -204,14 +224,14 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
         // since the user will be approaching the maneuver location.
         if routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart {
-            if userDistance < RouteControllerMinimumDistanceForHighAlert {
+            if userDistance < minimumDistanceForHighAlert {
                 text = String.localizedStringWithFormat(NSLocalizedString("LINKED_WITH_DISTANCE_UTTERANCE_FORMAT", value: "%@, then in %@, %@", comment: "Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction"), currentInstruction!, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
             } else {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), escapeIfNecessary(localizeRoadDescription(step)), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             }
         } else if routeProgress.currentLegProgress.currentStep.distance > 2_000 {
             text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), escapeIfNecessary(localizeRoadDescription(step)), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
-        } else if alertLevel == .high && stepDistance < RouteControllerMinimumDistanceForHighAlert {
+        } else if alertLevel == .high && stepDistance < minimumDistanceForHighAlert {
             text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
         } else if alertLevel != .high {
             text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
