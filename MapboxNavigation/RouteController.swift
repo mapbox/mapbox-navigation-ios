@@ -26,7 +26,7 @@ open class RouteController: NSObject {
     /*
      If true, the user puck is snapped to closest location on the route.
     */
-    public var snapUserToRoute = false
+    public var snapsUserLocationAnnotationToRoute = false
     
     
     /*
@@ -119,8 +119,8 @@ extension RouteController: CLLocationManagerDelegate {
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
         let radius = min(RouteControllerMaximumDistanceBeforeRecalculating,
-                         location.horizontalAccuracy + RouteControllerHorizontalAccuracyAnomaly)
-        
+                         location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
+
         return newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
     }
     

@@ -231,7 +231,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         guard let coordinates = route.coordinates else  { return nil }
         
         var newCoordinate = location.coordinate
-        if routeController.snapUserToRoute {
+        if routeController.snapsUserLocationAnnotationToRoute {
             // Snap to route
             let snappedCoordinate = closestCoordinate(on: coordinates, to: location.coordinate)
             if let coordinate = snappedCoordinate?.coordinate {

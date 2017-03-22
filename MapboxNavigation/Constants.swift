@@ -23,7 +23,7 @@ public var RouteControllerMaximumDistanceBeforeRecalculating: CLLocationDistance
 /*
  Accepted deviation excluding horizontal accuracy before the user is considered to be off route.
  */
-public var RouteControllerHorizontalAccuracyAnomaly: CLLocationDistance = 10
+public var RouteControllerUserLocationSnappingDistance: CLLocationDistance = 10
 
 /*
  Threshold user must be in within to count as completing a step. One of two heuristics used to know when a user completes a step, see `RouteControllerManeuverZoneRadius`.
