@@ -107,28 +107,30 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
         
-        if routeProgress.currentLegProgress.stepIndex == 0 {
+        if routeProgress.currentLegProgress.currentStepProgress.step.maneuverType == .depart && !userIsOnRoute(location) {
             let step = routeProgress.currentLegProgress.currentStepProgress.step
-            let stepLocation = CLLocation(latitude: step.coordinates!.first!.latitude, longitude: step.coordinates!.first!.longitude)
             
-            var currentUserToStartOfRoute = location.distance(from: stepLocation)
-            if currentUserToStartOfRoute > lastUserDistanceToStartOfRoute {
+            guard let userSnappedDistanceToClosestCoordinate = closestCoordinate(on: step.coordinates!, to: location.coordinate)?.distance else {
+                return
+            }
+            
+            if userSnappedDistanceToClosestCoordinate > lastUserDistanceToStartOfRoute {
                 userIsMovingAwayFromStartCounter += 1
             }
             
             // Wait until the user is moving 3 ticks away from the start of the route
             guard userIsMovingAwayFromStartCounter > 3 else {
-                lastUserDistanceToStartOfRoute = currentUserToStartOfRoute
+                lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
                 return
             }
             
             // Don't check `userIsOnRoute` if the user has not moved
-            guard currentUserToStartOfRoute != lastUserDistanceToStartOfRoute else {
-                lastUserDistanceToStartOfRoute = currentUserToStartOfRoute
+            guard userSnappedDistanceToClosestCoordinate != lastUserDistanceToStartOfRoute else {
+                lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
                 return
             }
             
-            lastUserDistanceToStartOfRoute = currentUserToStartOfRoute
+            lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
         }
         
         guard userIsOnRoute(location) else {
@@ -143,7 +145,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func resetStartCounter() {
-        userIsMovingAwayFromStartCounter = 0;
+        userIsMovingAwayFromStartCounter = 0
         lastUserDistanceToStartOfRoute = Double.infinity
     }
     
