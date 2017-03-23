@@ -126,11 +126,11 @@ extension RouteController: CLLocationManagerDelegate {
                 return
             }
             
-            lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
-            
             if userSnappedDistanceToClosestCoordinate > lastUserDistanceToStartOfRoute {
                 lastTimeStampSpentMovingAwayFromStart = location.timestamp
             }
+            
+            lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
         }
         
         guard userIsOnRoute(location) else {
