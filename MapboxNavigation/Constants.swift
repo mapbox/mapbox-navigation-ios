@@ -50,6 +50,8 @@ public var RouteControllerHighAlertInterval: TimeInterval = 15
 */
 public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
+public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
+
 
 /*
  Distance in meters for the minimum length of a step for giving a `medium` alert.

@@ -11,7 +11,7 @@ open class RouteController: NSObject {
     
     var lastUserDistanceToStartOfRoute = Double.infinity
     
-    var userIsMovingAwayFromStartCounter: Int = 0
+    var lastTimeStampSpentMovingAwayFromStart = Date()
     
     /*
      Monitor users location along route.
@@ -114,12 +114,8 @@ extension RouteController: CLLocationManagerDelegate {
                 return
             }
             
-            if userSnappedDistanceToClosestCoordinate > lastUserDistanceToStartOfRoute {
-                userIsMovingAwayFromStartCounter += 1
-            }
-            
-            // Wait until the user is moving 3 ticks away from the start of the route
-            guard userIsMovingAwayFromStartCounter > 3 else {
+            // Give the user x seconds of moving away from the start of the route before rerouting
+            guard Date().timeIntervalSince(lastTimeStampSpentMovingAwayFromStart) > MaxSecondsSpentTravelingAwayFromStartOfRoute else {
                 lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
                 return
             }
@@ -131,6 +127,10 @@ extension RouteController: CLLocationManagerDelegate {
             }
             
             lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
+            
+            if userSnappedDistanceToClosestCoordinate > lastUserDistanceToStartOfRoute {
+                lastTimeStampSpentMovingAwayFromStart = location.timestamp
+            }
         }
         
         guard userIsOnRoute(location) else {
@@ -145,7 +145,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func resetStartCounter() {
-        userIsMovingAwayFromStartCounter = 0
+        lastTimeStampSpentMovingAwayFromStart = Date()
         lastUserDistanceToStartOfRoute = Double.infinity
     }
     
