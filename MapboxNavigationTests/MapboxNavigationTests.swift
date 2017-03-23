@@ -62,16 +62,25 @@ class MapboxNavigationTests: XCTestCase {
     func testShouldReroute() {
         let navigation = RouteController(route: route)
         navigation.resume()
-        let reroutePoint = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
+        
+        let reroutePoint = CLLocation(latitude: 38, longitude: -123)
+        let reroutePoint1 = CLLocation(latitude: 38, longitude: -124)
+        let reroutePoint2 = CLLocation(latitude: 38, longitude: -125)
+        let reroutePoint3 = CLLocation(latitude: 38, longitude: -126)
+        let reroutePoint4 = CLLocation(latitude: 38, longitude: -127)
         
         self.expectation(forNotification: RouteControllerShouldReroute.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
             
             let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as? CLLocation
-            return location == reroutePoint
+            return location == reroutePoint4
         }
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint1])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint2])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint3])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint4])
         
         waitForExpectations(timeout: waitForInterval)
     }
