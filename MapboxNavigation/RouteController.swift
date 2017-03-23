@@ -9,6 +9,10 @@ import MapboxDirections
 @objc(MBRouteController)
 open class RouteController: NSObject {
     
+    var lastUserDistanceToStartOfRoute = Double.infinity
+    
+    var lastTimeStampSpentMovingAwayFromStart = Date()
+    
     /*
      Monitor users location along route.
 
@@ -87,13 +91,6 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
-        guard userIsOnRoute(location) else {
-            NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: [
-                RouteControllerNotificationShouldRerouteKey: location
-                ])
-            return
-        }
-        
         // Notify observers if the step’s remaining distance has changed.
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
@@ -110,7 +107,46 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
         
+        let step = routeProgress.currentLegProgress.currentStepProgress.step
+        if step.maneuverType == .depart && !userIsOnRoute(location) {
+            
+            guard let userSnappedDistanceToClosestCoordinate = closestCoordinate(on: step.coordinates!, to: location.coordinate)?.distance else {
+                return
+            }
+            
+            // Give the user x seconds of moving away from the start of the route before rerouting
+            guard Date().timeIntervalSince(lastTimeStampSpentMovingAwayFromStart) > MaxSecondsSpentTravelingAwayFromStartOfRoute else {
+                lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
+                return
+            }
+            
+            // Don't check `userIsOnRoute` if the user has not moved
+            guard userSnappedDistanceToClosestCoordinate != lastUserDistanceToStartOfRoute else {
+                lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
+                return
+            }
+            
+            if userSnappedDistanceToClosestCoordinate > lastUserDistanceToStartOfRoute {
+                lastTimeStampSpentMovingAwayFromStart = location.timestamp
+            }
+            
+            lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
+        }
+        
+        guard userIsOnRoute(location) else {
+            resetStartCounter()
+            NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: [
+                RouteControllerNotificationShouldRerouteKey: location
+                ])
+            return
+        }
+        
         monitorStepProgress(location)
+    }
+    
+    func resetStartCounter() {
+        lastTimeStampSpentMovingAwayFromStart = Date()
+        lastUserDistanceToStartOfRoute = Double.infinity
     }
     
     public func userIsOnRoute(_ location: CLLocation) -> Bool {

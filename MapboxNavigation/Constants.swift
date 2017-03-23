@@ -52,6 +52,12 @@ public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
 
 /*
+ Maximum number of seconds the user can travel away from the start of the route before rerouting occurs
+*/
+public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
+
+
+/*
  Distance in meters for the minimum length of a step for giving a `medium` alert.
 */
 public var RouteControllerMinimumDistanceForMediumAlertDriving: CLLocationDistance = 400
