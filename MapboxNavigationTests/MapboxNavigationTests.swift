@@ -63,24 +63,21 @@ class MapboxNavigationTests: XCTestCase {
         let navigation = RouteController(route: route)
         navigation.resume()
         
-        let reroutePoint = CLLocation(latitude: 38, longitude: -123)
-        let reroutePoint1 = CLLocation(latitude: 38, longitude: -124)
-        let reroutePoint2 = CLLocation(latitude: 38, longitude: -125)
-        let reroutePoint3 = CLLocation(latitude: 38, longitude: -126)
-        let reroutePoint4 = CLLocation(latitude: 38, longitude: -127)
+        let reroutePoint1 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123), altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, timestamp: Date().addingTimeInterval(10))
+        let reroutePoint2 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -124), altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, timestamp: Date().addingTimeInterval(20))
         
         self.expectation(forNotification: RouteControllerShouldReroute.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
             
             let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as? CLLocation
-            return location == reroutePoint4
+            return location == reroutePoint2
         }
         
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint])
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint1])
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint2])
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint3])
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint4])
+        
+        _ = Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { timer in
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [reroutePoint2])
+        }
         
         waitForExpectations(timeout: waitForInterval)
     }
