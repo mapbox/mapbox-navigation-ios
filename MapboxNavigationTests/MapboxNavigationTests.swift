@@ -63,8 +63,8 @@ class MapboxNavigationTests: XCTestCase {
         let navigation = RouteController(route: route)
         navigation.resume()
         
-        let reroutePoint1 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123), altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, timestamp: Date().addingTimeInterval(10))
-        let reroutePoint2 = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -124), altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, timestamp: Date().addingTimeInterval(20))
+        let reroutePoint1 = CLLocation(latitude: 38, longitude: -123)
+        let reroutePoint2 = CLLocation(latitude: 38, longitude: -124)
         
         self.expectation(forNotification: RouteControllerShouldReroute.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
