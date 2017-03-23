@@ -107,8 +107,8 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
         
-        if routeProgress.currentLegProgress.currentStepProgress.step.maneuverType == .depart && !userIsOnRoute(location) {
-            let step = routeProgress.currentLegProgress.currentStepProgress.step
+        let step = routeProgress.currentLegProgress.currentStepProgress.step
+        if step.maneuverType == .depart && !userIsOnRoute(location) {
             
             guard let userSnappedDistanceToClosestCoordinate = closestCoordinate(on: step.coordinates!, to: location.coordinate)?.distance else {
                 return
