@@ -61,6 +61,13 @@ public class RouteViewController: NavigationPulleyViewController {
      */
     public var voiceController: RouteVoiceController? = RouteVoiceController()
     
+    /**
+     `routeController` provides all routing logic for the user.
+
+     See `RouteController` for more information
+     */
+    public var routeController: RouteController!
+    
     
     /**
      `mapView` provides access to the navigation's `MGLMapView` with all its styling capabilities.
@@ -79,7 +86,6 @@ public class RouteViewController: NavigationPulleyViewController {
      */
     public var sendNotifications: Bool = true
     
-    var routeController: RouteController!
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     
