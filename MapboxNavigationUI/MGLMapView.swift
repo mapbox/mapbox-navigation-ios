@@ -9,8 +9,8 @@ let routeLayerCasingIdentifier = "routeLayerCasing"
 
 extension MGLMapView {
     
-    public func annotate(_ routes: [Route], clearMap: Bool) {
-        guard let route = routes.first, var coordinates = route.coordinates else {
+    public func annotate(_ route: Route) {
+        guard var coordinates = route.coordinates else {
             return
         }
         
