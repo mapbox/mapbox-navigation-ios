@@ -230,8 +230,24 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 newCoordinate = coordinate
             }
         }
+        let coords = routeController.routeProgress.route.coordinates!
+        let closest = closestCoordinate(on: coords, to: location.coordinate)
+        let slicedLine = polyline(along: coords, from: closest!.coordinate, to: coords.last)
         
-        return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
+        let infrontPointOne = coordinate(at: 2, fromStartOf: slicedLine)
+        let cloestInfront = closestCoordinate(on: coords, to: infrontPointOne!)
+        
+        let infrontPointTwo = coordinate(at: 4, fromStartOf: slicedLine)
+        let cloestBehind = closestCoordinate(on: coords, to: infrontPointTwo!)
+        
+        let infrontDirection = closest?.coordinate.direction(to: cloestInfront!.coordinate)
+        let behindDirection = closest?.coordinate.direction(to: cloestBehind!.coordinate)
+        
+        let normalizedCourse = wrap((infrontDirection! + behindDirection!) / 2, min: 0, max: 360)
+        let course = differenceBetweenAngles(location.course, normalizedCourse) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? normalizedCourse : location.course
+        
+        
+        return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 
