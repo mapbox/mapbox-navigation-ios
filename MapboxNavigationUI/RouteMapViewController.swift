@@ -233,41 +233,33 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         let defaultReturn = CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
         
-        guard location.course == -1 else {
+        guard location.course != -1 else {
             return defaultReturn
         }
         
-        guard let coords = routeController.routeProgress.route.coordinates else {
-            return defaultReturn
-        }
+        let coords = routeController.routeProgress.currentLegProgress.priorCurrentUpcomingStepCoordinates
+        assert(!coords.isEmpty)
         
-        guard let closest = closestCoordinate(on: coords, to: location.coordinate) else {
-            return defaultReturn
-        }
+        let closest = closestCoordinate(on: coords, to: location.coordinate)!
         let slicedLine = polyline(along: coords, from: closest.coordinate, to: coords.last)
         
         // Get closest point infront of user
-        guard let infrontPointOne = coordinate(at: 2, fromStartOf: slicedLine) else {
-            return defaultReturn
-        }
-        guard let infrontCloest = closestCoordinate(on: coords, to: infrontPointOne) else {
-            return defaultReturn
-        }
+        let infrontPointOne = coordinate(at: 2, fromStartOf: slicedLine)!
+        let infrontClosest = closestCoordinate(on: coords, to: infrontPointOne)!
         
-        // Get closest point begind infront of user
-        guard let infrontPointTwo = coordinate(at: 4, fromStartOf: slicedLine) else {
-            return defaultReturn
-        }
-        guard let behindCloset = closestCoordinate(on: coords, to: infrontPointTwo) else {
-            return defaultReturn
-        }
+        // Get closest point behind in front of user
+        let infrontPointTwo = coordinate(at: 4, fromStartOf: slicedLine)!
+        let behindClosest = closestCoordinate(on: coords, to: infrontPointTwo)!
         
         // Get direction of these points
-        let infrontDirection = closest.coordinate.direction(to: infrontCloest.coordinate)
-        let behindDirection = closest.coordinate.direction(to: behindCloset.coordinate)
+        let infrontDirection = closest.coordinate.direction(to: infrontClosest.coordinate)
+        let behindDirection = closest.coordinate.direction(to: behindClosest.coordinate)
         
-        let normalizedCourse = wrap((infrontDirection + behindDirection) / 2, min: 0, max: 360)
-        let course = differenceBetweenAngles(location.course, normalizedCourse) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? normalizedCourse : location.course
+        let normalizedInfrontDirection = wrap(infrontDirection, min: 0, max: 360)
+        let normalizedBehindDirection = wrap(behindDirection, min: 0, max: 360)
+        
+        let averagedCourse = (normalizedInfrontDirection + normalizedBehindDirection) / 2
+        let course = differenceBetweenAngles(location.course, averagedCourse) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? averagedCourse : location.course
         
         
         return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)

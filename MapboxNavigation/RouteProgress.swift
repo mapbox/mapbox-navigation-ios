@@ -178,6 +178,18 @@ open class RouteLegProgress: NSObject {
         return nil
     }
     
+    /*
+     Returns the `Step` before the current step.
+     
+     If there is no `priorStep`, nil is returned.
+     */
+    public var priorStep: RouteStep? {
+        guard stepIndex - 1 > 0 else {
+            return nil
+        }
+        return leg.steps[stepIndex - 1]
+    }
+    
     
     /*
      Returns number representing current `Step` for the leg the user is on.
@@ -227,6 +239,17 @@ open class RouteLegProgress: NSObject {
         self.leg = leg
         self.stepIndex = stepIndex
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex])
+    }
+    
+    
+    /*
+     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry
+    */
+    public var priorCurrentUpcomingStepCoordinates: [CLLocationCoordinate2D] {
+        let priorCoords = priorStep?.coordinates ?? []
+        let upcomingCoords = upComingStep?.coordinates ?? []
+        let currentCoords = currentStep.coordinates ?? []
+        return priorCoords + currentCoords + upcomingCoords
     }
 }
 
