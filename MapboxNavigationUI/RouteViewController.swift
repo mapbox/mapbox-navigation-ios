@@ -182,6 +182,11 @@ public class RouteViewController: NavigationPulleyViewController {
                 
                 strongSelf.mapViewController?.notifyDidReroute(route: route)
                 strongSelf.tableViewController?.notifyDidReroute()
+                
+                // posting a notification that could be listened to get new route info externally
+                NotificationCenter.default.post(name: RouteControllerDidReroute, object: strongSelf.routeController, userInfo: [
+                    RouteControllerDidRerouteNotifcationRouteProgressKey: strongSelf.routeController.routeProgress
+                    ])
             }
         })
     }

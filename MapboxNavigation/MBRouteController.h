@@ -13,3 +13,6 @@ extern NSString *const MBRouteControllerNotificationShouldRerouteKey;
 extern NSString *const MBRouteControllerNotificationProgressDidChange;
 extern NSString *const MBRouteControllerAlertLevelDidChange;
 extern NSString *const MBRouteControllerShouldReroute;
+
+extern NSString *const MBRouteControllerDidRerouteKey;
+extern NSString *const MBRouteControllerDidRerouteNotificationRouteProgressKey;
