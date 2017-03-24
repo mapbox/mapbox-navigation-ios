@@ -230,20 +230,43 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 newCoordinate = coordinate
             }
         }
-        let coords = routeController.routeProgress.route.coordinates!
-        let closest = closestCoordinate(on: coords, to: location.coordinate)
-        let slicedLine = polyline(along: coords, from: closest!.coordinate, to: coords.last)
         
-        let infrontPointOne = coordinate(at: 2, fromStartOf: slicedLine)
-        let cloestInfront = closestCoordinate(on: coords, to: infrontPointOne!)
+        let defaultReturn = CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
         
-        let infrontPointTwo = coordinate(at: 4, fromStartOf: slicedLine)
-        let cloestBehind = closestCoordinate(on: coords, to: infrontPointTwo!)
+        guard location.course == -1 else {
+            return defaultReturn
+        }
         
-        let infrontDirection = closest?.coordinate.direction(to: cloestInfront!.coordinate)
-        let behindDirection = closest?.coordinate.direction(to: cloestBehind!.coordinate)
+        guard let coords = routeController.routeProgress.route.coordinates else {
+            return defaultReturn
+        }
         
-        let normalizedCourse = wrap((infrontDirection! + behindDirection!) / 2, min: 0, max: 360)
+        guard let closest = closestCoordinate(on: coords, to: location.coordinate) else {
+            return defaultReturn
+        }
+        let slicedLine = polyline(along: coords, from: closest.coordinate, to: coords.last)
+        
+        // Get closest point infront of user
+        guard let infrontPointOne = coordinate(at: 2, fromStartOf: slicedLine) else {
+            return defaultReturn
+        }
+        guard let infrontCloest = closestCoordinate(on: coords, to: infrontPointOne) else {
+            return defaultReturn
+        }
+        
+        // Get closest point begind infront of user
+        guard let infrontPointTwo = coordinate(at: 4, fromStartOf: slicedLine) else {
+            return defaultReturn
+        }
+        guard let behindCloset = closestCoordinate(on: coords, to: infrontPointTwo) else {
+            return defaultReturn
+        }
+        
+        // Get direction of these points
+        let infrontDirection = closest.coordinate.direction(to: infrontCloest.coordinate)
+        let behindDirection = closest.coordinate.direction(to: behindCloset.coordinate)
+        
+        let normalizedCourse = wrap((infrontDirection + behindDirection) / 2, min: 0, max: 360)
         let course = differenceBetweenAngles(location.course, normalizedCourse) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? normalizedCourse : location.course
         
         
