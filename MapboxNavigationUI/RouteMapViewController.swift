@@ -130,7 +130,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            updateArrowAnnotations(routeProgress)
+            mapView.addArrow(routeProgress)
         } else {
             mapView.removeArrow()
         }
@@ -209,19 +209,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
                 completion(image)
             }
         }
-    }
-    
-    func updateArrowAnnotations(_ routeProgress: RouteProgress) {
-        guard let step = routeProgress.currentLegProgress.upComingStep else {
-            return
-        }
-        
-        if step != arrowCurrentStep {
-            mapView.removeArrow()
-            mapView.addArrow(routeProgress)
-        }
-        
-        arrowCurrentStep = step
     }
 }
 

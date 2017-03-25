@@ -89,6 +89,10 @@ extension MGLMapView {
         let maneuverCoordinate = routeProgress.currentLegProgress.upComingStep?.maneuverLocation
         let polylineCoordinates = routeProgress.route.coordinates
         
+        guard let style = style else {
+            return
+        }
+        
         let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate!.latitude), 50), 10)
         let shaftCoordinates = polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!)
             + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!)
@@ -145,11 +149,21 @@ extension MGLMapView {
             arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
             arrowStroke.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintColor)
             
-            style?.addSource(arrowSourceStroke)
-            style?.addSource(arrowSource)
+            if let source = style.source(withIdentifier: "arrowSource") {
+                let s = source as! MGLShapeSource
+                s.shape = MGLShapeCollection(shapes: maneuverArrowPolylines)
+            } else {
+                style.addSource(arrowSource)
+                style.addLayer(arrow)
+            }
             
-            style?.addLayer(arrow)
-            style?.insertLayer(arrowStroke, below: arrow)
+            if let source = style.source(withIdentifier: "arrowSourceStroke") {
+                let s = source as! MGLShapeSource
+                s.shape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
+            } else {
+                style.addSource(arrowSourceStroke)
+                style.insertLayer(arrowStroke, below: arrow)
+            }
         }
     }
     
