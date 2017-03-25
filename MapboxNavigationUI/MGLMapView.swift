@@ -166,26 +166,6 @@ extension MGLMapView {
             }
         }
     }
-    
-    func removeArrow() {
-        guard let style = style else { return }
-        
-        if let arrow = style.layer(withIdentifier: "arrow") {
-            style.removeLayer(arrow)
-        }
-        
-        if let arrow = style.layer(withIdentifier: "arrowStroke") {
-            style.removeLayer(arrow)
-        }
-        
-        if let arrowStrokeSourceCheck = style.source(withIdentifier: "arrowSourceStroke") {
-            style.removeSource(arrowStrokeSourceCheck)
-        }
-        
-        if let arrowSourceCheck = style.source(withIdentifier: "arrowSource") {
-            style.removeSource(arrowSourceCheck)
-        }
-    }
 }
 
 protocol NavigationMapViewDelegate {

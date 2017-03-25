@@ -123,7 +123,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
-        mapView.removeArrow()
         mapView.annotate(route)
         mapView.userTrackingMode = .followWithCourse
     }
@@ -131,8 +130,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
             mapView.addArrow(routeProgress)
-        } else {
-            mapView.removeArrow()
         }
     }
     
