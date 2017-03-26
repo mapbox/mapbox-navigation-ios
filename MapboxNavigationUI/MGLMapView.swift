@@ -6,6 +6,9 @@ import MapboxNavigation
 let sourceIdentifier = "routeSource"
 let routeLayerIdentifier = "routeLayer"
 let routeLayerCasingIdentifier = "routeLayerCasing"
+let arrowSourceIdentifier = "arrowSource"
+let arrowSourceStrokeIdentifier = "arrowSourceStroke"
+let arrowLayerIdentifier = "arrowLayer"
 
 extension MGLMapView {
     
@@ -51,7 +54,8 @@ extension MGLMapView {
         style.addSource(geoJSONSource)
         
         for layer in style.layers.reversed() {
-            if let layer = layer as? MGLStyleLayer, !(layer is MGLSymbolStyleLayer) {
+            if let layer = layer as? MGLStyleLayer, !(layer is MGLSymbolStyleLayer) &&
+                layer.identifier != arrowLayerIdentifier && layer.identifier != arrowSourceIdentifier {
                 style.insertLayer(line, above: layer)
                 style.insertLayer(lineCasing, below: line)
                 return
@@ -128,15 +132,15 @@ extension MGLMapView {
             
             maneuverArrowPolylines.append(headStrokePolyline)
             
-            let arrowSource = MGLShapeSource(identifier: "arrowSource", shape: MGLShapeCollection(shapes: maneuverArrowPolylines), options: nil)
-            let arrow = MGLLineStyleLayer(identifier: "arrow", source: arrowSource)
+            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: MGLShapeCollection(shapes: maneuverArrowPolylines), options: nil)
+            let arrow = MGLLineStyleLayer(identifier: arrowLayerIdentifier, source: arrowSource)
             
             arrow.lineWidth = MGLStyleValue(rawValue: 6)
             arrow.lineColor = MGLStyleValue(rawValue: .white)
             
             // Arrow stroke
-            let arrowSourceStroke = MGLShapeSource(identifier: "arrowSourceStroke", shape: MGLShapeCollection(shapes: maneuverArrowStrokePolylines), options: nil)
-            let arrowStroke = MGLLineStyleLayer(identifier: "arrowStroke", source: arrowSourceStroke)
+            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: MGLShapeCollection(shapes: maneuverArrowStrokePolylines), options: nil)
+            let arrowStroke = MGLLineStyleLayer(identifier: arrowSourceIdentifier, source: arrowSourceStroke)
             
             let cap = NSValue(mglLineCap: .round)
             let join = NSValue(mglLineJoin: .round)
@@ -149,7 +153,7 @@ extension MGLMapView {
             arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
             arrowStroke.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintColor)
             
-            if let source = style.source(withIdentifier: "arrowSource") {
+            if let source = style.source(withIdentifier: arrowSourceIdentifier) {
                 let s = source as! MGLShapeSource
                 s.shape = MGLShapeCollection(shapes: maneuverArrowPolylines)
             } else {
@@ -157,7 +161,7 @@ extension MGLMapView {
                 style.addLayer(arrow)
             }
             
-            if let source = style.source(withIdentifier: "arrowSourceStroke") {
+            if let source = style.source(withIdentifier: arrowSourceStrokeIdentifier) {
                 let s = source as! MGLShapeSource
                 s.shape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
             } else {
