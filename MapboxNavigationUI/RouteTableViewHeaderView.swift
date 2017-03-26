@@ -40,7 +40,9 @@ class RouteTableViewHeaderView: UIView {
             if (progressBarWidthConstraint != nil) {
                 progressBar.backgroundColor = NavigationUI.shared.tintColor
                 progressBarWidthConstraint.constant = bounds.width * progress
-                setNeedsUpdateConstraints()
+                UIView.animate(withDuration: 0.5) { [weak self] in
+                    self?.layoutIfNeeded()
+                }
             }
         }
     }
