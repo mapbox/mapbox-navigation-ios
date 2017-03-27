@@ -245,7 +245,7 @@ open class RouteLegProgress: NSObject {
     /*
      Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry
     */
-    public var priorCurrentUpcomingStepCoordinates: [CLLocationCoordinate2D] {
+    public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
         let upcomingCoords = upComingStep?.coordinates ?? []
         let currentCoords = currentStep.coordinates ?? []

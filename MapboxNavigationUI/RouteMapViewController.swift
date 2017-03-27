@@ -237,7 +237,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             return defaultReturn
         }
         
-        let coords = routeController.routeProgress.currentLegProgress.priorCurrentUpcomingStepCoordinates
+        let coords = routeController.routeProgress.currentLegProgress.nearbyCoordinates
         assert(!coords.isEmpty)
         
         let closest = closestCoordinate(on: coords, to: location.coordinate)!
