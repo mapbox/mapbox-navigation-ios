@@ -243,12 +243,15 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let closest = closestCoordinate(on: coords, to: location.coordinate)!
         let slicedLine = polyline(along: coords, from: closest.coordinate, to: coords.last)
         
+        
+        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
+        
         // Get closest point infront of user
-        let infrontPointOne = coordinate(at: 2, fromStartOf: slicedLine)!
+        let infrontPointOne = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
         let infrontClosest = closestCoordinate(on: coords, to: infrontPointOne)!
         
         // Get closest point behind in front of user
-        let infrontPointTwo = coordinate(at: 4, fromStartOf: slicedLine)!
+        let infrontPointTwo = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine)!
         let behindClosest = closestCoordinate(on: coords, to: infrontPointTwo)!
         
         // Get direction of these points
@@ -258,9 +261,13 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let normalizedInfrontDirection = wrap(infrontDirection, min: 0, max: 360)
         let normalizedBehindDirection = wrap(behindDirection, min: 0, max: 360)
         
-        let averagedCourse = (normalizedInfrontDirection + normalizedBehindDirection) / 2
-        let course = differenceBetweenAngles(location.course, averagedCourse) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? averagedCourse : location.course
+        let diffBetweenAngleInFront = differenceBetweenAngles(location.course, normalizedInfrontDirection)
+        let diffBetweenAngleBehind = differenceBetweenAngles(location.course, normalizedBehindDirection)
         
+        let averageDifference = (diffBetweenAngleInFront + diffBetweenAngleBehind) / 2
+        let averagedCourse = (normalizedBehindDirection + normalizedInfrontDirection) / 2
+        
+        let course = averageDifference <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? averagedCourse : location.course
         
         return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
