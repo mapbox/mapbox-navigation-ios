@@ -246,24 +246,23 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
         
         // Get closest point infront of user
-        let infrontPointOne = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
-        let infrontClosest = closestCoordinate(on: coords, to: infrontPointOne)!
+        let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
+        let pointOneClosest = closestCoordinate(on: coords, to: pointOneSliced)!
         
-        // Get closest point behind in front of user
-        let infrontPointTwo = coordinate(at: userDistanceBuffer * 1.5, fromStartOf: slicedLine)!
-        let behindClosest = closestCoordinate(on: coords, to: infrontPointTwo)!
+        let pointTwoSliced = coordinate(at: userDistanceBuffer * 1.5, fromStartOf: slicedLine)!
+        let pointTwoClosest = closestCoordinate(on: coords, to: pointTwoSliced)!
         
         // Get direction of these points
-        let infrontDirection = closest.coordinate.direction(to: infrontClosest.coordinate)
-        let behindDirection = closest.coordinate.direction(to: behindClosest.coordinate)
+        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
+        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
         
-        let wrappedInFront = wrap(infrontDirection, min: -180, max: 180)
-        let wrappedBehind = wrap(behindDirection, min: -180, max: 180)
+        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
+        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
         
-        let relativeAngleInFront = differenceBetweenAngles(location.course, wrappedInFront)
-        let relativeAngleBehind = differenceBetweenAngles(location.course, wrappedBehind)
+        let relativeAnglepointOne = differenceBetweenAngles(location.course, wrappedPointOne)
+        let relativeAnglepointTwo = differenceBetweenAngles(location.course, wrappedPointTwo)
         
-        let averageRelativeAngle = (relativeAngleInFront + relativeAngleBehind) / 2
+        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
 
         let absoluteDirection = wrap(location.course + averageRelativeAngle, min: 0 , max: 360)
         
