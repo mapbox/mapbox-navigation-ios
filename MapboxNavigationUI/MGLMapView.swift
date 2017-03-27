@@ -6,11 +6,14 @@ import MapboxNavigation
 let sourceIdentifier = "routeSource"
 let routeLayerIdentifier = "routeLayer"
 let routeLayerCasingIdentifier = "routeLayerCasing"
+let arrowSourceIdentifier = "arrowSource"
+let arrowSourceStrokeIdentifier = "arrowSourceStroke"
+let arrowLayerIdentifier = "arrowLayer"
 
 extension MGLMapView {
     
-    public func annotate(_ routes: [Route], clearMap: Bool) {
-        guard let route = routes.first, var coordinates = route.coordinates else {
+    public func annotate(_ route: Route) {
+        guard var coordinates = route.coordinates else {
             return
         }
         
@@ -31,30 +34,35 @@ extension MGLMapView {
         }
         
         let polyline = MGLPolylineFeature(coordinates: &coordinates, count: route.coordinateCount)
-        let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
-        let line = MGLLineStyleLayer(identifier: routeLayerIdentifier, source: geoJSONSource)
-        let lineCasing = MGLLineStyleLayer(identifier: routeLayerCasingIdentifier, source: geoJSONSource)
         
-        line.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor.withAlphaComponent(0.6))
-        line.lineWidth = MGLStyleValue(rawValue: 5)
-        lineCasing.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor)
-        lineCasing.lineWidth = MGLStyleValue(rawValue: 9)
-        
-        let cap = NSValue(mglLineCap: .round)
-        let join = NSValue(mglLineJoin: .round)
-        
-        line.lineCap = MGLStyleValue(rawValue: cap)
-        line.lineJoin = MGLStyleValue(rawValue: join)
-        lineCasing.lineCap = MGLStyleValue(rawValue: cap)
-        lineCasing.lineJoin = MGLStyleValue(rawValue: join)
-        
-        style.addSource(geoJSONSource)
-        
-        for layer in style.layers.reversed() {
-            if let layer = layer as? MGLStyleLayer, !(layer is MGLSymbolStyleLayer) {
-                style.insertLayer(line, above: layer)
-                style.insertLayer(lineCasing, below: line)
-                return
+        if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource {
+            source.shape = polyline
+        } else {
+            let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
+            let line = MGLLineStyleLayer(identifier: routeLayerIdentifier, source: geoJSONSource)
+            let lineCasing = MGLLineStyleLayer(identifier: routeLayerCasingIdentifier, source: geoJSONSource)
+            
+            line.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor.withAlphaComponent(0.6))
+            line.lineWidth = MGLStyleValue(rawValue: 5)
+            lineCasing.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor)
+            lineCasing.lineWidth = MGLStyleValue(rawValue: 9)
+            
+            let cap = NSValue(mglLineCap: .round)
+            let join = NSValue(mglLineJoin: .round)
+            
+            line.lineCap = MGLStyleValue(rawValue: cap)
+            line.lineJoin = MGLStyleValue(rawValue: join)
+            lineCasing.lineCap = MGLStyleValue(rawValue: cap)
+            lineCasing.lineJoin = MGLStyleValue(rawValue: join)
+            
+            style.addSource(geoJSONSource)
+            for layer in style.layers.reversed() {
+                if let layer = layer as? MGLStyleLayer, !(layer is MGLSymbolStyleLayer) &&
+                    layer.identifier != arrowLayerIdentifier && layer.identifier != arrowSourceIdentifier {
+                    style.insertLayer(line, above: layer)
+                    style.insertLayer(lineCasing, below: line)
+                    return
+                }
             }
         }
     }
@@ -88,6 +96,10 @@ extension MGLMapView {
     func addArrow(_ routeProgress: RouteProgress) {
         let maneuverCoordinate = routeProgress.currentLegProgress.upComingStep?.maneuverLocation
         let polylineCoordinates = routeProgress.route.coordinates
+        
+        guard let style = style else {
+            return
+        }
         
         let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate!.latitude), 50), 10)
         let shaftCoordinates = polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!)
@@ -124,52 +136,42 @@ extension MGLMapView {
             
             maneuverArrowPolylines.append(headStrokePolyline)
             
-            let arrowSource = MGLShapeSource(identifier: "arrowSource", shape: MGLShapeCollection(shapes: maneuverArrowPolylines), options: nil)
-            let arrow = MGLLineStyleLayer(identifier: "arrow", source: arrowSource)
-            
-            arrow.lineWidth = MGLStyleValue(rawValue: 6)
-            arrow.lineColor = MGLStyleValue(rawValue: .white)
-            
-            // Arrow stroke
-            let arrowSourceStroke = MGLShapeSource(identifier: "arrowSourceStroke", shape: MGLShapeCollection(shapes: maneuverArrowStrokePolylines), options: nil)
-            let arrowStroke = MGLLineStyleLayer(identifier: "arrowStroke", source: arrowSourceStroke)
+            let arrowShape = MGLShapeCollection(shapes: maneuverArrowPolylines)
+            let arrowStrokeShape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
             
             let cap = NSValue(mglLineCap: .round)
             let join = NSValue(mglLineJoin: .round)
             
-            arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
-            arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
-            arrow.lineCap = MGLStyleValue(rawValue: cap)
-            arrow.lineJoin = MGLStyleValue(rawValue: join)
+            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: nil)
+            let arrowStroke = MGLLineStyleLayer(identifier: arrowSourceIdentifier, source: arrowSourceStroke)
+            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: nil)
+            let arrow = MGLLineStyleLayer(identifier: arrowLayerIdentifier, source: arrowSource)
             
-            arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
-            arrowStroke.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintColor)
+            if let source = style.source(withIdentifier: arrowSourceIdentifier) as? MGLShapeSource {
+                source.shape = arrowShape
+            } else {
+                
+                arrow.lineCap = MGLStyleValue(rawValue: cap)
+                arrow.lineJoin = MGLStyleValue(rawValue: join)
+                arrow.lineWidth = MGLStyleValue(rawValue: 6)
+                arrow.lineColor = MGLStyleValue(rawValue: .white)
+                
+                style.addSource(arrowSource)
+                style.addLayer(arrow)
+            }
             
-            style?.addSource(arrowSourceStroke)
-            style?.addSource(arrowSource)
-            
-            style?.addLayer(arrow)
-            style?.insertLayer(arrowStroke, below: arrow)
-        }
-    }
-    
-    func removeArrow() {
-        guard let style = style else { return }
-        
-        if let arrow = style.layer(withIdentifier: "arrow") {
-            style.removeLayer(arrow)
-        }
-        
-        if let arrow = style.layer(withIdentifier: "arrowStroke") {
-            style.removeLayer(arrow)
-        }
-        
-        if let arrowStrokeSourceCheck = style.source(withIdentifier: "arrowSourceStroke") {
-            style.removeSource(arrowStrokeSourceCheck)
-        }
-        
-        if let arrowSourceCheck = style.source(withIdentifier: "arrowSource") {
-            style.removeSource(arrowSourceCheck)
+            if let source = style.source(withIdentifier: arrowSourceStrokeIdentifier) as? MGLShapeSource {
+                source.shape = arrowStrokeShape
+            } else {
+                
+                arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
+                arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
+                arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
+                arrowStroke.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintColor)
+                
+                style.addSource(arrowSourceStroke)
+                style.insertLayer(arrowStroke, below: arrow)
+            }
         }
     }
 }

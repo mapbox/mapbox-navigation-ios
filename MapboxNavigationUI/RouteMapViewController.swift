@@ -33,6 +33,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     let webImageManager = SDWebImageManager.shared()
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
+    var arrowCurrentStep: RouteStep?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,15 +123,14 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
-        mapView.annotate([route], clearMap: true)
+        mapView.addArrow(routeController.routeProgress)
+        mapView.annotate(route)
         mapView.userTrackingMode = .followWithCourse
     }
     
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            updateArrowAnnotations(routeProgress)
-        } else {
-            mapView.removeArrow()
+            mapView.addArrow(routeProgress)
         }
     }
     
@@ -208,15 +208,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             }
         }
     }
-    
-    func updateArrowAnnotations(_ routeProgress: RouteProgress) {
-        guard routeProgress.currentLegProgress.upComingStep != nil else {
-            return
-        }
-        
-        mapView.removeArrow()
-        mapView.addArrow(routeProgress)
-    }
 }
 
 // MARK: NavigationMapViewDelegate
@@ -288,7 +279,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        mapView.annotate([route], clearMap: false)
+        mapView.annotate(route)
     }
     
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
