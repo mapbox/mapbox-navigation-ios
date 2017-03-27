@@ -5,7 +5,7 @@ extern NSString *const MBRouteControllerProgressDidChangeNotificationProgressKey
 extern NSString *const MBRouteControllerProgressDidChangeNotificationLocationKey;
 extern NSString *const MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey;
 
-extern NSString *const MBRouteControllerDidChangeNotificationRouteProgress;
+extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey;
 extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey;
 
 extern NSString *const MBRouteControllerNotificationShouldRerouteKey;
@@ -13,5 +13,3 @@ extern NSString *const MBRouteControllerNotificationShouldRerouteKey;
 extern NSString *const MBRouteControllerNotificationProgressDidChange;
 extern NSString *const MBRouteControllerAlertLevelDidChange;
 extern NSString *const MBRouteControllerShouldReroute;
-
-extern NSString *const MBRouteControllerDidReroute;
