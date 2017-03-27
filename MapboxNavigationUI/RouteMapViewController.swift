@@ -249,7 +249,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
         let pointOneClosest = closestCoordinate(on: coords, to: pointOneSliced)!
         
-        let pointTwoSliced = coordinate(at: userDistanceBuffer * 1.5, fromStartOf: slicedLine)!
+        let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine)!
         let pointTwoClosest = closestCoordinate(on: coords, to: pointTwoSliced)!
         
         // Get direction of these points
@@ -258,13 +258,14 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
         let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
+        let wrappedCourse = wrap(location.course, min: -180, max: 180)
         
-        let relativeAnglepointOne = differenceBetweenAngles(location.course, wrappedPointOne)
-        let relativeAnglepointTwo = differenceBetweenAngles(location.course, wrappedPointTwo)
+        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
+        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
         
         let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
 
-        let absoluteDirection = wrap(location.course + averageRelativeAngle, min: 0 , max: 360)
+        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
         
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
