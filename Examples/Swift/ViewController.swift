@@ -76,7 +76,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         // If you are not using MapboxNavigationUI,
         // this would be a good time to update UI elements.
         // You can grab the current routeProgress like:
-        // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        // let routeProgress = notification.userInfo![RouteControllerDidChangeNotificationRouteProgressKey] as! RouteProgress
     }
     
     // Notification sent when the user is determined to be off the current route

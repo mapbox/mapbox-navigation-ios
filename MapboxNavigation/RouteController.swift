@@ -234,7 +234,7 @@ extension RouteController: CLLocationManagerDelegate {
             let userDistance = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
             
             NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: [
-                RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
+                RouteControllerDidChangeNotificationRouteProgressKey: routeProgress,
                 RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance
                 ])
         }
