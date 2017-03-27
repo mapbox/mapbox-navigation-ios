@@ -249,7 +249,9 @@ open class RouteLegProgress: NSObject {
         let priorCoords = priorStep?.coordinates ?? []
         let upcomingCoords = upComingStep?.coordinates ?? []
         let currentCoords = currentStep.coordinates ?? []
-        return priorCoords + currentCoords + upcomingCoords
+        let nearby = priorCoords + currentCoords + upcomingCoords
+        assert(!nearby.isEmpty, "Polyline must coordinates")
+        return nearby
     }
 }
 

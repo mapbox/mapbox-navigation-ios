@@ -238,7 +238,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         }
         
         let coords = routeController.routeProgress.currentLegProgress.nearbyCoordinates
-        assert(!coords.isEmpty)
         
         let closest = closestCoordinate(on: coords, to: location.coordinate)!
         let slicedLine = polyline(along: coords, from: closest.coordinate, to: coords.last)
@@ -258,16 +257,18 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let infrontDirection = closest.coordinate.direction(to: infrontClosest.coordinate)
         let behindDirection = closest.coordinate.direction(to: behindClosest.coordinate)
         
-        let normalizedInfrontDirection = wrap(infrontDirection, min: 0, max: 360)
-        let normalizedBehindDirection = wrap(behindDirection, min: 0, max: 360)
+        let wrappedInFront = wrap(infrontDirection, min: -180, max: 180)
+        let wrappedBehind = wrap(behindDirection, min: -180, max: 180)
         
-        let diffBetweenAngleInFront = differenceBetweenAngles(location.course, normalizedInfrontDirection)
-        let diffBetweenAngleBehind = differenceBetweenAngles(location.course, normalizedBehindDirection)
+        let relativeAngleInFront = differenceBetweenAngles(location.course, wrappedInFront)
+        let relativeAngleBehind = differenceBetweenAngles(location.course, wrappedBehind)
         
-        let averageDifference = (diffBetweenAngleInFront + diffBetweenAngleBehind) / 2
-        let averagedCourse = (normalizedBehindDirection + normalizedInfrontDirection) / 2
+        let averageRelativeAngle = (relativeAngleInFront + relativeAngleBehind) / 2
+        let wrappedAverage = (wrappedInFront + wrappedBehind) / 2
+
+        let absoluteDirection = wrap(min(relativeAngleInFront, relativeAngleBehind) + wrappedAverage, min: 0, max: 360)
         
-        let course = averageDifference <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? averagedCourse : location.course
+        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
         return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
