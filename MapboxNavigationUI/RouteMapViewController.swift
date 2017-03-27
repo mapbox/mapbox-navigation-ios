@@ -250,7 +250,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let infrontClosest = closestCoordinate(on: coords, to: infrontPointOne)!
         
         // Get closest point behind in front of user
-        let infrontPointTwo = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine)!
+        let infrontPointTwo = coordinate(at: userDistanceBuffer * 1.5, fromStartOf: slicedLine)!
         let behindClosest = closestCoordinate(on: coords, to: infrontPointTwo)!
         
         // Get direction of these points
@@ -264,9 +264,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let relativeAngleBehind = differenceBetweenAngles(location.course, wrappedBehind)
         
         let averageRelativeAngle = (relativeAngleInFront + relativeAngleBehind) / 2
-        let wrappedAverage = (wrappedInFront + wrappedBehind) / 2
 
-        let absoluteDirection = wrap(min(relativeAngleInFront, relativeAngleBehind) + wrappedAverage, min: 0, max: 360)
+        let absoluteDirection = wrap(location.course + averageRelativeAngle, min: 0 , max: 360)
         
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
