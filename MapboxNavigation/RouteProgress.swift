@@ -184,7 +184,7 @@ open class RouteLegProgress: NSObject {
      If there is no `priorStep`, nil is returned.
      */
     public var priorStep: RouteStep? {
-        guard stepIndex - 1 > 0 else {
+        guard stepIndex - 1 >= 0 else {
             return nil
         }
         return leg.steps[stepIndex - 1]
