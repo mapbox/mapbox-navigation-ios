@@ -7,11 +7,11 @@ typealias RadianDirection = Double
 
 extension CLLocationDegrees {
     func toRadians() -> LocationRadians {
-        return self * M_PI / 180.0
+        return self * .pi / 180.0
     }
     
     func toDegrees() -> CLLocationDirection {
-        return self * 180.0 / M_PI
+        return self * 180.0 / .pi
     }
 }
 

@@ -45,7 +45,7 @@ public class TurnArrowView: UIView {
         
         var flip: Bool = false
         let type: ManeuverType = step.maneuverType ?? .turn
-        let angle: Int = Int(wrap((step.finalHeading ?? CLLocationDirection.abs(0)) - (step.initialHeading ?? CLLocationDirection.abs(0)), min: -180, max: 180))
+        let angle: Int = Int(wrap((step.finalHeading ?? abs(0)) - (step.initialHeading ?? abs(0)), min: -180, max: 180))
         let direction: ManeuverDirection = step.maneuverDirection ?? ManeuverDirection(angle: angle)
 
         switch type {
