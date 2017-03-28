@@ -69,7 +69,21 @@
                         <subviews>
                             <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="NavigationMapView" customModule="MapboxNavigationUI" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u">
+                                        <rect key="frame" x="305" y="187" width="46" height="30"/>
+                                        <color key="backgroundColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="toggleOverview:" destination="3z2-H5-unA" eventType="touchUpInside" id="2Bc-fq-C2C"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
                                 <color key="backgroundColor" red="0.90196078430000004" green="0.89019607840000003" blue="0.87450980389999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Dry-gO-T7u" secondAttribute="trailing" constant="24" id="7Ai-oa-w3e"/>
+                                    <constraint firstAttribute="bottom" secondItem="Dry-gO-T7u" secondAttribute="bottom" constant="107" id="cnd-7m-DIG"/>
+                                </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/streets-v10"/>
@@ -112,6 +126,7 @@
                     </view>
                     <connections>
                         <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
+                        <outlet property="overviewButton" destination="Dry-gO-T7u" id="8s7-hO-rHP"/>
                         <outlet property="recenterButton" destination="5HY-QD-dBq" id="6ev-zD-MJ9"/>
                     </connections>
                 </viewController>

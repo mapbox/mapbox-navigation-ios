@@ -13,6 +13,7 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var recenterButton: UIButton!
+    @IBOutlet weak var overviewButton: UIButton!
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController!
@@ -34,6 +35,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
+    var isInOverviewMode = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,10 +57,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         if let camera = pendingCamera {
             mapView.camera = camera
         } else {
-            let camera = mapView.camera
-            camera.altitude = 1_000
-            camera.pitch = 45
-            mapView.camera = camera
+            setDefaultCamera(animated: false)
         }
         
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: .initial, context: nil)
@@ -101,6 +100,20 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         routePageViewController.notifyDidReRoute()
     }
     
+    @IBAction func toggleOverview(_ sender: Any) {
+        if isInOverviewMode {
+            recenterButton.isHidden = true
+            overviewButton.titleLabel?.text = "Overview"
+            isInOverviewMode = !isInOverviewMode
+            setDefaultCamera(animated: false)
+            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+        } else {
+            overviewButton.titleLabel?.text = "Navigate"
+            isInOverviewMode = !isInOverviewMode
+            updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier ?? "" {
         case "RoutePageViewController":
@@ -111,6 +124,17 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         default:
             break
         }
+    }
+    
+    func updateVisibleBounds(coordinates: [CLLocationCoordinate2D]) {
+        let camera = mapView.camera
+        camera.pitch = 0
+        camera.heading = 0
+        mapView.camera = camera
+        
+        let polyline = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
+        let overviewContentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
+        mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
     
     func startResetTrackingModeTimer() {
@@ -125,13 +149,24 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         routePageViewController.notifyDidReRoute()
         mapView.addArrow(routeController.routeProgress)
         mapView.annotate(route)
-        mapView.userTrackingMode = .followWithCourse
+        if isInOverviewMode {
+            updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
+        } else {
+            mapView.userTrackingMode = .followWithCourse
+        }
     }
     
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
             mapView.addArrow(routeProgress)
         }
+    }
+    
+    func setDefaultCamera(animated: Bool) {
+        let camera = mapView.camera
+        camera.altitude = 1_000
+        camera.pitch = 45
+        mapView.setCamera(camera, animated: animated)
     }
     
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
@@ -164,6 +199,17 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         }
         
         controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
+        
+        guard isInOverviewMode else {
+            return
+        }
+        
+        guard let userLocation = mapView.userLocation?.coordinate else {
+            return
+        }
+        
+        let slicedLine = polyline(along: routeProgress.route.coordinates!, from: userLocation, to: routeProgress.route.coordinates!.last)
+        updateVisibleBounds(coordinates: slicedLine)
     }
     
     func dataTaskForShieldImage(network: String, number: String, height: CGFloat, completion: @escaping (UIImage?) -> Void) -> URLSessionDataTask? {
@@ -301,20 +347,22 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if resetTrackingModeTimer != nil {
-            resetTrackingModeTimer.invalidate()
-        }
-        
-        if mode != .followWithCourse {
-            recenterButton.isHidden = false
-            startResetTrackingModeTimer()
-        } else {
-            recenterButton.isHidden = true
+        if !isInOverviewMode {
+            if resetTrackingModeTimer != nil {
+                resetTrackingModeTimer.invalidate()
+            }
+            
+            if mode != .followWithCourse {
+                recenterButton.isHidden = false
+                startResetTrackingModeTimer()
+            } else {
+                recenterButton.isHidden = true
+            }
         }
     }
     
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        if resetTrackingModeTimer != nil && mapView.userTrackingMode == .none {
+        if resetTrackingModeTimer != nil && mapView.userTrackingMode == .none && !isInOverviewMode {
             resetTrackingModeTimer.invalidate()
             startResetTrackingModeTimer()
         }
@@ -325,7 +373,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
-        if resetTrackingModeTimer != nil {
+        if resetTrackingModeTimer != nil && !isInOverviewMode {
             resetTrackingModeTimer.invalidate()
             startResetTrackingModeTimer()
         }
@@ -408,3 +456,11 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         return routeController.routeProgress.currentLegProgress.stepAfter(step)
     }
 }
+
+extension Route {
+    var polyline: MGLPolyline {
+        var coordinates = self.coordinates!
+        return MGLPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
+    }
+}
+
