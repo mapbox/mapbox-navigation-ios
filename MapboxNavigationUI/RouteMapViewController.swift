@@ -231,7 +231,45 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             }
         }
         
-        return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
+        let defaultReturn = CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
+        
+        guard location.course != -1 else {
+            return defaultReturn
+        }
+        
+        let coords = routeController.routeProgress.currentLegProgress.nearbyCoordinates
+        
+        let closest = closestCoordinate(on: coords, to: location.coordinate)!
+        let slicedLine = polyline(along: coords, from: closest.coordinate, to: coords.last)
+        
+        
+        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
+        
+        // Get closest point infront of user
+        let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
+        let pointOneClosest = closestCoordinate(on: coords, to: pointOneSliced)!
+        
+        let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine)!
+        let pointTwoClosest = closestCoordinate(on: coords, to: pointTwoSliced)!
+        
+        // Get direction of these points
+        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
+        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
+        
+        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
+        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
+        let wrappedCourse = wrap(location.course, min: -180, max: 180)
+        
+        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
+        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
+        
+        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
+
+        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
+        
+        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
+        
+        return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 
