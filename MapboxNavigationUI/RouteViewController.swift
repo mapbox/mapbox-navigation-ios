@@ -21,7 +21,11 @@ public protocol RouteViewControllerDelegate {
 public class RouteViewController: NavigationPulleyViewController {
     
     // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
-    public var route: Route!
+    public var route: Route! {
+        didSet {
+            setupRouteController()
+        }
+    }
     
     /** 
      `destination` is an instance of `MGLAnnotation` that will be showned on
@@ -218,7 +222,6 @@ public class RouteViewController: NavigationPulleyViewController {
     }
     
     override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        setupRouteController()
         switch segue.identifier ?? "" {
         case "MapViewControllerSegueIdentifier":
             if let controller = segue.destination as? RouteMapViewController {
