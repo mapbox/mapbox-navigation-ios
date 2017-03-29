@@ -44,7 +44,7 @@ pod 'Mapbox-iOS-SDK', '~> 3.4'
 Add the following line to your Cartfile:
 
 ```ruby
-github "mapbox/MapboxNavigation.swift"
+github "mapbox/MapboxNavigation.swift" "master"
 ```
 
 ### Gist of how this works
