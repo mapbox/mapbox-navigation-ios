@@ -267,6 +267,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
         let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
         
+        guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
+            return defaultReturn
+        }
+        
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
         return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
