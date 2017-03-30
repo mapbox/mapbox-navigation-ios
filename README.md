@@ -31,9 +31,9 @@ Add the following lines to your Podfile:
 
 ```ruby
 # Required
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
-pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :commit => 'f62a2bc607d8e0ef9a2ebaf8c8765b39a80c3084'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag ~> 'v0.1.0'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag ~> 'v0.1.0'
+pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :tag ~> 'v0.1.0'
 
 # Optional but, you will most likely use:
 pod 'Mapbox-iOS-SDK', '~> 3.5'
@@ -118,9 +118,9 @@ You'll need to install three pods, `MapboxNavigationUI.swift`, `MapboxNavigation
 Add the following lines to your Podfile:
 
 ```ruby
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
-pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :commit => 'f62a2bc607d8e0ef9a2ebaf8c8765b39a80c3084'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag ~> 'v0.1.0'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag ~> 'v0.1.0'
+pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :tag ~> 'v0.1.0'
 ```
 
 #### [Carthage](https://github.com/Carthage/Carthage)
