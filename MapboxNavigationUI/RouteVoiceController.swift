@@ -249,11 +249,9 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
         if let name = step.names?.first {
             if let code = step.codes?.first {
-                if markUpWithSSML {
-                    road = String.localizedStringWithFormat(NSLocalizedString("NAME_AND_REF", value: "%@ (%@)", comment: "Format for speech string; 1 = way name; 2 = way route number"), "<say-as interpret-as=\"address\">\(name.addingXMLEscapes)</say-as>", "<say-as interpret-as=\"address\">\(code.addingXMLEscapes)</say-as>")
-                } else {
-                    road = String.localizedStringWithFormat(NSLocalizedString("NAME_AND_REF", value: "%@ (%@)", comment: "Format for speech string; 1 = way name; 2 = way route number"), name, code)
-                }
+                let markedUpName = markUpWithSSML ? "<say-as interpret-as=\"address\">\(name.addingXMLEscapes)</say-as>" : name
+                let markedUpCode = markUpWithSSML ? "<say-as interpret-as=\"address\">\(code.addingXMLEscapes)</say-as>" : code
+                road = String.localizedStringWithFormat(NSLocalizedString("NAME_AND_REF", value: "%@ (%@)", comment: "Format for speech string; 1 = way name; 2 = way route number"), markedUpName, markedUpCode)
             } else {
                 road = escapeIfNecessary(name)
             }
