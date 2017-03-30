@@ -31,12 +31,12 @@ Add the following lines to your Podfile:
 
 ```ruby
 # Required
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'c5a637a201a3043c24e52f3e2c50a1657a8ffced'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'c5a637a201a3043c24e52f3e2c50a1657a8ffced'
-pod 'OSRMTextInstructions', :git => 'git@github.com:Project-OSRM/osrm-text-instructions.swift.git', :commit => 'bdd962bf5593f951bbbbd26435f732a829dacda7'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
+pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :commit => 'f62a2bc607d8e0ef9a2ebaf8c8765b39a80c3084'
 
 # Optional but, you will most likely use:
-pod 'Mapbox-iOS-SDK', '~> 3.4'
+pod 'Mapbox-iOS-SDK', '~> 3.5'
 ```
 
 #### [Carthage](https://github.com/carthage/carthage)
@@ -118,9 +118,9 @@ You'll need to install three pods, `MapboxNavigationUI.swift`, `MapboxNavigation
 Add the following lines to your Podfile:
 
 ```ruby
-pod 'MapboxDirections.swift', '~> 0.8'
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.0.4'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => 'a368a73a7575b296886ae53b7642216c167ca8e2'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :commit => '740c05ac5be0972e72f2b8378e3d86a8154c407f'
+pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :commit => 'f62a2bc607d8e0ef9a2ebaf8c8765b39a80c3084'
 ```
 
 #### [Carthage](https://github.com/Carthage/Carthage)
