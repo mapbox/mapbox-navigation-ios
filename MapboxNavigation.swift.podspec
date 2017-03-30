@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation.swift"
-  s.version = "0.0.4"
+  s.version = "0.1.0"
   s.summary = "Mapbox Navigation library"
 
   s.description  = <<-DESC
@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxDirections.swift", "~> 0.8"
-  s.dependency "OSRMTextInstructions"
+  s.dependency "OSRMTextInstructions", "~> 0.1"
 
   s.xcconfig = {
     "SWIFT_VERSION" => "3.0"
