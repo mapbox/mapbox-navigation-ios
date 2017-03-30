@@ -230,7 +230,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             }
         } else if routeProgress.currentLegProgress.currentStep.distance > 2_000 {
-            text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), escapeIfNecessary(localizeRoadDescription(step, markUpWithSSML: markUpWithSSML)), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
+            text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
         } else if alertLevel == .high && stepDistance < minimumDistanceForHighAlert {
             text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
         } else if alertLevel != .high {
