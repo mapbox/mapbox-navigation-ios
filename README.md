@@ -33,7 +33,6 @@ Add the following lines to your Podfile:
 # Required
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
 pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
-pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :tag => 'v0.1.0'
 
 # Optional but, you will most likely use:
 pod 'Mapbox-iOS-SDK', '~> 3.5'
@@ -120,7 +119,6 @@ Add the following lines to your Podfile:
 ```ruby
 pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
 pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
-pod 'OSRMTextInstructions', :git 'https://github.com/Project-OSRM/osrm-text-instructions.swift.git' => , :tag => 'v0.1.0'
 ```
 
 #### [Carthage](https://github.com/Carthage/Carthage)
