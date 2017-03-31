@@ -107,6 +107,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var routeController: RouteController!
     
+    /**
+     `simulate` provides simulated location updates along the given route.
+     */
+    public var simulatesLocationUpdates: Bool = false
     
     /**
      `mapView` provides access to the navigation's `MGLMapView` with all its styling capabilities.
@@ -132,6 +136,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     let routeStepFormatter = RouteStepFormatter()
     
     var lastReRouteLocation: CLLocation?
+    
+    var simulation: SimulatedRoute?
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -216,6 +222,13 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
+        
+        if simulatesLocationUpdates {
+            guard let coordinates = route.coordinates else { return }
+            simulation = SimulatedRoute(coordinates)
+            simulation?.delegate = self
+            simulation?.start()
+        }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -223,6 +236,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         UIApplication.shared.isIdleTimerDisabled = false
         routeController.suspendLocationUpdates()
+        simulation?.stop()
     }
     
     // MARK: Route controller notifications
@@ -318,7 +332,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func setupRouteController() {
         if routeController == nil {
-            routeController = RouteController(route: route)
+            routeController = RouteController(route: route, simulatesLocationUpdates: simulatesLocationUpdates)
             
             if Bundle.main.backgroundModeLocationSupported {
                 routeController.locationManager.activityType = .automotiveNavigation
@@ -375,5 +389,12 @@ extension NavigationViewController: PulleyDelegate {
         case .closed:
             break
         }
+    }
+}
+
+extension RouteViewController: SimulationDelegate {
+    func simulation(_ locationManager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        mapViewController?.mapView.locationManager(locationManager, didUpdateLocations: locations)
+        routeController.locationManager(locationManager, didUpdateLocations: locations)
     }
 }

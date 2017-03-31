@@ -11,8 +11,8 @@ open class NavigationMapView: MGLMapView {
     
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
-    open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [Any]!) {
-        guard let location = locations.first as? CLLocation else { return }
+    open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
+        guard let location = locations.first else { return }
         
         if let modifiedLocation = navigationMapDelegate?.navigationMapView?(self, shouldUpdateTo: location) {
             super.locationManager(manager, didUpdateLocations: [modifiedLocation])

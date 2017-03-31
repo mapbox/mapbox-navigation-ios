@@ -32,19 +32,23 @@ open class RouteController: NSObject {
     */
     public var snapsUserLocationAnnotationToRoute = false
     
+    var simulatesLocationUpdates: Bool = false
     
     /*
      Intializes a new `RouteController`.
      
      - parameter Route: A `Route` object representing the users route it will follow.
      */
-    public init(route: Route) {
+    public init(route: Route, simulatesLocationUpdates: Bool = false) {
         self.routeProgress = RouteProgress(route: route)
+        self.simulatesLocationUpdates = simulatesLocationUpdates
         super.init()
         
-        locationManager.delegate = self
-        if CLLocationManager.authorizationStatus() == .notDetermined {
-            locationManager.requestWhenInUseAuthorization()
+        if !simulatesLocationUpdates {
+            locationManager.delegate = self
+            if CLLocationManager.authorizationStatus() == .notDetermined {
+                locationManager.requestWhenInUseAuthorization()
+            }
         }
     }
     
