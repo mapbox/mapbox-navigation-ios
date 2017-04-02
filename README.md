@@ -100,7 +100,7 @@ navigation.routeProgress = RouteProgress(route: newRoute)
 
 ## MapboxNavigationUI.swift
 
-[![](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/6fc45a7e2817b859#/builds)
+[![Build Status](https://www.bitrise.io/app/2f82077d3f083479.svg?token=mC783nGMKA3XrvcMCJAOLg&branch=master)](https://www.bitrise.io/app/2f82077d3f083479)
 
 MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn navigation to their iOS application. You still have access to all emitted notifications identified above however, MapboxNavigationUI takes care of all the alerts, rerouting, etc.
 
