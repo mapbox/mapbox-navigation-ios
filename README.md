@@ -2,8 +2,7 @@
 
 MapboxNavigation consists of two libraries. MapboxNavigation.swift which contains the logic needed for turn-by-turn navigation and MapboxNavigationUI.swift that provides all UI elements needed for a great navigation experience.
 
-[📱&nbsp;![iOS Build Status](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q)](https://www.bitrise.io/app/2f82077d3f083479)
-&nbsp;&nbsp;&nbsp;
+[![Build Status](https://www.bitrise.io/app/2f82077d3f083479.svg?token=mC783nGMKA3XrvcMCJAOLg&branch=master)](https://www.bitrise.io/app/2f82077d3f083479)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 | MapboxNavigation.swift | MapboxNavigationUI.swift |
