@@ -29,7 +29,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     
-    var resetTrackingModeTimer: Timer!
+    var resetTrackingModeTimer: Timer?
     
     let webImageManager = SDWebImageManager.shared()
     var shieldAPIDataTask: URLSessionDataTask?
@@ -37,7 +37,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
     
-    let overviewContentInset = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+    let overviewContentInset = UIEdgeInsets(top: 50, left: 15, bottom: 50, right: 15)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +71,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
         
-        let topPadding: CGFloat = 30
-        let bottomPadding: CGFloat = 50
         mapView.setContentInset(overviewContentInset, animated: false)
     }
     
@@ -104,12 +102,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     @IBAction func toggleOverview(_ sender: Any) {
         if isInOverviewMode {
             recenterButton.isHidden = true
-            overviewButton.titleLabel?.text = "Overview"
+            overviewButton.setTitle("Overview", for: .normal)
             isInOverviewMode = !isInOverviewMode
             setDefaultCamera(animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
-            overviewButton.titleLabel?.text = "Navigate"
+            overviewButton.setTitle("Navigate", for: .normal)
             isInOverviewMode = !isInOverviewMode
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
         }
@@ -348,9 +346,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
         if !isInOverviewMode {
-            if resetTrackingModeTimer != nil {
-                resetTrackingModeTimer.invalidate()
-            }
+            resetTrackingModeTimer?.invalidate()
             
             if mode != .followWithCourse {
                 recenterButton.isHidden = false
@@ -362,8 +358,8 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        if resetTrackingModeTimer != nil && mapView.userTrackingMode == .none && !isInOverviewMode {
-            resetTrackingModeTimer.invalidate()
+        if mapView.userTrackingMode == .none && !isInOverviewMode {
+            resetTrackingModeTimer?.invalidate()
             startResetTrackingModeTimer()
         }
     }
@@ -373,8 +369,8 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
-        if resetTrackingModeTimer != nil && !isInOverviewMode {
-            resetTrackingModeTimer.invalidate()
+        if !isInOverviewMode {
+            resetTrackingModeTimer?.invalidate()
             startResetTrackingModeTimer()
         }
     }
