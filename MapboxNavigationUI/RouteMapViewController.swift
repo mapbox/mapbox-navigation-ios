@@ -37,6 +37,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
     
+    let overviewContentInset = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
@@ -71,8 +73,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         let topPadding: CGFloat = 30
         let bottomPadding: CGFloat = 50
-        let contentInset = UIEdgeInsets(top: routePageViewController.view.frame.maxY+topPadding, left: 0, bottom: bottomPadding, right: 0)
-        mapView.setContentInset(contentInset, animated: false)
+        mapView.setContentInset(overviewContentInset, animated: false)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -133,7 +134,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.camera = camera
         
         let polyline = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
-        let overviewContentInset = UIEdgeInsets(top: 30, left: 30, bottom: 30, right: 30)
         mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
     
@@ -456,11 +456,3 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         return routeController.routeProgress.currentLegProgress.stepAfter(step)
     }
 }
-
-extension Route {
-    var polyline: MGLPolyline {
-        var coordinates = self.coordinates!
-        return MGLPolyline(coordinates: &coordinates, count: UInt(coordinates.count))
-    }
-}
-
