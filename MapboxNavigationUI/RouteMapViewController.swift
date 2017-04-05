@@ -321,7 +321,8 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        mapView.annotate(route)
+        let map = mapView as! NavigationMapView
+        map.annotate(route)
     }
     
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
