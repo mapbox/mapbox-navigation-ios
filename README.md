@@ -30,8 +30,8 @@ Add the following lines to your Podfile:
 
 ```ruby
 # Required
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.1.0'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.1.0'
 
 # Optional but, you will most likely use:
 pod 'Mapbox-iOS-SDK', '~> 3.5'
@@ -42,7 +42,7 @@ pod 'Mapbox-iOS-SDK', '~> 3.5'
 Add the following line to your Cartfile:
 
 ```ruby
-github "mapbox/MapboxNavigation.swift"
+github "mapbox/mapbox-navigation-ios"
 ```
 
 ### Gist of how this works
@@ -84,8 +84,8 @@ Alert levels indicate the type of announcement that should be given. The enum ty
 * `none`
 * `depart` - Emitted while departing origin
 * `low` - Emitted directly after completing the maneuver
-* `medium` - Emitted when the user has [70 seconds](https://github.com/mapbox/MapboxNavigation.swift/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L15) remaining on the route.
-* `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/MapboxNavigation.swift/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
+* `medium` - Emitted when the user has [70 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L15) remaining on the route.
+* `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
 * `arrive` - Emitted when the user arrives at destination
 
 ### Rerouting
@@ -111,20 +111,20 @@ MapboxNavigationUI.swift makes it easy for developers to add turn-by-turn naviga
 
 #### [CocoaPods](https://cocoapods.org/)
 
-You'll need to install three pods, `MapboxNavigationUI.swift`, `MapboxNavigation.swift`  and `MapboxDirections.swift`
+You'll need to install two pods, `MapboxNavigationUI.swift` and `MapboxNavigation.swift`.
 
 Add the following lines to your Podfile:
 
 ```ruby
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/MapboxNavigation.swift.git', :tag => 'v0.1.0'
+pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.1.0'
+pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.1.0'
 ```
 
 #### [Carthage](https://github.com/Carthage/Carthage)
 
 1: Add the following line to your `Cartfile`:
 ```
-github "mapbox/MapboxNavigation.swift" "a368a73a7575b296886ae53b7642216c167ca8e2"
+github "mapbox/mapbox-navigation-ios" "a368a73a7575b296886ae53b7642216c167ca8e2"
 ```
 2: Run:
 ```
