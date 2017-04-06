@@ -15,7 +15,10 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    public func annotate(_ route: Route) {
+    /**
+     Annotates the map with a route line.
+     */
+    open func annotate(_ route: Route) {
         guard let style = style else {
             return
         }
@@ -54,7 +57,7 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    public func shape(describing route: Route) -> MGLShape? {
+    open func shape(describing route: Route) -> MGLShape? {
         guard var coordinates = route.coordinates else {
             return nil
         }
@@ -62,7 +65,10 @@ open class NavigationMapView: MGLMapView {
         return MGLPolylineFeature(coordinates: &coordinates, count: route.coordinateCount)
     }
     
-    public func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+    /**
+     Function for overriding the default route line style.
+     */
+    open func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         
@@ -75,7 +81,10 @@ open class NavigationMapView: MGLMapView {
         return line
     }
     
-    public func routeCasingStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+    /**
+     Function for overriding the default route line casing style.
+     */
+    open func routeCasingStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
