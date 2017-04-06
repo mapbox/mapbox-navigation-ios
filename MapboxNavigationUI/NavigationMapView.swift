@@ -5,9 +5,6 @@ open class NavigationMapView: MGLMapView {
     
     var navigationMapDelegate: NavigationMapViewDelegate?
     
-    let cap = NSValue(mglLineCap: .round)
-    let join = NSValue(mglLineJoin: .round)
-    
     open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [Any]!) {
         guard let location = locations.first as? CLLocation else { return }
         
@@ -35,16 +32,16 @@ open class NavigationMapView: MGLMapView {
             style.removeSource(source)
         }
         
-        let polyline = shape(for: route)
+        let polyline = shape(describing: route)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource {
             source.shape = polyline
         } else {
-            let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
-            style.addSource(geoJSONSource)
+            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
+            style.addSource(lineSource)
             
-            let line = lineStyle(MGLLineStyleLayer(identifier: routeLayerIdentifier, source: geoJSONSource))
-            let lineCasing = lineCasingStyle(MGLLineStyleLayer(identifier: routeLayerCasingIdentifier, source: geoJSONSource))
+            let line = routeStyleLayer(identifier: routeLayerIdentifier, source: lineSource)
+            let lineCasing = routeCasingStyleLayer(identifier: routeLayerCasingIdentifier, source: lineSource)
             
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) &&
@@ -57,7 +54,7 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    public func shape(for route: Route) -> MGLShape? {
+    public func shape(describing route: Route) -> MGLShape? {
         guard var coordinates = route.coordinates else {
             return nil
         }
@@ -65,28 +62,28 @@ open class NavigationMapView: MGLMapView {
         return MGLPolylineFeature(coordinates: &coordinates, count: route.coordinateCount)
     }
     
-    public func lineStyle(_ line: MGLLineStyleLayer) -> MGLLineStyleLayer {
-        let cap = NSValue(mglLineCap: .round)
-        let join = NSValue(mglLineJoin: .round)
+    public func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+        
+        let line = MGLLineStyleLayer(identifier: identifier, source: source)
         
         line.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor.withAlphaComponent(0.6))
         line.lineWidth = MGLStyleValue(rawValue: 5)
         
-        line.lineCap = MGLStyleValue(rawValue: cap)
-        line.lineJoin = MGLStyleValue(rawValue: join)
+        line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
         return line
     }
     
-    public func lineCasingStyle(_ lineCasing: MGLLineStyleLayer) -> MGLLineStyleLayer {
-        let cap = NSValue(mglLineCap: .round)
-        let join = NSValue(mglLineJoin: .round)
+    public func routeCasingStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+        
+        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
         lineCasing.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor)
         lineCasing.lineWidth = MGLStyleValue(rawValue: 9)
         
-        lineCasing.lineCap = MGLStyleValue(rawValue: cap)
-        lineCasing.lineJoin = MGLStyleValue(rawValue: join)
+        lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
         return lineCasing
     }
