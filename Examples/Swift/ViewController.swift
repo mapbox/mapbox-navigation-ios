@@ -1,6 +1,6 @@
 import UIKit
+import MapboxCoreNavigation
 import MapboxNavigation
-import MapboxNavigationUI
 import MapboxDirections
 import Mapbox
 import CoreLocation
@@ -73,7 +73,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     // Notifications sent on all location updates
     func progressDidChange(_ notification: NSNotification) {
-        // If you are not using MapboxNavigationUI,
+        // If you are using MapboxCoreNavigation,
         // this would be a good time to update UI elements.
         // You can grab the current routeProgress like:
         // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
@@ -82,7 +82,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     // Notification sent when the user is determined to be off the current route
     func rerouted(_ notification: NSNotification) {
         //
-        // If you're not using MapboxNavigationUI,
+        // If you're using MapboxNavigation,
         // this is how you'd handle fetching a new route and setting it as the active route
         /*
          getRoute {

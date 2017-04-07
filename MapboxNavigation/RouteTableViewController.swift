@@ -1,6 +1,6 @@
 import UIKit
 import Pulley
-import MapboxNavigation
+import MapboxCoreNavigation
 
 class RouteTableViewController: UIViewController {
     

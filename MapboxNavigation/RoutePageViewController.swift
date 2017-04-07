@@ -1,6 +1,6 @@
 import UIKit
 import MapboxDirections
-import MapboxNavigation
+import MapboxCoreNavigation
 
 protocol RoutePageViewControllerDelegate: class {
     func currentStep() -> RouteStep

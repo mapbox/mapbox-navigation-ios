@@ -2,12 +2,12 @@ Pod::Spec.new do |s|
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.name = "MapboxNavigation.swift"
-  s.version = "0.1.0"
+  s.name = "MapboxCoreNavigation"
+  s.version = "0.2.0"
   s.summary = "Mapbox Navigation library"
 
   s.description  = <<-DESC
-  MapboxNavigation.swift makes it easy to get step by step instructions for guiding a user along a route.
+  The Mapbox Navigation SDK makes it easy to get step by step instructions for guiding a user along a route.
                    DESC
 
   s.homepage = "https://www.mapbox.com/directions/"
@@ -28,16 +28,16 @@ Pod::Spec.new do |s|
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source = { :git => "https://github.com/mapbox/MapboxNavigation.swift.git", :tag => "v#{s.version.to_s}" }
+  s.source = { :git => "https://github.com/mapbox/mapbox-navigation-ios.git", :tag => "v#{s.version.to_s}" }
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = "MapboxNavigation"
+  s.source_files = "MapboxCoreNavigation"
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
-  s.module_name = "MapboxNavigation"
+  s.module_name = "MapboxCoreNavigation"
 
   s.dependency "MapboxDirections.swift", "~> 0.8"
   s.dependency "OSRMTextInstructions", "~> 0.1"

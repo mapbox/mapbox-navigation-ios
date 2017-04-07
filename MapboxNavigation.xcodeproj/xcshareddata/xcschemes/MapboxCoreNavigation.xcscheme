@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
-               BuildableName = "MapboxNavigationUI.framework"
-               BlueprintName = "MapboxNavigationUI"
+               BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+               BuildableName = "MapboxCoreNavigation.framework"
+               BlueprintName = "MapboxCoreNavigation"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,19 +32,27 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35AAE0BB1E5CF71600A1A307"
-               BuildableName = "MapboxNavigationUITests.xctest"
-               BlueprintName = "MapboxNavigationUITests"
+               BlueprintIdentifier = "C5ADFBD11DDCC7840011824B"
+               BuildableName = "MapboxCoreNavigationTests.xctest"
+               BlueprintName = "MapboxCoreNavigationTests"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "MapboxCoreNavigationTests/testLowAlert()">
+               </Test>
+               <Test
+                  Identifier = "MapboxNavigationTests/testLowAlert()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
-            BuildableName = "MapboxNavigationUI.framework"
-            BlueprintName = "MapboxNavigationUI"
+            BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+            BuildableName = "MapboxCoreNavigation.framework"
+            BlueprintName = "MapboxCoreNavigation"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -64,9 +72,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
-            BuildableName = "MapboxNavigationUI.framework"
-            BlueprintName = "MapboxNavigationUI"
+            BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+            BuildableName = "MapboxCoreNavigation.framework"
+            BlueprintName = "MapboxCoreNavigation"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -82,9 +90,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
-            BuildableName = "MapboxNavigationUI.framework"
-            BlueprintName = "MapboxNavigationUI"
+            BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+            BuildableName = "MapboxCoreNavigation.framework"
+            BlueprintName = "MapboxCoreNavigation"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

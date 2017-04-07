@@ -1,6 +1,6 @@
 import UIKit
 import MapboxDirections
-import MapboxNavigation
+import MapboxCoreNavigation
 import SDWebImage
 
 @IBDesignable

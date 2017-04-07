@@ -1,7 +1,7 @@
 import Foundation
 import Mapbox
 import MapboxDirections
-import MapboxNavigation
+import MapboxCoreNavigation
 
 let sourceIdentifier = "routeSource"
 let routeLayerIdentifier = "routeLayer"

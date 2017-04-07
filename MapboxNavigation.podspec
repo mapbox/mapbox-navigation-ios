@@ -2,12 +2,12 @@ Pod::Spec.new do |s|
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.name = "MapboxNavigationUI.swift"
-  s.version = "0.1.0"
+  s.name = "MapboxNavigation"
+  s.version = "0.2.0"
   s.summary = "Mapbox Navigation UI library"
 
   s.description  = <<-DESC
-  MapboxNavigationUI.swift makes it easy to get step by step UI for guiding a user along a route.
+  The Mapbox Navigation SDK makes it easy to get step by step UI for guiding a user along a route.
                    DESC
 
   s.homepage = "https://www.mapbox.com/directions/"
@@ -27,22 +27,22 @@ Pod::Spec.new do |s|
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source = { :git => "https://github.com/mapbox/MapboxNavigation.swift.git", :tag => "v#{s.version.to_s}" }
+  s.source = { :git => "https://github.com/mapbox/mapbox-navigation-ios.git", :tag => "v#{s.version.to_s}" }
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxNavigationUI/*", "MapboxNavigation/Geometry.swift"]
+  s.source_files = ["MapboxNavigation/*", "MapboxCoreNavigation/Geometry.swift"]
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.resources = ['MapboxNavigationUI/Resources/*']
+  s.resources = ['MapboxNavigation/Resources/*']
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
-  s.module_name = "MapboxNavigationUI"
+  s.module_name = "MapboxNavigation"
 
-  s.dependency "MapboxNavigation.swift"
+  s.dependency "MapboxCoreNavigation"
   s.dependency "MapboxDirections.swift", "~> 0.8"
   s.dependency "Mapbox-iOS-SDK", "~> 3.5"
   s.dependency "OSRMTextInstructions", "~> 0.1"

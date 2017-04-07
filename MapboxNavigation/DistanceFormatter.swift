@@ -1,4 +1,3 @@
-
 import CoreLocation
 
 let metersPerMile: CLLocationDistance = 1_609.344

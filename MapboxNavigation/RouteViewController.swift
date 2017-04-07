@@ -1,5 +1,5 @@
 import UIKit
-import MapboxNavigation
+import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
 import Pulley

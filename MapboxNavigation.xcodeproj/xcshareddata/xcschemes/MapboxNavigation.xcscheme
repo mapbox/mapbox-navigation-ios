@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+               BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
                BuildableName = "MapboxNavigation.framework"
                BlueprintName = "MapboxNavigation"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
@@ -32,22 +32,17 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C5ADFBD11DDCC7840011824B"
+               BlueprintIdentifier = "35B711CE1E5E7AD2001EDA8D"
                BuildableName = "MapboxNavigationTests.xctest"
                BlueprintName = "MapboxNavigationTests"
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "MapboxNavigationTests/testLowAlert()">
-               </Test>
-            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
             BuildableName = "MapboxNavigation.framework"
             BlueprintName = "MapboxNavigation"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
@@ -69,7 +64,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
             BuildableName = "MapboxNavigation.framework"
             BlueprintName = "MapboxNavigation"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">
@@ -87,7 +82,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C5ADFBC81DDCC7840011824B"
+            BlueprintIdentifier = "351BEBD61E5BCC28006FE110"
             BuildableName = "MapboxNavigation.framework"
             BlueprintName = "MapboxNavigation"
             ReferencedContainer = "container:MapboxNavigation.xcodeproj">

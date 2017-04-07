@@ -94,7 +94,7 @@
         <!--Navigation-->
         <scene sceneID="Cg8-0l-4UG">
             <objects>
-                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="com.mapbox.MapboxNavigationUI" id="dYn-UD-FHX" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="com.mapbox.MapboxNavigation" id="dYn-UD-FHX" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RhK-y2-JnK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="646" y="35"/>
