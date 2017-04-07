@@ -115,8 +115,8 @@ Mapbox Navigation gives you all the components you need, should you want to buil
 * [MapboxDirections](https://github.com/mapbox/MapboxDirections.swift)
   * Automotive, cycling, and walking directions
   * Traffic-influenced driving directions
-* Mapbox Navigation Core Components
-  * Route Controller
+* Mapbox Navigation core components (`MapboxNavigation` module)
+  * Route controller
     * Progress calculations
     * Location snapping
   * Guidance notifications
@@ -166,8 +166,8 @@ Alert levels indicate the type of announcement that should be given. The enum ty
 * `none`
 * `depart` - Emitted while departing origin
 * `low` - Emitted directly after completing the maneuver
-* `medium` - Emitted when the user has [70 seconds](https://github.com/mapbox/MapboxNavigation.swift/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L15) remaining on the route.
-* `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/MapboxNavigation.swift/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
+* `medium` - Emitted when the user has [70 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L15) remaining on the route.
+* `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
 * `arrive` - Emitted when the user arrives at destination
 
 ### Rerouting
