@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 import MapboxNavigation
 
-protocol RoutePageViewControllerDelegate {
+protocol RoutePageViewControllerDelegate: class {
     func currentStep() -> RouteStep
     func stepBefore(_ step: RouteStep) -> RouteStep?
     func stepAfter(_ step: RouteStep) -> RouteStep?
@@ -11,7 +11,7 @@ protocol RoutePageViewControllerDelegate {
 
 class RoutePageViewController: UIPageViewController {
     
-    var maneuverDelegate: RoutePageViewControllerDelegate!
+    weak var maneuverDelegate: RoutePageViewControllerDelegate!
     var currentManeuverPage: RouteManeuverViewController!
 
     override func viewDidLoad() {

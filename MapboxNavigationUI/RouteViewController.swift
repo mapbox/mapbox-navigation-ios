@@ -110,6 +110,8 @@ public class RouteViewController: NavigationPulleyViewController {
     
     deinit {
         suspendNotifications()
+        mapViewController?.resetTrackingModeTimer?.invalidate()
+        voiceController?.announcementTimer?.invalidate()
     }
     
     override public func viewDidLoad() {
@@ -262,7 +264,6 @@ public class RouteViewController: NavigationPulleyViewController {
 
 extension RouteViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
-        voiceController = nil
         if navigationDelegate?.routeViewControllerDidCancelNavigation(self) != nil {
             // The receiver should handle dismissal of the RouteViewController
         } else {
