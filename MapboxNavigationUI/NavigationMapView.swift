@@ -3,7 +3,7 @@ import MapboxDirections
 
 open class NavigationMapView: MGLMapView {
     
-    var navigationMapDelegate: NavigationMapViewDelegate?
+    weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [Any]!) {
         guard let location = locations.first as? CLLocation else { return }

@@ -1,6 +1,6 @@
 import UIKit
 
-protocol RouteTableViewHeaderViewDelegate {
+protocol RouteTableViewHeaderViewDelegate: class {
     func didTapCancel()
 }
 
@@ -14,7 +14,7 @@ class RouteTableViewHeaderView: UIView {
     @IBOutlet weak var etaLabel: StyleLabel!
     @IBOutlet weak var dividerView: UIView!
     
-    var delegate: RouteTableViewHeaderViewDelegate?
+    weak var delegate: RouteTableViewHeaderViewDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -121,6 +121,6 @@ extension MGLMapView {
     }
 }
 
-protocol NavigationMapViewDelegate {
+protocol NavigationMapViewDelegate: class  {
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation?
 }
