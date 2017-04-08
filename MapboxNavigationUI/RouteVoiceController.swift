@@ -161,7 +161,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     func alertLevelDidChange(notification: NSNotification) {
         guard isEnabled == true else { return }
         
-        guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
+        guard let routeProgress = notification.userInfo![RouteControllerDidChangeNotificationRouteProgressKey] as? RouteProgress else {
             assert(false)
             return
         }
@@ -189,7 +189,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func speechString(notification: NSNotification, markUpWithSSML: Bool) -> String {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerDidChangeNotificationRouteProgressKey] as! RouteProgress
         let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         let profileIdentifier = routeProgress.route.profileIdentifier

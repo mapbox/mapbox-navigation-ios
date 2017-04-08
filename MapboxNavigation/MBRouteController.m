@@ -5,7 +5,7 @@ NSString *const MBRouteControllerProgressDidChangeNotificationProgressKey       
 NSString *const MBRouteControllerProgressDidChangeNotificationLocationKey               = @"location";
 NSString *const MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = @"seconds";
 
-NSString *const MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey            = @"progress";
+NSString *const MBRouteControllerDidChangeNotificationRouteProgress                         = @"progress";
 NSString *const MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey  = @"distance";
 
 NSString *const MBRouteControllerNotificationShouldRerouteKey   = @"reroute";
@@ -13,3 +13,5 @@ NSString *const MBRouteControllerNotificationShouldRerouteKey   = @"reroute";
 NSString *const MBRouteControllerNotificationProgressDidChange  = @"RouteControllerProgressDidChange";
 NSString *const MBRouteControllerAlertLevelDidChange            = @"RouteControllerAlertLevelDidChange";
 NSString *const MBRouteControllerShouldReroute                  = @"RouteControllerShouldReroute";
+
+NSString *const MBRouteControllerDidReroute = @"RouteControllerDidReroute";

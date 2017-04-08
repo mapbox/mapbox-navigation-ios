@@ -89,7 +89,7 @@
     // If you are not using MapboxNavigationUI,
     // this would be a good time to update UI elements.
     // You can grab the current routeProgress like:
-    // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+    // let routeProgress = notification.userInfo![RouteControllerDidChangeNotificationRouteProgressKey] as! RouteProgress
 }
 
 - (void)rerouted:(NSNotification *)notification {

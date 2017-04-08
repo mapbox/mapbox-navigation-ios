@@ -155,7 +155,7 @@ public class RouteViewController: NavigationPulleyViewController {
     }
     
     func progressDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerDidChangeNotificationRouteProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
         let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
 
@@ -188,12 +188,17 @@ public class RouteViewController: NavigationPulleyViewController {
                 
                 strongSelf.mapViewController?.notifyDidReroute(route: route)
                 strongSelf.tableViewController?.notifyDidReroute()
+                
+                // posting a notification that could be listened to get new route info externally
+                NotificationCenter.default.post(name: RouteControllerDidReroute, object: strongSelf.routeController, userInfo: [
+                    RouteControllerDidChangeNotificationRouteProgressKey: strongSelf.routeController.routeProgress
+                    ])
             }
         })
     }
     
     func alertLevelDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerDidChangeNotificationRouteProgressKey] as! RouteProgress
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         
         mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
