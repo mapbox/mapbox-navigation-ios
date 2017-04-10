@@ -1,15 +1,7 @@
-//
-//  RouteProgressTests.swift
-//  MapboxNavigation
-//
-//  Created by Bobby Sudekum on 12/1/16.
-//  Copyright © 2016 Mapbox. All rights reserved.
-//
-
 import Foundation
 import XCTest
 import MapboxDirections
-@testable import MapboxNavigation
+@testable import MapboxCoreNavigation
 
 class RouteProgressTests: XCTestCase {
     func testAlertLevels() {

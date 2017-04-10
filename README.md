@@ -1,8 +1,8 @@
 # Mapbox Navigation SDK for iOS
 
-![Mapbox Navigation UI](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png) ![](https://cloud.githubusercontent.com/assets/764476/23671279/883c63ae-031f-11e7-8396-b404d18881e1.png)
+![Mapbox Navigation SDK](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png) ![](https://cloud.githubusercontent.com/assets/764476/23671279/883c63ae-031f-11e7-8396-b404d18881e1.png)
 
-Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps. 
+Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
 
 Get up and running in a few minutes with our drop-in turn-by-turn navigation `RouteViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
 
@@ -47,19 +47,19 @@ carthage update --platform ios
 
 ```swift
 import MapboxDirections
-import MapboxNavigationUI
+import MapboxNavigation
 ```
 
 ```swift
 let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, longitude: -77.0324047), name: "Mapbox")
 let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
-        
+
 let options = RouteOptions(waypoints: [origin, destination], profileIdentifier: .automobileAvoidsTraffic)
 options.includesSteps = true
 
 Directions.shared.calculate(options) { (waypoints, routes, error) in
     guard let route = routes?.first else { return }
-    
+
     let viewController = NavigationUI.routeViewController(for: route)
     self.present(viewController, animated: true, completion: nil)
 }
@@ -115,7 +115,7 @@ Mapbox Navigation gives you all the components you need, should you want to buil
 * [MapboxDirections](https://github.com/mapbox/MapboxDirections.swift)
   * Automotive, cycling, and walking directions
   * Traffic-influenced driving directions
-* Mapbox Navigation core components (`MapboxNavigation` module)
+* Mapbox Core Navigation (`MapboxCoreNavigation` module)
   * Route controller
     * Progress calculations
     * Location snapping

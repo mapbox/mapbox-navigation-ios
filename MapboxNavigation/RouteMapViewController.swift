@@ -2,7 +2,7 @@ import UIKit
 import Mapbox
 import MapboxDirections
 import Pulley
-import MapboxNavigation
+import MapboxCoreNavigation
 import SDWebImage
 
 

@@ -2,12 +2,12 @@ Pod::Spec.new do |s|
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.name = "MapboxNavigationUI.swift"
-  s.version = "0.1.0"
-  s.summary = "Mapbox Navigation UI library"
+  s.name = "MapboxCoreNavigation"
+  s.version = "0.2.0"
+  s.summary = "Core components for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
-  MapboxNavigationUI.swift makes it easy to get step by step UI for guiding a user along a route.
+  Mapbox Core Navigation provides the core spatial and timing logic for turn-by-turn navigation along a route. For a complete turn-by-turn navigation interface, use the Mapbox Navigation SDK for iOS (MapboxNavigation).
                    DESC
 
   s.homepage = "https://www.mapbox.com/directions/"
@@ -23,32 +23,24 @@ Pod::Spec.new do |s|
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.ios.deployment_target = "9.0"
+  s.ios.deployment_target = "8.0"
+
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source = { :git => "https://github.com/mapbox/MapboxNavigation.swift.git", :tag => "v#{s.version.to_s}" }
+  s.source = { :git => "https://github.com/mapbox/mapbox-navigation-ios.git", :tag => "v#{s.version.to_s}" }
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxNavigationUI/*", "MapboxNavigation/Geometry.swift"]
-
-  # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-
-  s.resources = ['MapboxNavigationUI/Resources/*']
+  s.source_files = "MapboxCoreNavigation"
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
-  s.module_name = "MapboxNavigationUI"
+  s.module_name = "MapboxCoreNavigation"
 
-  s.dependency "MapboxNavigation.swift"
   s.dependency "MapboxDirections.swift", "~> 0.8"
-  s.dependency "Mapbox-iOS-SDK", "~> 3.5"
   s.dependency "OSRMTextInstructions", "~> 0.1"
-  s.dependency "Pulley", "~> 1.3"
-  s.dependency "SDWebImage", "~> 4.0"
-  s.dependency "AWSPolly", "~> 2.5"
 
   s.xcconfig = {
     "SWIFT_VERSION" => "3.0"

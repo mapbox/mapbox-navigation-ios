@@ -14,7 +14,7 @@ extension UIColor {
 
 /**
  `NavigationUI` lets you apply basic styling to some of
- the MapboxNavigationUI elements.
+ the MapboxNavigation elements.
  */
 @objc(MBNavigationUI)
 public class NavigationUI: NSObject {

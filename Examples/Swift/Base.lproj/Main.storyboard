@@ -20,7 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3N-JT-loC" customClass="NavigationMapView" customModule="MapboxNavigationUI">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3N-JT-loC" customClass="NavigationMapView" customModule="MapboxNavigation">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Sl-bV-xyU">
@@ -93,7 +93,7 @@
         <!--Navigation-->
         <scene sceneID="Cg8-0l-4UG">
             <objects>
-                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="MapboxNavigationUI" id="dYn-UD-FHX" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="MapboxNavigation" id="dYn-UD-FHX" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RhK-y2-JnK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="646" y="35"/>

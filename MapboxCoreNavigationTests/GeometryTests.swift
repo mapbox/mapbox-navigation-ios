@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 import CoreLocation
-@testable import MapboxNavigation
+@testable import MapboxCoreNavigation
 
 let metersPerMile: CLLocationDistance = 1_609.344
 

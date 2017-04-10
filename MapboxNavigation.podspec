@@ -2,12 +2,12 @@ Pod::Spec.new do |s|
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.name = "MapboxNavigation.swift"
-  s.version = "0.1.0"
-  s.summary = "Mapbox Navigation library"
+  s.name = "MapboxNavigation"
+  s.version = "0.2.0"
+  s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
-  MapboxNavigation.swift makes it easy to get step by step instructions for guiding a user along a route.
+  The Mapbox Navigation SDK for iOS is a drop-in interface for turn-by-turn navigation along a route, complete with a well-designed map and easy-to-understand spoken directions. Routes are powered by Mapbox Directions.
                    DESC
 
   s.homepage = "https://www.mapbox.com/directions/"
@@ -23,24 +23,32 @@ Pod::Spec.new do |s|
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.ios.deployment_target = "8.0"
-
+  s.ios.deployment_target = "9.0"
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source = { :git => "https://github.com/mapbox/MapboxNavigation.swift.git", :tag => "v#{s.version.to_s}" }
+  s.source = { :git => "https://github.com/mapbox/mapbox-navigation-ios.git", :tag => "v#{s.version.to_s}" }
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = "MapboxNavigation"
+  s.source_files = ["MapboxNavigation/*", "MapboxCoreNavigation/Geometry.swift"]
+
+  # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
+  s.resources = ['MapboxNavigation/Resources/*']
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
 
+  s.dependency "MapboxCoreNavigation"
   s.dependency "MapboxDirections.swift", "~> 0.8"
+  s.dependency "Mapbox-iOS-SDK", "~> 3.5"
   s.dependency "OSRMTextInstructions", "~> 0.1"
+  s.dependency "Pulley", "~> 1.3"
+  s.dependency "SDWebImage", "~> 4.0"
+  s.dependency "AWSPolly", "~> 2.5"
 
   s.xcconfig = {
     "SWIFT_VERSION" => "3.0"

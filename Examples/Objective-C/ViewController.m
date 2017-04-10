@@ -1,9 +1,9 @@
 #import "ViewController.h"
 
 @import AVFoundation;
-@import MapboxNavigation;
+@import MapboxCoreNavigation;
 @import MapboxDirections;
-@import MapboxNavigationUI;
+@import MapboxNavigation;
 @import Mapbox;
 
 @interface ViewController () <AVSpeechSynthesizerDelegate>
@@ -86,7 +86,7 @@
 }
 
 - (void)progressDidChange:(NSNotification *)notification {
-    // If you are not using MapboxNavigationUI,
+    // If you are using MapboxCoreNavigation,
     // this would be a good time to update UI elements.
     // You can grab the current routeProgress like:
     // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
