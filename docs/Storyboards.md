@@ -1,4 +1,4 @@
-# Setting up Mapbox Navigation UI in a storyboard
+# Setting up Mapbox Navigation in a storyboard
 
 - Open the object library and drag in a `Storyboard Reference`.
 - Pick `Navigation` from the dropdown and set bundle to `com.mapbox.MapboxNavigation`.
