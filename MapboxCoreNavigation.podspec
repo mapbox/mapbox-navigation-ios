@@ -4,10 +4,10 @@ Pod::Spec.new do |s|
 
   s.name = "MapboxCoreNavigation"
   s.version = "0.2.0"
-  s.summary = "Mapbox Core Navigation SDK"
+  s.summary = "Core components for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
-  The Mapbox Navigation SDK makes it easy to get step by step instructions for guiding a user along a route.
+  Mapbox Core Navigation provides the core spatial and timing logic for turn-by-turn navigation along a route. For a complete turn-by-turn navigation interface, use the Mapbox Navigation SDK for iOS (MapboxNavigation).
                    DESC
 
   s.homepage = "https://www.mapbox.com/directions/"

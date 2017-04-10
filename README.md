@@ -115,7 +115,7 @@ Mapbox Navigation gives you all the components you need, should you want to buil
 * [MapboxDirections](https://github.com/mapbox/MapboxDirections.swift)
   * Automotive, cycling, and walking directions
   * Traffic-influenced driving directions
-* Mapbox Navigation core components (`MapboxNavigation` module)
+* Mapbox Core Navigation (`MapboxCoreNavigation` module)
   * Route controller
     * Progress calculations
     * Location snapping

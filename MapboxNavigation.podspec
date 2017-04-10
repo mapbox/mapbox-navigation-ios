@@ -4,10 +4,10 @@ Pod::Spec.new do |s|
 
   s.name = "MapboxNavigation"
   s.version = "0.2.0"
-  s.summary = "Mapbox Navigation SDK"
+  s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
-  The Mapbox Navigation SDK makes it easy to get step by step UI for guiding a user along a route.
+  The Mapbox Navigation SDK for iOS is a drop-in interface for turn-by-turn navigation along a route, complete with a well-designed map and easy-to-understand spoken directions. Routes are powered by Mapbox Directions.
                    DESC
 
   s.homepage = "https://www.mapbox.com/directions/"
