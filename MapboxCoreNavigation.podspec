@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
 
   s.name = "MapboxCoreNavigation"
   s.version = "0.2.0"
-  s.summary = "Mapbox Navigation library"
+  s.summary = "Mapbox Core Navigation SDK"
 
   s.description  = <<-DESC
   The Mapbox Navigation SDK makes it easy to get step by step instructions for guiding a user along a route.
