@@ -1,6 +1,7 @@
 import UIKit
 
 @IBDesignable
+@objc(MBDashedLineView)
 public class DashedLineView: UIView {
 
     @IBInspectable public var dashedLength: CGFloat = 4 { didSet { updateProperties() } }

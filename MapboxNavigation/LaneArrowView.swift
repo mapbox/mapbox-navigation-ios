@@ -1,6 +1,7 @@
 import UIKit
 import MapboxDirections
 
+@objc(MBLaneArrowView)
 class LaneArrowView: UIView {
     @IBInspectable
     var scale: CGFloat = 1

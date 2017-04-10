@@ -1,6 +1,7 @@
 import UIKit
 
 @IBDesignable
+@objc(MBStyleButton)
 public class StyleButton: UIButton {
     
     @IBInspectable

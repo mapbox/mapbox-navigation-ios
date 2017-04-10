@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 
+@objc(MBNavigationMapView)
 open class NavigationMapView: MGLMapView {
     
     weak var navigationMapDelegate: NavigationMapViewDelegate?

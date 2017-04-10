@@ -2,6 +2,7 @@ import Foundation
 import MapboxDirections
 import OSRMTextInstructions
 
+@objc(MBRouteStepFormatter)
 public class RouteStepFormatter: Formatter {
     let instructions = OSRMInstructionFormatter(version: "v5")
     
