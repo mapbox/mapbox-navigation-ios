@@ -4,6 +4,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import AWSPolly
 
+@objc(MBRouteVoiceController)
 public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     lazy var speechSynth = AVSpeechSynthesizer()

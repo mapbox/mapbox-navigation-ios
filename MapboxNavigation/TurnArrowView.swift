@@ -4,6 +4,7 @@ import MapboxCoreNavigation
 import SDWebImage
 
 @IBDesignable
+@objc(MBTurnArrowView)
 public class TurnArrowView: UIView {
     public var step: RouteStep? {
         didSet {

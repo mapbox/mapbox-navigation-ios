@@ -7,6 +7,7 @@ public enum TextStyle: Int {
 }
 
 @IBDesignable
+@objc(MBStyleLabel)
 public class StyleLabel: UILabel {
 
     public var textStyle: TextStyle = .primary {

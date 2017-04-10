@@ -7,6 +7,7 @@ import Pulley
 @objc(MBNavigationPulleyViewController)
 public class NavigationPulleyViewController: PulleyViewController {}
 
+@objc(MBRouteViewControllerDelegate)
 public protocol RouteViewControllerDelegate {
     func routeViewControllerDidCancelNavigation(_:RouteViewController)
 }

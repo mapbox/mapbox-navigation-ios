@@ -6,6 +6,7 @@ let yardsPerMile = 1_760.0
 let feetPerMile = yardsPerMile * 3.0
 
 /// Provides appropriately formatted, localized descriptions of linear distances.
+@objc(MBDistanceFormatter)
 public class DistanceFormatter: LengthFormatter {
     /// True to favor brevity over precision.
     var approx: Bool

@@ -6,6 +6,7 @@
 
 import UIKit
 
+@objc(MBStyleKitArrows)
 open class StyleKitArrows : NSObject {
 
     //// Drawing Methods
