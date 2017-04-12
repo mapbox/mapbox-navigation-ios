@@ -55,26 +55,4 @@ public class NavigationUI: NSObject {
         get { return _lineColor ?? .defaultLine }
         set { _lineColor = newValue }
     }
-    
-    /**
-     Convenient factory method for instantiating a `RouteViewController`,
-     providing turn by turn navigation for the given route.
-     A optional `direction` object is needed for potential rerouting.
-     
-     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
-     for further information.
-     */
-    public class func routeViewController(for route: Route, directions: Directions = Directions.shared) -> RouteViewController {
-        let destination = MGLPointAnnotation()
-        destination.coordinate = route.coordinates!.last!
-        
-        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
-        let controller = storyboard.instantiateInitialViewController() as! RouteViewController
-        
-        controller.route = route
-        controller.destination = destination
-        controller.directions = directions
-        
-        return controller
-    }
 }

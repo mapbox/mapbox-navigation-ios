@@ -150,7 +150,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         // Pass through a
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.
-        let viewController = NavigationUI.routeViewController(for: route)
+        let viewController = RouteViewController(for: route)
         
         // If you'd like to use AWS Polly, provide your IdentityPoolId below
         // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer

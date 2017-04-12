@@ -60,7 +60,7 @@ options.includesSteps = true
 Directions.shared.calculate(options) { (waypoints, routes, error) in
     guard let route = routes?.first else { return }
 
-    let viewController = NavigationUI.routeViewController(for: route)
+    let viewController = RouteViewController(for: route)
     self.present(viewController, animated: true, completion: nil)
 }
 ```
