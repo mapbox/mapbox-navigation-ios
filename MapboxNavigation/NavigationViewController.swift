@@ -7,9 +7,13 @@ import Pulley
 @objc(MBNavigationPulleyViewController)
 public class NavigationPulleyViewController: PulleyViewController {}
 
+
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate {
-    func navigationViewControllerDidCancelNavigation(_: NavigationViewController)
+    @objc optional func navigationViewControllerDidCancelNavigation(_: NavigationViewController)
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdenitier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdenitier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
 }
 
 /**
@@ -19,7 +23,7 @@ public protocol NavigationViewControllerDelegate {
  for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: NavigationPulleyViewController {
+public class NavigationViewController: NavigationPulleyViewController, RouteMapViewControllerDelegate {
     
     // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route! {
@@ -153,6 +157,7 @@ public class NavigationViewController: NavigationPulleyViewController {
                 controller.destination = destination
                 controller.pendingCamera = pendingCamera
                 mapViewController = controller
+                controller.delegate = self
             }
         case "TableViewControllerSegueIdentifier":
             if let controller = segue.destination as? RouteTableViewController {
@@ -298,11 +303,23 @@ public class NavigationViewController: NavigationPulleyViewController {
             destination = annotation
         }
     }
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdenitier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return navigationDelegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdenitier: identifier, source: source)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdenitier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return navigationDelegate?.navigationMapView(mapView, routeStyleLayerWithIdenitier: identifier, source: source)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
+        return navigationDelegate?.navigationMapView(mapView, shapeDescribing: route)
+    }
 }
 
 extension NavigationViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
-        if navigationDelegate?.navigationViewControllerDidCancelNavigation(self) != nil {
+        if navigationDelegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)
