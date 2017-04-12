@@ -105,14 +105,64 @@ public class RouteViewController: NavigationPulleyViewController {
     
     required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
         fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
-                   "Use NavigationUI.routeViewController(for:directions:) if you are instantiating programmatically " +
+                   "Use init(for:directions:) if you are instantiating programmatically " +
                    "or a storyboard reference to Navigation if you are using storyboards.")
+    }
+    
+    /**
+     Initializes a `RouteViewController` that provides turn by turn navigation
+     for the given route. A optional `direction` object is needed for  potential
+     rerouting.
+
+     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+     for further information.
+     */
+    @objc(initWithRoute:directions:)
+    required public init(for route: Route,  directions: Directions = Directions.shared) {
+        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
+        let tableViewController = storyboard.instantiateViewController(withIdentifier: "RouteTableViewController") as! RouteTableViewController
+        
+        super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
+        
+        self.directions = directions
+        self.route = route
+        self.setupRouteController()
+        self.mapViewController = mapViewController
+        self.tableViewController = tableViewController
+        
+        mapViewController.routeController = routeController
+        mapViewController.destination = destination
+        mapViewController.pendingCamera = pendingCamera
+        
+        tableViewController.routeController = routeController
+        tableViewController.headerView.delegate = self
     }
     
     deinit {
         suspendNotifications()
         mapViewController?.resetTrackingModeTimer?.invalidate()
         voiceController?.announcementTimer?.invalidate()
+    }
+    
+    override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier ?? "" {
+        case "MapViewControllerSegueIdentifier":
+            if let controller = segue.destination as? RouteMapViewController {
+                controller.routeController = routeController
+                controller.destination = destination
+                controller.pendingCamera = pendingCamera
+                mapViewController = controller
+            }
+        case "TableViewControllerSegueIdentifier":
+            if let controller = segue.destination as? RouteTableViewController {
+                controller.headerView.delegate = self
+                controller.routeController = routeController
+                tableViewController = controller
+            }
+        default:
+            break
+        }
     }
     
     override public func viewDidLoad() {
@@ -222,27 +272,6 @@ public class RouteViewController: NavigationPulleyViewController {
         UIApplication.shared.applicationIconBadgeNumber = 1
         
         UIApplication.shared.scheduleLocalNotification(notification)
-    }
-    
-    override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier ?? "" {
-        case "MapViewControllerSegueIdentifier":
-            if let controller = segue.destination as? RouteMapViewController {
-                controller.routeController = routeController
-                controller.destination = destination
-                controller.directions = directions
-                controller.pendingCamera = pendingCamera
-                mapViewController = controller
-            }
-        case "TableViewControllerSegueIdentifier":
-            if let controller = segue.destination as? RouteTableViewController {
-                controller.headerView.delegate = self
-                controller.routeController = routeController
-                tableViewController = controller
-            }
-        default:
-            break
-        }
     }
     
     func setupRouteController() {

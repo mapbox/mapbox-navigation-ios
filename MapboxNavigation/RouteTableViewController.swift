@@ -15,18 +15,13 @@ class RouteTableViewController: UIViewController {
     @IBOutlet var headerView: RouteTableViewHeaderView!
     @IBOutlet weak var tableView: UITableView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupTableView()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupTableView()
         dateFormatter.timeStyle = .short
         dateComponentsFormatter.maximumUnitCount = 2
         dateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
         dateComponentsFormatter.unitsStyle = .short
-        
         headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
     }
     
@@ -34,7 +29,6 @@ class RouteTableViewController: UIViewController {
         tableView.tableHeaderView = headerView
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 80
-        tableView.reloadData()
     }
     
     func showETA(routeProgress: RouteProgress) {

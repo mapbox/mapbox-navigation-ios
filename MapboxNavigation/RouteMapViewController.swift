@@ -1,7 +1,7 @@
 import UIKit
+import Pulley
 import Mapbox
 import MapboxDirections
-import Pulley
 import MapboxCoreNavigation
 import SDWebImage
 
@@ -20,7 +20,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     var route: Route { return routeController.routeProgress.route }
     
-    var directions: Directions!
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera?
     
