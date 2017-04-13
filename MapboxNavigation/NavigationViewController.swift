@@ -226,14 +226,12 @@ public class NavigationViewController: NavigationPulleyViewController {
         routeTask?.cancel()
         
         let options = routeController.routeProgress.route.routeOptions
-        
+ 
         options.waypoints = [Waypoint(coordinate: location.coordinate), Waypoint(coordinate: destination.coordinate)]
         
-        if let firstWaypoint = options.waypoints.first {
-            if location.course >= 0 {
-                firstWaypoint.heading = location.course
-                firstWaypoint.headingAccuracy = 90
-            }
+        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
+            firstWaypoint.heading = location.course
+            firstWaypoint.headingAccuracy = 90
         }
         
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
