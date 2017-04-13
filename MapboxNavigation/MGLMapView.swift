@@ -124,7 +124,7 @@ extension MGLMapView {
 @objc
 protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation?
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdenitier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdenitier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
 }

@@ -19,7 +19,7 @@ open class NavigationMapView: MGLMapView {
     /**
      Annotates the map with a route line.
      */
-    open func annotate(_ route: Route) {
+    func annotate(_ route: Route) {
         guard let style = style else {
             return
         }
@@ -32,8 +32,8 @@ open class NavigationMapView: MGLMapView {
             let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
             style.addSource(lineSource)
             
-            let line = navigationMapDelegate?.navigationMapView(self, routeStyleLayerWithIdenitier: routeLayerIdentifier, source: lineSource) ?? routeStyleLayer(identifier: routeLayerIdentifier, source: lineSource)
-            let lineCasing = navigationMapDelegate?.navigationMapView(self, routeCasingStyleLayerWithIdenitier: routeLayerCasingIdentifier, source: lineSource) ?? routeCasingStyleLayer(identifier: routeLayerCasingIdentifier, source: lineSource)
+            let line = navigationMapDelegate?.navigationMapView(self, routeStyleLayerWithIdentifier: routeLayerIdentifier, source: lineSource) ?? routeStyleLayer(identifier: routeLayerIdentifier, source: lineSource)
+            let lineCasing = navigationMapDelegate?.navigationMapView(self, routeCasingStyleLayerWithIdentifier: routeLayerCasingIdentifier, source: lineSource) ?? routeCasingStyleLayer(identifier: routeLayerCasingIdentifier, source: lineSource)
             
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) &&
@@ -46,7 +46,7 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    open func shape(describing route: Route) -> MGLShape? {
+    func shape(describing route: Route) -> MGLShape? {
         guard var coordinates = route.coordinates else {
             return nil
         }
@@ -57,7 +57,7 @@ open class NavigationMapView: MGLMapView {
     /**
      Function for overriding the default route line style.
      */
-    open func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+    func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         
@@ -73,7 +73,7 @@ open class NavigationMapView: MGLMapView {
     /**
      Function for overriding the default route line casing style.
      */
-    open func routeCasingStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+    func routeCasingStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
