@@ -135,7 +135,7 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"StartNavigation"]) {
-        MBRouteViewController *controller = (MBRouteViewController *)[segue destinationViewController];
+        MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
         controller.route = self.route;
         controller.directions = [MBDirections sharedDirections];
     }
@@ -147,7 +147,7 @@
     [self performSegueWithIdentifier:@"StartNavigation" sender:self];
     
     // Using code
-    MBRouteViewController *controller = [[MBRouteViewController alloc] initWithRoute:route directions:[MBDirections sharedDirections]];
+    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route directions:[MBDirections sharedDirections]];
     controller.pendingCamera = self.mapView.camera;
     //[self presentViewController:controller animated:YES completion:nil];
 }

@@ -7,19 +7,19 @@ import Pulley
 @objc(MBNavigationPulleyViewController)
 public class NavigationPulleyViewController: PulleyViewController {}
 
-@objc(MBRouteViewControllerDelegate)
-public protocol RouteViewControllerDelegate {
-    func routeViewControllerDidCancelNavigation(_:RouteViewController)
+@objc(MBNavigationViewControllerDelegate)
+public protocol NavigationViewControllerDelegate {
+    func navigationViewControllerDidCancelNavigation(_: NavigationViewController)
 }
 
 /**
- `RouteViewController` is fully featured, turn by turn navigation UI.
+ `NavigationViewController` is fully featured, turn by turn navigation UI.
  
  It provides step by step instructions, an overview of all steps
  for the given route and support for basic styling.
  */
-@objc(MBRouteViewController)
-public class RouteViewController: NavigationPulleyViewController {
+@objc(MBNavigationViewController)
+public class NavigationViewController: NavigationPulleyViewController {
     
     // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route! {
@@ -57,7 +57,7 @@ public class RouteViewController: NavigationPulleyViewController {
     /**
      The receiver’s delegate.
      */
-    public var navigationDelegate: RouteViewControllerDelegate?
+    public var navigationDelegate: NavigationViewControllerDelegate?
     
     /**
      `voiceController` provides access to various speech synthesizer options.
@@ -110,7 +110,7 @@ public class RouteViewController: NavigationPulleyViewController {
     }
     
     /**
-     Initializes a `RouteViewController` that provides turn by turn navigation
+     Initializes a `NavigationViewController` that provides turn by turn navigation
      for the given route. A optional `direction` object is needed for  potential
      rerouting.
 
@@ -292,17 +292,17 @@ public class RouteViewController: NavigationPulleyViewController {
     }
 }
 
-extension RouteViewController: RouteTableViewHeaderViewDelegate {
+extension NavigationViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
-        if navigationDelegate?.routeViewControllerDidCancelNavigation(self) != nil {
-            // The receiver should handle dismissal of the RouteViewController
+        if navigationDelegate?.navigationViewControllerDidCancelNavigation(self) != nil {
+            // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)
         }
     }
 }
 
-extension RouteViewController: PulleyDelegate {
+extension NavigationViewController: PulleyDelegate {
     public func drawerPositionDidChange(drawer: PulleyViewController) {
         switch drawer.drawerPosition {
         case .open:
