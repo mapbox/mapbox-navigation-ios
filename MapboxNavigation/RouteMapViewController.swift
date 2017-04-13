@@ -41,7 +41,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var arrowCurrentStep: RouteStep?
     
     var simulatesLocationUpdates: Bool {
-        guard let parent = parent as? RouteViewController else { return false }
+        guard let parent = parent as? NavigationViewController else { return false }
         return parent.simulatesLocationUpdates
     }
     

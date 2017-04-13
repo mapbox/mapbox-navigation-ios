@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 
-protocol SimulationDelegate : class {
+protocol SimulatedRouteDelegate : class {
     func simulation(_ locationManager: CLLocationManager, didUpdateLocations locations: [CLLocation])
 }
 
@@ -19,7 +19,7 @@ class SimulatedRoute : NSObject {
     
     let locationManager = CLLocationManager()
     
-    weak var delegate: SimulationDelegate?
+    weak var delegate: SimulatedRouteDelegate?
     
     convenience init(_ polyline: [CLLocationCoordinate2D]) {
         self.init()

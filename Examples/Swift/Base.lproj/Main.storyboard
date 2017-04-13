@@ -5,6 +5,7 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -24,16 +25,33 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Sl-bV-xyU">
-                                        <rect key="frame" x="132" y="615" width="111" height="30"/>
+                                        <rect key="frame" x="0.0" y="623" width="187.5" height="44"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.75" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="MYC-X6-san"/>
+                                        </constraints>
                                         <state key="normal" title="Start Navigation"/>
                                         <connections>
-                                            <action selector="didToggleNavigation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gd6-mu-4Zl"/>
+                                            <action selector="didTapStartNavigation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1ZD-3x-Irh"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press map to select a route" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hk0-SM-2Wl">
-                                        <rect key="frame" x="62" y="619" width="251" height="21"/>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KIU-cH-IXd">
+                                        <rect key="frame" x="187.5" y="623" width="187.5" height="44"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.75" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="R3B-3E-Ka9"/>
+                                        </constraints>
+                                        <state key="normal" title="Simulate Navigation"/>
+                                        <connections>
+                                            <action selector="didTapSimulateNavigation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2pl-dE-TSM"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Long press to select a destination" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hk0-SM-2Wl">
+                                        <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.75" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="D7X-rJ-g4m"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -42,10 +60,15 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="Hk0-SM-2Wl" secondAttribute="bottom" constant="27" id="7Oc-HJ-zKe"/>
-                                    <constraint firstItem="8Sl-bV-xyU" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="FIj-BC-6LP"/>
-                                    <constraint firstAttribute="bottom" secondItem="8Sl-bV-xyU" secondAttribute="bottom" constant="22" id="LOb-l9-Iql"/>
-                                    <constraint firstItem="Hk0-SM-2Wl" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="O4U-Pg-RJR"/>
+                                    <constraint firstAttribute="bottom" secondItem="Hk0-SM-2Wl" secondAttribute="bottom" id="7Oc-HJ-zKe"/>
+                                    <constraint firstAttribute="bottom" secondItem="8Sl-bV-xyU" secondAttribute="bottom" id="LOb-l9-Iql"/>
+                                    <constraint firstItem="8Sl-bV-xyU" firstAttribute="width" secondItem="A3N-JT-loC" secondAttribute="width" multiplier="1:2" id="Pds-uP-zSB"/>
+                                    <constraint firstAttribute="trailing" secondItem="KIU-cH-IXd" secondAttribute="trailing" id="Q7E-HM-WIz"/>
+                                    <constraint firstAttribute="bottom" secondItem="KIU-cH-IXd" secondAttribute="bottom" id="TjN-pb-n3K"/>
+                                    <constraint firstItem="8Sl-bV-xyU" firstAttribute="leading" secondItem="A3N-JT-loC" secondAttribute="leading" id="dsN-v1-DQf"/>
+                                    <constraint firstItem="KIU-cH-IXd" firstAttribute="leading" secondItem="8Sl-bV-xyU" secondAttribute="trailing" id="q92-IP-Nlc"/>
+                                    <constraint firstAttribute="trailing" secondItem="Hk0-SM-2Wl" secondAttribute="trailing" id="qaa-r0-NSw"/>
+                                    <constraint firstItem="Hk0-SM-2Wl" firstAttribute="leading" secondItem="A3N-JT-loC" secondAttribute="leading" id="vRW-UT-mQD"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/streets-v10"/>
@@ -77,7 +100,8 @@
                     <connections>
                         <outlet property="howToBeginLabel" destination="Hk0-SM-2Wl" id="iU7-G1-DBc"/>
                         <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
-                        <outlet property="toggleNavigationButton" destination="8Sl-bV-xyU" id="LwJ-MX-oWU"/>
+                        <outlet property="simulateNavigationButton" destination="KIU-cH-IXd" id="Bdk-oG-55B"/>
+                        <outlet property="startNavigationButton" destination="8Sl-bV-xyU" id="t1d-SH-adQ"/>
                         <segue destination="dYn-UD-FHX" kind="presentation" identifier="StartNavigation" id="CX3-Eh-kHD"/>
                     </connections>
                 </viewController>
