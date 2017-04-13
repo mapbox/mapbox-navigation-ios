@@ -42,10 +42,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
 
-  s.dependency "MapboxCoreNavigation"
-  s.dependency "MapboxDirections.swift", "~> 0.8"
   s.dependency "Mapbox-iOS-SDK", "~> 3.5"
-  s.dependency "OSRMTextInstructions", "~> 0.1"
   s.dependency "Pulley", "~> 1.3"
   s.dependency "SDWebImage", "~> 4.0"
   s.dependency "AWSPolly", "~> 2.5"
@@ -53,5 +50,16 @@ Pod::Spec.new do |s|
   s.xcconfig = {
     "SWIFT_VERSION" => "3.0"
   }
-
+  
+  # ――― Subspecs ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+  
+  s.subspec 'Core' do |core|
+    core.name = "MapboxCoreNavigation"
+    
+    core.source_files = "MapboxCoreNavigation"
+    
+    core.dependency "MapboxDirections.swift", "~> 0.8"
+    core.dependency "OSRMTextInstructions", "~> 0.1"
+  end
+  
 end
