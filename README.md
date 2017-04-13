@@ -1,6 +1,6 @@
 # Mapbox Navigation SDK for iOS
 
-![Mapbox Navigation SDK](https://cloud.githubusercontent.com/assets/764476/23636459/567771d2-028a-11e7-95cf-a8832792c67a.png)
+![Mapbox Navigation SDK](docs/images/navigation.png)
 
 Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
 
