@@ -135,6 +135,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.mapViewController = mapViewController
         self.tableViewController = tableViewController
         
+        mapViewController.delegate = self
         mapViewController.routeController = routeController
         mapViewController.destination = destination
         mapViewController.pendingCamera = pendingCamera

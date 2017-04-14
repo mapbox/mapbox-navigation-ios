@@ -9,7 +9,7 @@ open class NavigationMapView: MGLMapView {
     let routeLayerIdentifier = "routeLayer"
     let routeLayerCasingIdentifier = "routeLayerCasing"
     
-    weak var navigationMapDelegate: NavigationMapViewDelegate?
+    public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [Any]!) {
         guard let location = locations.first as? CLLocation else { return }
@@ -21,13 +21,16 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    func annotate(_ route: Route) {
+    /**
+     Adds or updates both the route line and the route line casing
+     */
+    public func showRoute(_ route: Route) {
         guard let style = style else {
             return
         }
         
-        let polyline = navigationMapDelegate?.navigationMapView(self, shapeDescribing: route) ?? shape(describing: route)
-        let polylineSimplified = navigationMapDelegate?.navigationMapView(self, simplifiedShapeDescribing: route) ?? simplifiedShape(describing: route)
+        let polyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: route) ?? shape(describing: route)
+        let polylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: route) ?? simplifiedShape(describing: route)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource {
             source.shape = polyline
@@ -39,8 +42,8 @@ open class NavigationMapView: MGLMapView {
             style.addSource(lineSource)
             style.addSource(lineCasingSource)
             
-            let line = navigationMapDelegate?.navigationMapView(self, routeStyleLayerWithIdentifier: routeLayerIdentifier, source: lineSource) ?? routeStyleLayer(identifier: routeLayerIdentifier, source: lineSource)
-            let lineCasing = navigationMapDelegate?.navigationMapView(self, routeCasingStyleLayerWithIdentifier: routeLayerCasingIdentifier, source: lineSource) ?? routeCasingStyleLayer(identifier: routeLayerCasingIdentifier, source: lineSource)
+            let line = navigationMapDelegate?.navigationMapView?(self, routeStyleLayerWithIdentifier: routeLayerIdentifier, source: lineSource) ?? routeStyleLayer(identifier: routeLayerIdentifier, source: lineSource)
+            let lineCasing = navigationMapDelegate?.navigationMapView?(self, routeCasingStyleLayerWithIdentifier: routeLayerCasingIdentifier, source: lineSource) ?? routeCasingStyleLayer(identifier: routeLayerCasingIdentifier, source: lineSource)
             
             for layer in style.layers.reversed() {
                 if !(layer is MGLSymbolStyleLayer) &&
@@ -94,4 +97,13 @@ open class NavigationMapView: MGLMapView {
         
         return lineCasing
     }
+}
+
+@objc
+public protocol NavigationMapViewDelegate: class  {
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
 }

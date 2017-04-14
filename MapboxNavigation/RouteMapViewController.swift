@@ -124,7 +124,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
         mapView.addArrow(routeController.routeProgress)
-        mapView.annotate(route)
+        mapView.showRoute(route)
         mapView.userTrackingMode = .followWithCourse
     }
     
@@ -338,7 +338,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         let map = mapView as! NavigationMapView
-        map.annotate(route)
+        map.showRoute(route)
     }
     
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
