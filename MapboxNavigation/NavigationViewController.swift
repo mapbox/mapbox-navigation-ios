@@ -7,12 +7,34 @@ import Pulley
 @objc(MBNavigationPulleyViewController)
 public class NavigationPulleyViewController: PulleyViewController {}
 
+/**
+ The `NavigationViewControllerDelegate` provides methods for listening and mamipulating items in the Navigation UI.
+ */
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate {
+    /**
+     Called when the user exits the navigation UI by tapping the `Cancel` button.
+     */
     @objc optional func navigationViewControllerDidCancelNavigation(_:NavigationViewController)
+    
+    /**
+     Returns the line layer for the route line. Used for styling the route line.
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    /**
+     Returns the line layer for the route line casing. Used for styling the route line casing.
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    /**
+     Returns shape for route line.
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    
+    /**
+     Returns shape for route line casing.
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
 }
 
