@@ -3,9 +3,6 @@ import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
 
-let sourceIdentifier = "routeSource"
-let routeLayerIdentifier = "routeLayer"
-let routeLayerCasingIdentifier = "routeLayerCasing"
 let arrowSourceIdentifier = "arrowSource"
 let arrowSourceStrokeIdentifier = "arrowSourceStroke"
 let arrowLayerIdentifier = "arrowLayer"
@@ -127,4 +124,5 @@ protocol NavigationMapViewDelegate: class  {
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
 }
