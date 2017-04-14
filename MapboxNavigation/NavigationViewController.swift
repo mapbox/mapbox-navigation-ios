@@ -10,10 +10,10 @@ public class NavigationPulleyViewController: PulleyViewController {}
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewControllerDidCancelNavigation(_:NavigationViewController)
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
-    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
 }
 
 /**
@@ -305,19 +305,19 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return navigationDelegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
+        return navigationDelegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return navigationDelegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+        return navigationDelegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
-        return navigationDelegate?.navigationMapView(mapView, shapeDescribing: route)
+        return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
-        return navigationDelegate?.navigationMapView(mapView, shapeDescribing: route)
+        return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
 }
 

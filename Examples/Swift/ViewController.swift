@@ -8,7 +8,7 @@ import CoreLocation
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate {
     
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
@@ -159,6 +159,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         viewController.routeController.snapsUserLocationAnnotationToRoute = true
         viewController.voiceController?.volume = 0.5
+        viewController.navigationDelegate = self
         
         present(viewController, animated: true, completion: nil)
     }
@@ -177,5 +178,27 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     func roundToTens(_ x: CLLocationDistance) -> Int {
         return 10 * Int(round(x / 10.0))
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
+        
+        lineCasing.lineColor = MGLStyleValue(rawValue: .blue)
+        lineCasing.lineWidth = MGLStyleValue(rawValue: 4)
+        
+        lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        return lineCasing
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        let line = MGLLineStyleLayer(identifier: identifier, source: source)
+        
+        line.lineColor = MGLStyleValue(rawValue: .red)
+        line.lineWidth = MGLStyleValue(rawValue: 8)
+        
+        line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        return line
     }
 }
