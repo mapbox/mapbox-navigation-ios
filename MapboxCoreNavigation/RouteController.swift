@@ -163,7 +163,7 @@ extension RouteController: CLLocationManagerDelegate {
     func monitorStepProgress(_ location: CLLocation) {
         // Force an announcement when the user begins a route
         var alertLevel: AlertLevel = routeProgress.currentLegProgress.alertUserLevel == .none ? .depart : routeProgress.currentLegProgress.alertUserLevel
-        let profileIdentifier = routeProgress.route.profileIdentifier
+        let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         
         let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed

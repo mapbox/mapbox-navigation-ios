@@ -193,7 +193,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
-        let profileIdentifier = routeProgress.route.profileIdentifier
+        let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
         
         let escapeIfNecessary = {(distance: String) -> String in
