@@ -144,17 +144,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         present(navigationViewController, animated: true, completion: nil)
     }
     
-    func removeRoutesFromMap() {
-        guard let style = mapView.style else {
-            return
-        }
-        if let line = style.layer(withIdentifier: layerIdentifier) {
-            style.removeLayer(line)
-        }
-        if let source = style.source(withIdentifier: sourceIdentifier) {
-            style.removeSource(source)
-        }
-    }
     
     func roundToTens(_ x: CLLocationDistance) -> Int {
         return 10 * Int(round(x / 10.0))

@@ -56,6 +56,31 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
+    /**
+     Removes route line and route line casing from map
+     */
+    public func removeRoute() {
+        guard let style = style else {
+            return
+        }
+        
+        if let line = style.layer(withIdentifier: routeLayerIdentifier) {
+            style.removeLayer(line)
+        }
+        
+        if let lineCasing = style.layer(withIdentifier: routeLayerCasingIdentifier) {
+            style.removeLayer(lineCasing)
+        }
+        
+        if let lineSource = style.source(withIdentifier: sourceIdentifier) {
+            style.removeSource(lineSource)
+        }
+        
+        if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
+            style.removeSource(lineCasingSource)
+        }
+    }
+    
     func shape(describing route: Route) -> MGLShape? {
         guard var coordinates = route.coordinates else {
             return nil
