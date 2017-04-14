@@ -22,6 +22,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera?
+    weak var delegate: RouteMapViewControllerDelegate?
     
     weak var routeController: RouteController!
     
@@ -123,7 +124,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
         mapView.addArrow(routeController.routeProgress)
-        mapView.annotate(route)
+        mapView.showRoute(route)
         mapView.userTrackingMode = .followWithCourse
     }
     
@@ -213,7 +214,23 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
 extension RouteMapViewController: NavigationMapViewDelegate {
     
-    @objc(navigationMapView:shouldUpdateToLocation:)
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
+        return delegate?.navigationMapView(mapView, shapeDescribing: route)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
+        return delegate?.navigationMapView(mapView, simplifiedShapeDescribing: route)
+    }
+    
+    @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
 
         guard routeController.userIsOnRoute(location) else { return nil }
@@ -321,7 +338,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         let map = mapView as! NavigationMapView
-        map.annotate(route)
+        map.showRoute(route)
     }
     
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
@@ -407,4 +424,11 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
     func stepAfter(_ step: RouteStep) -> RouteStep? {
         return routeController.routeProgress.currentLegProgress.stepAfter(step)
     }
+}
+
+protocol RouteMapViewControllerDelegate: class {
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
 }

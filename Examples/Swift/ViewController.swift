@@ -8,11 +8,10 @@ import CoreLocation
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate {
     
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
-    var navigationViewController: NavigationViewController?
     var userRoute: Route?
     
     @IBOutlet weak var mapView: NavigationMapView!
@@ -24,6 +23,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         super.viewDidLoad()
         
         mapView.delegate = self
+        mapView.navigationMapDelegate = self
         
         mapView.userTrackingMode = .follow
         resumeNotifications()
@@ -113,34 +113,14 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             guard let route = routes?.first else {
                 return
             }
-            guard let style = self?.mapView.style else {
-                return
-            }
             
             self?.userRoute = route
             self?.toggleNavigationButton.isHidden = false
             self?.howToBeginLabel.isHidden = true
             
-            self?.removeRoutesFromMap()
             
-            let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: route.coordinateCount)
-            let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
-            let line = MGLLineStyleLayer(identifier: layerIdentifier, source: geoJSONSource)
-            
-            // Style the line
-            line.lineColor = MGLStyleValue(rawValue: UIColor(red:0.00, green:0.45, blue:0.74, alpha:0.9))
-            line.lineWidth = MGLStyleValue(rawValue: 5)
-            line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
-            line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-            
-            // Add source and layer
-            style.addSource(geoJSONSource)
-            for layer in style.layers.reversed() {
-                if !(layer is MGLSymbolStyleLayer) {
-                    style.insertLayer(line, above: layer)
-                    break
-                }
-            }
+            // Open method for adding and updating the route line
+            self?.mapView.showRoute(route)
             
             didFinish?()
         }
@@ -150,32 +130,47 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         // Pass through a
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.
-        let viewController = NavigationViewController(for: route)
+        let navigationViewController = NavigationViewController(for: route)
         
         // If you'd like to use AWS Polly, provide your IdentityPoolId below
         // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer
         // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
         // viewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
         
-        viewController.routeController.snapsUserLocationAnnotationToRoute = true
-        viewController.voiceController?.volume = 0.5
+        navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
+        navigationViewController.voiceController?.volume = 0.5
+        navigationViewController.navigationDelegate = self
         
-        present(viewController, animated: true, completion: nil)
+        present(navigationViewController, animated: true, completion: nil)
     }
     
-    func removeRoutesFromMap() {
-        guard let style = mapView.style else {
-            return
-        }
-        if let line = style.layer(withIdentifier: layerIdentifier) {
-            style.removeLayer(line)
-        }
-        if let source = style.source(withIdentifier: sourceIdentifier) {
-            style.removeSource(source)
-        }
-    }
     
     func roundToTens(_ x: CLLocationDistance) -> Int {
         return 10 * Int(round(x / 10.0))
+    }
+    
+    
+    /// Delegate method for chaning the route line style
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
+        
+        lineCasing.lineColor = MGLStyleValue(rawValue: UIColor(red:0.00, green:0.70, blue:0.99, alpha:1.0))
+        lineCasing.lineWidth = MGLStyleValue(rawValue: 6)
+        
+        lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        return lineCasing
+    }
+    
+    /// Delegate method for chaning the route line casing style
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        let line = MGLLineStyleLayer(identifier: identifier, source: source)
+        
+        line.lineColor = MGLStyleValue(rawValue: UIColor(red:0.18, green:0.49, blue:0.78, alpha:1.0))
+        line.lineWidth = MGLStyleValue(rawValue: 8)
+        
+        line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        return line
     }
 }
