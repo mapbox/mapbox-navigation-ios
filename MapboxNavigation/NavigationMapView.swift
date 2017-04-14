@@ -30,7 +30,7 @@ open class NavigationMapView: MGLMapView {
         }
         
         let polyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: route) ?? shape(describing: route)
-        let polylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: route) ?? simplifiedShape(describing: route)
+        let polylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: route) ?? polyline
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource {
             source.shape = polyline
@@ -82,14 +82,6 @@ open class NavigationMapView: MGLMapView {
     }
     
     func shape(describing route: Route) -> MGLShape? {
-        guard var coordinates = route.coordinates else {
-            return nil
-        }
-        
-        return MGLPolylineFeature(coordinates: &coordinates, count: route.coordinateCount)
-    }
-    
-    func simplifiedShape(describing route: Route) -> MGLShape? {
         guard var coordinates = route.coordinates else {
             return nil
         }
