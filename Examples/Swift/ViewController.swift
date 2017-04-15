@@ -143,12 +143,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         present(navigationViewController, animated: true, completion: nil)
     }
     
-    
-    func roundToTens(_ x: CLLocationDistance) -> Int {
-        return 10 * Int(round(x / 10.0))
-    }
-    
-    
     /// Delegate method for chaning the route line style
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
