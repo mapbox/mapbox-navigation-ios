@@ -3,7 +3,6 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 import Mapbox
-import CoreLocation
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
