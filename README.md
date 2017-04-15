@@ -27,8 +27,8 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Ro
 Add the following lines to your Podfile:
 
 ```ruby
-pod 'MapboxNavigation.swift', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.2.0'
-pod 'MapboxNavigationUI.swift', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.2.0'
+pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.2.0'
+pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.2.0'
 ```
 
 ### [Carthage](https://github.com/Carthage/Carthage)
