@@ -1,13 +1,14 @@
 # Mapbox Navigation SDK for iOS
 
+[![Build Status](https://www.bitrise.io/app/2f82077d3f083479.svg?token=mC783nGMKA3XrvcMCJAOLg&branch=master)](https://www.bitrise.io/app/2f82077d3f083479)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](http://cocoadocs.org/docsets/MapboxNavigation/)
+
 ![Mapbox Navigation SDK](docs/images/navigation.png)
 
 Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
 
 Get up and running in a few minutes with our drop-in turn-by-turn navigation `RouteViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
-
-[![Build Status](https://www.bitrise.io/app/2f82077d3f083479.svg?token=mC783nGMKA3XrvcMCJAOLg&branch=master)](https://www.bitrise.io/app/2f82077d3f083479)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 ## Features
 
@@ -22,26 +23,25 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Ro
 
 ## Installation
 
-### [CocoaPods](https://cocoapods.org/)
+To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
 
-Add the following lines to your Podfile:
+1. Specify the following dependency in your Cartfile:
+   ```cartfile
+   github "mapbox/mapbox-navigation-ios" ~> 0.2
+   ```
 
-```ruby
-pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.2.0'
-pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.2.0'
-```
+1. Run `carthage update --platform iOS` to build just the iOS dependencies.
 
-### [Carthage](https://github.com/Carthage/Carthage)
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include MapboxNavigation.framework and MapboxCoreNavigation.framework.
 
-1: Add the following line to your `Cartfile`:
-```
-github "mapbox/mapbox-navigation-ios"
-```
-2: Run:
-```
-carthage update --platform ios
-```
-3: Drag all frameworks (located in `/Carthage/Build/iOS`) into Embedded Frameworks.
+Alternatively, to install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
+
+1. Specify the following dependency in your Podfile:
+   ```ruby
+   pod 'MapboxNavigation', '~> 0.2'
+   ```
+
+1. Run `pod install` and open the resulting Xcode workspace.
 
 ## Usage
 
@@ -127,6 +127,31 @@ Mapbox Navigation gives you all the components you need, should you want to buil
   * Geometry functions
   * Distance formatter
 
+### Installing Mapbox Core Navigation
+
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods](https://img.shields.io/cocoapods/v/MapboxCoreNavigation.svg)](http://cocoadocs.org/docsets/MapboxCoreNavigation/)
+
+To install Mapbox Core Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
+
+1. Specify the following dependency in your Cartfile:
+   ```cartfile
+   github "mapbox/mapbox-navigation-ios" ~> 0.2
+   ```
+
+1. Run `carthage update --platform iOS` to build just the iOS dependencies.
+
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include MapboxCoreNavigation.framework.
+
+Alternatively, to install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
+
+1. Specify the following dependency in your Podfile:
+   ```ruby
+   pod 'MapboxCoreNavigation', '~> 0.2'
+   ```
+
+1. Run `pod install` and open the resulting Xcode workspace.
+
 ### Route Controller
 
 `RouteController` is given a route. Internally `RouteController` matches the user's current location to the route while looking at 3 principle pieces:
@@ -180,4 +205,4 @@ navigation.routeProgress = RouteProgress(route: newRoute)
 
 ## License
 
-Mapbox Navigation SDK for iOS is released under the ISC License. [See LICENSE](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE) for details.
+Mapbox Navigation SDK for iOS is released under the ISC License. [See LICENSE](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for details.
