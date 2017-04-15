@@ -8,32 +8,40 @@ import Pulley
 public class NavigationPulleyViewController: PulleyViewController {}
 
 /**
- The `NavigationViewControllerDelegate` provides methods for listening and mamipulating items in the Navigation UI.
+ The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
  */
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate {
     /**
-     Called when the user exits the navigation UI by tapping the `Cancel` button.
+     Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
      */
     @objc optional func navigationViewControllerDidCancelNavigation(_:NavigationViewController)
     
     /**
-     Returns the line layer for the route line. Used for styling the route line.
+     Returns an `MGLStyleLayer` that determines the appearance of the route line.
+     
+     If this method is unimplemented, the navigation map view draws the route line using an `MGLLineStyleLayer`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Returns the line layer for the route line casing. Used for styling the route line casing.
+     Returns an `MGLStyleLayer` that determines the appearance of the route line’s casing.
+     
+     If this method is unimplemented, the navigation map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationMapView(_:routeStyleLayerWithIdentifier:source:)`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Returns shape for route line.
+     Returns an `MGLShape` that represents the path of the route line.
+     
+     If this method is unimplemented, the navigation map view represents the route line using an `MGLPolylineFeature` based on `route`’s `coordinates` property.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     
     /**
-     Returns shape for route line casing.
+     Returns an `MGLShape` that represents the path of the route line’s casing.
+     
+     If this method is unimplemented, the navigation map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationMapView(_:shapeDescribing:)`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
 }
