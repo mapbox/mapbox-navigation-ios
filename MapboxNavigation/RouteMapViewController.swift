@@ -21,7 +21,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var route: Route { return routeController.routeProgress.route }
     
     var destination: MGLAnnotation!
-    var pendingCamera: MGLMapCamera?
+    var pendingCamera: MGLMapCamera? {
+        guard let parent = parent as? NavigationViewController else {
+            return nil
+        }
+        return parent.pendingCamera
+    }
     weak var delegate: RouteMapViewControllerDelegate?
     
     weak var routeController: RouteController!

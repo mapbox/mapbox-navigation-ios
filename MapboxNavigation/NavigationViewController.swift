@@ -168,7 +168,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         mapViewController.delegate = self
         mapViewController.routeController = routeController
         mapViewController.destination = destination
-        mapViewController.pendingCamera = pendingCamera
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
@@ -186,7 +185,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             if let controller = segue.destination as? RouteMapViewController {
                 controller.routeController = routeController
                 controller.destination = destination
-                controller.pendingCamera = pendingCamera
                 mapViewController = controller
                 controller.delegate = self
             }
