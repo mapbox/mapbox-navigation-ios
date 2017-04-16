@@ -139,6 +139,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
         navigationViewController.voiceController?.volume = 0.5
         navigationViewController.navigationDelegate = self
+        navigationViewController.pendingCamera = mapView.camera
         
         present(navigationViewController, animated: true, completion: nil)
     }
