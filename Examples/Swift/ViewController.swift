@@ -137,9 +137,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         // viewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
         
         navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
+        navigationViewController.routeController.showCurrentWayNameLabel = true
         navigationViewController.voiceController?.volume = 0.5
         navigationViewController.navigationDelegate = self
-        navigationViewController.pendingCamera = mapView.camera
+        let camera = mapView.camera
+        camera.pitch = 45
+        camera.altitude = 600
+        navigationViewController.pendingCamera = camera
         
         present(navigationViewController, animated: true, completion: nil)
     }

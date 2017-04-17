@@ -13,6 +13,7 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var recenterButton: UIButton!
+    @IBOutlet weak var wayNameLabel: StyleLabel!
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController!
@@ -131,6 +132,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.addArrow(routeController.routeProgress)
         mapView.showRoute(route)
         mapView.userTrackingMode = .followWithCourse
+        wayNameLabel.isHidden = true
     }
     
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
@@ -256,6 +258,34 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         guard location.course != -1 else {
             return defaultReturn
+        }
+        
+        if let userLocation = mapView.userLocation, routeController.showCurrentWayNameLabel == true {
+            
+            // Somehow check the current style has mapbox streets
+            //
+            //let streets = MGLSource(identifier: "mapbox://mapbox-streets-v7")
+            //guard mapView.style!.sources.contains(streets) else {
+            //  return
+            //}
+            
+            let userPuck = mapView.view(for: userLocation)
+            if let userPuck = userPuck {
+                let features = mapView.visibleFeatures(in: userPuck.frame)
+                
+                for layer in features {
+                    
+                    // TODO: check for acceptable classes
+                    // if let feature = layer as? MGLPolylineFeature,
+                    
+                    // TODO: Localize
+                    if let name = layer.attribute(forKey: "name") as? String {
+                        wayNameLabel.text = name
+                        wayNameLabel.sizeToFit()
+                        wayNameLabel.isHidden = false
+                    }
+                }
+            }
         }
         
         let coords = routeController.routeProgress.currentLegProgress.nearbyCoordinates
