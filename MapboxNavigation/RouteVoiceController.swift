@@ -288,10 +288,14 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             input.voiceId = .raveena
         case ("en", _):
             input.voiceId = .joanna
+        case ("es", _):
+            input.voiceId = .miguel
         case ("fr", _):
             input.voiceId = .celine
         case ("nl", _):
             input.voiceId = .lotte
+        case ("ru", _):
+            input.voiceId = .maxim
         default:
             speakFallBack(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
             return
