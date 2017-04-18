@@ -41,6 +41,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
     
+    let streetsLanguages = ["zh", "ru", "fr", "es", "en"]
+    
     var simulatesLocationUpdates: Bool {
         guard let parent = parent as? NavigationViewController else { return false }
         return parent.simulatesLocationUpdates
@@ -286,11 +288,11 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             if let userPuck = mapView.view(for: userLocation) {
                 
                 let lineLayers = style.layers.flatMap {
-                    $0 as? MGLLineStyleLayer
+                    $0 as? MGLVectorStyleLayer
                 }
                 
                 let layerIdentifiers = lineLayers.filter {
-                    streetsSourceIdentifiers.contains($0.sourceIdentifier ?? "") && $0.sourceLayerIdentifier == "road"
+                    streetsSourceIdentifiers.contains($0.sourceIdentifier ?? "") && $0.sourceLayerIdentifier == "road_label"
                 }.map {
                     $0.identifier
                 }
@@ -299,7 +301,18 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 
                 for feature in features {
                     // TODO: Localize
-                    if let name = feature.attribute(forKey: "name") as? String {
+                    
+                    for attribute in feature.attributes {
+                        print(attribute)
+                    }
+                    
+                    var key = "name"
+                    if let language = Locale.preferredLanguages.first!.components(separatedBy: "-").first,
+                        streetsLanguages.contains(language) {
+                        key += "_\(language)"
+                    }
+                    
+                    if let name = feature.attribute(forKey: key) as? String {
                         wayNameLabel.text = name
                         wayNameLabel.sizeToFit()
                         wayNameLabel.isHidden = false
