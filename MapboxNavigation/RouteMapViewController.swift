@@ -274,18 +274,14 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             let style = mapView.style,
             routeController.showCurrentWayNameLabel == true {
             
-            let validSources = style.sources.filter { (source: MGLSource) -> Bool in
-                if let vectorSource = source as? MGLVectorSource {
-                    if vectorSource.configurationURL?.absoluteString.range(of: "mapbox.mapbox-streets-v7") != nil {
-                        return true
-                    } else {
-                        return false
-                    }
-                } else {
-                    return false
-                }
+            let streetsSourceIdentifiers = style.sources.flatMap {
+                $0 as? MGLVectorSource
+                }.filter {
+                    $0.isMapboxStreets
+                }.map {
+                    $0.identifier
             }
-            assert(!validSources.isEmpty, "The option `showCurrentWayNameLabel` must contain the source `mapbox.mapbox-streets-v7`")
+            assert(!streetsSourceIdentifiers.isEmpty, "The option `showCurrentWayNameLabel` must contain the source `mapbox.mapbox-streets-v7`")
             
             if let userPuck = mapView.view(for: userLocation) {
                 
@@ -293,16 +289,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     $0 as? MGLLineStyleLayer
                 }
                 
-                let sourceIdenitifers = validSources.map {
-                    $0.identifier
-                }
-                
                 let layerIdentifiers = lineLayers.filter {
-                    if let identifier = $0.sourceIdentifier {
-                        return sourceIdenitifers.contains(identifier) && $0.sourceLayerIdentifier == "road"
-                    } else {
-                        return false
-                    }
+                    streetsSourceIdentifiers.contains($0.sourceIdentifier ?? "") && $0.sourceLayerIdentifier == "road"
                 }.map {
                     $0.identifier
                 }
