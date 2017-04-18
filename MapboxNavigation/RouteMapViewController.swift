@@ -260,26 +260,49 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             return defaultReturn
         }
         
-        if let userLocation = mapView.userLocation, routeController.showCurrentWayNameLabel == true {
+        if let userLocation = mapView.userLocation,
+            let style = mapView.style,
+            routeController.showCurrentWayNameLabel == true {
             
-            // Somehow check the current style has mapbox streets
-            //
-            //let streets = MGLSource(identifier: "mapbox://mapbox-streets-v7")
-            //guard mapView.style!.sources.contains(streets) else {
-            //  return
-            //}
+            let validSources = style.sources.filter { (source: MGLSource) -> Bool in
+                if let vectorSource = source as? MGLVectorSource {
+                    if vectorSource.configurationURL?.absoluteString.range(of: "mapbox.mapbox-streets-v7") != nil {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return false
+                }
+            }
+            assert(!validSources.isEmpty, "The option `showCurrentWayNameLabel` must contain the source `mapbox.mapbox-streets-v7`")
             
             let userPuck = mapView.view(for: userLocation)
             if let userPuck = userPuck {
-                let features = mapView.visibleFeatures(in: userPuck.frame)
                 
-                for layer in features {
-                    
-                    // TODO: check for acceptable classes
-                    // if let feature = layer as? MGLPolylineFeature,
-                    
+                let lineLayers = style.layers.flatMap {
+                    $0 as? MGLLineStyleLayer
+                }
+                
+                let sourceIdenitifers = validSources.map {
+                    $0.identifier
+                }
+                
+                let layerIdentifiers = lineLayers.filter {
+                    if let identifier = $0.sourceIdentifier {
+                        return sourceIdenitifers.contains(identifier)
+                    } else {
+                        return false
+                    }
+                }.map {
+                    $0.identifier
+                }
+                
+                let features = mapView.visibleFeatures(in: userPuck.frame, styleLayerIdentifiers: Set(layerIdentifiers))
+                
+                for feature in features {
                     // TODO: Localize
-                    if let name = layer.attribute(forKey: "name") as? String {
+                    if let name = feature.attribute(forKey: "name") as? String {
                         wayNameLabel.text = name
                         wayNameLabel.sizeToFit()
                         wayNameLabel.isHidden = false
