@@ -32,6 +32,11 @@ open class RouteController: NSObject {
     */
     public var snapsUserLocationAnnotationToRoute = false
     
+    public var simulatesLocationUpdates: Bool = false {
+        didSet {
+            locationManager.delegate = simulatesLocationUpdates ? nil : self
+        }
+    }
     
     /*
      Intializes a new `RouteController`.

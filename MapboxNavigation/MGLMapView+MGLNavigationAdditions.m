@@ -2,4 +2,6 @@
 
 @implementation MGLMapView (MGLNavigationAdditions)
 
+@dynamic locationManager;
+
 @end

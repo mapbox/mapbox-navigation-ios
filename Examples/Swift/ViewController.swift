@@ -14,13 +14,16 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     var userRoute: Route?
     
     @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var toggleNavigationButton: UIButton!
+    @IBOutlet weak var startNavigationButton: UIButton!
+    @IBOutlet weak var simulateNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        automaticallyAdjustsScrollViewInsets = false
+        mapView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         
@@ -49,8 +52,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         getRoute()
     }
     
-    @IBAction func didToggleNavigation(_ sender: Any) {
-        startNavigation(userRoute!)
+    @IBAction func didTapStartNavigation(_ sender: Any) {
+        startNavigation(along: userRoute!)
+    }
+    
+    @IBAction func didTapSimulateNavigation(_ sender: Any) {
+        startNavigation(along: userRoute!, simulatesLocationUpdates: true)
     }
     
     func resumeNotifications() {
@@ -114,9 +121,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
             }
             
             self?.userRoute = route
-            self?.toggleNavigationButton.isHidden = false
+            self?.startNavigationButton.isHidden = false
+            self?.simulateNavigationButton.isHidden = false
             self?.howToBeginLabel.isHidden = true
-            
             
             // Open method for adding and updating the route line
             self?.mapView.showRoute(route)
@@ -125,7 +132,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         }
     }
     
-    func startNavigation(_ route: Route) {
+    func startNavigation(along route: Route, simulatesLocationUpdates: Bool = false) {
         // Pass through a
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.
@@ -136,10 +143,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
         // viewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
         
+        navigationViewController.simulatesLocationUpdates = simulatesLocationUpdates
         navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
         navigationViewController.voiceController?.volume = 0.5
         navigationViewController.navigationDelegate = self
-        navigationViewController.pendingCamera = mapView.camera
+        
+        let camera = mapView.camera
+        camera.pitch = 45
+        camera.altitude = 1_000
+        navigationViewController.pendingCamera = camera
         
         present(navigationViewController, animated: true, completion: nil)
     }
