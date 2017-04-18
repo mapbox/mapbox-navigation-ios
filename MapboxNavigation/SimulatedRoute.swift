@@ -7,7 +7,7 @@ protocol SimulatedRouteDelegate : class {
 
 class SimulatedRoute : NSObject {
     
-    var speed: CLLocationSpeed = 10
+    var speed: CLLocationSpeed = 30
     
     var distanceFilter: CLLocationDistance = 10
     
