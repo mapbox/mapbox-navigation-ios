@@ -15,7 +15,12 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
      */
-    @objc optional func navigationViewControllerDidCancelNavigation(_:NavigationViewController)
+    @objc optional func navigationViewControllerDidCancelNavigation(_ : NavigationViewController)
+    
+    /**
+     Called when the user arrives at the destination.
+     */
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: MGLAnnotation)
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line.
@@ -264,6 +269,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.notifyDidChange(routeProgress: routeProgress)
+        
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
+        }
     }
     
     func shouldReroute(notification: NSNotification) {

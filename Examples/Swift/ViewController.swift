@@ -156,7 +156,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         present(navigationViewController, animated: true, completion: nil)
     }
     
-    /// Delegate method for chaning the route line style
+    /// Delegate method for changing the route line style
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
@@ -168,7 +168,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         return lineCasing
     }
     
-    /// Delegate method for chaning the route line casing style
+    /// Delegate method for changing the route line casing style
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         
@@ -178,5 +178,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         return line
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt destination: MGLAnnotation) {
+        print("User arrived at \(destination)")
     }
 }
