@@ -287,8 +287,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             }
             assert(!validSources.isEmpty, "The option `showCurrentWayNameLabel` must contain the source `mapbox.mapbox-streets-v7`")
             
-            let userPuck = mapView.view(for: userLocation)
-            if let userPuck = userPuck {
+            if let userPuck = mapView.view(for: userLocation) {
                 
                 let lineLayers = style.layers.flatMap {
                     $0 as? MGLLineStyleLayer
@@ -300,7 +299,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 
                 let layerIdentifiers = lineLayers.filter {
                     if let identifier = $0.sourceIdentifier {
-                        return sourceIdenitifers.contains(identifier)
+                        return sourceIdenitifers.contains(identifier) && $0.sourceLayerIdentifier == "road"
                     } else {
                         return false
                     }
