@@ -110,7 +110,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      `simulate` provides simulated location updates along the given route.
      */
-    public var simulatesLocationUpdates: Bool = false
+    public var simulatesLocationUpdates: Bool = false {
+        didSet {
+            routeController.simulatesLocationUpdates = simulatesLocationUpdates
+        }
+    }
     
     /**
      `mapView` provides access to the navigation's `MGLMapView` with all its styling capabilities.
@@ -332,7 +336,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func setupRouteController() {
         if routeController == nil {
-            routeController = RouteController(route: route, simulatesLocationUpdates: simulatesLocationUpdates)
+            routeController = RouteController(route: route)
+            routeController.simulatesLocationUpdates = simulatesLocationUpdates
             
             if Bundle.main.backgroundModeLocationSupported {
                 routeController.locationManager.activityType = .automotiveNavigation
