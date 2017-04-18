@@ -430,34 +430,20 @@
 		351BEBD81E5BCC28006FE110 /* MapboxNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
-				35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */,
-				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
-				351BEC081E5BCC72006FE110 /* Bundle.swift */,
-				351BEC091E5BCC72006FE110 /* DashedLineView.swift */,
-				351BEC0A1E5BCC72006FE110 /* Directions.swift */,
+				C51923B41EA55C5E002AF9E1 /* Extensions */,
+				C51923B71EA58D28002AF9E1 /* RouteTableView */,
+				351BEC201E5BD4DC006FE110 /* Supporting files */,
+				C51923B51EA55CD4002AF9E1 /* Views */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
-				351BEC031E5BCC6C006FE110 /* LaneArrowView.swift */,
-				351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */,
-				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
+				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
+				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
 				351BEBE01E5BCC63006FE110 /* NavigationUI.swift */,
+				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
-				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
 				351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */,
-				351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */,
-				351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */,
-				351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */,
-				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
+				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
-				351BEBEB1E5BCC63006FE110 /* String.swift */,
-				351BEBEC1E5BCC63006FE110 /* StyleButton.swift */,
-				351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */,
-				351BEBEE1E5BCC63006FE110 /* StyleLabel.swift */,
-				351BEC201E5BD4DC006FE110 /* Supporting files */,
-				351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */,
-				351BEBF01E5BCC63006FE110 /* UIView.swift */,
-				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -561,6 +547,44 @@
 				35A1D3651E6624EF00A48FE8 /* Mapbox.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C51923B41EA55C5E002AF9E1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				351BEC081E5BCC72006FE110 /* Bundle.swift */,
+				351BEC0A1E5BCC72006FE110 /* Directions.swift */,
+				351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */,
+				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
+				35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */,
+				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
+				351BEBEB1E5BCC63006FE110 /* String.swift */,
+				351BEBF01E5BCC63006FE110 /* UIView.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
+		C51923B51EA55CD4002AF9E1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				351BEC091E5BCC72006FE110 /* DashedLineView.swift */,
+				351BEC031E5BCC6C006FE110 /* LaneArrowView.swift */,
+				351BEBEC1E5BCC63006FE110 /* StyleButton.swift */,
+				351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */,
+				351BEBEE1E5BCC63006FE110 /* StyleLabel.swift */,
+				351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		C51923B71EA58D28002AF9E1 /* RouteTableView */ = {
+			isa = PBXGroup;
+			children = (
+				351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */,
+				351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */,
+				351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */,
+			);
+			name = RouteTableView;
 			sourceTree = "<group>";
 		};
 		C52D09CF1DEF5E5F00BE3C5C /* Fixtures */ = {

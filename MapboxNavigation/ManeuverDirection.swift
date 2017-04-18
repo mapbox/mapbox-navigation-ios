@@ -1,8 +1,6 @@
 import Foundation
 import MapboxDirections
 
-
-
 extension ManeuverDirection {
     init(angle: Int) {
         var description: String
