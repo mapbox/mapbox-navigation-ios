@@ -39,6 +39,11 @@ open class RouteController: NSObject {
      */
     public var showCurrentWayNameLabel = false
     
+    public var simulatesLocationUpdates: Bool = false {
+        didSet {
+            locationManager.delegate = simulatesLocationUpdates ? nil : self
+        }
+    }
     
     /*
      Intializes a new `RouteController`.

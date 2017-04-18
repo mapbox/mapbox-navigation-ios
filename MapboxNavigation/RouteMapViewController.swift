@@ -41,6 +41,11 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
     
+    var simulatesLocationUpdates: Bool {
+        guard let parent = parent as? NavigationViewController else { return false }
+        return parent.simulatesLocationUpdates
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
@@ -75,6 +80,11 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
+        
+        if simulatesLocationUpdates {
+            mapView.locationManager.stopUpdatingLocation()
+            mapView.locationManager.stopUpdatingHeading()
+        }
         
         let topPadding: CGFloat = 30
         let bottomPadding: CGFloat = 50
