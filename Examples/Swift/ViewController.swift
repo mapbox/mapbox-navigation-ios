@@ -53,11 +53,11 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     }
     
     @IBAction func didTapStartNavigation(_ sender: Any) {
-        startNavigation(userRoute!)
+        startNavigation(along: userRoute!)
     }
     
     @IBAction func didTapSimulateNavigation(_ sender: Any) {
-        startNavigation(userRoute!, true)
+        startNavigation(along: userRoute!, simulatesLocationUpdates: true)
     }
     
     func resumeNotifications() {
@@ -132,7 +132,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         }
     }
     
-    func startNavigation(_ route: Route,_ simulatesLocationUpdates: Bool = false) {
+    func startNavigation(along route: Route, simulatesLocationUpdates: Bool = false) {
         // Pass through a
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.

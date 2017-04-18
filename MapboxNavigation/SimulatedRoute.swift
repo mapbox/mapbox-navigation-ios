@@ -58,7 +58,7 @@ class SimulatedRoute : NSObject {
         guard locations.count > 0 else { return }
         let location = locations[0]
         
-        delegate?.simulation(locationManager, didUpdateLocations: [location.shifted(Date())])
+        delegate?.simulation(locationManager, didUpdateLocations: [location.shifted(to: Date())])
         
         if (locations.count > 1) {
             let nextLocation = locations[1]
@@ -77,13 +77,13 @@ class SimulatedRoute : NSObject {
 }
 
 extension CLLocation {
-    func shifted(_ to: Date) -> CLLocation {
+    func shifted(to shiftedTimestamp: Date) -> CLLocation {
         return CLLocation(coordinate: coordinate,
                           altitude: altitude,
                           horizontalAccuracy: horizontalAccuracy,
                           verticalAccuracy: verticalAccuracy,
                           course: course,
                           speed: speed,
-                          timestamp: to)
+                          timestamp: shiftedTimestamp)
     }
 }
