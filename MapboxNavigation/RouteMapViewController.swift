@@ -262,29 +262,14 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let route = routeController.routeProgress.route
         guard let coordinates = route.coordinates else  { return nil }
         
-        var newCoordinate = location.coordinate
-        if routeController.snapsUserLocationAnnotationToRoute {
-            // Snap to route
-            let snappedCoordinate = closestCoordinate(on: coordinates, to: location.coordinate)
-            if let coordinate = snappedCoordinate?.coordinate {
-                newCoordinate = coordinate
-            }
-        }
-        
-        let defaultReturn = CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
-        
-        guard location.course != -1 else {
-            return defaultReturn
-        }
-        
         if let userLocation = mapView.userLocation,
             let style = mapView.style,
-            routeController.showCurrentWayNameLabel == true {
+            routeController.showCurrentWayNameLabel {
             
             let streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
-            }.filter {
-                $0.isMapboxStreets
+                }.filter {
+                    $0.isMapboxStreets
             }
             let streetsSourceIdentifiers = streetsSources.map {
                 $0.identifier
@@ -319,6 +304,21 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     }
                 }
             }
+        }
+        
+        var newCoordinate = location.coordinate
+        if routeController.snapsUserLocationAnnotationToRoute {
+            // Snap to route
+            let snappedCoordinate = closestCoordinate(on: coordinates, to: location.coordinate)
+            if let coordinate = snappedCoordinate?.coordinate {
+                newCoordinate = coordinate
+            }
+        }
+        
+        let defaultReturn = CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
+        
+        guard location.course != -1 else {
+            return defaultReturn
         }
         
         let coords = routeController.routeProgress.currentLegProgress.nearbyCoordinates

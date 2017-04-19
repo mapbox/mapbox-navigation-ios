@@ -145,7 +145,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         
         navigationViewController.simulatesLocationUpdates = simulatesLocationUpdates
         navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
-        navigationViewController.routeController.showCurrentWayNameLabel = true
         navigationViewController.voiceController?.volume = 0.5
         navigationViewController.navigationDelegate = self
         
