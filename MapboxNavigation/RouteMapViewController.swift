@@ -42,6 +42,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var arrowCurrentStep: RouteStep?
     
     let streetsLanguages = ["zh", "ru", "fr", "es", "en"]
+    let RoadLabelLayerIdentifier = "roadLabelLayer"
     
     var simulatesLocationUpdates: Bool {
         guard let parent = parent as? NavigationViewController else { return false }
@@ -57,6 +58,10 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.tintColor = NavigationUI.shared.tintColor
         recenterButton.tintColor = NavigationUI.shared.tintColor
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        wayNameLabel.applyDefaultCornerRadiusShadow()
+        wayNameLabel.layer.masksToBounds = true
+        wayNameLabel.insets = UIEdgeInsetsMake(0, 0, 5, 0)
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -276,35 +281,30 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             let style = mapView.style,
             routeController.showCurrentWayNameLabel == true {
             
-            let streetsSourceIdentifiers = style.sources.flatMap {
+            let streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
-                }.filter {
-                    $0.isMapboxStreets
-                }.map {
-                    $0.identifier
+            }.filter {
+                $0.isMapboxStreets
+            }
+            let streetsSourceIdentifiers = streetsSources.map {
+                $0.identifier
             }
             assert(!streetsSourceIdentifiers.isEmpty, "The option `showCurrentWayNameLabel` must contain the source `mapbox.mapbox-streets-v7`")
             
+            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: "roadLabelLayer") == nil{
+                let streetLabelLayer = MGLLineStyleLayer(identifier: RoadLabelLayerIdentifier, source: mapboxSteetsSource)
+                streetLabelLayer.sourceLayerIdentifier = "road_label"
+                
+                // If the opacity is set to 0, the feature will be ignored in `mapView.visibleFeatures()`
+                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 0.000000000001)
+                streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 10)
+                style.addLayer(streetLabelLayer)
+            }
+            
             if let userPuck = mapView.view(for: userLocation) {
-                
-                let lineLayers = style.layers.flatMap {
-                    $0 as? MGLVectorStyleLayer
-                }
-                
-                let layerIdentifiers = lineLayers.filter {
-                    streetsSourceIdentifiers.contains($0.sourceIdentifier ?? "") && $0.sourceLayerIdentifier == "road_label"
-                }.map {
-                    $0.identifier
-                }
-                
-                let features = mapView.visibleFeatures(in: userPuck.frame, styleLayerIdentifiers: Set(layerIdentifiers))
+                let features = mapView.visibleFeatures(in: userPuck.frame, styleLayerIdentifiers: Set([RoadLabelLayerIdentifier]))
                 
                 for feature in features {
-                    // TODO: Localize
-                    
-                    for attribute in feature.attributes {
-                        print(attribute)
-                    }
                     
                     var key = "name"
                     if let language = Locale.preferredLanguages.first!.components(separatedBy: "-").first,
