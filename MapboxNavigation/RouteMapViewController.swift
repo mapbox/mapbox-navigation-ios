@@ -264,7 +264,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         if let userLocation = mapView.userLocation,
             let style = mapView.style,
-            routeController.showCurrentWayNameLabel {
+            routeController.showCurrentWayNameLabel,
+            recenterButton.isHidden {
             
             let streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
@@ -391,6 +392,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         
         if mode != .followWithCourse {
             recenterButton.isHidden = false
+            wayNameLabel.isHidden = true
             startResetTrackingModeTimer()
         } else {
             recenterButton.isHidden = true
