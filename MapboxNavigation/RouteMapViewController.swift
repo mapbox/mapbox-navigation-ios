@@ -60,7 +60,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
         wayNameLabel.applyDefaultCornerRadiusShadow()
         wayNameLabel.layer.masksToBounds = true
-        wayNameLabel.insets = UIEdgeInsetsMake(0, 0, 5, 0)
+        wayNameLabel.insets = UIEdgeInsetsMake(1, 4, 1, 4)
 
     }
     
@@ -296,7 +296,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 streetLabelLayer.sourceLayerIdentifier = "road_label"
                 
                 // If the opacity is set to 0, the feature will be ignored in `mapView.visibleFeatures()`
-                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 0.000000000001)
+                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 0.001)
                 streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 10)
                 style.addLayer(streetLabelLayer)
             }
