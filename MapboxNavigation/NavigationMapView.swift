@@ -91,9 +91,9 @@ open class NavigationMapView: MGLMapView {
     
     func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
-        let line = MGLLineStyleLayer(identifier: identifier, source: source)
+        let line = RouteStyleLayer(identifier: identifier, source: source)
         
-        line.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor.withAlphaComponent(0.6))
+        line.lineColor = MGLStyleValue(rawValue: line.appearanceColor)
         line.lineWidth = MGLStyleValue(rawValue: 5)
         
         line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
@@ -104,9 +104,9 @@ open class NavigationMapView: MGLMapView {
     
     func routeCasingStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
-        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
+        let lineCasing = RouteCasingLayer(identifier: identifier, source: source)
         
-        lineCasing.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor)
+        lineCasing.lineColor = MGLStyleValue(rawValue: lineCasing.appearanceColor)
         lineCasing.lineWidth = MGLStyleValue(rawValue: 9)
         
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))

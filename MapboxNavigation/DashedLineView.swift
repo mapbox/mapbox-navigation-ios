@@ -2,11 +2,10 @@ import UIKit
 
 @IBDesignable
 @objc(MBDashedLineView)
-public class DashedLineView: UIView {
+public class DashedLineView: LineView {
 
     @IBInspectable public var dashedLength: CGFloat = 4 { didSet { updateProperties() } }
     @IBInspectable public var dashedGap: CGFloat = 4 { didSet { updateProperties() } }
-    @IBInspectable public var lineColor: UIColor = NavigationUI.shared.lineColor { didSet { updateProperties() } }
 
     let dashedLineLayer = CAShapeLayer()
 

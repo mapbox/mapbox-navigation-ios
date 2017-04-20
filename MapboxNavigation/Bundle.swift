@@ -2,7 +2,7 @@ import Foundation
 
 extension Bundle {
     class var navigationUI: Bundle {
-        get { return Bundle(for: NavigationUI.self) }
+        get { return Bundle(for: NavigationViewController.self) }
     }
     
     var backgroundModeLocationSupported: Bool {

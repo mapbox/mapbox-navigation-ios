@@ -85,7 +85,7 @@ extension MGLMapView {
             let join = NSValue(mglLineJoin: .round)
             
             let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: nil)
-            let arrowStroke = MGLLineStyleLayer(identifier: arrowSourceIdentifier, source: arrowSourceStroke)
+            let arrowStroke = ArrowStrokeLayer(identifier: arrowSourceIdentifier, source: arrowSourceStroke)
             let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: nil)
             let arrow = MGLLineStyleLayer(identifier: arrowLayerIdentifier, source: arrowSource)
             
@@ -109,7 +109,7 @@ extension MGLMapView {
                 arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
                 arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
                 arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
-                arrowStroke.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintColor)
+                arrowStroke.lineColor = MGLStyleValue(rawValue: arrowStroke.appearanceColor)
                 
                 style.addSource(arrowSourceStroke)
                 style.insertLayer(arrowStroke, below: arrow)

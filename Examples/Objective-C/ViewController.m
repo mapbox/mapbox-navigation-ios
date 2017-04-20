@@ -142,14 +142,21 @@
 }
 
 - (void)startNavigation:(MBRoute *)route {
+    [self applyCustomStyle];
+    
     // Using storyboard
-    [[MBNavigationUI shared] setTintColor:[UIColor redColor]];
     [self performSegueWithIdentifier:@"StartNavigation" sender:self];
     
     // Using code
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route directions:[MBDirections sharedDirections]];
     controller.pendingCamera = self.mapView.camera;
     //[self presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)applyCustomStyle {
+    MBStyle *style = [[MBStyle alloc] init];
+    style.headerBackgroundColor = [UIColor blueColor];
+    [style apply];
 }
 
 @end
