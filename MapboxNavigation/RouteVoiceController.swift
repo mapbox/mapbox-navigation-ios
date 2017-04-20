@@ -370,6 +370,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         // Only localized languages will have a proper fallback voice
         utterance.voice = AVSpeechSynthesisVoice(language: Bundle.main.preferredLocalizations.first)
+        utterance.volume = volume
         
         speechSynth.speak(utterance)
     }
