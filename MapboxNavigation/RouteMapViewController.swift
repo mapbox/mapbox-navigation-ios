@@ -295,7 +295,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     
                     var key = "name"
                     if let language = Locale.preferredLanguages.first!.components(separatedBy: "-").first,
-                        streetsLanguages.contains(language) {
+                        streetsLanguages.contains(language) || language == "zh-Hans" {
                         key += "_\(language)"
                     }
                     
