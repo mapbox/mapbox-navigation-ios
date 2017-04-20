@@ -40,7 +40,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
-    var currentWayNameCounter = 0
     
     var simulatesLocationUpdates: Bool {
         guard let parent = parent as? NavigationViewController else { return false }
@@ -264,7 +263,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             let style = mapView.style,
             recenterButton.isHidden {
             
-            let streetsLanguages = ["zh", "ru", "fr", "es", "en"]
+            let streetsLanguages = ["zh", "ru", "fr", "es", "en", "de"]
             let roadLabelLayerIdentifier = "roadLabelLayer"
             
             let streetsSources = style.sources.flatMap {
@@ -288,29 +287,34 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 style.addLayer(streetLabelLayer)
             }
             
-            if let userPuck = mapView.view(for: userLocation) {
+            if let userPuck = mapView.view(for: userLocation),
+                let routeWayNames = routeController.routeProgress.currentLegProgress.currentStep.names {
                 let features = mapView.visibleFeatures(in: userPuck.frame, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
                 
                 for feature in features {
                     
                     var key = "name"
-                    if let language = Locale.preferredLanguages.first!.components(separatedBy: "-").first,
-                        streetsLanguages.contains(language) || language == "zh-Hans" {
+                    if let languages = Locale.preferredLanguages.first,
+                        let language = languages.components(separatedBy: "-").first,
+                        streetsLanguages.contains(language) || languages == "zh-Hans" {
                         key += "_\(language)"
                     }
                     
                     if let name = feature.attribute(forKey: key) as? String {
-                        if name != wayNameLabel.text {
-                            currentWayNameCounter += 1
+                        
+                        let filteredStreetNames = routeWayNames.filter {
+                            return name.distanceFrom(string: $0) <= 6
                         }
-                        print(currentWayNameCounter)
-                        if currentWayNameCounter >= 10 {
+                        
+                        if !filteredStreetNames.isEmpty {
                             wayNameLabel.text = name
-                            currentWayNameCounter = 0
                         }
-                        wayNameLabel.sizeToFit()
-                        wayNameLabel.isHidden = false
+                    } else if let routeWayName = routeWayNames.first {
+                        wayNameLabel.text = routeWayName
                     }
+                    
+                    wayNameLabel.sizeToFit()
+                    wayNameLabel.isHidden = false
                 }
             }
         }
@@ -401,7 +405,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
         if mode != .followWithCourse {
             recenterButton.isHidden = false
             wayNameLabel.isHidden = true
-            currentWayNameCounter = 0
             startResetTrackingModeTimer()
         } else {
             recenterButton.isHidden = true
