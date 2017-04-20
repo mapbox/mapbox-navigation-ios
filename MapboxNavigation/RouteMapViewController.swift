@@ -40,9 +40,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
-    
-    let streetsLanguages = ["zh", "ru", "fr", "es", "en"]
-    let RoadLabelLayerIdentifier = "roadLabelLayer"
+    var currentWayNameCounter = 0
     
     var simulatesLocationUpdates: Bool {
         guard let parent = parent as? NavigationViewController else { return false }
@@ -60,7 +58,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
         wayNameLabel.applyDefaultCornerRadiusShadow()
         wayNameLabel.layer.masksToBounds = true
-        wayNameLabel.insets = UIEdgeInsetsMake(1, 4, 1, 4)
+        wayNameLabel.insets = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
 
     }
     
@@ -264,8 +262,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         if let userLocation = mapView.userLocation,
             let style = mapView.style,
-            routeController.showCurrentWayNameLabel,
             recenterButton.isHidden {
+            
+            let streetsLanguages = ["zh", "ru", "fr", "es", "en"]
+            let roadLabelLayerIdentifier = "roadLabelLayer"
             
             let streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
@@ -275,20 +275,21 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             let streetsSourceIdentifiers = streetsSources.map {
                 $0.identifier
             }
-            assert(!streetsSourceIdentifiers.isEmpty, "The option `showCurrentWayNameLabel` must contain the source `mapbox.mapbox-streets-v7`")
+            assert(!streetsSourceIdentifiers.isEmpty, "Style must contain the source `mapbox.mapbox-streets-v7`")
             
-            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: "roadLabelLayer") == nil{
-                let streetLabelLayer = MGLLineStyleLayer(identifier: RoadLabelLayerIdentifier, source: mapboxSteetsSource)
+            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil{
+                let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
                 streetLabelLayer.sourceLayerIdentifier = "road_label"
                 
                 // If the opacity is set to 0, the feature will be ignored in `mapView.visibleFeatures()`
                 streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 0.001)
                 streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 10)
+                streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
                 style.addLayer(streetLabelLayer)
             }
             
             if let userPuck = mapView.view(for: userLocation) {
-                let features = mapView.visibleFeatures(in: userPuck.frame, styleLayerIdentifiers: Set([RoadLabelLayerIdentifier]))
+                let features = mapView.visibleFeatures(in: userPuck.frame, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
                 
                 for feature in features {
                     
@@ -299,7 +300,14 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     }
                     
                     if let name = feature.attribute(forKey: key) as? String {
-                        wayNameLabel.text = name
+                        if name != wayNameLabel.text {
+                            currentWayNameCounter += 1
+                        }
+                        print(currentWayNameCounter)
+                        if currentWayNameCounter >= 10 {
+                            wayNameLabel.text = name
+                            currentWayNameCounter = 0
+                        }
                         wayNameLabel.sizeToFit()
                         wayNameLabel.isHidden = false
                     }
@@ -393,6 +401,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         if mode != .followWithCourse {
             recenterButton.isHidden = false
             wayNameLabel.isHidden = true
+            currentWayNameCounter = 0
             startResetTrackingModeTimer()
         } else {
             recenterButton.isHidden = true

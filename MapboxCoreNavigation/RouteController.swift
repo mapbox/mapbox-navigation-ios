@@ -32,13 +32,6 @@ open class RouteController: NSObject {
     */
     public var snapsUserLocationAnnotationToRoute = false
     
-    /**
-     If true, the way name the user is current traveling on will be displayed.
-     
-     Note: the feature queries the underlying tile data and makes the assumption the current style includes the source `mapbox://mapbox.streets-v7`. All default Mapbox styles include this source. If you are using a custom source, make sure it is included when using this feature. Otherwise, it will be ignored.
-     */
-    public var showCurrentWayNameLabel = true
-    
     public var simulatesLocationUpdates: Bool = false {
         didSet {
             locationManager.delegate = simulatesLocationUpdates ? nil : self
