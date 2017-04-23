@@ -55,6 +55,7 @@ let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, l
 let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
 
 let options = RouteOptions(waypoints: [origin, destination], profileIdentifier: .automobileAvoidingTraffic)
+options.routeShapeResolution = .full
 options.includesSteps = true
 
 Directions.shared.calculate(options) { (waypoints, routes, error) in
