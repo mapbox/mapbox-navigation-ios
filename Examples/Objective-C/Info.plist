@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>MGLMapboxAccessToken</key>
-	<string>pk.feedCafeDadeDeadBeef-BadeBede.FadeCafeDadeDeed-BadeBede</string>
+	<string>PASTE MAPBOX ACCESS TOKEN HERE</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Get user location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
