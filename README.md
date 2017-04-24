@@ -80,6 +80,9 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
 
 1. Add a `MGLMapboxAccessToken` key and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
 1. Add a `NSLocationWhenInUseUsageDescription` key if you haven't already
+1. If you need voice guidance while your app is in the background, you'll also need to add the `audio` and `location` value to the `UIBackgroundModes` array. You can also do this by navigating to the `Capabilities` tab -> `Background Modes` and enabling the following:
+    - `Audio, AirPlay, and Picture in Picture`
+    - `Location updates`
 
 #### Storyboards
 See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Docs/Storyboards.md) for usage with storyboards.
