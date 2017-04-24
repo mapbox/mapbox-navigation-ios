@@ -43,6 +43,15 @@ Alternatively, to install Mapbox Navigation using [CocoaPods](https://cocoapods.
 
 1. Run `pod install` and open the resulting Xcode workspace.
 
+### Running the example project
+
+1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
+1. Run `carthage update --platform ios` to build just the iOS dependencies
+1. Open `MapboxNavigation.xcodeproj`
+1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
+1. Open the `Info.plist` for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`
+1. Build and run the `Example-Swift` or `Example-Objective-C` target
+
 ## Usage
 
 ```swift
@@ -66,6 +75,16 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
 }
 ```
 
+#### Required Info.plist Keys
+Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
+
+1. Add a `MGLMapboxAccessToken` key and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
+1. Add a `NSLocationWhenInUseUsageDescription` key if you haven't already
+1. If you need voice guidance while your app is in the background, you'll also need to add the `audio` and `location` value to the `UIBackgroundModes` array. You can also do this by navigating to the `Capabilities` tab -> `Background Modes` and enabling the following:
+    - `Audio, AirPlay, and Picture in Picture`
+    - `Location updates`
+
+#### Storyboards
 See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Docs/Storyboards.md) for usage with storyboards.
 
 ### UI overrides and listeners
@@ -94,17 +113,6 @@ NavigationUI.shared.lineColor = .yellow
 #### RouteViewController Delegate Methods
 
 * `routeControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI
-
-## Examples
-
-We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open MapboxNavigation.xcodeproj to try it out.
-
-### Running the example app
-
-1. If running in the simulator, you can simulate the user location by selecting `Debug` -> `Location` -> `City Bicycle Ride`
-1. Long press any where on a map. This is where you will be routed to.
-1. Press `Start Navigation` to begin
-1. Press `Cancel` to end
 
 ## Building your own custom navigation UI
 
