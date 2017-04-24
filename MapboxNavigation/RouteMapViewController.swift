@@ -259,8 +259,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let route = routeController.routeProgress.route
         guard let coordinates = route.coordinates else  { return nil }
         
-        if let userLocation = mapView.userLocation,
-            let style = mapView.style,
+        if let style = mapView.style,
             recenterButton.isHidden {
             
             let streetsLanguages = ["zh", "ru", "fr", "es", "en", "de"]
@@ -287,11 +286,23 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 style.addLayer(streetLabelLayer)
             }
             
-            if let userPuck = mapView.view(for: userLocation),
-                let routeWayNames = routeController.routeProgress.currentLegProgress.currentStep.names {
-                let features = mapView.visibleFeatures(in: userPuck.frame, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+            let userPuck = mapView.convert(location.coordinate, toPointTo: mapView)
+            
+            if let routeWayNames = routeController.routeProgress.currentLegProgress.currentStep.names {
+                let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
                 
                 for feature in features {
+                    
+                    guard let line = feature as? MGLPolylineFeature else {
+                        break
+                    }
+                    
+                    
+                
+//                    <---.----*----.>
+//                        
+//                    <---[.--&--.]--------->
+                
                     
                     var key = "name"
                     if let languages = Locale.preferredLanguages.first,
@@ -300,7 +311,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                         key += "_\(language)"
                     }
                     
-                    if let name = feature.attribute(forKey: key) as? String {
+                    if let name = line.attribute(forKey: key) as? String {
                         
                         let filteredStreetNames = routeWayNames.filter {
                             return name.distanceFrom(string: $0) <= 6
