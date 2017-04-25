@@ -85,7 +85,7 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
     - `Location updates`
 
 #### Storyboards
-See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Docs/Storyboards.md) for usage with storyboards.
+See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/docs/Storyboards.md) for usage with storyboards.
 
 
 #### Styling
