@@ -12,7 +12,7 @@
         <!--Navigation View Controller-->
         <scene sceneID="Cs3-hm-Rck">
             <objects>
-                <viewController storyboardIdentifier="NavigationViewController" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2bw-kK-8r6" customClass="NavigationViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="NavigationViewController" modalTransitionStyle="crossDissolve" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2bw-kK-8r6" customClass="MBNavigationViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="THp-y6-1qy"/>
                         <viewControllerLayoutGuide type="bottom" id="6js-v8-urs"/>
