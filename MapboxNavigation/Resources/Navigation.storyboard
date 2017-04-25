@@ -371,7 +371,7 @@
                                             <constraint firstAttribute="trailing" secondItem="WfH-xJ-3Pp" secondAttribute="trailing" id="qiq-tX-giK"/>
                                         </constraints>
                                     </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dBm-Eb-XvC" userLabel="Separator View">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dBm-Eb-XvC" userLabel="Separator View" customClass="MBSeparatorView">
                                         <rect key="frame" x="0.0" y="39" width="343" height="1"/>
                                         <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
