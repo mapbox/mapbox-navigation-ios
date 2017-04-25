@@ -40,8 +40,9 @@ Alternatively, to install Mapbox Navigation using [CocoaPods](https://cocoapods.
    ```ruby
    pod 'MapboxNavigation', '~> 0.3.0'
    ```
-
 1. Run `pod install` and open the resulting Xcode workspace.
+
+Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
 
 ### Running the example project
 
