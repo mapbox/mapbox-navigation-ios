@@ -4,6 +4,12 @@ fileprivate extension CGFloat {
     fileprivate static var defaultManeuverViewHeight: CGFloat = 100
 }
 
+extension UIColor {
+    class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
+    class var defaultRouteLayer: UIColor { get { return UIColor.defaultTintStroke.withAlphaComponent(0.6) } }
+    class var defaultArrowStroke: UIColor { get { return .defaultTint } }
+}
+
 fileprivate extension UIColor {
     // General styling
     fileprivate class var defaultTint: UIColor { get { return #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) } }
@@ -11,9 +17,6 @@ fileprivate extension UIColor {
     fileprivate class var defaultPrimaryText: UIColor { get { return #colorLiteral(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0, alpha: 1) } }
     fileprivate class var defaultSecondaryText: UIColor { get { return #colorLiteral(red: 0.4509803922, green: 0.4509803922, blue: 0.4509803922, alpha: 1) } }
     fileprivate class var defaultLine: UIColor { get { return #colorLiteral(red: 0.7825912237, green: 0.7776457667, blue: 0.7863886952, alpha: 0.7) } }
-    fileprivate class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
-    fileprivate class var defaultRouteLayer: UIColor { get { return UIColor.defaultTintStroke.withAlphaComponent(0.6) } }
-    fileprivate class var defaultArrowStroke: UIColor { get { return .defaultTint } }
     
     // Maneuver view (Page view)
     fileprivate class var defaultManeuverViewBackground: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
@@ -89,22 +92,6 @@ public class Style: NSObject {
      */
     public var lineColor: UIColor?
     
-    /**
-     `routeCasingColor` sets the casing color of the route line.
-     
-     Note that this color will not be used if you are implementing
-     `routeCasingStyleLayerWithIdentifier(_:identifier:source:)`.
-     */
-    public var routeCasingColor: UIColor?
-    
-    /**
-     `routeLayerColor` sets the color of the route line.
-     
-     Note that this color will not be used if you are implementing
-     `routeCasingStyleLayerWithIdentifier(_:identifier:source:)`.
-     */
-    public var routeLayerColor: UIColor?
-    
     /// Maneuver view (Page view)
     
     /**
@@ -159,8 +146,6 @@ public class Style: NSObject {
         style.secondaryTextColor = .defaultSecondaryText
         style.buttonTextColor = .defaultPrimaryText
         style.lineColor = .defaultLine
-        style.routeCasingColor = .defaultRouteCasing
-        style.routeLayerColor = .defaultRouteLayer
         
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = .defaultManeuverViewBackground
@@ -296,16 +281,4 @@ class ManeuverView: UIView {
             setNeedsUpdateConstraints()
         }
     }
-}
-
-class RouteStyleLayer: MGLLineStyleLayer {
-    dynamic var appearanceColor: UIColor = .defaultRouteLayer
-}
-
-class RouteCasingLayer: MGLLineStyleLayer {
-    dynamic var appearanceColor: UIColor = .defaultRouteCasing
-}
-
-class ArrowStrokeLayer: MGLLineStyleLayer {
-    dynamic var appearanceColor: UIColor = .defaultArrowStroke
 }
