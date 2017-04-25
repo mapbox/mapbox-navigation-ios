@@ -81,7 +81,7 @@ style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
 style.apply()
 ```
 
-Or even for a specific system trait in an interface’s environment.
+Or for a specific system trait in an interface’s environment.
 For instance only when being used on an iPad.
 
 ```swift
