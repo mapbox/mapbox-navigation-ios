@@ -1,7 +1,7 @@
 # Setting up Mapbox Navigation in a storyboard
 
 - Open the object library and drag in a `Storyboard Reference`.
-- Pick `Navigation` from the dropdown and set bundle to `com.mapbox.MapboxNavigation`.
+- Pick `Navigation` from the dropdown and set bundle to `com.mapbox.MapboxNavigation` (`org.cocoapods.MapboxNavigation` if you are using CocoaPods)
 - Set up a segue to the storyboard reference like you would to any other UIViewController.
 
 <img src="images/setup_ib.png" width=340>
