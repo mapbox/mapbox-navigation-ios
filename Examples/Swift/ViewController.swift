@@ -148,12 +148,82 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         navigationViewController.voiceController?.volume = 0.5
         navigationViewController.navigationDelegate = self
         
+        // Uncomment to apply custom styles
+//        styleForRegular().apply()
+//        styleForCompact().apply()
+//        styleForiPad().apply()
+//        styleForCarPlay().apply()
+        
         let camera = mapView.camera
         camera.pitch = 45
         camera.altitude = 1_000
         navigationViewController.pendingCamera = camera
         
         present(navigationViewController, animated: true, completion: nil)
+    }
+    
+    func styleForRegular() -> Style {
+        let trait = UITraitCollection(verticalSizeClass: .regular)
+        let style = Style(traitCollection: trait)
+        
+        // General styling
+        style.tintColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+        style.primaryTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.secondaryTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
+        style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        // Maneuver view (Page view)
+        style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        style.maneuverViewHeight = 100
+        
+        // Table view (Drawer)
+        style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        style.cellTitleLabelTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
+        style.cellTitleLabelFont = UIFont.preferredFont(forTextStyle: .headline)
+        style.cellSubtitleLabelFont = UIFont.preferredFont(forTextStyle: .footnote)
+        
+        return style
+    }
+    
+    func styleForCompact() -> Style {
+        let horizontal = UITraitCollection(horizontalSizeClass: .compact)
+        let vertical = UITraitCollection(verticalSizeClass: .compact)
+        let traitCollection = UITraitCollection(traitsFrom: [horizontal, vertical])
+        let style = Style(traitCollection: traitCollection)
+        
+        // General styling
+        style.tintColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        style.primaryTextColor = .black
+        style.secondaryTextColor = .gray
+        style.buttonTextColor = .black
+        
+        // Maneuver view (Page view)
+        style.maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.maneuverViewHeight = 70
+        
+        // Table view (Drawer)
+        style.headerBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.primaryTextColor = .black
+        style.secondaryTextColor = .gray
+        style.cellTitleLabelTextColor = .black
+        style.cellSubtitleLabelTextColor = .gray
+        style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
+        style.cellSubtitleLabelFont = .preferredFont(forTextStyle: .footnote)
+        
+        return style
+    }
+    
+    func styleForiPad() -> Style {
+        let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
+        style.maneuverViewHeight = 100
+        return style
+    }
+    
+    func styleForCarPlay() -> Style {
+        let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .carPlay))
+        style.maneuverViewHeight = 40
+        return style
     }
     
     /// Delegate method for changing the route line style

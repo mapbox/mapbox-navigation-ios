@@ -87,27 +87,27 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
 #### Storyboards
 See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Docs/Storyboards.md) for usage with storyboards.
 
-### UI overrides and listeners
 
-#### Colors
+#### Styling
 
-You can override the default colors in the UI.
+You can customize the appearance in order to blend in with the rest of your app.
 
 ```swift
-// Used for guidance arrow, highlighted text and progress bars.
-NavigationUI.shared.tintColor = .red
+let style = Style()
+style.maneuverViewHeight = 80
+style.primaryTextColor = .black
+style.headerBackgroundColor = .white
+style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
+style.apply()
+```
 
-// Used for guidance arrow
-NavigationUI.shared.tintStrokeColor = .blue
+Or for a specific system trait in an interface’s environment.
+For instance only when being used on an iPad.
 
-// Used for titles and prioritized information
-NavigationUI.shared.primaryTextColor = .orange
-
-// Used for subtitles, distances and accessory labels
-NavigationUI.shared.secondaryTextColor = .pink
-
-// Used for separators in table views
-NavigationUI.shared.lineColor = .yellow
+```swift
+let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
+style.cellTitleLabelFont = .preferredFont(forTextStyle: .title1)
+return style
 ```
 
 #### RouteViewController Delegate Methods

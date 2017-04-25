@@ -109,7 +109,7 @@ extension MGLMapView {
                 arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
                 arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
                 arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
-                arrowStroke.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintColor)
+                arrowStroke.lineColor = MGLStyleValue(rawValue: .defaultArrowStroke)
                 
                 style.addSource(arrowSourceStroke)
                 style.insertLayer(arrowStroke, below: arrow)

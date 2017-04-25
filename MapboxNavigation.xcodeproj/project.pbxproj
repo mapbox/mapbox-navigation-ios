@@ -15,7 +15,7 @@
 		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
-		351BEBF21E5BCC63006FE110 /* NavigationUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* NavigationUI.swift */; };
+		351BEBF21E5BCC63006FE110 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* Style.swift */; };
 		351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */; };
 		351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */; };
 		351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */; };
@@ -24,9 +24,7 @@
 		351BEBFB1E5BCC63006FE110 /* RouteTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */; };
 		351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */; };
 		351BEBFD1E5BCC63006FE110 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEB1E5BCC63006FE110 /* String.swift */; };
-		351BEBFE1E5BCC63006FE110 /* StyleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEC1E5BCC63006FE110 /* StyleButton.swift */; };
 		351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */; };
-		351BEC001E5BCC63006FE110 /* StyleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEE1E5BCC63006FE110 /* StyleLabel.swift */; };
 		351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */; };
 		351BEC021E5BCC63006FE110 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBF01E5BCC63006FE110 /* UIView.swift */; };
 		351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC031E5BCC6C006FE110 /* LaneArrowView.swift */; };
@@ -246,7 +244,7 @@
 		351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		351BEBDA1E5BCC28006FE110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLMapView.swift; sourceTree = "<group>"; };
-		351BEBE01E5BCC63006FE110 /* NavigationUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationUI.swift; sourceTree = "<group>"; };
+		351BEBE01E5BCC63006FE110 /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteManeuverViewController.swift; sourceTree = "<group>"; };
 		351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteMapViewController.swift; sourceTree = "<group>"; };
 		351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutePageViewController.swift; sourceTree = "<group>"; };
@@ -255,9 +253,7 @@
 		351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewHeaderView.swift; sourceTree = "<group>"; };
 		351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		351BEBEB1E5BCC63006FE110 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		351BEBEC1E5BCC63006FE110 /* StyleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleButton.swift; sourceTree = "<group>"; };
 		351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKitArrows.swift; sourceTree = "<group>"; };
-		351BEBEE1E5BCC63006FE110 /* StyleLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleLabel.swift; sourceTree = "<group>"; };
 		351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnArrowView.swift; sourceTree = "<group>"; };
 		351BEBF01E5BCC63006FE110 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		351BEC031E5BCC6C006FE110 /* LaneArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LaneArrowView.swift; sourceTree = "<group>"; };
@@ -436,7 +432,7 @@
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
 				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
-				351BEBE01E5BCC63006FE110 /* NavigationUI.swift */,
+				351BEBE01E5BCC63006FE110 /* Style.swift */,
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
@@ -567,9 +563,7 @@
 			children = (
 				351BEC091E5BCC72006FE110 /* DashedLineView.swift */,
 				351BEC031E5BCC6C006FE110 /* LaneArrowView.swift */,
-				351BEBEC1E5BCC63006FE110 /* StyleButton.swift */,
 				351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */,
-				351BEBEE1E5BCC63006FE110 /* StyleLabel.swift */,
 				351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */,
 			);
 			name = Views;
@@ -1050,7 +1044,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
-				351BEBFE1E5BCC63006FE110 /* StyleButton.swift in Sources */,
 				352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */,
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
 				351BEBFD1E5BCC63006FE110 /* String.swift in Sources */,
@@ -1070,12 +1063,11 @@
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				351BEC101E5BCC72006FE110 /* DistanceFormatter.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
-				351BEC001E5BCC63006FE110 /* StyleLabel.swift in Sources */,
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
-				351BEBF21E5BCC63006FE110 /* NavigationUI.swift in Sources */,
+				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -149,6 +149,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     var simulation: SimulatedRoute?
     
     required public init?(coder aDecoder: NSCoder) {
+        Style.defaultStyle.apply()
         super.init(coder: aDecoder)
     }
     
@@ -168,6 +169,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     @objc(initWithRoute:directions:)
     required public init(for route: Route,  directions: Directions = Directions.shared) {
+        Style.defaultStyle.apply()
+        
         let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         let tableViewController = storyboard.instantiateViewController(withIdentifier: "RouteTableViewController") as! RouteTableViewController
