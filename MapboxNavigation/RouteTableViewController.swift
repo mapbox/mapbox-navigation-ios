@@ -49,7 +49,7 @@ class RouteTableViewController: UIViewController {
     }
     
     func notifyDidChange(routeProgress: RouteProgress) {
-        headerView.progress = CGFloat(routeProgress.fractionTraveled)
+        headerView.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
         showETA(routeProgress: routeProgress)
     }
     
