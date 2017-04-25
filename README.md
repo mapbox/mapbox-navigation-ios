@@ -107,7 +107,7 @@ For instance only when being used on an iPad.
 ```swift
 let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
 style.cellTitleLabelFont = .preferredFont(forTextStyle: .title1)
-return style
+style.apply()
 ```
 
 #### RouteViewController Delegate Methods
