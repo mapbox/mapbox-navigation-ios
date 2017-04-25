@@ -141,7 +141,12 @@ public class Style: NSObject {
         let style = Style(traitCollection: UITraitCollection())
         
         // General styling
-        style.tintColor = .defaultTint
+        if let tintColor = UIApplication.shared.delegate?.window??.rootViewController?.view.tintColor {
+            style.tintColor = tintColor
+        } else {
+            style.tintColor = .defaultTint
+        }
+        
         style.primaryTextColor = .defaultPrimaryText
         style.secondaryTextColor = .defaultSecondaryText
         style.buttonTextColor = .defaultPrimaryText
