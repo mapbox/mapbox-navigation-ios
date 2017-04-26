@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Carthage/Checkouts/Polyline/Polyline.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/osrm-text-instructions.swift/OSRMTextInstructions.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/MapboxDirections.swift/MapboxDirections.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/MapboxGeocoder.swift/MapboxGeocoder.xcodeproj">
+   </FileRef>
+</Workspace>
