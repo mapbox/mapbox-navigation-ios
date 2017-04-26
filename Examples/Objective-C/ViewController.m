@@ -1,9 +1,9 @@
 #import "ViewController.h"
 
 @import AVFoundation;
-@import MapboxNavigation;
+@import MapboxCoreNavigation;
 @import MapboxDirections;
-@import MapboxNavigationUI;
+@import MapboxNavigation;
 @import Mapbox;
 
 @interface ViewController () <AVSpeechSynthesizerDelegate>
@@ -86,7 +86,7 @@
 }
 
 - (void)progressDidChange:(NSNotification *)notification {
-    // If you are not using MapboxNavigationUI,
+    // If you are using MapboxCoreNavigation,
     // this would be a good time to update UI elements.
     // You can grab the current routeProgress like:
     // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
@@ -135,15 +135,28 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"StartNavigation"]) {
-        MBRouteViewController *controller = (MBRouteViewController *)[segue destinationViewController];
+        MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
         controller.route = self.route;
         controller.directions = [MBDirections sharedDirections];
     }
 }
 
 - (void)startNavigation:(MBRoute *)route {
-    [[MBNavigationUI shared] setTintColor:[UIColor redColor]];
+    [self applyCustomStyle];
+    
+    // Using storyboard
     [self performSegueWithIdentifier:@"StartNavigation" sender:self];
+    
+    // Using code
+    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route directions:[MBDirections sharedDirections]];
+    controller.pendingCamera = self.mapView.camera;
+    //[self presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)applyCustomStyle {
+    MBStyle *style = [[MBStyle alloc] init];
+    style.headerBackgroundColor = [UIColor blueColor];
+    [style apply];
 }
 
 @end

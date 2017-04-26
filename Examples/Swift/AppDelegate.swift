@@ -1,11 +1,3 @@
-//
-//  AppDelegate.swift
-//  Example-Swift
-//
-//  Created by Fredrik Karlsson on 2/22/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 import UIKit
 import Mapbox
 

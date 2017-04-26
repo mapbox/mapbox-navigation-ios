@@ -1,29 +1,31 @@
 import UIKit
+import MapboxCoreNavigation
 import MapboxNavigation
-import MapboxNavigationUI
 import MapboxDirections
 import Mapbox
-import CoreLocation
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate {
     
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
-    var routeViewController: RouteViewController?
     var userRoute: Route?
     
     @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var toggleNavigationButton: UIButton!
+    @IBOutlet weak var startNavigationButton: UIButton!
+    @IBOutlet weak var simulateNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        automaticallyAdjustsScrollViewInsets = false
+        mapView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         mapView.delegate = self
+        mapView.navigationMapDelegate = self
         
         mapView.userTrackingMode = .follow
         resumeNotifications()
@@ -50,8 +52,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         getRoute()
     }
     
-    @IBAction func didToggleNavigation(_ sender: Any) {
-        startNavigation(userRoute!)
+    @IBAction func didTapStartNavigation(_ sender: Any) {
+        startNavigation(along: userRoute!)
+    }
+    
+    @IBAction func didTapSimulateNavigation(_ sender: Any) {
+        startNavigation(along: userRoute!, simulatesLocationUpdates: true)
     }
     
     func resumeNotifications() {
@@ -73,7 +79,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     // Notifications sent on all location updates
     func progressDidChange(_ notification: NSNotification) {
-        // If you are not using MapboxNavigationUI,
+        // If you are using MapboxCoreNavigation,
         // this would be a good time to update UI elements.
         // You can grab the current routeProgress like:
         // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
@@ -82,7 +88,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     // Notification sent when the user is determined to be off the current route
     func rerouted(_ notification: NSNotification) {
         //
-        // If you're not using MapboxNavigationUI,
+        // If you're using MapboxNavigation,
         // this is how you'd handle fetching a new route and setting it as the active route
         /*
          getRoute {
@@ -113,69 +119,138 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             guard let route = routes?.first else {
                 return
             }
-            guard let style = self?.mapView.style else {
-                return
-            }
             
             self?.userRoute = route
-            self?.toggleNavigationButton.isHidden = false
+            self?.startNavigationButton.isHidden = false
+            self?.simulateNavigationButton.isHidden = false
             self?.howToBeginLabel.isHidden = true
             
-            self?.removeRoutesFromMap()
-            
-            let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: route.coordinateCount)
-            let geoJSONSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
-            let line = MGLLineStyleLayer(identifier: layerIdentifier, source: geoJSONSource)
-            
-            // Style the line
-            line.lineColor = MGLStyleValue(rawValue: UIColor(red:0.00, green:0.45, blue:0.74, alpha:0.9))
-            line.lineWidth = MGLStyleValue(rawValue: 5)
-            line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
-            line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-            
-            // Add source and layer
-            style.addSource(geoJSONSource)
-            for layer in style.layers.reversed() {
-                if !(layer is MGLSymbolStyleLayer) {
-                    style.insertLayer(line, above: layer)
-                    break
-                }
-            }
+            // Open method for adding and updating the route line
+            self?.mapView.showRoute(route)
             
             didFinish?()
         }
     }
     
-    func startNavigation(_ route: Route) {
+    func startNavigation(along route: Route, simulatesLocationUpdates: Bool = false) {
         // Pass through a
         // 1. the route the user will take
         // 2. A `Directions` class, used for rerouting.
-        let viewController = NavigationUI.routeViewController(for: route)
+        let navigationViewController = NavigationViewController(for: route)
         
         // If you'd like to use AWS Polly, provide your IdentityPoolId below
         // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer
         // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
         // viewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
         
-        viewController.routeController.snapsUserLocationAnnotationToRoute = true
-        viewController.voiceController?.volume = 0.5
+        navigationViewController.simulatesLocationUpdates = simulatesLocationUpdates
+        navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
+        navigationViewController.voiceController?.volume = 0.5
+        navigationViewController.navigationDelegate = self
         
-        present(viewController, animated: true, completion: nil)
+        // Uncomment to apply custom styles
+//        styleForRegular().apply()
+//        styleForCompact().apply()
+//        styleForiPad().apply()
+//        styleForCarPlay().apply()
+        
+        let camera = mapView.camera
+        camera.pitch = 45
+        camera.altitude = 1_000
+        navigationViewController.pendingCamera = camera
+        
+        present(navigationViewController, animated: true, completion: nil)
     }
     
-    func removeRoutesFromMap() {
-        guard let style = mapView.style else {
-            return
-        }
-        if let line = style.layer(withIdentifier: layerIdentifier) {
-            style.removeLayer(line)
-        }
-        if let source = style.source(withIdentifier: sourceIdentifier) {
-            style.removeSource(source)
-        }
+    func styleForRegular() -> Style {
+        let trait = UITraitCollection(verticalSizeClass: .regular)
+        let style = Style(traitCollection: trait)
+        
+        // General styling
+        style.tintColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+        style.primaryTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.secondaryTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
+        style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        // Maneuver view (Page view)
+        style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        style.maneuverViewHeight = 100
+        
+        // Table view (Drawer)
+        style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        style.cellTitleLabelTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
+        style.cellTitleLabelFont = UIFont.preferredFont(forTextStyle: .headline)
+        style.cellSubtitleLabelFont = UIFont.preferredFont(forTextStyle: .footnote)
+        
+        return style
     }
     
-    func roundToTens(_ x: CLLocationDistance) -> Int {
-        return 10 * Int(round(x / 10.0))
+    func styleForCompact() -> Style {
+        let horizontal = UITraitCollection(horizontalSizeClass: .compact)
+        let vertical = UITraitCollection(verticalSizeClass: .compact)
+        let traitCollection = UITraitCollection(traitsFrom: [horizontal, vertical])
+        let style = Style(traitCollection: traitCollection)
+        
+        // General styling
+        style.tintColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        style.primaryTextColor = .black
+        style.secondaryTextColor = .gray
+        style.buttonTextColor = .black
+        
+        // Maneuver view (Page view)
+        style.maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.maneuverViewHeight = 70
+        
+        // Table view (Drawer)
+        style.headerBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.primaryTextColor = .black
+        style.secondaryTextColor = .gray
+        style.cellTitleLabelTextColor = .black
+        style.cellSubtitleLabelTextColor = .gray
+        style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
+        style.cellSubtitleLabelFont = .preferredFont(forTextStyle: .footnote)
+        
+        return style
+    }
+    
+    func styleForiPad() -> Style {
+        let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
+        style.maneuverViewHeight = 100
+        return style
+    }
+    
+    func styleForCarPlay() -> Style {
+        let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .carPlay))
+        style.maneuverViewHeight = 40
+        return style
+    }
+    
+    /// Delegate method for changing the route line style
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
+        
+        lineCasing.lineColor = MGLStyleValue(rawValue: UIColor(red:0.00, green:0.70, blue:0.99, alpha:1.0))
+        lineCasing.lineWidth = MGLStyleValue(rawValue: 6)
+        
+        lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        return lineCasing
+    }
+    
+    /// Delegate method for changing the route line casing style
+    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        let line = MGLLineStyleLayer(identifier: identifier, source: source)
+        
+        line.lineColor = MGLStyleValue(rawValue: UIColor(red:0.18, green:0.49, blue:0.78, alpha:1.0))
+        line.lineWidth = MGLStyleValue(rawValue: 8)
+        
+        line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        return line
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt destination: MGLAnnotation) {
+        print("User arrived at \(destination)")
     }
 }
