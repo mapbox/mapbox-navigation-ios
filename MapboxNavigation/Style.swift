@@ -141,7 +141,7 @@ public class Style: NSObject {
         let style = Style(traitCollection: UITraitCollection())
         
         // General styling
-        if let tintColor = UIApplication.shared.delegate?.window??.rootViewController?.view.tintColor {
+        if let tintColor = UIApplication.shared.delegate?.window??.tintColor {
             style.tintColor = tintColor
         } else {
             style.tintColor = .defaultTint
