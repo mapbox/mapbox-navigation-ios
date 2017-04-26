@@ -56,7 +56,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
         mapView.delegate = self
         mapView.navigationMapDelegate = self
-        recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
+        recenterButton.applyDefaultCornerRadiusShadow()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -114,17 +115,17 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
+        print(isInOverviewMode)
         if isInOverviewMode {
-            recenterButton.isHidden = true
-            overviewButton.setTitle("Overview", for: .normal)
-            isInOverviewMode = !isInOverviewMode
+            overviewButton.isHidden = true
             setDefaultCamera(animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
-            overviewButton.setTitle("Navigate", for: .normal)
-            isInOverviewMode = !isInOverviewMode
+            overviewButton.isHidden = false
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
         }
+        
+        isInOverviewMode = !isInOverviewMode
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -356,15 +357,23 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
 extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if !isInOverviewMode {
+        if isInOverviewMode && mode != .followWithCourse {
+            recenterButton.isHidden = false
+        } else {
             resetTrackingModeTimer?.invalidate()
-
+            
             if mode != .followWithCourse {
                 recenterButton.isHidden = false
                 startResetTrackingModeTimer()
             } else {
                 recenterButton.isHidden = true
             }
+        }
+        
+        if isInOverviewMode {
+            overviewButton.isHidden = false
+            recenterButton.isHidden = true
+            isInOverviewMode = false
         }
     }
 
