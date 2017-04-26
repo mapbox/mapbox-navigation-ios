@@ -319,64 +319,62 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             }
             assert(!streetsSourceIdentifiers.isEmpty, "Style must contain the source `mapbox.mapbox-streets-v7`")
             
-            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil{
+            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
                 let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
                 streetLabelLayer.sourceLayerIdentifier = "road_label"
                 
                 // If the opacity is set to 0, the feature will be ignored in `mapView.visibleFeatures()`
-                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 0.001)
-                streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 10)
-                streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
+                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
+                streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 11)
+                streetLabelLayer.lineColor = MGLStyleValue(rawValue: .black)
                 style.addLayer(streetLabelLayer)
             }
             
-            let userPuck = mapView.convert(location.coordinate, toPointTo: mapView)
+            let userPuck = mapView.convert(newCoordinate, toPointTo: mapView)
             
             if let routeWayNames = routeController.routeProgress.currentLegProgress.currentStep.names {
                 let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
                 
+                var smallestLabelDistance = Double.infinity
+                var currentName: String?
+                
                 for feature in features {
                     
-                    guard let line = feature as? MGLPolylineFeature else {
+                    guard let line = feature as? MGLPolylineFeature ?? feature as? MGLMultiPolylineFeature else {
                         break
                     }
                     
+                    
+                    
                     let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
                     
-//                    let aheadOfQuery = coordinate(at: userDistanceBuffer * 2, fromStartOf: featureCoordinates)!
-//                    let behindQuery = coordinate(at: userDistanceBuffer * 4, fromStartOf: featureCoordinates)!
+                    let featureSlice = polyline(along: featureCoordinates, from: location.coordinate)
+                    // todo: account for -10
+                    let tenMetersAheadofFeature = coordinate(at: 10, fromStartOf: featureSlice)!
+                    let tenMetersAheadOfUser = coordinate(at: 10, fromStartOf: slicedLine)!
                     
-//                    let closeQueryFeatureCoordinate = closestCoordinate(on: featureCoordinates, to: location.coordinate)
+                    let distanceBetwenAheadOfUserAndFeature = tenMetersAheadofFeature - tenMetersAheadOfUser
                     
-                    for featureCoord in featureCoordinates {
-                        for nearbyCoord in nearByCoordinates {
-                            if nearbyCoord.latitude == featureCoord.latitude {
-                                print("hit")
-                            }
-                        }
-                    }
-                    
-                    
-                    var key = "name"
-                    if let languages = Locale.preferredLanguages.first,
-                        let language = languages.components(separatedBy: "-").first,
-                        streetsLanguages.contains(language) || languages == "zh-Hans" {
-                        key += "_\(language)"
-                    }
-                    
-                    if let name = line.attribute(forKey: key) as? String {
+                    if distanceBetwenAheadOfUserAndFeature < smallestLabelDistance {
+                        smallestLabelDistance = distanceBetwenAheadOfUserAndFeature
                         
-                        let filteredStreetNames = routeWayNames.filter {
-                            return name.distanceFrom(string: $0) <= 6
+                        var key = "name"
+                        if let languages = Locale.preferredLanguages.first,
+                            let language = languages.components(separatedBy: "-").first,
+                            streetsLanguages.contains(language) || languages == "zh-Hans" {
+                            key += "_\(language)"
                         }
                         
-                        if !filteredStreetNames.isEmpty {
-                            wayNameLabel.text = name
+                        if let name = line.attribute(forKey: key) as? String {
+                            currentName = name
+                        } else {
+                            currentName = nil
                         }
-                    } else if let routeWayName = routeWayNames.first {
-                        wayNameLabel.text = routeWayName
                     }
-                    
+                }
+                
+                if smallestLabelDistance < 25 {
+                    wayNameLabel.text = currentName
                     wayNameLabel.sizeToFit()
                     wayNameLabel.isHidden = false
                 }
