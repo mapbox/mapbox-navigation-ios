@@ -43,7 +43,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
 
-    let overviewContentInset = UIEdgeInsets(top: 50, left: 15, bottom: 50, right: 15)
+    let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
 
     var simulatesLocationUpdates: Bool {
         guard let parent = parent as? NavigationViewController else { return false }
@@ -108,6 +108,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
+        setDefaultCamera(animated: false)
         mapView.userTrackingMode = .followWithCourse
 
         // Recenter also resets the current page. Same behavior as rerouting.
@@ -115,16 +116,15 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
-        print(isInOverviewMode)
         if isInOverviewMode {
-            overviewButton.isHidden = true
+            overviewButton.isHidden = false
             setDefaultCamera(animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
-            overviewButton.isHidden = false
+            overviewButton.isHidden = true
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
         }
-        
+        resetTrackingModeTimer?.invalidate()
         isInOverviewMode = !isInOverviewMode
     }
 
@@ -178,8 +178,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
     func setDefaultCamera(animated: Bool) {
         let camera = mapView.camera
-        camera.altitude = 1_000
-        camera.pitch = 45
+        camera.altitude = 600
+        camera.pitch = 60
         mapView.setCamera(camera, animated: animated)
     }
 
