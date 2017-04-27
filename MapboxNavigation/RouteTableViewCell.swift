@@ -4,8 +4,8 @@ import MapboxCoreNavigation
 
 class RouteTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var titleLabel: StyleLabel!
-    @IBOutlet weak var subtitleLabel: StyleLabel!
+    @IBOutlet weak var titleLabel: CellTitleLabel!
+    @IBOutlet weak var subtitleLabel: CellSubtitleLabel!
     @IBOutlet weak var turnArrowView: TurnArrowView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)

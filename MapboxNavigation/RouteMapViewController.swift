@@ -13,11 +13,12 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var recenterButton: UIButton!
-    @IBOutlet weak var wayNameLabel: StyleLabel!
+    @IBOutlet weak var wayNameLabel: StylableLabel!
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController!
     let routeStepFormatter = RouteStepFormatter()
+    let MBSecondsBeforeResetTrackingMode: TimeInterval = 25.0
     
     var route: Route { return routeController.routeProgress.route }
     
@@ -52,13 +53,9 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
-        mapView.tintColor = NavigationUI.shared.tintColor
-        recenterButton.tintColor = NavigationUI.shared.tintColor
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
         wayNameLabel.applyDefaultCornerRadiusShadow()
         wayNameLabel.layer.masksToBounds = true
-        wayNameLabel.insets = UIEdgeInsets(top: 1, left: 4, bottom: 1, right: 4)
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -398,26 +395,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 // MARK: MGLMapViewDelegate
 
 extension RouteMapViewController: MGLMapViewDelegate {
-    func mapView(_ mapView: MGLMapView, strokeColorForShapeAnnotation annotation: MGLShape) -> UIColor {
-        if annotation is ArrowStrokePolyline {
-            return NavigationUI.shared.tintStrokeColor
-        } else if annotation is ArrowFillPolyline {
-            return .white
-        } else {
-            return NavigationUI.shared.tintColor
-        }
-    }
-    
-    func mapView(_ mapView: MGLMapView, lineWidthForPolylineAnnotation annotation: MGLPolyline) -> CGFloat {
-        if annotation is ArrowStrokePolyline {
-            return 7
-        } else if annotation is ArrowFillPolyline {
-            return 6
-        } else {
-            return 8
-        }
-    }
-    
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
         if resetTrackingModeTimer != nil {
             resetTrackingModeTimer.invalidate()

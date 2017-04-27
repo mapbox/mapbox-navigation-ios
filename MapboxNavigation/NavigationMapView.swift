@@ -93,7 +93,7 @@ open class NavigationMapView: MGLMapView {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         
-        line.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor.withAlphaComponent(0.6))
+        line.lineColor = MGLStyleValue(rawValue: .defaultRouteLayer)
         line.lineWidth = MGLStyleValue(rawValue: 5)
         
         line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
@@ -106,7 +106,7 @@ open class NavigationMapView: MGLMapView {
         
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
-        lineCasing.lineColor = MGLStyleValue(rawValue: NavigationUI.shared.tintStrokeColor)
+        lineCasing.lineColor = MGLStyleValue(rawValue: .defaultRouteCasing)
         lineCasing.lineWidth = MGLStyleValue(rawValue: 9)
         
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))

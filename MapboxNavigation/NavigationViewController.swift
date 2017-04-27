@@ -15,7 +15,12 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
      */
-    @objc optional func navigationViewControllerDidCancelNavigation(_:NavigationViewController)
+    @objc optional func navigationViewControllerDidCancelNavigation(_ : NavigationViewController)
+    
+    /**
+     Called when the user arrives at the destination.
+     */
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: MGLAnnotation)
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line.
@@ -144,6 +149,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     var simulation: SimulatedRoute?
     
     required public init?(coder aDecoder: NSCoder) {
+        Style.defaultStyle.apply()
         super.init(coder: aDecoder)
     }
     
@@ -163,6 +169,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     @objc(initWithRoute:directions:)
     required public init(for route: Route,  directions: Directions = Directions.shared) {
+        Style.defaultStyle.apply()
+        
         let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         let tableViewController = storyboard.instantiateViewController(withIdentifier: "RouteTableViewController") as! RouteTableViewController
@@ -264,6 +272,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.notifyDidChange(routeProgress: routeProgress)
+        
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
+        }
     }
     
     func shouldReroute(notification: NSNotification) {

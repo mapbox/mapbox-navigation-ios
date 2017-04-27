@@ -8,11 +8,11 @@ protocol RouteTableViewHeaderViewDelegate: class {
 class RouteTableViewHeaderView: UIView {
     
     @IBOutlet weak var progressBarWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var progressBar: UIView!
-    @IBOutlet weak var distanceRemaining: StyleLabel!
-    @IBOutlet weak var timeRemaining: StyleLabel!
-    @IBOutlet weak var etaLabel: StyleLabel!
-    @IBOutlet weak var dividerView: UIView!
+    @IBOutlet weak var progressBar: ProgressBar!
+    @IBOutlet weak var distanceRemaining: SubtitleLabel!
+    @IBOutlet weak var timeRemaining: TitleLabel!
+    @IBOutlet weak var etaLabel: TitleLabel!
+    @IBOutlet weak var dividerView: SeparatorView!
     
     weak var delegate: RouteTableViewHeaderViewDelegate?
     
@@ -23,8 +23,6 @@ class RouteTableViewHeaderView: UIView {
         distanceRemaining.text = ""
         timeRemaining.text = ""
         etaLabel.text = ""
-        
-        dividerView.backgroundColor = NavigationUI.shared.lineColor
     }
     
     override var intrinsicContentSize: CGSize {
@@ -38,7 +36,6 @@ class RouteTableViewHeaderView: UIView {
     var progress: CGFloat = 0 {
         didSet {
             if (progressBarWidthConstraint != nil) {
-                progressBar.backgroundColor = NavigationUI.shared.tintColor
                 progressBarWidthConstraint.constant = bounds.width * progress
                 UIView.animate(withDuration: 0.5) { [weak self] in
                     self?.layoutIfNeeded()

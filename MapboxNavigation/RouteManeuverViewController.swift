@@ -3,7 +3,7 @@ import MapboxDirections
 
 class RouteManeuverViewController: UIViewController {
 
-    @IBOutlet var separatorViews: [UIView]!
+    @IBOutlet var separatorViews: [SeparatorView]!
     @IBOutlet weak var stackViewContainer: UIView!
     @IBOutlet weak var distanceLabel: UILabel!
     @IBOutlet weak var streetLabel: UILabel!
@@ -22,6 +22,5 @@ class RouteManeuverViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         turnArrowView.backgroundColor = .clear
-        _ = separatorViews.flatMap( { $0.backgroundColor = NavigationUI.shared.lineColor } )
     }
 }

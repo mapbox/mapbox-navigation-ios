@@ -27,7 +27,7 @@ To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Cartha
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.2
+   github "mapbox/mapbox-navigation-ios" ~> 0.3.0
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
@@ -38,10 +38,20 @@ Alternatively, to install Mapbox Navigation using [CocoaPods](https://cocoapods.
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.2'
+   pod 'MapboxNavigation', '~> 0.3.0'
    ```
-
 1. Run `pod install` and open the resulting Xcode workspace.
+
+Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
+
+### Running the example project
+
+1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
+1. Run `carthage update --platform ios` to build just the iOS dependencies
+1. Open `MapboxNavigation.xcodeproj`
+1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
+1. Open the `Info.plist` for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`
+1. Build and run the `Example-Swift` or `Example-Objective-C` target
 
 ## Usage
 
@@ -54,7 +64,8 @@ import MapboxNavigation
 let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, longitude: -77.0324047), name: "Mapbox")
 let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
 
-let options = RouteOptions(waypoints: [origin, destination], profileIdentifier: .automobileAvoidsTraffic)
+let options = RouteOptions(waypoints: [origin, destination], profileIdentifier: .automobileAvoidingTraffic)
+options.routeShapeResolution = .full
 options.includesSteps = true
 
 Directions.shared.calculate(options) { (waypoints, routes, error) in
@@ -65,45 +76,44 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
 }
 ```
 
-See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Docs/Storyboards.md) for usage with storyboards.
+#### Required Info.plist Keys
+Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
 
-### UI overrides and listeners
+1. Add a `MGLMapboxAccessToken` key and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
+1. Add a `NSLocationWhenInUseUsageDescription` key if you haven't already
+1. If you need voice guidance while your app is in the background, you'll also need to add the `audio` and `location` value to the `UIBackgroundModes` array. You can also do this by navigating to the `Capabilities` tab -> `Background Modes` and enabling the following:
+    - `Audio, AirPlay, and Picture in Picture`
+    - `Location updates`
 
-#### Colors
+#### Storyboards
+See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/docs/Storyboards.md) for usage with storyboards.
 
-You can override the default colors in the UI.
+
+#### Styling
+
+You can customize the appearance in order to blend in with the rest of your app.
 
 ```swift
-// Used for guidance arrow, highlighted text and progress bars.
-NavigationUI.shared.tintColor = .red
+let style = Style()
+style.maneuverViewHeight = 80
+style.primaryTextColor = .black
+style.headerBackgroundColor = .white
+style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
+style.apply()
+```
 
-// Used for guidance arrow
-NavigationUI.shared.tintStrokeColor = .blue
+Or for a specific system trait in an interface’s environment.
+For instance only when being used on an iPad.
 
-// Used for titles and prioritized information
-NavigationUI.shared.primaryTextColor = .orange
-
-// Used for subtitles, distances and accessory labels
-NavigationUI.shared.secondaryTextColor = .pink
-
-// Used for separators in table views
-NavigationUI.shared.lineColor = .yellow
+```swift
+let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
+style.cellTitleLabelFont = .preferredFont(forTextStyle: .title1)
+style.apply()
 ```
 
 #### RouteViewController Delegate Methods
 
 * `routeControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI
-
-## Examples
-
-We provide examples in Swift and Objective-C. Run `carthage update --platform ios` from the root folder and open MapboxNavigation.xcodeproj to try it out.
-
-### Running the example app
-
-1. If running in the simulator, you can simulate the user location by selecting `Debug` -> `Location` -> `City Bicycle Ride`
-1. Long press any where on a map. This is where you will be routed to.
-1. Press `Start Navigation` to begin
-1. Press `Cancel` to end
 
 ## Building your own custom navigation UI
 
@@ -136,7 +146,7 @@ To install Mapbox Core Navigation using [Carthage](https://github.com/Carthage/C
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.2
+   github "mapbox/mapbox-navigation-ios" ~> 0.3.0
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
@@ -147,7 +157,7 @@ Alternatively, to install Mapbox Core Navigation using [CocoaPods](https://cocoa
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxCoreNavigation', '~> 0.2'
+   pod 'MapboxCoreNavigation', '~> 0.3.0'
    ```
 
 1. Run `pod install` and open the resulting Xcode workspace.
