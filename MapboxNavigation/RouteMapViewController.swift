@@ -300,21 +300,17 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
         let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
         
-        if let style = mapView.style,
-            recenterButton.isHidden {
+        if let style = mapView.style, recenterButton.isHidden {
             
             let streetsLanguages = ["zh", "ru", "fr", "es", "en", "de"]
             let roadLabelLayerIdentifier = "roadLabelLayer"
             
             let streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
-                }.filter {
-                    $0.isMapboxStreets
+            }.filter {
+                $0.isMapboxStreets
             }
-            let streetsSourceIdentifiers = streetsSources.map {
-                $0.identifier
-            }
-            assert(!streetsSourceIdentifiers.isEmpty, "Style must contain the source `mapbox.mapbox-streets-v7`")
+            assert(!streetsSources.isEmpty, "Style must contain the source `mapbox.mapbox-streets-v7`")
             
             if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
                 let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
@@ -328,14 +324,11 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             }
             
             let userPuck = mapView.convert(newCoordinate, toPointTo: mapView)
-            
             let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
-            
             var smallestLabelDistance = Double.infinity
             var currentName: String?
             
             for feature in features {
-                
                 var allLines: [MGLPolyline] = []
                 
                 if let line = feature as? MGLPolylineFeature {
@@ -351,7 +344,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     // todo: account for -10
                     let tenMetersAheadofFeature = coordinate(at: 10, fromStartOf: featureSlice)!
                     let tenMetersAheadOfUser = coordinate(at: 10, fromStartOf: slicedLine)!
-                    
                     let distanceBetwenAheadOfUserAndFeature = tenMetersAheadofFeature - tenMetersAheadOfUser
                     
                     if distanceBetwenAheadOfUserAndFeature < smallestLabelDistance {
