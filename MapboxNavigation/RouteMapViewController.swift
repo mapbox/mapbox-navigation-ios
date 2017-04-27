@@ -248,20 +248,18 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
 
         guard routeController.userIsOnRoute(location) else { return nil }
+        guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
         
-        let route = routeController.routeProgress.route
-        guard let coordinates = route.coordinates else  { return nil }
-        
-        var newCoordinate = location.coordinate
+        var possibleClosestCoordinateToRoute = location.coordinate
         if routeController.snapsUserLocationAnnotationToRoute {
             // Snap to route
-            let snappedCoordinate = closestCoordinate(on: coordinates, to: location.coordinate)
+            let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate)
             if let coordinate = snappedCoordinate?.coordinate {
-                newCoordinate = coordinate
+                possibleClosestCoordinateToRoute = coordinate
             }
         }
         
-        let defaultReturn = CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
+        let defaultReturn = CLLocation(coordinate: possibleClosestCoordinateToRoute, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
         
         guard location.course != -1 else {
             return defaultReturn
@@ -303,7 +301,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
-        return CLLocation(coordinate: newCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+        return CLLocation(coordinate: possibleClosestCoordinateToRoute, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 
