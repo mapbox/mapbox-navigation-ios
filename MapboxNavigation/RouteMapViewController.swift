@@ -179,7 +179,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     func setDefaultCamera(animated: Bool) {
         let camera = mapView.camera
         camera.altitude = 600
-        camera.pitch = 60
+        camera.pitch = 50
         mapView.setCamera(camera, animated: animated)
     }
 
