@@ -332,20 +332,22 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             
             let userPuck = mapView.convert(newCoordinate, toPointTo: mapView)
             
-            if let routeWayNames = routeController.routeProgress.currentLegProgress.currentStep.names {
-                let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+            let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+            
+            var smallestLabelDistance = Double.infinity
+            var currentName: String?
+            
+            for feature in features {
                 
-                var smallestLabelDistance = Double.infinity
-                var currentName: String?
+                var allLines: [MGLPolyline] = []
                 
-                for feature in features {
-                    
-                    guard let line = feature as? MGLPolylineFeature ?? feature as? MGLMultiPolylineFeature else {
-                        break
-                    }
-                    
-                    
-                    
+                if let line = feature as? MGLPolylineFeature {
+                    allLines.append(line)
+                } else if let lines = feature as? MGLMultiPolylineFeature {
+                    allLines = lines.polylines
+                }
+                
+                for line in allLines {
                     let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
                     
                     let featureSlice = polyline(along: featureCoordinates, from: location.coordinate)
@@ -365,19 +367,21 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                             key += "_\(language)"
                         }
                         
-                        if let name = line.attribute(forKey: key) as? String {
+                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: key) as? String {
+                            currentName = name
+                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: key) as? String {
                             currentName = name
                         } else {
                             currentName = nil
                         }
                     }
                 }
-                
-                if smallestLabelDistance < 25 {
-                    wayNameLabel.text = currentName
-                    wayNameLabel.sizeToFit()
-                    wayNameLabel.isHidden = false
-                }
+            }
+            
+            if smallestLabelDistance < 5 {
+                wayNameLabel.text = currentName
+                wayNameLabel.sizeToFit()
+                wayNameLabel.isHidden = false
             }
         }
         
