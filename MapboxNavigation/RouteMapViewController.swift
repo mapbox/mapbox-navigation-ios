@@ -306,12 +306,21 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     let slicedLine = polyline(along: coordinates, from: newCoordinate)
                     let featureSlice = polyline(along: featureCoordinates, from: newCoordinate)
                     // todo: account for -10
-                    let tenMetersAheadofFeature = coordinate(at: 5, fromStartOf: featureSlice)!
-                    let tenMetersAheadOfUser = coordinate(at: 5, fromStartOf: slicedLine)!
-                    let distanceBetwenAheadOfUserAndFeature = tenMetersAheadofFeature - tenMetersAheadOfUser
                     
-                    if distanceBetwenAheadOfUserAndFeature < smallestLabelDistance {
-                        smallestLabelDistance = distanceBetwenAheadOfUserAndFeature
+                    let lookAheadDistance:CLLocationDistance = 10
+                    
+                    let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: featureSlice)!
+                    let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine)!
+                    let pointBehindFeature = coordinate(at: -lookAheadDistance, fromStartOf: featureSlice)!
+                    let pointBehindUser = coordinate(at: -lookAheadDistance, fromStartOf: slicedLine)!
+                    
+                    let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
+                    let distanceBetweenPointsBehind = pointBehindFeature - pointBehindUser
+                    let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenPointsBehind)
+                    
+                    
+                    if minDistanceBetweenPoints < smallestLabelDistance {
+                        smallestLabelDistance = minDistanceBetweenPoints
                         
                         var key = "name"
                         if let languages = Locale.preferredLanguages.first,
