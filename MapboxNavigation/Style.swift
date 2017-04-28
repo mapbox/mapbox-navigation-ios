@@ -179,6 +179,7 @@ public class Style: NSObject {
             ProgressBar.appearance(for: traitCollection).backgroundColor = color
             Button.appearance(for: traitCollection).tintColor = color
             HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
+            HighlightedLabel.appearance(for: traitCollection).textColor = color
         }
         
         if let color = primaryTextColor {
@@ -249,6 +250,9 @@ public class Button: StylableButton { }
  */
 @objc(MBHighlightedButton)
 public class HighlightedButton: Button { }
+
+@objc(MBHighlightedLabel)
+public class HighlightedLabel: UILabel { }
 
 @objc(MBStylableLabel)
 public class StylableLabel : UILabel { }

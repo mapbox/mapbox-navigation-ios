@@ -16,7 +16,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var recenterButton: Button!
     @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var wayNameLabel: StylableLabel!
+    @IBOutlet weak var wayNameLabel: HighlightedLabel!
     @IBOutlet weak var wayNameView: UIView!
     
     var routePageViewController: RoutePageViewController!
@@ -466,6 +466,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
 
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         if mapView.userTrackingMode == .none && !isInOverviewMode {
+            wayNameView.isHidden = true
             resetTrackingModeTimer?.invalidate()
             startResetTrackingModeTimer()
         }
