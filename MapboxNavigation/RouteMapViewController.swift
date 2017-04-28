@@ -55,6 +55,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        wayNameView.layer.borderWidth = 1
+        wayNameView.layer.borderColor = UIColor.lightGray.cgColor
         wayNameView.applyDefaultCornerRadiusShadow()
         wayNameLabel.layer.masksToBounds = true
     }
