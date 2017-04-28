@@ -2,9 +2,8 @@ import UIKit
 import Pulley
 import MapboxCoreNavigation
 
-class RouteTableViewController: UIViewController {
+class RouteTableViewController: StaticTableViewController {
     
-    let RouteTableViewCellIdentifier = "RouteTableViewCellId"
     let dateFormatter = DateFormatter()
     let dateComponentsFormatter = DateComponentsFormatter()
     let distanceFormatter = DistanceFormatter(approximate: true)
@@ -13,11 +12,14 @@ class RouteTableViewController: UIViewController {
     weak var routeController: RouteController!
     
     @IBOutlet var headerView: RouteTableViewHeaderView!
-    @IBOutlet weak var tableView: UITableView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupTableView()
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupTableView()
         dateFormatter.timeStyle = .short
         dateComponentsFormatter.maximumUnitCount = 2
         dateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
@@ -28,29 +30,75 @@ class RouteTableViewController: UIViewController {
     
     func setupTableView() {
         tableView.tableHeaderView = headerView
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 80
+        // TODO: Are we gonna use a progress bar?
+        //headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
+        
+        let satellite = TableViewItem("Satellite")
+        let traffic = TableViewItem("Live traffic")
+        let sound = TableViewItem("Sound")
+        let steps = TableViewItem("Steps")
+        
+        satellite.image = UIImage(named: "satellite", in: Bundle.navigationUI, compatibleWith: nil)
+        traffic.image = UIImage(named: "traffic", in: Bundle.navigationUI, compatibleWith: nil)
+        sound.image = UIImage(named: "volume-up", in: Bundle.navigationUI, compatibleWith: nil)
+        steps.image = UIImage(named: "list", in: Bundle.navigationUI, compatibleWith: nil)
+        
+        satellite.toggledStateHandler = { (sender: UISwitch) in
+            return false // TODO: Return satellite state
+        }
+        
+        traffic.toggledStateHandler = { (sender: UISwitch) in
+            return true // TODO: Return traffic state
+        }
+        
+        sound.toggledStateHandler = { (sender: UISwitch) in
+            return true // TODO: Return sound state
+        }
+        
+        satellite.didToggleHandler = { (sender: UISwitch) in
+            // TODO: toggle satellite
+        }
+        
+        traffic.didToggleHandler = { (sender: UISwitch) in
+            // TODO: toggle traffic
+        }
+        
+        sound.didToggleHandler = { (sender: UISwitch) in
+            // TODO: toggle sound
+        }
+        
+        data.append([satellite, traffic])
+        data.append([sound, steps])
+        
+        tableView.reloadData()
     }
     
     func showETA(routeProgress: RouteProgress) {
-        let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
-        headerView.etaLabel.text = dateFormatter.string(from: arrivalDate!)
+        if let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date()) {
+            headerView.etaLabel.text = dateFormatter.string(from: arrivalDate)
+        }
         
         if routeProgress.durationRemaining < 5 {
-            headerView.distanceRemaining.text = nil
+            headerView.distanceRemainingLabel.text = nil
         } else {
-            headerView.distanceRemaining.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
+            headerView.distanceRemainingLabel.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
         }
         
         if routeProgress.durationRemaining < 60 {
-            headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
+            headerView.timeRemainingLabel.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
         } else {
-            headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
+            headerView.timeRemainingLabel.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
         }
+        
+        // TODO: Get from system settings
+        headerView.etaUnitLabel.text = "hh:mm"
+        headerView.distanceUnitLabel.text = "miles"
+        headerView.timeUnitLabel.text = "PM"
     }
     
     func notifyDidChange(routeProgress: RouteProgress) {
-        headerView.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
+        // TODO: Update progress?
+//        headerView.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
         showETA(routeProgress: routeProgress)
     }
     
@@ -65,6 +113,7 @@ class RouteTableViewController: UIViewController {
     }
 }
 
+/* // TODO: Populate steps in a new table view
 extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -87,7 +136,7 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
-}
+}*/
 
 extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
     

@@ -188,17 +188,24 @@ public class Style: NSObject {
             NavigationMapView.appearance(for: traitCollection).tintColor = color
             ProgressBar.appearance(for: traitCollection).backgroundColor = color
             Button.appearance(for: traitCollection).tintColor = color
+            
             HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
+            ToggleView.appearance(for: traitCollection).tintColor = color
+            ToggleView.appearance(for: traitCollection).onTintColor = color
+            
+            IconImageView.appearance(for: traitCollection).tintColor = color
         }
         
         if let color = primaryTextColor {
             TitleLabel.appearance(for: traitCollection).textColor = color
             CellTitleLabel.appearance(for: traitCollection).textColor = color
+            HeaderTitleLabel.appearance(for: traitCollection).textColor = color
         }
         
         if let color = secondaryTextColor {
             SubtitleLabel.appearance(for: traitCollection).textColor = color
             CellSubtitleLabel.appearance(for: traitCollection).textColor = color
+            HeaderSubtitleLabel.appearance(for: traitCollection).textColor = color
         }
         
         if let color = buttonTextColor {
@@ -281,8 +288,14 @@ public class CellTitleLabel: StylableLabel { }
 @objc(MBCellSubtitleLabel)
 public class CellSubtitleLabel: StylableLabel { }
 
+@objc(MBHeaderTitleLabel)
+public class HeaderTitleLabel: StylableLabel { }
+
 @objc(MBWayNameLabel)
 public class WayNameLabel: StylableLabel { }
+
+@objc(MBHeaderSubtitleLabel)
+public class HeaderSubtitleLabel: StylableLabel { }
 
 @objc(MBProgressBar)
 public class ProgressBar: UIView { }
@@ -296,6 +309,12 @@ public class LineView: UIView {
         }
     }
 }
+
+@objc(MBToggleView)
+public class ToggleView: UISwitch { }
+
+@objc(MBIconImageView)
+public class IconImageView: UIImageView { }
 
 @objc(MBSeparatorView)
 public class SeparatorView: UIView { }
