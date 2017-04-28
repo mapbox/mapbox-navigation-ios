@@ -269,18 +269,22 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         if let style = mapView.style, recenterButton.isHidden {
             let streetsLanguages = ["zh", "ru", "fr", "es", "en", "de"]
             let roadLabelLayerIdentifier = "roadLabelLayer"
-            let streetsSources = style.sources.flatMap {
+            var streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
                 }.filter {
                     $0.isMapboxStreets
             }
-            assert(!streetsSources.isEmpty, "Style must contain the source `mapbox.mapbox-streets-v7`")
+            
+            // Add Mapbox Streets if the map does not already have it
+            if streetsSources.isEmpty {
+                let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
+                style.addSource(source)
+                streetsSources.append(source)
+            }
             
             if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
                 let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
                 streetLabelLayer.sourceLayerIdentifier = "road_label"
-                
-                // If the opacity is set to 0, the feature will be ignored in `mapView.visibleFeatures()`
                 streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
                 streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 20)
                 streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
