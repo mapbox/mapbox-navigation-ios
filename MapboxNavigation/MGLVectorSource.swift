@@ -1,11 +1,3 @@
-//
-//  MGLVectorSource.swift
-//  MapboxNavigation
-//
-//  Created by Bobby Sudekum on 4/18/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 import Foundation
 import Mapbox
 
