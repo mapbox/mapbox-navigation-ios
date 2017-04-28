@@ -134,6 +134,7 @@
                     <connections>
                         <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
                         <outlet property="overviewButton" destination="Dry-gO-T7u" id="8s7-hO-rHP"/>
+                        <outlet property="overviewButtonTopConstraint" destination="o9Q-tS-xND" id="Ms2-k4-xU1"/>
                         <outlet property="recenterButton" destination="5HY-QD-dBq" id="6ev-zD-MJ9"/>
                     </connections>
                 </viewController>

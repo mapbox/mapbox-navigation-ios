@@ -14,7 +14,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var recenterButton: Button!
-
+    @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
+    
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController!
     let routeStepFormatter = RouteStepFormatter()
@@ -211,6 +212,11 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
             updateShield(for: controller)
         }
+        
+        UIView.animate(withDuration: 1, animations: {
+            self.overviewButtonTopConstraint.constant = 20
+            self.view.layoutIfNeeded()
+        })
 
         controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
 
@@ -434,6 +440,8 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         }
         maneuverViewController.distanceLabel.text = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : ""
         maneuverViewController.turnArrowView.step = step
+        
+        var initialPaddingForOverviewButton:CGFloat = 20
 
         if let allLanes = step?.intersections?.first?.approachLanes, let usableLanes = step?.intersections?.first?.usableApproachLanes {
             for (i, lane) in allLanes.enumerated() {
@@ -447,9 +455,17 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 laneView.isValid = usableLanes.contains(i as Int)
                 laneView.setNeedsDisplay()
             }
+            initialPaddingForOverviewButton += maneuverViewController.stackViewContainer.frame.maxY
         } else {
             maneuverViewController.stackViewContainer.isHidden = true
         }
+        
+        
+        UIView.animate(withDuration: 1, animations: {
+            self.overviewButtonTopConstraint.constant = maneuverViewController.stackViewContainer.frame.maxY + initialPaddingForOverviewButton
+            self.view.layoutIfNeeded()
+        })
+        
 
         if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
             mapView.userTrackingMode = .followWithCourse
