@@ -212,11 +212,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
             updateShield(for: controller)
         }
-        
-        UIView.animate(withDuration: 1, animations: {
-            self.overviewButtonTopConstraint.constant = 20
-            self.view.layoutIfNeeded()
-        })
 
         controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
 
@@ -441,7 +436,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.distanceLabel.text = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : ""
         maneuverViewController.turnArrowView.step = step
         
-        var initialPaddingForOverviewButton:CGFloat = 20
+        var initialPaddingForOverviewButton:CGFloat = -30
 
         if let allLanes = step?.intersections?.first?.approachLanes, let usableLanes = step?.intersections?.first?.usableApproachLanes {
             for (i, lane) in allLanes.enumerated() {
@@ -455,17 +450,15 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 laneView.isValid = usableLanes.contains(i as Int)
                 laneView.setNeedsDisplay()
             }
-            initialPaddingForOverviewButton += maneuverViewController.stackViewContainer.frame.maxY
+            initialPaddingForOverviewButton += maneuverViewController.laneViews.first!.frame.maxY + 10
         } else {
             maneuverViewController.stackViewContainer.isHidden = true
         }
         
-        
-        UIView.animate(withDuration: 1, animations: {
-            self.overviewButtonTopConstraint.constant = maneuverViewController.stackViewContainer.frame.maxY + initialPaddingForOverviewButton
+        UIView.animate(withDuration: 0.5, animations: {
+            self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
             self.view.layoutIfNeeded()
         })
-        
 
         if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
             mapView.userTrackingMode = .followWithCourse
