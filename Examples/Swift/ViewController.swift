@@ -145,7 +145,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         
         navigationViewController.simulatesLocationUpdates = simulatesLocationUpdates
         navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
-        navigationViewController.voiceController?.volume = 0.5
+        navigationViewController.voiceController?.volume = 0
         navigationViewController.navigationDelegate = self
         
         // Uncomment to apply custom styles
