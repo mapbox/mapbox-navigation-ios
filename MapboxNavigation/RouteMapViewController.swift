@@ -12,7 +12,9 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var recenterButton: Button!
+    @IBOutlet weak var recenterButton: UIButton!
+    @IBOutlet weak var wayNameLabel: StylableLabel!
+    @IBOutlet weak var wayNameView: UIView!
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController!
@@ -53,6 +55,10 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        wayNameView.layer.borderWidth = 1
+        wayNameView.layer.borderColor = UIColor.lightGray.cgColor
+        wayNameView.applyDefaultCornerRadiusShadow()
+        wayNameLabel.layer.masksToBounds = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -140,6 +146,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.addArrow(routeController.routeProgress)
         mapView.showRoute(route)
         mapView.userTrackingMode = .followWithCourse
+        wayNameView.isHidden = true
     }
     
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
@@ -252,47 +259,122 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         var possibleClosestCoordinateToRoute = location.coordinate
         if routeController.snapsUserLocationAnnotationToRoute {
-            // Snap to route
             let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate)
             if let coordinate = snappedCoordinate?.coordinate {
                 possibleClosestCoordinateToRoute = coordinate
             }
         }
+
+        // Add current way name to UI
+        if let style = mapView.style, recenterButton.isHidden {
+            let streetsLanguages = ["zh", "ru", "fr", "es", "en", "de"]
+            let roadLabelLayerIdentifier = "roadLabelLayer"
+            var streetsSources = style.sources.flatMap {
+                $0 as? MGLVectorSource
+                }.filter {
+                    $0.isMapboxStreets
+            }
+            
+            // Add Mapbox Streets if the map does not already have it
+            if streetsSources.isEmpty {
+                let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
+                style.addSource(source)
+                streetsSources.append(source)
+            }
+            
+            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
+                let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
+                streetLabelLayer.sourceLayerIdentifier = "road_label"
+                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
+                streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 20)
+                streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
+                style.insertLayer(streetLabelLayer, at: 0)
+            }
+            
+            let userPuck = mapView.convert(possibleClosestCoordinateToRoute, toPointTo: mapView)
+            let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+            var smallestLabelDistance = Double.infinity
+            var currentName: String?
+            
+            for feature in features {
+                var allLines: [MGLPolyline] = []
+                
+                if let line = feature as? MGLPolylineFeature {
+                    allLines.append(line)
+                } else if let lines = feature as? MGLMultiPolylineFeature {
+                    allLines = lines.polylines
+                }
+                
+                for line in allLines {
+                    let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
+                    let slicedLine = polyline(along: stepCoordinates, from: possibleClosestCoordinateToRoute)
+                    
+                    let lookAheadDistance:CLLocationDistance = 10
+                    guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: possibleClosestCoordinateToRoute)) else { continue }
+                    guard let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine) else { continue }
+                    guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: possibleClosestCoordinateToRoute)) else { continue }
+                    
+                    let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
+                    let distanceBetweenReversedPoint = reversedPoint - pointAheadUser
+                    let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenReversedPoint)
+                    
+                    if minDistanceBetweenPoints < smallestLabelDistance {
+                        smallestLabelDistance = minDistanceBetweenPoints
+                        
+                        var key = "name"
+                        if let languages = Locale.preferredLanguages.first,
+                            let language = languages.components(separatedBy: "-").first,
+                            streetsLanguages.contains(language) || languages == "zh-Hans" {
+                            key += "_\(language)"
+                        }
+                        
+                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: key) as? String {
+                            currentName = name
+                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: key) as? String {
+                            currentName = name
+                        } else {
+                            currentName = nil
+                        }
+                    }
+                }
+            }
+            
+            if smallestLabelDistance < 5 && currentName != nil {
+                wayNameLabel.text = currentName
+                wayNameView.isHidden = false
+            } else {
+                wayNameView.isHidden = true
+            }
+        }
         
+        
+        // Snap user and course to route
         let defaultReturn = CLLocation(coordinate: possibleClosestCoordinateToRoute, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
         
         guard location.course != -1 else {
             return defaultReturn
         }
         
-        let coords = routeController.routeProgress.currentLegProgress.nearbyCoordinates
-        
-        let closest = closestCoordinate(on: coords, to: location.coordinate)!
-        let slicedLine = polyline(along: coords, from: closest.coordinate, to: coords.last)
-        
-        
+        let nearByCoordinates = routeController.routeProgress.currentLegProgress.nearbyCoordinates
+        let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate)!
+        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
         let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
         
         // Get closest point infront of user
         let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
-        let pointOneClosest = closestCoordinate(on: coords, to: pointOneSliced)!
-        
+        let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced)!
         let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine)!
-        let pointTwoClosest = closestCoordinate(on: coords, to: pointTwoSliced)!
+        let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced)!
         
         // Get direction of these points
         let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
         let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
-        
         let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
         let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
         let wrappedCourse = wrap(location.course, min: -180, max: 180)
-        
         let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
         let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
-        
         let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
-
         let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
         
         guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
@@ -315,6 +397,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         
         if mode != .followWithCourse {
             recenterButton.isHidden = false
+            wayNameView.isHidden = true
             startResetTrackingModeTimer()
         } else {
             recenterButton.isHidden = true
