@@ -52,6 +52,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
         
+        distanceFormatter.numberFormatter.locale = Locale.init(identifier: Locale.preferredLocalLanguageCountryCode)
+        
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
