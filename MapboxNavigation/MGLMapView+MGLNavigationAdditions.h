@@ -1,3 +1,4 @@
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 #import <Mapbox/Mapbox.h>
 
 @interface MGLMapView (MGLNavigationAdditions) <CLLocationManagerDelegate>
