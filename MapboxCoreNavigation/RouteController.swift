@@ -38,6 +38,8 @@ open class RouteController: NSObject {
         }
     }
     
+    var isInsideManeuverRadius = false
+    
     /*
      Intializes a new `RouteController`.
      
@@ -138,6 +140,8 @@ extension RouteController: CLLocationManagerDelegate {
             lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
         }
         
+        monitorStepProgress(location)
+        
         guard userIsOnRoute(location) else {
             resetStartCounter()
             NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: [
@@ -145,8 +149,6 @@ extension RouteController: CLLocationManagerDelegate {
                 ])
             return
         }
-        
-        monitorStepProgress(location)
     }
     
     func resetStartCounter() {
@@ -162,7 +164,48 @@ extension RouteController: CLLocationManagerDelegate {
         let radius = min(RouteControllerMaximumDistanceBeforeRecalculating,
                          location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
 
-        return newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
+        let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
+        
+        // If the user is moving away from the maneuver location
+        // and they are close to the next step
+        // we can safely say they have completed the maneuver.
+        // This is intended to be a fallback case when we do find
+        // that the users course matches the exit bearing.
+        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
+            let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
+            if !isCloseToCurrentStep && isCloseToUpComingStep && isInsideManeuverRadius {
+                
+                // Increment the step
+                incrementRouteStepProgress(location)
+                
+                // and reset the alert level since we're on the next step
+                let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
+                let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
+                incrementRouteProgressAlertLevel(secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low, location: location)
+                return true
+            }
+        }
+        
+        return isCloseToCurrentStep
+    }
+    
+    func incrementRouteStepProgress(_ location: CLLocation) {
+        isInsideManeuverRadius = false
+        routeProgress.currentLegProgress.stepIndex += 1
+    }
+    
+    func incrementRouteProgressAlertLevel(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation) {
+        if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel {
+            routeProgress.currentLegProgress.alertUserLevel = newlyCalculatedAlertLevel
+            // Use fresh user location distance to end of step
+            // since the step could of changed
+            let userDistance = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
+            
+            NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: [
+                RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
+                RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance
+                ])
+        }
     }
     
     func monitorStepProgress(_ location: CLLocation) {
@@ -184,17 +227,21 @@ extension RouteController: CLLocationManagerDelegate {
             let userHeadingNormalized = wrap(location.course, min: 0, max: 360)
             courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
         }
+        
+        if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
+            isInsideManeuverRadius = true
+        }
 
         // When departing, `userSnapToStepDistanceFromManeuver` is most often less than `RouteControllerManeuverZoneRadius`
         // since the user will most often be at the beginning of the route, in the maneuver zone
-        if alertLevel == .depart && userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
+        if alertLevel == .depart && isInsideManeuverRadius {
             // If the user is close to the maneuver location,
             // don't give a depature instruction.
             // Instead, give a `.high` alert.
             if secondsToEndOfStep <= RouteControllerHighAlertInterval {
                 alertLevel = .high
             }
-        } else if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
+        } else if isInsideManeuverRadius {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
             let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
@@ -216,8 +263,8 @@ extension RouteController: CLLocationManagerDelegate {
             
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 alertLevel = .arrive
-            } else if courseMatchesManeuverFinalHeading {
-                routeProgress.currentLegProgress.stepIndex += 1
+            } else if courseMatchesManeuverFinalHeading && false {
+                incrementRouteStepProgress(location)
                 let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
                 let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
                 alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
@@ -232,16 +279,6 @@ extension RouteController: CLLocationManagerDelegate {
             alertLevel = .medium
         }
         
-        if routeProgress.currentLegProgress.alertUserLevel != alertLevel {
-            routeProgress.currentLegProgress.alertUserLevel = alertLevel
-            // Use fresh user location distance to end of step
-            // since the step could of changed
-            let userDistance = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
-            
-            NotificationCenter.default.post(name: RouteControllerAlertLevelDidChange, object: self, userInfo: [
-                RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
-                RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance
-                ])
-        }
+        incrementRouteProgressAlertLevel(alertLevel, location: location)
     }
 }
