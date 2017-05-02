@@ -267,7 +267,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
         // Add current way name to UI
         if let style = mapView.style, recenterButton.isHidden {
-            let streetsLanguages = ["zh", "ru", "fr", "es", "en", "de"]
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
