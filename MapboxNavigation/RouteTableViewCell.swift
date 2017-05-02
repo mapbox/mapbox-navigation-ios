@@ -20,7 +20,7 @@ class RouteTableViewCell: UITableViewCell {
             
             turnArrowView.step = step
             titleLabel.text = routeStepFormatter.string(for: step)
-            distanceFormatter.numberFormatter.locale = Locale.init(identifier: Locale.preferredLocalLanguageCountryCode)
+            distanceFormatter.numberFormatter.locale = Locale.nationalizedCurrent
             subtitleLabel.text = distanceFormatter.string(from: step.distance)
         }
     }

@@ -83,7 +83,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     override public init() {
         super.init()
         maneuverVoiceDistanceFormatter.unitStyle = .long
-        maneuverVoiceDistanceFormatter.numberFormatter.locale = Locale.init(identifier: Locale.preferredLocalLanguageCountryCode)
+        maneuverVoiceDistanceFormatter.numberFormatter.locale = Locale.nationalizedCurrent
         resumeNotifications()
     }
     

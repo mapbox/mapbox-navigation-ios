@@ -52,7 +52,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
         
-        distanceFormatter.numberFormatter.locale = Locale.init(identifier: Locale.preferredLocalLanguageCountryCode)
+        distanceFormatter.numberFormatter.locale = Locale.nationalizedCurrent
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self

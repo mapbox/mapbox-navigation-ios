@@ -2,16 +2,17 @@ import Foundation
 
 extension Locale {
     static var preferredLocalLanguageCountryCode: String {
-        let bundleLanguage = Bundle.main.preferredLocalizations.first!
-        let bundleLanguages = bundleLanguage.components(separatedBy: "-")
+        let firstBundleLocale = Bundle.main.preferredLocalizations.first!
+        let bundleLocale = firstBundleLocale.components(separatedBy: "-")
         
-        if bundleLanguages.count == 2 {
-            return bundleLanguage
+        if bundleLocale.count > 1 {
+            return firstBundleLocale
         }
         
         let countryCode = NSLocale.Key.countryCode
-        let locale = NSLocale.current as NSLocale
-        let countryString = locale.object(forKey: countryCode) as! String
-        return "\(bundleLanguages.first!)-\(countryString)"
+        let countryString = (NSLocale.current as NSLocale).object(forKey: countryCode) as! String
+        return "\(bundleLocale.first!)-\(countryString)"
     }
+    
+    static var nationalizedCurrent = Locale(identifier: preferredLocalLanguageCountryCode)
 }
