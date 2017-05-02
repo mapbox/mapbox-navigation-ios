@@ -267,7 +267,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
         // Add current way name to UI
         if let style = mapView.style, recenterButton.isHidden {
-            let streetsLanguages = ["zh", "ru", "fr", "es", "en", "de"]
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
@@ -321,16 +320,9 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     if minDistanceBetweenPoints < smallestLabelDistance {
                         smallestLabelDistance = minDistanceBetweenPoints
                         
-                        var key = "name"
-                        if let languages = Locale.preferredLanguages.first,
-                            let language = languages.components(separatedBy: "-").first,
-                            streetsLanguages.contains(language) || languages == "zh-Hans" {
-                            key += "_\(language)"
-                        }
-                        
-                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: key) as? String {
+                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
                             currentName = name
-                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: key) as? String {
+                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
                             currentName = name
                         } else {
                             currentName = nil
