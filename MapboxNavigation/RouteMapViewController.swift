@@ -16,7 +16,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var recenterButton: Button!
     @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var wayNameLabel: HighlightedLabel!
+    @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
     
     var routePageViewController: RoutePageViewController!
