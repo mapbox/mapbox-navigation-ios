@@ -38,7 +38,7 @@ open class RouteController: NSObject {
         }
     }
     
-    var isInsideManeuverRadius = false
+    var isInsideManeuverZone = false
     
     /*
      Intializes a new `RouteController`.
@@ -173,7 +173,7 @@ extension RouteController: CLLocationManagerDelegate {
         // that the users course matches the exit bearing.
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
-            if !isCloseToCurrentStep && isCloseToUpComingStep && isInsideManeuverRadius {
+            if !isCloseToCurrentStep && isCloseToUpComingStep && isInsideManeuverZone {
                 
                 // Increment the step
                 incrementRouteStepProgress(location)
@@ -190,7 +190,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func incrementRouteStepProgress(_ location: CLLocation) {
-        isInsideManeuverRadius = false
+        isInsideManeuverZone = false
         routeProgress.currentLegProgress.stepIndex += 1
     }
     
@@ -229,19 +229,19 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
-            isInsideManeuverRadius = true
+            isInsideManeuverZone = true
         }
 
         // When departing, `userSnapToStepDistanceFromManeuver` is most often less than `RouteControllerManeuverZoneRadius`
         // since the user will most often be at the beginning of the route, in the maneuver zone
-        if alertLevel == .depart && isInsideManeuverRadius {
+        if alertLevel == .depart && isInsideManeuverZone {
             // If the user is close to the maneuver location,
             // don't give a depature instruction.
             // Instead, give a `.high` alert.
             if secondsToEndOfStep <= RouteControllerHighAlertInterval {
                 alertLevel = .high
             }
-        } else if isInsideManeuverRadius {
+        } else if isInsideManeuverZone {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
             let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
