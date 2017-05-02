@@ -135,6 +135,16 @@ public class Style: NSObject {
     public var cellSubtitleLabelTextColor: UIColor?
     
     /**
+     `wayNameTextColor` sets the color for the current way name label.
+     */
+    public var wayNameTextColor: UIColor?
+    
+    /**
+     `wayNameLabelFont` sets the font of the current way name label.
+     */
+    public var wayNameLabelFont: UIFont?
+    
+    /**
      `defaultStyle` returns the default style for Mapbox Navigation SDK.
      */
     public class var defaultStyle: Style {
@@ -234,6 +244,14 @@ public class Style: NSObject {
         if let color = cellSubtitleLabelTextColor {
             CellSubtitleLabel.appearance(for: traitCollection).textColor = color
         }
+        
+        if let color = wayNameTextColor {
+            WayNameLabel.appearance(for: traitCollection).textColor = color
+        }
+        
+        if let font = wayNameLabelFont {
+            WayNameLabel.appearance(for: traitCollection).font = font
+        }
     }
 }
 
@@ -266,6 +284,9 @@ public class SubtitleLabel: StylableLabel { }
 public class CellTitleLabel: StylableLabel { }
 @objc(MBCellSubtitleLabel)
 public class CellSubtitleLabel: StylableLabel { }
+
+@objc(MBWayNameLabel)
+public class WayNameLabel: StylableLabel { }
 
 @objc(MBProgressBar)
 public class ProgressBar: UIView { }
