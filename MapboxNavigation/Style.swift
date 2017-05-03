@@ -16,7 +16,7 @@ fileprivate extension UIColor {
     fileprivate class var defaultTintStroke: UIColor { get { return #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1) } }
     fileprivate class var defaultPrimaryText: UIColor { get { return #colorLiteral(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0, alpha: 1) } }
     fileprivate class var defaultSecondaryText: UIColor { get { return #colorLiteral(red: 0.4509803922, green: 0.4509803922, blue: 0.4509803922, alpha: 1) } }
-    fileprivate class var defaultLine: UIColor { get { return #colorLiteral(red: 0.7825912237, green: 0.7776457667, blue: 0.7863886952, alpha: 0.7) } }
+    fileprivate class var defaultLine: UIColor { get { return #colorLiteral(red: 0.2470588235, green: 0.3568627451, blue: 0.4823529412, alpha: 0.16) } }
     
     // Maneuver view (Page view)
     fileprivate class var defaultManeuverViewBackground: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }

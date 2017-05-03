@@ -49,6 +49,7 @@
 		352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */; };
 		352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */; };
 		353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */; };
+		353E61CA1EB8BDBC0093B7C7 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E61C91EB8BDBC0093B7C7 /* Constants.swift */; };
 		353E68FE1EF0B985007B2AE5 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E68FD1EF0B985007B2AE5 /* Bundle.swift */; };
 		353E69011EF0C2B6007B2AE5 /* DefaultLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E69001EF0C2B6007B2AE5 /* DefaultLocationManager.swift */; };
 		353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */; };
@@ -299,6 +300,7 @@
 		352BBC591E5E78EA00703DF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3534CC811EF1FE1E00DECAFA /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocation.swift; sourceTree = "<group>"; };
 		353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManager.swift; sourceTree = "<group>"; };
+		353E61C91EB8BDBC0093B7C7 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		353E68FD1EF0B985007B2AE5 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		353E69001EF0C2B6007B2AE5 /* DefaultLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLocationManager.swift; sourceTree = "<group>"; };
 		353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedLocationManager.swift; sourceTree = "<group>"; };
@@ -514,6 +516,7 @@
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				353E69001EF0C2B6007B2AE5 /* DefaultLocationManager.swift */,
 				359873241EB25B2B0002BAE4 /* StaticTableViewCell.swift */,
+				353E61C91EB8BDBC0093B7C7 /* Constants.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1163,6 +1166,7 @@
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
 				351BEBFD1E5BCC63006FE110 /* String.swift in Sources */,
 				359873251EB25B2B0002BAE4 /* StaticTableViewCell.swift in Sources */,
+				353E61CA1EB8BDBC0093B7C7 /* Constants.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
 				351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */,

@@ -9,6 +9,13 @@ class TableViewItem: NSObject {
     var didSelectHandler: ActionHandler?
     var didToggleHandler: ToggledHandler?
     var toggledStateHandler: ToggledStateHandler?
+    var isSeparator: Bool = false
+    
+    static var separator: TableViewItem {
+        let item = TableViewItem("")
+        item.isSeparator = true
+        return item
+    }
     
     init(_ title: String) {
         self.title = title
@@ -22,11 +29,13 @@ class StaticTableViewController: UITableViewController {
     var data = [TableViewSection]()
     
     let cellReuseIdentifier = "StaticTableViewCellId"
+    let separatorReuseIdentifier = "StaticSeparatorTableViewCellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 80
+        tableView.estimatedRowHeight = 50
+        tableView.tableFooterView = UIView()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -38,11 +47,20 @@ class StaticTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! StaticTableViewCell
-
         let item = data[indexPath.section][indexPath.row]
-        cell.titleLabel.text = item.title
         
+        if item.isSeparator {
+            return separatorCell(forRowAt: indexPath)
+        } else {
+            return tableViewCell(forRowAt: indexPath)
+        }
+    }
+    
+    func tableViewCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! StaticTableViewCell
+        let item = data[indexPath.section][indexPath.row]
+        
+        cell.titleLabel.text = item.title
         cell.iconImageView.image = item.image
         cell.iconImageView.sizeToFit()
         
@@ -60,7 +78,12 @@ class StaticTableViewController: UITableViewController {
         } else {
             cell.accessoryView = nil
         }
-
+        
+        return cell
+    }
+    
+    func separatorCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: separatorReuseIdentifier, for: indexPath) as! SeparatorTableViewCell
         return cell
     }
     

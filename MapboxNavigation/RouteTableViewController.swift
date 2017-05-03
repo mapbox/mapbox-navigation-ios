@@ -32,10 +32,9 @@ class RouteTableViewController: StaticTableViewController {
         tableView.tableHeaderView = headerView
         // TODO: Are we gonna use a progress bar?
         //headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
-        
-        let satellite = TableViewItem("Satellite")
-        let traffic = TableViewItem("Live traffic")
-        let sound = TableViewItem("Sound")
+        let satellite = TableViewItem(NSLocalizedString("SATELLITE", value: "Satellite", comment: "Satellite table view item"))
+        let traffic = TableViewItem(NSLocalizedString("LIVE_TRAFFIC", value: "Live Traffic", comment: "Live Traffic table view item"))
+        let sound = TableViewItem(NSLocalizedString("SOUND", value: "Sound", comment: "Sound table view item"))
         let steps = TableViewItem("Steps")
         
         satellite.image = UIImage(named: "satellite", in: Bundle.navigationUI, compatibleWith: nil)
@@ -44,11 +43,17 @@ class RouteTableViewController: StaticTableViewController {
         steps.image = UIImage(named: "list", in: Bundle.navigationUI, compatibleWith: nil)
         
         satellite.toggledStateHandler = { (sender: UISwitch) in
-            return false // TODO: Return satellite state
+            if let showsSatellite = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsSatellite) {
+                return showsSatellite
+            }
+            return false
         }
         
         traffic.toggledStateHandler = { (sender: UISwitch) in
-            return true // TODO: Return traffic state
+            if let showsTraffic = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsSatellite) {
+                return showsTraffic
+            }
+            return false
         }
         
         sound.toggledStateHandler = { (sender: UISwitch) in
@@ -56,19 +61,21 @@ class RouteTableViewController: StaticTableViewController {
         }
         
         satellite.didToggleHandler = { (sender: UISwitch) in
-            // TODO: toggle satellite
+            guard let controller = self.parent as? NavigationViewController else { return }
+            NavigationDefaults.shared?.set(sender.isOn, forKey: NavigationSettings.showsSatellite)
+            controller.mapView?.styleURL = NavigationSettings.styleURL
         }
         
         traffic.didToggleHandler = { (sender: UISwitch) in
-            // TODO: toggle traffic
+            NavigationDefaults.shared?.set(sender.isOn, forKey: NavigationSettings.showsTraffic)
         }
         
         sound.didToggleHandler = { (sender: UISwitch) in
             // TODO: toggle sound
         }
         
-        data.append([satellite, traffic])
-        data.append([sound, steps])
+        data.append([TableViewItem.separator, satellite, traffic])
+        data.append([TableViewItem.separator, sound, steps])
         
         tableView.reloadData()
     }
