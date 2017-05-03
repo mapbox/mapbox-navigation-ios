@@ -22,6 +22,7 @@ class RouteTableViewController: UIViewController {
         dateComponentsFormatter.maximumUnitCount = 2
         dateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
         dateComponentsFormatter.unitsStyle = .short
+        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
     }
     

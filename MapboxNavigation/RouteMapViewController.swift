@@ -57,7 +57,9 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
-
+        
+        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
+        
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         
