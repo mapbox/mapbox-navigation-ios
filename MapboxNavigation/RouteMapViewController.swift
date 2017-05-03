@@ -160,6 +160,10 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         mapView.camera = camera
 
         let polyline = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
+        // Don't keep zooming in
+        guard polyline.overlayBounds.ne - polyline.overlayBounds.sw > 200 else {
+            return
+        }
         mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 
