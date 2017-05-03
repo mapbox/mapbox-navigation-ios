@@ -83,6 +83,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     override public init() {
         super.init()
         maneuverVoiceDistanceFormatter.unitStyle = .long
+        maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
         resumeNotifications()
     }
     
@@ -269,8 +270,8 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         let input = AWSPollySynthesizeSpeechURLBuilderRequest()
         input.textType = .ssml
         input.outputFormat = .mp3
-        
-        let langs = Locale.preferredLanguages.first!.components(separatedBy: "-")
+
+        let langs = Locale.preferredLocalLanguageCountryCode.components(separatedBy: "-")
         let langCode = langs[0]
         var countryCode = ""
         if langs.count > 1 {
@@ -369,7 +370,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
         
         // Only localized languages will have a proper fallback voice
-        utterance.voice = AVSpeechSynthesisVoice(language: Bundle.main.preferredLocalizations.first)
+        utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
         utterance.volume = volume
         
         speechSynth.speak(utterance)
