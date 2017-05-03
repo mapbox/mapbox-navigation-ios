@@ -1,4 +1,4 @@
-﻿﻿/* Format for speech string; 1 = way name; 2 = distance */
+﻿/* Format for speech string; 1 = way name; 2 = distance */
 "CONTINUE" = "继续沿%@行驶%@";
 
 /* Format string for less than; 1 = duration remaining */
