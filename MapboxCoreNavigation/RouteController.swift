@@ -38,8 +38,6 @@ open class RouteController: NSObject {
         }
     }
     
-    var isInsideManeuverZone = false
-    
     /*
      Intializes a new `RouteController`.
      
@@ -140,8 +138,6 @@ extension RouteController: CLLocationManagerDelegate {
             lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
         }
         
-        monitorStepProgress(location)
-        
         guard userIsOnRoute(location) else {
             resetStartCounter()
             NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: [
@@ -149,6 +145,8 @@ extension RouteController: CLLocationManagerDelegate {
                 ])
             return
         }
+        
+        monitorStepProgress(location)
     }
     
     func resetStartCounter() {
@@ -173,10 +171,10 @@ extension RouteController: CLLocationManagerDelegate {
         // that the users course matches the exit bearing.
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
-            if !isCloseToCurrentStep && isCloseToUpComingStep && isInsideManeuverZone {
+            if !isCloseToCurrentStep && isCloseToUpComingStep {
                 
                 // Increment the step
-                incrementRouteStepProgress(location)
+                routeProgress.currentLegProgress.stepIndex += 1
                 
                 // and reset the alert level since we're on the next step
                 let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
@@ -187,11 +185,6 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         return isCloseToCurrentStep
-    }
-    
-    func incrementRouteStepProgress(_ location: CLLocation) {
-        isInsideManeuverZone = false
-        routeProgress.currentLegProgress.stepIndex += 1
     }
     
     func incrementRouteProgressAlertLevel(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation) {
@@ -227,21 +220,17 @@ extension RouteController: CLLocationManagerDelegate {
             let userHeadingNormalized = wrap(location.course, min: 0, max: 360)
             courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
         }
-        
-        if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
-            isInsideManeuverZone = true
-        }
 
         // When departing, `userSnapToStepDistanceFromManeuver` is most often less than `RouteControllerManeuverZoneRadius`
         // since the user will most often be at the beginning of the route, in the maneuver zone
-        if alertLevel == .depart && isInsideManeuverZone {
+        if alertLevel == .depart && userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             // If the user is close to the maneuver location,
             // don't give a depature instruction.
             // Instead, give a `.high` alert.
             if secondsToEndOfStep <= RouteControllerHighAlertInterval {
                 alertLevel = .high
             }
-        } else if isInsideManeuverZone {
+        } else if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
             let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
@@ -264,7 +253,7 @@ extension RouteController: CLLocationManagerDelegate {
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 alertLevel = .arrive
             } else if courseMatchesManeuverFinalHeading && false {
-                incrementRouteStepProgress(location)
+                routeProgress.currentLegProgress.stepIndex += 1
                 let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
                 let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
                 alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
