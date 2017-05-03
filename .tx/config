@@ -1,0 +1,10 @@
+[main]
+host = https://www.transifex.com
+minimum_perc = 80
+type = STRINGS
+
+[mapbox-navigation-ios.localizablestrings]
+file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
+lang_map = pt_BR: pt-BR, pt_PT: pt-PT, zh_CN: zh-Hans, zh_TW: zh-Hant
+source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
+source_lang = en
