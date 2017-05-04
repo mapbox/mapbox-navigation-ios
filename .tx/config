@@ -23,4 +23,4 @@ source_lang = en
 file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
 source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
-minimum_perc = 80
+minimum_perc = 40
