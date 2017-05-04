@@ -79,6 +79,14 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
+                                                <attributedString key="userComments">
+                                                    <fragment content="DO NOT TRANSLATE">
+                                                        <attributes>
+                                                            <font key="NSFont" metaFont="smallSystem"/>
+                                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -101,14 +109,32 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/traffic-day-v2"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5HY-QD-dBq" customClass="MBButton">
-                                <rect key="frame" x="165" y="180" width="44" height="44"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBButton">
+                                <rect key="frame" x="10" y="110" width="40" height="40"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="Boe-Xa-uFI"/>
+                                    <constraint firstAttribute="height" constant="40" id="ybt-ny-GPN"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="0.5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" image="overview"/>
+                                <connections>
+                                    <action selector="toggleOverview:" destination="3z2-H5-unA" eventType="touchUpInside" id="2Bc-fq-C2C"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5HY-QD-dBq" customClass="MBHighlightedButton">
+                                <rect key="frame" x="10" y="189.5" width="112" height="42"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="44" id="Cby-DX-AvF"/>
-                                    <constraint firstAttribute="height" constant="44" id="QGu-S5-V3G"/>
+                                    <constraint firstAttribute="height" constant="42" id="QGu-S5-V3G"/>
+                                    <constraint firstAttribute="width" constant="112" id="auw-yF-4hd"/>
                                 </constraints>
-                                <state key="normal" image="location"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                <inset key="titleEdgeInsets" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="Resume" image="location">
+                                    <color key="titleColor" red="0.1019607857" green="0.27843138579999999" blue="0.40000000600000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="recenter:" destination="3z2-H5-unA" eventType="touchUpInside" id="s72-hB-PTq"/>
                                 </connections>
@@ -128,17 +154,21 @@
                         <constraints>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
+                            <constraint firstItem="5HY-QD-dBq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leadingMargin" constant="-6" id="DLa-g1-fxC"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
+                            <constraint firstItem="Dry-gO-T7u" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="emb-2d-lCf"/>
                             <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
-                            <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="5HY-QD-dBq" secondAttribute="bottom" constant="100" id="leu-SU-9Qj"/>
-                            <constraint firstItem="5HY-QD-dBq" firstAttribute="centerX" secondItem="Gvo-VD-DXF" secondAttribute="centerX" id="wDo-xG-s8o"/>
+                            <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="5HY-QD-dBq" secondAttribute="bottom" constant="92" id="leu-SU-9Qj"/>
+                            <constraint firstItem="Dry-gO-T7u" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="top" constant="110" id="o9Q-tS-xND"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
+                        <outlet property="overviewButton" destination="Dry-gO-T7u" id="8s7-hO-rHP"/>
+                        <outlet property="overviewButtonTopConstraint" destination="o9Q-tS-xND" id="Ms2-k4-xU1"/>
                         <outlet property="recenterButton" destination="5HY-QD-dBq" id="6ev-zD-MJ9"/>
                         <outlet property="wayNameLabel" destination="bcm-ca-nGv" id="8Sy-Pk-fQZ"/>
                         <outlet property="wayNameView" destination="drb-do-FoT" id="oby-w9-mC3"/>
@@ -692,5 +722,6 @@
     </scenes>
     <resources>
         <image name="location" width="22" height="22"/>
+        <image name="overview" width="16" height="14"/>
     </resources>
 </document>

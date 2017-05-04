@@ -12,17 +12,20 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var recenterButton: UIButton!
-    @IBOutlet weak var wayNameLabel: StylableLabel!
+
+    @IBOutlet weak var overviewButton: Button!
+    @IBOutlet weak var recenterButton: Button!
+    @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController!
     let routeStepFormatter = RouteStepFormatter()
     let MBSecondsBeforeResetTrackingMode: TimeInterval = 25.0
-    
+
     var route: Route { return routeController.routeProgress.route }
-    
+
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -31,23 +34,26 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         return parent.pendingCamera
     }
     weak var delegate: RouteMapViewControllerDelegate?
-    
+
     weak var routeController: RouteController!
-    
+
     let distanceFormatter = DistanceFormatter(approximate: true)
-    
-    var resetTrackingModeTimer: Timer!
-    
+
+    var resetTrackingModeTimer: Timer?
+
     let webImageManager = SDWebImageManager.shared()
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
-    
+    var isInOverviewMode = false
+
+    let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
+
     var simulatesLocationUpdates: Bool {
         guard let parent = parent as? NavigationViewController else { return false }
         return parent.simulatesLocationUpdates
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
@@ -56,54 +62,51 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
-        recenterButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
+        recenterButton.applyDefaultCornerRadiusShadow()
+        
         wayNameView.layer.borderWidth = 1
         wayNameView.layer.borderColor = UIColor.lightGray.cgColor
         wayNameView.applyDefaultCornerRadiusShadow()
         wayNameLabel.layer.masksToBounds = true
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         mapView.compassView.isHidden = true
         mapView.addAnnotation(destination)
-        
+
         if let camera = pendingCamera {
             mapView.camera = camera
         } else {
-            let camera = mapView.camera
-            camera.altitude = 1_000
-            camera.pitch = 45
-            mapView.camera = camera
+            setDefaultCamera(animated: false)
         }
-        
+
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: .initial, context: nil)
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
-        
+
         if simulatesLocationUpdates {
             mapView.locationManager.stopUpdatingLocation()
             mapView.locationManager.stopUpdatingHeading()
         }
-        
-        let topPadding: CGFloat = 30
-        let bottomPadding: CGFloat = 50
-        let contentInset = UIEdgeInsets(top: routePageViewController.view.frame.maxY+topPadding, left: 0, bottom: bottomPadding, right: 0)
-        mapView.setContentInset(contentInset, animated: false)
+
+        mapView.setContentInset(overviewContentInset, animated: false)
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         webImageManager.cancelAll()
     }
-    
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "batteryState" {
             let batteryState = UIDevice.current.batteryState
@@ -111,18 +114,33 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             routeController.locationManager.desiredAccuracy = pluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
         }
     }
-    
+
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     @IBAction func recenter(_ sender: AnyObject) {
+        setDefaultCamera(animated: false)
         mapView.userTrackingMode = .followWithCourse
-        
+
         // Recenter also resets the current page. Same behavior as rerouting.
         routePageViewController.notifyDidReRoute()
     }
-    
+
+    @IBAction func toggleOverview(_ sender: Any) {
+        if isInOverviewMode {
+            overviewButton.isHidden = false
+            setDefaultCamera(animated: false)
+            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+        } else {
+            wayNameView.isHidden = true
+            overviewButton.isHidden = true
+            updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
+        }
+        resetTrackingModeTimer?.invalidate()
+        isInOverviewMode = !isInOverviewMode
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier ?? "" {
         case "RoutePageViewController":
@@ -134,47 +152,73 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             break
         }
     }
-    
+
+    func updateVisibleBounds(coordinates: [CLLocationCoordinate2D]) {
+        let camera = mapView.camera
+        camera.pitch = 0
+        camera.heading = 0
+        mapView.camera = camera
+
+        let polyline = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
+        // Don't keep zooming in
+        guard polyline.overlayBounds.ne - polyline.overlayBounds.sw > 200 else {
+            return
+        }
+        mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
+    }
+
     func startResetTrackingModeTimer() {
         resetTrackingModeTimer = Timer.scheduledTimer(timeInterval: MBSecondsBeforeResetTrackingMode, target: self, selector: #selector(trackingModeTimerDone), userInfo: nil, repeats: false)
     }
-    
+
     func trackingModeTimerDone() {
         mapView.userTrackingMode = .followWithCourse
     }
-    
+
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
         mapView.addArrow(routeController.routeProgress)
         mapView.showRoute(route)
-        mapView.userTrackingMode = .followWithCourse
-        wayNameView.isHidden = true
+
+        if isInOverviewMode {
+            updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
+        } else {
+            mapView.userTrackingMode = .followWithCourse
+            wayNameView.isHidden = true
+        }
     }
-    
+
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
             mapView.addArrow(routeProgress)
         }
     }
-    
+
+    func setDefaultCamera(animated: Bool) {
+        let camera = mapView.camera
+        camera.altitude = 600
+        camera.pitch = 50
+        mapView.setCamera(camera, animated: animated)
+    }
+
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         let stepProgress = routeController.routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         guard let controller = routePageViewController.currentManeuverPage else { return }
-        
+
         controller.distanceLabel.isHidden = false
-        
+
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             controller.streetLabel.text = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
             controller.distanceLabel.isHidden = true
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
-            
+
             if secondsRemaining > 5 {
                 controller.distanceLabel.text = distanceFormatter.string(from: distanceRemaining)
             } else {
                 controller.distanceLabel.isHidden = true
             }
-            
+
             if let name = upComingStep.names?.first {
                 controller.streetLabel.text = name
             } else if let destinations = upComingStep.destinations?.joined(separator: "\n") {
@@ -182,25 +226,36 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             } else {
                 controller.streetLabel.text = upComingStep.instructions
             }
-            
+
             updateShield(for: controller)
         }
-        
+
         controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
+
+        guard isInOverviewMode else {
+            return
+        }
+
+        guard let userLocation = mapView.userLocation?.coordinate else {
+            return
+        }
+
+        let slicedLine = polyline(along: routeProgress.route.coordinates!, from: userLocation, to: routeProgress.route.coordinates!.last)
+        updateVisibleBounds(coordinates: slicedLine)
     }
-    
+
     func dataTaskForShieldImage(network: String, number: String, height: CGFloat, completion: @escaping (UIImage?) -> Void) -> URLSessionDataTask? {
         guard let imageNamePattern = ShieldImageNamesByPrefix[network] else {
             return nil
         }
-        
+
         let imageName = imageNamePattern.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "{ref}", with: number)
         let apiURL = URL(string: "https://commons.wikimedia.org/w/api.php?action=query&format=json&maxage=86400&prop=imageinfo&titles=File%3A\(imageName)&iiprop=url%7Csize&iiurlheight=\(Int(round(height)))")!
-        
+
         guard shieldAPIDataTask?.originalRequest?.url != apiURL else {
             return nil
         }
-        
+
         shieldAPIDataTask?.cancel()
         return URLSession.shared.dataTask(with: apiURL) { [weak self] (data, response, error) in
             var json: [String: Any] = [:]
@@ -211,18 +266,18 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
                     assert(false, "Invalid data")
                 }
             }
-            
+
             guard data != nil && error == nil else {
                 return
             }
-            
+
             guard let query = json["query"] as? [String: Any],
                 let pages = query["pages"] as? [String: Any], let page = pages.first?.1 as? [String: Any],
                 let imageInfos = page["imageinfo"] as? [[String: Any]], let imageInfo = imageInfos.first,
                 let thumbURLString = imageInfo["thumburl"] as? String, let thumbURL = URL(string: thumbURLString) else {
                     return
             }
-            
+
             if thumbURL != self?.shieldImageDownloadToken?.url {
                 self?.webImageManager.imageDownloader?.cancel(self?.shieldImageDownloadToken)
             }
@@ -236,23 +291,23 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 // MARK: NavigationMapViewDelegate
 
 extension RouteMapViewController: NavigationMapViewDelegate {
-    
+
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
-    
+
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
-    
+
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView(mapView, shapeDescribing: route)
     }
-    
+
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView(mapView, simplifiedShapeDescribing: route)
     }
-    
+
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
 
@@ -353,7 +408,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate)!
         let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
         let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
-        
+
         // Get closest point infront of user
         let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
         let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced)!
@@ -370,11 +425,11 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
         let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
         let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
-        
+
         guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
             return defaultReturn
         }
-        
+
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
         return CLLocation(coordinate: possibleClosestCoordinateToRoute, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
@@ -385,51 +440,61 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
 extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if resetTrackingModeTimer != nil {
-            resetTrackingModeTimer.invalidate()
-        }
-        
-        if mode != .followWithCourse {
+        if isInOverviewMode && mode != .followWithCourse {
             recenterButton.isHidden = false
             wayNameView.isHidden = true
             startResetTrackingModeTimer()
         } else {
+            resetTrackingModeTimer?.invalidate()
+            
+            if mode != .followWithCourse {
+                recenterButton.isHidden = false
+                startResetTrackingModeTimer()
+            } else {
+                recenterButton.isHidden = true
+            }
+        }
+        
+        if isInOverviewMode {
+            overviewButton.isHidden = false
             recenterButton.isHidden = true
+            isInOverviewMode = false
         }
     }
-    
+
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        if resetTrackingModeTimer != nil && mapView.userTrackingMode == .none {
-            resetTrackingModeTimer.invalidate()
+        if mapView.userTrackingMode == .none && !isInOverviewMode {
+            wayNameView.isHidden = true
+            resetTrackingModeTimer?.invalidate()
             startResetTrackingModeTimer()
         }
     }
-    
+
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         let map = mapView as! NavigationMapView
         map.showRoute(route)
     }
-    
+
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
-        if resetTrackingModeTimer != nil {
-            resetTrackingModeTimer.invalidate()
+        if !isInOverviewMode {
+            resetTrackingModeTimer?.invalidate()
             startResetTrackingModeTimer()
         }
     }
-    
+
     func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
         mapView.userTrackingMode = .followWithCourse
     }
-    
+
     func updateShield(for controller: RouteManeuverViewController) {
         let currentLegProgress = routeController.routeProgress.currentLegProgress
-        
+
         guard let upComingStep = currentLegProgress?.upComingStep else { return }
         guard let ref = upComingStep.codes?.first else { return }
         guard controller.shieldImage == nil else { return }
-        
+
         let components = ref.components(separatedBy: " ")
-        
+
         if components.count > 1 {
             shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { (image) in
                 controller.shieldImage = image
@@ -444,10 +509,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
 extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
         let step = maneuverViewController.step
-        
+
         maneuverViewController.shieldImage = nil
         updateShield(for: maneuverViewController)
-        
+
         if let name = step?.names?.first {
             maneuverViewController.streetLabel.text = name
         } else if let destinations = step?.destinations?.joined(separator: "\n") {
@@ -458,6 +523,8 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.distanceLabel.text = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : ""
         maneuverViewController.turnArrowView.step = step
         
+        var initialPaddingForOverviewButton:CGFloat = -30
+
         if let allLanes = step?.intersections?.first?.approachLanes, let usableLanes = step?.intersections?.first?.usableApproachLanes {
             for (i, lane) in allLanes.enumerated() {
                 guard i < maneuverViewController.laneViews.count else {
@@ -470,10 +537,16 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 laneView.isValid = usableLanes.contains(i as Int)
                 laneView.setNeedsDisplay()
             }
+            initialPaddingForOverviewButton += maneuverViewController.laneViews.first!.frame.maxY + 10
         } else {
             maneuverViewController.stackViewContainer.isHidden = true
         }
         
+        UIView.animate(withDuration: 0.5, animations: {
+            self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
+            self.view.layoutIfNeeded()
+        })
+
         if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
             mapView.userTrackingMode = .followWithCourse
         } else {
@@ -481,15 +554,15 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         }
     }
 
-    
+
     func currentStep() -> RouteStep {
         return routeController.routeProgress.currentLegProgress.currentStep
     }
-    
+
     func stepBefore(_ step: RouteStep) -> RouteStep? {
         return routeController.routeProgress.currentLegProgress.stepBefore(step)
     }
-    
+
     func stepAfter(_ step: RouteStep) -> RouteStep? {
         return routeController.routeProgress.currentLegProgress.stepAfter(step)
     }
