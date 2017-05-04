@@ -18,3 +18,9 @@ source_lang = en
 file_filter = Examples/Objective-C/<lang>.lproj/Main.strings
 source_file = Examples/Objective-C/en.lproj/Main.strings
 source_lang = en
+
+[mapbox-navigation-ios.navigationstrings]
+file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
+source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
+source_lang = en
+minimum_perc = 80
