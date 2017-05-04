@@ -1,0 +1,18 @@
+﻿/* Format for speech string; 1 = way name; 2 = distance */
+"CONTINUE" = "Continua per %1$@ cap a %2$@";
+
+/* Format string for less than; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+
+/* Format for speech string; 1 = current instruction; 2 = the following linked instruction */
+"LINKED_UTTERANCE_FORMAT" = "%1$@, després %2$@";
+
+/* Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction */
+"LINKED_WITH_DISTANCE_UTTERANCE_FORMAT" = "%1$@, després a %2$@, %3$@";
+
+/* Format for speech string; 1 = way name; 2 = way route number */
+"NAME_AND_REF" = "%1$@ (%2$@)";
+
+/* Format for speech string; 1 = formatted distance; 2 = instruction */
+"WITH_DISTANCE_UTTERANCE_FORMAT" = "A %1$@, %2$@";
+
