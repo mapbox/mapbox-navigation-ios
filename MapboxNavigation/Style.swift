@@ -188,6 +188,7 @@ public class Style: NSObject {
             NavigationMapView.appearance(for: traitCollection).tintColor = color
             ProgressBar.appearance(for: traitCollection).backgroundColor = color
             Button.appearance(for: traitCollection).tintColor = color
+            HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
         }
         
         if let color = primaryTextColor {
@@ -253,8 +254,19 @@ public class Style: NSObject {
     }
 }
 
+/**
+ `MBButton` sets the tintColor according to the style.
+ */
 @objc(MBButton)
 public class Button: StylableButton { }
+
+/**
+ `MBHighlightedButton` sets the button’s titleColor for normal control state
+ according to the style in addition to the styling behavior inherited from
+ `MBButton`.
+ */
+@objc(MBHighlightedButton)
+public class HighlightedButton: Button { }
 
 @objc(MBStylableLabel)
 public class StylableLabel : UILabel { }
