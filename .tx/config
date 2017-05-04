@@ -8,3 +8,13 @@ type = STRINGS
 file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
 source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
+
+[mapbox-navigation-ios.swiftexample]
+file_filter = Examples/Swift/<lang>.lproj/Main.strings
+source_file = Examples/Swift/en.lproj/Main.strings
+source_lang = en
+
+[mapbox-navigation-ios.objcexample]
+file_filter = Examples/Objective-C/<lang>.lproj/Main.strings
+source_file = Examples/Objective-C/en.lproj/Main.strings
+source_lang = en
