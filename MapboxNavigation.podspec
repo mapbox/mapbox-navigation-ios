@@ -45,7 +45,7 @@ Pod::Spec.new do |s|
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
   s.dependency "MapboxDirections.swift", "~> 0.9.0"
   s.dependency "Mapbox-iOS-SDK", "~> 3.5"
-  s.dependency "OSRMTextInstructions", "~> 0.1.1"
+  s.dependency "OSRMTextInstructions", "~> 0.1.2"
   s.dependency "Pulley", "~> 1.3"
   s.dependency "SDWebImage", "~> 4.0"
   s.dependency "AWSPolly", "~> 2.5"
