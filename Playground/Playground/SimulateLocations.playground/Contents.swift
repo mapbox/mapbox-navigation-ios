@@ -11,6 +11,7 @@ import Mapbox
 import MapboxDirections
 import PlaygroundSupport
 
+
 class DebugPointFeature: MGLPointFeature {
     var location: CLLocation!
 }
@@ -19,6 +20,47 @@ let mapSize = CGSize(width: 700, height: 800)
 
 MGLAccountManager.setAccessToken(accessToken)
 let mapView = MGLMapView(frame: CGRect(origin: .zero, size: mapSize))
+
+func draw(simulatedRoute: SimulatedRoute) {
+    
+    guard let locations = simulatedRoute.processedLocations else { return }
+    
+    // Draw simulated route
+    let coordinates = locations.map({ $0.coordinate })
+    
+    let simulatedFeature = MGLPolylineFeature(coordinates: coordinates, count: UInt(coordinates.count))
+    let simulatedSource = MGLShapeSource(identifier: "simulatedSource", features: [simulatedFeature], options: nil)
+    mapView.style?.addSource(simulatedSource)
+    
+    let simulatedLayer = MGLLineStyleLayer(identifier: "simulatedLayer", source: simulatedSource)
+    simulatedLayer.lineColor = MGLStyleValue(rawValue: #colorLiteral(red: 1, green: 0.2461264729, blue: 0.3175281286, alpha: 1))
+    simulatedLayer.lineWidth = MGLStyleValue(rawValue: 2)
+    mapView.style?.addLayer(simulatedLayer)
+    
+    // Add symbol layers for each simulated location
+    for location in locations {
+        let pointFeature = DebugPointFeature()
+        pointFeature.location = location
+        pointFeature.coordinate = location.coordinate
+        let index = locations.index(of: location)!
+        
+        let symbolSource = MGLShapeSource(identifier: "symbolSource\(index)", features: [pointFeature], options: nil)
+        mapView.style?.addSource(symbolSource)
+        
+        let symbolLayer = MGLSymbolStyleLayer(identifier: "symbolLayer\(index)", source: symbolSource)
+        let debugLocation = location
+        let timestamp = debugLocation.timestamp.timeIntervalSinceNow
+        symbolLayer.text = MGLStyleValue(rawValue: "\(floor(debugLocation.speed*3.6))" as NSString)
+//        symbolLayer.text = MGLStyleValue(rawValue: "\(timestamp)" as NSString)
+//        symbolLayer.text = MGLStyleValue(rawValue: "\(debugLocation.turnPenalty)" as NSString)
+//        symbolLayer.text = MGLStyleValue(rawValue: "\(debugLocation.coefficient)" as NSString)
+        symbolLayer.textHaloColor = MGLStyleValue(rawValue: UIColor.white)
+        symbolLayer.textHaloWidth = MGLStyleValue(rawValue: 1)
+        mapView.style?.addLayer(symbolLayer)
+    }
+}
+
+
 let origin = CLLocationCoordinate2D(latitude: 56.2064, longitude: 15.2734)
 let destination = CLLocationCoordinate2D(latitude: 56.213204, longitude: 15.262874)
 
@@ -39,36 +81,13 @@ _ = directions.calculate(options) { (waypoints, routes, error) in
         mapView.style?.addSource(source)
         
         let routeLayer = MGLLineStyleLayer(identifier: "routeLayer", source: source)
-        routeLayer.lineColor = MGLStyleValue(rawValue: UIColor.red)
-        routeLayer.lineWidth = MGLStyleValue(rawValue: 3)
+        routeLayer.lineColor = MGLStyleValue(rawValue: #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1))
+        routeLayer.lineWidth = MGLStyleValue(rawValue: 5)
         mapView.style?.addLayer(routeLayer)
         
         // Draw simulated route
-        let simulatedRoute = SimulatedRoute(along: coordinates)
-        let simulatedFeature = MGLPolylineFeature(coordinates: simulatedRoute.coordinates, count: UInt(simulatedRoute.coordinates.count))
-        let simulatedSource = MGLShapeSource(identifier: "simulatedSource", features: [simulatedFeature], options: nil)
-        mapView.style?.addSource(simulatedSource)
-        
-        let simulatedLayer = MGLLineStyleLayer(identifier: "simulatedLayer", source: simulatedSource)
-        simulatedLayer.lineColor = MGLStyleValue(rawValue: UIColor.blue)
-        simulatedLayer.lineWidth = MGLStyleValue(rawValue: 3)
-        mapView.style?.addLayer(simulatedLayer)
-        
-        // Add symbol layers for each simulated location
-        for location in simulatedRoute.locations {
-            let pointFeature = DebugPointFeature()
-            pointFeature.location = location
-            pointFeature.coordinate = location.coordinate
-            let index = simulatedRoute.locations.index(of: location)!
-            
-            let symbolSource = MGLShapeSource(identifier: "symbolSource\(index)", features: [pointFeature], options: nil)
-            mapView.style?.addSource(symbolSource)
-
-            let symbolLayer = MGLSymbolStyleLayer(identifier: "symbolLayer\(index)", source: symbolSource)
-            symbolLayer.text = MGLStyleValue(rawValue: "\(location.speed)" as NSString)
-            symbolLayer.textHaloColor = MGLStyleValue(rawValue: UIColor.white)
-            symbolLayer.textHaloWidth = MGLStyleValue(rawValue: 1)
-            mapView.style?.addLayer(symbolLayer)
+        if let simulatedRoute = SimulatedRoute(along: coordinates) {
+            draw(simulatedRoute: simulatedRoute)
         }
         
         // Set visible bounds
