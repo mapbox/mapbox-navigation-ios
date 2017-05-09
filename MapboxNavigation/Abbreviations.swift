@@ -1,3 +1,6 @@
+import UIKit
+
+// http://wiki.openstreetmap.org/wiki/Name_finder:Abbreviations#English
 let Abbreviations = [
     "apartments": "Apts",
     "center": "Ctr",
@@ -35,7 +38,7 @@ let Abbreviations = [
     "william": "Wm",
 ]
 
-let Directions = [
+let CompassDirections = [
     "east": "E",
     "north": "N",
     "northeast": "NE",
@@ -77,11 +80,50 @@ let Classifications = [
     "walkway": "Wky",
 ]
 
+/// Options that specify what kinds of words in a string should be abbreviated.
+struct StringAbbreviationOptions : OptionSet {
+    let rawValue: Int
+    
+    /// Abbreviates ordinary words that have common abbreviations.
+    static let Abbreviations = StringAbbreviationOptions(rawValue: 1 << 0)
+    /// Abbreviates directional words.
+    static let Directions = StringAbbreviationOptions(rawValue: 1 << 1)
+    /// Abbreviates road name suffixes.
+    static let Classifications = StringAbbreviationOptions(rawValue: 1 << 2)
+}
+
 extension String {
-    var abbreviatedString: String {
+    /// Returns an abbreviated copy of the string.
+    func stringByAbbreviatingWithOptions(options: StringAbbreviationOptions) -> String {
         return characters.split(separator: " ").map(String.init).map { (word) -> String in
             let lowercaseWord = word.lowercased()
-            return Abbreviations[lowercaseWord] ?? Directions[lowercaseWord] ?? Classifications[lowercaseWord] ?? word
+            if let abbreviation = Abbreviations[lowercaseWord], options.contains(.Abbreviations) {
+                return abbreviation
+            }
+            if let direction = CompassDirections[lowercaseWord], options.contains(.Directions) {
+                return direction
+            }
+            if let classification = Classifications[lowercaseWord], options.contains(.Classifications) {
+                return classification
+            }
+            return word
             }.joined(separator: " ")
+    }
+    
+    /// Returns the string abbreviated only as much as necessary to fit the given width and font.
+    func stringByAbbreviatingToFitWidth(width: CGFloat, font: UIFont) -> String {
+        var fittedString = self
+        if fittedString.size(attributes: [NSFontAttributeName: font]).width <= width {
+            return fittedString
+        }
+        fittedString = fittedString.stringByAbbreviatingWithOptions(options: [.Classifications])
+        if fittedString.size(attributes: [NSFontAttributeName: font]).width <= width {
+            return fittedString
+        }
+        fittedString = fittedString.stringByAbbreviatingWithOptions(options: [.Directions])
+        if fittedString.size(attributes: [NSFontAttributeName: font]).width <= width {
+            return fittedString
+        }
+        return fittedString.stringByAbbreviatingWithOptions(options: [.Abbreviations])
     }
 }

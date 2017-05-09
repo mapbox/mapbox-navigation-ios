@@ -219,12 +219,15 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
                 controller.distanceLabel.isHidden = true
             }
 
+            let streetLabelWidth = controller.streetLabel.bounds.width
+            let streetLabelFont = controller.streetLabel.font!
+            
             if let name = upComingStep.names?.first {
-                controller.streetLabel.text = name
+                controller.streetLabel.text = name.stringByAbbreviatingToFitWidth(width: streetLabelWidth, font: streetLabelFont)
             } else if let destinations = upComingStep.destinations?.joined(separator: "\n") {
-                controller.streetLabel.text = destinations
+                controller.streetLabel.text = destinations.stringByAbbreviatingToFitWidth(width: streetLabelWidth, font: streetLabelFont)
             } else {
-                controller.streetLabel.text = upComingStep.instructions
+                controller.streetLabel.text = upComingStep.instructions.stringByAbbreviatingToFitWidth(width: streetLabelWidth, font: streetLabelFont)
             }
 
             updateShield(for: controller)
@@ -512,13 +515,16 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
 
         maneuverViewController.shieldImage = nil
         updateShield(for: maneuverViewController)
+        
+        let streetLabelWidth = maneuverViewController.streetLabel.bounds.width
+        let streetLabelFont = maneuverViewController.streetLabel.font!
 
         if let name = step?.names?.first {
-            maneuverViewController.streetLabel.text = name
+            maneuverViewController.streetLabel.text = name.stringByAbbreviatingToFitWidth(width: streetLabelWidth, font: streetLabelFont)
         } else if let destinations = step?.destinations?.joined(separator: "\n") {
-            maneuverViewController.streetLabel.text = destinations
+            maneuverViewController.streetLabel.text = destinations.stringByAbbreviatingToFitWidth(width: streetLabelWidth, font: streetLabelFont)
         } else {
-            maneuverViewController.streetLabel.text = step?.instructions
+            maneuverViewController.streetLabel.text = step?.instructions.stringByAbbreviatingToFitWidth(width: streetLabelWidth, font: streetLabelFont)
         }
         maneuverViewController.distanceLabel.text = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : ""
         maneuverViewController.turnArrowView.step = step
