@@ -215,8 +215,10 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
             if secondsRemaining > 5 {
                 controller.distanceLabel.text = distanceFormatter.string(from: distanceRemaining)
+                controller.streetLabel.numberOfLines = 1
             } else {
                 controller.distanceLabel.isHidden = true
+                controller.streetLabel.numberOfLines = 2
             }
 
             if let name = upComingStep.names?.first {
@@ -500,6 +502,8 @@ extension RouteMapViewController: MGLMapViewDelegate {
                 controller.shieldImage = image
             }
             shieldAPIDataTask?.resume()
+        } else {
+            controller.shieldImage = nil
         }
     }
 }
