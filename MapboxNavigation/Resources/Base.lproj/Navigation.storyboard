@@ -237,7 +237,10 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Elm St NW" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.59999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="MBTitleLabel">
-                                        <rect key="frame" x="82" y="40.5" width="125" height="31.5"/>
+                                        <rect key="frame" x="82" y="40.5" width="210" height="31.5"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="210" id="i7t-DH-9kT"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
                                         <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -277,7 +280,6 @@
                                     <constraint firstItem="bvZ-78-dml" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" id="Znd-PG-ZQU"/>
                                     <constraint firstAttribute="bottom" secondItem="uEZ-9k-UtQ" secondAttribute="bottom" constant="4" id="eIU-rb-uk9"/>
                                     <constraint firstItem="gkj-hG-NxS" firstAttribute="centerY" secondItem="BR8-8N-Rhk" secondAttribute="centerY" id="eQc-fF-gEd"/>
-                                    <constraint firstItem="gkj-hG-NxS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="BR8-8N-Rhk" secondAttribute="trailing" constant="10" id="f6G-bn-OXa"/>
                                     <constraint firstItem="uEZ-9k-UtQ" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="14" id="vPn-7k-ggQ"/>
                                 </constraints>
                                 <connections>
