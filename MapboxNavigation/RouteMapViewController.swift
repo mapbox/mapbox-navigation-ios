@@ -231,6 +231,30 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             }
 
             updateShield(for: controller)
+            
+            var initialPaddingForOverviewButton:CGFloat = -30
+            if let allLanes = upComingStep.intersections?.first?.approachLanes, let usableLanes = upComingStep.intersections?.first?.usableApproachLanes {
+                for (i, lane) in allLanes.enumerated() {
+                    guard i < controller.laneViews.count else {
+                        return
+                    }
+                    controller.stackViewContainer.isHidden = false
+                    let laneView = controller.laneViews[i]
+                    laneView.isHidden = false
+                    laneView.lane = lane
+                    laneView.maneuverDirection = upComingStep.maneuverDirection
+                    laneView.isValid = usableLanes.contains(i as Int)
+                    laneView.setNeedsDisplay()
+                }
+                initialPaddingForOverviewButton += controller.laneViews.first!.frame.maxY + 10
+            } else {
+                controller.stackViewContainer.isHidden = true
+            }
+            
+            UIView.animate(withDuration: 0.5, animations: {
+                self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
+                self.view.layoutIfNeeded()
+            })
         }
 
         controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
@@ -560,7 +584,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
         }
     }
-
 
     func currentStep() -> RouteStep {
         return routeController.routeProgress.currentLegProgress.currentStep
