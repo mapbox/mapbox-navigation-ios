@@ -234,7 +234,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             
             controller.showLaneView(step: upComingStep)
             
-            if !controller.isPagingeStepList {
+            if !controller.isPagingThroughStepList {
                 let initialPaddingForOverviewButton:CGFloat = controller.stackViewContainer.isHidden ? -30 : -20 + controller.laneViews.first!.frame.maxY
                 UIView.animate(withDuration: 0.5, animations: {
                     self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
@@ -550,10 +550,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         }
 
         if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
-            maneuverViewController.isPagingeStepList = false
+            maneuverViewController.isPagingThroughStepList = false
             mapView.userTrackingMode = .followWithCourse
         } else {
-            maneuverViewController.isPagingeStepList = true
+            maneuverViewController.isPagingThroughStepList = true
             mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
         }
     }

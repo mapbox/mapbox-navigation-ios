@@ -26,7 +26,7 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    var isPagingeStepList = false
+    var isPagingThroughStepList = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
