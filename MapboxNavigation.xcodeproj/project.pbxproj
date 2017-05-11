@@ -1273,6 +1273,7 @@
 				C5212B561EC4BE97009538EB /* Base */,
 			);
 			name = Abbreviations.plist;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		DAAE5F321EAE4C4700832871 /* Localizable.strings */ = {
