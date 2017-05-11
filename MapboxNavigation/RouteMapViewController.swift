@@ -253,7 +253,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             
             UIView.animate(withDuration: 0.5, animations: {
                 self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
-                self.view.layoutIfNeeded()
+                controller.stackViewContainer.layoutIfNeeded()
             })
         }
 
@@ -575,7 +575,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         
         UIView.animate(withDuration: 0.5, animations: {
             self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
-            self.view.layoutIfNeeded()
+            maneuverViewController.stackViewContainer.layoutIfNeeded()
         })
 
         if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
