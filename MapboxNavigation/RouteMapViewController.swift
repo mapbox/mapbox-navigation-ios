@@ -206,18 +206,15 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         let distanceRemaining = stepProgress.distanceRemaining
         guard let controller = routePageViewController.currentManeuverPage else { return }
 
-        controller.distanceLabel.isHidden = false
-
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             controller.streetLabel.text = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
-            controller.distanceLabel.isHidden = true
+            controller.distanceText = nil
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
 
             if secondsRemaining > 5 {
-                controller.distanceLabel.text = distanceFormatter.string(from: distanceRemaining)
-                controller.streetLabel.numberOfLines = 1
+                controller.distanceText = distanceFormatter.string(from: distanceRemaining)
             } else {
-                controller.distanceLabel.isHidden = true
+                controller.distanceText = nil
                 controller.streetLabel.numberOfLines = 2
             }
 
@@ -524,7 +521,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         } else {
             maneuverViewController.streetLabel.text = step?.instructions
         }
-        maneuverViewController.distanceLabel.text = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : ""
+        maneuverViewController.distanceText = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : nil
         maneuverViewController.turnArrowView.step = step
         
         var initialPaddingForOverviewButton:CGFloat = -30
