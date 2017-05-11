@@ -232,29 +232,14 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
             updateShield(for: controller)
             
-            var initialPaddingForOverviewButton:CGFloat = -30
-            if let allLanes = upComingStep.intersections?.first?.approachLanes, let usableLanes = upComingStep.intersections?.first?.usableApproachLanes {
-                for (i, lane) in allLanes.enumerated() {
-                    guard i < controller.laneViews.count else {
-                        return
-                    }
-                    controller.stackViewContainer.isHidden = false
-                    let laneView = controller.laneViews[i]
-                    laneView.isHidden = false
-                    laneView.lane = lane
-                    laneView.maneuverDirection = upComingStep.maneuverDirection
-                    laneView.isValid = usableLanes.contains(i as Int)
-                    laneView.setNeedsDisplay()
-                }
-                initialPaddingForOverviewButton += controller.laneViews.first!.frame.maxY + 10
-            } else {
-                controller.stackViewContainer.isHidden = true
-            }
+            controller.showLaneView(step: upComingStep)
             
-            UIView.animate(withDuration: 0.5, animations: {
-                self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
-                controller.stackViewContainer.layoutIfNeeded()
-            })
+            if !controller.isPagingeStepList {
+                let initialPaddingForOverviewButton:CGFloat = controller.stackViewContainer.isHidden ? -30 : -20 + controller.laneViews.first!.frame.maxY
+                UIView.animate(withDuration: 0.5, animations: {
+                    self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
+                })
+            }
         }
 
         controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
@@ -555,32 +540,20 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.distanceText = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : nil
         maneuverViewController.turnArrowView.step = step
         
-        var initialPaddingForOverviewButton:CGFloat = -30
-        if let allLanes = step?.intersections?.first?.approachLanes, let usableLanes = step?.intersections?.first?.usableApproachLanes {
-            for (i, lane) in allLanes.enumerated() {
-                guard i < maneuverViewController.laneViews.count else {
-                    return
-                }
-                let laneView = maneuverViewController.laneViews[i]
-                laneView.isHidden = false
-                laneView.lane = lane
-                laneView.maneuverDirection = step?.maneuverDirection
-                laneView.isValid = usableLanes.contains(i as Int)
-                laneView.setNeedsDisplay()
-            }
-            initialPaddingForOverviewButton += maneuverViewController.laneViews.first!.frame.maxY + 10
-        } else {
-            maneuverViewController.stackViewContainer.isHidden = true
+        if let step = step {
+            maneuverViewController.showLaneView(step: step)
+            
+            let initialPaddingForOverviewButton:CGFloat = maneuverViewController.stackViewContainer.isHidden ? -30 : -20 + maneuverViewController.laneViews.first!.frame.maxY
+            UIView.animate(withDuration: 0.5, animations: {
+                self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
+            })
         }
-        
-        UIView.animate(withDuration: 0.5, animations: {
-            self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
-            maneuverViewController.stackViewContainer.layoutIfNeeded()
-        })
 
         if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
+            maneuverViewController.isPagingeStepList = false
             mapView.userTrackingMode = .followWithCourse
         } else {
+            maneuverViewController.isPagingeStepList = true
             mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
         }
     }

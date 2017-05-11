@@ -26,8 +26,29 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
+    var isPagingeStepList = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         turnArrowView.backgroundColor = .clear
+    }
+    
+    func showLaneView(step: RouteStep) {
+        if let allLanes = step.intersections?.first?.approachLanes, let usableLanes = step.intersections?.first?.usableApproachLanes {
+            for (i, lane) in allLanes.enumerated() {
+                guard i < laneViews.count else {
+                    return
+                }
+                stackViewContainer.isHidden = false
+                let laneView = laneViews[i]
+                laneView.isHidden = false
+                laneView.lane = lane
+                laneView.maneuverDirection = step.maneuverDirection
+                laneView.isValid = usableLanes.contains(i as Int)
+                laneView.setNeedsDisplay()
+            }
+        } else {
+            stackViewContainer.isHidden = true
+        }
     }
 }
