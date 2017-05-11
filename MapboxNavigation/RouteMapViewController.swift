@@ -206,11 +206,11 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         let distanceRemaining = stepProgress.distanceRemaining
         guard let controller = routePageViewController.currentManeuverPage else { return }
         
-        let streetLabelWidth = controller.streetLabel.bounds.width
+        let streetLabelBounds = controller.streetLabel.bounds
         let streetLabelFont = controller.streetLabel.font!
 
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            controller.streetLabel.text = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))?.abbreviated(width: streetLabelWidth, font: streetLabelFont)
+            controller.streetLabel.text = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))?.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
             controller.distanceText = nil
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
 
@@ -222,12 +222,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             }
             
             if let name = upComingStep.names?.first {
-                controller.streetLabel.text = name.abbreviated(width: streetLabelWidth, font: streetLabelFont)
+                controller.streetLabel.text = name.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
             } else if let destinations = upComingStep.destinations?.joined(separator: "\n") {
-                controller.streetLabel.text = destinations.abbreviated(width: streetLabelWidth, font: streetLabelFont)
+                controller.streetLabel.text = destinations.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
             } else {
-                controller.streetLabel.text = upComingStep.instructions.abbreviated(width: streetLabelWidth, font: streetLabelFont)
-                controller.streetLabel.text = routeStepFormatter.string(for: upComingStep)?.abbreviated(width: streetLabelWidth, font: streetLabelFont)
+                controller.streetLabel.text = upComingStep.instructions.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
+                controller.streetLabel.text = routeStepFormatter.string(for: upComingStep)?.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
             }
 
             updateShield(for: controller)
@@ -518,21 +518,20 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.shieldImage = nil
         updateShield(for: maneuverViewController)
         
-        let streetLabelWidth = maneuverViewController.streetLabel.bounds.width
+        let streetLabelBounds = maneuverViewController.streetLabel.bounds
         let streetLabelFont = maneuverViewController.streetLabel.font!
 
         if let name = step?.names?.first {
-            maneuverViewController.streetLabel.text = name.abbreviated(width: streetLabelWidth, font: streetLabelFont)
+            maneuverViewController.streetLabel.text = name.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
         } else if let destinations = step?.destinations?.joined(separator: "\n") {
-            maneuverViewController.streetLabel.text = destinations.abbreviated(width: streetLabelWidth, font: streetLabelFont)
+            maneuverViewController.streetLabel.text = destinations.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
         } else if let step = step {
-            maneuverViewController.streetLabel.text = routeStepFormatter.string(for: step)?.abbreviated(width: streetLabelWidth, font: streetLabelFont)
+            maneuverViewController.streetLabel.text = routeStepFormatter.string(for: step)?.abbreviated(bounds: streetLabelBounds, font: streetLabelFont)
         }
         maneuverViewController.distanceText = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : nil
         maneuverViewController.turnArrowView.step = step
         
         var initialPaddingForOverviewButton:CGFloat = -30
-
         if let allLanes = step?.intersections?.first?.approachLanes, let usableLanes = step?.intersections?.first?.usableApproachLanes {
             for (i, lane) in allLanes.enumerated() {
                 guard i < maneuverViewController.laneViews.count else {
