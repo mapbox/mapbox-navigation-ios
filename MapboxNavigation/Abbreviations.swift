@@ -34,7 +34,7 @@ extension String {
     }
     
     /// Returns the string abbreviated only as much as necessary to fit the given width and font.
-    func abbreviated(bounds: CGRect, font: UIFont) -> String {
+    func abbreviated(toFit bounds: CGRect, font: UIFont) -> String {
         var fittedString = self
         let stringSize = fittedString.size(attributes: [NSFontAttributeName: font])
         
