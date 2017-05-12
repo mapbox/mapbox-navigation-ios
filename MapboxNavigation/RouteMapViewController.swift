@@ -211,13 +211,14 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             controller.streetLabel.text = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))?.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-            controller.distanceText = nil
+            controller.distance = nil
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
 
             if secondsRemaining > 5 {
-                controller.distanceText = distanceFormatter.string(from: distanceRemaining)
+                
+                controller.distance = distanceRemaining
             } else {
-                controller.distanceText = nil
+                controller.distance = nil
                 controller.streetLabel.numberOfLines = 2
             }
             
@@ -537,7 +538,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         } else if let step = step {
             maneuverViewController.streetLabel.text = routeStepFormatter.string(for: step)?.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
         }
-        maneuverViewController.distanceText = step!.distance > 0 ? distanceFormatter.string(from: step!.distance) : nil
+        maneuverViewController.distance = step!.distance > 0 ? step!.distance : nil
         maneuverViewController.turnArrowView.step = step
         
         if let step = step {

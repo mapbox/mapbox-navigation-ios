@@ -27,7 +27,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
         
-        controller.distanceText = nil
+        controller.distance = nil
         controller.streetLabel.text = "This should be multiple lines"
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
@@ -39,7 +39,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
         
-        controller.distanceText = "10 miles"
+        controller.distance = 1000
         controller.streetLabel.text = "This text should shrink"
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage

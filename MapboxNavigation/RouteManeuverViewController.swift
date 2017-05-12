@@ -11,12 +11,18 @@ class RouteManeuverViewController: UIViewController {
     @IBOutlet weak fileprivate var shieldImageView: UIImageView!
     @IBOutlet var laneViews: [LaneArrowView]!
     
+    let distanceFormatter = DistanceFormatter(approximate: true)
     weak var step: RouteStep!
     
-    var distanceText: String? {
+    var distance: CLLocationDistance? {
         didSet {
-            streetLabel.numberOfLines = distanceText != nil ? 1 : 2
-            distanceLabel.text = distanceText
+            if let distance = distance {
+                distanceLabel.text = distanceFormatter.string(from: distance)
+                streetLabel.numberOfLines = 1
+            } else {
+                distanceLabel.text = nil
+                streetLabel.numberOfLines = 2
+            }
         }
     }
     
