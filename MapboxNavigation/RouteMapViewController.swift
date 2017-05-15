@@ -328,12 +328,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
         guard routeController.userIsOnRoute(location) else { return nil }
         guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
-        
-        let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate)
+        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
 
         // Add current way name to UI
-        if let style = mapView.style, recenterButton.isHidden,
-            let snappedCoordinate = snappedCoordinate {
+        if let style = mapView.style, recenterButton.isHidden{
             let closestCoordinate = snappedCoordinate.coordinate
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
@@ -417,10 +415,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             return location
         }
         
-        guard let snappedClosestCoordinate = snappedCoordinate else {
-            return location
-        }
-        
         let nearByCoordinates = routeController.routeProgress.currentLegProgress.nearbyCoordinates
         let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate)!
         let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
@@ -449,11 +443,11 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
-        guard snappedClosestCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
+        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
             return location
         }
         
-        return CLLocation(coordinate: snappedClosestCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 
