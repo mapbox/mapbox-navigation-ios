@@ -21,6 +21,14 @@ public protocol NavigationViewControllerDelegate {
      Called when the user arrives at the destination.
      */
     @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: MGLAnnotation)
+
+    /**
+     Called when `RouteControllerShouldReroute` is sent from `RouteController`.
+
+     If this method is unimplemented `NavigationViewController` will automatically reroute. If this method is implemented,
+     it's responsible for handling rerouting.
+    */
+    @objc(navigationViewController:shouldRerouteFromLocation:) optional func navigationViewController(_ : NavigationViewController, shouldRerouteFrom location: CLLocation)
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line.
@@ -280,6 +288,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func shouldReroute(notification: NSNotification) {
         let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
+
+        guard navigationDelegate?.navigationViewController?(self, shouldRerouteFrom: location) == nil else {
+            return
+        }
         
         if let previousLocation = lastReRouteLocation {
             guard location.distance(from: previousLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
