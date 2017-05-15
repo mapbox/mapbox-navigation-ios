@@ -34,17 +34,19 @@ extension String {
     }
     
     /// Returns the string abbreviated only as much as necessary to fit the given width and font.
-    func abbreviated(width: CGFloat, font: UIFont) -> String {
+    func abbreviated(toFit bounds: CGRect, font: UIFont) -> String {
         var fittedString = self
-        if fittedString.size(attributes: [NSFontAttributeName: font]).width <= width {
+        let stringSize = fittedString.size(attributes: [NSFontAttributeName: font])
+        
+        if stringSize.width <= bounds.width && stringSize.height <= bounds.height {
             return fittedString
         }
         fittedString = fittedString.abbreviated(by: [.Classifications])
-        if fittedString.size(attributes: [NSFontAttributeName: font]).width <= width {
+        if stringSize.width <= bounds.width && stringSize.height <= bounds.height {
             return fittedString
         }
         fittedString = fittedString.abbreviated(by: [.Directions])
-        if fittedString.size(attributes: [NSFontAttributeName: font]).width <= width {
+        if stringSize.width <= bounds.width && stringSize.height <= bounds.height {
             return fittedString
         }
         return fittedString.abbreviated(by: [.Abbreviations])

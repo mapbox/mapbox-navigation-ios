@@ -1,7 +1,7 @@
 import UIKit
 
 fileprivate extension CGFloat {
-    fileprivate static var defaultManeuverViewHeight: CGFloat = 100
+    fileprivate static var defaultManeuverViewHeight: CGFloat = 115
 }
 
 extension UIColor {

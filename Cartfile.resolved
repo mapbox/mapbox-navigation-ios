@@ -1,6 +1,7 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.5.3"
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.5.4"
 github "52inc/Pulley" "1.4"
 github "Project-OSRM/osrm-text-instructions.swift" "v0.1.2"
+github "facebook/ios-snapshot-test-case" "2.1.4"
 github "frederoni/aws-sdk-ios" "1a8432b03c22326fb7ed86fac978212106e2d465"
 github "mapbox/MapboxDirections.swift" "v0.9.0"
 github "raphaelmor/Polyline" "v4.1.1"

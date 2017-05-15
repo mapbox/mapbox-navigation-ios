@@ -35,11 +35,13 @@
 		351BEC101E5BCC72006FE110 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
 		351BEC2B1E5BD538006FE110 /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2A1E5BD538006FE110 /* Shields.plist */; };
+		35213DAF1EC456E800A62B21 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */; };
 		3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		3525449E1E664E0F004C8F1C /* AWSPolly.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354BD4F11E6634C500AE1344 /* AWSPolly.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3525449F1E664E2D004C8F1C /* AWSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354BD4F61E6638E800AE1344 /* AWSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		352544A01E665AA3004C8F1C /* AWSCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354BD4F61E6638E800AE1344 /* AWSCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		352544A11E665AA3004C8F1C /* AWSPolly.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354BD4F11E6634C500AE1344 /* AWSPolly.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
 		352BBC3B1E5E6A0C00703DF1 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
 		352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
@@ -268,6 +270,8 @@
 		351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		351BEC2A1E5BD538006FE110 /* Shields.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Shields.plist; path = Resources/Shields.plist; sourceTree = "<group>"; };
+		35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSnapshotTestCase.framework; path = Carthage/Build/iOS/FBSnapshotTestCase.framework; sourceTree = "<group>"; };
+		3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Fixtures.xcassets; sourceTree = "<group>"; };
 		352BBC471E5E78D700703DF1 /* Example-SwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example-SwiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example_SwiftTests.swift; sourceTree = "<group>"; };
 		352BBC4B1E5E78D700703DF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -406,6 +410,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */,
+				35213DAF1EC456E800A62B21 /* FBSnapshotTestCase.framework in Frameworks */,
 				35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -536,6 +541,7 @@
 			children = (
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
+				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -554,6 +560,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */,
 				354BD4F61E6638E800AE1344 /* AWSCore.framework */,
 				354BD4F11E6634C500AE1344 /* AWSPolly.framework */,
 				354A01BE1E6625A900D765C2 /* SDWebImage.framework */,
@@ -984,6 +991,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1037,6 +1045,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AWSPolly.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AWSCore.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FBSnapshotTestCase.framework",
 			);
 			name = "Carthage copy frameworks";
 			outputPaths = (
@@ -1350,6 +1359,10 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Examples/SwiftTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1365,6 +1378,10 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Examples/SwiftTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1488,6 +1505,10 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MapboxNavigationTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1502,6 +1523,10 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = MapboxNavigationTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
