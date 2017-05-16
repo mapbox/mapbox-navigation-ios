@@ -162,8 +162,8 @@ open class RouteLegProgress: NSObject {
         guard let index = leg.steps.index(of: step) else {
             return nil
         }
-        if index > 0 && index > stepIndex {
-            return leg.steps[index - 1]
+        if index > 0 {
+            return leg.steps[index-1]
         }
         return nil
     }
