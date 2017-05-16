@@ -564,6 +564,11 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
     }
 
     func stepBefore(_ step: RouteStep) -> RouteStep? {
+        guard let legProgress = routeController.routeProgress.currentLegProgress,
+            let index = legProgress.leg.steps.index(of: step),
+            index > legProgress.stepIndex else {
+            return nil
+        }
         return routeController.routeProgress.currentLegProgress.stepBefore(step)
     }
 
