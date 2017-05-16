@@ -154,13 +154,26 @@ extension RouteController: CLLocationManagerDelegate {
         lastUserDistanceToStartOfRoute = Double.infinity
     }
     
-    public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        // Find future location of user
+    
+    /**
+     Returns the calculated reroute distance.
+     */
+    public func getRerouteRadius(_ horizontalAccuracy: CLLocationAccuracy) -> CLLocationDistance {
+        return min(RouteControllerMaximumDistanceBeforeRecalculating, horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
+    }
+    
+    /**
+     Takes a `CLLocation` and returns a `CLLocation` infront of the provided location given the current speed.
+     */
+    public func getDeadReckoningLocation(_ location: CLLocation) -> CLLocation {
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
-        let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        let radius = min(RouteControllerMaximumDistanceBeforeRecalculating,
-                         location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
+        return CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
+    }
+    
+    public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        let newLocation = getDeadReckoningLocation(location)
+        let radius = getRerouteRadius(location.horizontalAccuracy)
 
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         

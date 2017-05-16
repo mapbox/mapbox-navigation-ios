@@ -281,15 +281,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         annotation.coordinate = location.coordinate
         annotation.title = "Reroute"
         annotation.color = .red
-        let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
-        let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
-        let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        let radius = min(RouteControllerMaximumDistanceBeforeRecalculating,
-                         location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
-        
+        let newLocation = routeController.getDeadReckoningLocation(location)
+        let radius = routeController.getRerouteRadius(location.horizontalAccuracy)
+
         var subtitle = location.debugInformation
-        
-        subtitle += "\nMeters in front of user: \(metersInFrontOfUser)"
+
+        subtitle += "\nMeters in front of user: \(location.distance(from: newLocation))"
         subtitle += "\nRadius: \(radius)"
         annotation.subtitle = subtitle
         
