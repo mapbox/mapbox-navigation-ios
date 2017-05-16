@@ -1,4 +1,5 @@
 import Foundation
+import MapboxDirections
 import CoreLocation
 
 protocol SimulatedRouteDelegate : class {
@@ -11,8 +12,8 @@ public class SimulatedLocation: CLLocation {
 
 public class SimulatedRoute : NSObject {
     
-    let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
-    let minimumSpeed: CLLocationSpeed = 5 // ~18 kmh
+    let maximumSpeed: CLLocationSpeed = 30 // ~108 kph
+    let minimumSpeed: CLLocationSpeed = 5 // ~18 kph
     var speed: CLLocationSpeed = 30
     var distanceFilter: CLLocationDistance = 10
     var verticalAccuracy: CLLocationAccuracy = 40
@@ -142,6 +143,7 @@ public class SimulatedRoute : NSObject {
         
         return locations
     }
+    
     
     func start() {
         tick()
