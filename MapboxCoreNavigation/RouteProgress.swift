@@ -230,6 +230,16 @@ open class RouteLegProgress: NSObject {
     public func isCurrentStep(_ step: RouteStep) -> Bool {
         return leg.steps.index(of: step) == stepIndex
     }
+    
+    /*
+     Return bool whether step provided is the upcoming `Step`.
+     */
+    public func isUpComingStep(_ step: RouteStep) -> Bool {
+        guard 1 + stepIndex < leg.steps.count else {
+            return false
+        }
+        return leg.steps.index(of: step) == 1 + stepIndex
+    }
 
 
     public var currentStepProgress: RouteStepProgress
