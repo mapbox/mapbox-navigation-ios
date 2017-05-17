@@ -3,7 +3,6 @@ import CoreLocation
 
 fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
 fileprivate let minimumSpeed: CLLocationSpeed = 5 // ~18 kmh
-fileprivate var speed: CLLocationSpeed = 30
 fileprivate var distanceFilter: CLLocationDistance = 10
 fileprivate var verticalAccuracy: CLLocationAccuracy = 40
 fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
@@ -42,8 +41,8 @@ class SimulatedRoute : NSObject {
         processedLocations = polyline
             .simulatedLocationsWithTurnPenalties()
             .interpolated()
-            .calculatedSpeed()
-            .calculatedTimestamp()
+            .withSpeeds()
+            .withShiftedTimestamps()
     }
     
     func start() {
@@ -142,7 +141,7 @@ fileprivate extension Array where Element == SimulatedLocation {
         return processedLocations.count > count ? processedLocations.interpolated() : processedLocations
     }
     
-    fileprivate func calculatedTimestamp() -> [SimulatedLocation] {
+    fileprivate func withShiftedTimestamps() -> [SimulatedLocation] {
         var processedLocations = [SimulatedLocation]()
         
         for location in self {
@@ -150,9 +149,8 @@ fileprivate extension Array where Element == SimulatedLocation {
                 processedLocations.append(location.shifted(to: Date()))
             } else {
                 let distance = location.distance(from: processedLocations.last!)
-                let time = distance / location.speed
-                let newLocation = location.shifted(to: processedLocations.last!.timestamp.addingTimeInterval(time))
-                processedLocations.append(newLocation)
+                let shiftedLocation = location.shifted(to: processedLocations.last!.timestamp.addingTimeInterval(distance / location.speed))
+                processedLocations.append(shiftedLocation)
             }
         }
         
@@ -160,20 +158,19 @@ fileprivate extension Array where Element == SimulatedLocation {
     }
     
     // Calculate speed based on turn penalty.
-    fileprivate func calculatedSpeed() -> [SimulatedLocation] {
-        var processedLocations = [SimulatedLocation]()
-        
-        for location in self {
-            let reversedTurnPenalty = maximumTurnPenalty - location.turnPenalty
-            let speed = reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
-            processedLocations.append(location.withSpeed(speed))
-        }
-        
-        return processedLocations
+    fileprivate func withSpeeds() -> [SimulatedLocation] {
+        return map({$0.withPenalizedSpeed})
     }
 }
 
 fileprivate extension SimulatedLocation {
+    
+    var withPenalizedSpeed: SimulatedLocation {
+        let reversedTurnPenalty = maximumTurnPenalty - turnPenalty
+        let speed = reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
+        return withSpeed(speed)
+    }
+    
     func shifted(to shiftedTimestamp: Date) -> SimulatedLocation {
         let location = SimulatedLocation(coordinate: coordinate,
                                          altitude: altitude,
