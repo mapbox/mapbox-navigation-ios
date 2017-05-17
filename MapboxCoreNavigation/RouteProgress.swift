@@ -230,7 +230,6 @@ open class RouteLegProgress: NSObject {
     public func isCurrentStep(_ step: RouteStep) -> Bool {
         return step == currentStep
     }
-
     
     public var currentStepProgress: RouteStepProgress
 
