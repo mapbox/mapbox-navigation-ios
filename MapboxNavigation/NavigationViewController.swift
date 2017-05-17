@@ -245,7 +245,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         if simulatesLocationUpdates {
             guard let coordinates = route.coordinates else { return }
-            simulation = SimulatedRoute(coordinates)
+            simulation = SimulatedRoute(along: coordinates)
             simulation?.delegate = self
             simulation?.start()
         }
