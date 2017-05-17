@@ -228,10 +228,9 @@ open class RouteLegProgress: NSObject {
      Return bool whether step provided is the current `Step` the user is on.
     */
     public func isCurrentStep(_ step: RouteStep) -> Bool {
-        return leg.steps.index(of: step) == stepIndex
+        return step == currentStep
     }
-
-
+    
     public var currentStepProgress: RouteStepProgress
 
 

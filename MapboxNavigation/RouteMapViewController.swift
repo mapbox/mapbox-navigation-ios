@@ -550,7 +550,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             })
         }
 
-        if routeController.routeProgress.currentLegProgress.isCurrentStep(step!) {
+        if step == routeController.routeProgress.currentLegProgress.upComingStep {
             maneuverViewController.isPagingThroughStepList = false
             mapView.userTrackingMode = .followWithCourse
         } else {
