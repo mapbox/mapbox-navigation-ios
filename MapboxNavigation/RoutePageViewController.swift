@@ -3,7 +3,8 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 protocol RoutePageViewControllerDelegate: class {
-    func currentStep() -> RouteStep
+    var currentStep: RouteStep { get }
+    var upComingStep: RouteStep? { get }
     func stepBefore(_ step: RouteStep) -> RouteStep?
     func stepAfter(_ step: RouteStep) -> RouteStep?
     func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController)
@@ -33,7 +34,7 @@ class RoutePageViewController: UIPageViewController {
     }
     
     func setupRoutePageViewController() {
-        let currentStep = maneuverDelegate.currentStep()
+        let currentStep = maneuverDelegate.upComingStep ?? maneuverDelegate.currentStep
         let controller = routeManeuverViewController(with: currentStep)!
         setViewControllers([controller], direction: .forward, animated: false, completion: nil)
         currentManeuverPage = controller

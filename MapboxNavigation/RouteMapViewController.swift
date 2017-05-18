@@ -139,6 +139,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         }
         resetTrackingModeTimer?.invalidate()
         isInOverviewMode = !isInOverviewMode
+        
+        routePageViewController.notifyDidReRoute()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -549,30 +551,40 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
             })
         }
+        
+        maneuverViewController.isPagingThroughStepList = true
 
-        if step == routeController.routeProgress.currentLegProgress.upComingStep {
-            maneuverViewController.isPagingThroughStepList = false
-            mapView.userTrackingMode = .followWithCourse
-        } else {
-            maneuverViewController.isPagingThroughStepList = true
-            mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
+        if !isInOverviewMode {
+            if step == routeController.routeProgress.currentLegProgress.upComingStep {
+                mapView.userTrackingMode = .followWithCourse
+            } else {
+                mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
+            }
         }
     }
-
-    func currentStep() -> RouteStep {
+    
+    var upComingStep: RouteStep? {
+        return routeController.routeProgress.currentLegProgress.upComingStep
+    }
+    
+    var currentStep: RouteStep {
         return routeController.routeProgress.currentLegProgress.currentStep
     }
 
     func stepBefore(_ step: RouteStep) -> RouteStep? {
         guard let legProgress = routeController.routeProgress.currentLegProgress,
             let index = legProgress.leg.steps.index(of: step),
-            index > legProgress.stepIndex else {
+            index - 1 > legProgress.stepIndex,
+            !isInOverviewMode else {
             return nil
         }
         return routeController.routeProgress.currentLegProgress.stepBefore(step)
     }
 
     func stepAfter(_ step: RouteStep) -> RouteStep? {
+        guard !isInOverviewMode else {
+            return nil
+        }
         return routeController.routeProgress.currentLegProgress.stepAfter(step)
     }
 }
