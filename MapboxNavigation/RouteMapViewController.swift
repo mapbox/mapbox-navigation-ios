@@ -551,13 +551,13 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
             })
         }
+        
+        maneuverViewController.isPagingThroughStepList = true
 
         if !isInOverviewMode {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
-                maneuverViewController.isPagingThroughStepList = false
                 mapView.userTrackingMode = .followWithCourse
             } else {
-                maneuverViewController.isPagingThroughStepList = true
                 mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
             }
         }
