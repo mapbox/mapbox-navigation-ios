@@ -281,8 +281,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         annotation.coordinate = location.coordinate
         annotation.title = "Reroute"
         annotation.color = .red
-        let newLocation = routeController.getDeadReckoningLocation(location)
-        let radius = routeController.getRerouteRadius(location.horizontalAccuracy)
+        let newLocation = location.advanced(by: RouteControllerDeadReckoningTimeInterval)
+        let radius = location.rerouteRadius
 
         var subtitle = location.debugInformation
 
@@ -333,8 +333,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-
-        guard routeController.userIsOnRoute(location) else { return nil }
+        guard location.isOnRoute(with: routeController.routeProgress) else { return nil }
+        
         guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
         
         var possibleClosestCoordinateToRoute = location.coordinate

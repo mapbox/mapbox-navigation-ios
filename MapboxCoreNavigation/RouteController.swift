@@ -113,7 +113,8 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         let step = routeProgress.currentLegProgress.currentStepProgress.step
-        if step.maneuverType == .depart && !userIsOnRoute(location) {
+        
+        if step.maneuverType == .depart && !location.isOnRoute(with: routeProgress) {
             
             guard let userSnappedDistanceToClosestCoordinate = closestCoordinate(on: step.coordinates!, to: location.coordinate)?.distance else {
                 return
@@ -138,8 +139,16 @@ extension RouteController: CLLocationManagerDelegate {
             lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
         }
         
-        guard userIsOnRoute(location) else {
+        guard location.isOnRoute(with: routeProgress) else {
             resetStartCounter()
+            // Increment the step
+            routeProgress.currentLegProgress.stepIndex += 1
+            
+            // and reset the alert level since we're on the next step
+            let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
+            let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
+            incrementRouteProgressAlertLevel(secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low, location: location)
+            
             NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: [
                 RouteControllerNotificationShouldRerouteKey: location
                 ])
@@ -152,52 +161,6 @@ extension RouteController: CLLocationManagerDelegate {
     func resetStartCounter() {
         lastTimeStampSpentMovingAwayFromStart = Date()
         lastUserDistanceToStartOfRoute = Double.infinity
-    }
-    
-    
-    /**
-     Returns the calculated reroute distance.
-     */
-    public func getRerouteRadius(_ horizontalAccuracy: CLLocationAccuracy) -> CLLocationDistance {
-        return min(RouteControllerMaximumDistanceBeforeRecalculating, horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
-    }
-    
-    /**
-     Takes a `CLLocation` and returns a `CLLocation` infront of the provided location given the current speed.
-     */
-    public func getDeadReckoningLocation(_ location: CLLocation) -> CLLocation {
-        let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
-        let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
-        return CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-    }
-    
-    public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        let newLocation = getDeadReckoningLocation(location)
-        let radius = getRerouteRadius(location.horizontalAccuracy)
-
-        let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-        
-        // If the user is moving away from the maneuver location
-        // and they are close to the next step
-        // we can safely say they have completed the maneuver.
-        // This is intended to be a fallback case when we do find
-        // that the users course matches the exit bearing.
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-            let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
-            if !isCloseToCurrentStep && isCloseToUpComingStep {
-                
-                // Increment the step
-                routeProgress.currentLegProgress.stepIndex += 1
-                
-                // and reset the alert level since we're on the next step
-                let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
-                let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-                incrementRouteProgressAlertLevel(secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low, location: location)
-                return true
-            }
-        }
-        
-        return isCloseToCurrentStep
     }
     
     func incrementRouteProgressAlertLevel(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation) {
