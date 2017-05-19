@@ -1,7 +1,8 @@
 import XCTest
 import FBSnapshotTestCase
-import MapboxDirections
+@testable import MapboxDirections
 @testable import MapboxNavigation
+@testable import MapboxCoreNavigation
 
 class MapboxNavigationTests: FBSnapshotTestCase {
     
@@ -28,9 +29,10 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         XCTAssert(controller.view != nil)
         
         controller.distance = nil
-        controller.streetLabel.text = "This should be multiple lines"
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
+        controller.streetLabel.unabridgedText = "This should be multiple lines"
+        controller.streetLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -40,9 +42,49 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         XCTAssert(controller.view != nil)
         
         controller.distance = 1000
-        controller.streetLabel.text = "This text should shrink"
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
+        controller.streetLabel.unabridgedText = "Single line"
+        controller.streetLabel.backgroundColor = .red
+        
+        FBSnapshotVerifyView(controller.view)
+    }
+    
+    func testManeuverViewNotAbbreviated() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
+        XCTAssert(controller.view != nil)
+        
+        controller.turnArrowView.isEnd = true
+        controller.distance = nil
+        controller.shieldImage = shieldImage
+        controller.streetLabel.unabridgedText = "Spell out Avenue multiple lines"
+        controller.streetLabel.backgroundColor = .red
+        
+        FBSnapshotVerifyView(controller.view)
+    }
+    
+    func testManeuverViewAbbreviated() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
+        XCTAssert(controller.view != nil)
+        
+        controller.turnArrowView.isEnd = true
+        controller.shieldImage = shieldImage
+        controller.distance = 100
+        controller.streetLabel.unabridgedText = "This Drive Avenue should be abbreviated."
+        controller.streetLabel.backgroundColor = .red
+        
+        FBSnapshotVerifyView(controller.view)
+    }
+    
+    func testManeuverViewNotAbbreviatedMultipleLines() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
+        XCTAssert(controller.view != nil)
+        
+        controller.turnArrowView.isEnd = true
+        controller.shieldImage = shieldImage
+        controller.distance = nil
+        controller.streetLabel.unabridgedText = "This Drive Avenue should be abbreviated on multiple lines...................."
+        controller.streetLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
     }

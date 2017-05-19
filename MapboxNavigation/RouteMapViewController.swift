@@ -204,48 +204,18 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
-        let stepProgress = routeController.routeProgress.currentLegProgress.currentStepProgress
-        let distanceRemaining = stepProgress.distanceRemaining
         guard let controller = routePageViewController.currentManeuverPage else { return }
         
-        let streetLabelBounds = controller.streetLabel.bounds
-        let streetLabelFont = controller.streetLabel.font!
-
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            controller.streetLabel.text = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))?.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-            controller.distance = nil
-        } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
-
-            if secondsRemaining > 5 {
-                
-                controller.distance = distanceRemaining
-            } else {
-                controller.distance = nil
-                controller.streetLabel.numberOfLines = 2
-            }
-            
-            if let name = upComingStep.names?.first {
-                controller.streetLabel.text = name.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-            } else if let destinations = upComingStep.destinations?.joined(separator: "\n") {
-                controller.streetLabel.text = destinations.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-            } else {
-                controller.streetLabel.text = upComingStep.instructions.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-                controller.streetLabel.text = routeStepFormatter.string(for: upComingStep)?.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-            }
-
-            updateShield(for: controller)
-            
-            controller.showLaneView(step: upComingStep)
-            
-            if !controller.isPagingThroughStepList {
-                let initialPaddingForOverviewButton:CGFloat = controller.stackViewContainer.isHidden ? -30 : -20 + controller.laneViews.first!.frame.maxY
-                UIView.animate(withDuration: 0.5, animations: {
-                    self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
-                })
-            }
+        controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
+        updateShield(for: controller)
+        
+        // Move the overview button if the lane views become visible
+        if !controller.isPagingThroughStepList {
+            let initialPaddingForOverviewButton:CGFloat = controller.stackViewContainer.isHidden ? -30 : -20 + controller.laneViews.first!.frame.maxY
+            UIView.animate(withDuration: 0.5, animations: {
+                self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
+            })
         }
-
-        controller.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
 
         guard isInOverviewMode else {
             return
@@ -528,20 +498,11 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         let step = maneuverViewController.step
 
         maneuverViewController.shieldImage = nil
-        updateShield(for: maneuverViewController)
-        
-        let streetLabelBounds = maneuverViewController.streetLabel.bounds
-        let streetLabelFont = maneuverViewController.streetLabel.font!
-
-        if let name = step?.names?.first {
-            maneuverViewController.streetLabel.text = name.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-        } else if let destinations = step?.destinations?.joined(separator: "\n") {
-            maneuverViewController.streetLabel.text = destinations.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-        } else if let step = step {
-            maneuverViewController.streetLabel.text = routeStepFormatter.string(for: step)?.abbreviated(toFit: streetLabelBounds, font: streetLabelFont)
-        }
+        maneuverViewController.updateStreetNameForStep()
         maneuverViewController.distance = step!.distance > 0 ? step!.distance : nil
         maneuverViewController.turnArrowView.step = step
+        
+        updateShield(for: maneuverViewController)
         
         if let step = step {
             maneuverViewController.showLaneView(step: step)
