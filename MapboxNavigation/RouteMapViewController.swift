@@ -208,6 +208,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         updateShield(for: controller)
+        controller.step = upComingStep ?? currentStep
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
