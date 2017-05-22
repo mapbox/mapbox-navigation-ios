@@ -181,6 +181,11 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         fallbackText = speechString(notification: notification, markUpWithSSML: false)
         
+        // If the user is merging onto a highway, an announcement to merge is a bit excessive
+        guard let upComingStep = routeProgress.currentLegProgress.upComingStep, !(routeProgress.currentLegProgress.currentStep.maneuverType == .takeOnRamp && upComingStep.maneuverType == .merge && routeProgress.currentLegProgress.alertUserLevel == .high) else {
+            return
+        }
+        
         if useDefaultVoice {
             speakFallBack(fallbackText)
         } else {
