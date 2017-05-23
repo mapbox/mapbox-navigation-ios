@@ -11,6 +11,8 @@ class TableViewItem: NSObject {
     var toggledStateHandler: ToggledStateHandler?
     var isSeparator: Bool = false
     
+    var isToggleable: Bool { return toggledStateHandler != nil }
+    
     static var separator: TableViewItem {
         let item = TableViewItem("")
         item.isSeparator = true
@@ -29,6 +31,7 @@ class StaticTableViewController: UITableViewController {
     var data = [TableViewSection]()
     
     let cellReuseIdentifier = "StaticTableViewCellId"
+    let toggleCellReuseIdentifier = "StaticToggleTableViewCellId"
     let separatorReuseIdentifier = "StaticSeparatorTableViewCellId"
     
     override func viewDidLoad() {
@@ -51,6 +54,8 @@ class StaticTableViewController: UITableViewController {
         
         if item.isSeparator {
             return separatorCell(forRowAt: indexPath)
+        } else if item.isToggleable {
+            return toggleCell(forRowAt: indexPath)
         } else {
             return tableViewCell(forRowAt: indexPath)
         }
@@ -59,31 +64,34 @@ class StaticTableViewController: UITableViewController {
     func tableViewCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! StaticTableViewCell
         let item = data[indexPath.section][indexPath.row]
-        
+        configureTableViewCell(cell, for: item)
+        return cell
+    }
+    
+    func configureTableViewCell(_ cell: StaticTableViewCell, for item: TableViewItem) {
         cell.titleLabel.text = item.title
         cell.iconImageView.image = item.image
         cell.iconImageView.sizeToFit()
-        
-        let isToggleable = (item.didToggleHandler != nil)
-        
-        if isToggleable {
-            let toggleView = ToggleView()
-            toggleView.addTarget(self, action: #selector(didToggle(_:)), for: .valueChanged)
-            
-            if let handler = item.toggledStateHandler {
-                toggleView.isOn = handler(toggleView)
-            }
-            
-            cell.accessoryView = toggleView
-        } else {
-            cell.accessoryView = nil
-        }
-        
-        return cell
     }
     
     func separatorCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: separatorReuseIdentifier, for: indexPath) as! SeparatorTableViewCell
+        return cell
+    }
+    
+    func toggleCell(forRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: toggleCellReuseIdentifier, for: indexPath) as! StaticToggleTableViewCell
+        let item = data[indexPath.section][indexPath.row]
+        
+        configureTableViewCell(cell, for: item)
+        
+        cell.toggleView.removeTarget(self, action: #selector(didToggle(_:)), for: .valueChanged)
+        cell.toggleView.addTarget(self, action: #selector(didToggle(_:)), for: .valueChanged)
+        
+        if let handler = item.toggledStateHandler {
+            cell.toggleView.isOn = handler(cell.toggleView)
+        }
+        
         return cell
     }
     
@@ -94,9 +102,9 @@ class StaticTableViewController: UITableViewController {
     }
     
     func didToggle(_ sender: UISwitch) {
-        guard let cell = sender.superview as? UITableViewCell else { return }
+        guard let cell = sender.superview?.superview as? StaticToggleTableViewCell else { return }
         guard let indexPath = tableView.indexPath(for: cell) else { return }
-        guard let toggleView = cell.accessoryView as? UISwitch else { return }
+        guard let toggleView = cell.toggleView else { return }
         
         let item = data[indexPath.section][indexPath.row]
         item.didToggleHandler?(toggleView)

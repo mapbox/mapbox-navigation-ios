@@ -23,15 +23,10 @@ struct NavigationSettings {
     static let showsTraffic = "ShowsTraffic"
     static let showsSatellite = "ShowsSatellite"
     static let volume = "Volume"
-    
-    static var styleURL: URL {
-        get {
-            if let showsSatellite = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsSatellite) {
-                return showsSatellite
-                    ? MGLStyle.satelliteStyleURL(withVersion: 9)
-                    : MGLStyle.streetsStyleURL(withVersion: 10)
-            }
-            return MGLStyle.streetsStyleURL(withVersion: 10)
-        }
-    }
+    static let voiceEnabled = "VoiceEnabled"
+}
+
+extension URL {
+    static var navigationStreetStyle: URL { return MGLStyle.streetsStyleURL(withVersion: 10) }
+    static var navigationSatelliteStyle: URL { return MGLStyle.satelliteStyleURL(withVersion: 9) }
 }

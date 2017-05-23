@@ -9,3 +9,8 @@ class StaticTableViewCell: UITableViewCell {
 @IBDesignable
 class SeparatorTableViewCell: UITableViewCell {
 }
+
+@IBDesignable
+class StaticToggleTableViewCell: StaticTableViewCell {
+    @IBOutlet weak var toggleView: ToggleView!
+}

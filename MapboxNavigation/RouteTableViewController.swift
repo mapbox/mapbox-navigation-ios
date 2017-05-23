@@ -2,12 +2,19 @@ import UIKit
 import Pulley
 import MapboxCoreNavigation
 
+protocol RouteTableViewControllerDelegate: class {
+    var voiceEnabled: Bool { get set }
+    var showsSatellite: Bool { get set }
+    var showsTraffic: Bool { get set }
+}
+
 class RouteTableViewController: StaticTableViewController {
     
     let dateFormatter = DateFormatter()
     let dateComponentsFormatter = DateComponentsFormatter()
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
+    var delegate: RouteTableViewControllerDelegate!
     
     weak var routeController: RouteController!
     
@@ -34,7 +41,7 @@ class RouteTableViewController: StaticTableViewController {
         //headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
         let satellite = TableViewItem(NSLocalizedString("SATELLITE", value: "Satellite", comment: "Satellite table view item"))
         let traffic = TableViewItem(NSLocalizedString("LIVE_TRAFFIC", value: "Live Traffic", comment: "Live Traffic table view item"))
-        let sound = TableViewItem(NSLocalizedString("SOUND", value: "Sound", comment: "Sound table view item"))
+        let sound = TableViewItem(NSLocalizedString("VOICE", value: "Voice", comment: "Voice table view item"))
         let steps = TableViewItem("Steps")
         
         satellite.image = UIImage(named: "satellite", in: Bundle.navigationUI, compatibleWith: nil)
@@ -42,36 +49,28 @@ class RouteTableViewController: StaticTableViewController {
         sound.image = UIImage(named: "volume-up", in: Bundle.navigationUI, compatibleWith: nil)
         steps.image = UIImage(named: "list", in: Bundle.navigationUI, compatibleWith: nil)
         
-        satellite.toggledStateHandler = { (sender: UISwitch) in
-            if let showsSatellite = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsSatellite) {
-                return showsSatellite
-            }
-            return false
+        satellite.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+            return self.delegate.showsSatellite
         }
         
-        traffic.toggledStateHandler = { (sender: UISwitch) in
-            if let showsTraffic = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsSatellite) {
-                return showsTraffic
-            }
-            return false
+        satellite.didToggleHandler = { [unowned self] (sender: UISwitch) in
+            self.delegate.showsSatellite = sender.isOn
         }
         
-        sound.toggledStateHandler = { (sender: UISwitch) in
-            return true // TODO: Return sound state
+        traffic.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+            return self.delegate.showsTraffic
         }
         
-        satellite.didToggleHandler = { (sender: UISwitch) in
-            guard let controller = self.parent as? NavigationViewController else { return }
-            NavigationDefaults.shared?.set(sender.isOn, forKey: NavigationSettings.showsSatellite)
-            controller.mapView?.styleURL = NavigationSettings.styleURL
+        traffic.didToggleHandler = { [unowned self] (sender: UISwitch) in
+            self.delegate.showsTraffic = sender.isOn
         }
         
-        traffic.didToggleHandler = { (sender: UISwitch) in
-            NavigationDefaults.shared?.set(sender.isOn, forKey: NavigationSettings.showsTraffic)
+        sound.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+            return self.delegate.voiceEnabled
         }
         
-        sound.didToggleHandler = { (sender: UISwitch) in
-            // TODO: toggle sound
+        sound.didToggleHandler = { [unowned self] (sender: UISwitch) in
+            self.delegate.voiceEnabled = sender.isOn
         }
         
         data.append([TableViewItem.separator, satellite, traffic])
