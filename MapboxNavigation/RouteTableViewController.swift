@@ -14,7 +14,51 @@ class RouteTableViewController: StaticTableViewController {
     let dateComponentsFormatter = DateComponentsFormatter()
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
-    var delegate: RouteTableViewControllerDelegate!
+    weak var delegate: RouteTableViewControllerDelegate!
+    
+    var defaultSections: [TableViewSection] {
+        get {
+            var sections = [TableViewSection]()
+            let satellite = TableViewItem(NSLocalizedString("SATELLITE", value: "Satellite", comment: "Satellite table view item"))
+            let traffic = TableViewItem(NSLocalizedString("LIVE_TRAFFIC", value: "Live Traffic", comment: "Live Traffic table view item"))
+            let sound = TableViewItem(NSLocalizedString("VOICE", value: "Voice", comment: "Voice table view item"))
+            let steps = TableViewItem("Steps")
+            
+            satellite.image = UIImage(named: "satellite", in: Bundle.navigationUI, compatibleWith: nil)
+            traffic.image = UIImage(named: "traffic", in: Bundle.navigationUI, compatibleWith: nil)
+            sound.image = UIImage(named: "volume-up", in: Bundle.navigationUI, compatibleWith: nil)
+            steps.image = UIImage(named: "list", in: Bundle.navigationUI, compatibleWith: nil)
+            
+            satellite.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+                return self.delegate.showsSatellite
+            }
+            
+            satellite.didToggleHandler = { [unowned self] (sender: UISwitch) in
+                self.delegate.showsSatellite = sender.isOn
+            }
+            
+            traffic.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+                return self.delegate.showsTraffic
+            }
+            
+            traffic.didToggleHandler = { [unowned self] (sender: UISwitch) in
+                self.delegate.showsTraffic = sender.isOn
+            }
+            
+            sound.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+                return self.delegate.voiceEnabled
+            }
+            
+            sound.didToggleHandler = { [unowned self] (sender: UISwitch) in
+                self.delegate.voiceEnabled = sender.isOn
+            }
+            
+            sections.append([TableViewItem.separator, satellite, traffic])
+            sections.append([TableViewItem.separator, sound, steps])
+            
+            return sections
+        }
+    }
     
     weak var routeController: RouteController!
     
@@ -37,46 +81,7 @@ class RouteTableViewController: StaticTableViewController {
     
     func setupTableView() {
         tableView.tableHeaderView = headerView
-        // TODO: Are we gonna use a progress bar?
-        //headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
-        let satellite = TableViewItem(NSLocalizedString("SATELLITE", value: "Satellite", comment: "Satellite table view item"))
-        let traffic = TableViewItem(NSLocalizedString("LIVE_TRAFFIC", value: "Live Traffic", comment: "Live Traffic table view item"))
-        let sound = TableViewItem(NSLocalizedString("VOICE", value: "Voice", comment: "Voice table view item"))
-        let steps = TableViewItem("Steps")
-        
-        satellite.image = UIImage(named: "satellite", in: Bundle.navigationUI, compatibleWith: nil)
-        traffic.image = UIImage(named: "traffic", in: Bundle.navigationUI, compatibleWith: nil)
-        sound.image = UIImage(named: "volume-up", in: Bundle.navigationUI, compatibleWith: nil)
-        steps.image = UIImage(named: "list", in: Bundle.navigationUI, compatibleWith: nil)
-        
-        satellite.toggledStateHandler = { [unowned self] (sender: UISwitch) in
-            return self.delegate.showsSatellite
-        }
-        
-        satellite.didToggleHandler = { [unowned self] (sender: UISwitch) in
-            self.delegate.showsSatellite = sender.isOn
-        }
-        
-        traffic.toggledStateHandler = { [unowned self] (sender: UISwitch) in
-            return self.delegate.showsTraffic
-        }
-        
-        traffic.didToggleHandler = { [unowned self] (sender: UISwitch) in
-            self.delegate.showsTraffic = sender.isOn
-        }
-        
-        sound.toggledStateHandler = { [unowned self] (sender: UISwitch) in
-            return self.delegate.voiceEnabled
-        }
-        
-        sound.didToggleHandler = { [unowned self] (sender: UISwitch) in
-            self.delegate.voiceEnabled = sender.isOn
-        }
-        
-        data.append([TableViewItem.separator, satellite, traffic])
-        data.append([TableViewItem.separator, sound, steps])
-        
-        tableView.reloadData()
+        sections = defaultSections
     }
     
     func showETA(routeProgress: RouteProgress) {

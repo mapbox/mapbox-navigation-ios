@@ -183,7 +183,23 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var sendNotifications: Bool = true
     
-    var tableViewController: RouteTableViewController?
+    /**
+     `tableViewSections` is the data source for the table view at the bottom of
+     the navigation screen. It contains a set of sections and items like
+     satellite and traffic by default. You can add or remove items as needed.
+     */
+    public var tableViewSections: [TableViewSection] {
+        get {
+            return tableViewController.sections
+        }
+        set {
+            tableViewController.sections = newValue
+        }
+    }
+    
+    var defaultSections: [TableViewSection] { return tableViewController.defaultSections }
+    
+    var tableViewController: RouteTableViewController!
     var mapViewController: RouteMapViewController?
     
     let routeStepFormatter = RouteStepFormatter()
