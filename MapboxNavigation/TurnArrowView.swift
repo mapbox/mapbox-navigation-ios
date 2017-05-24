@@ -93,7 +93,7 @@ public class TurnArrowView: UIView {
                 flip = true
             case .uTurn:
                 StyleKitArrows.drawArrow180(scale: scale)
-                flip = [.left, .slightLeft, .sharpLeft].contains(ManeuverDirection(angle: angle))
+                flip = angle < 0
             default:
                 StyleKitArrows.drawArrow0(scale: scale)
             }
