@@ -82,17 +82,10 @@ fileprivate extension Array where Element == CLLocationCoordinate2D {
     fileprivate func simulatedLocationsWithTurnPenalties() -> [SimulatedLocation] {
         var locations = [SimulatedLocation]()
         
-        locations.append(SimulatedLocation(coordinate: first!,
-                                           altitude: 0,
-                                           horizontalAccuracy: horizontalAccuracy,
-                                           verticalAccuracy: verticalAccuracy,
-                                           course: wrap(floor(first!.direction(to: self[1])), min: 0, max: 360),
-                                           speed: minimumSpeed,
-                                           timestamp: Date()))
-        
         for (coordinate, nextCoordinate) in zip(prefix(upTo: endIndex - 1), suffix(from: 1)) {
+            let currentCoordinate = locations.isEmpty ? first! : coordinate
             let course: CLLocationDirection = wrap(floor(coordinate.direction(to: nextCoordinate)), min: 0, max: 360)
-            let turnPenalty: Double = floor(differenceBetweenAngles(locations.last!.coordinate.direction(to: coordinate), coordinate.direction(to: nextCoordinate)))
+            let turnPenalty: Double = floor(differenceBetweenAngles(currentCoordinate.direction(to: coordinate), coordinate.direction(to: nextCoordinate)))
             let location = SimulatedLocation(coordinate: coordinate,
                                              altitude: 0,
                                              horizontalAccuracy: horizontalAccuracy,
@@ -103,6 +96,14 @@ fileprivate extension Array where Element == CLLocationCoordinate2D {
             location.turnPenalty = Swift.max(Swift.min(turnPenalty, maximumTurnPenalty), minimumTurnPenalty)
             locations.append(location)
         }
+        
+        locations.append(SimulatedLocation(coordinate: last!,
+                                           altitude: 0,
+                                           horizontalAccuracy: horizontalAccuracy,
+                                           verticalAccuracy: verticalAccuracy,
+                                           course: locations.last!.course,
+                                           speed: minimumSpeed,
+                                           timestamp: Date()))
         
         return locations
     }
@@ -134,9 +135,7 @@ fileprivate extension Array where Element == SimulatedLocation {
             }
         }
         
-        if processedLocations.last!.coordinate != last!.coordinate {
-            processedLocations.append(last!)
-        }
+        processedLocations.append(last!)
         
         return processedLocations.count > count ? processedLocations.interpolated() : processedLocations
     }
