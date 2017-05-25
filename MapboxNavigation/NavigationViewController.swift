@@ -119,6 +119,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      See `RouteController` for more information
      */
     public var routeController: RouteController!
+
+    /**
+     `isDebugging` determines whether to add debug points when rerouting occurs.
+     */
+    public var isDebugging: Bool = false
     
     /**
      `simulate` provides simulated location updates along the given route.
@@ -300,6 +305,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
         
         routeTask?.cancel()
+        
+        if isDebugging {
+            mapViewController?.addDebugAnnotation(location: location)
+        }
         
         let options = routeController.routeProgress.route.routeOptions
  

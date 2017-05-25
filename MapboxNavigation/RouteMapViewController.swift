@@ -9,7 +9,6 @@ import SDWebImage
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
-
 class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
     @IBOutlet weak var mapView: NavigationMapView!
 
@@ -296,8 +295,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-
-        guard routeController.userIsOnRoute(location) else { return nil }
+        guard location.isOnRoute(with: routeController.routeProgress) else { return nil }
+        
         guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
         
         var possibleClosestCoordinateToRoute = location.coordinate
@@ -462,7 +461,12 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
-        if !isInOverviewMode {
+        if let annotation = annotation as? DebugAnnotation {
+            showDebugAlert(with: annotation)
+            return
+        }
+        
+        if resetTrackingModeTimer != nil {
             resetTrackingModeTimer?.invalidate()
             startResetTrackingModeTimer()
         }
@@ -471,7 +475,12 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
         mapView.userTrackingMode = .followWithCourse
     }
-
+    
+    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        guard let debugAnnotation = annotation as? DebugAnnotation else { return nil }
+        return debugAnnotationViewFor(debugAnnotation)
+    }
+    
     func updateShield(for controller: RouteManeuverViewController) {
         let currentLegProgress = routeController.routeProgress.currentLegProgress
 

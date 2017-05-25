@@ -147,6 +147,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
         navigationViewController.voiceController?.volume = 0.5
         navigationViewController.navigationDelegate = self
+        navigationViewController.isDebugging = true
         
         // Uncomment to apply custom styles
 //        styleForRegular().apply()
