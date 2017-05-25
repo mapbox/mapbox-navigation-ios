@@ -286,8 +286,10 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         switch (langCode, countryCode) {
         case ("de", _):
             input.voiceId = .marlene
-        case ("en", "GB"), ("en", "CA"):
+        case ("en", "CA"):
             input.voiceId = .joanna
+        case ("en", "GB"):
+             input.voiceId = .brian
         case ("en", "AU"):
             input.voiceId = .nicole
         case ("en", "IN"):
