@@ -36,7 +36,8 @@ public class DistanceFormatter: LengthFormatter {
         let miles = distance / metersPerMile
         let feet = miles * feetPerMile
         
-        let isBritish = Locale.current.regionCode == "GB"
+        // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
+        let isBritish = Locale.current.identifier == "en-GB"
         numberFormatter.locale = isBritish ? Locale(identifier: "en-US") : Locale.current
         
         var unit: LengthFormatter.Unit = .millimeter
