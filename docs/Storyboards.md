@@ -6,13 +6,13 @@
 
 <img src="images/setup_ib.png" width=340>
 
-You also need to pass a route and optionally a directions instance to the `RouteViewController`. To do that, override your UIViewController's `prepare(for:sender:)`:
+You also need to pass a route and optionally a directions instance to the `NavigationViewController`. To do that, override your UIViewController's `prepare(for:sender:)`:
 
 ```swift
 override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     switch segue.identifier ?? "" {
         case "MyNavigationSegue":
-            if let controller = segue.destination as? RouteViewController {
+            if let controller = segue.destination as? NavigationViewController {
                 controller.route = route
                 controller.directions = directions
             }

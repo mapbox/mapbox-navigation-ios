@@ -8,7 +8,7 @@
 
 Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
 
-Get up and running in a few minutes with our drop-in turn-by-turn navigation `RouteViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
+Get up and running in a few minutes with our drop-in turn-by-turn navigation `NavigationViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
 
 ## Features
 
@@ -111,7 +111,7 @@ style.cellTitleLabelFont = .preferredFont(forTextStyle: .title1)
 style.apply()
 ```
 
-#### RouteViewController Delegate Methods
+#### NavigationViewController Delegate Methods
 
 * `navigationViewController:didArriveAtDestination:`: Fired when the user arrives at their destination. You are responsible for dismissing the UI.
 * `navigationViewControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI
