@@ -40,6 +40,17 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:didRerouteAlongRoute:)
     optional func routeController(_ routeController: RouteController, didRerouteAlong route: Route)
+    
+    /**
+     Called when the route controller fails to receive a new route.
+     
+     This method is called after `routeController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidFailToReroute` notification being posted.
+     
+     - parameter routeController: The route controller that has calculated a new route.
+     - parameter error: An error raised during the process of obtaining a new route.
+     */
+    @objc(routeController:didFailToRerouteWithError:)
+    optional func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error)
 }
 
 /**
@@ -288,8 +299,11 @@ extension RouteController: CLLocationManagerDelegate {
                 NotificationCenter.default.post(name: RouteControllerDidReroute, object: self, userInfo: [
                     MBRouteControllerNotificationRouteKey: location
                     ])
-            } else {
-                
+            } else if let error = error {
+                strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
+                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
+                    MBRouteControllerNotificationErrorKey: error
+                    ])
             }
         })
     }

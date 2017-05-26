@@ -57,6 +57,17 @@ public protocol NavigationViewControllerDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
     
     /**
+     Called when the navigation view controller fails to receive a new route.
+     
+     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidFailToReroute` notification being posted.
+     
+     - parameter navigationViewController: The navigation view controller that has calculated a new route.
+     - parameter error: An error raised during the process of obtaining a new route.
+     */
+    @objc(navigationViewController:didFailToRerouteWithError:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
+    
+    /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line.
      
      If this method is unimplemented, the navigation map view draws the route line using an `MGLLineStyleLayer`.
@@ -390,6 +401,10 @@ extension NavigationViewController: RouteControllerDelegate {
         tableViewController?.notifyDidReroute()
         
         navigationDelegate?.navigationViewController?(self, didRerouteAlong: route)
+    }
+    
+    public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
+        navigationDelegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
 }
 
