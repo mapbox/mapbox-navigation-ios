@@ -33,7 +33,7 @@ public protocol RouteControllerDelegate: class {
     /**
      Called immediately after the route controller receives a new route.
      
-     This method is called after `routeController(_:willRerouteFrom:)`.
+     This method is called after `routeController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidReroute` notification being posted.
      
      - parameter routeController: The route controller that has calculated a new route.
      - parameter route: The new route.
@@ -285,6 +285,9 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.routeProgress = RouteProgress(route: route)
                 strongSelf.routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                NotificationCenter.default.post(name: RouteControllerDidReroute, object: self, userInfo: [
+                    MBRouteControllerNotificationLocationKey: location
+                    ])
             } else {
                 
             }

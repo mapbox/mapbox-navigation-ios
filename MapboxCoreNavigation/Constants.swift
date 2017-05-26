@@ -14,6 +14,7 @@ public let RouteControllerNotificationLocationKey = MBRouteControllerNotificatio
 public let RouteControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
 public let RouteControllerAlertLevelDidChange = Notification.Name(MBRouteControllerAlertLevelDidChange)
 public let RouteControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
+public let RouteControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
 
 /**
  Maximum number of meters the user can travel away from step before `RouteControllerShouldReroute` is emitted.

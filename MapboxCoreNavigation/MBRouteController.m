@@ -12,4 +12,5 @@ NSString *const MBRouteControllerNotificationLocationKey   = @"location";
 
 NSString *const MBRouteControllerNotificationProgressDidChange  = @"RouteControllerProgressDidChange";
 NSString *const MBRouteControllerAlertLevelDidChange            = @"RouteControllerAlertLevelDidChange";
-NSString *const MBRouteControllerWillReroute                  = @"RouteControllerWillReroute";
+NSString *const MBRouteControllerWillReroute                    = @"RouteControllerWillReroute";
+NSString *const MBRouteControllerDidReroute                     = @"RouteControllerDidReroute";

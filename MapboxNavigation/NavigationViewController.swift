@@ -48,7 +48,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called immediately after the navigation view controller receives a new route.
      
-     This method is called after `navigationViewController(_:willRerouteFrom:)`.
+     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter route: The new route.
