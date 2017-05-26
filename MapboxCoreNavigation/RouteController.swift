@@ -286,7 +286,7 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
                 NotificationCenter.default.post(name: RouteControllerDidReroute, object: self, userInfo: [
-                    MBRouteControllerNotificationLocationKey: location
+                    MBRouteControllerNotificationRouteKey: location
                     ])
             } else {
                 

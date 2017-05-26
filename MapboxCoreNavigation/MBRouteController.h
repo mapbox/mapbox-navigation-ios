@@ -9,6 +9,7 @@ extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationRouteProg
 extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey;
 
 extern NSString *const MBRouteControllerNotificationLocationKey;
+extern NSString *const MBRouteControllerNotificationRouteKey;
 
 extern NSString *const MBRouteControllerNotificationProgressDidChange;
 extern NSString *const MBRouteControllerAlertLevelDidChange;
