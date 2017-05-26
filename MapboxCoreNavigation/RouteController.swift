@@ -2,10 +2,9 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-/*
- RouteController helps user navigate along a route.
+/**
+ A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route. 
  */
-
 @objc(MBRouteController)
 open class RouteController: NSObject {
     
@@ -13,23 +12,23 @@ open class RouteController: NSObject {
     
     var lastTimeStampSpentMovingAwayFromStart = Date()
     
-    /*
+    /**
      Monitor users location along route.
 
      The variable can be provided by the developer so options on it can be set.
-    */
+     */
     public var locationManager = CLLocationManager()
     
     
-    /*
+    /**
      `routeProgress` is a class containing all progress information of user along the route, leg and step.
-    */
+     */
     public var routeProgress: RouteProgress
     
     
-    /*
+    /**
      If true, the user puck is snapped to closest location on the route.
-    */
+     */
     public var snapsUserLocationAnnotationToRoute = false
     
     public var simulatesLocationUpdates: Bool = false {
@@ -38,7 +37,7 @@ open class RouteController: NSObject {
         }
     }
     
-    /*
+    /**
      Intializes a new `RouteController`.
      
      - parameter Route: A `Route` object representing the users route it will follow.
@@ -57,18 +56,18 @@ open class RouteController: NSObject {
         suspendLocationUpdates()
     }
     
-    /*
-     Starts monitoring user location along route.
+    /**
+     Starts monitoring the user’s location along the route.
      
-     Will continue monitoring until `suspend()` is called.
+     Will continue monitoring until `suspendLocationUpdates()` is called.
      */
     public func resume() {
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
     }
     
-    /*
-     Stops monitoring users location along route.
+    /**
+     Stops monitoring the user’s location along the route.
      */
     public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()

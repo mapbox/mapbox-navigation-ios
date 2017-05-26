@@ -32,9 +32,9 @@ struct RadianCoordinate2D {
     }
     
     
-    /*
+    /**
      Returns direction given two coordinates.
-    */
+     */
     func direction(to coordinate: RadianCoordinate2D) -> RadianDirection {
         let a = sin(coordinate.longitude - longitude) * cos(coordinate.latitude)
         let b = cos(latitude) * sin(coordinate.latitude)
@@ -43,9 +43,9 @@ struct RadianCoordinate2D {
     }
     
     
-    /*
+    /**
      Returns coordinate at a given distance and direction away from coordinate.
-    */
+     */
     func coordinate(at distance: RadianDistance, facing direction: RadianDirection) -> RadianCoordinate2D {
         let distance = distance, direction = direction
         let otherLatitude = asin(sin(latitude) * cos(distance)
@@ -57,7 +57,7 @@ struct RadianCoordinate2D {
 }
 
 
-/*
+/**
  Returns the Haversine distance between two coordinates measured in radians.
  */
 func -(left: RadianCoordinate2D, right: RadianCoordinate2D) -> RadianDistance {
@@ -67,7 +67,7 @@ func -(left: RadianCoordinate2D, right: RadianCoordinate2D) -> RadianDistance {
 }
 
 
-/*
+/**
  Returns the Haversine distance between two coordinates measured in degrees.
  */
 func -(left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> CLLocationDistance {
@@ -97,7 +97,7 @@ extension CLLocationCoordinate2D {
 typealias LineSegment = (CLLocationCoordinate2D, CLLocationCoordinate2D)
 
 
-/* 
+/**
  Returns the intersection of two line segments.
  */
 func intersection(_ line1: LineSegment, _ line2: LineSegment) -> CLLocationCoordinate2D? {
@@ -134,11 +134,11 @@ struct CoordinateAlongPolyline {
 }
 
 
-/*
+/**
  Returns the geographic coordinate along the polyline that is closest to the given coordinate as the crow flies.
  
  The returned coordinate may not correspond to one of the polyline’s vertices, but it always lies along the polyline.
-*/
+ */
 func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLLocationCoordinate2D) -> CoordinateAlongPolyline? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
     let polyline = polyline, coordinate = coordinate
@@ -178,7 +178,7 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
 }
 
 
-/*
+/**
  Returns a subset of the polyline between given coordinates.
  */
 func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> [CLLocationCoordinate2D] {
@@ -204,7 +204,7 @@ func polyline(along polyline: [CLLocationCoordinate2D], from start: CLLocationCo
 }
 
 
-/*
+/**
  Returns the distance along a slice of a polyline with the given endpoints.
  */
 func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordinate2D? = nil, to end: CLLocationCoordinate2D? = nil) -> CLLocationDistance {
@@ -222,7 +222,7 @@ func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordi
 }
 
 
-/*
+/**
  Returns a coordinate along a polyline at a certain distance from the start of the polyline.
  */
 func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
@@ -250,8 +250,8 @@ func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocati
 }
 
 
-/*
- Returns a coordinate along a polyline with x units away from a coordinate
+/**
+ Returns a coordinate along a polyline with x units away from a coordinate.
  */
 func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocationDistance, of coordinate: CLLocationCoordinate2D) -> [CLLocationCoordinate2D] {
     let startVertex = closestCoordinate(on: polyline, to: coordinate)
@@ -296,7 +296,7 @@ func polyline(along polyline: [CLLocationCoordinate2D], within distance: CLLocat
 }
 
 
-/*
+/**
  Returns a normalized number given min and max bounds.
  */
 public func wrap(_ value: Double, min minValue: Double, max maxValue: Double) -> Double {
@@ -306,9 +306,9 @@ public func wrap(_ value: Double, min minValue: Double, max maxValue: Double) ->
 
 
 extension CLLocation {
-    /*
+    /**
      Returns a Boolean value indicating whether the receiver is within a given distance of a route step, inclusive.
-    */
+     */
     func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
         guard let closestCoordinate = closestCoordinate(on: routeStep.coordinates!, to: coordinate) else {
             return true
@@ -318,8 +318,8 @@ extension CLLocation {
 }
 
 
-/*
- Returns the smallest angle between two angles
+/**
+ Returns the smallest angle between two angles.
  */
 func differenceBetweenAngles(_ alpha: CLLocationDirection, _ beta: CLLocationDirection) -> CLLocationDirection {
     let phi = abs(beta - alpha).truncatingRemainder(dividingBy: 360)
