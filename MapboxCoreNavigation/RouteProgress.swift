@@ -2,57 +2,57 @@ import Foundation
 import MapboxDirections
 
 
-/*
- `AlertLevel` is used to control when and the type of alert notification the user should recieve.
-*/
+/**
+ An `AlertLevel` indicates the user’s general progress toward a step’s maneuver point. A change to the current alert level is often an opportunity to present the user with a visual or voice notification about the upcoming maneuver.
+ */
 @objc(MBAlertLevel)
 public enum AlertLevel: Int {
     
-    /*
+    /**
      Default `AlertLevel`
-    */
+     */
     case none
     
     
-    /*
+    /**
      The user has started the route.
      */
     case depart
     
     
-    /*
+    /**
      The user has recently completed a step.
-    */
+     */
     case low
     
     
-    /*
+    /**
      The user is approaching the maneuver.
-    */
+     */
     case medium
     
     
-    /*
+    /**
      The user is at or very close to the maneuver point
-    */
+     */
     case high
     
     
-    /*
+    /**
      The user has completed the route.
-    */
+     */
     case arrive
 }
 
 
-/*
- `routeProgress` contains all progress information of user along the route, leg and step.
+/**
+ `RouteProgress` stores the user’s progress along a route.
  */
 @objc(MBRouteProgress)
 open class RouteProgress: NSObject {
     public let route: Route
 
-    /*
+    /**
      Index representing current leg
      */
     public var legIndex: Int {
@@ -64,7 +64,7 @@ open class RouteProgress: NSObject {
     }
 
 
-    /*
+    /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
      */
     public var currentLeg: RouteLeg {
@@ -72,7 +72,7 @@ open class RouteProgress: NSObject {
     }
 
     
-    /*
+    /**
      Total distance traveled by user along all legs.
      */
     public var distanceTraveled: CLLocationDistance {
@@ -80,7 +80,7 @@ open class RouteProgress: NSObject {
     }
     
 
-    /*
+    /**
      Total seconds remaining on all legs
      */
     public var durationRemaining: CLLocationDistance {
@@ -88,7 +88,7 @@ open class RouteProgress: NSObject {
     }
 
     
-    /*
+    /**
      Number between 0 and 1 representing how far along the `Route` the user has traveled.
      */
     public var fractionTraveled: Double {
@@ -96,7 +96,7 @@ open class RouteProgress: NSObject {
     }
 
 
-    /*
+    /**
      Total distance remaining in meters along route.
      */
     public var distanceRemaining: CLLocationDistance {
@@ -115,14 +115,17 @@ open class RouteProgress: NSObject {
     }
 }
 
+/*
+ `RouteLegProgress` stores the user’s progress along a route leg.
+ */
 @objc(MBRouteLegProgress)
 open class RouteLegProgress: NSObject {
     public let leg: RouteLeg
     
     
-    /*
+    /**
      Index representing the current step
-    */
+     */
     public var stepIndex: Int {
         didSet {
             assert(stepIndex >= 0 && stepIndex < leg.steps.endIndex)
@@ -131,7 +134,7 @@ open class RouteLegProgress: NSObject {
     }
 
 
-    /*
+    /**
      Total distance traveled in meters along current leg
      */
     public var distanceTraveled: CLLocationDistance {
@@ -139,7 +142,7 @@ open class RouteLegProgress: NSObject {
     }
     
     
-    /*
+    /**
      Duration remaining in seconds on current leg
      */
     public var durationRemaining: TimeInterval {
@@ -147,9 +150,9 @@ open class RouteLegProgress: NSObject {
     }
 
 
-    /*
+    /**
      Number between 0 and 1 representing how far along the current leg the user has traveled.
-    */
+     */
     public var fractionTraveled: Double {
         return distanceTraveled / leg.distance
     }
@@ -178,7 +181,7 @@ open class RouteLegProgress: NSObject {
         return nil
     }
     
-    /*
+    /**
      Returns the `Step` before the current step.
      
      If there is no `priorStep`, nil is returned.
@@ -191,7 +194,7 @@ open class RouteLegProgress: NSObject {
     }
     
     
-    /*
+    /**
      Returns number representing current `Step` for the leg the user is on.
      */
     public var currentStep: RouteStep {
@@ -199,7 +202,7 @@ open class RouteLegProgress: NSObject {
     }
 
 
-    /*
+    /**
      Returns the upcoming `Step`.
      
      If there is no `upcomingStep`, nil is returned.
@@ -211,11 +214,11 @@ open class RouteLegProgress: NSObject {
         return leg.steps[stepIndex + 1]
     }
 
-    /*
+    /**
      Returns step 2 steps ahead.
      
      If there is no `followOnStep`, nil is returned.
-    */
+     */
     public var followOnStep: RouteStep? {
         guard stepIndex + 2 < leg.steps.endIndex else {
             return nil
@@ -224,9 +227,9 @@ open class RouteLegProgress: NSObject {
     }
 
 
-    /*
+    /**
      Return bool whether step provided is the current `Step` the user is on.
-    */
+     */
     public func isCurrentStep(_ step: RouteStep) -> Bool {
         return step == currentStep
     }
@@ -241,9 +244,9 @@ open class RouteLegProgress: NSObject {
     }
     
     
-    /*
+    /**
      Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry
-    */
+     */
     public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
         let upcomingCoords = upComingStep?.coordinates ?? []
@@ -254,39 +257,42 @@ open class RouteLegProgress: NSObject {
     }
 }
 
+/**
+ `RouteStepProgress` stores the user’s progress along a route step.
+ */
 @objc(MBRouteStepProgress)
 open class RouteStepProgress: NSObject {
 
     public let step: RouteStep
 
 
-    /*
+    /**
      Returns distance user has traveled along current step.
-    */
+     */
     public var distanceTraveled: CLLocationDistance = 0
     
     
-    /*
+    /**
      Returns distance from user to end of step.
-    */
+     */
     public var userDistanceToManeuverLocation: CLLocationDistance? = nil
     
-    /*
+    /**
      Total distance in meters remaining on current stpe
      */
     public var distanceRemaining: CLLocationDistance {
         return step.distance - distanceTraveled
     }
 
-    /*
+    /**
      Number between 0 and 1 representing fraction of current step traveled
-    */
+     */
     public var fractionTraveled: Double {
         return distanceTraveled / step.distance
     }
 
 
-    /*
+    /**
      Number of seconds remaining on current step
      */
     public var durationRemaining: TimeInterval {
