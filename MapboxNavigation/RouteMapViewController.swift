@@ -299,17 +299,11 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
         guard routeController.userIsOnRoute(location) else { return nil }
         guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
-        
-        var possibleClosestCoordinateToRoute = location.coordinate
-        if routeController.snapsUserLocationAnnotationToRoute {
-            let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate)
-            if let coordinate = snappedCoordinate?.coordinate {
-                possibleClosestCoordinateToRoute = coordinate
-            }
-        }
+        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
 
         // Add current way name to UI
-        if let style = mapView.style, recenterButton.isHidden {
+        if let style = mapView.style, recenterButton.isHidden{
+            let closestCoordinate = snappedCoordinate.coordinate
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
@@ -333,7 +327,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 style.insertLayer(streetLabelLayer, at: 0)
             }
             
-            let userPuck = mapView.convert(possibleClosestCoordinateToRoute, toPointTo: mapView)
+            let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
             let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
             var smallestLabelDistance = Double.infinity
             var currentName: String?
@@ -349,12 +343,12 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 
                 for line in allLines {
                     let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
-                    let slicedLine = polyline(along: stepCoordinates, from: possibleClosestCoordinateToRoute)
+                    let slicedLine = polyline(along: stepCoordinates, from: closestCoordinate)
                     
                     let lookAheadDistance:CLLocationDistance = 10
-                    guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: possibleClosestCoordinateToRoute)) else { continue }
+                    guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: closestCoordinate)) else { continue }
                     guard let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine) else { continue }
-                    guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: possibleClosestCoordinateToRoute)) else { continue }
+                    guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: closestCoordinate)) else { continue }
                     
                     let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
                     let distanceBetweenReversedPoint = reversedPoint - pointAheadUser
@@ -384,10 +378,12 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         
         // Snap user and course to route
-        let defaultReturn = CLLocation(coordinate: possibleClosestCoordinateToRoute, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: location.course, speed: location.speed, timestamp: location.timestamp)
+        guard routeController.snapsUserLocationAnnotationToRoute else {
+            return location
+        }
         
         guard location.course != -1 else {
-            return defaultReturn
+            return location
         }
         
         let nearByCoordinates = routeController.routeProgress.currentLegProgress.nearbyCoordinates
@@ -413,12 +409,16 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
 
         guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
-            return defaultReturn
+            return location
         }
 
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
-        return CLLocation(coordinate: possibleClosestCoordinateToRoute, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
+            return location
+        }
+        
+        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 
