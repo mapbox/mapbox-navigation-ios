@@ -293,6 +293,31 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             return
         }
         
+        // If the user is in a parking lot, don't reroute
+        guard let mapView = mapView else { return }
+        guard let style = mapView.style else { return }
+        
+        let roadLabelLayerIdentifier = "parkingLot"
+        var streetsSources = style.sources.flatMap { $0 as? MGLVectorSource }.filter { $0.isMapboxStreets}
+        
+        if streetsSources.isEmpty {
+            let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
+            style.addSource(source)
+            streetsSources.append(source)
+        }
+        
+        if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
+            let parkingLayer = MGLFillStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
+            parkingLayer.sourceLayerIdentifier = "landuse"
+            parkingLayer.predicate = NSPredicate(format: "class == 'parking'")
+            style.insertLayer(parkingLayer, at: 0)
+        }
+        
+        let userPuck = mapView.convert(location.coordinate, toPointTo: mapView)
+        let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+        
+        guard features.isEmpty else { return }
+        
         if let previousLocation = lastReRouteLocation {
             guard location.distance(from: previousLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
                 return
