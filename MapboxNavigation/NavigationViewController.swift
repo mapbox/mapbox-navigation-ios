@@ -23,12 +23,49 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: MGLAnnotation)
 
     /**
-     Called when `RouteControllerShouldReroute` is sent from `RouteController`.
-
-     If this method is unimplemented `NavigationViewController` will automatically reroute. If this method is implemented,
-     it's responsible for handling rerouting.
+     Returns whether the navigation view controller should be allowed to calculate a new route.
+     
+     If implemented, this method is called as soon as the navigation view controller detects that the user is off the predetermined route. Implement this method to conditionally prevent rerouting. If this method returns `true`, `navigationViewController(_:willRerouteFrom:)` will be called immediately afterwards.
+     
+     - parameter navigationViewController: The navigation view controller that has detected the need to calculate a new route.
+     - parameter location: The user’s current location.
+     - returns: True to allow the navigation view controller to calculate a new route; false to keep tracking the current route.
     */
-    @objc(navigationViewController:shouldRerouteFromLocation:) optional func navigationViewController(_ : NavigationViewController, shouldRerouteFrom location: CLLocation)
+    @objc(navigationViewController:shouldRerouteFromLocation:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
+    
+    /**
+     Called immediately before the navigation view controller calculates a new route.
+     
+     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `RouteControllerWillReroute` notification being posted, and before `navigationViewController(_:didRerouteAlong:)` is called.
+     
+     - parameter navigationViewController: The navigation view controller that will calculate a new route.
+     - parameter location: The user’s current location.
+     */
+    @objc(navigationViewController:willRerouteFromLocation:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation)
+    
+    /**
+     Called immediately after the navigation view controller receives a new route.
+     
+     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidReroute` notification being posted.
+     
+     - parameter navigationViewController: The navigation view controller that has calculated a new route.
+     - parameter route: The new route.
+     */
+    @objc(navigationViewController:didRerouteAlongRoute:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
+    
+    /**
+     Called when the navigation view controller fails to receive a new route.
+     
+     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidFailToReroute` notification being posted.
+     
+     - parameter navigationViewController: The navigation view controller that has calculated a new route.
+     - parameter error: An error raised during the process of obtaining a new route.
+     */
+    @objc(navigationViewController:didFailToRerouteWithError:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line.
@@ -149,10 +186,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     
-    var routeTask: URLSessionDataTask?
     let routeStepFormatter = RouteStepFormatter()
-    
-    var lastReRouteLocation: CLLocation?
     
     var simulation: SimulatedRoute?
     
@@ -263,13 +297,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(shouldReroute(notification:)), name: RouteControllerShouldReroute, object: routeController)
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: routeController)
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
     }
     
@@ -284,47 +316,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
-    }
-    
-    func shouldReroute(notification: NSNotification) {
-        let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as! CLLocation
-
-        guard navigationDelegate?.navigationViewController?(self, shouldRerouteFrom: location) == nil else {
-            return
-        }
-        
-        if let previousLocation = lastReRouteLocation {
-            guard location.distance(from: previousLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
-                return
-            }
-        }
-        
-        routeTask?.cancel()
-        
-        let options = routeController.routeProgress.route.routeOptions
- 
-        options.waypoints = [Waypoint(coordinate: location.coordinate), Waypoint(coordinate: destination.coordinate)]
-        
-        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
-            firstWaypoint.heading = location.course
-            firstWaypoint.headingAccuracy = 90
-        }
-        
-        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
-            guard let strongSelf = self else {
-                return
-            }
-            
-            if let route = routes?.first {
-                strongSelf.routeController.routeProgress = RouteProgress(route: route)
-                strongSelf.routeController.routeProgress.currentLegProgress.stepIndex = 0
-                
-                strongSelf.giveLocalNotification(strongSelf.routeController.routeProgress.currentLegProgress.currentStep)
-                
-                strongSelf.mapViewController?.notifyDidReroute(route: route)
-                strongSelf.tableViewController?.notifyDidReroute()
-            }
-        })
     }
     
     func alertLevelDidChange(notification: NSNotification) {
@@ -360,7 +351,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func setupRouteController() {
         if routeController == nil {
-            routeController = RouteController(route: route)
+            routeController = RouteController(along: route, directions: directions)
+            routeController.delegate = self
             routeController.simulatesLocationUpdates = simulatesLocationUpdates
             
             if Bundle.main.backgroundModeLocationSupported {
@@ -390,6 +382,29 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
+    }
+}
+
+extension NavigationViewController: RouteControllerDelegate {
+    public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
+        return navigationDelegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
+    }
+    
+    public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
+        navigationDelegate?.navigationViewController?(self, willRerouteFrom: location)
+    }
+    
+    public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
+        giveLocalNotification(routeController.routeProgress.currentLegProgress.currentStep)
+        
+        mapViewController?.notifyDidReroute(route: route)
+        tableViewController?.notifyDidReroute()
+        
+        navigationDelegate?.navigationViewController?(self, didRerouteAlong: route)
+    }
+    
+    public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
+        navigationDelegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
 }
 

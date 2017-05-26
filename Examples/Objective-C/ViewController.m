@@ -53,13 +53,13 @@
 - (void)resumeNotifications {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerAlertLevelDidChange object:_navigation];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerNotificationProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(rerouted:) name:MBRouteControllerShouldReroute object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillReroute object:_navigation];
 }
 
 - (void)suspendNotifications {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerAlertLevelDidChange object:_navigation];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerNotificationProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerShouldReroute object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillReroute object:_navigation];
 }
 
 - (void)alertLevelDidChange:(NSNotification *)notification {
@@ -92,7 +92,7 @@
     // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
 }
 
-- (void)rerouted:(NSNotification *)notification {
+- (void)willReroute:(NSNotification *)notification {
     [self getRoute];
 }
 

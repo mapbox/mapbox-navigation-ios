@@ -3,7 +3,58 @@ import CoreLocation
 import MapboxDirections
 
 /**
- A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route. 
+ The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
+ */
+@objc(MBRouteControllerDelegate)
+public protocol RouteControllerDelegate: class {
+    /**
+     Returns whether the route controller should be allowed to calculate a new route.
+     
+     If implemented, this method is called as soon as the route controller detects that the user is off the predetermined route. Implement this method to conditionally prevent rerouting. If this method returns `true`, `routeController(_:willRerouteFrom:)` will be called immediately afterwards.
+     
+     - parameter routeController: The route controller that has detected the need to calculate a new route.
+     - parameter location: The user’s current location.
+     - returns: True to allow the route controller to calculate a new route; false to keep tracking the current route.
+     */
+    @objc(routeController:shouldRerouteFromLocation:)
+    optional func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool
+    
+    /**
+     Called immediately before the route controller calculates a new route.
+     
+     This method is called after `routeController(_:shouldRerouteFrom:)` is called, simultaneously with the `RouteControllerWillReroute` notification being posted, and before `routeController(_:didRerouteAlong:)` is called.
+     
+     - parameter routeController: The route controller that will calculate a new route.
+     - parameter location: The user’s current location.
+     */
+    @objc(routeController:willRerouteFromLocation:)
+    optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
+    
+    /**
+     Called immediately after the route controller receives a new route.
+     
+     This method is called after `routeController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidReroute` notification being posted.
+     
+     - parameter routeController: The route controller that has calculated a new route.
+     - parameter route: The new route.
+     */
+    @objc(routeController:didRerouteAlongRoute:)
+    optional func routeController(_ routeController: RouteController, didRerouteAlong route: Route)
+    
+    /**
+     Called when the route controller fails to receive a new route.
+     
+     This method is called after `routeController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidFailToReroute` notification being posted.
+     
+     - parameter routeController: The route controller that has calculated a new route.
+     - parameter error: An error raised during the process of obtaining a new route.
+     */
+    @objc(routeController:didFailToRerouteWithError:)
+    optional func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error)
+}
+
+/**
+ A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
  */
 @objc(MBRouteController)
 open class RouteController: NSObject {
@@ -13,15 +64,23 @@ open class RouteController: NSObject {
     var lastTimeStampSpentMovingAwayFromStart = Date()
     
     /**
-     Monitor users location along route.
-
-     The variable can be provided by the developer so options on it can be set.
+     The route controller’s delegate.
+     */
+    public weak var delegate: RouteControllerDelegate?
+    
+    /**
+     The Directions object used to create the route.
+     */
+    public let directions: Directions
+    
+    /**
+     The location manager.
      */
     public var locationManager = CLLocationManager()
     
     
     /**
-     `routeProgress` is a class containing all progress information of user along the route, leg and step.
+     Details about the user’s progress along the current route, leg, and step.
      */
     public var routeProgress: RouteProgress
     
@@ -37,12 +96,19 @@ open class RouteController: NSObject {
         }
     }
     
+    var lastReRouteLocation: CLLocation?
+    
+    var routeTask: URLSessionDataTask?
+    
     /**
      Intializes a new `RouteController`.
      
-     - parameter Route: A `Route` object representing the users route it will follow.
+     - parameter route: The route to follow.
+     - parameter directions: The Directions object that created `route`.
      */
-    public init(route: Route) {
+    @objc(initWithRoute:directions:)
+    public init(along route: Route, directions: Directions = Directions.shared) {
+        self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         super.init()
         
@@ -137,11 +203,8 @@ extension RouteController: CLLocationManagerDelegate {
             lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
         }
         
-        guard userIsOnRoute(location) else {
-            resetStartCounter()
-            NotificationCenter.default.post(name: RouteControllerShouldReroute, object: self, userInfo: [
-                RouteControllerNotificationShouldRerouteKey: location
-                ])
+        guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
+            reroute(from: location)
             return
         }
         
@@ -198,6 +261,51 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance
                 ])
         }
+    }
+    
+    func reroute(from location: CLLocation) {
+        resetStartCounter()
+        delegate?.routeController?(self, willRerouteFrom: location)
+        NotificationCenter.default.post(name: RouteControllerWillReroute, object: self, userInfo: [
+            MBRouteControllerNotificationLocationKey: location
+            ])
+        
+        if let previousLocation = lastReRouteLocation {
+            guard location.distance(from: previousLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
+                return
+            }
+        }
+        
+        routeTask?.cancel()
+        
+        let options = routeProgress.route.routeOptions
+        
+        options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
+        
+        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
+            firstWaypoint.heading = location.course
+            firstWaypoint.headingAccuracy = 90
+        }
+        
+        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if let route = routes?.first {
+                strongSelf.routeProgress = RouteProgress(route: route)
+                strongSelf.routeProgress.currentLegProgress.stepIndex = 0
+                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                NotificationCenter.default.post(name: RouteControllerDidReroute, object: self, userInfo: [
+                    MBRouteControllerNotificationRouteKey: location
+                    ])
+            } else if let error = error {
+                strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
+                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
+                    MBRouteControllerNotificationErrorKey: error
+                    ])
+            }
+        })
     }
     
     func monitorStepProgress(_ location: CLLocation) {

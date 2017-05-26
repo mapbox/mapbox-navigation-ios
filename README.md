@@ -114,8 +114,11 @@ style.apply()
 #### NavigationViewController Delegate Methods
 
 * `navigationViewController:didArriveAtDestination:`: Fired when the user arrives at their destination. You are responsible for dismissing the UI.
-* `navigationViewControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI
+* `navigationViewControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI.
 * `navigationViewController:shouldRerouteFromLocation:`: Fired when SDK detects that a user has gone off route. You can return `false` here to either prevent a reroute from occuring or if you want to rerequest an alternative route manually.
+* `navigationViewController:willRerouteFromLocation:`: Fired just before the SDK requests a new route.
+* `navigationViewController:didRerouteAlongRoute:`: Fired as soon as the SDK receives a new route.
+* `navigationViewController:didFailToRerouteWithError:`: Fired when SDK receives an error instead of a new route.
 
 ## Building your own custom navigation UI
 
