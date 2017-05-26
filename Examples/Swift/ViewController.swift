@@ -63,13 +63,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: RouteControllerShouldReroute, object: navigation)
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(_:)), name: RouteControllerWillReroute, object: navigation)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: navigation)
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: navigation)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: navigation)
     }
     
     // Notification sent when the alert level changes.
@@ -86,7 +86,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     }
     
     // Notification sent when the user is determined to be off the current route
-    func rerouted(_ notification: NSNotification) {
+    func willReroute(_ notification: NSNotification) {
         //
         // If you're using MapboxNavigation,
         // this is how you'd handle fetching a new route and setting it as the active route

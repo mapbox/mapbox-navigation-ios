@@ -97,13 +97,13 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(reRoute(notification:)), name: RouteControllerShouldReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector:#selector(audioPlayerDidFinishPlaying(notification:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: audioPlayer.currentItem)
     }
     
     public func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerShouldReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
@@ -111,7 +111,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynth.stopSpeaking(at: .word)
     }
     
-    func reRoute(notification: NSNotification) {
+    func willReroute(notification: NSNotification) {
         stopVoice()
     }
     

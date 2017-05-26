@@ -6,6 +6,7 @@ let response = Fixture.JSONFromFileNamed(name: "route")
 let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
 let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
 let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
 let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: RouteOptions(waypoints: [waypoint1, waypoint2]))
 
 let waitForInterval: TimeInterval = 5
@@ -13,7 +14,7 @@ let waitForInterval: TimeInterval = 5
 class MapboxCoreNavigationTests: XCTestCase {
     
     func testDepart() {
-        let navigation = RouteController(route: route)
+        let navigation = RouteController(along: route, directions: directions)
         navigation.resume()
         let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
@@ -32,7 +33,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testLowAlert() {
-        let navigation = RouteController(route: route)
+        let navigation = RouteController(along: route, directions: directions)
         navigation.resume()
         let user = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789118, longitude: -122.432209), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
         
@@ -52,16 +53,16 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testShouldReroute() {
-        let navigation = RouteController(route: route)
+        let navigation = RouteController(along: route, directions: directions)
         navigation.resume()
         
         let reroutePoint1 = CLLocation(latitude: 38, longitude: -123)
         let reroutePoint2 = CLLocation(latitude: 38, longitude: -124)
         
-        self.expectation(forNotification: RouteControllerShouldReroute.rawValue, object: navigation) { (notification) -> Bool in
+        self.expectation(forNotification: RouteControllerWillReroute.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
             
-            let location = notification.userInfo![RouteControllerNotificationShouldRerouteKey] as? CLLocation
+            let location = notification.userInfo![RouteControllerNotificationLocationKey] as? CLLocation
             return location == reroutePoint2
         }
         

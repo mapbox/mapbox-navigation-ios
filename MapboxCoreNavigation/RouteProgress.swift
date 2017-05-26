@@ -102,7 +102,10 @@ open class RouteProgress: NSObject {
     public var distanceRemaining: CLLocationDistance {
         return route.distance - distanceTraveled
     }
-
+    
+    public var remainingWaypoints: [Waypoint] {
+        return route.legs.suffix(from: legIndex).map { $0.destination }
+    }
     
     public var currentLegProgress: RouteLegProgress!
 
@@ -115,7 +118,7 @@ open class RouteProgress: NSObject {
     }
 }
 
-/*
+/**
  `RouteLegProgress` stores the user’s progress along a route leg.
  */
 @objc(MBRouteLegProgress)

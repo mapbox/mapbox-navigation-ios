@@ -8,8 +8,8 @@ extern NSString *const MBRouteControllerProgressDidChangeNotificationSecondsRema
 extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey;
 extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey;
 
-extern NSString *const MBRouteControllerNotificationShouldRerouteKey;
+extern NSString *const MBRouteControllerNotificationLocationKey;
 
 extern NSString *const MBRouteControllerNotificationProgressDidChange;
 extern NSString *const MBRouteControllerAlertLevelDidChange;
-extern NSString *const MBRouteControllerShouldReroute;
+extern NSString *const MBRouteControllerWillReroute;
