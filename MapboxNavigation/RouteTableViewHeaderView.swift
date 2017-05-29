@@ -10,14 +10,8 @@ class RouteTableViewHeaderView: UIView {
     @IBOutlet weak var progressBarWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var progressBar: ProgressBar!
     
-    @IBOutlet weak var timeRemainingLabel: HeaderTitleLabel!
-    @IBOutlet weak var timeUnitLabel: HeaderSubtitleLabel!
-    
-    @IBOutlet weak var etaLabel: HeaderTitleLabel!
-    @IBOutlet weak var etaUnitLabel: HeaderSubtitleLabel!
-    
-    @IBOutlet weak var distanceRemainingLabel: HeaderTitleLabel!
-    @IBOutlet weak var distanceUnitLabel: HeaderSubtitleLabel!
+    @IBOutlet weak var titleLabel: HeaderTitleLabel!
+    @IBOutlet weak var subtitleLabel: HeaderSubtitleLabel!
     
     weak var delegate: RouteTableViewHeaderViewDelegate?
     
@@ -25,12 +19,8 @@ class RouteTableViewHeaderView: UIView {
         super.awakeFromNib()
         
         //clear default values from the storyboard so user does not see a 'flash' of random values
-        timeRemainingLabel.text     = ""
-        timeUnitLabel.text          = ""
-        etaLabel.text               = ""
-        etaUnitLabel.text           = ""
-        distanceRemainingLabel.text = ""
-        distanceUnitLabel.text      = ""
+        titleLabel.text = ""
+        subtitleLabel.text = ""
     }
     
     override var intrinsicContentSize: CGSize {

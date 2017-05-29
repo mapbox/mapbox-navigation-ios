@@ -9,12 +9,29 @@ protocol RouteTableViewControllerDelegate: class {
 }
 
 class RouteTableViewController: StaticTableViewController {
-    
-    let dateFormatter = DateFormatter()
-    let dateComponentsFormatter = DateComponentsFormatter()
-    let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
     weak var delegate: RouteTableViewControllerDelegate!
+    
+    lazy var timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
+    lazy var dateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.maximumUnitCount = 2
+        formatter.allowedUnits = [.day, .hour, .minute]
+        formatter.unitsStyle = .short
+        return formatter
+    }()
+    
+    lazy var distanceFormatter: DistanceFormatter = {
+        let formatter = DistanceFormatter(approximate: true)
+        formatter.numberFormatter.locale = .nationalizedCurrent
+        formatter.unitStyle = .long
+        return formatter
+    }()
     
     var defaultSections: [TableViewSection] {
         get {
@@ -69,47 +86,39 @@ class RouteTableViewController: StaticTableViewController {
         setupTableView()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        dateFormatter.timeStyle = .short
-        dateComponentsFormatter.maximumUnitCount = 2
-        dateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
-        dateComponentsFormatter.unitsStyle = .short
-        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
-        headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
-    }
-    
     func setupTableView() {
         tableView.tableHeaderView = headerView
         sections = defaultSections
     }
     
     func showETA(routeProgress: RouteProgress) {
-        if let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date()) {
-            headerView.etaLabel.text = dateFormatter.string(from: arrivalDate)
+        guard let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date()) else {
+            return
         }
         
-        if routeProgress.durationRemaining < 5 {
-            headerView.distanceRemainingLabel.text = nil
-        } else {
-            headerView.distanceRemainingLabel.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
-        }
+        var subtitleComponents = [String]()
+        var title = ""
         
         if routeProgress.durationRemaining < 60 {
-            headerView.timeRemainingLabel.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
+            title = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
         } else {
-            headerView.timeRemainingLabel.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
+            if let duration = dateComponentsFormatter.string(from: routeProgress.durationRemaining) {
+                title = duration
+            }
         }
         
-        // TODO: Get from system settings
-        headerView.etaUnitLabel.text = "hh:mm"
-        headerView.distanceUnitLabel.text = "miles"
-        headerView.timeUnitLabel.text = "PM"
+        headerView.titleLabel.text = title
+        
+        subtitleComponents.append(timeFormatter.string(from: arrivalDate))
+        
+        if routeProgress.durationRemaining >= 5 {
+            subtitleComponents.append(distanceFormatter.string(from: routeProgress.distanceRemaining))
+        }
+        
+        headerView.subtitleLabel.text = subtitleComponents.joined(separator: ", ")
     }
     
     func notifyDidChange(routeProgress: RouteProgress) {
-        // TODO: Update progress?
-//        headerView.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
         showETA(routeProgress: routeProgress)
     }
     

@@ -653,85 +653,41 @@
                     <rect key="frame" x="0.0" y="0.0" width="365" height="80"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="clD-ZH-6dO">
-                            <rect key="frame" x="16" y="18.5" width="171.5" height="43.5"/>
-                            <subviews>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Gxx-FW-YVo">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="43.5"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2:45" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yon-2W-IOO" customClass="MBHeaderTitleLabel">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="29"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7q-rO-GbT" customClass="MBHeaderSubtitleLabel">
-                                            <rect key="frame" x="12.5" y="29" width="25" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </stackView>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0ON-Pd-Q57">
-                                    <rect key="frame" x="82" y="0.0" width="59.5" height="43.5"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:22" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hMe-N5-jPU" customClass="MBHeaderTitleLabel">
-                                            <rect key="frame" x="0.0" y="0.0" width="59.5" height="29"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ETA" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e3w-zd-6pk" customClass="MBHeaderSubtitleLabel">
-                                            <rect key="frame" x="19" y="29" width="22" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </stackView>
-                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="bNB-cF-5ZG">
-                                    <rect key="frame" x="173.5" y="0.0" width="30" height="43.5"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="17" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gTc-4M-SMq" customClass="MBHeaderTitleLabel">
-                                            <rect key="frame" x="3" y="0.0" width="24.5" height="29"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="miles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hix-qS-tff" customClass="MBHeaderSubtitleLabel">
-                                            <rect key="frame" x="0.0" y="29" width="30" height="14.5"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <nil key="textColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </stackView>
-                            </subviews>
-                        </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gvH-ui-czu" customClass="MBButton">
-                            <rect key="frame" x="301" y="25" width="48" height="30"/>
-                            <state key="normal" title="Cancel"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Ol-fU-7lX">
+                            <rect key="frame" x="329" y="29" width="20" height="22"/>
+                            <state key="normal" image="cancel"/>
                             <connections>
-                                <action selector="didTapCancel:" destination="ugF-Pg-FeI" eventType="touchUpInside" id="1rE-nl-c8o"/>
+                                <action selector="didTapCancel:" destination="ugF-Pg-FeI" eventType="touchUpInside" id="HBu-kE-CzY"/>
                             </connections>
                         </button>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="2l3-7U-jyy">
+                            <rect key="frame" x="16" y="8" width="190" height="64.5"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 hr, 45 min" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yon-2W-IOO" customClass="MBHeaderTitleLabel">
+                                    <rect key="frame" x="0.0" y="0.0" width="190" height="43"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:22 PM, 18 miles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7q-rO-GbT" customClass="MBHeaderSubtitleLabel">
+                                    <rect key="frame" x="0.0" y="43" width="190" height="21.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="gvH-ui-czu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="clD-ZH-6dO" secondAttribute="trailing" constant="8" id="GSR-V9-ryU"/>
-                        <constraint firstItem="gvH-ui-czu" firstAttribute="centerY" secondItem="ugF-Pg-FeI" secondAttribute="centerY" id="U0C-W3-QhP"/>
-                        <constraint firstAttribute="trailing" secondItem="gvH-ui-czu" secondAttribute="trailing" constant="16" id="WnV-N2-62f"/>
-                        <constraint firstItem="clD-ZH-6dO" firstAttribute="leading" secondItem="ugF-Pg-FeI" secondAttribute="leading" constant="16" id="eO8-dS-n6e"/>
-                        <constraint firstItem="clD-ZH-6dO" firstAttribute="centerY" secondItem="ugF-Pg-FeI" secondAttribute="centerY" id="hdi-Yz-ZzS"/>
+                        <constraint firstAttribute="trailing" secondItem="4Ol-fU-7lX" secondAttribute="trailing" constant="16" id="MA8-FM-8mF"/>
+                        <constraint firstItem="2l3-7U-jyy" firstAttribute="centerY" secondItem="ugF-Pg-FeI" secondAttribute="centerY" id="RO7-87-7sX"/>
+                        <constraint firstItem="2l3-7U-jyy" firstAttribute="leading" secondItem="ugF-Pg-FeI" secondAttribute="leading" constant="16" id="cWL-CB-r2d"/>
+                        <constraint firstItem="4Ol-fU-7lX" firstAttribute="centerY" secondItem="ugF-Pg-FeI" secondAttribute="centerY" id="es9-ZV-e73"/>
                     </constraints>
                     <connections>
-                        <outlet property="distanceRemainingLabel" destination="gTc-4M-SMq" id="ehc-NN-sBF"/>
-                        <outlet property="distanceUnitLabel" destination="hix-qS-tff" id="Ehs-At-0cc"/>
-                        <outlet property="etaLabel" destination="hMe-N5-jPU" id="NSD-AI-5cc"/>
-                        <outlet property="etaUnitLabel" destination="e3w-zd-6pk" id="FHn-5I-0dn"/>
-                        <outlet property="timeRemainingLabel" destination="Yon-2W-IOO" id="vGH-vX-Tkb"/>
-                        <outlet property="timeUnitLabel" destination="a7q-rO-GbT" id="pyt-eE-ak5"/>
+                        <outlet property="subtitleLabel" destination="a7q-rO-GbT" id="ayH-1B-jdp"/>
+                        <outlet property="titleLabel" destination="Yon-2W-IOO" id="PuR-0Z-hQh"/>
                     </connections>
                 </view>
             </objects>
@@ -739,6 +695,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="cancel" width="20" height="20"/>
         <image name="location" width="22" height="22"/>
         <image name="overview" width="16" height="14"/>
         <image name="satellite" width="20" height="20"/>
