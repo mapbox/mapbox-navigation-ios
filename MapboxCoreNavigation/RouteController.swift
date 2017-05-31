@@ -236,12 +236,11 @@ extension RouteController: CLLocationManagerDelegate {
             if !isCloseToCurrentStep && isCloseToUpComingStep {
                 
                 // Increment the step
-                routeProgress.currentLegProgress.stepIndex += 1
                 
                 // and reset the alert level since we're on the next step
                 let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
                 let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-                incrementRouteProgressAlertLevel(secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low, location: location)
+                incrementRouteProgress(secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low, location: location, updateStepIndex: true)
                 return true
             }
         }
@@ -249,7 +248,18 @@ extension RouteController: CLLocationManagerDelegate {
         return isCloseToCurrentStep
     }
     
-    func incrementRouteProgressAlertLevel(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation) {
+    func incrementRouteProgress(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation, updateStepIndex: Bool) {
+        
+        if updateStepIndex {
+            routeProgress.currentLegProgress.stepIndex += 1
+        }
+        
+        // If the step is not being updated, don't accept a lower alert level.
+        // A lower alert level can only occur when the user begins the next step.
+        if newlyCalculatedAlertLevel.rawValue < routeProgress.currentLegProgress.alertUserLevel.rawValue, !updateStepIndex {
+            return
+        }
+        
         if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel {
             routeProgress.currentLegProgress.alertUserLevel = newlyCalculatedAlertLevel
             // Use fresh user location distance to end of step
@@ -311,6 +321,7 @@ extension RouteController: CLLocationManagerDelegate {
     func monitorStepProgress(_ location: CLLocation) {
         // Force an announcement when the user begins a route
         var alertLevel: AlertLevel = routeProgress.currentLegProgress.alertUserLevel == .none ? .depart : routeProgress.currentLegProgress.alertUserLevel
+        var updateStepIndex = false
         let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         
         let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
@@ -360,7 +371,7 @@ extension RouteController: CLLocationManagerDelegate {
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 alertLevel = .arrive
             } else if courseMatchesManeuverFinalHeading {
-                routeProgress.currentLegProgress.stepIndex += 1
+                updateStepIndex = true
                 let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
                 let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
                 alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
@@ -371,11 +382,10 @@ extension RouteController: CLLocationManagerDelegate {
             // Don't alert if the route segment is shorter than X
             // However, if it's the beginning of the route
             // There needs to be an alert
-            routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForMediumAlert &&
-            alertLevel != .high {
+            routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForMediumAlert {
             alertLevel = .medium
         }
         
-        incrementRouteProgressAlertLevel(alertLevel, location: location)
+        incrementRouteProgress(alertLevel, location: location, updateStepIndex: updateStepIndex)
     }
 }
