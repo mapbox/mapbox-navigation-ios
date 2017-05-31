@@ -85,7 +85,7 @@ class RouteManeuverViewController: UIViewController {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
-        distance = secondsRemaining > 5 ? distanceRemaining : nil
+        distance = distanceRemaining > 10 ? distanceRemaining : nil
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
