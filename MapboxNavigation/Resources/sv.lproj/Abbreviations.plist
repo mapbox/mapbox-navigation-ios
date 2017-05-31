@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>abbreviations</key>
+	<dict>
+		<key>sankt</key>
+		<string>s:t</string>
+		<key>sankta</key>
+		<string>s:ta</string>
+		<key>gamla</key>
+		<string>G:la</string>
+	</dict>
+	<key>directions</key>
+	<dict>
+		<key>sydöst</key>
+		<string>SO</string>
+		<key>nordväst</key>
+		<string>NV</string>
+		<key>söder</key>
+		<string>S</string>
+		<key>väster</key>
+		<string>V</string>
+		<key>sydväst</key>
+		<string>SV</string>
+		<key>norr</key>
+		<string>N</string>
+		<key>öster</key>
+		<string>O</string>
+		<key>nordöst</key>
+		<string>NO</string>
+	</dict>
+	<key>classifications</key>
+	<dict>
+		<key>Bro</key>
+		<string>Br</string>
+	</dict>
+</dict>
+</plist>
