@@ -371,7 +371,8 @@ extension RouteController: CLLocationManagerDelegate {
             // Don't alert if the route segment is shorter than X
             // However, if it's the beginning of the route
             // There needs to be an alert
-            routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForMediumAlert {
+            routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForMediumAlert &&
+            alertLevel != .high {
             alertLevel = .medium
         }
         
