@@ -234,10 +234,6 @@ extension RouteController: CLLocationManagerDelegate {
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
             if !isCloseToCurrentStep && isCloseToUpComingStep {
-                
-                // Increment the step
-                
-                // and reset the alert level since we're on the next step
                 let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
                 let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
                 incrementRouteProgress(secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low, location: location, updateStepIndex: true)
@@ -256,7 +252,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         // If the step is not being updated, don't accept a lower alert level.
         // A lower alert level can only occur when the user begins the next step.
-        if newlyCalculatedAlertLevel.rawValue < routeProgress.currentLegProgress.alertUserLevel.rawValue, !updateStepIndex {
+        guard newlyCalculatedAlertLevel.rawValue > routeProgress.currentLegProgress.alertUserLevel.rawValue || updateStepIndex else {
             return
         }
         
@@ -372,9 +368,15 @@ extension RouteController: CLLocationManagerDelegate {
                 alertLevel = .arrive
             } else if courseMatchesManeuverFinalHeading {
                 updateStepIndex = true
-                let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
-                let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-                alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
+                
+                // Look at the following step to determine what the new alert level should be
+                if let upComingStep = routeProgress.currentLegProgress.upComingStep {
+                    let userSnapToUpComingStepDistanceFromManeuver = distance(along: upComingStep.coordinates!, from: location.coordinate)
+                    let secondsToEndOfStep = userSnapToUpComingStepDistanceFromManeuver / location.speed
+                    alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
+                } else {
+                    assert(false, "In this case, there should always be an upcoming step")
+                }
             }
         } else if secondsToEndOfStep <= RouteControllerHighAlertInterval && routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForHighAlert {
             alertLevel = .high
