@@ -122,15 +122,15 @@ style.apply()
 
 ## Building your own custom navigation UI
 
-Mapbox Navigation gives you all the components you need, should you want to build your own custom turn-by-turn navigation UI:
+If you need additional flexibility, you can use the following building blocks to build your own custom navigation UI:
 
-* [Mapbox iOS SDK](https://www.mapbox.com/ios-sdk/) – interactive map SDK
+* [Interactive map SDK for iOS](https://www.mapbox.com/ios-sdk/) and [macOS](https://mapbox.github.io/mapbox-gl-native/macos/)
 * [Mapbox Studio](https://www.mapbox.com/studio/)
   * Design custom maps with live traffic overlays
-* [MapboxDirections](https://github.com/mapbox/MapboxDirections.swift)
+* [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift) (also compatible with macOS, tvOS, and watchOS)
   * Automotive, cycling, and walking directions
   * Traffic-influenced driving directions
-* Mapbox Core Navigation (`MapboxCoreNavigation` module)
+* Mapbox Core Navigation (`MapboxCoreNavigation` module) (also compatible with watchOS)
   * Route controller
     * Progress calculations
     * Location snapping
@@ -141,6 +141,8 @@ Mapbox Navigation gives you all the components you need, should you want to buil
     * Rerouting notifications
   * Geometry functions
   * Distance formatter
+* [OSRM Text Instructions for Swift](https://github.com/Project-OSRM/osrm-text-instructions.swift/) (also compatible with macOS, tvOS, and watchOS)
+  * Localized guidance instructions
 
 ### Installing Mapbox Core Navigation
 
