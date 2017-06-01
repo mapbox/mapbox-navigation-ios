@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		355CE6EA1EDDBAED00F0BCB7 /* Abbreviations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355CE6E91EDDBAED00F0BCB7 /* Abbreviations.swift */; };
+		355CE6EA1EDDBAED00F0BCB7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355CE6E91EDDBAED00F0BCB7 /* main.swift */; };
 		355CE6F21EDDBB3700F0BCB7 /* SwiftCLI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 355CE6F11EDDBB3700F0BCB7 /* SwiftCLI.framework */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +25,7 @@
 
 /* Begin PBXFileReference section */
 		355CE6E61EDDBAED00F0BCB7 /* LocalizeAbbreviations */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LocalizeAbbreviations; sourceTree = BUILT_PRODUCTS_DIR; };
-		355CE6E91EDDBAED00F0BCB7 /* Abbreviations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Abbreviations.swift; sourceTree = SOURCE_ROOT; };
+		355CE6E91EDDBAED00F0BCB7 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = SOURCE_ROOT; };
 		355CE6F11EDDBB3700F0BCB7 /* SwiftCLI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftCLI.framework; path = Carthage/Build/Mac/SwiftCLI.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -45,7 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				355CE6F01EDDBAFE00F0BCB7 /* Frameworks */,
-				355CE6E91EDDBAED00F0BCB7 /* Abbreviations.swift */,
+				355CE6E91EDDBAED00F0BCB7 /* main.swift */,
 				355CE6E71EDDBAED00F0BCB7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -76,7 +76,6 @@
 				355CE6E21EDDBAED00F0BCB7 /* Sources */,
 				355CE6E31EDDBAED00F0BCB7 /* Frameworks */,
 				355CE6E41EDDBAED00F0BCB7 /* CopyFiles */,
-				355CE6F31EDDBB8100F0BCB7 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -120,29 +119,12 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		355CE6F31EDDBB8100F0BCB7 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/Mac/SwiftCLI.framework",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		355CE6E21EDDBAED00F0BCB7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				355CE6EA1EDDBAED00F0BCB7 /* Abbreviations.swift in Sources */,
+				355CE6EA1EDDBAED00F0BCB7 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
