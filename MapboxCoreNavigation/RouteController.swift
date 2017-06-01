@@ -371,9 +371,7 @@ extension RouteController: CLLocationManagerDelegate {
                 
                 // Look at the following step to determine what the new alert level should be
                 if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-                    let userSnapToUpComingStepDistanceFromManeuver = distance(along: upComingStep.coordinates!, from: location.coordinate)
-                    let secondsToEndOfStep = userSnapToUpComingStepDistanceFromManeuver / location.speed
-                    alertLevel = secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low
+                    alertLevel = upComingStep.expectedTravelTime <= RouteControllerMediumAlertInterval ? .medium : .low
                 } else {
                     assert(false, "In this case, there should always be an upcoming step")
                 }
