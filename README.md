@@ -124,7 +124,7 @@ style.apply()
 
 Mapbox Navigation gives you all the components you need, should you want to build your own custom turn-by-turn navigation UI:
 
-* [Mapbox Maps SDK](https://www.mapbox.com/ios-sdk/)
+* [Mapbox iOS SDK](https://www.mapbox.com/ios-sdk/) – interactive map SDK
 * [Mapbox Studio](https://www.mapbox.com/studio/)
   * Design custom maps with live traffic overlays
 * [MapboxDirections](https://github.com/mapbox/MapboxDirections.swift)
