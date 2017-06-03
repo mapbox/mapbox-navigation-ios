@@ -498,10 +498,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
         let step = maneuverViewController.step
 
-        maneuverViewController.shieldImage = nil
-        maneuverViewController.updateStreetNameForStep()
-        maneuverViewController.distance = step!.distance > 0 ? step!.distance : nil
         maneuverViewController.turnArrowView.step = step
+        maneuverViewController.shieldImage = nil
+        maneuverViewController.distance = step!.distance > 0 ? step!.distance : nil
+        maneuverViewController.updateStreetNameForStep()
         
         updateShield(for: maneuverViewController)
         
