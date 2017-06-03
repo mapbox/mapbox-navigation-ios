@@ -37,13 +37,17 @@ class RouteManeuverViewController: UIViewController {
             if let distance = distance {
                 distanceLabel.isHidden = false
                 distanceLabel.text = distanceFormatter.string(from: distance)
-                streetLabel.numberOfLines = 1
+                streetLabel.numberOfLines = streetLabelLines
             } else {
                 distanceLabel.isHidden = true
                 distanceLabel.text = nil
-                streetLabel.numberOfLines = 2
+                streetLabel.numberOfLines = streetLabelLines
             }
         }
+    }
+    
+    var streetLabelLines: Int {
+        return distance != nil ? 1 : 2
     }
     
     var shieldImage: UIImage? {
@@ -67,7 +71,7 @@ class RouteManeuverViewController: UIViewController {
     var maximumAvailableStreetLabelSize: CGSize {
         get {
             let height = ("|" as NSString).size(attributes: [NSFontAttributeName: streetLabel.font]).height
-            let lines: CGFloat = distance == nil ? 2 : 1
+            let lines = CGFloat(streetLabelLines)
             let padding: CGFloat = 8*4
             return CGSize(width: view.bounds.width-padding-shieldImageView.bounds.size.width-turnArrowView.bounds.width, height: height*lines)
         }
@@ -101,8 +105,8 @@ class RouteManeuverViewController: UIViewController {
     public func updateStreetNameForStep() {
         if let name = step?.names?.first {
             streetLabel.unabridgedText = name
-        } else if let destinations = step?.destinations?.joined(separator: "\n") {
-            streetLabel.unabridgedText = destinations
+        } else if let destinations = step?.destinations {
+            streetLabel.unabridgedText = destinations.prefix(min(streetLabelLines, destinations.count)).joined(separator: "\n")
         } else if let step = step {
             streetLabel.unabridgedText = routeStepFormatter.string(for: step)
         }
