@@ -48,7 +48,7 @@
                                     <constraint firstItem="Hk0-SM-2Wl" firstAttribute="centerX" secondItem="A3N-JT-loC" secondAttribute="centerX" id="O4U-Pg-RJR"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/traffic-day-v2"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/navigation-preview-day-v1"/>
                                     <userDefinedRuntimeAttribute type="number" keyPath="latitude">
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
