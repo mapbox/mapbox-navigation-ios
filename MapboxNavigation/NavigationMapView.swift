@@ -32,10 +32,10 @@ open class NavigationMapView: MGLMapView {
         let polyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: route) ?? shape(describing: route)
         let polylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: route) ?? polyline
         
-        if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource {
+        if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
+            let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
             source.shape = polyline
-        } else if let source = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
-            source.shape = polylineSimplified
+            sourceSimplified.shape = polylineSimplified
         } else {
             let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
             let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: polylineSimplified, options: nil)
