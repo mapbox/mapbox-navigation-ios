@@ -6,7 +6,7 @@ import SwiftCLI
 let runPath = FileManager.default.currentDirectoryPath
 let lprojPath = "\(runPath)/../../MapboxNavigation/Resources"
 let importFilename = "Abbreviations.plist"
-let exportFilename = "Abbreviations_csv.plist"
+let exportFilename = "Abbreviations.csv.plist"
 
 enum AbbreviationType: String {
     case Directions = "directions"

@@ -4,150 +4,150 @@
 <dict>
 	<key>abbreviations</key>
 	<dict>
-		<key>square</key>
-		<string>Sq</string>
-		<key>centre</key>
-		<string>Ctr</string>
-		<key>sister</key>
-		<string>Sr</string>
-		<key>lake</key>
-		<string>Lk</string>
-		<key>fort</key>
-		<string>Ft</string>
-		<key>route</key>
-		<string>Rte</string>
-		<key>william</key>
-		<string>Wm</string>
-		<key>national</key>
-		<string>Nat’l</string>
-		<key>junction</key>
-		<string>Jct</string>
-		<key>center</key>
-		<string>Ctr</string>
-		<key>saint</key>
-		<string>St</string>
-		<key>saints</key>
-		<string>SS</string>
-		<key>station</key>
-		<string>Sta</string>
-		<key>mount</key>
-		<string>Mt</string>
-		<key>junior</key>
-		<string>Jr</string>
-		<key>mountain</key>
-		<string>Mtn</string>
-		<key>heights</key>
-		<string>Hts</string>
-		<key>university</key>
-		<string>Univ</string>
-		<key>school</key>
-		<string>Sch</string>
-		<key>international</key>
-		<string>Int’l</string>
 		<key>apartments</key>
 		<string>apts</string>
-		<key>crossing</key>
-		<string>Xing</string>
+		<key>center</key>
+		<string>Ctr</string>
+		<key>centre</key>
+		<string>Ctr</string>
 		<key>creek</key>
 		<string>Crk</string>
-		<key>township</key>
-		<string>Twp</string>
+		<key>crossing</key>
+		<string>Xing</string>
 		<key>downtown</key>
 		<string>Dtwn</string>
 		<key>father</key>
 		<string>Fr</string>
-		<key>senior</key>
-		<string>Sr</string>
+		<key>fort</key>
+		<string>Ft</string>
+		<key>heights</key>
+		<string>Hts</string>
+		<key>international</key>
+		<string>Int’l</string>
+		<key>junction</key>
+		<string>Jct</string>
+		<key>junior</key>
+		<string>Jr</string>
+		<key>lake</key>
+		<string>Lk</string>
+		<key>market</key>
+		<string>Mkt</string>
+		<key>memorial</key>
+		<string>Mem</string>
+		<key>mount</key>
+		<string>Mt</string>
+		<key>mountain</key>
+		<string>Mtn</string>
+		<key>national</key>
+		<string>Nat’l</string>
+		<key>park</key>
+		<string>Pk</string>
 		<key>point</key>
 		<string>Pt</string>
 		<key>river</key>
 		<string>Riv</string>
-		<key>market</key>
-		<string>Mkt</string>
+		<key>route</key>
+		<string>Rte</string>
+		<key>saint</key>
+		<string>St</string>
+		<key>saints</key>
+		<string>SS</string>
+		<key>school</key>
+		<string>Sch</string>
+		<key>senior</key>
+		<string>Sr</string>
+		<key>sister</key>
+		<string>Sr</string>
+		<key>square</key>
+		<string>Sq</string>
+		<key>station</key>
+		<string>Sta</string>
+		<key>township</key>
+		<string>Twp</string>
+		<key>university</key>
+		<string>Univ</string>
 		<key>village</key>
 		<string>Vil</string>
-		<key>park</key>
-		<string>Pk</string>
-		<key>memorial</key>
-		<string>Mem</string>
-	</dict>
-	<key>directions</key>
-	<dict>
-		<key>southeast</key>
-		<string>SE</string>
-		<key>northwest</key>
-		<string>NW</string>
-		<key>south</key>
-		<string>S</string>
-		<key>west</key>
-		<string>W</string>
-		<key>southwest</key>
-		<string>SW</string>
-		<key>north</key>
-		<string>N</string>
-		<key>east</key>
-		<string>E</string>
-		<key>northeast</key>
-		<string>NE</string>
+		<key>william</key>
+		<string>Wm</string>
 	</dict>
 	<key>classifications</key>
 	<dict>
-		<key>place</key>
-		<string>Pl</string>
-		<key>circle</key>
-		<string>Cir</string>
+		<key>alley</key>
+		<string>Aly</string>
+		<key>avenue</key>
+		<string>Ave</string>
+		<key>boulevard</key>
+		<string>Blvd</string>
+		<key>bridge</key>
+		<string>Br</string>
 		<key>bypass</key>
 		<string>Byp</string>
-		<key>motorway</key>
-		<string>Mwy</string>
-		<key>crescent</key>
-		<string>Cres</string>
-		<key>road</key>
-		<string>Rd</string>
+		<key>circle</key>
+		<string>Cir</string>
+		<key>court</key>
+		<string>Ct</string>
 		<key>cove</key>
 		<string>Cv</string>
+		<key>crescent</key>
+		<string>Cres</string>
+		<key>drive</key>
+		<string>Dr</string>
+		<key>expressway</key>
+		<string>Expy</string>
+		<key>footway</key>
+		<string>Ftwy</string>
+		<key>freeway</key>
+		<string>Fwy</string>
+		<key>highway</key>
+		<string>Hwy</string>
 		<key>lane</key>
 		<string>Ln</string>
+		<key>motorway</key>
+		<string>Mwy</string>
+		<key>parkway</key>
+		<string>Pky</string>
+		<key>pike</key>
+		<string>Pk</string>
+		<key>place</key>
+		<string>Pl</string>
+		<key>plaza</key>
+		<string>Plz</string>
+		<key>point</key>
+		<string>Pt</string>
+		<key>road</key>
+		<string>Rd</string>
 		<key>square</key>
 		<string>Sq</string>
 		<key>street</key>
 		<string>St</string>
-		<key>freeway</key>
-		<string>Fwy</string>
-		<key>walk</key>
-		<string>Wk</string>
-		<key>plaza</key>
-		<string>Plz</string>
-		<key>parkway</key>
-		<string>Pky</string>
-		<key>avenue</key>
-		<string>Ave</string>
-		<key>pike</key>
-		<string>Pk</string>
-		<key>drive</key>
-		<string>Dr</string>
-		<key>highway</key>
-		<string>Hwy</string>
-		<key>footway</key>
-		<string>Ftwy</string>
-		<key>point</key>
-		<string>Pt</string>
-		<key>court</key>
-		<string>Ct</string>
 		<key>terrace</key>
 		<string>Ter</string>
-		<key>walkway</key>
-		<string>Wky</string>
-		<key>alley</key>
-		<string>Aly</string>
-		<key>expressway</key>
-		<string>Expy</string>
-		<key>bridge</key>
-		<string>Br</string>
-		<key>boulevard</key>
-		<string>Blvd</string>
 		<key>turnpike</key>
 		<string>Tpk</string>
+		<key>walk</key>
+		<string>Wk</string>
+		<key>walkway</key>
+		<string>Wky</string>
+	</dict>
+	<key>directions</key>
+	<dict>
+		<key>east</key>
+		<string>E</string>
+		<key>north</key>
+		<string>N</string>
+		<key>northeast</key>
+		<string>NE</string>
+		<key>northwest</key>
+		<string>NW</string>
+		<key>south</key>
+		<string>S</string>
+		<key>southeast</key>
+		<string>SE</string>
+		<key>southwest</key>
+		<string>SW</string>
+		<key>west</key>
+		<string>W</string>
 	</dict>
 </dict>
 </plist>
