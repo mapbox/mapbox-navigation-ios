@@ -61,6 +61,17 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     
     /**
+     If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
+     */
+    public var playRerouteSound = false
+    
+    /**
+     Reroute sound to play prior to reroute.
+     */
+    public var rerouteSound = Bundle.main.path(forResource: "reroute-ding", ofType: "mp3")
+    
+    
+    /**
      Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
     */
     public var bufferBetweenAnnouncements: TimeInterval = 3
@@ -107,12 +118,20 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
-    public func stopVoice() {
-        speechSynth.stopSpeaking(at: .word)
-    }
-    
     func willReroute(notification: NSNotification) {
-        stopVoice()
+        speechSynth.stopSpeaking(at: .word)
+        
+        guard playRerouteSound else {
+            return
+        }
+        
+        if let currentItem = audioPlayer.currentItem {
+            currentItem.removeObserver(self, forKeyPath: "status")
+        }
+        
+        let alertSound = URL(fileURLWithPath: rerouteSound!)
+        audioPlayer.replaceCurrentItem(with: AVPlayerItem(url: alertSound))
+        audioPlayer.currentItem?.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions(), context: nil)
     }
     
     func audioPlayerDidFinishPlaying(notification: NSNotification) {
