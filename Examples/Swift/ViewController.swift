@@ -12,12 +12,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
     var userRoute: Route?
+    var waypoints: [Waypoint] = []
     
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var startNavigationButton: UIButton!
     @IBOutlet weak var simulateNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
-    
+    @IBOutlet weak var getRouteButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,19 +42,34 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
             return
         }
         
-        if let destination = destination {
-            mapView.removeAnnotation(destination)
-        }
+        let coordinates = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
         
-        destination = MGLPointAnnotation()
-        destination?.coordinate = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
-        mapView.addAnnotation(destination!)
+        getRouteButton.isHidden = false
+        howToBeginLabel.isHidden = true
         
-        getRoute()
+        let annotation = MGLPointAnnotation()
+        annotation.coordinate = coordinates
+        mapView.addAnnotation(annotation)
+        
+        let waypoint = Waypoint(coordinate: coordinates)
+        waypoints.append(waypoint)
     }
     
     @IBAction func didTapStartNavigation(_ sender: Any) {
         startNavigation(along: userRoute!)
+    }
+    
+    @IBAction func didTapClearmap(_ sender: Any) {
+        mapView.removeAnnotations(mapView.annotations ?? [])
+        
+        startNavigationButton.isHidden = true
+        simulateNavigationButton.isHidden = true
+        howToBeginLabel.isHidden = false
+        getRouteButton.isHidden = true
+    }
+    
+    @IBAction func didTapGetRoute(_ sender: Any) {
+        getRoute()
     }
     
     @IBAction func didTapSimulateNavigation(_ sender: Any) {
@@ -104,19 +120,22 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     }
     
     func getRoute(didFinish: (()->())? = nil) {
-        guard let destination = destination else { return }
+
+        let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "user")
+        waypoints.insert(userWaypoint, at: 0)
         
-        let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination.coordinate])
+        let options = RouteOptions(waypoints: waypoints)
         options.includesSteps = true
         options.routeShapeResolution = .full
         options.profileIdentifier = .automobileAvoidingTraffic
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
-                print(error!)
+                print(error!.localizedDescription)
                 return
             }
             guard let route = routes?.first else {
+                print("No routes")
                 return
             }
             
@@ -124,6 +143,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
             self?.startNavigationButton.isHidden = false
             self?.simulateNavigationButton.isHidden = false
             self?.howToBeginLabel.isHidden = true
+            self?.getRouteButton.isHidden = true
             
             // Open method for adding and updating the route line
             self?.mapView.showRoute(route)
