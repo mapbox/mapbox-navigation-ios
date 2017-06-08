@@ -9,8 +9,11 @@ extension Locale {
             return firstBundleLocale
         }
         
-        let countryString = (NSLocale.current as NSLocale).object(forKey: .countryCode) as! String
-        return "\(bundleLocale.first!)-\(countryString)"
+        if let countryCode = (Locale.current as NSLocale).object(forKey: .countryCode) as? String {
+            return "\(bundleLocale.first!)-\(countryCode)"
+        }
+        
+        return firstBundleLocale
     }
     
     static var nationalizedCurrent = Locale(identifier: preferredLocalLanguageCountryCode)
