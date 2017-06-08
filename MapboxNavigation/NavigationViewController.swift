@@ -95,6 +95,11 @@ public protocol NavigationViewControllerDelegate {
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
+    /**
+     Return an `MGLAnnotationImage` that represents the destination marker.
+     
+     If this method is unimplemented, the navigation map view will represent the destination annotation with the default marker.
+     */
     @objc optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
 }
 
