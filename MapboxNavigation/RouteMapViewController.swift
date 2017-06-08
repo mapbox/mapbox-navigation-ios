@@ -195,6 +195,10 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             mapView.addArrow(routeProgress)
         }
     }
+    
+    func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        return navigationMapView(mapView, imageFor: annotation)
+    }
 
     func setDefaultCamera(animated: Bool) {
         let camera = mapView.camera
@@ -292,6 +296,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView(mapView, simplifiedShapeDescribing: route)
+    }
+    
+    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        return delegate?.navigationMapView(mapView, imageFor:annotation)
     }
 
     @objc(navigationMapView:shouldUpdateTo:)
@@ -556,4 +564,5 @@ protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
 }

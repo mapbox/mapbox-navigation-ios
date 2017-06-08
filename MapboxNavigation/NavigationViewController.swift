@@ -94,6 +94,13 @@ public protocol NavigationViewControllerDelegate {
      If this method is unimplemented, the navigation map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationMapView(_:shapeDescribing:)`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    
+    /**
+     Return an `MGLAnnotationImage` that represents the destination marker.
+     
+     If this method is unimplemented, the navigation map view will represent the destination annotation with the default marker.
+     */
+    @objc optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
 }
 
 /**
@@ -382,6 +389,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
+    }
+    
+    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        return navigationDelegate?.navigationMapView?(mapView, imageFor: annotation)
     }
 }
 
