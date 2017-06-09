@@ -68,20 +68,25 @@ class RouteTableViewController: UIViewController {
 extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return routeController.routeProgress.route.legs.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Leg \(section + 1)"
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return routeController.routeProgress.allSteps.count
+        return routeController.routeProgress.route.legs[section].steps.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RouteTableViewCellIdentifier, for: indexPath) as! RouteTableViewCell
-        let allSteps = routeController.routeProgress.allSteps
+        let legs = routeController.routeProgress.route.legs
         
-        cell.step = allSteps[indexPath.row]
         
-        if routeController.routeProgress.currentLegProgress.stepIndex + 1 > indexPath.row {
+         cell.step = legs[indexPath.section].steps[indexPath.row]
+        
+        if  routeController.routeProgress.legIndex + 1 > indexPath.section && routeController.routeProgress.currentLegProgress.stepIndex + 1 > indexPath.row  {
             cell.contentView.alpha = 0.4
         }
         

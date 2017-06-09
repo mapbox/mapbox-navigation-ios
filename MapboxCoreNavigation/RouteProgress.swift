@@ -62,14 +62,6 @@ open class RouteProgress: NSObject {
             currentLegProgress = RouteLegProgress(leg: currentLeg)
         }
     }
-    
-    public var allSteps: [RouteStep] {
-        let steps = route.legs.flatMap {
-            $0.steps
-        }
-        return steps
-    }
-
 
     /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
