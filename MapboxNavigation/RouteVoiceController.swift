@@ -8,7 +8,7 @@ import AWSPolly
 public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     lazy var speechSynth = AVSpeechSynthesizer()
-    let audioPlayer = AVPlayer()
+    var audioPlayer = AVAudioPlayer()
     let maneuverVoiceDistanceFormatter = DistanceFormatter(approximate: true, forVoiceUse: true)
     let routeStepFormatter = RouteStepFormatter()
     var recentlyAnnouncedRouteStep: RouteStep?
@@ -66,9 +66,9 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public var playRerouteSound = false
     
     /**
-     Reroute sound to play prior to reroute.
+     Sound to play prior to reroute.
      */
-    public var rerouteSound = Bundle.main.path(forResource: "reroute-ding", ofType: "mp3")
+    public var rerouteSound = NSDataAsset(name: "reroute-sound")
     
     
     /**
@@ -99,9 +99,6 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     deinit {
-        if let currentItem = audioPlayer.currentItem {
-            currentItem.removeObserver(self, forKeyPath: "status")
-        }
         suspendNotifications()
         speechSynth.stopSpeaking(at: .word)
     }
@@ -109,13 +106,11 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector:#selector(audioPlayerDidFinishPlaying(notification:)), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: audioPlayer.currentItem)
     }
     
     public func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
     }
     
     func willReroute(notification: NSNotification) {
@@ -124,14 +119,15 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         guard playRerouteSound else {
             return
         }
-        
-        if let currentItem = audioPlayer.currentItem {
-            currentItem.removeObserver(self, forKeyPath: "status")
+
+        if let sound = rerouteSound {
+            do {
+                audioPlayer = try AVAudioPlayer(data: sound.data, fileTypeHint: AVFileTypeMPEGLayer3)
+                audioPlayer.play()
+            } catch {
+                print(error)
+            }
         }
-        
-        let alertSound = URL(fileURLWithPath: rerouteSound!)
-        audioPlayer.replaceCurrentItem(with: AVPlayerItem(url: alertSound))
-        audioPlayer.currentItem?.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions(), context: nil)
     }
     
     func audioPlayerDidFinishPlaying(notification: NSNotification) {
@@ -350,34 +346,13 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
                 return nil
             }
             
-            if let currentItem = strongSelf.audioPlayer.currentItem {
-                currentItem.removeObserver(strongSelf, forKeyPath: "status")
-            }
-            
-            let playerItem = AVPlayerItem(url: url as URL)
-            strongSelf.audioPlayer.replaceCurrentItem(with: playerItem)
-            
-            strongSelf.audioPlayer.currentItem?.addObserver(strongSelf, forKeyPath: "status", options: NSKeyValueObservingOptions(), context: nil)
+            strongSelf.audioPlayer = try! AVAudioPlayer(contentsOf: url as URL)
+            strongSelf.audioPlayer.play()
             
             return nil
         }
     }
-    
-    public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "status" {
-            do {
-                try duckAudio()
-            } catch {
-                print(error)
-            }
-            
-            if let error = audioPlayer.currentItem?.error {
-                self.speakFallBack(fallbackText, error: error.localizedDescription)
-            } else {
-                audioPlayer.play()
-            }
-        }
-    }
+
     
     
     func speakFallBack(_ text: String, error: String? = nil) {
