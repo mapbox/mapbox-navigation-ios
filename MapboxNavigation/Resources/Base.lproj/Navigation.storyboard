@@ -295,9 +295,9 @@
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="bUX-dR-1V6" secondAttribute="bottom" constant="36" id="Rcv-5L-mWP"/>
                                             <constraint firstItem="bUX-dR-1V6" firstAttribute="top" secondItem="c9E-8M-S3k" secondAttribute="top" constant="36" id="Rd0-YX-uil"/>
-                                            <constraint firstItem="JY3-Q1-T0F" firstAttribute="top" secondItem="c9E-8M-S3k" secondAttribute="top" constant="39" id="cCQ-KH-1ub"/>
+                                            <constraint firstItem="JY3-Q1-T0F" firstAttribute="top" secondItem="c9E-8M-S3k" secondAttribute="top" constant="42" id="cCQ-KH-1ub"/>
                                             <constraint firstItem="bUX-dR-1V6" firstAttribute="leading" secondItem="c9E-8M-S3k" secondAttribute="leading" constant="40" id="g36-qv-f10"/>
-                                            <constraint firstAttribute="bottom" secondItem="JY3-Q1-T0F" secondAttribute="bottom" constant="39" id="tTL-IC-7Sm"/>
+                                            <constraint firstAttribute="bottom" secondItem="JY3-Q1-T0F" secondAttribute="bottom" constant="36" id="tTL-IC-7Sm"/>
                                             <constraint firstAttribute="trailing" secondItem="JY3-Q1-T0F" secondAttribute="trailing" constant="40" id="weD-R6-rz7"/>
                                         </constraints>
                                     </view>
