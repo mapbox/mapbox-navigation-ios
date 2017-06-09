@@ -9,7 +9,6 @@ let layerIdentifier = "layerIdentifier"
 
 class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate {
     
-    var destination: MGLPointAnnotation?
     var navigation: RouteController?
     var userRoute: Route?
     var waypoints: [Waypoint] = []
@@ -52,6 +51,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         mapView.addAnnotation(annotation)
         
         let waypoint = Waypoint(coordinate: coordinates)
+        waypoint.coordinateAccuracy = -1
         waypoints.append(waypoint)
     }
     
@@ -66,6 +66,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         simulateNavigationButton.isHidden = true
         howToBeginLabel.isHidden = false
         getRouteButton.isHidden = true
+        
+        waypoints.removeAll()
     }
     
     @IBAction func didTapGetRoute(_ sender: Any) {
@@ -122,6 +124,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     func getRoute(didFinish: (()->())? = nil) {
 
         let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "user")
+        userWaypoint.coordinateAccuracy = -1
         waypoints.insert(userWaypoint, at: 0)
         
         let options = RouteOptions(waypoints: waypoints)

@@ -26,7 +26,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
 
     var route: Route { return routeController.routeProgress.route }
 
-    var destination: MGLAnnotation!
+//    var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
             return nil
@@ -76,7 +76,14 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         super.viewWillAppear(animated)
 
         mapView.compassView.isHidden = true
-        mapView.addAnnotation(destination)
+        
+        for leg in route.legs {
+            if let last = leg.steps.last {
+                let annotation = MGLPointAnnotation()
+                annotation.coordinate = last.coordinates!.last!
+                mapView.addAnnotation(annotation)
+            }
+        }
 
         if let camera = pendingCamera {
             mapView.camera = camera

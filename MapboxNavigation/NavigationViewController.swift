@@ -124,7 +124,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      on the destination of your route. The last coordinate of the route will be
      used if no destination is given.
     */
-    public var destination: MGLAnnotation!
+//    public var destination: MGLAnnotation!
+    
     
     /**
      `directions` is an instance of `Directions` need for rerouting.
@@ -234,7 +235,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         mapViewController.delegate = self
         mapViewController.routeController = routeController
-        mapViewController.destination = destination
+//        mapViewController.destination = destination
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
@@ -251,7 +252,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         case "MapViewControllerSegueIdentifier":
             if let controller = segue.destination as? RouteMapViewController {
                 controller.routeController = routeController
-                controller.destination = destination
                 mapViewController = controller
                 controller.delegate = self
             }
@@ -320,9 +320,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.notifyDidChange(routeProgress: routeProgress)
         
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
-        }
+        // TODO: Add back
+//        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+//            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
+//        }
     }
     
     func alertLevelDidChange(notification: NSNotification) {
@@ -368,11 +369,18 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             }
         }
         
-        if destination == nil {
-            let annotation = MGLPointAnnotation()
-            annotation.coordinate = route.coordinates!.last!
-            destination = annotation
+        for leg in route.legs {
+            if let last = leg.steps.last {
+                let annotation = MGLPointAnnotation()
+                annotation.coordinate = last.coordinates!.last!
+            }
         }
+        
+//        if destination == nil {
+//            let annotation = MGLPointAnnotation()
+//            annotation.coordinate = route.coordinates!.last!
+//            destination = annotation
+//        }
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {

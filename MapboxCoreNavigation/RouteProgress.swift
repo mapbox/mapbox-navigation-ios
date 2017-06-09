@@ -62,6 +62,13 @@ open class RouteProgress: NSObject {
             currentLegProgress = RouteLegProgress(leg: currentLeg)
         }
     }
+    
+    public var allSteps: [RouteStep] {
+        let steps = route.legs.flatMap {
+            $0.steps
+        }
+        return steps
+    }
 
 
     /**
@@ -108,7 +115,6 @@ open class RouteProgress: NSObject {
     }
     
     public var currentLegProgress: RouteLegProgress!
-
     
     public init(route: Route, legIndex: Int = 0) {
         self.route = route

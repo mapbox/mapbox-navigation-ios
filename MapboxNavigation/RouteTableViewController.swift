@@ -72,14 +72,14 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return routeController.routeProgress.currentLeg.steps.count
+        return routeController.routeProgress.allSteps.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RouteTableViewCellIdentifier, for: indexPath) as! RouteTableViewCell
-        let leg = routeController.routeProgress.currentLeg
+        let allSteps = routeController.routeProgress.allSteps
         
-        cell.step = leg.steps[indexPath.row]
+        cell.step = allSteps[indexPath.row]
         
         if routeController.routeProgress.currentLegProgress.stepIndex + 1 > indexPath.row {
             cell.contentView.alpha = 0.4

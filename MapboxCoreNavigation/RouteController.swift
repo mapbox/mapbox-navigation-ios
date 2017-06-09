@@ -150,7 +150,8 @@ extension RouteController: CLLocationManagerDelegate {
         let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         
-        guard routeProgress.currentLegProgress.alertUserLevel != .arrive else {
+        guard routeProgress.currentLegProgress.alertUserLevel != .arrive,
+            routeProgress.remainingWaypoints.count > 1 else {
             // Don't advance nor check progress if the user has arrived at their destination
             suspendLocationUpdates()
             NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
@@ -257,7 +258,17 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel {
+            
             routeProgress.currentLegProgress.alertUserLevel = newlyCalculatedAlertLevel
+            
+            if routeProgress.currentLegProgress.alertUserLevel == .arrive,
+                routeProgress.remainingWaypoints.count > 1 {
+                routeProgress.legIndex += 1
+                routeProgress.currentLegProgress.stepIndex = 0
+                routeProgress.currentLegProgress.alertUserLevel = .depart
+            }
+            
+            
             // Use fresh user location distance to end of step
             // since the step could of changed
             let userDistance = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
@@ -285,7 +296,6 @@ extension RouteController: CLLocationManagerDelegate {
         routeTask?.cancel()
         
         let options = routeProgress.route.routeOptions
-        
         options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
         
         if let firstWaypoint = options.waypoints.first, location.course >= 0 {
