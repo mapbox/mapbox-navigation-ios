@@ -8,7 +8,7 @@ import AWSPolly
 public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     lazy var speechSynth = AVSpeechSynthesizer()
-    var audioPlayer = AVAudioPlayer()
+    var audioPlayer: AVAudioPlayer?
     let maneuverVoiceDistanceFormatter = DistanceFormatter(approximate: true, forVoiceUse: true)
     let routeStepFormatter = RouteStepFormatter()
     var recentlyAnnouncedRouteStep: RouteStep?
@@ -28,10 +28,15 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
      */
     public var volume: Float {
         get {
+            guard let audioPlayer = audioPlayer else {
+                return 1
+            }
             return audioPlayer.volume
         }
         set {
-            audioPlayer.volume = newValue
+            if let audioPlayer = audioPlayer {
+                audioPlayer.volume = newValue
+            }
         }
     }
     
@@ -123,7 +128,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         if let sound = rerouteSound {
             do {
                 audioPlayer = try AVAudioPlayer(data: sound.data, fileTypeHint: AVFileTypeMPEGLayer3)
-                audioPlayer.play()
+                audioPlayer!.play()
             } catch {
                 print(error)
             }
@@ -347,7 +352,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             }
             
             strongSelf.audioPlayer = try! AVAudioPlayer(contentsOf: url as URL)
-            strongSelf.audioPlayer.play()
+            strongSelf.audioPlayer!.play()
             
             return nil
         }
