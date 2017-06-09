@@ -123,7 +123,7 @@ fileprivate extension Array where Element == SimulatedLocation {
             let timeToTravel: TimeInterval = distance / speed
             
             if timeToTravel > 1 {
-                guard let newCoordinate = coordinate(at: speed, fromStartOf: [location.coordinate, nextLocation.coordinate]) else { return processedLocations }
+                guard let newCoordinate = coordinate(at: speed, fromStartOf: [location.coordinate, nextLocation.coordinate]) else { continue }
                 let newLocation = SimulatedLocation(coordinate: newCoordinate,
                                                     altitude: location.altitude,
                                                     horizontalAccuracy: horizontalAccuracy,
