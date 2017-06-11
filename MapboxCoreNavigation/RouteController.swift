@@ -151,7 +151,7 @@ extension RouteController: CLLocationManagerDelegate {
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         
         guard routeProgress.currentLegProgress.alertUserLevel != .arrive,
-            routeProgress.remainingWaypoints.count > 1 else {
+            routeProgress.remainingWaypoints.count > 0 else {
             // Don't advance nor check progress if the user has arrived at their destination
             suspendLocationUpdates()
             NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [

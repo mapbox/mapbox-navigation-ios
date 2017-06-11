@@ -67,8 +67,8 @@
                                             <action selector="didTapGetRoute:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ffn-fF-Lba"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p1Q-wj-seE">
-                                        <rect key="frame" x="8" y="585" width="70" height="30"/>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p1Q-wj-seE">
+                                        <rect key="frame" x="8" y="565" width="70" height="30"/>
                                         <state key="normal" title="Clear map"/>
                                         <connections>
                                             <action selector="didTapClearmap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YbJ-3h-xu2"/>
@@ -82,7 +82,7 @@
                                     <constraint firstAttribute="bottom" secondItem="8Sl-bV-xyU" secondAttribute="bottom" id="LOb-l9-Iql"/>
                                     <constraint firstItem="8Sl-bV-xyU" firstAttribute="width" secondItem="A3N-JT-loC" secondAttribute="width" multiplier="1:2" id="Pds-uP-zSB"/>
                                     <constraint firstAttribute="trailing" secondItem="KIU-cH-IXd" secondAttribute="trailing" id="Q7E-HM-WIz"/>
-                                    <constraint firstItem="oWT-TG-jZs" firstAttribute="top" secondItem="p1Q-wj-seE" secondAttribute="bottom" constant="8" id="SbN-yI-sn0"/>
+                                    <constraint firstItem="oWT-TG-jZs" firstAttribute="top" secondItem="p1Q-wj-seE" secondAttribute="bottom" constant="28" id="SbN-yI-sn0"/>
                                     <constraint firstAttribute="trailing" secondItem="oWT-TG-jZs" secondAttribute="trailing" id="TC4-VU-ggG"/>
                                     <constraint firstAttribute="bottom" secondItem="KIU-cH-IXd" secondAttribute="bottom" id="TjN-pb-n3K"/>
                                     <constraint firstItem="p1Q-wj-seE" firstAttribute="leading" secondItem="A3N-JT-loC" secondAttribute="leading" constant="8" id="djs-kC-Hft"/>
@@ -121,6 +121,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="clearMapButton" destination="p1Q-wj-seE" id="ULz-0n-Sys"/>
                         <outlet property="getRouteButton" destination="oWT-TG-jZs" id="b4W-Xb-oB7"/>
                         <outlet property="howToBeginLabel" destination="Hk0-SM-2Wl" id="iU7-G1-DBc"/>
                         <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>

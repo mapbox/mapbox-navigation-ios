@@ -18,6 +18,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     @IBOutlet weak var simulateNavigationButton: UIButton!
     @IBOutlet weak var howToBeginLabel: UILabel!
     @IBOutlet weak var getRouteButton: UIButton!
+    @IBOutlet weak var clearMapButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,8 +44,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         
         let coordinates = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
         
-        getRouteButton.isHidden = false
         howToBeginLabel.isHidden = true
+        getRouteButton.isHidden = false
+        clearMapButton.isHidden = false
         
         let annotation = MGLPointAnnotation()
         annotation.coordinate = coordinates
@@ -64,10 +66,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         
         startNavigationButton.isHidden = true
         simulateNavigationButton.isHidden = true
-        howToBeginLabel.isHidden = false
         getRouteButton.isHidden = true
+        clearMapButton.isHidden = true
+        howToBeginLabel.isHidden = false
         
         waypoints.removeAll()
+        mapView.removeRoute()
     }
     
     @IBAction func didTapGetRoute(_ sender: Any) {
