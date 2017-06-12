@@ -15,7 +15,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
      */
-    @objc optional func navigationViewControllerDidCancelNavigation(_ : NavigationViewController)
+    @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController : NavigationViewController)
     
     /**
      Called when the user arrives at the destination.
