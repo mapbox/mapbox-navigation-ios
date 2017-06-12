@@ -133,15 +133,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
     }
     
     func startNavigation(along route: Route, simulatesLocationUpdates: Bool = false) {
-        // Pass through a
-        // 1. the route the user will take
-        // 2. A `Directions` class, used for rerouting.
+        // Pass through:
+        // 1. The route the user will take.
+        // 2. A `Directions` object, used for rerouting.
         let navigationViewController = NavigationViewController(for: route)
         
-        // If you'd like to use AWS Polly, provide your IdentityPoolId below
-        // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer
+        // If you'd like to use AWS Polly, provide your IdentityPoolId below.
+        // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
         // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
-        // viewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
+        //navigationViewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
         
         navigationViewController.simulatesLocationUpdates = simulatesLocationUpdates
         navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true

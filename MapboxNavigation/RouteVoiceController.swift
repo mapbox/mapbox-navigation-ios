@@ -24,7 +24,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     
     /**
-     Volume of audioPlayer. Used only for Polly instructions.
+     Volume of announcements.
      */
     public var volume: Float {
         get {
@@ -37,7 +37,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     
     /**
-     Forces Polly voice to always be of specified type. If not set, a localized voice will be used
+     Forces Polly voice to always be of specified type. If not set, a localized voice will be used.
      */
     public var globalVoiceId: AWSPollyVoiceId?
     
