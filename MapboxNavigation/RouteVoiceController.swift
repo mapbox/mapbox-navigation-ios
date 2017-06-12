@@ -133,13 +133,11 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     
     func validateNavigationVoiceOptions() throws {
         let category = AVAudioSessionCategoryPlayback
-        if #available(iOS 9.0, *) {
-            let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
-            try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
-            try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
-        }
+        let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
+        try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
+        try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
     }
-    
+
     func duckAudio() throws {
         try validateNavigationVoiceOptions()
         try AVAudioSession.sharedInstance().setActive(true)
@@ -370,12 +368,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
         
         let utterance = AVSpeechUtterance(string: text)
-        
-        // change the rate of speech for iOS 8
-        if !ProcessInfo().isOperatingSystemAtLeast(OperatingSystemVersion(majorVersion: 9, minorVersion: 0, patchVersion: 0)) {
-            utterance.rate = AVSpeechUtteranceMinimumSpeechRate + AVSpeechUtteranceDefaultSpeechRate / 5.0
-        }
-        
+
         // Only localized languages will have a proper fallback voice
         utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
         utterance.volume = volume
