@@ -159,7 +159,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func alertLevelDidChange(notification: NSNotification) {
-        guard isEnabled == true else { return }
+        guard isEnabled, volume > 0 else { return }
         
         guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
             assert(false)
