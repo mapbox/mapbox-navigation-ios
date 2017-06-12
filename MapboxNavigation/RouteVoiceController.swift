@@ -131,7 +131,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
     }
     
-    func validateNavigationVoiceOptions() throws {
+    func validateDuckingOptions() throws {
         let category = AVAudioSessionCategoryPlayback
         let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
@@ -139,7 +139,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
 
     func duckAudio() throws {
-        try validateNavigationVoiceOptions()
+        try validateDuckingOptions()
         try AVAudioSession.sharedInstance().setActive(true)
     }
     
