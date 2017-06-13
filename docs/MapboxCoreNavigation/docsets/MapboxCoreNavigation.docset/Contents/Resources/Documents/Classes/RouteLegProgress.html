@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RouteLegProgress Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/RouteLegProgress" class="dashAnchor"></a>
+    <a title="RouteLegProgress Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">MapboxCoreNavigation Docs</a> (63% documented)</p>
+        <p class="header-right"><a href="https://github.com/mapbox/mapbox-navigation-ios"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fnavigation%2Dsdk%2Fios%2F0%2E4%2E0%2Fdocsets%2FMapboxCoreNavigation%2Exml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">MapboxCoreNavigation Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        RouteLegProgress Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/RouteController.html">RouteController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteLegProgress.html">RouteLegProgress</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteProgress.html">RouteProgress</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteStepProgress.html">RouteStepProgress</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Global Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation44MaxSecondsSpentTravelingAwayFromStartOfRouteSd">MaxSecondsSpentTravelingAwayFromStartOfRoute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation34RouteControllerAlertLevelDidChangeVCSo14NSNotification4Name">RouteControllerAlertLevelDidChange</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation72RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKeySS">RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation62RouteControllerAlertLevelDidChangeNotificationRouteProgressKeySS">RouteControllerAlertLevelDidChangeNotificationRouteProgressKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation40RouteControllerDeadReckoningTimeIntervalSd">RouteControllerDeadReckoningTimeInterval</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation31RouteControllerDidFailToRerouteVCSo14NSNotification4Name">RouteControllerDidFailToReroute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation25RouteControllerDidRerouteVCSo14NSNotification4Name">RouteControllerDidReroute</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation32RouteControllerHighAlertIntervalSd">RouteControllerHighAlertInterval</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation33RouteControllerManeuverZoneRadiusSd">RouteControllerManeuverZoneRadius</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation40RouteControllerMaxManipulatedCourseAngleSd">RouteControllerMaxManipulatedCourseAngle</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation58RouteControllerMaximumAllowedDegreeOffsetForTurnCompletionSd">RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation49RouteControllerMaximumDistanceBeforeRecalculatingSd">RouteControllerMaximumDistanceBeforeRecalculating</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation34RouteControllerMediumAlertIntervalSd">RouteControllerMediumAlertInterval</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation49RouteControllerMinimumDistanceForHighAlertCyclingSd">RouteControllerMinimumDistanceForHighAlertCycling</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation49RouteControllerMinimumDistanceForHighAlertDrivingSd">RouteControllerMinimumDistanceForHighAlertDriving</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation49RouteControllerMinimumDistanceForHighAlertWalkingSd">RouteControllerMinimumDistanceForHighAlertWalking</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation51RouteControllerMinimumDistanceForMediumAlertCyclingSd">RouteControllerMinimumDistanceForMediumAlertCycling</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation51RouteControllerMinimumDistanceForMediumAlertDrivingSd">RouteControllerMinimumDistanceForMediumAlertDriving</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation51RouteControllerMinimumDistanceForMediumAlertWalkingSd">RouteControllerMinimumDistanceForMediumAlertWalking</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation35RouteControllerNotificationErrorKeySS">RouteControllerNotificationErrorKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation38RouteControllerNotificationLocationKeySS">RouteControllerNotificationLocationKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation35RouteControllerNotificationRouteKeySS">RouteControllerNotificationRouteKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation32RouteControllerProgressDidChangeVCSo14NSNotification4Name">RouteControllerProgressDidChange</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation55RouteControllerProgressDidChangeNotificationLocationKeySS">RouteControllerProgressDidChangeNotificationLocationKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation55RouteControllerProgressDidChangeNotificationProgressKeySS">RouteControllerProgressDidChangeNotificationProgressKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation69RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKeySS">RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation43RouteControllerUserLocationSnappingDistanceSd">RouteControllerUserLocationSnappingDistance</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Global Variables.html#/s:v20MapboxCoreNavigation26RouteControllerWillRerouteVCSo14NSNotification4Name">RouteControllerWillReroute</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AlertLevel.html">AlertLevel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F20MapboxCoreNavigation42RouteControllerMinimumDistanceForHighAlertFT10identifierVSC29MBDirectionsProfileIdentifier_Sd">RouteControllerMinimumDistanceForHighAlert(identifier:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F20MapboxCoreNavigation44RouteControllerMinimumDistanceForMediumAlertFT10identifierVSC29MBDirectionsProfileIdentifier_Sd">RouteControllerMinimumDistanceForMediumAlert(identifier:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F20MapboxCoreNavigation4wrapFTSd3minSd3maxSd_Sd">wrap(_:min:max:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/RouteControllerDelegate.html">RouteControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>RouteLegProgress</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                </div>
+              </div>
+            <p><code>RouteLegProgress</code> stores the user’s progress along a route leg.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress3legC16MapboxDirections8RouteLeg"></a>
+                    <a name="//apple_ref/swift/Property/leg" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress3legC16MapboxDirections8RouteLeg">leg</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress9stepIndexSi"></a>
+                    <a name="//apple_ref/swift/Property/stepIndex" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress9stepIndexSi">stepIndex</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Index representing the current step</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">stepIndex</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L132-L137">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress16distanceTraveledSd"></a>
+                    <a name="//apple_ref/swift/Property/distanceTraveled" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress16distanceTraveledSd">distanceTraveled</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Total distance traveled in meters along current leg</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">distanceTraveled</span><span class="p">:</span> <span class="kt">CLLocationDistance</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L143-L145">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress17durationRemainingSd"></a>
+                    <a name="//apple_ref/swift/Property/durationRemaining" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress17durationRemainingSd">durationRemaining</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Duration remaining in seconds on current leg</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">durationRemaining</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L151-L153">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress16fractionTraveledSd"></a>
+                    <a name="//apple_ref/swift/Property/fractionTraveled" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress16fractionTraveledSd">fractionTraveled</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Number between 0 and 1 representing how far along the current leg the user has traveled.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fractionTraveled</span><span class="p">:</span> <span class="kt">Double</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L159-L161">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress14alertUserLevelOS_10AlertLevel"></a>
+                    <a name="//apple_ref/swift/Property/alertUserLevel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress14alertUserLevelOS_10AlertLevel">alertUserLevel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC20MapboxCoreNavigation16RouteLegProgress10stepBeforeFC16MapboxDirections9RouteStepGSqS2__"></a>
+                    <a name="//apple_ref/swift/Method/stepBefore(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC20MapboxCoreNavigation16RouteLegProgress10stepBeforeFC16MapboxDirections9RouteStepGSqS2__">stepBefore(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L167-L175">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC20MapboxCoreNavigation16RouteLegProgress9stepAfterFC16MapboxDirections9RouteStepGSqS2__"></a>
+                    <a name="//apple_ref/swift/Method/stepAfter(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC20MapboxCoreNavigation16RouteLegProgress9stepAfterFC16MapboxDirections9RouteStepGSqS2__">stepAfter(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L177-L185">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress9priorStepGSqC16MapboxDirections9RouteStep_"></a>
+                    <a name="//apple_ref/swift/Property/priorStep" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress9priorStepGSqC16MapboxDirections9RouteStep_">priorStep</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the <code>Step</code> before the current step.</p>
+
+<p>If there is no <code>priorStep</code>, nil is returned.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">priorStep</span><span class="p">:</span> <span class="kt">RouteStep</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L192-L197">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress11currentStepC16MapboxDirections9RouteStep"></a>
+                    <a name="//apple_ref/swift/Property/currentStep" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress11currentStepC16MapboxDirections9RouteStep">currentStep</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns number representing current <code>Step</code> for the leg the user is on.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">currentStep</span><span class="p">:</span> <span class="kt">RouteStep</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L203-L205">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress12upComingStepGSqC16MapboxDirections9RouteStep_"></a>
+                    <a name="//apple_ref/swift/Property/upComingStep" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress12upComingStepGSqC16MapboxDirections9RouteStep_">upComingStep</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the upcoming <code>Step</code>.</p>
+
+<p>If there is no <code>upcomingStep</code>, nil is returned.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">upComingStep</span><span class="p">:</span> <span class="kt">RouteStep</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L213-L218">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress12followOnStepGSqC16MapboxDirections9RouteStep_"></a>
+                    <a name="//apple_ref/swift/Property/followOnStep" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress12followOnStepGSqC16MapboxDirections9RouteStep_">followOnStep</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns step 2 steps ahead.</p>
+
+<p>If there is no <code>followOnStep</code>, nil is returned.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">followOnStep</span><span class="p">:</span> <span class="kt">RouteStep</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L225-L230">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC20MapboxCoreNavigation16RouteLegProgress13isCurrentStepFC16MapboxDirections9RouteStepSb"></a>
+                    <a name="//apple_ref/swift/Method/isCurrentStep(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC20MapboxCoreNavigation16RouteLegProgress13isCurrentStepFC16MapboxDirections9RouteStepSb">isCurrentStep(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return bool whether step provided is the current <code>Step</code> the user is on.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">isCurrentStep</span><span class="p">(</span><span class="n">_</span> <span class="nv">step</span><span class="p">:</span> <span class="kt">RouteStep</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L236-L238">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress19currentStepProgressCS_17RouteStepProgress"></a>
+                    <a name="//apple_ref/swift/Property/currentStepProgress" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress19currentStepProgressCS_17RouteStepProgress">currentStepProgress</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC20MapboxCoreNavigation16RouteLegProgresscFT3legC16MapboxDirections8RouteLeg9stepIndexSi_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(leg:stepIndex:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC20MapboxCoreNavigation16RouteLegProgresscFT3legC16MapboxDirections8RouteLeg9stepIndexSi_S0_">init(leg:stepIndex:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L243-L247">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC20MapboxCoreNavigation16RouteLegProgress17nearbyCoordinatesGSaVSC22CLLocationCoordinate2D_"></a>
+                    <a name="//apple_ref/swift/Property/nearbyCoordinates" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC20MapboxCoreNavigation16RouteLegProgress17nearbyCoordinatesGSaVSC22CLLocationCoordinate2D_">nearbyCoordinates</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns an array of <code>CLLocationCoordinate2D</code> of the prior, current and upcoming step geometry</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">nearbyCoordinates</span><span class="p">:</span> <span class="p">[</span><span class="kt">CLLocationCoordinate2D</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxCoreNavigation/RouteProgress.swift#L253-L260">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>© 2014–2017 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/mapbox-gl-native/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

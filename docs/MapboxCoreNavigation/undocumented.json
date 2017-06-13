@@ -1,0 +1,243 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 5,
+      "symbol": "RouteControllerProgressDidChangeNotificationProgressKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 6,
+      "symbol": "RouteControllerProgressDidChangeNotificationLocationKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 7,
+      "symbol": "RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 9,
+      "symbol": "RouteControllerAlertLevelDidChangeNotificationRouteProgressKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 10,
+      "symbol": "RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 12,
+      "symbol": "RouteControllerNotificationLocationKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 13,
+      "symbol": "RouteControllerNotificationRouteKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 14,
+      "symbol": "RouteControllerNotificationErrorKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 16,
+      "symbol": "RouteControllerProgressDidChange",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 17,
+      "symbol": "RouteControllerAlertLevelDidChange",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 18,
+      "symbol": "RouteControllerWillReroute",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 19,
+      "symbol": "RouteControllerDidReroute",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 20,
+      "symbol": "RouteControllerDidFailToReroute",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 68,
+      "symbol": "RouteControllerMinimumDistanceForMediumAlertCycling",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 69,
+      "symbol": "RouteControllerMinimumDistanceForMediumAlertWalking",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 71,
+      "symbol": "RouteControllerMinimumDistanceForMediumAlert(identifier:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 93,
+      "symbol": "RouteControllerMinimumDistanceForHighAlertCycling",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 94,
+      "symbol": "RouteControllerMinimumDistanceForHighAlertWalking",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
+      "line": 96,
+      "symbol": "RouteControllerMinimumDistanceForHighAlert(identifier:)",
+      "symbol_kind": "source.lang.swift.decl.function.free",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
+      "line": 93,
+      "symbol": "RouteController.simulatesLocationUpdates",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
+      "line": 145,
+      "symbol": "RouteController.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
+      "line": 219,
+      "symbol": "RouteController.userIsOnRoute(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 53,
+      "symbol": "RouteProgress.route",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 106,
+      "symbol": "RouteProgress.remainingWaypoints",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 110,
+      "symbol": "RouteProgress.currentLegProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 113,
+      "symbol": "RouteProgress.init(route:legIndex:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 126,
+      "symbol": "RouteLegProgress.leg",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 164,
+      "symbol": "RouteLegProgress.alertUserLevel",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 167,
+      "symbol": "RouteLegProgress.stepBefore(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 177,
+      "symbol": "RouteLegProgress.stepAfter(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 240,
+      "symbol": "RouteLegProgress.currentStepProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 243,
+      "symbol": "RouteLegProgress.init(leg:stepIndex:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 269,
+      "symbol": "RouteStepProgress.step",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 306,
+      "symbol": "RouteStepProgress.init(step:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios"
+}
