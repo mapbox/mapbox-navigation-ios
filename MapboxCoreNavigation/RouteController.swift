@@ -264,10 +264,8 @@ extension RouteController: CLLocationManagerDelegate {
             if routeProgress.currentLegProgress.alertUserLevel == .arrive,
                 routeProgress.remainingWaypoints.count > 1 {
                 routeProgress.legIndex += 1
-                routeProgress.currentLegProgress.stepIndex = 0
                 routeProgress.currentLegProgress.alertUserLevel = .depart
             }
-            
             
             // Use fresh user location distance to end of step
             // since the step could of changed

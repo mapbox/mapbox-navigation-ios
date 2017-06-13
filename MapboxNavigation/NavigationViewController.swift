@@ -124,7 +124,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      on the destination of your route. The last coordinate of the route will be
      used if no destination is given.
     */
-    @available(*, deprecated, message: "Destination is no longer support nor necessary. A destination annotation will automatically be added to map given the route.")
+    @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
     public var destination: MGLAnnotation!
     
     

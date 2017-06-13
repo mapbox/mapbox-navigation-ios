@@ -72,7 +72,17 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Leg \(section + 1)"
+        // Don't display section header if there is only one step
+        guard routeController.routeProgress.route.legs.count > 1 else {
+            return nil
+        }
+        
+        let legToFrom = routeController.routeProgress.route.legs[section].description.components(separatedBy: ", ")
+        if legToFrom.count == 2 {
+            return "\(legToFrom[0]) to \(legToFrom[1])"
+        } else {
+            return routeController.routeProgress.route.legs[section].description
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,9 +94,9 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         let legs = routeController.routeProgress.route.legs
         
         
-         cell.step = legs[indexPath.section].steps[indexPath.row]
+        cell.step = legs[indexPath.section].steps[indexPath.row]
         
-        if  routeController.routeProgress.legIndex + 1 > indexPath.section && routeController.routeProgress.currentLegProgress.stepIndex + 1 > indexPath.row  {
+        if routeController.routeProgress.legIndex + 1 > indexPath.section && routeController.routeProgress.currentLegProgress.stepIndex + 1 > indexPath.row  {
             cell.contentView.alpha = 0.4
         }
         
