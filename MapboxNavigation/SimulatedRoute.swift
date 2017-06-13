@@ -123,12 +123,12 @@ fileprivate extension Array where Element == SimulatedLocation {
             let timeToTravel: TimeInterval = distance / speed
             
             if timeToTravel > 1 {
-                let newCoordinate = coordinate(at: speed, fromStartOf: [location.coordinate, nextLocation.coordinate])
-                let newLocation = SimulatedLocation(coordinate: newCoordinate!,
+                guard let newCoordinate = coordinate(at: speed, fromStartOf: [location.coordinate, nextLocation.coordinate]) else { continue }
+                let newLocation = SimulatedLocation(coordinate: newCoordinate,
                                                     altitude: location.altitude,
                                                     horizontalAccuracy: horizontalAccuracy,
                                                     verticalAccuracy: verticalAccuracy,
-                                                    course: wrap(floor(newCoordinate!.direction(to: nextLocation.coordinate)), min: 0, max: 360),
+                                                    course: wrap(floor(newCoordinate.direction(to: nextLocation.coordinate)), min: 0, max: 360),
                                                     speed: speed,
                                                     timestamp: Date())
                 processedLocations.append(newLocation)

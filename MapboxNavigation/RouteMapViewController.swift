@@ -400,10 +400,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
 
         // Get closest point infront of user
-        let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine)!
-        let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced)!
-        let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine)!
-        let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced)!
+        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
+        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
+        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
+        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
         
         // Get direction of these points
         let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
