@@ -20,7 +20,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user arrives at the destination.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: MGLAnnotation)
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: RouteStep)
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -124,7 +124,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      on the destination of your route. The last coordinate of the route will be
      used if no destination is given.
     */
-//    public var destination: MGLAnnotation!
+    @available(*, deprecated, message: "Destination is no longer support nor necessary. A destination annotation will automatically be added to map given the route.")
+    public var destination: MGLAnnotation!
     
     
     /**
@@ -235,7 +236,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         mapViewController.delegate = self
         mapViewController.routeController = routeController
-//        mapViewController.destination = destination
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
@@ -319,11 +319,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.notifyDidChange(routeProgress: routeProgress)
-        
-        // TODO: Add back
-//        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-//            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
-//        }
+
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive,
+            routeProgress.remainingWaypoints.count == 0 {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.currentStep)
+        }
     }
     
     func alertLevelDidChange(notification: NSNotification) {
@@ -375,12 +375,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 annotation.coordinate = last.coordinates!.last!
             }
         }
-        
-//        if destination == nil {
-//            let annotation = MGLPointAnnotation()
-//            annotation.coordinate = route.coordinates!.last!
-//            destination = annotation
-//        }
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
