@@ -368,13 +368,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 routeController.locationManager.allowsBackgroundLocationUpdates = true
             }
         }
-        
-        for leg in route.legs {
-            if let last = leg.steps.last {
-                let annotation = MGLPointAnnotation()
-                annotation.coordinate = last.coordinates!.last!
-            }
-        }
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
