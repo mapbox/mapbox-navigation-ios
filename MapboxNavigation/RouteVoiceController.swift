@@ -60,9 +60,9 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 
     
     /**
-     Sound to play prior to reroute.
+     Sound to play prior to reroute. Inherits volume level from `volume`.
      */
-    public var rerouteSound = NSDataAsset(name: "reroute-sound")
+    public var rerouteSound = NSDataAsset(name: "reroute-sound", bundle: Bundle.navigationUI)
     
     
     /**
