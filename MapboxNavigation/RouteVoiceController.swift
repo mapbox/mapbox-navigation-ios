@@ -26,19 +26,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Volume of announcements.
      */
-    public var volume: Float {
-        get {
-            guard let audioPlayer = audioPlayer else {
-                return 1
-            }
-            return audioPlayer.volume
-        }
-        set {
-            if let audioPlayer = audioPlayer {
-                audioPlayer.volume = newValue
-            }
-        }
-    }
+    public var volume: Float = 1.0
     
     
     /**
@@ -69,11 +57,18 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
     public var playRerouteSound = false
+
     
     /**
      Sound to play prior to reroute.
      */
     public var rerouteSound = NSDataAsset(name: "reroute-sound")
+    
+    
+    /**
+     File type of the reroute sound file.
+     */
+    public var rerouteSoundFileTypeHint = AVFileTypeMPEGLayer3
     
     
     /**
@@ -127,8 +122,11 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 
         if let sound = rerouteSound {
             do {
-                audioPlayer = try AVAudioPlayer(data: sound.data, fileTypeHint: AVFileTypeMPEGLayer3)
-                audioPlayer!.play()
+                audioPlayer = try AVAudioPlayer(data: sound.data, fileTypeHint: rerouteSoundFileTypeHint)
+                if let audioPlayer = audioPlayer {
+                    audioPlayer.volume = volume
+                    audioPlayer.play()
+                }
             } catch {
                 print(error)
             }
@@ -351,14 +349,20 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
                 return nil
             }
             
-            strongSelf.audioPlayer = try! AVAudioPlayer(contentsOf: url as URL)
-            strongSelf.audioPlayer!.play()
+            do {
+                strongSelf.audioPlayer = try AVAudioPlayer(contentsOf: url as URL)
+                if let audioPlayer = strongSelf.audioPlayer {
+                    audioPlayer.volume = strongSelf.volume
+                    audioPlayer.play()
+                }
+            } catch {
+                strongSelf.speakFallBack(strongSelf.fallbackText, error: error.localizedDescription)
+            }
             
             return nil
         }
     }
 
-    
     
     func speakFallBack(_ text: String, error: String? = nil) {
         // Note why it failed
