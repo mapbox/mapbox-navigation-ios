@@ -44,13 +44,13 @@ extension MGLMapView {
         }
         
         let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate!.latitude), 50), 10)
-        let shaftCoordinates = polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!)
-            + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!)
+        let shaftCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!).reversed()
+            + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
         
         if shaftCoordinates.count > 1 {
             let shaftStrokeLength = shaftLength * 1.1
-            var shaftStrokeCoordinates = polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate!)
-                + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!)
+            var shaftStrokeCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate!).reversed()
+                + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
             let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
             
             var maneuverArrowStrokePolylines = [shaftStrokePolyline]
