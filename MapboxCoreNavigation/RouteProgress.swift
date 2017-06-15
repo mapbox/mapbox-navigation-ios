@@ -108,6 +108,7 @@ open class RouteProgress: NSObject {
     }
     
     public var currentLegProgress: RouteLegProgress!
+    
 
     /**
      Intializes a new `RouteProgress`.
