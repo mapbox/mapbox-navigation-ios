@@ -13,14 +13,19 @@ if [ -z `which jazzy` ]; then
     fi
 fi
 
+
+BRANCH=$( git describe --tags --abbrev=0 )
+SHORT_VERSION=$( echo ${BRANCH} | sed 's/^ios-v//' )
+RELEASE_VERSION=$( echo ${SHORT_VERSION} | sed -e 's/^ios-v//' -e 's/-.*//' )
+
 for module in MapboxNavigation MapboxCoreNavigation
 do
     jazzy \
         --config jazzy.yml \
-        --module "$module" \
-        --module-version 0.4.0 \
-        --root-url 'https://www.mapbox.com/navigation-sdk/ios/0.4.0/' \
-        --github-file-prefix 'https://github.com/mapbox/mapbox-navigation-ios/tree/master' \
+        --module $module \
+        --module-version $SHORT_VERSION \
+        --root-url https://www.mapbox.com/navigation-sdk/ios/${RELEASE_VERSION}/ \
+        --github-file-prefix https://github.com/mapbox/navigation-sdk/tree/${BRANCH} \
         --umbrella_header "$module"/"$module".h \
         --output docs/"$module"
 done
