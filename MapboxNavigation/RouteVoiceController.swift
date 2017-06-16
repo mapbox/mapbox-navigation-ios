@@ -62,13 +62,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
-    public var rerouteSound = NSDataAsset(name: "reroute-sound", bundle: Bundle.navigationUI)
-    
-    
-    /**
-     File type of the reroute sound file.
-     */
-    public var rerouteSoundFileTypeHint = AVFileTypeMPEGLayer3
+    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: Bundle.navigationUI)!.data, fileTypeHint: AVFileTypeMPEGLayer3)
     
     
     /**
@@ -119,18 +113,9 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         guard playRerouteSound else {
             return
         }
-
-        if let sound = rerouteSound {
-            do {
-                audioPlayer = try AVAudioPlayer(data: sound.data, fileTypeHint: rerouteSoundFileTypeHint)
-                if let audioPlayer = audioPlayer {
-                    audioPlayer.volume = volume
-                    audioPlayer.play()
-                }
-            } catch {
-                print(error)
-            }
-        }
+        
+        rerouteSoundPlayer.volume = volume
+        rerouteSoundPlayer.play()
     }
     
     func audioPlayerDidFinishPlaying(notification: NSNotification) {
