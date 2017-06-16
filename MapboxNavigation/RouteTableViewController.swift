@@ -77,11 +77,13 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
             return nil
         }
         
-        let legToFrom = routeController.routeProgress.route.legs[section].description.components(separatedBy: ", ")
+        let sectionName = routeController.routeProgress.route.legs[section].name
+        let legToFrom = sectionName.components(separatedBy: ", ")
+        
         if legToFrom.count == 2 {
             return "\(legToFrom[0]) to \(legToFrom[1])"
         } else {
-            return routeController.routeProgress.route.legs[section].description
+            return sectionName
         }
     }
     
