@@ -35,7 +35,7 @@ jazzy \
     --module-version ${SHORT_VERSION} \
     --github-file-prefix "https://github.com/mapbox/mapbox-navigation-ios/tree/${BRANCH}" \
     --documentation=docs/guides/*.md \
-    --root-url "https://www.mapbox.com/navigation-sdk/ios/${RELEASE_VERSION}/" \
+    --root-url "https://mapbox.github.io/mapbox-navigation-ios/navigation/${RELEASE_VERSION}/" \
     --theme ${THEME} \
     --output ${OUTPUT}
 
