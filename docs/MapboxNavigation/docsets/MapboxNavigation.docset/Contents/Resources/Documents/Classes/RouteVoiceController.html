@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>RouteVoiceController Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/RouteVoiceController" class="dashAnchor"></a>
+    <a title="RouteVoiceController Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">MapboxNavigation Docs</a> (46% documented)</p>
+        <p class="header-right"><a href="https://github.com/mapbox/mapbox-navigation-ios"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fnavigation%2Dsdk%2Fios%2Fv0%2E4%2E0%2Fdocsets%2FMapboxNavigation%2Exml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">MapboxNavigation Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        RouteVoiceController Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation6Button">Button</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation17CellSubtitleLabel">CellSubtitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation14CellTitleLabel">CellTitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DashedLineView.html">DashedLineView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DistanceFormatter.html">DistanceFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation17HighlightedButton">HighlightedButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation8LineView">LineView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NavigationMapView.html">NavigationMapView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NavigationViewController.html">NavigationViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation11ProgressBar">ProgressBar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteStepFormatter.html">RouteStepFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteVoiceController.html">RouteVoiceController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation13SeparatorView">SeparatorView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation14StylableButton">StylableButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation13StylableLabel">StylableLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Style.html">Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StyleKitArrows.html">StyleKitArrows</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation13SubtitleLabel">SubtitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation10TitleLabel">TitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TurnArrowView.html">TurnArrowView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation12WayNameLabel">WayNameLabel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/MGLMapView.html">MGLMapView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/RouteTableViewController.html">RouteTableViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F16MapboxNavigation4wrapFTSd3minSd3maxSd_Sd">wrap(_:min:max:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/NavigationMapViewDelegate.html">NavigationMapViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>RouteVoiceController</h1>
+            <p>Undocumented</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController9isEnabledSb"></a>
+                    <a name="//apple_ref/swift/Property/isEnabled" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController9isEnabledSb">isEnabled</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A boolean value indicating whether instructions should be announced by voice or not.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L23">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController6volumeSf"></a>
+                    <a name="//apple_ref/swift/Property/volume" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController6volumeSf">volume</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Volume of announcements.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">volume</span><span class="p">:</span> <span class="kt">Float</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L29-L36">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController13globalVoiceIdGSqOSC15AWSPollyVoiceId_"></a>
+                    <a name="//apple_ref/swift/Property/globalVoiceId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController13globalVoiceIdGSqOSC15AWSPollyVoiceId_">globalVoiceId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Forces Polly voice to always be of specified type. If not set, a localized voice will be used.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">globalVoiceId</span><span class="p">:</span> <span class="kt">AWSPollyVoiceId</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L42">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController25instructionVoiceSpeedRateSd"></a>
+                    <a name="//apple_ref/swift/Property/instructionVoiceSpeedRate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController25instructionVoiceSpeedRateSd">instructionVoiceSpeedRate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>SSML option which controls at which speed Polly instructions are read.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">instructionVoiceSpeedRate</span> <span class="o">=</span> <span class="mf">1.08</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L48">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController22instructionVoiceVolumeSS"></a>
+                    <a name="//apple_ref/swift/Property/instructionVoiceVolume" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController22instructionVoiceVolumeSS">instructionVoiceVolume</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>SSML option that specifies the voice loudness.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">instructionVoiceVolume</span> <span class="o">=</span> <span class="s">"x-loud"</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L54">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController10regionTypeOSC13AWSRegionType"></a>
+                    <a name="//apple_ref/swift/Property/regionType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController10regionTypeOSC13AWSRegionType">regionType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><code>regionType</code> specifies what AWS region to use for Polly.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">regionType</span><span class="p">:</span> <span class="kt">AWSRegionType</span> <span class="o">=</span> <span class="o">.</span><span class="kt">USEast1</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L60">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController26bufferBetweenAnnouncementsSd"></a>
+                    <a name="//apple_ref/swift/Property/bufferBetweenAnnouncements" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController26bufferBetweenAnnouncementsSd">bufferBetweenAnnouncements</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Buffer time between announcements. After an announcement is given any announcement given within this <code>TimeInterval</code> will be suppressed.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">bufferBetweenAnnouncements</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">3</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L66">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController14identityPoolIdGSqSS_"></a>
+                    <a name="//apple_ref/swift/Property/identityPoolId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController14identityPoolIdGSqSS_">identityPoolId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><code>identityPoolId</code> is a required value for using AWS Polly voice instead of iOS&rsquo;s built in AVSpeechSynthesizer.
+You can get a token here: <a href="http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html">http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">identityPoolId</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L73-L81">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC16MapboxNavigation20RouteVoiceControllercFT_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC16MapboxNavigation20RouteVoiceControllercFT_S0_">init()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L83-L88">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC16MapboxNavigation20RouteVoiceController20suspendNotificationsFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/suspendNotifications()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC16MapboxNavigation20RouteVoiceController20suspendNotificationsFT_T_">suspendNotifications()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L104-L108">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC16MapboxNavigation20RouteVoiceController9stopVoiceFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/stopVoice()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC16MapboxNavigation20RouteVoiceController9stopVoiceFT_T_">stopVoice()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L110-L112">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC16MapboxNavigation20RouteVoiceController17speechSynthesizerFTCSo19AVSpeechSynthesizer9didFinishCSo17AVSpeechUtterance_T_"></a>
+                    <a name="//apple_ref/swift/Method/speechSynthesizer(_:didFinish:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC16MapboxNavigation20RouteVoiceController17speechSynthesizerFTCSo19AVSpeechSynthesizer9didFinishCSo17AVSpeechUtterance_T_">speechSynthesizer(_:didFinish:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L126-L132">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC16MapboxNavigation20RouteVoiceController12observeValueFT10forKeyPathGSqSS_2ofGSqP__6changeGSqGVs10DictionaryVSC19NSKeyValueChangeKeyP___7contextGSqSv__T_"></a>
+                    <a name="//apple_ref/swift/Method/observeValue(forKeyPath:of:change:context:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC16MapboxNavigation20RouteVoiceController12observeValueFT10forKeyPathGSqSS_2ofGSqP__6changeGSqGVs10DictionaryVSC19NSKeyValueChangeKeyP___7contextGSqSv__T_">observeValue(forKeyPath:of:change:context:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L347-L361">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>© 2014–2017 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

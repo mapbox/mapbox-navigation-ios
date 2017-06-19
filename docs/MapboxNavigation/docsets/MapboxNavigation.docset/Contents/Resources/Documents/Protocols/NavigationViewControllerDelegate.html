@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>NavigationViewControllerDelegate Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Protocol/NavigationViewControllerDelegate" class="dashAnchor"></a>
+    <a title="NavigationViewControllerDelegate Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">MapboxNavigation Docs</a> (46% documented)</p>
+        <p class="header-right"><a href="https://github.com/mapbox/mapbox-navigation-ios"><img src="../img/gh.png"/>View on GitHub</a></p>
+        <p class="header-right"><a href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fnavigation%2Dsdk%2Fios%2Fv0%2E4%2E0%2Fdocsets%2FMapboxNavigation%2Exml"><img src="../img/dash.png"/>Install in Dash</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">MapboxNavigation Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        NavigationViewControllerDelegate Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation6Button">Button</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation17CellSubtitleLabel">CellSubtitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation14CellTitleLabel">CellTitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DashedLineView.html">DashedLineView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DistanceFormatter.html">DistanceFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation17HighlightedButton">HighlightedButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation8LineView">LineView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NavigationMapView.html">NavigationMapView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NavigationViewController.html">NavigationViewController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation11ProgressBar">ProgressBar</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteStepFormatter.html">RouteStepFormatter</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/RouteVoiceController.html">RouteVoiceController</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation13SeparatorView">SeparatorView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation14StylableButton">StylableButton</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation13StylableLabel">StylableLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Style.html">Style</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/StyleKitArrows.html">StyleKitArrows</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation13SubtitleLabel">SubtitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation10TitleLabel">TitleLabel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TurnArrowView.html">TurnArrowView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes.html#/s:C16MapboxNavigation12WayNameLabel">WayNameLabel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/MGLMapView.html">MGLMapView</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/RouteTableViewController.html">RouteTableViewController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F16MapboxNavigation4wrapFTSd3minSd3maxSd_Sd">wrap(_:min:max:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/NavigationMapViewDelegate.html">NavigationMapViewDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>NavigationViewControllerDelegate</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">NavigationViewControllerDelegate</span></code></pre>
+
+                </div>
+              </div>
+            <p>The <code>NavigationViewControllerDelegate</code> provides methods for configuring the map view shown by a <code><a href="../Classes/NavigationViewController.html">NavigationViewController</a></code> and responding to the cancellation of a navigation session.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate43navigationViewControllerDidCancelNavigationFCS_24NavigationViewControllerT_"></a>
+                    <a name="//apple_ref/swift/Method/navigationViewControllerDidCancelNavigation(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate43navigationViewControllerDidCancelNavigationFCS_24NavigationViewControllerT_">navigationViewControllerDidCancelNavigation(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationViewControllerDidCancelNavigation</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span> <span class="p">:</span> <span class="kt"><a href="../Classes/NavigationViewController.html">NavigationViewController</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L18">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController11didArriveAtPSo13MGLAnnotation__T_"></a>
+                    <a name="//apple_ref/swift/Method/navigationViewController(_:didArriveAt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController11didArriveAtPSo13MGLAnnotation__T_">navigationViewController(_:didArriveAt:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when the user arrives at the destination.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span> <span class="p">:</span> <span class="kt"><a href="../Classes/NavigationViewController.html">NavigationViewController</a></span><span class="p">,</span> <span class="n">didArriveAt</span> <span class="nv">destination</span><span class="p">:</span> <span class="kt">MGLAnnotation</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L23">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController17shouldRerouteFromCSo10CLLocation_Sb"></a>
+                    <a name="//apple_ref/swift/Method/navigationViewController(_:shouldRerouteFrom:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController17shouldRerouteFromCSo10CLLocation_Sb">navigationViewController(_:shouldRerouteFrom:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns whether the navigation view controller should be allowed to calculate a new route.</p>
+
+<p>If implemented, this method is called as soon as the navigation view controller detects that the user is off the predetermined route. Implement this method to conditionally prevent rerouting. If this method returns <code>true</code>, <code><a href="../Protocols/NavigationViewControllerDelegate.html#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15willRerouteFromCSo10CLLocation_T_">navigationViewController(_:willRerouteFrom:)</a></code> will be called immediately afterwards.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationViewController.html">NavigationViewController</a></span><span class="p">,</span> <span class="n">shouldRerouteFrom</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>navigationViewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The navigation view controller that has detected the need to calculate a new route.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>location</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The user’s current location.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>True to allow the navigation view controller to calculate a new route; false to keep tracking the current route.</p>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L35">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15willRerouteFromCSo10CLLocation_T_"></a>
+                    <a name="//apple_ref/swift/Method/navigationViewController(_:willRerouteFrom:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15willRerouteFromCSo10CLLocation_T_">navigationViewController(_:willRerouteFrom:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called immediately before the navigation view controller calculates a new route.</p>
+
+<p>This method is called after <code><a href="../Protocols/NavigationViewControllerDelegate.html#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController17shouldRerouteFromCSo10CLLocation_Sb">navigationViewController(_:shouldRerouteFrom:)</a></code> is called, simultaneously with the <code>RouteControllerWillReroute</code> notification being posted, and before <code><a href="../Protocols/NavigationViewControllerDelegate.html#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15didRerouteAlongC16MapboxDirections5Route_T_">navigationViewController(_:didRerouteAlong:)</a></code> is called.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationViewController.html">NavigationViewController</a></span><span class="p">,</span> <span class="n">willRerouteFrom</span> <span class="nv">location</span><span class="p">:</span> <span class="kt">CLLocation</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>navigationViewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The navigation view controller that will calculate a new route.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>location</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The user’s current location.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L46">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15didRerouteAlongC16MapboxDirections5Route_T_"></a>
+                    <a name="//apple_ref/swift/Method/navigationViewController(_:didRerouteAlong:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15didRerouteAlongC16MapboxDirections5Route_T_">navigationViewController(_:didRerouteAlong:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called immediately after the navigation view controller receives a new route.</p>
+
+<p>This method is called after <code><a href="../Protocols/NavigationViewControllerDelegate.html#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15willRerouteFromCSo10CLLocation_T_">navigationViewController(_:willRerouteFrom:)</a></code> and simultaneously with the <code>RouteControllerDidReroute</code> notification being posted.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationViewController.html">NavigationViewController</a></span><span class="p">,</span> <span class="n">didRerouteAlong</span> <span class="nv">route</span><span class="p">:</span> <span class="kt">Route</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>navigationViewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The navigation view controller that has calculated a new route.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>route</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The new route.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L57">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController20didFailToRerouteWithPs5Error__T_"></a>
+                    <a name="//apple_ref/swift/Method/navigationViewController(_:didFailToRerouteWith:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController20didFailToRerouteWithPs5Error__T_">navigationViewController(_:didFailToRerouteWith:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when the navigation view controller fails to receive a new route.</p>
+
+<p>This method is called after <code><a href="../Protocols/NavigationViewControllerDelegate.html#/s:FP16MapboxNavigation32NavigationViewControllerDelegate24navigationViewControllerFTCS_24NavigationViewController15willRerouteFromCSo10CLLocation_T_">navigationViewController(_:willRerouteFrom:)</a></code> and simultaneously with the <code>RouteControllerDidFailToReroute</code> notification being posted.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationViewController.html">NavigationViewController</a></span><span class="p">,</span> <span class="n">didFailToRerouteWith</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>navigationViewController</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The navigation view controller that has calculated a new route.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An error raised during the process of obtaining a new route.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L68">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView29routeStyleLayerWithIdentifierSS6sourceCSo9MGLSource_GSqCSo13MGLStyleLayer_"></a>
+                    <a name="//apple_ref/swift/Method/navigationMapView(_:routeStyleLayerWithIdentifier:source:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView29routeStyleLayerWithIdentifierSS6sourceCSo9MGLSource_GSqCSo13MGLStyleLayer_">navigationMapView(_:routeStyleLayerWithIdentifier:source:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns an <code>MGLStyleLayer</code> that determines the appearance of the route line.</p>
+
+<p>If this method is unimplemented, the navigation map view draws the route line using an <code>MGLLineStyleLayer</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationMapView</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapView</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationMapView.html">NavigationMapView</a></span><span class="p">,</span> <span class="n">routeStyleLayerWithIdentifier</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">MGLSource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MGLStyleLayer</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L75">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView35routeCasingStyleLayerWithIdentifierSS6sourceCSo9MGLSource_GSqCSo13MGLStyleLayer_"></a>
+                    <a name="//apple_ref/swift/Method/navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView35routeCasingStyleLayerWithIdentifierSS6sourceCSo9MGLSource_GSqCSo13MGLStyleLayer_">navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns an <code>MGLStyleLayer</code> that determines the appearance of the route line’s casing.</p>
+
+<p>If this method is unimplemented, the navigation map view draws the route line’s casing using an <code>MGLLineStyleLayer</code> whose width is greater than that of the style layer returned by <code><a href="../Protocols/NavigationViewControllerDelegate.html#/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView29routeStyleLayerWithIdentifierSS6sourceCSo9MGLSource_GSqCSo13MGLStyleLayer_">navigationMapView(_:routeStyleLayerWithIdentifier:source:)</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationMapView</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapView</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationMapView.html">NavigationMapView</a></span><span class="p">,</span> <span class="n">routeCasingStyleLayerWithIdentifier</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">source</span><span class="p">:</span> <span class="kt">MGLSource</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MGLStyleLayer</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L82">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView15shapeDescribingC16MapboxDirections5Route_GSqCSo8MGLShape_"></a>
+                    <a name="//apple_ref/swift/Method/navigationMapView(_:shapeDescribing:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView15shapeDescribingC16MapboxDirections5Route_GSqCSo8MGLShape_">navigationMapView(_:shapeDescribing:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns an <code>MGLShape</code> that represents the path of the route line.</p>
+
+<p>If this method is unimplemented, the navigation map view represents the route line using an <code>MGLPolylineFeature</code> based on <code>route</code>’s <code>coordinates</code> property.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationMapView</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapView</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationMapView.html">NavigationMapView</a></span><span class="p">,</span> <span class="n">shapeDescribing</span> <span class="nv">route</span><span class="p">:</span> <span class="kt">Route</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MGLShape</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L89">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView25simplifiedShapeDescribingC16MapboxDirections5Route_GSqCSo8MGLShape_"></a>
+                    <a name="//apple_ref/swift/Method/navigationMapView(_:simplifiedShapeDescribing:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView25simplifiedShapeDescribingC16MapboxDirections5Route_GSqCSo8MGLShape_">navigationMapView(_:simplifiedShapeDescribing:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns an <code>MGLShape</code> that represents the path of the route line’s casing.</p>
+
+<p>If this method is unimplemented, the navigation map view represents the route line’s casing using an <code>MGLPolylineFeature</code> identical to the one returned by <code><a href="../Protocols/NavigationViewControllerDelegate.html#/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCS_17NavigationMapView15shapeDescribingC16MapboxDirections5Route_GSqCSo8MGLShape_">navigationMapView(_:shapeDescribing:)</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationMapView</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapView</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationMapView.html">NavigationMapView</a></span><span class="p">,</span> <span class="n">simplifiedShapeDescribing</span> <span class="nv">route</span><span class="p">:</span> <span class="kt">Route</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MGLShape</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L96">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCSo10MGLMapView8imageForPSo13MGLAnnotation__GSqCSo18MGLAnnotationImage_"></a>
+                    <a name="//apple_ref/swift/Method/navigationMapView(_:imageFor:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP16MapboxNavigation32NavigationViewControllerDelegate17navigationMapViewFTCSo10MGLMapView8imageForPSo13MGLAnnotation__GSqCSo18MGLAnnotationImage_">navigationMapView(_:imageFor:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Return an <code>MGLAnnotationImage</code> that represents the destination marker.</p>
+
+<p>If this method is unimplemented, the navigation map view will represent the destination annotation with the default marker.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">@objc</span> <span class="kd">optional</span> <span class="kd">func</span> <span class="nf">navigationMapView</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapView</span><span class="p">:</span> <span class="kt">MGLMapView</span><span class="p">,</span> <span class="n">imageFor</span> <span class="nv">annotation</span><span class="p">:</span> <span class="kt">MGLAnnotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MGLAnnotationImage</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/mapbox/navigation-sdk/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L103">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>© 2014–2017 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
