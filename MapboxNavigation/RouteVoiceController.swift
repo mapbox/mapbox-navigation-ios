@@ -56,7 +56,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
-    public var playRerouteSound = false
+    public var playRerouteSound = true
 
     
     /**
@@ -334,8 +334,10 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
                 return nil
             }
             
+            
             do {
-                strongSelf.audioPlayer = try AVAudioPlayer(contentsOf: url as URL)
+                let soundData = try Data(contentsOf: url as URL)
+                strongSelf.audioPlayer = try AVAudioPlayer(data: soundData)
                 if let audioPlayer = strongSelf.audioPlayer {
                     audioPlayer.volume = strongSelf.volume
                     audioPlayer.play()
