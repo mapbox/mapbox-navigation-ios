@@ -277,6 +277,30 @@
                                             <constraint firstItem="c3B-6D-Ukh" firstAttribute="top" secondItem="dhM-Ng-gx5" secondAttribute="top" id="r0L-mL-w9Y"/>
                                         </constraints>
                                     </stackView>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c9E-8M-S3k" userLabel="Reroute View">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="115"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bUX-dR-1V6" customClass="MBTitleLabel">
+                                                <rect key="frame" x="40" y="36" width="153" height="43"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="JY3-Q1-T0F">
+                                                <rect key="frame" x="266" y="39" width="37" height="37"/>
+                                                <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            </activityIndicatorView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="bUX-dR-1V6" secondAttribute="bottom" constant="36" id="Rcv-5L-mWP"/>
+                                            <constraint firstItem="bUX-dR-1V6" firstAttribute="top" secondItem="c9E-8M-S3k" secondAttribute="top" constant="36" id="Rd0-YX-uil"/>
+                                            <constraint firstItem="JY3-Q1-T0F" firstAttribute="top" secondItem="c9E-8M-S3k" secondAttribute="top" constant="42" id="cCQ-KH-1ub"/>
+                                            <constraint firstItem="bUX-dR-1V6" firstAttribute="leading" secondItem="c9E-8M-S3k" secondAttribute="leading" constant="40" id="g36-qv-f10"/>
+                                            <constraint firstAttribute="bottom" secondItem="JY3-Q1-T0F" secondAttribute="bottom" constant="36" id="tTL-IC-7Sm"/>
+                                            <constraint firstAttribute="trailing" secondItem="JY3-Q1-T0F" secondAttribute="trailing" constant="40" id="weD-R6-rz7"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.99030783119999999" green="0.99866314420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -284,13 +308,17 @@
                                     <constraint firstAttribute="trailing" secondItem="dhM-Ng-gx5" secondAttribute="trailing" constant="8" id="89n-ce-bNw"/>
                                     <constraint firstAttribute="bottom" secondItem="bvZ-78-dml" secondAttribute="bottom" id="Bc5-Ji-bW4"/>
                                     <constraint firstItem="dhM-Ng-gx5" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" constant="22" id="FaC-Sw-ePv"/>
+                                    <constraint firstItem="c9E-8M-S3k" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" id="GTN-ji-BrT"/>
                                     <constraint firstItem="dhM-Ng-gx5" firstAttribute="leading" secondItem="dvV-hd-Sbg" secondAttribute="trailing" constant="8" id="Gou-LA-42q"/>
                                     <constraint firstItem="bvZ-78-dml" firstAttribute="top" secondItem="dvV-hd-Sbg" secondAttribute="bottom" constant="32" id="Gz2-XC-3ys"/>
                                     <constraint firstAttribute="height" constant="115" id="IsE-zQ-C8r"/>
                                     <constraint firstAttribute="trailing" secondItem="bvZ-78-dml" secondAttribute="trailing" id="YYi-dU-nsG"/>
                                     <constraint firstItem="bvZ-78-dml" firstAttribute="top" relation="greaterThanOrEqual" secondItem="dhM-Ng-gx5" secondAttribute="bottom" constant="8" id="Yib-o8-7Hf"/>
                                     <constraint firstItem="bvZ-78-dml" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" id="Znd-PG-ZQU"/>
+                                    <constraint firstItem="c9E-8M-S3k" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" id="bkI-QJ-QrG"/>
+                                    <constraint firstAttribute="bottom" secondItem="c9E-8M-S3k" secondAttribute="bottom" id="nbM-vd-u9C"/>
                                     <constraint firstItem="dvV-hd-Sbg" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="8" id="nf4-6t-r96"/>
+                                    <constraint firstAttribute="trailing" secondItem="c9E-8M-S3k" secondAttribute="trailing" id="oMw-Qa-CdI"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="heightConstraint" destination="IsE-zQ-C8r" id="1HK-YB-fcP"/>
@@ -474,6 +502,7 @@
                     <size key="freeformSize" width="343" height="185"/>
                     <connections>
                         <outlet property="distanceLabel" destination="u1L-N9-mMS" id="trZ-xg-0er"/>
+                        <outlet property="rerouteView" destination="c9E-8M-S3k" id="Q9I-4d-Fnd"/>
                         <outlet property="shieldImageView" destination="gkj-hG-NxS" id="Yff-xC-gBo"/>
                         <outlet property="stackViewContainer" destination="7Fv-nY-OMF" id="73h-Ih-lpJ"/>
                         <outlet property="streetLabel" destination="BR8-8N-Rhk" id="ypb-Nm-TKX"/>

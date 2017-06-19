@@ -20,6 +20,7 @@ class RouteManeuverViewController: UIViewController {
     @IBOutlet weak var turnArrowView: TurnArrowView!
     @IBOutlet weak var streetLabel: StreetLabel!
     @IBOutlet var laneViews: [LaneArrowView]!
+    @IBOutlet weak var rerouteView: UIView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
@@ -83,6 +84,20 @@ class RouteManeuverViewController: UIViewController {
         super.viewDidLoad()
         turnArrowView.backgroundColor = .clear
         streetLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
+        resumeNotifications()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        suspendNotifications()
+    }
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
+    }
+    
+    public func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
     }
     
     public func notifyDidChange(routeProgress: RouteProgress, secondsRemaining: TimeInterval) {
@@ -110,6 +125,11 @@ class RouteManeuverViewController: UIViewController {
         } else if let step = step {
             streetLabel.unabridgedText = routeStepFormatter.string(for: step)
         }
+    }
+    
+    func willReroute(notification: NSNotification) {
+        rerouteView.isHidden = false
+        stackViewContainer.isHidden = true
     }
     
     func showLaneView(step: RouteStep) {
