@@ -261,12 +261,6 @@ extension RouteController: CLLocationManagerDelegate {
             
             routeProgress.currentLegProgress.alertUserLevel = newlyCalculatedAlertLevel
             
-            if routeProgress.currentLegProgress.alertUserLevel == .arrive,
-                routeProgress.remainingWaypoints.count > 1 {
-                routeProgress.legIndex += 1
-                routeProgress.currentLegProgress.alertUserLevel = .depart
-            }
-            
             // Use fresh user location distance to end of step
             // since the step could of changed
             let userDistance = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
@@ -275,6 +269,12 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
                 RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance
                 ])
+            
+            if routeProgress.currentLegProgress.alertUserLevel == .arrive,
+                routeProgress.remainingWaypoints.count > 1 {
+                routeProgress.legIndex += 1
+                routeProgress.currentLegProgress.alertUserLevel = .depart
+            }
         }
     }
     

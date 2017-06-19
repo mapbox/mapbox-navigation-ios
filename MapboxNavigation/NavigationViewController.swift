@@ -20,7 +20,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user arrives at the destination.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: RouteStep)
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: Waypoint)
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -319,11 +319,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.notifyDidChange(routeProgress: routeProgress)
-
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive,
-            routeProgress.remainingWaypoints.count == 0 {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.currentStep)
-        }
     }
     
     func alertLevelDidChange(notification: NSNotification) {
@@ -332,6 +327,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
         tableViewController?.notifyAlertLevelDidChange()
+        
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.route.routeOptions.waypoints[routeProgress.legIndex + 1])
+        }
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
             giveLocalNotification(upComingStep)
