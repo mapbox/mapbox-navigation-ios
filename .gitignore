@@ -12,3 +12,5 @@ Pods/
 
 Carthage/Build
 Carthage/Checkouts
+/documentation
+/build

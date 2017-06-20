@@ -4,7 +4,7 @@
 - Pick `Navigation` from the dropdown and set bundle to `com.mapbox.MapboxNavigation` (`org.cocoapods.MapboxNavigation` if you are using CocoaPods)
 - Set up a segue to the storyboard reference like you would to any other UIViewController.
 
-<img src="images/setup_ib.png" width=340>
+<img src="img/setup_ib.png" width=340>
 
 You also need to pass a route and optionally a directions instance to the `NavigationViewController`. To do that, override your UIViewController's `prepare(for:sender:)`:
 
