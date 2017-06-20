@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Drop-in UI  Reference</title>
+    <title>Turn-by-turn UI  Reference</title>
     <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="css/highlight.css" />
     <meta charset="utf-8">
@@ -10,19 +10,24 @@
     <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
 
     <style type="text/css">
-      .nav-group-name[data-name="Drop-in UI"] > .small-heading,
-      .nav-group-task[data-name="Drop-in UI"] {
+      .nav-group-name[data-name="Turn-by-turn UI"] > .small-heading,
+      .nav-group-task[data-name="Turn-by-turn UI"] {
         background-color: #f5f8fc;
         font-family: "Open Sans Bold";
         border-left: 3px solid #3a68d8;
         padding-left: 5px
       }
     </style>
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+        analytics.load("fl0c8p240n");
+      }}();
+    </script>
   </head>
   <body>
 
 
-    <a title="Drop-in UI  Reference"></a>
+    <a title="Turn-by-turn UI  Reference"></a>
 
     <header class="header-container">
       <div class="limiter">
@@ -32,7 +37,7 @@
             <img style="height: 25px;"  class="header-icon" src="img/mapbox.svg" alt="Mapbox Navigation SDK for iOS Docs"/>
             <span class='header-tag'>Navigation SDK for iOS  Reference</span>
           </a>
-           (52% documented)
+           (53% documented)
         </p>
     
           <p class="header-col header-col--secondary">
@@ -45,7 +50,7 @@
           </p>
     
           <p class="header-col header-col--secondary">
-            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fnavigation%2Dsdk%2Fdocsets%2FMapbox%2Exml">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fmapbox%2Egithub%2Eio%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapbox%2Exml">
               <img style="margin-bottom: 1px;" class="header-icon" src="img/dash.png"/>
               Install in Dash
             </a>
@@ -58,7 +63,7 @@
       <div class="limiter">
         <a class="breadcrumb" href="index.html">Mapbox Navigation SDK for iOS Reference</a>
         <img class="carat" src="img/carat.png" />
-        Drop-in UI  Reference
+        Turn-by-turn UI  Reference
       </div>
     </div>
 
@@ -73,8 +78,19 @@
               </li>
             </ul>
           </li>
-          <li class="nav-group-name" data-name="Core Navigation">
-            <a class="small-heading" href="Core Navigation.html">Core Navigation<span class="anchor-icon" /></a>
+          <li class="nav-group-name" data-name="Turn-by-turn UI">
+            <a class="small-heading" href="Turn-by-turn UI.html">Turn-by-turn UI<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
+                <a title="NavigationViewController" class="nav-group-task-link" href="Classes/NavigationViewController.html">NavigationViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
+                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Core Navigation Logic">
+            <a class="small-heading" href="Core Navigation Logic.html">Core Navigation Logic<span class="anchor-icon" /></a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task" data-name="RouteController" data-url="Classes/RouteController.html">
                 <a title="RouteController" class="nav-group-task-link" href="Classes/RouteController.html">RouteController</a>
@@ -90,26 +106,6 @@
               </li>
               <li class="nav-group-task" data-name="RouteStepProgress" data-url="Classes/RouteStepProgress.html">
                 <a title="RouteStepProgress" class="nav-group-task-link" href="Classes/RouteStepProgress.html">RouteStepProgress</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name" data-name="Drop-in UI">
-            <a class="small-heading" href="Drop-in UI.html">Drop-in UI<span class="anchor-icon" /></a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
-                <a title="NavigationViewController" class="nav-group-task-link" href="Classes/NavigationViewController.html">NavigationViewController</a>
-              </li>
-              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
-                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
-              </li>
-              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
-                <a title="RouteVoiceController" class="nav-group-task-link" href="Classes/RouteVoiceController.html">RouteVoiceController</a>
-              </li>
-              <li class="nav-group-task" data-name="RouteTableViewController" data-url="Extensions/RouteTableViewController.html">
-                <a title="RouteTableViewController" class="nav-group-task-link" href="Extensions/RouteTableViewController.html">RouteTableViewController</a>
-              </li>
-              <li class="nav-group-task" data-name="NavigationPulleyViewController" data-url="Drop-in UI.html#/s:C16MapboxNavigation30NavigationPulleyViewController">
-                <a title="NavigationPulleyViewController" class="nav-group-task-link" href="Drop-in UI.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
               </li>
             </ul>
           </li>
@@ -194,6 +190,15 @@
           <li class="nav-group-name" data-name="UI Components">
             <a class="small-heading" href="UI Components.html">UI Components<span class="anchor-icon" /></a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
+                <a title="RouteVoiceController" class="nav-group-task-link" href="Classes/RouteVoiceController.html">RouteVoiceController</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteTableViewController" data-url="Extensions/RouteTableViewController.html">
+                <a title="RouteTableViewController" class="nav-group-task-link" href="Extensions/RouteTableViewController.html">RouteTableViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationPulleyViewController" data-url="UI Components.html#/s:C16MapboxNavigation30NavigationPulleyViewController">
+                <a title="NavigationPulleyViewController" class="nav-group-task-link" href="UI Components.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
+              </li>
               <li class="nav-group-task" data-name="Button" data-url="UI Components.html#/s:C16MapboxNavigation6Button">
                 <a title="Button" class="nav-group-task-link" href="UI Components.html#/s:C16MapboxNavigation6Button">Button</a>
               </li>
@@ -313,7 +318,7 @@
 
         <section class="section">
           <div class="section-content">
-            <a href="#/Drop-in UI"><h1 id="Drop-in UI">Drop-in UI<span class="anchor-icon" /></h1></a>
+            <a href="#/Turn-by-turn UI"><h1 id="Turn-by-turn UI">Turn-by-turn UI<span class="anchor-icon" /></h1></a>
             
           </div>
         </section>
@@ -344,12 +349,12 @@ for the given route and support for basic styling.</p>
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">NavigationViewController</span><span class="p">:</span> <span class="kt"><a href="Drop-in UI.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a></span><span class="p">,</span> <span class="kt">RouteMapViewControllerDelegate</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">NavigationViewController</span><span class="p">:</span> <span class="kt"><a href="UI Components.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a></span><span class="p">,</span> <span class="kt">RouteMapViewControllerDelegate</span></code></pre>
 
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L113-L397">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L113-L398">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -382,85 +387,6 @@ for the given route and support for basic styling.</p>
                       </div>
                       <div class="show-on-github">
                         <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L14-L104">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:C16MapboxNavigation30NavigationPulleyViewController"></a>
-                    <a name="//apple_ref/swift/Class/NavigationPulleyViewController" class="dashAnchor"></a>
-                    <a class="token" href="#/s:C16MapboxNavigation30NavigationPulleyViewController"><span class="token-name">NavigationPulleyViewController</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/NavigationViewController.swift#L">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:C16MapboxNavigation20RouteVoiceController"></a>
-                    <a name="//apple_ref/swift/Class/RouteVoiceController" class="dashAnchor"></a>
-                    <a class="token" href="#/s:C16MapboxNavigation20RouteVoiceController"><span class="token-name">RouteVoiceController</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Classes/RouteVoiceController.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L8-L378">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:C16MapboxNavigation24RouteTableViewController"></a>
-                    <a name="//apple_ref/swift/Extension/RouteTableViewController" class="dashAnchor"></a>
-                    <a class="token" href="#/s:C16MapboxNavigation24RouteTableViewController"><span class="token-name">RouteTableViewController</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                        <a href="Extensions/RouteTableViewController.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteTableViewController.swift#L">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
                           View Source on GitHub
                         </a>

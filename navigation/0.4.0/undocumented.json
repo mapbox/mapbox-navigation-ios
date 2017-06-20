@@ -380,42 +380,42 @@
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationViewController.swift",
-      "line": 249,
+      "line": 250,
       "symbol": "NavigationViewController.prepare(for:sender:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationViewController.swift",
-      "line": 269,
+      "line": 270,
       "symbol": "NavigationViewController.viewDidLoad()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationViewController.swift",
-      "line": 276,
+      "line": 277,
       "symbol": "NavigationViewController.viewDidDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationViewController.swift",
-      "line": 281,
+      "line": 282,
       "symbol": "NavigationViewController.viewWillAppear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationViewController.swift",
-      "line": 295,
+      "line": 296,
       "symbol": "NavigationViewController.viewWillDisappear(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationViewController.swift",
-      "line": 433,
+      "line": 434,
       "symbol": "NavigationViewController.drawerPositionDidChange(drawer:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -471,36 +471,22 @@
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteVoiceController.swift",
-      "line": 83,
+      "line": 88,
       "symbol": "RouteVoiceController.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteVoiceController.swift",
-      "line": 104,
+      "line": 105,
       "symbol": "RouteVoiceController.suspendNotifications()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteVoiceController.swift",
-      "line": 110,
-      "symbol": "RouteVoiceController.stopVoice()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteVoiceController.swift",
-      "line": 126,
+      "line": 129,
       "symbol": "RouteVoiceController.speechSynthesizer(_:didFinish:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteVoiceController.swift",
-      "line": 347,
-      "symbol": "RouteVoiceController.observeValue(forKeyPath:of:change:context:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },

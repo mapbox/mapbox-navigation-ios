@@ -18,6 +18,11 @@
         padding-left: 5px
       }
     </style>
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+        analytics.load("fl0c8p240n");
+      }}();
+    </script>
   </head>
   <body>
 
@@ -32,7 +37,7 @@
             <img style="height: 25px;"  class="header-icon" src="img/mapbox.svg" alt="Mapbox Navigation SDK for iOS Docs"/>
             <span class='header-tag'>Navigation SDK for iOS  Reference</span>
           </a>
-           (52% documented)
+           (53% documented)
         </p>
     
           <p class="header-col header-col--secondary">
@@ -45,7 +50,7 @@
           </p>
     
           <p class="header-col header-col--secondary">
-            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fnavigation%2Dsdk%2Fdocsets%2FMapbox%2Exml">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fmapbox%2Egithub%2Eio%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapbox%2Exml">
               <img style="margin-bottom: 1px;" class="header-icon" src="img/dash.png"/>
               Install in Dash
             </a>
@@ -73,8 +78,19 @@
               </li>
             </ul>
           </li>
-          <li class="nav-group-name" data-name="Core Navigation">
-            <a class="small-heading" href="Core Navigation.html">Core Navigation<span class="anchor-icon" /></a>
+          <li class="nav-group-name" data-name="Turn-by-turn UI">
+            <a class="small-heading" href="Turn-by-turn UI.html">Turn-by-turn UI<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
+                <a title="NavigationViewController" class="nav-group-task-link" href="Classes/NavigationViewController.html">NavigationViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
+                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Core Navigation Logic">
+            <a class="small-heading" href="Core Navigation Logic.html">Core Navigation Logic<span class="anchor-icon" /></a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task" data-name="RouteController" data-url="Classes/RouteController.html">
                 <a title="RouteController" class="nav-group-task-link" href="Classes/RouteController.html">RouteController</a>
@@ -90,26 +106,6 @@
               </li>
               <li class="nav-group-task" data-name="RouteStepProgress" data-url="Classes/RouteStepProgress.html">
                 <a title="RouteStepProgress" class="nav-group-task-link" href="Classes/RouteStepProgress.html">RouteStepProgress</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name" data-name="Drop-in UI">
-            <a class="small-heading" href="Drop-in UI.html">Drop-in UI<span class="anchor-icon" /></a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
-                <a title="NavigationViewController" class="nav-group-task-link" href="Classes/NavigationViewController.html">NavigationViewController</a>
-              </li>
-              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
-                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
-              </li>
-              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
-                <a title="RouteVoiceController" class="nav-group-task-link" href="Classes/RouteVoiceController.html">RouteVoiceController</a>
-              </li>
-              <li class="nav-group-task" data-name="RouteTableViewController" data-url="Extensions/RouteTableViewController.html">
-                <a title="RouteTableViewController" class="nav-group-task-link" href="Extensions/RouteTableViewController.html">RouteTableViewController</a>
-              </li>
-              <li class="nav-group-task" data-name="NavigationPulleyViewController" data-url="Drop-in UI.html#/s:C16MapboxNavigation30NavigationPulleyViewController">
-                <a title="NavigationPulleyViewController" class="nav-group-task-link" href="Drop-in UI.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
               </li>
             </ul>
           </li>
@@ -194,6 +190,15 @@
           <li class="nav-group-name" data-name="UI Components">
             <a class="small-heading" href="UI Components.html">UI Components<span class="anchor-icon" /></a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
+                <a title="RouteVoiceController" class="nav-group-task-link" href="Classes/RouteVoiceController.html">RouteVoiceController</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteTableViewController" data-url="Extensions/RouteTableViewController.html">
+                <a title="RouteTableViewController" class="nav-group-task-link" href="Extensions/RouteTableViewController.html">RouteTableViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationPulleyViewController" data-url="UI Components.html#/s:C16MapboxNavigation30NavigationPulleyViewController">
+                <a title="NavigationPulleyViewController" class="nav-group-task-link" href="UI Components.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
+              </li>
               <li class="nav-group-task" data-name="Button" data-url="UI Components.html#/s:C16MapboxNavigation6Button">
                 <a title="Button" class="nav-group-task-link" href="UI Components.html#/s:C16MapboxNavigation6Button">Button</a>
               </li>
@@ -318,7 +323,7 @@
 
 <p><a href="https://www.bitrise.io/app/6fc45a7e2817b859"><img src="https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q&amp;branch=master" alt="Build Status"></a>
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a>
-<a href="http://cocoadocs.org/docsets/MapboxNavigation/"><img src="https://img.shields.io/cocoapods/v/MapboxNavigation.svg" alt="CocoaPods"></a></p>
+<a href="https://cocoapods.org/pods/MapboxNavigation/"><img src="https://img.shields.io/cocoapods/v/MapboxNavigation.svg" alt="CocoaPods"></a></p>
 
 <p><img src="https://github.com/mapbox/mapbox-navigation-ios/raw/master/docs/img/navigation.png" alt="Mapbox Navigation SDK"></p>
 
@@ -339,17 +344,7 @@
 </ul>
 <h2 id='installation' class='heading'>Installation</h2>
 
-<p>To install Mapbox Navigation using <a href="https://github.com/Carthage/Carthage/">Carthage</a> v0.19.0 or above:</p>
-
-<ol>
-<li><p>Specify the following dependency in your Cartfile:</p>
-<pre class="highlight plaintext"><code>github "mapbox/mapbox-navigation-ios" ~&gt; 0.4.0
-</code></pre></li>
-<li><p>Run <code>carthage update --platform iOS</code> to build just the iOS dependencies.</p></li>
-<li><p>Follow the rest of <a href="https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos">Carthage’s iOS integration instructions</a>. Your application target’s Embedded Frameworks should include MapboxNavigation.framework and MapboxCoreNavigation.framework.</p></li>
-</ol>
-
-<p>Alternatively, to install Mapbox Navigation using <a href="https://cocoapods.org/">CocoaPods</a>:</p>
+<p>To install Mapbox Navigation using <a href="https://cocoapods.org/">CocoaPods</a>:</p>
 
 <ol>
 <li>Specify the following dependency in your Podfile:
@@ -360,6 +355,16 @@ pod &#39;MapboxNavigation&#39;, &#39;~&gt; 0.4.0&#39;
 </ol>
 
 <p>Note, you may need to run <code>pod repo update</code> before <code>pod install</code> if your Cocoapods sources haven&rsquo;t been updated in a while.</p>
+
+<p>Alternatively, to install Mapbox Navigation using <a href="https://github.com/Carthage/Carthage/">Carthage</a> v0.19.0 or above: </p>
+
+<ol>
+<li><p>Specify the following dependency in your Cartfile:</p>
+<pre class="highlight plaintext"><code>github "mapbox/mapbox-navigation-ios" ~&gt; 0.4.0
+</code></pre></li>
+<li><p>Run <code>carthage update --platform iOS</code> to build just the iOS dependencies.</p></li>
+<li><p>Follow the rest of <a href="https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos">Carthage’s iOS integration instructions</a>. Your application target’s Embedded Frameworks should include MapboxNavigation.framework and MapboxCoreNavigation.framework.</p></li>
+</ol>
 <h3 id='running-the-example-project' class='heading'>Running the example project</h3>
 
 <ol>
@@ -371,6 +376,8 @@ pod &#39;MapboxNavigation&#39;, &#39;~&gt; 0.4.0&#39;
 <li>Build and run the <code>Example-Swift</code> or <code>Example-Objective-C</code> target</li>
 </ol>
 <h2 id='usage' class='heading'>Usage</h2>
+
+<p><strong><a href="https://mapbox.github.io/mapbox-navigation-ios/navigation/">API reference</a></strong></p>
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">MapboxDirections</span>
 <span class="kd">import</span> <span class="kt">MapboxNavigation</span>
 </code></pre>
@@ -385,6 +392,7 @@ pod &#39;MapboxNavigation&#39;, &#39;~&gt; 0.4.0&#39;
     <span class="k">guard</span> <span class="k">let</span> <span class="nv">route</span> <span class="o">=</span> <span class="n">routes</span><span class="p">?</span><span class="o">.</span><span class="n">first</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
 
     <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="kt">NavigationViewController</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">route</span><span class="p">)</span>
+    <span class="n">viewController</span><span class="o">.</span><span class="n">simulatesLocationUpdates</span> <span class="o">=</span> <span class="kc">true</span>
     <span class="k">self</span><span class="o">.</span><span class="nf">present</span><span class="p">(</span><span class="n">viewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
 <span class="p">}</span>
 </code></pre>
@@ -402,9 +410,6 @@ pod &#39;MapboxNavigation&#39;, &#39;~&gt; 0.4.0&#39;
 <li><code>Location updates</code></li>
 </ul></li>
 </ol>
-<h4 id='storyboards' class='heading'>Storyboards</h4>
-
-<p>See <a href="https://github.com/mapbox/mapbox-navigation-ios/blob/master/docs/Storyboards.md">this guide</a> for usage with storyboards.</p>
 <h4 id='styling' class='heading'>Styling</h4>
 
 <p>You can customize the appearance in order to blend in with the rest of your app.</p>
@@ -472,9 +477,20 @@ For instance only when being used on an iPad.</p>
 <h3 id='installing-mapbox-core-navigation' class='heading'>Installing Mapbox Core Navigation</h3>
 
 <p><a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a>
-<a href="http://cocoadocs.org/docsets/MapboxCoreNavigation/"><img src="https://img.shields.io/cocoapods/v/MapboxCoreNavigation.svg" alt="CocoaPods"></a></p>
+<a href="https://cocoapods.org/pods/MapboxCoreNavigation/"><img src="https://img.shields.io/cocoapods/v/MapboxCoreNavigation.svg" alt="CocoaPods"></a></p>
 
-<p>To install Mapbox Core Navigation using <a href="https://github.com/Carthage/Carthage/">Carthage</a> v0.19.0 or above:</p>
+<p>To install Mapbox Core Navigation using <a href="https://cocoapods.org/">CocoaPods</a>:</p>
+
+<ol>
+<li><p>Specify the following dependency in your Podfile:</p>
+<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'MapboxCoreNavigation'</span><span class="p">,</span> <span class="s1">'~&gt; 0.4.0'</span>
+</code></pre></li>
+<li><p>Run <code>pod install</code> and open the resulting Xcode workspace.</p></li>
+</ol>
+
+<p>Note, you may need to run <code>pod repo update</code> before <code>pod install</code> if your Cocoapods sources haven&rsquo;t been updated in a while.</p>
+
+<p>Alternatively, to install Mapbox Core Navigation using <a href="https://github.com/Carthage/Carthage/">Carthage</a> v0.19.0 or above:</p>
 
 <ol>
 <li><p>Specify the following dependency in your Cartfile:</p>
@@ -482,15 +498,6 @@ For instance only when being used on an iPad.</p>
 </code></pre></li>
 <li><p>Run <code>carthage update --platform iOS</code> to build just the iOS dependencies.</p></li>
 <li><p>Follow the rest of <a href="https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos">Carthage’s iOS integration instructions</a>. Your application target’s Embedded Frameworks should include MapboxCoreNavigation.framework.</p></li>
-</ol>
-
-<p>Alternatively, to install Mapbox Core Navigation using <a href="https://cocoapods.org/">CocoaPods</a>:</p>
-
-<ol>
-<li><p>Specify the following dependency in your Podfile:</p>
-<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'MapboxCoreNavigation'</span><span class="p">,</span> <span class="s1">'~&gt; 0.4.0'</span>
-</code></pre></li>
-<li><p>Run <code>pod install</code> and open the resulting Xcode workspace.</p></li>
 </ol>
 <h3 id='route-controller' class='heading'>Route Controller</h3>
 
@@ -551,7 +558,8 @@ For instance only when being used on an iPad.</p>
 <h3 id='rerouting' class='heading'>Rerouting</h3>
 
 <p>In the event of a reroute, it&rsquo;s necessary to update the current route with a new route. Once fetched, you can update the current route by:</p>
-<pre class="highlight swift"><code><span class="n">navigation</span><span class="o">.</span><span class="n">routeProgress</span> <span class="o">=</span> <span class="kt">RouteProgress</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="n">newRoute</span><span class="p">)</span>
+<pre class="highlight swift"><code><span class="k">var</span> <span class="nv">navigation</span><span class="p">:</span> <span class="kt">RouteController</span><span class="o">!</span>
+<span class="n">navigation</span><span class="o">.</span><span class="n">routeProgress</span> <span class="o">=</span> <span class="kt">RouteProgress</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="n">newRoute</span><span class="p">)</span>
 </code></pre>
 <h2 id='license' class='heading'>License</h2>
 

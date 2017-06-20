@@ -18,6 +18,11 @@
         padding-left: 5px
       }
     </style>
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+        analytics.load("fl0c8p240n");
+      }}();
+    </script>
   </head>
   <body>
 
@@ -33,7 +38,7 @@
             <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="Mapbox Navigation SDK for iOS Docs"/>
             <span class='header-tag'>Navigation SDK for iOS  Reference</span>
           </a>
-           (52% documented)
+           (53% documented)
         </p>
     
           <p class="header-col header-col--secondary">
@@ -46,7 +51,7 @@
           </p>
     
           <p class="header-col header-col--secondary">
-            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fnavigation%2Dsdk%2Fdocsets%2FMapbox%2Exml">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fmapbox%2Egithub%2Eio%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapbox%2Exml">
               <img style="margin-bottom: 1px;" class="header-icon" src="../img/dash.png"/>
               Install in Dash
             </a>
@@ -74,8 +79,19 @@
               </li>
             </ul>
           </li>
-          <li class="nav-group-name" data-name="Core Navigation">
-            <a class="small-heading" href="../Core Navigation.html">Core Navigation<span class="anchor-icon" /></a>
+          <li class="nav-group-name" data-name="Turn-by-turn UI">
+            <a class="small-heading" href="../Turn-by-turn UI.html">Turn-by-turn UI<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
+                <a title="NavigationViewController" class="nav-group-task-link" href="../Classes/NavigationViewController.html">NavigationViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
+                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="../Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Core Navigation Logic">
+            <a class="small-heading" href="../Core Navigation Logic.html">Core Navigation Logic<span class="anchor-icon" /></a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task" data-name="RouteController" data-url="Classes/RouteController.html">
                 <a title="RouteController" class="nav-group-task-link" href="../Classes/RouteController.html">RouteController</a>
@@ -91,26 +107,6 @@
               </li>
               <li class="nav-group-task" data-name="RouteStepProgress" data-url="Classes/RouteStepProgress.html">
                 <a title="RouteStepProgress" class="nav-group-task-link" href="../Classes/RouteStepProgress.html">RouteStepProgress</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name" data-name="Drop-in UI">
-            <a class="small-heading" href="../Drop-in UI.html">Drop-in UI<span class="anchor-icon" /></a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
-                <a title="NavigationViewController" class="nav-group-task-link" href="../Classes/NavigationViewController.html">NavigationViewController</a>
-              </li>
-              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
-                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="../Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
-              </li>
-              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
-                <a title="RouteVoiceController" class="nav-group-task-link" href="../Classes/RouteVoiceController.html">RouteVoiceController</a>
-              </li>
-              <li class="nav-group-task" data-name="RouteTableViewController" data-url="Extensions/RouteTableViewController.html">
-                <a title="RouteTableViewController" class="nav-group-task-link" href="../Extensions/RouteTableViewController.html">RouteTableViewController</a>
-              </li>
-              <li class="nav-group-task" data-name="NavigationPulleyViewController" data-url="Drop-in UI.html#/s:C16MapboxNavigation30NavigationPulleyViewController">
-                <a title="NavigationPulleyViewController" class="nav-group-task-link" href="../Drop-in UI.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
               </li>
             </ul>
           </li>
@@ -195,6 +191,15 @@
           <li class="nav-group-name" data-name="UI Components">
             <a class="small-heading" href="../UI Components.html">UI Components<span class="anchor-icon" /></a>
             <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
+                <a title="RouteVoiceController" class="nav-group-task-link" href="../Classes/RouteVoiceController.html">RouteVoiceController</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteTableViewController" data-url="Extensions/RouteTableViewController.html">
+                <a title="RouteTableViewController" class="nav-group-task-link" href="../Extensions/RouteTableViewController.html">RouteTableViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationPulleyViewController" data-url="UI Components.html#/s:C16MapboxNavigation30NavigationPulleyViewController">
+                <a title="NavigationPulleyViewController" class="nav-group-task-link" href="../UI Components.html#/s:C16MapboxNavigation30NavigationPulleyViewController">NavigationPulleyViewController</a>
+              </li>
               <li class="nav-group-task" data-name="Button" data-url="UI Components.html#/s:C16MapboxNavigation6Button">
                 <a title="Button" class="nav-group-task-link" href="../UI Components.html#/s:C16MapboxNavigation6Button">Button</a>
               </li>
@@ -373,12 +378,12 @@
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">volume</span><span class="p">:</span> <span class="kt">Float</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">volume</span><span class="p">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="mf">1.0</span></code></pre>
 
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L29-L36">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L29">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -409,7 +414,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L42">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L35">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -440,7 +445,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L48">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L41">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -471,7 +476,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L54">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L47">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -502,7 +507,69 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L60">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L53">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController16playRerouteSoundSb"></a>
+                    <a name="//apple_ref/swift/Property/playRerouteSound" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController16playRerouteSoundSb"><span class="token-name">playRerouteSound</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>If true, a noise indicating the user is going to be rerouted will play prior to rerouting.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">playRerouteSound</span> <span class="o">=</span> <span class="kc">true</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L59">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation20RouteVoiceController18rerouteSoundPlayerCSo13AVAudioPlayer"></a>
+                    <a name="//apple_ref/swift/Property/rerouteSoundPlayer" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation20RouteVoiceController18rerouteSoundPlayerCSo13AVAudioPlayer"><span class="token-name">rerouteSoundPlayer</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sound to play prior to reroute. Inherits volume level from <code><a href="../Classes/RouteVoiceController.html#/s:vC16MapboxNavigation20RouteVoiceController6volumeSf">volume</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">rerouteSoundPlayer</span><span class="p">:</span> <span class="kt">AVAudioPlayer</span> <span class="o">=</span> <span class="k">try!</span> <span class="kt">AVAudioPlayer</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="kt">NSDataAsset</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"reroute-sound"</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kt">Bundle</span><span class="o">.</span><span class="n">navigationUI</span><span class="p">)</span><span class="o">!.</span><span class="n">data</span><span class="p">,</span> <span class="nv">fileTypeHint</span><span class="p">:</span> <span class="kt">AVFileTypeMPEGLayer3</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L65">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -533,7 +600,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L66">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L71">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -565,7 +632,7 @@ You can get a token here: <a href="http://docs.aws.amazon.com/mobile/sdkforios/d
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L73-L81">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L78-L86">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -588,7 +655,7 @@ You can get a token here: <a href="http://docs.aws.amazon.com/mobile/sdkforios/d
 
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L83-L88">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L88-L93">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -611,30 +678,7 @@ You can get a token here: <a href="http://docs.aws.amazon.com/mobile/sdkforios/d
 
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L104-L108">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC16MapboxNavigation20RouteVoiceController9stopVoiceFT_T_"></a>
-                    <a name="//apple_ref/swift/Method/stopVoice()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC16MapboxNavigation20RouteVoiceController9stopVoiceFT_T_"><span class="token-name">stopVoice()</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L110-L112">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L105-L108">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -657,30 +701,7 @@ You can get a token here: <a href="http://docs.aws.amazon.com/mobile/sdkforios/d
 
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L126-L132">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:FC16MapboxNavigation20RouteVoiceController12observeValueFT10forKeyPathGSqSS_2ofGSqP__6changeGSqGVs10DictionaryVSC19NSKeyValueChangeKeyP___7contextGSqSv__T_"></a>
-                    <a name="//apple_ref/swift/Method/observeValue(forKeyPath:of:change:context:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:FC16MapboxNavigation20RouteVoiceController12observeValueFT10forKeyPathGSqSS_2ofGSqP__6changeGSqGVs10DictionaryVSC19NSKeyValueChangeKeyP___7contextGSqSv__T_"><span class="token-name">observeValue(forKeyPath:of:change:context:)</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L347-L361">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxNavigation/RouteVoiceController.swift#L129-L135">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
