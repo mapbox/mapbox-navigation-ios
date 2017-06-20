@@ -4,7 +4,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](http://cocoadocs.org/docsets/MapboxNavigation/)
 
-![Mapbox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios/blob/master/docs/img/navigation.png)
+![Mapbox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios/raw/master/docs/img/navigation.png)
 
 Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
 
