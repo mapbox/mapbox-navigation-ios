@@ -220,11 +220,13 @@ class RouteMapViewController: UIViewController {
                 controller = routePageViewController.routeManeuverViewController(with: step)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
                 routePageViewController.currentManeuverPage = controller
-                controller.step = step
             }
         }
         
         previousStep = step
+        
+        // Do not update if the current page doesn't represent the current step
+        guard step == controller.step else { return }
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         updateShield(for: controller)
