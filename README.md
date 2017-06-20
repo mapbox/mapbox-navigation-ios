@@ -2,7 +2,7 @@
 
 [![Build Status](https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q&branch=master)](https://www.bitrise.io/app/6fc45a7e2817b859)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](http://cocoadocs.org/docsets/MapboxNavigation/)
+[![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](https://cocoapods.org/pods/MapboxNavigation/)
 
 ![Mapbox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios/raw/master/docs/img/navigation.png)
 
@@ -54,6 +54,8 @@ Note, you may need to run `pod repo update` before `pod install` if your Cocoapo
 1. Build and run the `Example-Swift` or `Example-Objective-C` target
 
 ## Usage
+
+**[API reference](https://mapbox.github.io/mapbox-navigation-ios/navigation/)**
 
 ```swift
 import MapboxDirections
@@ -147,7 +149,7 @@ If you need additional flexibility, you can use the following building blocks to
 ### Installing Mapbox Core Navigation
 
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![CocoaPods](https://img.shields.io/cocoapods/v/MapboxCoreNavigation.svg)](http://cocoadocs.org/docsets/MapboxCoreNavigation/)
+[![CocoaPods](https://img.shields.io/cocoapods/v/MapboxCoreNavigation.svg)](https://cocoapods.org/pods/MapboxCoreNavigation/)
 
 To install Mapbox Core Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
 
