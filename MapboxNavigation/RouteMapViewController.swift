@@ -516,11 +516,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 
     func updateShield(for controller: RouteManeuverViewController) {
-        let currentLegProgress = routeController.routeProgress.currentLegProgress
-
-        guard let upComingStep = currentLegProgress?.upComingStep else { return }
-        guard let ref = upComingStep.codes?.first else { return }
-        guard controller.shieldImage == nil else { return }
+        guard let ref = controller.step.codes?.first else { return }
 
         let components = ref.components(separatedBy: " ")
 
