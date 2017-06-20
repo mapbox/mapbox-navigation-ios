@@ -10,7 +10,7 @@ class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
 
-class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDelegate {
+class RouteMapViewController: UIViewController {
     @IBOutlet weak var mapView: NavigationMapView!
 
     @IBOutlet weak var overviewButton: Button!
@@ -20,11 +20,12 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     @IBOutlet weak var wayNameView: UIView!
     
     var routePageViewController: RoutePageViewController!
-    var routeTableViewController: RouteTableViewController!
+    var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
     let MBSecondsBeforeResetTrackingMode: TimeInterval = 25.0
 
     var route: Route { return routeController.routeProgress.route }
+    var previousStep: RouteStep?
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -45,8 +46,6 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
-
-    let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
 
     var simulatesLocationUpdates: Bool {
         guard let parent = parent as? NavigationViewController else { return false }
@@ -103,8 +102,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
             mapView.locationManager.stopUpdatingLocation()
             mapView.locationManager.stopUpdatingHeading()
         }
-
-        mapView.setContentInset(overviewContentInset, animated: false)
+        
+        mapView.setContentInset(contentInsets, animated: false)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -172,6 +171,8 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
         guard polyline.overlayBounds.ne - polyline.overlayBounds.sw > 200 else {
             return
         }
+        
+        let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
         mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 
@@ -214,11 +215,25 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
-        guard let controller = routePageViewController.currentManeuverPage else { return }
+        guard var controller = routePageViewController.currentManeuverPage else { return }
+        
+        let step = upComingStep ?? currentStep
+        
+        // Clear the page view controller’s cached pages (before & after) if the step has been changed
+        // to avoid going back to an already completed step and avoid duplicated future steps
+        if let previousStep = previousStep {
+            if previousStep != step {
+                controller = routePageViewController.routeManeuverViewController(with: step)!
+                routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
+                routePageViewController(routePageViewController, willTransitionTo: controller)
+            }
+        }
+        
+        previousStep = step
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         updateShield(for: controller)
-        controller.step = upComingStep ?? currentStep
+        controller.step = step
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
@@ -281,6 +296,24 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
                 completion(image)
             }
         }
+    }
+    
+    var contentInsets: UIEdgeInsets {
+        guard let tableViewController = routeTableViewController else { return .zero }
+        guard let drawer = parent as? NavigationViewController else { return .zero }
+        
+        return UIEdgeInsets(top: routePageViewController.view.bounds.height,
+                            left: 0,
+                            bottom: drawer.drawerPosition == .partiallyRevealed ? tableViewController.partialRevealDrawerHeight() : tableViewController.collapsedDrawerHeight(),
+                            right: 0)
+    }
+}
+
+// MARK: PulleyPrimaryContentControllerDelegate
+
+extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
+    func drawerPositionDidChange(drawer: PulleyViewController) {
+        mapView.setContentInset(contentInsets, animated: true)
     }
 }
 

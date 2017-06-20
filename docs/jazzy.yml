@@ -1,0 +1,92 @@
+module: MapboxNavigation
+author: Mapbox
+author_url: https://www.mapbox.com/navigation-sdk/
+github_url: https://github.com/mapbox/mapbox-navigation-ios
+dash_url: https://www.mapbox.com/navigation-sdk/docsets/Mapbox.xml
+copyright: '© 2014–2017 [Mapbox](https://www.mapbox.com/). See [license](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for more details.'
+
+head: |
+  <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+#skip_undocumented: Yes
+#hide_documentation_coverage: Yes
+
+custom_categories:
+  - name: Guides
+    children:
+      - Storyboards
+  - name: Core Navigation
+    children:
+      - RouteController
+      - RouteControllerDelegate
+      - RouteProgress
+      - RouteLegProgress
+      - RouteStepProgress
+  - name: Drop-in UI
+    children:
+      - NavigationViewController
+      - NavigationViewControllerDelegate
+      - RouteVoiceController
+      - RouteTableViewController
+      - NavigationPulleyViewController
+  - name: Maps
+    children:
+      - NavigationMapView
+      - NavigationMapViewDelegate
+      - MGLMapView
+  - name: Styling
+    children:
+      - Style
+      - StyleKitArrows
+      - StylableButton
+      - StylableLabel
+  - name: Notifications
+    children:
+      - AlertLevel
+      - RouteControllerAlertLevelDidChange
+      - RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey
+      - RouteControllerAlertLevelDidChangeNotificationRouteProgressKey
+      - RouteControllerDidFailToReroute
+      - RouteControllerDidReroute
+      - RouteControllerNotificationErrorKey
+      - RouteControllerNotificationLocationKey
+      - RouteControllerNotificationRouteKey
+      - RouteControllerProgressDidChange
+      - RouteControllerProgressDidChangeNotificationLocationKey
+      - RouteControllerProgressDidChangeNotificationProgressKey
+      - RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey
+      - RouteControllerWillReroute
+  - name: UI Components
+    children:
+      - Button
+      - CellSubtitleLabel
+      - CellTitleLabel
+      - DashedLineView
+      - HighlightedButton
+      - LineView
+      - ProgressBar
+      - SeparatorView
+      - SubtitleLabel
+      - TitleLabel
+      - TurnArrowView
+      - WayNameLabel
+  - name: Formatters
+    children:
+      - DistanceFormatter
+      - RouteStepFormatter
+  - name: Configuration
+    children:
+      - MaxSecondsSpentTravelingAwayFromStartOfRoute
+      - RouteControllerDeadReckoningTimeInterval
+      - RouteControllerHighAlertInterval
+      - RouteControllerManeuverZoneRadius
+      - RouteControllerMaxManipulatedCourseAngle
+      - RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
+      - RouteControllerMaximumDistanceBeforeRecalculating
+      - RouteControllerMediumAlertInterval
+      - RouteControllerMinimumDistanceForHighAlertCycling
+      - RouteControllerMinimumDistanceForHighAlertDriving
+      - RouteControllerMinimumDistanceForHighAlertWalking
+      - RouteControllerMinimumDistanceForMediumAlertCycling
+      - RouteControllerMinimumDistanceForMediumAlertDriving
+      - RouteControllerMinimumDistanceForMediumAlertWalking
+      - RouteControllerUserLocationSnappingDistance

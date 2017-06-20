@@ -2,12 +2,12 @@ Pod::Spec.new do |s|
 
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.name = "MapboxCoreNavigation"
+  s.name = "MapboxNavigation-Documentation"
   s.version = "0.4.0"
-  s.summary = "Core components for turn-by-turn navigation on iOS."
+  s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
-  Mapbox Core Navigation provides the core spatial and timing logic for turn-by-turn navigation along a route. For a complete turn-by-turn navigation interface, use the Mapbox Navigation SDK for iOS (MapboxNavigation).
+  The Mapbox Navigation SDK for iOS is a drop-in interface for turn-by-turn navigation along a route, complete with a well-designed map and easy-to-understand spoken directions. Routes are powered by Mapbox Directions.
                    DESC
 
   s.homepage = "https://www.mapbox.com/navigation-sdk/"
@@ -24,8 +24,7 @@ Pod::Spec.new do |s|
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.ios.deployment_target = "8.0"
-
+  s.ios.deployment_target = "9.0"
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -33,14 +32,22 @@ Pod::Spec.new do |s|
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = "MapboxCoreNavigation"
+  s.source_files = ["MapboxNavigation/*", "MapboxCoreNavigation/*"]
+
+  # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
+
+  s.resources = ['MapboxNavigation/Resources/*/*', 'MapboxNavigation/Resources/*']
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.requires_arc = true
-  s.module_name = "MapboxCoreNavigation"
+  s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxDirections.swift", "~> 0.9.0"
-  s.dependency "OSRMTextInstructions", "~> 0.1.1"
+  s.dependency "Mapbox-iOS-SDK", "~> 3.5"
+  s.dependency "OSRMTextInstructions", "~> 0.1.2"
+  s.dependency "Pulley", "~> 1.3"
+  s.dependency "SDWebImage", "~> 4.0"
+  s.dependency "AWSPolly", "~> 2.5"
 
 end
