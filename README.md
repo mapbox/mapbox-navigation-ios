@@ -23,7 +23,17 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Installation
 
-To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
+To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
+
+1. Specify the following dependency in your Podfile:
+   ```ruby
+   pod 'MapboxNavigation', '~> 0.4.0'
+   ```
+1. Run `pod install` and open the resulting Xcode workspace.
+
+Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
+
+Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above: 
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
@@ -34,15 +44,7 @@ To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Cartha
 
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include MapboxNavigation.framework and MapboxCoreNavigation.framework.
 
-Alternatively, to install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
-1. Specify the following dependency in your Podfile:
-   ```ruby
-   pod 'MapboxNavigation', '~> 0.4.0'
-   ```
-1. Run `pod install` and open the resulting Xcode workspace.
-
-Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
 
 ### Running the example project
 
