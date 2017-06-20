@@ -97,7 +97,13 @@ extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
             .open,
             .closed
         ]
-        
+    }
+    
+    func drawerPositionDidChange(drawer: PulleyViewController) {
+        var rect = tableView.frame
+        // Workaround for Pulley’s bounceOverflowMargin
+        rect.origin.y = drawer.drawerPosition == .collapsed ? 0 : -20
+        tableView.frame = rect
     }
     
     func collapsedDrawerHeight() -> CGFloat {
@@ -105,6 +111,6 @@ extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
     }
     
     func partialRevealDrawerHeight() -> CGFloat {
-        return UIScreen.main.bounds.height * 0.75
+        return UIScreen.main.bounds.height * 0.60
     }
 }
