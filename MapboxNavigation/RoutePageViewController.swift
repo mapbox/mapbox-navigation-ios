@@ -34,8 +34,8 @@ class RoutePageViewController: UIPageViewController {
     }
     
     func setupRoutePageViewController() {
-        let currentStep = maneuverDelegate.upComingStep ?? maneuverDelegate.currentStep
-        let controller = routeManeuverViewController(with: currentStep)!
+        let step = maneuverDelegate.upComingStep ?? maneuverDelegate.currentStep
+        let controller = routeManeuverViewController(with: step)!
         setViewControllers([controller], direction: .forward, animated: false, completion: nil)
         currentManeuverPage = controller
         maneuverDelegate.routePageViewController(self, willTransitionTo: controller)
