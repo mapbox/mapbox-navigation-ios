@@ -7,6 +7,32 @@ import MapboxCoreNavigation
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
+struct Road {
+    let name: String?
+    let classification: RoadClassification
+}
+
+enum RoadClassification: String {
+    case motorway = "motorway"
+    case motorwayLink = "motorway_link"
+    case trunk = "trunk"
+    case primary = "primary"
+    case secondary = "secondary"
+    case tertiary = "tertiary"
+    case link = "link"
+    case street = "street"
+    case limitedStreet = "street_limited"
+    case pedestrian = "pedestrian"
+    case construction = "construction"
+    case track = "track"
+    case service = "service"
+    case ferry = "ferry"
+    case path = "path"
+    case majorRail = "major_rail"
+    case minorRail = "minor_rail"
+    case aerialway = "aerialway"
+    case golf = "golf"
+}
 
 class RouteMapViewController: UIViewController {
     @IBOutlet weak var mapView: NavigationMapView!
@@ -43,17 +69,6 @@ class RouteMapViewController: UIViewController {
         }
     }
     weak var delegate: RouteMapViewControllerDelegate?
-    
-    var currentRoadName: String? {
-        didSet {
-            if let currentRoadName = currentRoadName {
-                wayNameLabel.text = currentRoadName
-                wayNameView.isHidden = false
-            } else {
-                wayNameView.isHidden = true
-            }
-        }
-    }
 
     weak var routeController: RouteController!
 
@@ -63,6 +78,13 @@ class RouteMapViewController: UIViewController {
 
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
+    
+    var currentRoad: Road? {
+        didSet {
+            wayNameLabel.text = currentRoad?.name
+            wayNameView.isHidden = currentRoad?.name == nil || currentRoad!.name!.isEmpty
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -320,7 +342,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
             let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
             var smallestLabelDistance = Double.infinity
-            var currentName: String?
+            var closestRoad: Road?
             
             for feature in features {
                 var allLines: [MGLPolyline] = []
@@ -347,18 +369,19 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     if minDistanceBetweenPoints < smallestLabelDistance {
                         smallestLabelDistance = minDistanceBetweenPoints
                         
-                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
+                        if let line = (feature as? MGLPolylineFeature ?? feature as? MGLMultiPolylineFeature) as? MGLFeature {
+                            let name = line.attribute(forKey: "name") as? String
+                            let rawClassification = line.attribute(forKey: "class") as! String
+                            let classification = RoadClassification(rawValue: rawClassification) ?? .street
+                            closestRoad = Road(name: name, classification: classification)
                         } else {
-                            currentName = nil
+                            closestRoad = nil
                         }
                     }
                 }
             }
             
-            currentRoadName = smallestLabelDistance < 5 ? currentName : nil
+            currentRoad = smallestLabelDistance < 5 ? closestRoad : nil
         }
         
         
