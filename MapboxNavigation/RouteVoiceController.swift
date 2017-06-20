@@ -102,7 +102,7 @@ public class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
     }
     
-    public func suspendNotifications() {
+    func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
     }

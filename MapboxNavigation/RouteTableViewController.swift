@@ -90,6 +90,10 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
+    
+    /**
+     Returns an array of `PulleyPosition`. The array contains the view positions the bottom bar supports.
+     */
     public func supportedDrawerPositions() -> [PulleyPosition] {
         return [
             .collapsed,
