@@ -219,7 +219,8 @@ class RouteMapViewController: UIViewController {
             if previousStep != step {
                 controller = routePageViewController.routeManeuverViewController(with: step)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
-                routePageViewController(routePageViewController, willTransitionTo: controller)
+                routePageViewController.currentManeuverPage = controller
+                controller.step = step
             }
         }
         
@@ -227,7 +228,6 @@ class RouteMapViewController: UIViewController {
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         updateShield(for: controller)
-        controller.step = step
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
