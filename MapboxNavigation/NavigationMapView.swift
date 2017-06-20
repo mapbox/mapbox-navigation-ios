@@ -9,6 +9,11 @@ open class NavigationMapView: MGLMapView {
     let routeLayerIdentifier = "routeLayer"
     let routeLayerCasingIdentifier = "routeLayerCasing"
     
+    /**
+     Returns the map view used while navigating.
+     
+     This map inherits from `MGLMapView`.
+     */
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {

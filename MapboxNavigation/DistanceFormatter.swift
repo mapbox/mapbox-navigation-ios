@@ -14,6 +14,12 @@ public class DistanceFormatter: LengthFormatter {
     var forVoiceUse: Bool
     let nonFractionalLengthFormatter = LengthFormatter()
     
+    /**
+     Intializes a new `DistanceFormatter`.
+     
+     - parameter approximate: approximates the distances.
+     - parameter forVoiceUse: If true, the returned string will contain strings for some numbers like fractions. This is helpful for some speech synthesizers.
+     */
     public init(approximate: Bool = false, forVoiceUse: Bool = false) {
         self.approx = approximate
         self.forVoiceUse = forVoiceUse
@@ -32,6 +38,11 @@ public class DistanceFormatter: LengthFormatter {
         aCoder.encode(forVoiceUse, forKey: "forVoiceUse")
     }
     
+    /**
+     Returns a more human readable `String` from a given `CLLocationDistance`.
+     
+     The user’s `Locale` is used here to set the units.
+    */
     public func string(from distance: CLLocationDistance) -> String {
         let miles = distance / metersPerMile
         let feet = miles * feetPerMile

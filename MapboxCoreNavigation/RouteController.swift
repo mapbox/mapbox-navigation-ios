@@ -216,6 +216,11 @@ extension RouteController: CLLocationManagerDelegate {
         lastUserDistanceToStartOfRoute = Double.infinity
     }
     
+    /**
+     Given a users current location, returns a Boolean whether they are currently on the route.
+     
+     If the user is not on the route, they should be rerouted.
+     */
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
         // Find future location of user
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval

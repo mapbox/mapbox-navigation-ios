@@ -96,11 +96,11 @@ class RouteManeuverViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
     }
     
-    public func suspendNotifications() {
+    func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
     }
     
-    public func notifyDidChange(routeProgress: RouteProgress, secondsRemaining: TimeInterval) {
+    func notifyDidChange(routeProgress: RouteProgress, secondsRemaining: TimeInterval) {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
@@ -117,7 +117,7 @@ class RouteManeuverViewController: UIViewController {
         turnArrowView.step = routeProgress.currentLegProgress.upComingStep
     }
     
-    public func updateStreetNameForStep() {
+    func updateStreetNameForStep() {
         if let name = step?.names?.first {
             streetLabel.unabridgedText = name
         } else if let destinations = step?.destinations {

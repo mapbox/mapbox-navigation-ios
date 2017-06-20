@@ -62,12 +62,26 @@ public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
 
 
 /**
- Distance in meters for the minimum length of a step for giving a `medium` alert.
+ Distance in meters for the minimum length of a step for giving a `medium` alert while using `MBDirectionsProfileIdentifierAutomobile` or `MBDirectionsProfileIdentifierAutomobileAvoidingTraffic`.
  */
 public var RouteControllerMinimumDistanceForMediumAlertDriving: CLLocationDistance = 400
+
+
+/**
+ Distance in meters for the minimum length of a step for giving a `medium` alert while using `MBDirectionsProfileIdentifierCycling`.
+ */
 public var RouteControllerMinimumDistanceForMediumAlertCycling: CLLocationDistance = 200
+
+
+/**
+ Distance in meters for the minimum length of a step for giving a `medium` alert while using `MBDirectionsProfileIdentifierWalking`.
+ */
 public var RouteControllerMinimumDistanceForMediumAlertWalking: CLLocationDistance = 100
 
+
+/**
+ Returns the appropriate `mediium` `AlertLevel` distance for a given `MBDirectionsProfileIdentifier`.
+ */
 public func RouteControllerMinimumDistanceForMediumAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
     switch identifier {
     case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:
@@ -87,12 +101,26 @@ public func RouteControllerMinimumDistanceForMediumAlert(identifier: MBDirection
 
 
 /**
- Distance in meters for the minimum length of a step for giving a `high` alert.
+ Distance in meters for the minimum length of a step for giving a `high` alert while using `MBDirectionsProfileIdentifierAutomobile` or `MBDirectionsProfileIdentifierAutomobileAvoidingTraffic`.
  */
 public var RouteControllerMinimumDistanceForHighAlertDriving: CLLocationDistance = 100
+
+
+/**
+ Distance in meters for the minimum length of a step for giving a `high` alert while using `MBDirectionsProfileIdentifierCycling`.
+ */
 public var RouteControllerMinimumDistanceForHighAlertCycling: CLLocationDistance = 60
+
+
+/**
+ Distance in meters for the minimum length of a step for giving a `high` alert while using `MBDirectionsProfileIdentifierWalking`.
+ */
 public var RouteControllerMinimumDistanceForHighAlertWalking: CLLocationDistance = 20
 
+
+/**
+ Returns a the appropriate `high` `AlertLevel` distance for a given `MBDirectionsProfileIdentifier`.
+ */
 public func RouteControllerMinimumDistanceForHighAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
     switch identifier {
     case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:

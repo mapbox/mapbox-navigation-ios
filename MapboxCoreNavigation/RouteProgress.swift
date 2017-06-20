@@ -109,7 +109,12 @@ open class RouteProgress: NSObject {
     
     public var currentLegProgress: RouteLegProgress!
 
-    
+    /**
+     Intializes a new `RouteProgress`.
+     
+     - parameter route: The route to follow.
+     - parameter legIndex: Zero-based index indicating the current leg the user is on.
+     */
     public init(route: Route, legIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
@@ -160,10 +165,15 @@ open class RouteLegProgress: NSObject {
         return distanceTraveled / leg.distance
     }
 
-    
+    /**
+     `AlertLevel` for the current step.
+     */
     public var alertUserLevel: AlertLevel = .none
 
     
+    /**
+     Returns the `RouteStep` before a given step. Returns `nil` if there is no step prior.
+     */
     public func stepBefore(_ step: RouteStep) -> RouteStep? {
         guard let index = leg.steps.index(of: step) else {
             return nil
@@ -174,6 +184,9 @@ open class RouteLegProgress: NSObject {
         return nil
     }
     
+    /**
+     Returns the `RouteStep` after a given step. Returns `nil` if there is not a step after.
+     */
     public func stepAfter(_ step: RouteStep) -> RouteStep? {
         guard let index = leg.steps.index(of: step) else {
             return nil
@@ -240,6 +253,12 @@ open class RouteLegProgress: NSObject {
     public var currentStepProgress: RouteStepProgress
 
 
+    /**
+     Intializes a new `RouteLegProgress`.
+     
+     - parameter leg: Leg on a `Route`.
+     - parameter stepIndex: Current step the user is on.
+     */
     public init(leg: RouteLeg, stepIndex: Int = 0) {
         self.leg = leg
         self.stepIndex = stepIndex
@@ -266,6 +285,9 @@ open class RouteLegProgress: NSObject {
 @objc(MBRouteStepProgress)
 open class RouteStepProgress: NSObject {
 
+    /**
+     Returns the current `RouteStep`.
+     */
     public let step: RouteStep
 
 
