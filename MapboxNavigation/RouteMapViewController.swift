@@ -25,6 +25,7 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     let MBSecondsBeforeResetTrackingMode: TimeInterval = 25.0
 
     var route: Route { return routeController.routeProgress.route }
+    var previousStep: RouteStep?
 
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera? {
@@ -208,11 +209,25 @@ class RouteMapViewController: UIViewController, PulleyPrimaryContentControllerDe
     }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
-        guard let controller = routePageViewController.currentManeuverPage else { return }
+        guard var controller = routePageViewController.currentManeuverPage else { return }
+        
+        let step = upComingStep ?? currentStep
+        
+        // Clear the page view controller’s cached pages (before & after) if the step has been changed
+        // to avoid going back to an already completed step and avoid duplicated future steps
+        if let previousStep = previousStep {
+            if previousStep != step {
+                controller = routePageViewController.routeManeuverViewController(with: step)!
+                routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
+                routePageViewController(routePageViewController, willTransitionTo: controller)
+            }
+        }
+        
+        previousStep = step
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         updateShield(for: controller)
-        controller.step = upComingStep ?? currentStep
+        controller.step = step
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
