@@ -82,15 +82,15 @@ class RouteMapViewController: UIViewController {
         } else {
             setDefaultCamera(animated: false)
         }
+        
+        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
+        mapView.setUserTrackingMode(.followWithCourse, animated: false)
 
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: .initial, context: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-        mapView.setUserTrackingMode(.followWithCourse, animated: false)
 
         if simulatesLocationUpdates {
             mapView.locationManager.stopUpdatingLocation()
