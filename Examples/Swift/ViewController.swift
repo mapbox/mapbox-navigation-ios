@@ -279,7 +279,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         return line
     }
     
-    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt destination: Waypoint) {
-        print("User arrived at \(destination.name ?? "waypoint")")
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
+        print("User arrived at \(waypoint.name ?? "waypoint")")
     }
 }

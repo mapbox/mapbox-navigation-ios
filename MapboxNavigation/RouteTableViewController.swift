@@ -76,14 +76,20 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         guard routeController.routeProgress.route.legs.count > 1 else {
             return nil
         }
+        let leg = routeController.routeProgress.route.legs[section]
         
-        let sectionName = routeController.routeProgress.route.legs[section].name
-        let legToFrom = sectionName.components(separatedBy: ", ")
+        let sourceName = leg.source.name
+        let destinationName = leg.destination.name
         
+        if let sourceName = sourceName?.nonEmptyString, let destinationName = destinationName?.nonEmptyString {
+            return "\(sourceName) to \(destinationName)"
+        }
+        
+        let legToFrom = leg.name.components(separatedBy: ", ")
         if legToFrom.count == 2 {
             return "\(legToFrom[0]) to \(legToFrom[1])"
         } else {
-            return sectionName
+            return leg.name
         }
     }
     

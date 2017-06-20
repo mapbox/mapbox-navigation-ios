@@ -76,11 +76,9 @@ class RouteMapViewController: UIViewController {
         mapView.compassView.isHidden = true
         
         for leg in route.legs {
-            if let last = leg.steps.last {
-                let annotation = MGLPointAnnotation()
-                annotation.coordinate = last.coordinates!.last!
-                mapView.addAnnotation(annotation)
-            }
+            let annotation = MGLPointAnnotation()
+            annotation.coordinate = leg.destination.coordinate
+            mapView.addAnnotation(annotation)
         }
 
         if let camera = pendingCamera {

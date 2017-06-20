@@ -20,7 +20,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user arrives at the destination.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: Waypoint)
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint)
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -330,7 +330,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         tableViewController?.notifyAlertLevelDidChange()
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.route.routeOptions.waypoints[routeProgress.legIndex + 1])
+            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
