@@ -234,6 +234,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         mapViewController.delegate = self
         mapViewController.routeController = routeController
+        mapViewController.routeTableViewController = tableViewController
         mapViewController.destination = destination
         
         tableViewController.routeController = routeController

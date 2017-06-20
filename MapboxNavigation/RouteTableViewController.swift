@@ -97,7 +97,6 @@ extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
             .open,
             .closed
         ]
-        
     }
     
     func collapsedDrawerHeight() -> CGFloat {
@@ -105,6 +104,6 @@ extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
     }
     
     func partialRevealDrawerHeight() -> CGFloat {
-        return UIScreen.main.bounds.height * 0.75
+        return UIScreen.main.bounds.height * 0.60
     }
 }
