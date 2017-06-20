@@ -99,13 +99,6 @@ extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
         ]
     }
     
-    func drawerPositionDidChange(drawer: PulleyViewController) {
-        var rect = tableView.frame
-        // Workaround for Pulley’s bounceOverflowMargin
-        rect.origin.y = drawer.drawerPosition == .collapsed ? 0 : -20
-        tableView.frame = rect
-    }
-    
     func collapsedDrawerHeight() -> CGFloat {
         return headerView.intrinsicContentSize.height
     }
