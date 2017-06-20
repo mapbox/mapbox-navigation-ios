@@ -43,6 +43,17 @@ class RouteMapViewController: UIViewController {
         }
     }
     weak var delegate: RouteMapViewControllerDelegate?
+    
+    var currentRoadName: String? {
+        didSet {
+            if let currentRoadName = currentRoadName {
+                wayNameLabel.text = currentRoadName
+                wayNameView.isHidden = false
+            } else {
+                wayNameView.isHidden = true
+            }
+        }
+    }
 
     weak var routeController: RouteController!
 
@@ -347,12 +358,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 }
             }
             
-            if smallestLabelDistance < 5 && currentName != nil {
-                wayNameLabel.text = currentName
-                wayNameView.isHidden = false
-            } else {
-                wayNameView.isHidden = true
-            }
+            currentRoadName = smallestLabelDistance < 5 ? currentName : nil
         }
         
         
