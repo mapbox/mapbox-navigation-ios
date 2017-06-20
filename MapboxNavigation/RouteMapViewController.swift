@@ -165,7 +165,8 @@ class RouteMapViewController: UIViewController {
             return
         }
         
-        mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: contentInsets, animated: true)
+        let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
+        mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 
     func startResetTrackingModeTimer() {
