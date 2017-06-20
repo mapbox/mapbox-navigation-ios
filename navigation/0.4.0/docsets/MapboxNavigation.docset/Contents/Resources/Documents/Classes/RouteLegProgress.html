@@ -20,7 +20,7 @@
     </style>
     <script type="text/javascript">
       !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
-        analytics.load("fl0c8p240n");
+	analytics.load("fl0c8p240n");
       }}();
     </script>
   </head>
@@ -38,7 +38,7 @@
             <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="Mapbox Navigation SDK for iOS Docs"/>
             <span class='header-tag'>Navigation SDK for iOS  Reference</span>
           </a>
-           (53% documented)
+           (61% documented)
         </p>
     
           <p class="header-col header-col--secondary">
@@ -389,7 +389,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L132-L137">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L137-L142">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -420,7 +420,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L143-L145">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L148-L150">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -451,7 +451,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L151-L153">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L156-L158">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -482,7 +482,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L159-L161">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L164-L166">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -501,19 +501,19 @@
                   <div class="height-container">
                     <section class="section">
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p><code><a href="../Enums/AlertLevel.html">AlertLevel</a></code> for the current step.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">alertUserLevel</span><span class="p">:</span> <span class="kt"><a href="../Enums/AlertLevel.html">AlertLevel</a></span> <span class="o">=</span> <span class="o">.</span><span class="k">none</span></code></pre>
 
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L171">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -532,19 +532,19 @@
                   <div class="height-container">
                     <section class="section">
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Returns the <code>RouteStep</code> before a given step. Returns <code>nil</code> if there is no step prior.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">stepBefore</span><span class="p">(</span><span class="n">_</span> <span class="nv">step</span><span class="p">:</span> <span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/RouteStep.html">RouteStep</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">RouteStep</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L167-L175">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L177-L185">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -563,19 +563,19 @@
                   <div class="height-container">
                     <section class="section">
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Returns the <code>RouteStep</code> after a given step. Returns <code>nil</code> if there is not a step after.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">stepAfter</span><span class="p">(</span><span class="n">_</span> <span class="nv">step</span><span class="p">:</span> <span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/RouteStep.html">RouteStep</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">RouteStep</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L177-L185">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L190-L198">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -608,7 +608,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L192-L197">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L205-L210">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -639,7 +639,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L203-L205">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L216-L218">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -672,7 +672,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L213-L218">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L226-L231">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -705,7 +705,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L225-L230">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L238-L243">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -736,7 +736,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L236-L238">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L249-L251">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -786,19 +786,50 @@
                   <div class="height-container">
                     <section class="section">
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Intializes a new <code>RouteLegProgress</code>.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteLegProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">leg</span><span class="p">:</span> <span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/RouteLeg.html">RouteLeg</a></span><span class="p">,</span> <span class="nv">stepIndex</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  leg
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Leg on a <code>Route</code>.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  stepIndex
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Current step the user is on.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L243-L247">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L262-L266">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -829,7 +860,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L253-L260">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L272-L279">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>

@@ -92,48 +92,6 @@
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
-      "line": 68,
-      "symbol": "RouteControllerMinimumDistanceForMediumAlertCycling",
-      "symbol_kind": "source.lang.swift.decl.var.global",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
-      "line": 69,
-      "symbol": "RouteControllerMinimumDistanceForMediumAlertWalking",
-      "symbol_kind": "source.lang.swift.decl.var.global",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
-      "line": 71,
-      "symbol": "RouteControllerMinimumDistanceForMediumAlert(identifier:)",
-      "symbol_kind": "source.lang.swift.decl.function.free",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
-      "line": 93,
-      "symbol": "RouteControllerMinimumDistanceForHighAlertCycling",
-      "symbol_kind": "source.lang.swift.decl.var.global",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
-      "line": 94,
-      "symbol": "RouteControllerMinimumDistanceForHighAlertWalking",
-      "symbol_kind": "source.lang.swift.decl.var.global",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/Constants.swift",
-      "line": 96,
-      "symbol": "RouteControllerMinimumDistanceForHighAlert(identifier:)",
-      "symbol_kind": "source.lang.swift.decl.function.free",
-      "warning": "undocumented"
-    },
-    {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
       "line": 93,
       "symbol": "RouteController.simulatesLocationUpdates",
@@ -144,13 +102,6 @@
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
       "line": 145,
       "symbol": "RouteController.locationManager(_:didUpdateLocations:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
-      "line": 219,
-      "symbol": "RouteController.userIsOnRoute(_:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -177,63 +128,21 @@
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 113,
-      "symbol": "RouteProgress.init(route:legIndex:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 126,
+      "line": 131,
       "symbol": "RouteLegProgress.leg",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 164,
-      "symbol": "RouteLegProgress.alertUserLevel",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 167,
-      "symbol": "RouteLegProgress.stepBefore(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 177,
-      "symbol": "RouteLegProgress.stepAfter(_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 240,
+      "line": 253,
       "symbol": "RouteLegProgress.currentStepProgress",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 243,
-      "symbol": "RouteLegProgress.init(leg:stepIndex:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 269,
-      "symbol": "RouteStepProgress.step",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteProgress.swift",
-      "line": 306,
+      "line": 328,
       "symbol": "RouteStepProgress.init(step:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -268,29 +177,15 @@
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/DistanceFormatter.swift",
-      "line": 17,
-      "symbol": "DistanceFormatter.init(approximate:forVoiceUse:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/DistanceFormatter.swift",
-      "line": 23,
+      "line": 29,
       "symbol": "DistanceFormatter.init(coder:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/DistanceFormatter.swift",
-      "line": 29,
-      "symbol": "DistanceFormatter.encode(with:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/DistanceFormatter.swift",
       "line": 35,
-      "symbol": "DistanceFormatter.string(from:)",
+      "symbol": "DistanceFormatter.encode(with:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
@@ -310,56 +205,49 @@
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 12,
-      "symbol": "NavigationMapView.navigationMapDelegate",
-      "symbol_kind": "source.lang.swift.decl.var.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 14,
+      "line": 19,
       "symbol": "NavigationMapView.locationManager(_:didUpdateLocations:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 120,
+      "line": 125,
       "symbol": "NavigationMapViewDelegate",
       "symbol_kind": "source.lang.swift.decl.protocol",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 121,
+      "line": 126,
       "symbol": "NavigationMapViewDelegate.navigationMapView(_:shouldUpdateTo:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 122,
+      "line": 127,
       "symbol": "NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 123,
+      "line": 128,
       "symbol": "NavigationMapViewDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 124,
+      "line": 129,
       "symbol": "NavigationMapViewDelegate.navigationMapView(_:shapeDescribing:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/NavigationMapView.swift",
-      "line": 125,
+      "line": 130,
       "symbol": "NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeDescribing:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -429,21 +317,7 @@
     },
     {
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteStepFormatter.swift",
-      "line": 9,
-      "symbol": "RouteStepFormatter.string(for:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteStepFormatter.swift",
-      "line": 13,
-      "symbol": "RouteStepFormatter.string(for:markUpWithSSML:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteStepFormatter.swift",
-      "line": 33,
+      "line": 39,
       "symbol": "RouteStepFormatter.getObjectValue(_:for:errorDescription:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -453,13 +327,6 @@
       "line": null,
       "symbol": "RouteTableViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteTableViewController.swift",
-      "line": 93,
-      "symbol": "RouteTableViewController.supportedDrawerPositions()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
@@ -473,13 +340,6 @@
       "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteVoiceController.swift",
       "line": 88,
       "symbol": "RouteVoiceController.init()",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/ericrwolfe/Repos/Mapbox/mapbox-navigation-ios/MapboxNavigation/RouteVoiceController.swift",
-      "line": 105,
-      "symbol": "RouteVoiceController.suspendNotifications()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },

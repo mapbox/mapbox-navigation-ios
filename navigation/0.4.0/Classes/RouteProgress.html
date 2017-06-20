@@ -20,7 +20,7 @@
     </style>
     <script type="text/javascript">
       !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
-        analytics.load("fl0c8p240n");
+	analytics.load("fl0c8p240n");
       }}();
     </script>
   </head>
@@ -38,7 +38,7 @@
             <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="Mapbox Navigation SDK for iOS Docs"/>
             <span class='header-tag'>Navigation SDK for iOS  Reference</span>
           </a>
-           (53% documented)
+           (61% documented)
         </p>
     
           <p class="header-col header-col--secondary">
@@ -636,19 +636,50 @@
                   <div class="height-container">
                     <section class="section">
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Intializes a new <code>RouteProgress</code>.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">RouteProgress</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/Route.html">Route</a></span><span class="p">,</span> <span class="nv">legIndex</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                  route
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The route to follow.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                  legIndex
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Zero-based index indicating the current leg the user is on.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L113-L118">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.4.0/MapboxCoreNavigation/RouteProgress.swift#L118-L123">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
