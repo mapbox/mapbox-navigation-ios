@@ -21,6 +21,8 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 - Automatic rerouting
 - Snap to route
 
+## [Documentation](https://mapbox.github.io/mapbox-navigation-ios/navigation/)
+
 ## Installation
 
 To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
@@ -88,39 +90,8 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
     - `Location updates`
 
 #### Storyboards
+
 See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/docs/Storyboards.md) for usage with storyboards.
-
-
-#### Styling
-
-You can customize the appearance in order to blend in with the rest of your app.
-
-```swift
-let style = Style()
-style.maneuverViewHeight = 80
-style.primaryTextColor = .black
-style.headerBackgroundColor = .white
-style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
-style.apply()
-```
-
-Or for a specific system trait in an interface’s environment.
-For instance only when being used on an iPad.
-
-```swift
-let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
-style.cellTitleLabelFont = .preferredFont(forTextStyle: .title1)
-style.apply()
-```
-
-#### NavigationViewController Delegate Methods
-
-* `navigationViewController:didArriveAtDestination:`: Fired when the user arrives at their destination. You are responsible for dismissing the UI.
-* `navigationViewControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI.
-* `navigationViewController:shouldRerouteFromLocation:`: Fired when SDK detects that a user has gone off route. You can return `false` here to either prevent a reroute from occuring or if you want to rerequest an alternative route manually.
-* `navigationViewController:willRerouteFromLocation:`: Fired just before the SDK requests a new route.
-* `navigationViewController:didRerouteAlongRoute:`: Fired as soon as the SDK receives a new route.
-* `navigationViewController:didFailToRerouteWithError:`: Fired when SDK receives an error instead of a new route.
 
 ## Building your own custom navigation UI
 
@@ -170,58 +141,3 @@ Alternatively, to install Mapbox Core Navigation using [CocoaPods](https://cocoa
    ```
 
 1. Run `pod install` and open the resulting Xcode workspace.
-
-### Route Controller
-
-`RouteController` is given a route. Internally `RouteController` matches the user's current location to the route while looking at 3 principle pieces:
-
-1. Is the user on or off the route?
-1. How far along the step is the user?
-1. Does the user need to be alerted about an upcoming maneuver?
-
-The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via `NSNotification`.
-
-### Guidance Notifications
-
-This library relies heavily on `NSNotification`s for letting the developer know when events have occurred.
-
-#### `RouteControllerProgressDidChange`
-
-* Emitted when the user moves along the route. Notification contains 3 keys:
-  * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
-  * `RouteControllerProgressDidChangeNotificationLocationKey` - `CLLocation` - Current location
-  * `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey` - `Double` - Given users speed and location, this is the number of seconds left to the end of the step
-
-#### `RouteControllerAlertLevelDidChange`
-
-* Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver. See [Alerts](#Alert levels). Notification contains 3 keys:
-  * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
-  * `RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey` - `CLLocationDistance` - The users snapped distance to the end of the route.
-
-#### `RouteControllerShouldReroute`
-
-* Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
-  * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
-
-### Alert levels
-
-Alert levels indicate the type of announcement that should be given. The enum types available are:
-
-* `none`
-* `depart` - Emitted while departing origin
-* `low` - Emitted directly after completing the maneuver
-* `medium` - Emitted when the user has [70 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L15) remaining on the route.
-* `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
-* `arrive` - Emitted when the user arrives at destination
-
-### Rerouting
-
-In the event of a reroute, it's necessary to update the current route with a new route. Once fetched, you can update the current route by:
-
-```swift
-navigation.routeProgress = RouteProgress(route: newRoute)
-```
-
-## License
-
-Mapbox Navigation SDK for iOS is released under the ISC License. [See LICENSE](https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md) for details.
