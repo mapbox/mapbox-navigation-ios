@@ -14,7 +14,7 @@ public class RouteStepFormatter: Formatter {
     }
     
     /**
-     Returns an instruction as a `String`. `markUpWithSSML` will return a string containing [SSML](https://www.w3.org/TR/speech-synthesis/) tag information around appropriate strings.
+     Returns an instruction as a `String`. Setting `markUpWithSSML` to `true` will return a string containing [SSML](https://www.w3.org/TR/speech-synthesis/) tag information around appropriate strings.
      */
     public func string(for obj: Any?, markUpWithSSML: Bool) -> String? {
         guard let step = obj as? RouteStep else {

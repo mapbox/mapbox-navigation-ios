@@ -17,7 +17,7 @@ public class DistanceFormatter: LengthFormatter {
     /**
      Intializes a new `DistanceFormatter`.
      
-     - parameter approximate: approxiates the distances.
+     - parameter approximate: approximates the distances.
      - parameter forVoiceUse: If true, the returned string will contain strings for some numbers like fractions. This is helpful for some speech synthesizers.
      */
     public init(approximate: Bool = false, forVoiceUse: Bool = false) {
@@ -41,7 +41,7 @@ public class DistanceFormatter: LengthFormatter {
     /**
      Returns a more human readable `String` from a given `CLLocationDistance`.
      
-     The users `Locale` is used here to set the units.
+     The user’s `Locale` is used here to set the units.
     */
     public func string(from distance: CLLocationDistance) -> String {
         let miles = distance / metersPerMile

@@ -217,7 +217,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     /**
-     Given a users current location, returns a `bool` whether they are currently on the route.
+     Given a users current location, returns a Boolean whether they are currently on the route.
      
      If the user is not on the route, they should be rerouted.
      */
