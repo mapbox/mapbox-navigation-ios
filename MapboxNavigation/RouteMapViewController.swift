@@ -219,15 +219,17 @@ class RouteMapViewController: UIViewController {
             if previousStep != step {
                 controller = routePageViewController.routeManeuverViewController(with: step)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
-                routePageViewController(routePageViewController, willTransitionTo: controller)
+                routePageViewController.currentManeuverPage = controller
             }
         }
         
         previousStep = step
         
+        // Do not update if the current page doesn't represent the current step
+        guard step == controller.step else { return }
+        
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         updateShield(for: controller)
-        controller.step = step
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
