@@ -156,7 +156,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         
         let camera = mapView.camera
         camera.pitch = 45
-        camera.altitude = 1_000
+        camera.altitude = 600
+        if let userLocation = mapView.userLocation {
+            camera.centerCoordinate = userLocation.coordinate
+            if let location = userLocation.location {
+                camera.heading = location.course
+            }
+        }
         navigationViewController.pendingCamera = camera
         
         present(navigationViewController, animated: true, completion: nil)
