@@ -7,25 +7,24 @@ import Mapbox
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate, UITabBarDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate {
     
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
     var userRoute: Route?
     
     @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var navitationTabBar: UITabBar!
+    @IBOutlet weak var toolbar: UIToolbar!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        automaticallyAdjustsScrollViewInsets = false
-        mapView.delegate = self
-        mapView.navigationMapDelegate = self
-	navitationTabBar.delegate = self
-        
-        mapView.userTrackingMode = .follow
+	automaticallyAdjustsScrollViewInsets = false
+	mapView.delegate = self
+	mapView.navigationMapDelegate = self
+
+	mapView.userTrackingMode = .follow
     }
     
     deinit {
@@ -47,19 +46,11 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         destination?.coordinate = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
         mapView.addAnnotation(destination!)
         
-        getRoute()
+	getRoute()
     }
-    
-    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-	if item.tag == 0 {
-	    startNavigation(along: userRoute!)
-	} else if item.tag == 1 {
-	    performSegue(withIdentifier: "customUI", sender: self)
-	}
-    }
-    
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-	if segue.identifier == "customUI" {
+	if segue.identifier == "CustomUI" {
 	    if let customUI = segue.destination as? CustomNavigationUI {
 		let camera = mapView.camera
 		camera.pitch = 50
@@ -91,13 +82,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
             }
             guard let route = routes?.first else {
                 return
-            }
-            
-            self?.userRoute = route
-	    self?.navitationTabBar.isHidden = false
-            
-            // Open method for adding and updating the route line
-            self?.mapView.showRoute(route)
+	    }
+
+	    self?.userRoute = route
+	    self?.toolbar.isHidden = false
+
+	    // Open method for adding and updating the route line
+	    self?.mapView.showRoute(route)
             
             didFinish?()
         }

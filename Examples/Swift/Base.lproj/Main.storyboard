@@ -38,40 +38,50 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="Tey-e2-Fxu" appends="YES" id="gi9-4K-f5d"/>
-                                </connections>
-                            </view>
-			    <tabBar hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D72-tc-u7D">
-				<rect key="frame" x="0.0" y="618" width="375" height="49"/>
-				<color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+				    <outletCollection property="gestureRecognizers" destination="Tey-e2-Fxu" appends="YES" id="gi9-4K-f5d"/>
+				</connections>
+			    </view>
+			    <toolbar hidden="YES" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="n6v-5m-Xa1">
+				<rect key="frame" x="0.0" y="623" width="375" height="44"/>
 				<items>
-				    <tabBarItem title="Built in UI" image="recenter" id="foe-yv-Mfb"/>
-				    <tabBarItem tag="1" title="Custom UI" image="recenter" id="xxw-34-ILB"/>
-				    <tabBarItem tag="1" title="Simulate location" image="location" id="28b-Ne-m1H"/>
+				    <barButtonItem title="Built in UI" id="xy9-qZ-25f"/>
+				    <barButtonItem style="plain" systemItem="flexibleSpace" id="6dp-J9-CDo"/>
+				    <barButtonItem title="Custom UI" id="MuU-1y-lta">
+					<connections>
+					    <segue destination="j9p-fX-jo4" kind="show" identifier="CustomUI" id="jff-xp-qnI"/>
+					</connections>
+				    </barButtonItem>
+				    <barButtonItem style="plain" systemItem="flexibleSpace" id="T0d-fx-Rk9"/>
+				    <barButtonItem title="Settings" id="AY9-Eb-4AL">
+					<connections>
+					    <segue destination="lRW-ue-2Vy" kind="show" id="jTs-W3-D7S"/>
+					</connections>
+				    </barButtonItem>
 				</items>
-			    </tabBar>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <gestureRecognizers/>
-                        <constraints>
-			    <constraint firstItem="D72-tc-u7D" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ADE-K0-BeC"/>
-                            <constraint firstItem="A3N-JT-loC" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="BVa-uD-YOz"/>
-			    <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="D72-tc-u7D" secondAttribute="bottom" id="PlK-bK-jhE"/>
-                            <constraint firstItem="A3N-JT-loC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="UoZ-PE-6rl"/>
-                            <constraint firstAttribute="trailing" secondItem="A3N-JT-loC" secondAttribute="trailing" id="a1N-bP-ay4"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="A3N-JT-loC" secondAttribute="bottom" id="iAW-RV-9er"/>
-			    <constraint firstAttribute="trailing" secondItem="D72-tc-u7D" secondAttribute="trailing" id="iEh-do-tgE"/>
-                        </constraints>
-                    </view>
+			    </toolbar>
+			</subviews>
+			<color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+			<gestureRecognizers/>
+			<constraints>
+			    <constraint firstItem="n6v-5m-Xa1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="2FJ-h7-fPg"/>
+			    <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="n6v-5m-Xa1" secondAttribute="bottom" id="82A-cZ-kva"/>
+			    <constraint firstItem="A3N-JT-loC" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="BVa-uD-YOz"/>
+			    <constraint firstAttribute="trailing" secondItem="n6v-5m-Xa1" secondAttribute="trailing" id="Jqj-JY-Nax"/>
+			    <constraint firstItem="A3N-JT-loC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="UoZ-PE-6rl"/>
+			    <constraint firstAttribute="trailing" secondItem="A3N-JT-loC" secondAttribute="trailing" id="a1N-bP-ay4"/>
+			    <constraint firstAttribute="trailing" secondItem="n6v-5m-Xa1" secondAttribute="trailing" id="e1f-yk-oSd"/>
+			    <constraint firstItem="n6v-5m-Xa1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="h2t-a7-0XV"/>
+			    <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="A3N-JT-loC" secondAttribute="bottom" id="iAW-RV-9er"/>
+			</constraints>
+		    </view>
 		    <navigationItem key="navigationItem" title="Long press to select a destination" id="zxr-0T-HBr"/>
-                    <connections>
-                        <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
-			<outlet property="navitationTabBar" destination="D72-tc-u7D" id="5Aa-u5-bDN"/>
-                        <segue destination="dYn-UD-FHX" kind="presentation" identifier="StartNavigation" id="CX3-Eh-kHD"/>
-			<segue destination="j9p-fX-jo4" kind="show" identifier="customUI" id="cTi-EC-ul5"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+		    <connections>
+			<outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
+			<outlet property="toolbar" destination="n6v-5m-Xa1" id="GPw-zF-pkg"/>
+			<segue destination="dYn-UD-FHX" kind="presentation" identifier="StartNavigation" id="CX3-Eh-kHD"/>
+		    </connections>
+		</viewController>
+		<placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Tey-e2-Fxu">
                     <connections>
                         <action selector="didLongPress:" destination="BYZ-38-t0r" id="NHG-Kd-gSa"/>
@@ -101,8 +111,27 @@
             <objects>
                 <viewControllerPlaceholder storyboardName="Navigation" bundleIdentifier="MapboxNavigation" id="dYn-UD-FHX" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RhK-y2-JnK" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
+	    </objects>
 	    <point key="canvasLocation" x="642" y="-253"/>
+	</scene>
+	<!--Settings-->
+	<scene sceneID="hwF-ef-Qgh">
+	    <objects>
+		<placeholder placeholderIdentifier="IBFirstResponder" id="S0I-yR-SgC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+		<viewController title="Settings" id="lRW-ue-2Vy" sceneMemberID="viewController">
+		    <layoutGuides>
+			<viewControllerLayoutGuide type="top" id="RGd-KN-Blk"/>
+			<viewControllerLayoutGuide type="bottom" id="bQa-mo-fRe"/>
+		    </layoutGuides>
+		    <view key="view" contentMode="scaleToFill" id="ExS-sa-xgC">
+			<rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+			<autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+			<color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+		    </view>
+		    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+		</viewController>
+	    </objects>
+	    <point key="canvasLocation" x="25" y="787"/>
 	</scene>
 	<!--Custom NavigationUI-->
 	<scene sceneID="uy4-fi-XVj">
@@ -134,10 +163,6 @@
 		<placeholder placeholderIdentifier="IBFirstResponder" id="bbz-fl-vkV" userLabel="First Responder" sceneMemberID="firstResponder"/>
 	    </objects>
 	    <point key="canvasLocation" x="863" y="224"/>
-        </scene>
+	</scene>
     </scenes>
-    <resources>
-	<image name="location" width="22" height="22"/>
-	<image name="recenter" width="16" height="16"/>
-    </resources>
 </document>
