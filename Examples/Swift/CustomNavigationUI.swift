@@ -86,7 +86,7 @@ class CustomNavigationUI: UIViewController, MGLMapViewDelegate, AVSpeechSynthesi
 	if let upComingStep = routeProgress.currentLegProgress.upComingStep {
 	    navigationController?.navigationBar.isHidden = false
 
-	    navigationController?.navigationBar.topItem?.title =  "In \(roundToTens(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining))m \(upComingStep.instructions)"
+	    navigationController?.navigationBar.topItem?.title =  "In \(routeProgress.currentLegProgress.currentStepProgress.distanceRemaining)m \(upComingStep.instructions)"
 	} else {
 	    navigationController?.navigationBar.isHidden = true
 	}
