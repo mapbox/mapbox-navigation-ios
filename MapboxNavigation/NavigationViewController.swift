@@ -116,6 +116,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     public var route: Route! {
         didSet {
             ensureRouteController()
+            routeController.routeProgress = RouteProgress(route: route)
             mapViewController?.notifyDidReroute(route: route)
             tableViewController?.notifyDidReroute()
         }
@@ -369,10 +370,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 routeController.locationManager.activityType = .automotiveNavigation
                 routeController.locationManager.allowsBackgroundLocationUpdates = true
             }
-        }
-        
-        if route != routeController.routeProgress.route {
-            routeController.routeProgress = RouteProgress(route: route)
         }
         
         if destination == nil {
