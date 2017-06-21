@@ -373,7 +373,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         if route != routeController.routeProgress.route {
             routeController.routeProgress = RouteProgress(route: route)
-            routeController.routeProgress.currentLegProgress.stepIndex = 0
         }
         
         if destination == nil {
