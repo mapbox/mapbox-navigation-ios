@@ -76,6 +76,7 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
     guard let route = routes?.first else { return }
 
     let viewController = NavigationViewController(for: route)
+    viewController.simulatesLocationUpdates = true
     self.present(viewController, animated: true, completion: nil)
 }
 ```
@@ -88,10 +89,6 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
 1. If you need voice guidance while your app is in the background, you'll also need to add the `audio` and `location` value to the `UIBackgroundModes` array. You can also do this by navigating to the `Capabilities` tab -> `Background Modes` and enabling the following:
     - `Audio, AirPlay, and Picture in Picture`
     - `Location updates`
-
-#### Storyboards
-See [this guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/docs/Storyboards.md) for usage with storyboards.
-
 
 #### Styling
 
@@ -153,7 +150,18 @@ If you need additional flexibility, you can use the following building blocks to
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/MapboxCoreNavigation.svg)](https://cocoapods.org/pods/MapboxCoreNavigation/)
 
-To install Mapbox Core Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
+To install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
+
+1. Specify the following dependency in your Podfile:
+   ```ruby
+   pod 'MapboxCoreNavigation', '~> 0.4.0'
+   ```
+
+1. Run `pod install` and open the resulting Xcode workspace.
+
+Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
+
+Alternatively, to install Mapbox Core Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
@@ -163,15 +171,6 @@ To install Mapbox Core Navigation using [Carthage](https://github.com/Carthage/C
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
 
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include MapboxCoreNavigation.framework.
-
-Alternatively, to install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
-
-1. Specify the following dependency in your Podfile:
-   ```ruby
-   pod 'MapboxCoreNavigation', '~> 0.4.0'
-   ```
-
-1. Run `pod install` and open the resulting Xcode workspace.
 
 ### Route Controller
 
@@ -221,6 +220,7 @@ Alert levels indicate the type of announcement that should be given. The enum ty
 In the event of a reroute, it's necessary to update the current route with a new route. Once fetched, you can update the current route by:
 
 ```swift
+var navigation: RouteController!
 navigation.routeProgress = RouteProgress(route: newRoute)
 ```
 
