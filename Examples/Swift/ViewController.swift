@@ -7,32 +7,28 @@ import Mapbox
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate, UITabBarDelegate {
     
     var destination: MGLPointAnnotation?
     var navigation: RouteController?
     var userRoute: Route?
     
     @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var startNavigationButton: UIButton!
-    @IBOutlet weak var simulateNavigationButton: UIButton!
-    @IBOutlet weak var howToBeginLabel: UILabel!
+    @IBOutlet weak var navitationTabBar: UITabBar!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         automaticallyAdjustsScrollViewInsets = false
-        mapView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         mapView.delegate = self
         mapView.navigationMapDelegate = self
+	navitationTabBar.delegate = self
         
         mapView.userTrackingMode = .follow
-        resumeNotifications()
     }
     
     deinit {
-        suspendNotifications()
         navigation?.suspendLocationUpdates()
     }
     
@@ -45,6 +41,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
             mapView.removeAnnotation(destination)
         }
         
+	navigationController?.navigationBar.topItem?.title = "Select Navigation Method"
+
         destination = MGLPointAnnotation()
         destination?.coordinate = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
         mapView.addAnnotation(destination!)
@@ -52,55 +50,30 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         getRoute()
     }
     
-    @IBAction func didTapStartNavigation(_ sender: Any) {
-        startNavigation(along: userRoute!)
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+	if item.tag == 0 {
+	    startNavigation(along: userRoute!)
+	} else if item.tag == 1 {
+	    performSegue(withIdentifier: "customUI", sender: self)
+	}
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	if segue.identifier == "customUI" {
+	    if let customUI = segue.destination as? CustomNavigationUI {
+		let camera = mapView.camera
+		camera.pitch = 50
+		camera.altitude = 600
+
+		customUI.userRoute = userRoute
+		customUI.pendingCamera = camera
+		customUI.destination = destination!
+	    }
+	}
     }
     
     @IBAction func didTapSimulateNavigation(_ sender: Any) {
-        startNavigation(along: userRoute!, simulatesLocationUpdates: true)
-    }
-    
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(_:)), name: RouteControllerWillReroute, object: navigation)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: navigation)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: navigation)
-    }
-    
-    // Notification sent when the alert level changes.
-    func alertLevelDidChange(_ notification: NSNotification) {
-        // Good place to give alerts about maneuver. These announcements are handled by `RouteVoiceController`
-    }
-    
-    // Notifications sent on all location updates
-    func progressDidChange(_ notification: NSNotification) {
-        // If you are using MapboxCoreNavigation,
-        // this would be a good time to update UI elements.
-        // You can grab the current routeProgress like:
-        // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-    }
-    
-    // Notification sent when the user is determined to be off the current route
-    func willReroute(_ notification: NSNotification) {
-        //
-        // If you're using MapboxNavigation,
-        // this is how you'd handle fetching a new route and setting it as the active route
-        /*
-         getRoute {
-         /*
-         **IMPORTANT**
-         
-         When rerouting, you need to give the RouteController a new route.
-         Otherwise, it will continue to compare the user to the old route and continually reroute the user.
-         */
-         self.navigation?.routeProgress = RouteProgress(route: self.userRoute!)
-         }
-         */
+	startNavigation(along: userRoute!, simulatesLocationUpdates: true)
     }
     
     func getRoute(didFinish: (()->())? = nil) {
@@ -121,9 +94,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
             }
             
             self?.userRoute = route
-            self?.startNavigationButton.isHidden = false
-            self?.simulateNavigationButton.isHidden = false
-            self?.howToBeginLabel.isHidden = true
+	    self?.navitationTabBar.isHidden = false
             
             // Open method for adding and updating the route line
             self?.mapView.showRoute(route)
