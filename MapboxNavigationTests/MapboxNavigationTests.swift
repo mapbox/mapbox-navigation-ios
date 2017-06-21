@@ -4,6 +4,8 @@ import FBSnapshotTestCase
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
+let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
+
 class MapboxNavigationTests: FBSnapshotTestCase {
     
     var shieldImage: UIImage {
@@ -87,5 +89,40 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.streetLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
+    }
+    
+    func testRouteSwitching() {
+        let bundle = Bundle(for: MapboxNavigationTests.self)
+        var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
+        var route = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
+        
+        let navigation = NavigationViewController(for: route, directions: directions)
+        navigation.loadViewIfNeeded()
+        
+        filePath = bundle.path(forResource: "GGPark-to-BernalHeights", ofType: "route")!
+        let newRoute = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
+        
+        navigation.route = newRoute
+        
+        XCTAssertTrue(navigation.routeController.routeProgress.route == newRoute, "Route should be equal the new route")
+        
+        let tableViewController = navigation.tableViewController!
+        let numberOfRows = tableViewController.tableView(tableViewController.tableView, numberOfRowsInSection: 0)
+        XCTAssertTrue(numberOfRows == newRoute.legs[0].steps.count,
+                      "It should be same amount of cells as steps in the new route")
+    }
+}
+
+extension CLLocationCoordinate2D {
+    static var unionSquare: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: 37.786902, longitude: -122.407668)
+    }
+    
+    static var goldenGatePark: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: 37.770935, longitude: -122.479346)
+    }
+    
+    static var bernalHeights: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: 37.739912, longitude: -122.420100)
     }
 }
