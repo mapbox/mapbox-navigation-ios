@@ -148,7 +148,10 @@
     [self performSegueWithIdentifier:@"StartNavigation" sender:self];
     
     // Using code
-    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route directions:[MBDirections sharedDirections]];
+    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
+                                                                                     directions:[MBDirections sharedDirections]
+                                                                                locationManager:nil];
+    
     controller.pendingCamera = self.mapView.camera;
     //[self presentViewController:controller animated:YES completion:nil];
 }
