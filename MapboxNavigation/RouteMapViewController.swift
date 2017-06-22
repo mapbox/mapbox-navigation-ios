@@ -259,10 +259,6 @@ class RouteMapViewController: UIViewController {
         let imageName = imageNamePattern.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "{ref}", with: number)
         let apiURL = URL(string: "https://commons.wikimedia.org/w/api.php?action=query&format=json&maxage=86400&prop=imageinfo&titles=File%3A\(imageName)&iiprop=url%7Csize&iiurlheight=\(Int(round(height)))")!
 
-        guard shieldAPIDataTask?.originalRequest?.url != apiURL else {
-            return nil
-        }
-
         shieldAPIDataTask?.cancel()
         return URLSession.shared.dataTask(with: apiURL) { [weak self] (data, response, error) in
             var json: [String: Any] = [:]
@@ -516,11 +512,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 
     func updateShield(for controller: RouteManeuverViewController) {
-        let currentLegProgress = routeController.routeProgress.currentLegProgress
-
-        guard let upComingStep = currentLegProgress?.upComingStep else { return }
-        guard let ref = upComingStep.codes?.first else { return }
-        guard controller.shieldImage == nil else { return }
+        guard let ref = controller.step.codes?.first, controller.shieldImage == nil else { return }
 
         let components = ref.components(separatedBy: " ")
 
