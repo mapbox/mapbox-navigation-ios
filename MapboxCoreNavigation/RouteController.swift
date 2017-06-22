@@ -140,7 +140,7 @@ open class RouteController: NSObject {
     /**
      IOS 8601 timestamp of when the `RouteController` was initialized.
      */
-    public let startTimestamp: String = Date.ISO8601
+    public let startTimestamp: String = Date().ISO8601
     
     /**
      Unique idenitifier for the current `RouteController` session.
@@ -525,7 +525,7 @@ extension RouteController: CLLocationManagerDelegate {
             locationDictionary["lat"] = location.coordinate.latitude
             locationDictionary["lng"] = location.coordinate.latitude
             locationDictionary["altitude"] = location.altitude
-            locationDictionary["timestamp"] = location.timestamp
+            locationDictionary["timestamp"] = location.timestamp.ISO8601
             locationDictionary["horizontalAccuracy"] = location.horizontalAccuracy
             locationDictionary["verticalAccuracy"] = location.verticalAccuracy
             locationDictionary["course"] = location.course

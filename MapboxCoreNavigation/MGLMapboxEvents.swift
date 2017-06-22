@@ -8,7 +8,7 @@ extension MGLMapboxEvents {
         modifiedEventDictionary["platform"] = UIDevice.current.systemName
         modifiedEventDictionary["operatingSystemVersion"] = "\(UIDevice.current.systemName)-\(UIDevice.current.systemVersion)"
         modifiedEventDictionary["sdkIdentifier"] = "mapbox-navigation-ios"
-        modifiedEventDictionary["sdkVersion"] = "0.4.0"
+        modifiedEventDictionary["sdkVersion"] = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
         modifiedEventDictionary["eventVersion"] = 1
         modifiedEventDictionary["sessionIdentifier"] = sessionIdentifier
         
@@ -16,7 +16,7 @@ extension MGLMapboxEvents {
             modifiedEventDictionary["geometry"] = Polyline(coordinates: geometry)
         }
 
-        modifiedEventDictionary["created"] = Date.ISO8601
+        modifiedEventDictionary["created"] = Date().ISO8601
         modifiedEventDictionary["routeProfile"] = routeProgress.route.routeOptions.profileIdentifier
         
         modifiedEventDictionary["batteryLevel"] = UIDevice.current.batteryState
