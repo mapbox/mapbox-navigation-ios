@@ -115,7 +115,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route! {
         didSet {
-            setupRouteController()
+            ensureRouteController()
+            routeController.routeProgress = RouteProgress(route: route)
+            mapViewController?.notifyDidReroute(route: route)
+            tableViewController?.notifyDidReroute()
         }
     }
     
@@ -228,7 +231,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         self.directions = directions
         self.route = route
-        self.setupRouteController()
+        self.ensureRouteController()
         self.mapViewController = mapViewController
         self.tableViewController = tableViewController
         
@@ -357,7 +360,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         UIApplication.shared.scheduleLocalNotification(notification)
     }
     
-    func setupRouteController() {
+    func ensureRouteController() {
         if routeController == nil {
             routeController = RouteController(along: route, directions: directions)
             routeController.delegate = self

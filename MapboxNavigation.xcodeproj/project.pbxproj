@@ -81,6 +81,8 @@
 		354A01EC1E6626EF00D765C2 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; };
 		354A01ED1E6626EF00D765C2 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354BD4F51E6637D500AE1344 /* AWSPolly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354BD4F11E6634C500AE1344 /* AWSPolly.framework */; };
+		355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */; };
+		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
@@ -287,6 +289,8 @@
 		354A01BE1E6625A900D765C2 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		354BD4F11E6634C500AE1344 /* AWSPolly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSPolly.framework; path = Carthage/Build/iOS/AWSPolly.framework; sourceTree = "<group>"; };
 		354BD4F61E6638E800AE1344 /* AWSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSCore.framework; path = Carthage/Build/iOS/AWSCore.framework; sourceTree = "<group>"; };
+		355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "GGPark-to-BernalHeights.route"; sourceTree = "<group>"; };
+		355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
 		355EF9641EDF264200749641 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = sv; path = sv.lproj/Abbreviations.plist; sourceTree = "<group>"; };
 		356B7D8A1EE166E100FE5B89 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = SOURCE_ROOT; };
 		357F0DF01EB9D99F00A0B53C /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -517,6 +521,16 @@
 			path = "Examples/Objective-CTests";
 			sourceTree = "<group>";
 		};
+		355DB5731EFA73410091BFB7 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				352690481ECC843700E387BD /* Fixture.swift */,
+				355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */,
+				355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
 		358D14641E5E3B7700ADE590 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
@@ -544,7 +558,7 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
-				352690481ECC843700E387BD /* Fixture.swift */,
+				355DB5731EFA73410091BFB7 /* Fixtures */,
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
@@ -998,6 +1012,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */,
+				355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */,
+				355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
