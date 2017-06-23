@@ -112,7 +112,13 @@ public protocol NavigationViewControllerDelegate {
 @objc(MBNavigationViewController)
 public class NavigationViewController: NavigationPulleyViewController, RouteMapViewControllerDelegate {
     
-    // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+    /** 
+     `route` is a `Route` object constructed by [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/)
+     
+     In cases where you need to update the route after navigation has started
+     you can set a new `route` here and `NavigationViewController` will
+     update its UI accordingly.
+     */
     public var route: Route! {
         didSet {
             if routeController == nil {
@@ -127,7 +133,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /** 
-     `destination` is an instance of `MGLAnnotation` that will be showned on
+     `destination` is an instance of `MGLAnnotation` that will be shown on
      on the destination of your route. The last coordinate of the route will be
      used if no destination is given.
     */
@@ -135,7 +141,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     /**
      `directions` is an instance of `Directions` need for rerouting.
-     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+     See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/)
      for further information.
      */
     public var directions: Directions!
@@ -219,7 +225,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      for the given route. A optional `direction` object is needed for  potential
      rerouting.
 
-     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+     See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/)
      for further information.
      */
     @objc(initWithRoute:directions:style:locationManager:)

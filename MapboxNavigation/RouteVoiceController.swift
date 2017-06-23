@@ -58,6 +58,23 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     */
     public var bufferBetweenAnnouncements: TimeInterval = 3
     
+    /**
+     `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
+     You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
+     */
+    public var identityPoolId: String? {
+        didSet {
+            if let poolId = identityPoolId {
+                let credentialsProvider = AWSCognitoCredentialsProvider(regionType:regionType, identityPoolId: poolId)
+                let configuration = AWSServiceConfiguration(region:regionType, credentialsProvider:credentialsProvider)
+                AWSServiceManager.default().defaultServiceConfiguration = configuration
+            }
+        }
+    }
+    
+    /**
+     Default initializer for `RouteVoiceController`
+     */
     override public init() {
         super.init()
         speechSynth.delegate = self

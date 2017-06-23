@@ -3,6 +3,8 @@ import UIKit
 /**
  `Style` is a convenient wrapper for styling the appearance of various interface
  components throughout the Navigation UI.
+ 
+ Styles are applied globally using UIAppearance. You should call `Style.apply()` to apply the style to the `NavigationViewController`.
  */
 @objc(MBStyle)
 public class Style: NSObject {

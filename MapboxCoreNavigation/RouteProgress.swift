@@ -50,10 +50,13 @@ public enum AlertLevel: Int {
  */
 @objc(MBRouteProgress)
 open class RouteProgress: NSObject {
+    /**
+     Returns the current `Route`
+     */
     public let route: Route
 
     /**
-     Index representing current leg
+     Index representing current `RouteLeg`
      */
     public var legIndex: Int {
         didSet {
@@ -103,10 +106,16 @@ open class RouteProgress: NSObject {
         return route.distance - distanceTraveled
     }
     
+    /**
+     Number of waypoints remaining on the current route
+     */
     public var remainingWaypoints: [Waypoint] {
         return route.legs.suffix(from: legIndex).map { $0.destination }
     }
     
+    /**
+     Returns the progress along the current `RouteLeg`
+     */
     public var currentLegProgress: RouteLegProgress!
 
     /**
@@ -128,6 +137,9 @@ open class RouteProgress: NSObject {
  */
 @objc(MBRouteLegProgress)
 open class RouteLegProgress: NSObject {
+    /**
+     Returns the current `RouteLeg`.
+     */
     public let leg: RouteLeg
     
     
@@ -198,7 +210,7 @@ open class RouteLegProgress: NSObject {
     }
     
     /**
-     Returns the `Step` before the current step.
+     Returns the `RouteStep` before the current step.
      
      If there is no `priorStep`, nil is returned.
      */
@@ -211,7 +223,7 @@ open class RouteLegProgress: NSObject {
     
     
     /**
-     Returns number representing current `Step` for the leg the user is on.
+     Returns the current `RouteStep` for the leg the user is on.
      */
     public var currentStep: RouteStep {
         return leg.steps[stepIndex]
@@ -219,7 +231,7 @@ open class RouteLegProgress: NSObject {
 
 
     /**
-     Returns the upcoming `Step`.
+     Returns the upcoming `RouteStep`.
      
      If there is no `upcomingStep`, nil is returned.
      */
@@ -244,12 +256,15 @@ open class RouteLegProgress: NSObject {
 
 
     /**
-     Return bool whether step provided is the current `Step` the user is on.
+     Return bool whether step provided is the current `RouteStep` the user is on.
      */
     public func isCurrentStep(_ step: RouteStep) -> Bool {
         return step == currentStep
     }
     
+    /**
+     Returns the progress along the current `RouteStep`
+     */
     public var currentStepProgress: RouteStepProgress
 
 
@@ -325,6 +340,11 @@ open class RouteStepProgress: NSObject {
     }
 
 
+    /**
+     Intializes a new `RouteStepProgress`.
+     
+     - parameter step: Step on a `RouteLeg`.
+     */
     public init(step: RouteStep) {
         self.step = step
     }
