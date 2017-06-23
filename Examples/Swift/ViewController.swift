@@ -7,33 +7,48 @@ import Mapbox
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
 
-class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewControllerDelegate, NavigationMapViewDelegate {
+enum ExampleMode {
+    case `default`
+    case custom
+    case styled
+    case multipleWaypoints
+}
+
+class ViewController: UIViewController, MGLMapViewDelegate {
     
     var destination: MGLPointAnnotation?
-    var navigation: RouteController?
-    var userRoute: Route?
+    var currentRoute: Route? {
+        didSet {
+            self.startButton.isEnabled = currentRoute != nil
+        }
+    }
     
     @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var startNavigationButton: UIButton!
-    @IBOutlet weak var simulateNavigationButton: UIButton!
-    @IBOutlet weak var howToBeginLabel: UILabel!
+    @IBOutlet weak var longPressHintView: UIView!
+
+    @IBOutlet weak var simulationButton: UIButton!
+    @IBOutlet weak var startButton: UIButton!
     
+    var exampleMode: ExampleMode?
+    var nextWaypoint: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         automaticallyAdjustsScrollViewInsets = false
-        mapView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 44, right: 0)
         mapView.delegate = self
-        mapView.navigationMapDelegate = self
         
         mapView.userTrackingMode = .follow
-        resumeNotifications()
+
+        simulationButton.isSelected = true
+        startButton.isEnabled = false
     }
     
-    deinit {
-        suspendNotifications()
-        navigation?.suspendLocationUpdates()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        // Reset the navigation styling to the defaults
+        Style.defaultStyle.apply()
     }
     
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -45,68 +60,45 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
             mapView.removeAnnotation(destination)
         }
         
+        longPressHintView.isHidden = true
+        
         destination = MGLPointAnnotation()
         destination?.coordinate = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
         mapView.addAnnotation(destination!)
         
-        getRoute()
+        requestRoute()
     }
     
-    @IBAction func didTapStartNavigation(_ sender: Any) {
-        startNavigation(along: userRoute!)
+    @IBAction func simulateButtonPressed(_ sender: Any) {
+        simulationButton.isSelected = !simulationButton.isSelected
     }
     
-    @IBAction func didTapSimulateNavigation(_ sender: Any) {
-        startNavigation(along: userRoute!, simulatesLocationUpdates: true)
+    @IBAction func startButtonPressed(_ sender: Any) {
+        let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
+            self.startBasicNavigation()
+        }))
+        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
+            self.startCustomNavigation()
+        }))
+        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
+            self.startStyledNavigation()
+        }))
+        alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
+            self.startMultipleWaypoints()
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        present(alertController, animated: true, completion: nil)
     }
     
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(_:)), name: RouteControllerWillReroute, object: navigation)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: navigation)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: navigation)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: navigation)
-    }
-    
-    // Notification sent when the alert level changes.
-    func alertLevelDidChange(_ notification: NSNotification) {
-        // Good place to give alerts about maneuver. These announcements are handled by `RouteVoiceController`
-    }
-    
-    // Notifications sent on all location updates
-    func progressDidChange(_ notification: NSNotification) {
-        // If you are using MapboxCoreNavigation,
-        // this would be a good time to update UI elements.
-        // You can grab the current routeProgress like:
-        // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-    }
-    
-    // Notification sent when the user is determined to be off the current route
-    func willReroute(_ notification: NSNotification) {
-        //
-        // If you're using MapboxNavigation,
-        // this is how you'd handle fetching a new route and setting it as the active route
-        /*
-         getRoute {
-         /*
-         **IMPORTANT**
-         
-         When rerouting, you need to give the RouteController a new route.
-         Otherwise, it will continue to compare the user to the old route and continually reroute the user.
-         */
-         self.navigation?.routeProgress = RouteProgress(route: self.userRoute!)
-         }
-         */
-    }
-    
-    func getRoute(didFinish: (()->())? = nil) {
+    // Helper for requesting a route
+    func requestRoute() {
         guard let destination = destination else { return }
         
-        let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination.coordinate])
+        let options = RouteOptions(coordinates: [
+            mapView.userLocation!.coordinate,
+            destination.coordinate,
+        ])
         options.includesSteps = true
         options.routeShapeResolution = .full
         options.profileIdentifier = .automobileAvoidingTraffic
@@ -116,61 +108,59 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
                 print(error!)
                 return
             }
-            guard let route = routes?.first else {
-                return
-            }
-            
-            self?.userRoute = route
-            self?.startNavigationButton.isHidden = false
-            self?.simulateNavigationButton.isHidden = false
-            self?.howToBeginLabel.isHidden = true
+            guard let route = routes?.first else { return }
+                
+            self?.currentRoute = route
             
             // Open method for adding and updating the route line
             self?.mapView.showRoute(route)
-            
-            didFinish?()
         }
     }
     
-    func startNavigation(along route: Route, simulatesLocationUpdates: Bool = false) {
-        // Pass through:
-        // 1. The route the user will take.
-        // 2. A `Directions` object, used for rerouting.
+    // MARK: - Basic Navigation
+    
+    func startBasicNavigation() {
+        guard let route = currentRoute else { return }
+            
+        exampleMode = .default
+            
         let navigationViewController = NavigationViewController(for: route)
-        
-        // If you'd like to use AWS Polly, provide your IdentityPoolId below.
-        // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
-        // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
-        //navigationViewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
-        
-        navigationViewController.simulatesLocationUpdates = simulatesLocationUpdates
-        navigationViewController.routeController.snapsUserLocationAnnotationToRoute = true
-        navigationViewController.voiceController?.volume = 0.5
+        navigationViewController.simulatesLocationUpdates = simulationButton.isSelected
         navigationViewController.navigationDelegate = self
-        
-        // Uncomment to apply custom styles
-//        styleForRegular().apply()
-//        styleForCompact().apply()
-//        styleForiPad().apply()
-//        styleForCarPlay().apply()
-        
-        let camera = mapView.camera
-        camera.pitch = 45
-        camera.altitude = 600
-        if let userLocation = mapView.userLocation {
-            camera.centerCoordinate = userLocation.coordinate
-            if let location = userLocation.location {
-                camera.heading = location.course
-            }
-        }
-        navigationViewController.pendingCamera = camera
-        
+            
         present(navigationViewController, animated: true, completion: nil)
     }
+
+    // MARK: - Custom Navigation UI
+
+    func startCustomNavigation() {
+        guard let route = self.currentRoute else { return }
+
+        guard let customViewController = self.storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
+            
+        exampleMode = .custom
+
+        customViewController.userRoute = route
+        customViewController.destination = self.destination
+            
+        present(customViewController, animated: true, completion: nil)
+    }
     
-    func styleForRegular() -> Style {
-        let trait = UITraitCollection(verticalSizeClass: .regular)
-        let style = Style(traitCollection: trait)
+    // MARK: - Styling the default UI
+
+    func startStyledNavigation() {
+        guard let route = self.currentRoute else { return }
+
+        exampleMode = .styled
+
+        let navigationViewController = NavigationViewController(for: route)
+        navigationViewController.simulatesLocationUpdates = simulationButton.isSelected
+        navigationViewController.navigationDelegate = self
+        
+        // Set a custom style URL
+        navigationViewController.mapView?.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v1")
+
+        let style = Style()
         
         // General styling
         style.tintColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
@@ -178,87 +168,95 @@ class ViewController: UIViewController, MGLMapViewDelegate, NavigationViewContro
         style.secondaryTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
         style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
-        style.wayNameTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)    
-
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
         style.maneuverViewHeight = 100
-        
+
+        // Current street name label
+        style.wayNameTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+            
         // Table view (Drawer)
         style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
-        style.cellTitleLabelTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
-        style.cellTitleLabelFont = UIFont.preferredFont(forTextStyle: .headline)
-        style.cellSubtitleLabelFont = UIFont.preferredFont(forTextStyle: .footnote)
-        
-        return style
+        style.cellTitleLabelTextColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        style.cellTitleLabelFont = UIFont(name: "Georgia-Bold", size: 17)
+        style.cellSubtitleLabelFont = UIFont(name: "Georgia", size: 15)
+            
+        style.apply()
+            
+        // If you'd like to use AWS Polly, provide your IdentityPoolId below.
+        // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
+        // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
+        //navigationViewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
+            
+        present(navigationViewController, animated: true, completion: nil)
     }
     
-    func styleForCompact() -> Style {
-        let horizontal = UITraitCollection(horizontalSizeClass: .compact)
-        let vertical = UITraitCollection(verticalSizeClass: .compact)
-        let traitCollection = UITraitCollection(traitsFrom: [horizontal, vertical])
-        let style = Style(traitCollection: traitCollection)
+    // MARK: - Navigation with multiple waypoints
+
+    func startMultipleWaypoints() {
+        guard let route = self.currentRoute else { return }
+
+        exampleMode = .multipleWaypoints
         
-        // General styling
-        style.tintColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
-        style.primaryTextColor = .black
-        style.secondaryTextColor = .gray
-        style.buttonTextColor = .black
+        // When the user arrives at their destination, we'll prompt them to return back to where they started
+        nextWaypoint = self.currentRoute?.coordinates?.first
         
-        // Maneuver view (Page view)
-        style.maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        style.maneuverViewHeight = 70
-        
-        // Table view (Drawer)
-        style.headerBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        style.primaryTextColor = .black
-        style.secondaryTextColor = .gray
-        style.cellTitleLabelTextColor = .black
-        style.cellSubtitleLabelTextColor = .gray
-        style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
-        style.cellSubtitleLabelFont = .preferredFont(forTextStyle: .footnote)
-        
-        return style
+        let navigationViewController = NavigationViewController(for: route)
+        navigationViewController.simulatesLocationUpdates = simulationButton.isSelected
+        navigationViewController.navigationDelegate = self
+
+        present(navigationViewController, animated: true, completion: nil)
     }
     
-    func styleForiPad() -> Style {
-        let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
-        style.maneuverViewHeight = 100
-        return style
-    }
-    
-    func styleForCarPlay() -> Style {
-        let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .carPlay))
-        style.maneuverViewHeight = 40
-        return style
-    }
-    
-    /// Delegate method for changing the route line style
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
-        
-        lineCasing.lineColor = MGLStyleValue(rawValue: UIColor(red:0.00, green:0.70, blue:0.99, alpha:1.0))
-        lineCasing.lineWidth = MGLStyleValue(rawValue: 6)
-        
-        lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
-        lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-        return lineCasing
-    }
-    
-    /// Delegate method for changing the route line casing style
-    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        let line = MGLLineStyleLayer(identifier: identifier, source: source)
-        
-        line.lineColor = MGLStyleValue(rawValue: UIColor(red:0.18, green:0.49, blue:0.78, alpha:1.0))
-        line.lineWidth = MGLStyleValue(rawValue: 8)
-        
-        line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
-        line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-        return line
-    }
-    
+}
+
+extension ViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt destination: MGLAnnotation) {
-        print("User arrived at \(destination)")
+        
+        // Multiple waypoint demo
+        guard exampleMode == .multipleWaypoints, nextWaypoint != nil else { return }
+
+        // When the user arrives, present a view controller that prompts the user to continue to their next destination
+        // This typ of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
+        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return }
+            
+        confirmationController.delegate = self
+        
+        navigationViewController.present(confirmationController, animated: true, completion: nil)
+    }
+}
+
+extension ViewController: WaypointConfirmationViewControllerDelegate {
+    func confirmationControllerDidConfirm(controller confirmationController: WaypointConfirmationViewController) {
+        guard let nextDestination = nextWaypoint else { return }
+        guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
+
+        // Calculate directions to the next waypoint
+        let options = RouteOptions(coordinates: [
+            navigationViewController.mapView!.userLocation!.coordinate,
+            nextDestination,
+        ])
+        options.includesSteps = true
+        options.routeShapeResolution = .full
+        options.profileIdentifier = navigationViewController.route.routeOptions.profileIdentifier
+
+        _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
+            guard error == nil else {
+                print(error!)
+                return
+            }
+            guard let route = routes?.first else { return }
+            
+            // update the navigationViewController with the route to the next waypoint
+            navigationViewController.route = route
+            
+            // Set the next waypoint to our start point
+            // We'll continue this waypoint loop until the user exits navigation
+            self?.nextWaypoint = route.coordinates?.first
+            
+            // Dismiss the confirmation screen
+            confirmationController.dismiss(animated: true, completion: nil)
+        }
     }
 }

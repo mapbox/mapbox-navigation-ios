@@ -34,6 +34,14 @@ class RouteMapViewController: UIViewController {
         }
         return parent.pendingCamera
     }
+    var tiltedCamera: MGLMapCamera {
+        get {
+            let camera = mapView.camera
+            camera.altitude = 600
+            camera.pitch = 45
+            return camera
+        }
+    }
     weak var delegate: RouteMapViewControllerDelegate?
 
     weak var routeController: RouteController!
@@ -80,7 +88,12 @@ class RouteMapViewController: UIViewController {
         if let camera = pendingCamera {
             mapView.camera = camera
         } else {
-            setDefaultCamera(animated: false)
+            let camera = tiltedCamera
+            if let coordinates = route.coordinates, coordinates.count > 1 {
+                camera.centerCoordinate = coordinates.first!
+                camera.heading = coordinates[0].direction(to: coordinates[1])
+            }
+            mapView.setCamera(camera, animated: false)
         }
 
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: .initial, context: nil)
@@ -119,7 +132,7 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        setDefaultCamera(animated: false)
+        mapView.setCamera(tiltedCamera, animated: false)
         mapView.userTrackingMode = .followWithCourse
 
         // Recenter also resets the current page. Same behavior as rerouting.
@@ -129,7 +142,7 @@ class RouteMapViewController: UIViewController {
     @IBAction func toggleOverview(_ sender: Any) {
         if isInOverviewMode {
             overviewButton.isHidden = false
-            setDefaultCamera(animated: false)
+            mapView.setCamera(tiltedCamera, animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
             wayNameView.isHidden = true
@@ -199,13 +212,6 @@ class RouteMapViewController: UIViewController {
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationMapView(mapView, imageFor: annotation)
-    }
-
-    func setDefaultCamera(animated: Bool) {
-        let camera = mapView.camera
-        camera.altitude = 600
-        camera.pitch = 50
-        mapView.setCamera(camera, animated: animated)
     }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
