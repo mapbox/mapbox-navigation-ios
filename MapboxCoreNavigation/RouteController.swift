@@ -137,15 +137,8 @@ open class RouteController: NSObject {
         self.locationManager.delegate = self
     }
     
-    /**
-     IOS 8601 timestamp of when the `RouteController` was initialized.
-     */
-    public let sessionStartTimestamp: String = Date().ISO8601
-    
-    /**
-     Unique idenitifier for the current `RouteController` session.
-     */
-    public let sessionIdentifier = UUID()
+    let sessionStartTimestamp: String = Date().ISO8601
+    let sessionIdentifier = UUID()
     
     var lastReRouteLocation: CLLocation?
 
@@ -176,6 +169,14 @@ open class RouteController: NSObject {
         if currentRerouteEventState.shouldPushEventually {
             pushAndResetLocationCounters()
         }
+        
+        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier, sessionNumberOfReroutes: sessionNumberOfReroutes)
+        eventDictionary["distanceCompleted"] = sessionTotalDistanceCompleted
+        eventDictionary["startTimestamp"] = sessionStartTimestamp
+        eventDictionary["distanceRemaining"] = routeProgress.distanceRemaining
+        eventDictionary["durationRemaining"] = routeProgress.durationRemaining
+        
+        MGLMapboxEvents.pushEvent("navigation.cancel", withAttributes: eventDictionary)
     }
     
     /**

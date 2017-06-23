@@ -2,7 +2,7 @@ import Mapbox
 import Polyline
 
 extension MGLMapboxEvents {
-    public class func addDefaultEvents(routeProgress: RouteProgress, sessionIdentifier: UUID, sessionNumberOfReroutes: Int = 0) -> [String: Any] {
+    class func addDefaultEvents(routeProgress: RouteProgress, sessionIdentifier: UUID, sessionNumberOfReroutes: Int = 0) -> [String: Any] {
         var modifiedEventDictionary: [String: Any] = [:]
     
         modifiedEventDictionary["platform"] = String.systemName
