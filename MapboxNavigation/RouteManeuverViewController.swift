@@ -87,8 +87,7 @@ class RouteManeuverViewController: UIViewController {
         resumeNotifications()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    deinit {
         suspendNotifications()
     }
     

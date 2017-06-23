@@ -277,11 +277,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.delegate = self
     }
     
-    public override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        suspendNotifications()
-    }
-    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
