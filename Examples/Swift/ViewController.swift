@@ -103,24 +103,24 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         options.routeShapeResolution = .full
         options.profileIdentifier = .automobileAvoidingTraffic
         
-        _ = Directions.shared.calculate(options) { (waypoints, routes, error) in
+        _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
                 print(error!)
                 return
             }
             guard let route = routes?.first else { return }
                 
-            self.currentRoute = route
+            self?.currentRoute = route
             
             // Open method for adding and updating the route line
-            self.mapView.showRoute(route)
+            self?.mapView.showRoute(route)
         }
     }
     
     // MARK: - Basic Navigation
     
     func startBasicNavigation() {
-        guard let route = self.currentRoute else { return }
+        guard let route = currentRoute else { return }
             
         exampleMode = .default
             
@@ -239,9 +239,9 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
         ])
         options.includesSteps = true
         options.routeShapeResolution = .full
-        options.profileIdentifier = .automobileAvoidingTraffic
+        options.profileIdentifier = navigationViewController.route.routeOptions.profileIdentifier
 
-        _ = Directions.shared.calculate(options) { (waypoints, routes, error) in
+        _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
                 print(error!)
                 return
@@ -253,7 +253,7 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
             
             // Set the next waypoint to our start point
             // We'll continue this waypoint loop until the user exits navigation
-            self.nextWaypoint = route.coordinates?.first
+            self?.nextWaypoint = route.coordinates?.first
             
             // Dismiss the confirmation screen
             confirmationController.dismiss(animated: true, completion: nil)
