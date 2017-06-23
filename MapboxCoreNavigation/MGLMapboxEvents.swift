@@ -5,8 +5,8 @@ extension MGLMapboxEvents {
     class func addDefaultEvents(routeProgress: RouteProgress, sessionIdentifier: UUID) -> [String: Any] {
         var modifiedEventDictionary: [String: Any] = [:]
     
-        modifiedEventDictionary["platform"] = UIDevice.current.systemName
-        modifiedEventDictionary["operatingSystemVersion"] = "\(UIDevice.current.systemName)-\(UIDevice.current.systemVersion)"
+        modifiedEventDictionary["platform"] = String.systemName
+        modifiedEventDictionary["operatingSystemVersion"] = "\(String.systemName)-\(String.systemVersion)"
         modifiedEventDictionary["sdkIdentifier"] = "mapbox-navigation-ios"
         modifiedEventDictionary["sdkVersion"] = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
         modifiedEventDictionary["eventVersion"] = 1
@@ -25,15 +25,4 @@ extension MGLMapboxEvents {
         
         return modifiedEventDictionary
     }
-    
-    class func addEventPrefix(eventDictionary: [String: Any], eventPrefix: String) -> [String: Any] {
-        var newDictionary: [String: Any] = [:]
-        
-        for key in Array(eventDictionary.keys) {
-            newDictionary["\(eventPrefix)"] = eventDictionary[key]
-        }
-        
-        return newDictionary
-    }
-    
 }
