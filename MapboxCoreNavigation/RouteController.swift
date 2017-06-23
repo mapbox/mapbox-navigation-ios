@@ -140,7 +140,7 @@ open class RouteController: NSObject {
     /**
      IOS 8601 timestamp of when the `RouteController` was initialized.
      */
-    public let startTimestamp: String = Date().ISO8601
+    public let sessionStartTimestamp: String = Date().ISO8601
     
     /**
      Unique idenitifier for the current `RouteController` session.
@@ -151,9 +151,12 @@ open class RouteController: NSObject {
 
     var routeTask: URLSessionDataTask?
     
-    var sessionTotalDistanceCompleted: CLLocationDistance = 0
+    public var sessionTotalDistanceCompleted: CLLocationDistance = 0
+    public var sessionNumberOfReroutes = 0
     
     struct RerouteEventState {
+        var hasSentDepartEvent = false
+        var hasSentArriveEvent = false
         var userLocationsAroundRerouteLocation: [CLLocation] = []
         var maxLocationOnEitherSideOfReroute = 20
         var indexLocationBeforeReroute = 0
@@ -249,16 +252,26 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
+        if !currentRerouteEventState.hasSentDepartEvent {
+            let eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier)
+            MGLMapboxEvents.pushEvent("navigation.depart", withAttributes: eventDictionary)
+            currentRerouteEventState.hasSentDepartEvent = true
+        } else if routeProgress.currentLegProgress.alertUserLevel == .arrive && !currentRerouteEventState.hasSentArriveEvent {
+            var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier, sessionNumberOfReroutes: sessionNumberOfReroutes)
+            eventDictionary["distanceCompleted"] = sessionTotalDistanceCompleted
+            eventDictionary["startTimestamp"] = sessionStartTimestamp
+            MGLMapboxEvents.pushEvent("navigation.arrive", withAttributes: eventDictionary)
+            currentRerouteEventState.hasSentArriveEvent = true
+        }
+        
         currentRerouteEventState.userLocationsAroundRerouteLocation.append(location)
         // Keep double the amount needed for reroute event since we keep collecting after the reroute
         if currentRerouteEventState.userLocationsAroundRerouteLocation.count >= currentRerouteEventState.maxLocationOnEitherSideOfReroute * 2 {
             currentRerouteEventState.userLocationsAroundRerouteLocation.removeFirst()
         }
-        
         if currentRerouteEventState.shouldPushEventually {
             currentRerouteEventState.countdownToPushEvent -= 1
         }
-        
         if currentRerouteEventState.countdownToPushEvent == 0 {
             pushAndResetLocationCounters()
         }
@@ -319,8 +332,8 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func pushAndResetLocationCounters() {
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier)
-        eventDictionary["startTimestamp"] = startTimestamp
+        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier, sessionNumberOfReroutes: sessionNumberOfReroutes)
+        eventDictionary["startTimestamp"] = sessionStartTimestamp
         eventDictionary["feedbackType"] = "reroute"
         eventDictionary["locationsBefore"] = convertLocationsObject(locations: Array(currentRerouteEventState.userLocationsAroundRerouteLocation.prefix(currentRerouteEventState.indexLocationBeforeReroute)))
         eventDictionary["locationsAfter"] = convertLocationsObject(locations: Array(currentRerouteEventState.userLocationsAroundRerouteLocation.suffix(from: currentRerouteEventState.indexLocationBeforeReroute)))
@@ -419,6 +432,7 @@ extension RouteController: CLLocationManagerDelegate {
         currentRerouteEventState.indexLocationBeforeReroute = currentRerouteEventState.userLocationsAroundRerouteLocation.count - 1
         
         sessionTotalDistanceCompleted += routeProgress.distanceTraveled
+        sessionNumberOfReroutes += 1
         
         previousRererouteInformation = PreviousRerouteState(distanceRemaining: routeProgress.distanceRemaining, durationRemaining: routeProgress.durationRemaining)
         

@@ -392,6 +392,15 @@ extension NavigationViewController: RouteControllerDelegate {
 
 extension NavigationViewController: RouteTableViewHeaderViewDelegate {
     func didTapCancel() {
+        
+        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeController.routeProgress, sessionIdentifier: routeController.sessionIdentifier, sessionNumberOfReroutes: routeController.sessionNumberOfReroutes)
+        eventDictionary["distanceCompleted"] = routeController.sessionTotalDistanceCompleted
+        eventDictionary["startTimestamp"] = routeController.sessionStartTimestamp
+        eventDictionary["distanceRemaining"] = routeController.routeProgress.distanceRemaining
+        eventDictionary["durationRemaining"] = routeController.routeProgress.durationRemaining
+        
+        MGLMapboxEvents.pushEvent("navigation.cancel", withAttributes: eventDictionary)
+
         if navigationDelegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
