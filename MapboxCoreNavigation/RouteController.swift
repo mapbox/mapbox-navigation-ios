@@ -139,13 +139,12 @@ open class RouteController: NSObject {
     
     let sessionStartTimestamp: String = Date().ISO8601
     let sessionIdentifier = UUID()
+    var sessionTotalDistanceCompleted: CLLocationDistance = 0
+    var sessionNumberOfReroutes = 0
     
     var lastReRouteLocation: CLLocation?
 
     var routeTask: URLSessionDataTask?
-    
-    public var sessionTotalDistanceCompleted: CLLocationDistance = 0
-    public var sessionNumberOfReroutes = 0
     
     struct RerouteEventState {
         var hasSentDepartEvent = false
