@@ -34,7 +34,7 @@ class RouteMapViewController: UIViewController {
         }
         return parent.pendingCamera
     }
-    var defaultCamera: MGLMapCamera {
+    var tiltedCamera: MGLMapCamera {
         get {
             let camera = mapView.camera
             camera.altitude = 600
@@ -88,7 +88,7 @@ class RouteMapViewController: UIViewController {
         if let camera = pendingCamera {
             mapView.camera = camera
         } else {
-            let camera = defaultCamera
+            let camera = tiltedCamera
             if let coordinates = route.coordinates, coordinates.count > 1 {
                 camera.centerCoordinate = coordinates.first!
                 camera.heading = coordinates[0].direction(to: coordinates[1])
@@ -132,7 +132,7 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        mapView.setCamera(defaultCamera, animated: false)
+        mapView.setCamera(tiltedCamera, animated: false)
         mapView.userTrackingMode = .followWithCourse
 
         // Recenter also resets the current page. Same behavior as rerouting.
@@ -142,7 +142,7 @@ class RouteMapViewController: UIViewController {
     @IBAction func toggleOverview(_ sender: Any) {
         if isInOverviewMode {
             overviewButton.isHidden = false
-            mapView.setCamera(defaultCamera, animated: false)
+            mapView.setCamera(tiltedCamera, animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
             wayNameView.isHidden = true
