@@ -11,7 +11,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     let directions = Directions.shared
     var routeController: RouteController!
 
-    let lengthFormatter = MGLDistanceFormatter()
+    let distanceFormatter = MGLDistanceFormatter()
     lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
 
@@ -26,6 +26,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
 
         mapView.delegate = self
 
+        distanceFormatter.unitStyle = .long
+        distanceFormatter.numberFormatter.maximumFractionDigits = 0
+        
         routeController = RouteController(along: userRoute!, directions: directions)
         routeController.snapsUserLocationAnnotationToRoute = true
 
@@ -66,18 +69,21 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         var text: String
 
         let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
+        let formattedDistance = distanceFormatter.string(fromDistance: distance)
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             // Don't give full instruction with distance if the alert type is high
             if alertLevel == .high {
-            text = upComingStep.instructions
+                text = upComingStep.instructions
             } else {
-            text = "In \(distance) meters \(upComingStep.instructions)"
+                text = "In \(formattedDistance) \(upComingStep.instructions)"
             }
         } else {
-            text = "In \(distance) meters \(routeProgress.currentLegProgress.currentStep.instructions)"
+            text = "In \(formattedDistance) \(routeProgress.currentLegProgress.currentStep.instructions)"
         }
 
-        speak(text)
+        let utterance = AVSpeechUtterance(string: text)
+        speechSynth.delegate = self
+        speechSynth.speak(utterance)
     }
 
     // Notifications sent on all location updates
@@ -93,22 +99,22 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         if let direction = step.maneuverDirection {
             switch direction {
             case .slightRight:
-            self.arrowView.text = "↗️"
+                self.arrowView.text = "↗️"
             case .sharpRight, .right:
-            self.arrowView.text = "➡️"
+                self.arrowView.text = "➡️"
             case .slightLeft:
-            self.arrowView.text = "↖️"
+                self.arrowView.text = "↖️"
             case .sharpLeft, .left:
-            self.arrowView.text = "⬅️"
+                self.arrowView.text = "⬅️"
             case .uTurn:
-            self.arrowView.text = "⤵️"
+                self.arrowView.text = "⤵️"
             default:
-            self.arrowView.text = "⬆️"
+                self.arrowView.text = "⬆️"
             }
         }
-        self.instructionLabel.text = step.names?.first
+        self.instructionLabel.text = step.destinationCodes?.first ?? step.destinations?.first ?? step.names?.first ?? step.instructions
         let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
-        self.distanceLabel.text = lengthFormatter.string(fromMeters: distance)
+        self.distanceLabel.text = distanceFormatter.string(fromMeters: distance)
     }
 
     // Fired when the user is no longer on the route.
@@ -156,6 +162,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         guard let style = mapView.style else { return }
         guard let userRoute = userRoute else { return }
 
+        if let annotations = mapView.annotations {
+            mapView.removeAnnotations(annotations)
+        }
         mapView.addAnnotation(destination)
 
         let polyline = MGLPolylineFeature(coordinates: userRoute.coordinates!, count: userRoute.coordinateCount)
@@ -181,12 +190,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
                 }
             }
         }
-    }
-
-    func speak(_ text: String) {
-        let utterance = AVSpeechUtterance(string: text)
-        speechSynth.delegate = self
-        speechSynth.speak(utterance)
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
