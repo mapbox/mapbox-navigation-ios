@@ -136,8 +136,8 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"StartNavigation"]) {
         MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
-        controller.route = self.route;
         controller.directions = [MBDirections sharedDirections];
+        controller.route = self.route;
     }
 }
 

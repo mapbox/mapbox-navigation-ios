@@ -134,7 +134,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
      for further information.
      */
-    public var directions: Directions!
+    public var directions: Directions = Directions.shared
     
     /**
      `pendingCamera` is an optional `MGLMapCamera` you can use to improve
