@@ -483,16 +483,6 @@
 			name = "Supporting files";
 			sourceTree = "<group>";
 		};
-		351174F21EF1C0370065E248 /* LocationManagers */ = {
-			isa = PBXGroup;
-			children = (
-				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
-				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
-				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
-			);
-			path = LocationManagers;
-			sourceTree = "<group>";
-		};
 		351174F71EF1FC8F0065E248 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -719,18 +709,20 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				351174F21EF1C0370065E248 /* LocationManagers */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
-				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				35D457A61E2D253100A89946 /* MBRouteController.h */,
 				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
-				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
-				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
-				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
-				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
 				353E68FD1EF0B985007B2AE5 /* Bundle.swift */,
+				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
+				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
+				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
+				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
+				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
+				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
 				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
+				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
+				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
