@@ -94,7 +94,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testRouteSwitching() {
         let bundle = Bundle(for: MapboxNavigationTests.self)
         var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
-        var route = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
+        let route = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
         
         let navigation = NavigationViewController(for: route, directions: directions)
         navigation.loadViewIfNeeded()

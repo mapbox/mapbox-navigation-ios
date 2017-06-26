@@ -69,6 +69,19 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         requestRoute()
     }
     
+    @IBAction func replay(_ sender: Any) {
+        let bundle = Bundle(for: ViewController.self)
+        let filePath = bundle.path(forResource: "tunnel", ofType: "json")!
+        let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
+        let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
+        
+        let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
+        
+        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager)
+        
+        present(navigationViewController, animated: true, completion: nil)
+    }
+    
     @IBAction func simulateButtonPressed(_ sender: Any) {
         simulationButton.isSelected = !simulationButton.isSelected
     }
@@ -109,7 +122,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
                 return
             }
             guard let route = routes?.first else { return }
-                
+            
             self?.currentRoute = route
             
             // Open method for adding and updating the route line
@@ -123,11 +136,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         guard let route = currentRoute else { return }
             
         exampleMode = .default
-            
-        let navigationViewController = NavigationViewController(for: route)
-        navigationViewController.simulatesLocationUpdates = simulationButton.isSelected
+        
+        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.navigationDelegate = self
-            
+        
         present(navigationViewController, animated: true, completion: nil)
     }
 
@@ -153,8 +165,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         exampleMode = .styled
 
-        let navigationViewController = NavigationViewController(for: route)
-        navigationViewController.simulatesLocationUpdates = simulationButton.isSelected
+        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.navigationDelegate = self
         
         // Set a custom style URL
@@ -180,16 +191,14 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.cellTitleLabelTextColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         style.cellTitleLabelFont = UIFont(name: "Georgia-Bold", size: 17)
-        style.cellSubtitleLabelFont = UIFont(name: "Georgia", size: 15)
-            
         style.apply()
-            
-        // If you'd like to use AWS Polly, provide your IdentityPoolId below.
-        // `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
-        // You can get a token here: http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth-aws-identity-for-ios.html
-        //navigationViewController.voiceController?.identityPoolId = "<#Your AWS IdentityPoolId. Remove Argument if you do not want to use AWS Polly#>"
-            
+        
         present(navigationViewController, animated: true, completion: nil)
+    }
+    
+    func locationManager() -> NavigationLocationManager {
+        guard let route = currentRoute else { return NavigationLocationManager() }
+        return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
     
     // MARK: - Navigation with multiple waypoints
@@ -202,8 +211,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         // When the user arrives at their destination, we'll prompt them to return back to where they started
         nextWaypoint = self.currentRoute?.coordinates?.first
         
-        let navigationViewController = NavigationViewController(for: route)
-        navigationViewController.simulatesLocationUpdates = simulationButton.isSelected
+        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
