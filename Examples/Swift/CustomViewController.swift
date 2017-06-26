@@ -11,7 +11,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     let directions = Directions.shared
     var routeController: RouteController!
 
-    let distanceFormatter = MGLDistanceFormatter()
+    let distanceFormatter = DistanceFormatter()
     lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
 
@@ -69,7 +69,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         var text: String
 
         let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
-        let formattedDistance = distanceFormatter.string(fromDistance: distance)
+        let formattedDistance = distanceFormatter.string(from: distance)
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             // Don't give full instruction with distance if the alert type is high
             if alertLevel == .high {
