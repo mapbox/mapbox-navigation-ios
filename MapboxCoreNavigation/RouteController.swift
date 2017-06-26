@@ -137,45 +137,19 @@ open class RouteController: NSObject {
         self.locationManager.delegate = self
     }
     
-    let sessionStartTimestamp: String = Date().ISO8601
-    let sessionIdentifier = UUID()
-    var sessionTotalDistanceCompleted: CLLocationDistance = 0
-    var sessionNumberOfReroutes = 0
+    /// :nodoc:
+    public var usesDefaultUserInterface = false
     
-    var lastReRouteLocation: CLLocation?
-
-    var routeTask: URLSessionDataTask?
-    
-    struct RerouteEventState {
-        var hasSentDepartEvent = false
-        var hasSentArriveEvent = false
-        var userLocationsAroundRerouteLocation: [CLLocation] = []
-        var maxLocationOnEitherSideOfReroute = 20
-        var indexLocationBeforeReroute = 0
-        var shouldPushEventually = false
-        var countdownToPushEvent = 20
-    }
-    var currentRerouteEventState = RerouteEventState()
-    
-    struct PreviousRerouteState {
-        var distanceRemaining: CLLocationDistance
-        var durationRemaining: CLLocationDistance
-    }
-    var previousRererouteInformation: PreviousRerouteState?
+    var sessionState = SessionState()
+    var currentFeedbackEventState = FeedbackEventState()
     
     deinit {
         suspendLocationUpdates()
-        if currentRerouteEventState.shouldPushEventually {
+        if currentFeedbackEventState.shouldPushEventually {
             pushAndResetLocationCounters()
         }
         
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier, sessionNumberOfReroutes: sessionNumberOfReroutes)
-        eventDictionary["distanceCompleted"] = sessionTotalDistanceCompleted
-        eventDictionary["startTimestamp"] = sessionStartTimestamp
-        eventDictionary["distanceRemaining"] = routeProgress.distanceRemaining
-        eventDictionary["durationRemaining"] = routeProgress.durationRemaining
-        
-        MGLMapboxEvents.pushEvent("navigation.cancel", withAttributes: eventDictionary)
+        sendCancelEvent()
     }
     
     /**
@@ -252,27 +226,21 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
-        if !currentRerouteEventState.hasSentDepartEvent {
-            let eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier)
-            MGLMapboxEvents.pushEvent("navigation.depart", withAttributes: eventDictionary)
-            currentRerouteEventState.hasSentDepartEvent = true
-        } else if routeProgress.currentLegProgress.alertUserLevel == .arrive && !currentRerouteEventState.hasSentArriveEvent {
-            var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier, sessionNumberOfReroutes: sessionNumberOfReroutes)
-            eventDictionary["distanceCompleted"] = sessionTotalDistanceCompleted
-            eventDictionary["startTimestamp"] = sessionStartTimestamp
-            MGLMapboxEvents.pushEvent("navigation.arrive", withAttributes: eventDictionary)
-            currentRerouteEventState.hasSentArriveEvent = true
+        if !sessionState.hasSentDepartEvent {
+            sendDepartEvent()
+        } else if routeProgress.currentLegProgress.alertUserLevel == .arrive && !sessionState.hasSentArriveEvent {
+            sendArriveEvent()
         }
         
-        currentRerouteEventState.userLocationsAroundRerouteLocation.append(location)
+        currentFeedbackEventState.userLocationsAroundRerouteLocation.append(location)
         // Keep double the amount needed for reroute event since we keep collecting after the reroute
-        if currentRerouteEventState.userLocationsAroundRerouteLocation.count >= currentRerouteEventState.maxLocationOnEitherSideOfReroute * 2 {
-            currentRerouteEventState.userLocationsAroundRerouteLocation.removeFirst()
+        if currentFeedbackEventState.userLocationsAroundRerouteLocation.count >= currentFeedbackEventState.maxLocationOnEitherSideOfReroute * 2 {
+            currentFeedbackEventState.userLocationsAroundRerouteLocation.removeFirst()
         }
-        if currentRerouteEventState.shouldPushEventually {
-            currentRerouteEventState.countdownToPushEvent -= 1
+        if currentFeedbackEventState.shouldPushEventually {
+            currentFeedbackEventState.countdownToPushEvent -= 1
         }
-        if currentRerouteEventState.countdownToPushEvent == 0 {
+        if currentFeedbackEventState.countdownToPushEvent == 0 {
             pushAndResetLocationCounters()
         }
         
@@ -332,23 +300,12 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func pushAndResetLocationCounters() {
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeProgress: routeProgress, sessionIdentifier: sessionIdentifier, sessionNumberOfReroutes: sessionNumberOfReroutes)
-        eventDictionary["startTimestamp"] = sessionStartTimestamp
-        eventDictionary["feedbackType"] = "reroute"
-        eventDictionary["locationsBefore"] = convertLocationsObject(locations: Array(currentRerouteEventState.userLocationsAroundRerouteLocation.prefix(currentRerouteEventState.indexLocationBeforeReroute)))
-        eventDictionary["locationsAfter"] = convertLocationsObject(locations: Array(currentRerouteEventState.userLocationsAroundRerouteLocation.suffix(from: currentRerouteEventState.indexLocationBeforeReroute)))
-        eventDictionary["distanceCompleted"] = sessionTotalDistanceCompleted
-        if let previousRererouteInformation = previousRererouteInformation {
-            eventDictionary["distanceRemaining"] = previousRererouteInformation.distanceRemaining
-            eventDictionary["durationRemaining"] = previousRererouteInformation.durationRemaining
-        }
+        sendFeedbackEvent()
         
-        MGLMapboxEvents.pushEvent("navigation.feedback", withAttributes: eventDictionary)
-        
-        currentRerouteEventState.indexLocationBeforeReroute = 0
-        currentRerouteEventState.userLocationsAroundRerouteLocation.removeAll()
-        currentRerouteEventState.shouldPushEventually = false
-        currentRerouteEventState.countdownToPushEvent = 20
+        currentFeedbackEventState.indexLocationBeforeReroute = 0
+        currentFeedbackEventState.userLocationsAroundRerouteLocation.removeAll()
+        currentFeedbackEventState.shouldPushEventually = false
+        currentFeedbackEventState.countdownToPushEvent = 20
     }
     
     /**
@@ -422,19 +379,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
         
-        // If there was just a reroute event, layoff on sending a reroute event
-        if currentRerouteEventState.shouldPushEventually {
-            currentRerouteEventState.shouldPushEventually = false
-        } else {
-            currentRerouteEventState.shouldPushEventually = true
-        }
-        currentRerouteEventState.countdownToPushEvent = 20
-        currentRerouteEventState.indexLocationBeforeReroute = currentRerouteEventState.userLocationsAroundRerouteLocation.count - 1
-        
-        sessionTotalDistanceCompleted += routeProgress.distanceTraveled
-        sessionNumberOfReroutes += 1
-        
-        previousRererouteInformation = PreviousRerouteState(distanceRemaining: routeProgress.distanceRemaining, durationRemaining: routeProgress.durationRemaining)
+        triggerFeedback(reroute: true)
         
         routeTask?.cancel()
         
@@ -554,5 +499,79 @@ extension RouteController: CLLocationManagerDelegate {
             return locationDictionary
         }
     }
+    
+    func sendDepartEvent() {
+        let eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        
+        MGLMapboxEvents.pushEvent("navigation.depart", withAttributes: eventDictionary)
+        MGLMapboxEvents.flush()
+        
+        sessionState.hasSentDepartEvent = true
+    }
+    
+    func sendFeedbackEvent() {
+        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        eventDictionary["lat"] = currentFeedbackEventState.coordinate?.latitude
+        eventDictionary["lng"] = currentFeedbackEventState.coordinate?.longitude
+        eventDictionary["created"] = currentFeedbackEventState.timestamp?.ISO8601
+        eventDictionary["startTimestamp"] = sessionState.startTimestamp.ISO8601
+        eventDictionary["feedbackType"] = currentFeedbackEventState.reroute ? "reroute" : "user"
+        eventDictionary["locationsBefore"] = convertLocationsObject(locations: Array(currentFeedbackEventState.userLocationsAroundRerouteLocation.prefix(currentFeedbackEventState.indexLocationBeforeReroute)))
+        eventDictionary["locationsAfter"] = convertLocationsObject(locations: Array(currentFeedbackEventState.userLocationsAroundRerouteLocation.suffix(from: currentFeedbackEventState.indexLocationBeforeReroute)))
+        eventDictionary["distanceCompleted"] = sessionState.totalDistanceCompleted
+        eventDictionary["distanceRemaining"] = currentFeedbackEventState.previousDistanceRemaining
+        eventDictionary["durationRemaining"] = currentFeedbackEventState.previousDurationRemaining
+        if currentFeedbackEventState.reroute {
+            eventDictionary["newDistanceRemaining"] = routeProgress.route.distance
+            eventDictionary["newDurationRemaining"] = routeProgress.route.expectedTravelTime
+            eventDictionary["secondsSinceLastReroute"] = sessionState.lastReroute != nil ? currentFeedbackEventState.timestamp!.timeIntervalSince(sessionState.lastReroute!) : -1
+        }
+        
+        MGLMapboxEvents.pushEvent("navigation.feedback", withAttributes: eventDictionary)
+        MGLMapboxEvents.flush()
+    }
 
+    func sendArriveEvent() {
+        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        eventDictionary["startTimestamp"] = sessionState.startTimestamp.ISO8601
+        eventDictionary["distanceCompleted"] = sessionState.totalDistanceCompleted
+        
+        MGLMapboxEvents.pushEvent("navigation.arrive", withAttributes: eventDictionary)
+        MGLMapboxEvents.flush()
+
+        sessionState.hasSentArriveEvent = true
+    }
+    
+    func sendCancelEvent() {
+        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        eventDictionary["startTimestamp"] = sessionState.startTimestamp.ISO8601
+        eventDictionary["distanceCompleted"] = sessionState.totalDistanceCompleted
+        eventDictionary["distanceRemaining"] = routeProgress.distanceRemaining
+        eventDictionary["durationRemaining"] = routeProgress.durationRemaining
+        
+        MGLMapboxEvents.pushEvent("navigation.cancel", withAttributes: eventDictionary)
+        MGLMapboxEvents.flush()
+    }
+    
+    public func triggerFeedback(reroute: Bool) {
+        // If there was just a reroute event, layoff on sending a reroute event
+        if currentFeedbackEventState.shouldPushEventually {
+            currentFeedbackEventState.shouldPushEventually = false
+        } else {
+            currentFeedbackEventState.shouldPushEventually = true
+        }
+        currentFeedbackEventState.reroute = reroute
+        currentFeedbackEventState.countdownToPushEvent = 20
+        currentFeedbackEventState.indexLocationBeforeReroute = currentFeedbackEventState.userLocationsAroundRerouteLocation.count - 1
+        currentFeedbackEventState.timestamp = Date()
+        currentFeedbackEventState.coordinate = locationManager.location?.coordinate
+        currentFeedbackEventState.previousDistanceRemaining = routeProgress.distanceRemaining
+        currentFeedbackEventState.previousDurationRemaining = routeProgress.durationRemaining
+        
+        if reroute {
+            // FIXME: make sure this works with arbitrary feedback events
+            sessionState.totalDistanceCompleted += routeProgress.distanceTraveled
+            sessionState.numberOfReroutes += 1
+        }
+    }
 }

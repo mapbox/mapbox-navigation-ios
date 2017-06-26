@@ -221,6 +221,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.route = route
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager())
+        self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
         let annotation = MGLPointAnnotation()
