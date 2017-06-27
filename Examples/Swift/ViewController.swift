@@ -195,6 +195,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.cellTitleLabelFont = UIFont(name: "Georgia-Bold", size: 17)
         style.apply()
         
+        // Add a custom item
+        let searchItem = TableViewItem("Search along route")
+        searchItem.image = #imageLiteral(resourceName: "search")
+        searchItem.didSelectHandler = { print("Did tap search along route") }
+        navigationViewController.tableViewSections.insert([searchItem], at: 0)
+        
         present(navigationViewController, animated: true, completion: nil)
     }
     
