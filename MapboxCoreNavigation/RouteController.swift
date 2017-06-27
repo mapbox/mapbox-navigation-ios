@@ -88,7 +88,12 @@ open class RouteController: NSObject {
     /**
      The route controller’s associated location manager.
      */
-    public var locationManager: NavigationLocationManager!
+    public var locationManager: NavigationLocationManager! {
+        didSet {
+            oldValue?.delegate = nil
+            locationManager.delegate = self
+        }
+    }
     
     /**
      If true, location updates will be simulated when driving through tunnels or

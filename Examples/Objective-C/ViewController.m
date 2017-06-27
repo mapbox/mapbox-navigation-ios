@@ -136,8 +136,15 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"StartNavigation"]) {
         MBNavigationViewController *controller = (MBNavigationViewController *)[segue destinationViewController];
-        controller.route = self.route;
+        
         controller.directions = [MBDirections sharedDirections];
+        controller.route = self.route;
+        
+        MGLPointAnnotation *destination = [[MGLPointAnnotation alloc] init];
+        destination.coordinate = self.destination;
+        controller.destination = destination;
+        
+        controller.routeController.locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:self.route];
     }
 }
 
@@ -148,12 +155,12 @@
     [self performSegueWithIdentifier:@"StartNavigation" sender:self];
     
     // Using code
-    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
-                                                                                     directions:[MBDirections sharedDirections]
-                                                                                locationManager:nil];
-    
-    controller.pendingCamera = self.mapView.camera;
-    //[self presentViewController:controller animated:YES completion:nil];
+//    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
+//                                                                                     directions:[MBDirections sharedDirections]
+//                                                                                locationManager:nil];
+//
+//    controller.pendingCamera = self.mapView.camera;
+//    [self presentViewController:controller animated:YES completion:nil];
 }
 
 - (void)applyCustomStyle {
