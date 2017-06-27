@@ -148,12 +148,13 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func startCustomNavigation() {
         guard let route = self.currentRoute else { return }
 
-        guard let customViewController = self.storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
+        guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
             
         exampleMode = .custom
 
+        customViewController.simulateLocation = simulationButton.isSelected
         customViewController.userRoute = route
-        customViewController.destination = self.destination
+        customViewController.destination = destination
             
         present(customViewController, animated: true, completion: nil)
     }
