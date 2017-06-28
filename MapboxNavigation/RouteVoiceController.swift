@@ -3,6 +3,9 @@ import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
 
+/**
+ The `RouteVoiceController` class provides voice guidance.
+ */
 @objc(MBRouteVoiceController)
 open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     

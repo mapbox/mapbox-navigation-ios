@@ -2,6 +2,11 @@ import Foundation
 import AWSPolly
 import AVFoundation
 
+/**
+ `PollyVoiceController` extends the default `RouteVoiceController` by providing
+ support for AWSPolly. `RouteVoiceController` will be used as a fallback during
+ poor network conditions.
+ */
 @objc(MBPollyVoiceController)
 public class PollyVoiceController: RouteVoiceController {
     
