@@ -3,53 +3,82 @@ import Polyline
 import MapboxDirections
 import AVFoundation
 
+let SECONDS_FOR_COLLECTION_AFTER_FEEDBACK_EVENT: TimeInterval = 20
+
 extension MGLMapboxEvents {
     class func addDefaultEvents(routeController: RouteController) -> [String: Any] {
+        let session = routeController.sessionState
+        let routeProgress = routeController.routeProgress
+        
         var modifiedEventDictionary: [String: Any] = [:]
-    
+        
+        modifiedEventDictionary["created"] = Date().ISO8601
+        modifiedEventDictionary["startTimestamp"] = session.departureTimestamp?.ISO8601 ?? NSNull()
+
         modifiedEventDictionary["platform"] = String.systemName
-        modifiedEventDictionary["device"] = UIDevice.current.machine
         modifiedEventDictionary["operatingSystem"] = "\(String.systemName) \(String.systemVersion)"
+        modifiedEventDictionary["device"] = UIDevice.current.machine
+        
         modifiedEventDictionary["sdkIdentifier"] = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         modifiedEventDictionary["sdkVersion"] = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
-        modifiedEventDictionary["eventVersion"] = 1
-        modifiedEventDictionary["sessionIdentifier"] = routeController.sessionState.identifier.uuidString
+        
+        modifiedEventDictionary["eventVersion"] = 2
+        
+        modifiedEventDictionary["profile"] = routeProgress.route.routeOptions.profileIdentifier.rawValue
+        modifiedEventDictionary["simulation"] = routeController.locationManager is ReplayLocationManager || routeController.locationManager is SimulatedLocationManager ? true : false
+
+        modifiedEventDictionary["sessionIdentifier"] = session.identifier.uuidString
+        modifiedEventDictionary["originalRequestIdentifier"] = nil
+        modifiedEventDictionary["requestIdentifier"] = nil
         
         if let location = routeController.locationManager.location {
             modifiedEventDictionary["lat"] = location.coordinate.latitude
             modifiedEventDictionary["lng"] = location.coordinate.longitude
         }
         
-        if let geometry = routeController.sessionState.originalRoute.coordinates {
-            modifiedEventDictionary["geometry"] = Polyline(coordinates: geometry).encodedPolyline
+        if let geometry = session.originalRoute.coordinates {
+            modifiedEventDictionary["originalGeometry"] = Polyline(coordinates: geometry).encodedPolyline
+            modifiedEventDictionary["originalEstimatedDistance"] = round(session.originalRoute.distance)
+            modifiedEventDictionary["originalEstimatedDuration"] = round(session.originalRoute.expectedTravelTime)
         }
-
-        modifiedEventDictionary["created"] = Date().ISO8601
-        modifiedEventDictionary["profile"] = routeController.routeProgress.route.routeOptions.profileIdentifier.rawValue
+        if let geometry = session.currentRoute.coordinates {
+            modifiedEventDictionary["geometry"] = Polyline(coordinates: geometry).encodedPolyline
+            modifiedEventDictionary["estimatedDistance"] = round(session.currentRoute.distance)
+            modifiedEventDictionary["estimatedDuration"] = round(session.currentRoute.expectedTravelTime)
+        }
         
-        modifiedEventDictionary["estimatedDistance"] = round(routeController.sessionState.originalRoute.distance)
-        modifiedEventDictionary["estimatedDuration"] = round(routeController.sessionState.originalRoute.expectedTravelTime)
-        modifiedEventDictionary["rerouteCount"] = routeController.sessionState.numberOfReroutes
+        modifiedEventDictionary["distanceCompleted"] = round(session.totalDistanceCompleted + routeProgress.distanceTraveled)
+        modifiedEventDictionary["distanceRemaining"] = round(routeProgress.distanceRemaining)
+        modifiedEventDictionary["durationRemaining"] = round(routeProgress.durationRemaining)
+        
+        modifiedEventDictionary["rerouteCount"] = session.numberOfReroutes
 
         modifiedEventDictionary["volumeLevel"] = Int(AVAudioSession.sharedInstance().outputVolume * 100)
         modifiedEventDictionary["screenBrightness"] = Int(UIScreen.main.brightness * 100)
 
         modifiedEventDictionary["batteryPluggedIn"] = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
         modifiedEventDictionary["batteryLevel"] = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
-       
-        switch UIApplication.shared.applicationState {
-        case .active:
-            modifiedEventDictionary["applicationState"] = "Foreground"
-        case .inactive:
-            modifiedEventDictionary["applicationState"] = "Inactive"
-        case .background:
-            modifiedEventDictionary["applicationState"] = "Background"
-        default:
-            modifiedEventDictionary["applicationState"] = "Unknown"
-        }
+        modifiedEventDictionary["applicationState"] = UIApplication.shared.applicationState.telemString
+        
         //modifiedEventDictionary["connectivity"] = ??
         
         return modifiedEventDictionary
+    }
+}
+
+extension UIApplicationState {
+    var telemString: String {
+        get {
+            switch self {
+            case .active:
+                return "Foreground"
+            case .inactive:
+                return "Inactive"
+            case .background:
+                return "Background"
+            }
+            return "Unknown"
+        }
     }
 }
 
@@ -69,36 +98,68 @@ extension UIDevice {
     }
 }
 
-struct SessionState {
-    let startTimestamp = Date()
-    let identifier = UUID()
-    var totalDistanceCompleted: CLLocationDistance = 0
-    var numberOfReroutes = 0
-    var lastReroute: Date?
-    var hasSentDepartEvent = false
-    var hasSentArriveEvent = false
-    var originalRoute: Route!
+extension CLLocation {
+    var dictionary: [String: Any] {
+        get {
+            var locationDictionary:[String: Any] = [:]
+            locationDictionary["lat"] = coordinate.latitude
+            locationDictionary["lng"] = coordinate.latitude
+            locationDictionary["altitude"] = altitude
+            locationDictionary["timestamp"] = timestamp.ISO8601
+            locationDictionary["horizontalAccuracy"] = horizontalAccuracy
+            locationDictionary["verticalAccuracy"] = verticalAccuracy
+            locationDictionary["course"] = course
+            locationDictionary["speed"] = speed
+            return locationDictionary
+        }
+    }
 }
 
-struct FeedbackEventState {
-    var reroute = false
-    var shouldPushEventually = false
+class FixedLengthBuffer<T> {
+    private var objects = Array<T>()
+    private var length: Int
     
-    var maxLocationOnEitherSideOfReroute = 20
-    var indexLocationBeforeReroute = 0
-    var countdownToPushEvent = 20
+    public init(length: Int) {
+        self.length = length
+    }
     
-    var userLocationsAroundRerouteLocation: [CLLocation] = []
+    public func push(_ obj: T) {
+        objects.append(obj)
+        if objects.count == length {
+            objects.remove(at: 0)
+        }
+    }
     
-    var lastReroute: Date?
-    var numberOfReroutes = 0
-    
-    var timestamp: Date?
-    var coordinate: CLLocationCoordinate2D?
-    var previousDistanceRemaining: CLLocationDistance = -1
-    var previousDurationRemaining: TimeInterval = -1
-    
-    var newDistanceRemaining: CLLocationDistance = -1
-    var newDurationRemaining: TimeInterval = -1
-    var secondsSinceLastReroute: TimeInterval = -1
+    public var allObjects: Array<T> {
+        get {
+            return Array(objects)
+        }
+    }
 }
+
+class CoreFeedbackEvent: Hashable {
+    var id = UUID()
+    
+    var timestamp: Date
+    
+    var eventDictionary: [String: Any]
+    
+    init(timestamp: Date, eventDictionary: [String: Any]) {
+        self.timestamp = timestamp
+        self.eventDictionary = eventDictionary
+    }
+    
+    var hashValue: Int {
+        get {
+            return id.hashValue
+        }
+    }
+    
+    static func ==(lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
+class FeedbackEvent: CoreFeedbackEvent {}
+
+class RerouteEvent: CoreFeedbackEvent {}
