@@ -2,55 +2,123 @@ import UIKit
 import Pulley
 import MapboxCoreNavigation
 
-class RouteTableViewController: UIViewController {
-    
-    let RouteTableViewCellIdentifier = "RouteTableViewCellId"
-    let dateFormatter = DateFormatter()
-    let dateComponentsFormatter = DateComponentsFormatter()
-    let distanceFormatter = DistanceFormatter(approximate: true)
+protocol RouteTableViewControllerDelegate: class {
+    var voiceEnabled: Bool { get set }
+    var showsSatellite: Bool { get set }
+    var showsTraffic: Bool { get set }
+}
+
+class RouteTableViewController: StaticTableViewController {
     let routeStepFormatter = RouteStepFormatter()
+    weak var delegate: RouteTableViewControllerDelegate!
+    
+    lazy var timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        return formatter
+    }()
+    
+    lazy var dateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.maximumUnitCount = 2
+        formatter.allowedUnits = [.day, .hour, .minute]
+        formatter.unitsStyle = .short
+        return formatter
+    }()
+    
+    lazy var distanceFormatter: DistanceFormatter = {
+        let formatter = DistanceFormatter(approximate: true)
+        formatter.numberFormatter.locale = .nationalizedCurrent
+        formatter.unitStyle = .long
+        return formatter
+    }()
+    
+    var defaultSections: [TableViewSection] {
+        get {
+            var sections = [TableViewSection]()
+            let satellite = TableViewItem(NSLocalizedString("SATELLITE", value: "Satellite", comment: "Satellite table view item"))
+            let traffic = TableViewItem(NSLocalizedString("LIVE_TRAFFIC", value: "Live Traffic", comment: "Live Traffic table view item"))
+            let sound = TableViewItem(NSLocalizedString("VOICE", value: "Voice", comment: "Voice table view item"))
+            let steps = TableViewItem("Steps")
+            
+            satellite.image = UIImage(named: "satellite", in: Bundle.navigationUI, compatibleWith: nil)
+            traffic.image = UIImage(named: "traffic", in: Bundle.navigationUI, compatibleWith: nil)
+            sound.image = UIImage(named: "volume-up", in: Bundle.navigationUI, compatibleWith: nil)
+            steps.image = UIImage(named: "list", in: Bundle.navigationUI, compatibleWith: nil)
+            
+            satellite.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+                return self.delegate.showsSatellite
+            }
+            
+            satellite.didToggleHandler = { [unowned self] (sender: UISwitch) in
+                self.delegate.showsSatellite = sender.isOn
+            }
+            
+            traffic.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+                return self.delegate.showsTraffic
+            }
+            
+            traffic.didToggleHandler = { [unowned self] (sender: UISwitch) in
+                self.delegate.showsTraffic = sender.isOn
+            }
+            
+            sound.toggledStateHandler = { [unowned self] (sender: UISwitch) in
+                return self.delegate.voiceEnabled
+            }
+            
+            sound.didToggleHandler = { [unowned self] (sender: UISwitch) in
+                self.delegate.voiceEnabled = sender.isOn
+            }
+            
+            sections.append([TableViewItem.separator, satellite, traffic])
+            sections.append([TableViewItem.separator, sound, steps])
+            
+            return sections
+        }
+    }
     
     weak var routeController: RouteController!
     
     @IBOutlet var headerView: RouteTableViewHeaderView!
-    @IBOutlet weak var tableView: UITableView!
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         setupTableView()
-        dateFormatter.timeStyle = .short
-        dateComponentsFormatter.maximumUnitCount = 2
-        dateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
-        dateComponentsFormatter.unitsStyle = .short
-        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
-        headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
     }
     
     func setupTableView() {
         tableView.tableHeaderView = headerView
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 80
+        sections = defaultSections
     }
     
     func showETA(routeProgress: RouteProgress) {
-        let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
-        headerView.etaLabel.text = dateFormatter.string(from: arrivalDate!)
-        
-        if routeProgress.durationRemaining < 5 {
-            headerView.distanceRemaining.text = nil
-        } else {
-            headerView.distanceRemaining.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
+        guard let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date()) else {
+            return
         }
+        
+        var subtitleComponents = [String]()
+        var title = ""
         
         if routeProgress.durationRemaining < 60 {
-            headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
+            title = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
         } else {
-            headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
+            if let duration = dateComponentsFormatter.string(from: routeProgress.durationRemaining) {
+                title = duration
+            }
         }
+        
+        headerView.titleLabel.text = title
+        
+        subtitleComponents.append(timeFormatter.string(from: arrivalDate))
+        
+        if routeProgress.durationRemaining >= 5 {
+            subtitleComponents.append(distanceFormatter.string(from: routeProgress.distanceRemaining))
+        }
+        
+        headerView.subtitleLabel.text = subtitleComponents.joined(separator: ", ")
     }
     
     func notifyDidChange(routeProgress: RouteProgress) {
-        headerView.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
         showETA(routeProgress: routeProgress)
     }
     
@@ -65,6 +133,7 @@ class RouteTableViewController: UIViewController {
     }
 }
 
+/* // TODO: Populate steps in a new table view
 extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -87,7 +156,7 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell
     }
-}
+}*/
 
 extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
     

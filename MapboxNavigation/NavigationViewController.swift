@@ -188,7 +188,23 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var sendNotifications: Bool = true
     
-    var tableViewController: RouteTableViewController?
+    /**
+     `tableViewSections` is the data source for the table view at the bottom of
+     the navigation screen. It contains a set of sections and items like
+     satellite and traffic by default. You can add or remove items as needed.
+     */
+    public var tableViewSections: [TableViewSection] {
+        get {
+            return tableViewController.sections
+        }
+        set {
+            tableViewController.sections = newValue
+        }
+    }
+    
+    var defaultSections: [TableViewSection] { return tableViewController.defaultSections }
+    
+    var tableViewController: RouteTableViewController!
     var mapViewController: RouteMapViewController?
     
     let routeStepFormatter = RouteStepFormatter()
@@ -242,6 +258,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
+        tableViewController.delegate = self
     }
     
     deinit {
@@ -273,8 +290,24 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     override public func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
-        self.drawerCornerRadius = 0
+        drawerCornerRadius = 8
         self.delegate = self
+        
+        usePreviouslyStoredSettings()
+    }
+    
+    func usePreviouslyStoredSettings() {
+        if let showsTraffic = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsTraffic) {
+            self.showsTraffic = showsTraffic
+        }
+        
+        if let showsSatellite = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsSatellite) {
+            self.showsSatellite = showsSatellite
+        }
+        
+        if let voiceEnabled = NavigationDefaults.shared?.bool(forKey: NavigationSettings.voiceEnabled) {
+            self.voiceEnabled = voiceEnabled
+        }
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -365,6 +398,47 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationDelegate?.navigationMapView?(mapView, imageFor: annotation)
+    }
+}
+
+extension NavigationViewController: RouteTableViewControllerDelegate {
+    var voiceEnabled: Bool {
+        get {
+            if let voiceEnabled = NavigationDefaults.shared?.bool(forKey: NavigationSettings.voiceEnabled) {
+                return voiceEnabled
+            }
+            return false
+        }
+        set {
+            voiceController?.isEnabled = newValue
+            NavigationDefaults.shared?.set(newValue, forKey: NavigationSettings.voiceEnabled)
+        }
+    }
+    
+    var showsSatellite: Bool {
+        get {
+            if let styleURL = mapView?.styleURL {
+                return styleURL == .navigationSatelliteStyle
+            }
+            return false
+        }
+        set {
+            mapView?.styleURL = newValue ? .navigationSatelliteStyle : .navigationStreetStyle
+            NavigationDefaults.shared?.set(newValue, forKey: NavigationSettings.showsSatellite)
+        }
+    }
+    
+    var showsTraffic: Bool {
+        get {
+            if let showsTraffic = NavigationDefaults.shared?.bool(forKey: NavigationSettings.showsTraffic) {
+                return showsTraffic
+            }
+            return false
+        }
+        set {
+            mapView?.showsTraffic = newValue
+            NavigationDefaults.shared?.set(newValue, forKey: NavigationSettings.showsTraffic)
+        }
     }
 }
 

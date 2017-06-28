@@ -105,11 +105,6 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         navigation.route = newRoute
         
         XCTAssertTrue(navigation.routeController.routeProgress.route == newRoute, "Route should be equal the new route")
-        
-        let tableViewController = navigation.tableViewController!
-        let numberOfRows = tableViewController.tableView(tableViewController.tableView, numberOfRowsInSection: 0)
-        XCTAssertTrue(numberOfRows == newRoute.legs[0].steps.count,
-                      "It should be same amount of cells as steps in the new route")
     }
 }
 

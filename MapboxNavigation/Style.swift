@@ -5,36 +5,36 @@ fileprivate extension CGFloat {
 }
 
 extension UIColor {
-    class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
-    class var defaultRouteLayer: UIColor { get { return UIColor.defaultTintStroke.withAlphaComponent(0.6) } }
-    class var defaultArrowStroke: UIColor { get { return .defaultTint } }
+    class var defaultRouteCasing: UIColor { return .defaultTintStroke }
+    class var defaultRouteLayer: UIColor { return UIColor.defaultTintStroke.withAlphaComponent(0.6) }
+    class var defaultArrowStroke: UIColor { return .defaultTint }
 }
 
 fileprivate extension UIColor {
     // General styling
-    fileprivate class var defaultTint: UIColor { get { return #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) } }
-    fileprivate class var defaultTintStroke: UIColor { get { return #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1) } }
-    fileprivate class var defaultPrimaryText: UIColor { get { return #colorLiteral(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0, alpha: 1) } }
-    fileprivate class var defaultSecondaryText: UIColor { get { return #colorLiteral(red: 0.4509803922, green: 0.4509803922, blue: 0.4509803922, alpha: 1) } }
-    fileprivate class var defaultLine: UIColor { get { return #colorLiteral(red: 0.7825912237, green: 0.7776457667, blue: 0.7863886952, alpha: 0.7) } }
+    fileprivate class var defaultTint: UIColor { return #colorLiteral(red: 0.1490196078, green: 0.2392156863, blue: 0.3411764706, alpha: 1) }
+    fileprivate class var defaultTintStroke: UIColor { return #colorLiteral(red: 0.05882352963, green: 0.180392161, blue: 0.2470588237, alpha: 1) }
+    fileprivate class var defaultPrimaryText: UIColor { return #colorLiteral(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0, alpha: 1) }
+    fileprivate class var defaultSecondaryText: UIColor { return #colorLiteral(red: 0.4509803922, green: 0.4509803922, blue: 0.4509803922, alpha: 1) }
+    fileprivate class var defaultLine: UIColor { return #colorLiteral(red: 0.2470588235, green: 0.3568627451, blue: 0.4823529412, alpha: 0.16) }
     
     // Maneuver view (Page view)
-    fileprivate class var defaultManeuverViewBackground: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
+    fileprivate class var defaultManeuverViewBackground: UIColor { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
     
     // Table view (Drawer)
-    fileprivate class var defaultHeaderBackground: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
-    fileprivate class var defaultHeaderTitleLabel: UIColor { get { return defaultPrimaryText } }
-    fileprivate class var defaultHeaderSubtitleLabel: UIColor { get { return defaultSecondaryText } }
+    fileprivate class var defaultHeaderBackground: UIColor { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
+    fileprivate class var defaultHeaderTitleLabel: UIColor { return .defaultTint }
+    fileprivate class var defaultHeaderSubtitleLabel: UIColor { return UIColor.defaultTint.withAlphaComponent(0.62) }
 }
 
 fileprivate extension UIFont {
     // General styling
-    fileprivate class var defaultPrimaryText: UIFont { get { return UIFont.systemFont(ofSize: 16) } }
-    fileprivate class var defaultSecondaryText: UIFont { get { return UIFont.systemFont(ofSize: 16) } }
-    fileprivate class var defaultCellTitleLabel: UIFont { get { return UIFont.systemFont(ofSize: 28, weight: UIFontWeightMedium) } }
+    fileprivate class var defaultPrimaryText: UIFont { return UIFont.systemFont(ofSize: 16) }
+    fileprivate class var defaultSecondaryText: UIFont { return UIFont.systemFont(ofSize: 16) }
+    fileprivate class var defaultCellTitleLabel: UIFont { return UIFont.systemFont(ofSize: 28, weight: UIFontWeightMedium) }
     
     // Table view (drawer)
-    fileprivate class var defaultHeaderTitleLabel: UIFont { get { return UIFont.preferredFont(forTextStyle: .headline) } }
+    fileprivate class var defaultHeaderTitleLabel: UIFont { return UIFont.preferredFont(forTextStyle: .headline) }
 }
 
 /**
@@ -114,6 +114,18 @@ public class Style: NSObject {
     public var headerBackgroundColor: UIColor?
     
     /**
+     `headerTitleLabelColor` sets the color of the title in the header view,
+     positioned at the top.
+     */
+    public var headerTitleLabelColor: UIColor?
+    
+    /**
+     `headerSubtitleLabelColor` sets the color of the subtitle in the header
+     view, positioned at the bottom of the header.
+     */
+    public var headerSubtitleLabelColor: UIColor?
+    
+    /**
      `cellTitleLabelFont` sets the font of the title labels in table views.
      */
     public var cellTitleLabelFont: UIFont?
@@ -169,6 +181,9 @@ public class Style: NSObject {
         // Table view (Drawer)
         style.headerBackgroundColor = .defaultHeaderBackground
         
+        style.headerTitleLabelColor = .defaultHeaderTitleLabel
+        style.headerSubtitleLabelColor = .defaultHeaderSubtitleLabel
+        
         style.cellTitleLabelFont = .defaultPrimaryText
         style.cellTitleLabelTextColor = .defaultPrimaryText
         
@@ -188,17 +203,24 @@ public class Style: NSObject {
             NavigationMapView.appearance(for: traitCollection).tintColor = color
             ProgressBar.appearance(for: traitCollection).backgroundColor = color
             Button.appearance(for: traitCollection).tintColor = color
+            
             HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
+            ToggleView.appearance(for: traitCollection).tintColor = color
+            ToggleView.appearance(for: traitCollection).onTintColor = color
+            
+            IconImageView.appearance(for: traitCollection).tintColor = color
         }
         
         if let color = primaryTextColor {
             TitleLabel.appearance(for: traitCollection).textColor = color
             CellTitleLabel.appearance(for: traitCollection).textColor = color
+            HeaderTitleLabel.appearance(for: traitCollection).textColor = color
         }
         
         if let color = secondaryTextColor {
             SubtitleLabel.appearance(for: traitCollection).textColor = color
             CellSubtitleLabel.appearance(for: traitCollection).textColor = color
+            HeaderSubtitleLabel.appearance(for: traitCollection).textColor = color
         }
         
         if let color = buttonTextColor {
@@ -226,6 +248,14 @@ public class Style: NSObject {
         
         if let color = headerBackgroundColor {
             RouteTableViewHeaderView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = headerTitleLabelColor {
+            HeaderTitleLabel.appearance(for: traitCollection).textColor = color
+        }
+        
+        if let color = headerSubtitleLabelColor {
+            HeaderSubtitleLabel.appearance(for: traitCollection).textColor = color
         }
         
         if let font = cellTitleLabelFont {
@@ -281,6 +311,12 @@ public class CellTitleLabel: StylableLabel { }
 @objc(MBCellSubtitleLabel)
 public class CellSubtitleLabel: StylableLabel { }
 
+@objc(MBHeaderTitleLabel)
+public class HeaderTitleLabel: StylableLabel { }
+
+@objc(MBHeaderSubtitleLabel)
+public class HeaderSubtitleLabel: StylableLabel { }
+
 @objc(MBWayNameLabel)
 public class WayNameLabel: StylableLabel { }
 
@@ -296,6 +332,12 @@ public class LineView: UIView {
         }
     }
 }
+
+@objc(MBToggleView)
+public class ToggleView: UISwitch { }
+
+@objc(MBIconImageView)
+public class IconImageView: UIImageView { }
 
 @objc(MBSeparatorView)
 public class SeparatorView: UIView { }

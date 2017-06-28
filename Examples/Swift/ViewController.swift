@@ -180,6 +180,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.secondaryTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
         style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
+        style.wayNameTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)    
+
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
         style.maneuverViewHeight = 100
@@ -193,6 +195,12 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         style.cellTitleLabelFont = UIFont(name: "Georgia-Bold", size: 17)
         style.apply()
+        
+        // Add a custom item
+        let searchItem = TableViewItem("Search along route")
+        searchItem.image = #imageLiteral(resourceName: "search")
+        searchItem.didSelectHandler = { print("Did tap search along route") }
+        navigationViewController.tableViewSections.insert([searchItem], at: 0)
         
         present(navigationViewController, animated: true, completion: nil)
     }
