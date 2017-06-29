@@ -612,6 +612,7 @@ extension RouteController {
         var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         
+        eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
         eventDictionary["feedbackType"] = type.rawValue
         eventDictionary["description"] = description
         
