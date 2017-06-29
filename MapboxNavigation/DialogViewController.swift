@@ -23,7 +23,18 @@ class DialogViewController: UIViewController {
         viewController.present(controller, animated: true, completion: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        perform(#selector(dismissAnimated), with: nil, afterDelay: 0.5)
+    }
+    
     @IBAction func dismissDialog(_ sender: UITapGestureRecognizer) {
+        dismissAnimated()
+    }
+    
+    @objc func dismissAnimated() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissAnimated), object: nil)
         dismiss(animated: true, completion: nil)
     }
 }
