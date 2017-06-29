@@ -107,8 +107,13 @@ open class RouteController: NSObject {
             sessionState.totalDistanceCompleted += routeProgress.distanceTraveled
         }
         didSet {
-            sessionState.currentRoute = routeProgress.route
-
+            // if the user has already arrived and a new route has been set, restart the navigation session
+            if sessionState.arrivalTimestamp != nil {
+                resetSession()
+            } else {
+                sessionState.currentRoute = routeProgress.route
+            }
+            
             var userInfo = [String: Any]()
             if let location = locationManager.location {
                 userInfo[MBRouteControllerNotificationLocationKey] = location
@@ -125,6 +130,13 @@ open class RouteController: NSObject {
     var isRerouting = false
     
     var routeTask: URLSessionDataTask?
+    
+    /// :nodoc: This is used internally when the navigation UI is being used
+    public var usesDefaultUserInterface = false
+    
+    var sessionState = SessionState()
+    var outstandingFeedbackEvents = [CoreFeedbackEvent]()
+    
     
     /**
      Intializes a new `RouteController`.
@@ -143,17 +155,10 @@ open class RouteController: NSObject {
         
         self.locationManager.delegate = self
         
-        self.sessionState.originalRoute = route
-        self.sessionState.currentRoute = route
+        self.resetSession()
         
         self.resumeNotifications()
     }
-    
-    /// :nodoc:
-    public var usesDefaultUserInterface = false
-    
-    var sessionState = SessionState()
-    var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
     deinit {
         suspendLocationUpdates()
@@ -631,7 +636,7 @@ extension RouteController {
         
         eventDictionary["secondsSinceLastReroute"] = sessionState.lastReroute != nil ? round(timestamp.timeIntervalSince(sessionState.lastReroute!)) : -1
         
-        // These are placeholders until the
+        // These are placeholders until the RouteProgress is updated after rerouting
         eventDictionary["newDistanceRemaining"] = -1
         eventDictionary["newDurationRemaining"] = -1
         eventDictionary["newGeometry"] = nil
@@ -648,5 +653,11 @@ extension RouteController {
         for event in eventsToPush {
             sendFeedbackEvent(event: event)
         }
+    }
+    
+    func resetSession() {
+        sessionState = SessionState()
+        self.sessionState.originalRoute = routeProgress.route
+        self.sessionState.currentRoute = routeProgress.route
     }
 }
