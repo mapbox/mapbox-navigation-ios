@@ -563,8 +563,6 @@ extension RouteController {
     func sendDepartEvent() {
         let eventName = "navigation.depart"
         
-        NSLog("Sending \(eventName)")
-        
         var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
 
@@ -580,10 +578,8 @@ extension RouteController {
         
         let eventName = event.eventDictionary["event"] as! String
         
-        NSLog("Sending \(eventName)")
-
-        event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter({$0.timestamp <= event.timestamp }).map({$0.dictionary})
-        event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter({$0.timestamp > event.timestamp }).map({$0.dictionary})
+        event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter({$0.timestamp <= event.timestamp }).map {$0.dictionary}
+        event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter({$0.timestamp > event.timestamp }).map {$0.dictionary}
         
         MGLMapboxEvents.pushEvent(eventName, withAttributes: event.eventDictionary)
         MGLMapboxEvents.flush()
@@ -595,8 +591,6 @@ extension RouteController {
         var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         
-        NSLog("Sending \(eventName)")
-
         MGLMapboxEvents.pushEvent(eventName, withAttributes: eventDictionary)
         MGLMapboxEvents.flush()
     }
@@ -607,8 +601,6 @@ extension RouteController {
         var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         eventDictionary["arrivalTimestamp"] = sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
-
-        NSLog("Sending \(eventName)")
 
         MGLMapboxEvents.pushEvent(eventName, withAttributes: eventDictionary)
         MGLMapboxEvents.flush()
