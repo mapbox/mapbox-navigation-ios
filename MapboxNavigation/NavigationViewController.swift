@@ -183,6 +183,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var sendNotifications: Bool = true
     
+    public var showsReportFeedback: Bool = false {
+        didSet {
+            mapViewController?.reportButton.isHidden = !showsReportFeedback
+        }
+    }
+    
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     

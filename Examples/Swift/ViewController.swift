@@ -138,6 +138,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         exampleMode = .default
         
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
+        navigationViewController.showsReportFeedback = true
         navigationViewController.navigationDelegate = self
         
         present(navigationViewController, animated: true, completion: nil)

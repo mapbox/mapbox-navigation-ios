@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.19" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.16"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -68,13 +69,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MBNavigationMapView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View">
-                                        <rect key="frame" x="141" y="208.5" width="94.5" height="25"/>
+                                        <rect key="frame" x="140" y="209" width="95" height="25"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
-                                                <rect key="frame" x="8" y="2" width="78.5" height="21"/>
+                                                <rect key="frame" x="8" y="2" width="79" height="21"/>
                                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <nil key="textColor"/>
@@ -122,8 +123,20 @@
                                     <action selector="toggleOverview:" destination="3z2-H5-unA" eventType="touchUpInside" id="2Bc-fq-C2C"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBButton">
+                                <rect key="frame" x="10" y="155" width="40" height="40"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="o37-gV-IxI"/>
+                                    <constraint firstAttribute="width" constant="40" id="vXa-Tt-AZm"/>
+                                </constraints>
+                                <state key="normal" image="bug_report"/>
+                                <connections>
+                                    <action selector="report:" destination="3z2-H5-unA" eventType="touchUpInside" id="2mO-AS-TQL"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5HY-QD-dBq" customClass="MBHighlightedButton">
-                                <rect key="frame" x="10" y="189.5" width="112" height="42"/>
+                                <rect key="frame" x="10" y="190" width="112" height="42"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="QGu-S5-V3G"/>
@@ -153,12 +166,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
+                            <constraint firstItem="EeE-dV-610" firstAttribute="centerX" secondItem="Dry-gO-T7u" secondAttribute="centerX" id="3Ur-hj-FJq"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
                             <constraint firstItem="5HY-QD-dBq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leadingMargin" constant="-6" id="DLa-g1-fxC"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
+                            <constraint firstItem="EeE-dV-610" firstAttribute="top" secondItem="Dry-gO-T7u" secondAttribute="bottom" constant="5" id="bUb-wf-WI7"/>
                             <constraint firstItem="Dry-gO-T7u" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="emb-2d-lCf"/>
                             <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
                             <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="5HY-QD-dBq" secondAttribute="bottom" constant="92" id="leu-SU-9Qj"/>
@@ -170,6 +185,7 @@
                         <outlet property="overviewButton" destination="Dry-gO-T7u" id="8s7-hO-rHP"/>
                         <outlet property="overviewButtonTopConstraint" destination="o9Q-tS-xND" id="Ms2-k4-xU1"/>
                         <outlet property="recenterButton" destination="5HY-QD-dBq" id="6ev-zD-MJ9"/>
+                        <outlet property="reportButton" destination="EeE-dV-610" id="C8S-JP-WAr"/>
                         <outlet property="wayNameLabel" destination="bcm-ca-nGv" id="8Sy-Pk-fQZ"/>
                         <outlet property="wayNameView" destination="drb-do-FoT" id="oby-w9-mC3"/>
                     </connections>
@@ -231,7 +247,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="229" height="70"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="MBTitleLabel">
-                                                        <rect key="frame" x="0.0" y="0.0" width="55" height="31.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="53.5" height="31.5"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -245,7 +261,7 @@
                                                         </attributedString>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Elm St NW" textAlignment="natural" lineBreakMode="tailTruncation" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="StreetLabel" customModule="MapboxNavigation" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="31.5" width="153" height="38.5"/>
+                                                        <rect key="frame" x="0.0" y="31.5" width="150" height="38.5"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
                                                         <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -281,13 +297,13 @@
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="115"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bUX-dR-1V6" customClass="MBTitleLabel">
-                                                <rect key="frame" x="40" y="36" width="153" height="43"/>
+                                                <rect key="frame" x="40" y="36" width="149" height="43"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="JY3-Q1-T0F">
-                                                <rect key="frame" x="266" y="39" width="37" height="37"/>
+                                                <rect key="frame" x="266" y="42" width="37" height="37"/>
                                                 <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             </activityIndicatorView>
                                         </subviews>
@@ -344,7 +360,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xwq-ce-lBE" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" priority="999" constant="30" id="Yj3-WT-VYi"/>
@@ -357,7 +373,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eHe-aK-9BX" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="D5v-3d-Jeh"/>
@@ -370,7 +386,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="tg6-zK-yeN" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="997" constant="30" id="MCS-vE-znn"/>
@@ -383,7 +399,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1SY-R8-0Ga" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="996" constant="30" id="IYA-R3-E7i"/>
@@ -396,7 +412,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="wG2-Wg-gPO" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="995" constant="30" id="SCC-vU-ZoY"/>
@@ -409,7 +425,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="y28-An-Esx" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" priority="994" constant="30" id="DsZ-2f-pEu"/>
@@ -422,7 +438,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="W9A-Qo-Q2I" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" priority="999" constant="30" id="18o-rV-gwp"/>
@@ -435,7 +451,7 @@
                                                 </userDefinedRuntimeAttributes>
                                             </view>
                                             <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Q0R-gA-tRA" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <rect key="frame" x="-171" y="0.0" width="0.0" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" priority="999" constant="30" id="CMh-Oa-n2C"/>
@@ -525,6 +541,73 @@
             </objects>
             <point key="canvasLocation" x="4768.8000000000002" y="-235.23238380809596"/>
         </scene>
+        <!--Dialog View Controller-->
+        <scene sceneID="w13-5f-0a6">
+            <objects>
+                <viewController storyboardIdentifier="DialogViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9cO-wr-vPJ" customClass="DialogViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FfW-Td-xQt"/>
+                        <viewControllerLayoutGuide type="bottom" id="0Bb-qf-wRv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gCR-ym-GKC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRI-Re-dHf">
+                                <rect key="frame" x="57" y="263" width="260" height="140"/>
+                                <subviews>
+                                    <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9ao-4M-QVt">
+                                        <rect key="frame" x="30" y="36" width="200" height="68.5"/>
+                                        <subviews>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="ioV-Hk-dG7">
+                                                <rect key="frame" x="79" y="0.0" width="42" height="28"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thank you for your report!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upm-fg-ffn">
+                                                <rect key="frame" x="0.0" y="48" width="200" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <constraints>
+                                    <constraint firstItem="9ao-4M-QVt" firstAttribute="centerY" secondItem="BRI-Re-dHf" secondAttribute="centerY" id="aQ6-6f-JZu"/>
+                                    <constraint firstAttribute="height" constant="140" id="ddP-m6-48l"/>
+                                    <constraint firstItem="9ao-4M-QVt" firstAttribute="centerX" secondItem="BRI-Re-dHf" secondAttribute="centerX" id="kxU-Ak-QgF"/>
+                                    <constraint firstAttribute="width" constant="260" id="ukH-l5-cNy"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.39505391725352113" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="BRI-Re-dHf" firstAttribute="centerX" secondItem="gCR-ym-GKC" secondAttribute="centerX" id="33K-7A-cS6"/>
+                            <constraint firstItem="BRI-Re-dHf" firstAttribute="centerY" secondItem="gCR-ym-GKC" secondAttribute="centerY" id="eTM-ju-EDF"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="BfJ-PJ-AzX" appends="YES" id="9KF-Yg-qIZ"/>
+                        </connections>
+                    </view>
+                    <size key="freeformSize" width="375" height="667"/>
+                    <connections>
+                        <outlet property="dialogView" destination="BRI-Re-dHf" id="28l-K5-kd1"/>
+                        <outlet property="imageView" destination="ioV-Hk-dG7" id="50l-gj-Ldi"/>
+                        <outlet property="label" destination="upm-fg-ffn" id="gv8-ma-Txw"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qZz-KZ-Hgr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="BfJ-PJ-AzX">
+                    <connections>
+                        <action selector="dismissDialog:" destination="9cO-wr-vPJ" id="jG6-su-IpR"/>
+                        <outlet property="delegate" destination="gCR-ym-GKC" id="ftk-Eh-cA1"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="4991.1999999999998" y="213.64317841079463"/>
+        </scene>
         <!--Route Table View Controller-->
         <scene sceneID="rc4-rm-VzX">
             <objects>
@@ -538,7 +621,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="meX-oz-5Hs">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="293"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="294"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RouteTableViewCellId" rowHeight="118" id="6gn-fK-aZY" customClass="RouteTableViewCell" customModule="MapboxNavigation" customModuleProvider="target">
@@ -654,7 +737,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="MBTitleLabel">
-                            <rect key="frame" x="10" y="9" width="87" height="34"/>
+                            <rect key="frame" x="10" y="9" width="85" height="34"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -762,7 +845,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="bug_report" width="16" height="18"/>
         <image name="location" width="22" height="22"/>
         <image name="overview" width="16" height="14"/>
+        <image name="report_checkmark" width="42" height="28"/>
     </resources>
 </document>

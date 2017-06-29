@@ -14,6 +14,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var mapView: NavigationMapView!
 
     @IBOutlet weak var overviewButton: Button!
+    @IBOutlet weak var reportButton: Button!
     @IBOutlet weak var recenterButton: Button!
     @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
@@ -66,6 +67,7 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         recenterButton.applyDefaultCornerRadiusShadow()
         
         wayNameView.layer.borderWidth = 1
@@ -130,6 +132,12 @@ class RouteMapViewController: UIViewController {
         isInOverviewMode = !isInOverviewMode
         
         routePageViewController.notifyDidReRoute()
+    }
+    
+    @IBAction func report(_ sender: Any) {
+        guard let parent = parent else { return }
+        routeController.sendFeedback(type: .general, description: "Test")
+        DialogViewController.present(on: parent)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
