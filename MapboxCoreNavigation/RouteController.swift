@@ -234,8 +234,8 @@ extension RouteController {
         if let lastReroute = outstandingFeedbackEvents.filter({$0 is RerouteEvent }).last {
             if let geometry = route.coordinates {
                 lastReroute.eventDictionary["newGeometry"] = Polyline(coordinates: geometry).encodedPolyline
-                lastReroute.eventDictionary["newDistanceRemaining"] = route.distance
-                lastReroute.eventDictionary["newDurationRemaining"] = route.expectedTravelTime
+                lastReroute.eventDictionary["newDistanceRemaining"] = round(route.distance)
+                lastReroute.eventDictionary["newDurationRemaining"] = round(route.expectedTravelTime)
             }
         }
     }
@@ -629,7 +629,7 @@ extension RouteController {
         var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         
-        eventDictionary["secondsSinceLastReroute"] = sessionState.lastReroute != nil ? timestamp.timeIntervalSince(sessionState.lastReroute!) : -1
+        eventDictionary["secondsSinceLastReroute"] = sessionState.lastReroute != nil ? round(timestamp.timeIntervalSince(sessionState.lastReroute!)) : -1
         
         // These are placeholders until the
         eventDictionary["newDistanceRemaining"] = -1
