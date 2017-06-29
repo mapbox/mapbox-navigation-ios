@@ -578,8 +578,8 @@ extension RouteController {
         
         let eventName = event.eventDictionary["event"] as! String
         
-        event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter({$0.timestamp <= event.timestamp }).map {$0.dictionary}
-        event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter({$0.timestamp > event.timestamp }).map {$0.dictionary}
+        event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter {$0.timestamp <= event.timestamp}.map {$0.dictionary}
+        event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionary}
         
         MGLMapboxEvents.pushEvent(eventName, withAttributes: event.eventDictionary)
         MGLMapboxEvents.flush()
