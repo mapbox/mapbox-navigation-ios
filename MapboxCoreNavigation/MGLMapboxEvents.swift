@@ -103,7 +103,7 @@ extension CLLocation {
         get {
             var locationDictionary:[String: Any] = [:]
             locationDictionary["lat"] = coordinate.latitude
-            locationDictionary["lng"] = coordinate.latitude
+            locationDictionary["lng"] = coordinate.longitude
             locationDictionary["altitude"] = altitude
             locationDictionary["timestamp"] = timestamp.ISO8601
             locationDictionary["horizontalAccuracy"] = horizontalAccuracy
