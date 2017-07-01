@@ -554,7 +554,7 @@ struct SessionState {
     var originalRoute: Route!
     var originalRequestIdentifier: String?
     
-    var pastLocations = FixedLengthBuffer<CLLocation>(length: 60)
+    var pastLocations = FixedLengthBuffer<CLLocation>(length: 40)
 }
 
 // MARK: - Telemetry
