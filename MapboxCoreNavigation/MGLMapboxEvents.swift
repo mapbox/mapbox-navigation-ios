@@ -57,7 +57,7 @@ extension MGLMapboxEvents {
         modifiedEventDictionary["screenBrightness"] = Int(UIScreen.main.brightness * 100)
 
         modifiedEventDictionary["batteryPluggedIn"] = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
-        modifiedEventDictionary["batteryLevel"] = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
+        modifiedEventDictionary["batteryLevel"] = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
         modifiedEventDictionary["applicationState"] = UIApplication.shared.applicationState.telemString
         
         //modifiedEventDictionary["connectivity"] = ??
