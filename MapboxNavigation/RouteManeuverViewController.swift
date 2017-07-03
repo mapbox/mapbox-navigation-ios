@@ -2,23 +2,14 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
-class StreetLabel: TitleLabel {
-    typealias AvailableBoundsHandler = () -> (CGRect)
-    var availableBounds: AvailableBoundsHandler!
-    var unabridgedText: String? {
-        didSet {
-            super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
-        }
-    }
-}
 
 class RouteManeuverViewController: UIViewController {
     @IBOutlet var separatorViews: [SeparatorView]!
     @IBOutlet weak var stackViewContainer: UIView!
-    @IBOutlet fileprivate weak var distanceLabel: TitleLabel!
+    @IBOutlet fileprivate weak var distanceLabel: DistanceLabel!
     @IBOutlet fileprivate weak var shieldImageView: UIImageView!
     @IBOutlet weak var turnArrowView: TurnArrowView!
-    @IBOutlet weak var streetLabel: StreetLabel!
+    @IBOutlet weak var destinationLabel: DestinationLabel!
     @IBOutlet var laneViews: [LaneArrowView]!
     @IBOutlet weak var rerouteView: UIView!
     
@@ -38,16 +29,16 @@ class RouteManeuverViewController: UIViewController {
             if let distance = distance {
                 distanceLabel.isHidden = false
                 distanceLabel.text = distanceFormatter.string(from: distance)
-                streetLabel.numberOfLines = streetLabelLines
+                destinationLabel.numberOfLines = numberOfDestinationLines
             } else {
                 distanceLabel.isHidden = true
                 distanceLabel.text = nil
-                streetLabel.numberOfLines = streetLabelLines
+                destinationLabel.numberOfLines = numberOfDestinationLines
             }
         }
     }
     
-    var streetLabelLines: Int {
+    var numberOfDestinationLines: Int {
         return distance != nil ? 1 : 2
     }
     
@@ -71,8 +62,8 @@ class RouteManeuverViewController: UIViewController {
      */
     var maximumAvailableStreetLabelSize: CGSize {
         get {
-            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: streetLabel.font]).height
-            let lines = CGFloat(streetLabelLines)
+            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: destinationLabel.font]).height
+            let lines = CGFloat(numberOfDestinationLines)
             let padding: CGFloat = 8*4
             return CGSize(width: view.bounds.width-padding-shieldImageView.bounds.size.width-turnArrowView.bounds.width, height: height*lines)
         }
@@ -83,7 +74,7 @@ class RouteManeuverViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         turnArrowView.backgroundColor = .clear
-        streetLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
+        destinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
         resumeNotifications()
     }
     
@@ -107,7 +98,7 @@ class RouteManeuverViewController: UIViewController {
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
-            streetLabel.unabridgedText = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))
+            destinationLabel.unabridgedText = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
             updateStreetNameForStep()
             showLaneView(step: upComingStep)
@@ -118,11 +109,11 @@ class RouteManeuverViewController: UIViewController {
     
     func updateStreetNameForStep() {
         if let name = step?.names?.first {
-            streetLabel.unabridgedText = name
+            destinationLabel.unabridgedText = name
         } else if let destinations = step?.destinations {
-            streetLabel.unabridgedText = destinations.prefix(min(streetLabelLines, destinations.count)).joined(separator: "\n")
+            destinationLabel.unabridgedText = destinations.prefix(min(numberOfDestinationLines, destinations.count)).joined(separator: "\n")
         } else if let step = step {
-            streetLabel.unabridgedText = routeStepFormatter.string(for: step)
+            destinationLabel.unabridgedText = routeStepFormatter.string(for: step)
         }
     }
     
