@@ -1,4 +1,4 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.5.4"
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.6.0"
 github "52inc/Pulley" "1.4"
 github "Project-OSRM/osrm-text-instructions.swift" "v0.1.2"
 github "facebook/ios-snapshot-test-case" "2.1.4"
