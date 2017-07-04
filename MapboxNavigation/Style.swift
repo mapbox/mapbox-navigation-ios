@@ -90,6 +90,16 @@ public class Style: NSObject {
      */
     public var destinationLabelTextColor: UIColor?
     
+    /**
+     Sets the prominent color on the turn arrow.
+     */
+    public var turnArrowPrimaryColor: UIColor?
+    
+    /**
+     Sets the subtle color on the turn arrow.
+     */
+    public var turnArrowSecondaryColor: UIColor?
+    
     /// Table view (Drawer)
     
     /**
@@ -188,6 +198,14 @@ public class Style: NSObject {
         
         if let font = wayNameLabelFont {
             WayNameLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
+        }
+        
+        if let color = turnArrowPrimaryColor {
+            TurnArrowView.appearance(for: traitCollection).primaryColor = color
+        }
+        
+        if let color = turnArrowSecondaryColor {
+            TurnArrowView.appearance(for: traitCollection).secondaryColor = color
         }
         
         // Maneuver page view controller

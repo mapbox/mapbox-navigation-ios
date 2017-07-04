@@ -6,6 +6,19 @@ import SDWebImage
 @IBDesignable
 @objc(MBTurnArrowView)
 public class TurnArrowView: UIView {
+    
+    public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     public var step: RouteStep? {
         didSet {
             setNeedsDisplay()
@@ -37,9 +50,9 @@ public class TurnArrowView: UIView {
         transform = CGAffineTransform.identity
         guard let step = step else {
             if isStart {
-                StyleKitArrows.drawStarting(scale: scale)
+                StyleKitArrows.drawStarting(primaryColor: primaryColor, scale: scale)
             } else if isEnd {
-                StyleKitArrows.drawDestination(scale: scale)
+                StyleKitArrows.drawDestination(primaryColor: primaryColor, scale: scale)
             }
             return
         }
@@ -51,51 +64,51 @@ public class TurnArrowView: UIView {
 
         switch type {
         case .merge:
-            StyleKitArrows.drawMerge(scale: scale)
+            StyleKitArrows.drawMerge(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
             flip = [.right, .slightRight, .sharpRight].contains(direction)
         case .takeOffRamp:
-            StyleKitArrows.drawOfframp(scale: scale)
+            StyleKitArrows.drawOfframp(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
             flip = [.right, .slightRight, .sharpRight].contains(direction)
         case .reachFork:
-            StyleKitArrows.drawFork(scale: scale)
+            StyleKitArrows.drawFork(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
             flip = [.right, .slightRight, .sharpRight].contains(direction)
         case .takeRoundabout, .turnAtRoundabout:
-            StyleKitArrows.drawRoundabout(scale: scale)
+            StyleKitArrows.drawRoundabout(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
         case .arrive:
             switch direction {
             case .right:
-                StyleKitArrows.drawArriveright(scale: scale)
+                StyleKitArrows.drawArriveright(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
             case .left:
-                StyleKitArrows.drawArriveright(scale: scale)
+                StyleKitArrows.drawArriveright(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
                 flip = true
             default:
-                StyleKitArrows.drawArrive(scale: scale)
+                StyleKitArrows.drawArrive(primaryColor: primaryColor, scale: scale)
             }
         default:
             switch direction {
             case .right:
-                StyleKitArrows.drawArrow45(scale: scale)
+                StyleKitArrows.drawArrow45(primaryColor: primaryColor, scale: scale)
                 flip = false
             case .slightRight:
-                StyleKitArrows.drawArrow30(scale: scale)
+                StyleKitArrows.drawArrow30(primaryColor: primaryColor, scale: scale)
                 flip = false
             case .sharpRight:
-                StyleKitArrows.drawArrow75(scale: scale)
+                StyleKitArrows.drawArrow75(primaryColor: primaryColor, scale: scale)
                 flip = false
             case .left:
-                StyleKitArrows.drawArrow45(scale: scale)
+                StyleKitArrows.drawArrow45(primaryColor: primaryColor, scale: scale)
                 flip = true
             case .slightLeft:
-                StyleKitArrows.drawArrow30(scale: scale)
+                StyleKitArrows.drawArrow30(primaryColor: primaryColor, scale: scale)
                 flip = true
             case .sharpLeft:
-                StyleKitArrows.drawArrow75(scale: scale)
+                StyleKitArrows.drawArrow75(primaryColor: primaryColor, scale: scale)
                 flip = true
             case .uTurn:
-                StyleKitArrows.drawArrow180(scale: scale)
+                StyleKitArrows.drawArrow180(primaryColor: primaryColor, scale: scale)
                 flip = angle < 0
             default:
-                StyleKitArrows.drawArrow0(scale: scale)
+                StyleKitArrows.drawArrow0(primaryColor: primaryColor, scale: scale)
             }
         }
         

@@ -5,6 +5,9 @@ extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
     class var defaultRouteLayer: UIColor { get { return UIColor.defaultTintStroke.withAlphaComponent(0.6) } }
     class var defaultArrowStroke: UIColor { get { return .defaultTint } }
+    
+    class var defaultTurnArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
+    class var defaultTurnArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
 }
 
 extension UIColor {
@@ -43,6 +46,9 @@ public class DefaultStyle: Style {
         
         wayNameLabelFont = .systemFont(ofSize: 14)
         wayNameLabelTextColor = .defaultPrimaryText
+        
+        turnArrowPrimaryColor = .defaultTurnArrowPrimary
+        turnArrowSecondaryColor = .defaultTurnArrowSecondary
         
         // Maneuver view (Page view)
         maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)

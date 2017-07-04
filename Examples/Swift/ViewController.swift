@@ -172,6 +172,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.tintColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
         style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         style.fontFamily = "Georgia"
+        style.turnArrowPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.turnArrowSecondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
         
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
