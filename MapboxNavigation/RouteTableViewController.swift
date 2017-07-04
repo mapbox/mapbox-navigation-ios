@@ -34,7 +34,7 @@ class RouteTableViewController: UIViewController {
     
     func showETA(routeProgress: RouteProgress) {
         let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
-        headerView.etaLabel.text = dateFormatter.string(from: arrivalDate!)
+        headerView.arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate!)
         
         if routeProgress.durationRemaining < 5 {
             headerView.distanceRemaining.text = nil

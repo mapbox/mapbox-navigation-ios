@@ -48,7 +48,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         super.viewWillAppear(animated)
 
         // Reset the navigation styling to the defaults
-        Style.defaultStyle.apply()
+        DefaultStyle().apply()
     }
     
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -165,34 +165,38 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         guard let route = self.currentRoute else { return }
 
         exampleMode = .styled
-
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
-        navigationViewController.navigationDelegate = self
         
-        // Set a custom style URL
-        navigationViewController.mapView?.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v1")
-
-        let style = Style()
+        let style = DefaultStyle()
         
         // General styling
         style.tintColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
-        style.primaryTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        style.secondaryTextColor = #colorLiteral(red: 0.9626983484, green: 0.9626983484, blue: 0.9626983484, alpha: 1)
         style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.fontFamily = "Georgia"
+        style.turnArrowPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.turnArrowSecondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
         
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
         style.maneuverViewHeight = 100
+        style.distanceLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
+        style.destinationLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
+        style.distanceRemainingLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
+        style.timeRemainingLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
+        style.arrivalTimeLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
 
         // Current street name label
-        style.wayNameTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+        style.wayNameLabelTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
             
         // Table view (Drawer)
         style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
         style.cellTitleLabelTextColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
-        style.cellTitleLabelFont = UIFont(name: "Georgia-Bold", size: 17)
-        style.apply()
+        
+        let navigationViewController = NavigationViewController(for: route, styles: [style], locationManager: locationManager())
+        navigationViewController.navigationDelegate = self
+        
+        // Set a custom style URL
+        navigationViewController.mapView?.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v1")
         
         present(navigationViewController, animated: true, completion: nil)
     }

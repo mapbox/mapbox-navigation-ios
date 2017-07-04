@@ -92,6 +92,7 @@
 		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		35718BE71EF3194200AFA3D1 /* tunnel.json in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE41EF316BA00AFA3D1 /* tunnel.json */; };
 		35718BE81EF3194500AFA3D1 /* tunnel.route in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE31EF316BA00AFA3D1 /* tunnel.route */; };
+		35726EE81F0856E900AFA1B6 /* DefaultStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DefaultStyle.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
@@ -102,6 +103,7 @@
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */; };
 		35C997411E732C5400544D1C /* RouteStepFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C997401E732C5400544D1C /* RouteStepFormatter.swift */; };
+		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FB1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
@@ -315,6 +317,7 @@
 		356B7D8A1EE166E100FE5B89 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = SOURCE_ROOT; };
 		35718BE31EF316BA00AFA3D1 /* tunnel.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tunnel.route; sourceTree = "<group>"; };
 		35718BE41EF316BA00AFA3D1 /* tunnel.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tunnel.json; sourceTree = "<group>"; };
+		35726EE71F0856E900AFA1B6 /* DefaultStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStyle.swift; sourceTree = "<group>"; };
 		357F0DF01EB9D99F00A0B53C /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		357F0DF11EB9DAB400A0B53C /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		358D14631E5E3B7700ADE590 /* Example-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -344,6 +347,7 @@
 		35C6EDB21EBB286500A27EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteVoiceController.swift; sourceTree = "<group>"; };
 		35C997401E732C5400544D1C /* RouteStepFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepFormatter.swift; sourceTree = "<group>"; };
+		35CF34B01F0A733200C2692E /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
 		35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+MGLNavigationAdditions.h"; sourceTree = "<group>"; };
 		35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+MGLNavigationAdditions.m"; sourceTree = "<group>"; };
@@ -502,6 +506,7 @@
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
 				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
 				351BEBE01E5BCC63006FE110 /* Style.swift */,
+				35726EE71F0856E900AFA1B6 /* DefaultStyle.swift */,
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
@@ -642,6 +647,7 @@
 				C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */,
 				351BEBEB1E5BCC63006FE110 /* String.swift */,
 				351BEBF01E5BCC63006FE110 /* UIView.swift */,
+				35CF34B01F0A733200C2692E /* UIFont.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1167,6 +1173,7 @@
 				351BEBFB1E5BCC63006FE110 /* RouteTableViewHeaderView.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
+				35726EE81F0856E900AFA1B6 /* DefaultStyle.swift in Sources */,
 				C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */,
 				351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */,
@@ -1176,6 +1183,7 @@
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
+				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
 				353E69011EF0C2B6007B2AE5 /* DefaultLocationManager.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,

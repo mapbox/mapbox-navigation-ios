@@ -33,8 +33,8 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.distance = nil
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
-        controller.streetLabel.unabridgedText = "This should be multiple lines"
-        controller.streetLabel.backgroundColor = .red
+        controller.destinationLabel.unabridgedText = "This should be multiple lines"
+        controller.destinationLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -46,8 +46,8 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.distance = 1000
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
-        controller.streetLabel.unabridgedText = "Single line"
-        controller.streetLabel.backgroundColor = .red
+        controller.destinationLabel.unabridgedText = "Single line"
+        controller.destinationLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -59,8 +59,8 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.turnArrowView.isEnd = true
         controller.distance = nil
         controller.shieldImage = shieldImage
-        controller.streetLabel.unabridgedText = "Spell out Avenue multiple lines"
-        controller.streetLabel.backgroundColor = .red
+        controller.destinationLabel.unabridgedText = "Spell out Avenue multiple lines"
+        controller.destinationLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -72,8 +72,8 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
         controller.distance = 100
-        controller.streetLabel.unabridgedText = "This Drive Avenue should be abbreviated."
-        controller.streetLabel.backgroundColor = .red
+        controller.destinationLabel.unabridgedText = "This Drive Avenue should be abbreviated."
+        controller.destinationLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -85,8 +85,8 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
         controller.distance = nil
-        controller.streetLabel.unabridgedText = "This Drive Avenue should be abbreviated on multiple lines...................."
-        controller.streetLabel.backgroundColor = .red
+        controller.destinationLabel.unabridgedText = "This Drive Avenue should be abbreviated on multiple lines...................."
+        controller.destinationLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)
     }
