@@ -11,7 +11,7 @@ class RouteTableViewHeaderView: UIView {
     @IBOutlet weak var progressBar: ProgressBar!
     @IBOutlet weak var distanceRemaining: DistanceRemainingLabel!
     @IBOutlet weak var timeRemaining: TimeRemainingLabel!
-    @IBOutlet weak var etaLabel: ETALabel!
+    @IBOutlet weak var arrivalTimeLabel: ArrivalTimeLabel!
     @IBOutlet weak var dividerView: SeparatorView!
     
     weak var delegate: RouteTableViewHeaderViewDelegate?
@@ -22,7 +22,7 @@ class RouteTableViewHeaderView: UIView {
         //clear default values from the storyboard so user does not see a 'flash' of random values
         distanceRemaining.text = ""
         timeRemaining.text = ""
-        etaLabel.text = ""
+        arrivalTimeLabel.text = ""
     }
     
     override var intrinsicContentSize: CGSize {

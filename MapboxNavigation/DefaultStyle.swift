@@ -60,8 +60,8 @@ public class DefaultStyle: Style {
         destinationLabelFont = .systemFont(ofSize: 32, weight: UIFontWeightMedium)
         destinationLabelTextColor = .defaultPrimaryText
         
-        etaLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
-        etaLabelTextColor = .defaultPrimaryText
+        arrivalTimeLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
+        arrivalTimeLabelTextColor = .defaultPrimaryText
         
         // Table view (Drawer)
         headerBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -72,8 +72,8 @@ public class DefaultStyle: Style {
         distanceRemainingLabelTextColor = .defaultPrimaryText
         distanceRemainingLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
         
-        etaLabelTextColor = .defaultPrimaryText
-        etaLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
+        arrivalTimeLabelTextColor = .defaultPrimaryText
+        arrivalTimeLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
         
         cellTitleLabelFont = .systemFont(ofSize: 17)
         cellTitleLabelTextColor = .defaultPrimaryText

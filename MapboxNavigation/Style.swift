@@ -128,14 +128,14 @@ public class Style: NSObject {
     public var distanceRemainingLabelTextColor: UIColor?
     
     /**
-     Sets the font on the ETA label.
+     Sets the font on the arrival time label.
      */
-    public var etaLabelFont: UIFont?
+    public var arrivalTimeLabelFont: UIFont?
     
     /**
      Sets the text color on the ETA label.
      */
-    public var etaLabelTextColor: UIColor?
+    public var arrivalTimeLabelTextColor: UIColor?
     
     /**
      Sets the font of the title labels in table views.
@@ -256,12 +256,12 @@ public class Style: NSObject {
             DistanceRemainingLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
         }
         
-        if let color = etaLabelTextColor {
-            ETALabel.appearance(for: traitCollection).textColor = color
+        if let color = arrivalTimeLabelTextColor {
+            ArrivalTimeLabel.appearance(for: traitCollection).textColor = color
         }
         
-        if let font = etaLabelFont {
-            ETALabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
+        if let font = arrivalTimeLabelFont {
+            ArrivalTimeLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
         }
         
         if let font = cellTitleLabelFont {
@@ -327,8 +327,8 @@ public class TimeRemainingLabel: StylableLabel { }
 public class DistanceRemainingLabel: StylableLabel { }
 
 /// :nodoc:
-@objc(MBETALabel)
-public class ETALabel: StylableLabel { }
+@objc(MBArrivalTimeLabel)
+public class ArrivalTimeLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBTitleLabel)

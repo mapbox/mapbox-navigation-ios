@@ -689,7 +689,7 @@
                                 </fragment>
                             </attributedString>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="MBETALabel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="MBArrivalTimeLabel">
                             <rect key="frame" x="238" y="32" width="48" height="22"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <nil key="textColor"/>
@@ -750,9 +750,9 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="arrivalTimeLabel" destination="HRl-MT-kqB" id="Nvg-Jp-KsB"/>
                         <outlet property="distanceRemaining" destination="6dE-ya-mrD" id="Qg0-hZ-tkK"/>
                         <outlet property="dividerView" destination="rwq-3y-Mg0" id="MlN-hT-NJe"/>
-                        <outlet property="etaLabel" destination="HRl-MT-kqB" id="Nvg-Jp-KsB"/>
                         <outlet property="progressBar" destination="MEj-M2-Aqd" id="2U4-W6-rv9"/>
                         <outlet property="progressBarWidthConstraint" destination="Dyb-zf-R8A" id="Jz1-i2-QOe"/>
                         <outlet property="timeRemaining" destination="82H-sg-SOL" id="tfh-39-juV"/>
