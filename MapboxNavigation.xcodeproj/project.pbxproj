@@ -33,7 +33,6 @@
 		351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */; };
 		351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC081E5BCC72006FE110 /* Bundle.swift */; };
 		351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC091E5BCC72006FE110 /* DashedLineView.swift */; };
-		351BEC0F1E5BCC72006FE110 /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0A1E5BCC72006FE110 /* Directions.swift */; };
 		351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC281E5BD530006FE110 /* Assets.xcassets */; };
 		351BEC2B1E5BD538006FE110 /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2A1E5BD538006FE110 /* Shields.plist */; };
 		35213DAF1EC456E800A62B21 /* FBSnapshotTestCase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */; };
@@ -286,7 +285,6 @@
 		351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManeuverDirection.swift; sourceTree = "<group>"; };
 		351BEC081E5BCC72006FE110 /* Bundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		351BEC091E5BCC72006FE110 /* DashedLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DashedLineView.swift; sourceTree = "<group>"; };
-		351BEC0A1E5BCC72006FE110 /* Directions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 		351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceFormatter.swift; sourceTree = "<group>"; };
 		351BEC281E5BD530006FE110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Resources/Assets.xcassets; sourceTree = "<group>"; };
 		351BEC2A1E5BD538006FE110 /* Shields.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Shields.plist; path = Resources/Shields.plist; sourceTree = "<group>"; };
@@ -641,7 +639,6 @@
 			children = (
 				C5000A921EC25C6E00563EA9 /* Abbreviations.swift */,
 				351BEC081E5BCC72006FE110 /* Bundle.swift */,
-				351BEC0A1E5BCC72006FE110 /* Directions.swift */,
 				C55CEB271EB7E4240065D7D9 /* Locale.swift */,
 				351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */,
 				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
@@ -1172,7 +1169,6 @@
 				C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */,
 				35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */,
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
-				351BEC0F1E5BCC72006FE110 /* Directions.swift in Sources */,
 				35C997411E732C5400544D1C /* RouteStepFormatter.swift in Sources */,
 				351BEBFB1E5BCC63006FE110 /* RouteTableViewHeaderView.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
