@@ -15,6 +15,7 @@
 		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
 		351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351174F31EF1C0530065E248 /* ReplayLocationManager.swift */; };
+		351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351A40151F0291D100E6D378 /* PollyVoiceController.swift */; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* Style.swift */; };
 		351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */; };
@@ -265,6 +266,7 @@
 		35002D6D1E5F6C7F0090E733 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35002D751E5F6CD30090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		351174F31EF1C0530065E248 /* ReplayLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayLocationManager.swift; sourceTree = "<group>"; };
+		351A40151F0291D100E6D378 /* PollyVoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollyVoiceController.swift; sourceTree = "<group>"; };
 		351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		351BEBDA1E5BCC28006FE110 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLMapView.swift; sourceTree = "<group>"; };
@@ -514,6 +516,7 @@
 				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				353E69001EF0C2B6007B2AE5 /* DefaultLocationManager.swift */,
+				351A40151F0291D100E6D378 /* PollyVoiceController.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1165,6 +1168,7 @@
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
 				351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */,
+				351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */,
 				C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */,
 				35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */,
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
