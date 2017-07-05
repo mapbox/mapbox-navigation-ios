@@ -168,7 +168,6 @@ open class RouteController: NSObject {
     }
     
     func resumeNotifications() {
-        UIDevice.current.isBatteryMonitoringEnabled = true
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
@@ -176,7 +175,6 @@ open class RouteController: NSObject {
     }
     
     func suspendNotifications() {
-        UIDevice.current.isBatteryMonitoringEnabled = false
         NotificationCenter.default.removeObserver(self)
     }
     
