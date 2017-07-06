@@ -104,7 +104,7 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.step = legs[indexPath.section].steps[indexPath.row]
         
-        if routeController.routeProgress.legIndex + 1 > indexPath.section && routeController.routeProgress.currentLegProgress.stepIndex + 1 > indexPath.row  {
+        if indexPath.section < routeController.routeProgress.legIndex || (indexPath.section == routeController.routeProgress.legIndex && indexPath.row <= routeController.routeProgress.currentLegProgress.stepIndex) {
             cell.contentView.alpha = 0.4
         }
         

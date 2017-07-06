@@ -16,7 +16,7 @@ enum ExampleMode {
 
 class ViewController: UIViewController, MGLMapViewDelegate {
     
-    var destination: MGLPointAnnotation?
+    var waypoints: [Waypoint] = []
     var currentRoute: Route? {
         didSet {
             self.startButton.isEnabled = currentRoute != nil
@@ -30,7 +30,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     @IBOutlet weak var startButton: UIButton!
     
     var exampleMode: ExampleMode?
-    var nextWaypoint: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,15 +55,25 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             return
         }
         
-        if let destination = destination {
-            mapView.removeAnnotation(destination)
+        if let annotation = mapView.annotations?.last, waypoints.count > 2 {
+            mapView.removeAnnotation(annotation)
         }
+        
+        if waypoints.count > 1 {
+            waypoints = Array(waypoints.suffix(1))
+        }
+        
+        let coordinates = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
+        
+        let annotation = MGLPointAnnotation()
+        annotation.coordinate = coordinates
+        mapView.addAnnotation(annotation)
         
         longPressHintView.isHidden = true
         
-        destination = MGLPointAnnotation()
-        destination?.coordinate = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
-        mapView.addAnnotation(destination!)
+        let waypoint = Waypoint(coordinate: coordinates)
+        waypoint.coordinateAccuracy = -1
+        waypoints.append(waypoint)
         
         requestRoute()
     }
@@ -97,28 +106,31 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
             self.startStyledNavigation()
         }))
-        alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-            self.startMultipleWaypoints()
-        }))
+        if waypoints.count > 2 {
+            alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
+                self.startMultipleWaypoints()
+            }))
+        }
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
     
     // Helper for requesting a route
     func requestRoute() {
-        guard let destination = destination else { return }
+        guard waypoints.count > 0 else { return }
         
-        let options = RouteOptions(coordinates: [
-            mapView.userLocation!.coordinate,
-            destination.coordinate,
-            ])
+        let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "user")
+        userWaypoint.coordinateAccuracy = -1
+        waypoints.insert(userWaypoint, at: 0)
+        
+        let options = RouteOptions(waypoints: waypoints)
         options.includesSteps = true
         options.routeShapeResolution = .full
         options.profileIdentifier = .automobileAvoidingTraffic
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
-                print(error!)
+                print(error!.localizedDescription)
                 return
             }
             guard let route = routes?.first else { return }
@@ -154,7 +166,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         customViewController.simulateLocation = simulationButton.isSelected
         customViewController.userRoute = route
-        customViewController.destination = destination
         
         present(customViewController, animated: true, completion: nil)
     }
@@ -213,9 +224,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         exampleMode = .multipleWaypoints
         
-        // When the user arrives at their destination, we'll prompt them to return back to where they started
-        nextWaypoint = self.currentRoute?.coordinates?.first
-        
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.navigationDelegate = self
         
@@ -225,10 +233,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 }
 
 extension ViewController: NavigationViewControllerDelegate {
-    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt destination: MGLAnnotation) {
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
         
         // Multiple waypoint demo
-        guard exampleMode == .multipleWaypoints, nextWaypoint != nil else { return }
+        guard exampleMode == .multipleWaypoints else { return }
         
         // When the user arrives, present a view controller that prompts the user to continue to their next destination
         // This typ of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
@@ -242,34 +250,6 @@ extension ViewController: NavigationViewControllerDelegate {
 
 extension ViewController: WaypointConfirmationViewControllerDelegate {
     func confirmationControllerDidConfirm(controller confirmationController: WaypointConfirmationViewController) {
-        guard let nextDestination = nextWaypoint else { return }
-        guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
-        
-        // Calculate directions to the next waypoint
-        let options = RouteOptions(coordinates: [
-            navigationViewController.mapView!.userLocation!.coordinate,
-            nextDestination,
-            ])
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.profileIdentifier = navigationViewController.route.routeOptions.profileIdentifier
-        
-        _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
-            guard error == nil else {
-                print(error!)
-                return
-            }
-            guard let route = routes?.first else { return }
-            
-            // update the navigationViewController with the route to the next waypoint
-            navigationViewController.route = route
-            
-            // Set the next waypoint to our start point
-            // We'll continue this waypoint loop until the user exits navigation
-            self?.nextWaypoint = route.coordinates?.first
-            
-            // Dismiss the confirmation screen
-            confirmationController.dismiss(animated: true, completion: nil)
-        }
+        confirmationController.dismiss(animated: true, completion: nil)
     }
 }
