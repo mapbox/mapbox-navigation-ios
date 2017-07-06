@@ -404,7 +404,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             return location
         }
         
-        guard location.course != -1 else {
+        guard location.course != -1, location.speed >= 0 else {
             return location
         }
         
