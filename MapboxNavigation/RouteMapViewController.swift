@@ -26,6 +26,8 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
+    
+    var hasFinishedLoadingStyle = false
 
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera? {
@@ -315,9 +317,15 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return delegate?.navigationMapView(mapView, imageFor:annotation)
     }
+    
+    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
+        hasFinishedLoadingStyle = true
+    }
 
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
+        
+        guard hasFinishedLoadingStyle else { return nil }
 
         guard routeController.userIsOnRoute(location) else { return nil }
         guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
