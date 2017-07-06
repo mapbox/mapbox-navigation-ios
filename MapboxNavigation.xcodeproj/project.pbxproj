@@ -108,6 +108,9 @@
 		35D825FB1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		404E887D1F0EF203007FE16F /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404E887C1F0EF203007FE16F /* MapboxMobileEvents.framework */; };
+		404E887E1F0EF224007FE16F /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 404E887C1F0EF203007FE16F /* MapboxMobileEvents.framework */; };
+		404E887F1F0EF224007FE16F /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 404E887C1F0EF203007FE16F /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5000A921EC25C6E00563EA9 /* Abbreviations.swift */; };
 		C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C520EE921EBB84F9008805BC /* Navigation.storyboard */; };
@@ -222,6 +225,7 @@
 				3525449E1E664E0F004C8F1C /* AWSPolly.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				354A01D61E6626AC00D765C2 /* MapboxNavigation.framework in Embed Frameworks */,
+				404E887F1F0EF224007FE16F /* MapboxMobileEvents.framework in Embed Frameworks */,
 				354A01C81E66265800D765C2 /* Pulley.framework in Embed Frameworks */,
 				354A01C61E66265600D765C2 /* SDWebImage.framework in Embed Frameworks */,
 				354A01D01E66266100D765C2 /* MapboxDirections.framework in Embed Frameworks */,
@@ -352,6 +356,7 @@
 		35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+MGLNavigationAdditions.h"; sourceTree = "<group>"; };
 		35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+MGLNavigationAdditions.m"; sourceTree = "<group>"; };
 		35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapboxNavigation.h; sourceTree = "<group>"; };
+		404E887C1F0EF203007FE16F /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		C5000A921EC25C6E00563EA9 /* Abbreviations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Abbreviations.swift; sourceTree = "<group>"; };
 		C520EE911EBB84F9008805BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Navigation.storyboard; sourceTree = "<group>"; };
@@ -412,6 +417,7 @@
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				354A01CB1E66265D00D765C2 /* OSRMTextInstructions.framework in Frameworks */,
 				354A01C91E66265B00D765C2 /* Polyline.framework in Frameworks */,
+				404E887E1F0EF224007FE16F /* MapboxMobileEvents.framework in Frameworks */,
 				354A01C21E66265100D765C2 /* Mapbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -438,6 +444,7 @@
 			files = (
 				354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */,
 				359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */,
+				404E887D1F0EF203007FE16F /* MapboxMobileEvents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,6 +628,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				404E887C1F0EF203007FE16F /* MapboxMobileEvents.framework */,
 				35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */,
 				354BD4F61E6638E800AE1344 /* AWSCore.framework */,
 				354BD4F11E6634C500AE1344 /* AWSPolly.framework */,
