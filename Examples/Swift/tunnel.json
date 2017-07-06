@@ -1,0 +1,122 @@
+[
+  {
+    "verticalAccuracy" : 6,
+    "speed" : 22.899999618530273,
+    "longitude" : -122.45956801250402,
+    "horizontalAccuracy" : 5,
+    "course" : 67.859794616699219,
+    "latitude" : 37.801929819902256,
+    "timestamp" : 1497475499.0256791,
+    "altitude" : 23.702549187157306
+  },
+  {
+    "verticalAccuracy" : 6,
+    "speed" : 23.280000686645508,
+    "longitude" : -122.45932581643162,
+    "horizontalAccuracy" : 5,
+    "course" : 67.859794616699219,
+    "latitude" : 37.802020704125916,
+    "timestamp" : 1497475500.04006,
+    "altitude" : 22.810098907476391
+  },
+  {
+    "verticalAccuracy" : 6,
+    "speed" : 23.059999465942383,
+    "longitude" : -122.45906355161894,
+    "horizontalAccuracy" : 5,
+    "course" : 67.859794616699219,
+    "latitude" : 37.802109132033124,
+    "timestamp" : 1497475501.0420461,
+    "altitude" : 22.003214925033497
+  },
+  {
+    "verticalAccuracy" : 6,
+    "speed" : 23.020000457763672,
+    "longitude" : -122.45882975747831,
+    "horizontalAccuracy" : 5,
+    "course" : 67.859794616699219,
+    "latitude" : 37.802185453583604,
+    "timestamp" : 1497475502.040133,
+    "altitude" : 21.47761759014524
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 22.850000381469727,
+    "longitude" : -122.45859724198759,
+    "horizontalAccuracy" : 5,
+    "course" : 69.7305908203125,
+    "latitude" : 37.802259399870124,
+    "timestamp" : 1497475503.059294,
+    "altitude" : 20.227788424849507
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 22.940000534057617,
+    "longitude" : -122.45835469888969,
+    "horizontalAccuracy" : 5,
+    "course" : 70.288505554199219,
+    "latitude" : 37.802340558295121,
+    "timestamp" : 1497475504.070745,
+    "altitude" : 19.921009934433961
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 22.959999084472656,
+    "longitude" : -122.45812377041734,
+    "horizontalAccuracy" : 5,
+    "course" : 70.288505554199219,
+    "latitude" : 37.802421605266439,
+    "timestamp" : 1497475505.03931,
+    "altitude" : 19.050089638479612
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 22.590000152587891,
+    "longitude" : -122.45788721230271,
+    "horizontalAccuracy" : 5,
+    "course" : 70.230934143066406,
+    "latitude" : 37.802494510830861,
+    "timestamp" : 1497475506.0359511,
+    "altitude" : 18.383877173140085
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 22.469999313354492,
+    "longitude" : -122.45764916464815,
+    "horizontalAccuracy" : 5,
+    "course" : 70.230934143066406,
+    "latitude" : 37.802562549697868,
+    "timestamp" : 1497475507.038976,
+    "altitude" : 17.417158889435495
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 22.350000381469727,
+    "longitude" : -122.45742081797762,
+    "horizontalAccuracy" : 5,
+    "course" : 70.926567077636719,
+    "latitude" : 37.802609044489465,
+    "timestamp" : 1497475508.0399661,
+    "altitude" : 16.990964193201091
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 22.260000228881836,
+    "longitude" : -122.45717497985068,
+    "horizontalAccuracy" : 5,
+    "course" : 71.793121337890625,
+    "latitude" : 37.802681546020445,
+    "timestamp" : 1497475509.0264881,
+    "altitude" : 16.993961965274575
+  },
+  {
+    "verticalAccuracy" : 4,
+    "speed" : 12.909999847412109,
+    "longitude" : -122.45272421289464,
+    "horizontalAccuracy" : 5,
+    "course" : 95.9765625,
+    "latitude" : 37.80292640909348,
+    "timestamp" : 1497475530.0280781,
+    "altitude" : 14.228695074569107
+  }
+]

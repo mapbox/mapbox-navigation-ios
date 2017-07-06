@@ -115,7 +115,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route! {
         didSet {
-            setupRouteController()
+            if routeController == nil {
+                routeController = RouteController(along: route, directions: directions, locationManager: DefaultLocationManager())
+                routeController.delegate = self
+            } else {
+                routeController.routeProgress = RouteProgress(route: route)
+            }
+            mapViewController?.notifyDidReroute(route: route)
+            tableViewController?.notifyDidReroute()
         }
     }
     
@@ -150,7 +157,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      The receiver’s delegate.
      */
-    public var navigationDelegate: NavigationViewControllerDelegate?
+    public weak var navigationDelegate: NavigationViewControllerDelegate?
     
     /**
      `voiceController` provides access to various speech synthesizer options.
@@ -162,16 +169,18 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      `routeController` provides all routing logic for the user.
 
-     See `RouteController` for more information
+     See `RouteController` for more information.
      */
     public var routeController: RouteController!
     
     /**
-     `simulate` provides simulated location updates along the given route.
+     Styles that will be used for various system traits.
+     
+     See `Style` and `DefaultStyle` for more information.
      */
-    public var simulatesLocationUpdates: Bool = false {
+    public var styles: [Style] = [DefaultStyle()] {
         didSet {
-            routeController.simulatesLocationUpdates = simulatesLocationUpdates
+            styles.forEach { $0.apply() }
         }
     }
     
@@ -197,10 +206,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     let routeStepFormatter = RouteStepFormatter()
     
-    var simulation: SimulatedRoute?
-    
     required public init?(coder aDecoder: NSCoder) {
-        Style.defaultStyle.apply()
         super.init(coder: aDecoder)
     }
     
@@ -218,9 +224,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
      for further information.
      */
-    @objc(initWithRoute:directions:)
-    required public init(for route: Route,  directions: Directions = Directions.shared) {
-        Style.defaultStyle.apply()
+    @objc(initWithRoute:directions:style:locationManager:)
+    required public init(for route: Route,
+                         directions: Directions = Directions.shared,
+                         styles: [Style]? = [DefaultStyle()],
+                         locationManager: NavigationLocationManager? = DefaultLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
@@ -228,9 +236,17 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
+        self.styles = styles ?? [DefaultStyle()]
         self.directions = directions
         self.route = route
-        self.setupRouteController()
+        
+        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager())
+        self.routeController.delegate = self
+        
+        let annotation = MGLPointAnnotation()
+        annotation.coordinate = route.coordinates!.last!
+        destination = annotation
+        
         self.mapViewController = mapViewController
         self.tableViewController = tableViewController
         
@@ -274,23 +290,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.delegate = self
     }
     
-    public override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        suspendNotifications()
-    }
-    
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = true
+        styles.forEach { $0.apply() }
         routeController.resume()
-        
-        if simulatesLocationUpdates {
-            guard let coordinates = route.coordinates else { return }
-            simulation = SimulatedRoute(along: coordinates)
-            simulation?.delegate = self
-            simulation?.start()
-        }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -298,7 +303,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         UIApplication.shared.isIdleTimerDisabled = false
         routeController.suspendLocationUpdates()
-        simulation?.stop()
     }
     
     // MARK: Route controller notifications
@@ -357,19 +361,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         UIApplication.shared.scheduleLocalNotification(notification)
     }
     
-    func setupRouteController() {
-        if routeController == nil {
-            routeController = RouteController(along: route, directions: directions)
-            routeController.delegate = self
-            routeController.simulatesLocationUpdates = simulatesLocationUpdates
-            
-            if Bundle.main.backgroundModeLocationSupported {
-                routeController.locationManager.activityType = .automotiveNavigation
-                routeController.locationManager.allowsBackgroundLocationUpdates = true
-            }
-        }
-    }
-    
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return navigationDelegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
@@ -412,6 +403,10 @@ extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
         navigationDelegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
+    
+    public func routeController(_ routeController: RouteController, didUpdateLocations locations: [CLLocation]) {
+        mapViewController?.mapView.locationManager(routeController.locationManager, didUpdateLocations: locations)
+    }
 }
 
 extension NavigationViewController: RouteTableViewHeaderViewDelegate {
@@ -439,12 +434,5 @@ extension NavigationViewController: PulleyDelegate {
         case .closed:
             break
         }
-    }
-}
-
-extension NavigationViewController: SimulatedRouteDelegate {
-    func simulation(_ locationManager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        mapViewController?.mapView.locationManager(locationManager, didUpdateLocations: locations)
-        routeController.locationManager(locationManager, didUpdateLocations: locations)
     }
 }

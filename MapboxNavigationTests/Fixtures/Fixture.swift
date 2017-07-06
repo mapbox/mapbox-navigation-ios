@@ -1,5 +1,7 @@
 import XCTest
 import Foundation
+import MapboxDirections
+import CoreLocation
 
 internal class Fixture {
     internal class func stringFromFileNamed(name: String) -> String {
@@ -30,5 +32,23 @@ internal class Fixture {
             XCTAssert(false, "Unable to decode JSON fixture at \(path): \(error).")
             return [:]
         }
+    }
+    
+    class func downloadRouteFixture(coordinates: [CLLocationCoordinate2D], fileName: String, completion: @escaping () -> Void) {
+        let accessToken = "<# Mapbox Access Token #>"
+        let directions = Directions(accessToken: accessToken)
+        
+        let options = RouteOptions(coordinates: coordinates, profileIdentifier: .automobileAvoidingTraffic)
+        options.includesSteps = true
+        options.routeShapeResolution = .full
+        let filePath = (NSTemporaryDirectory() as NSString).appendingPathComponent(fileName)
+        
+        _ = directions.calculate(options, completionHandler: { (waypoints, routes, error) in
+            guard let route = routes?.first else { return }
+            
+            NSKeyedArchiver.archiveRootObject(route, toFile: filePath)
+            print("Route downloaded to \(filePath)")
+            completion()
+        })
     }
 }

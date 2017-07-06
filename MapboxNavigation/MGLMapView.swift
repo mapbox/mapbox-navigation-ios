@@ -92,7 +92,7 @@ extension MGLMapView {
             if let source = style.source(withIdentifier: arrowSourceIdentifier) as? MGLShapeSource {
                 source.shape = arrowShape
             } else {
-                
+                arrow.minimumZoomLevel = 14.5
                 arrow.lineCap = MGLStyleValue(rawValue: cap)
                 arrow.lineJoin = MGLStyleValue(rawValue: join)
                 arrow.lineWidth = MGLStyleValue(rawValue: 6)
@@ -106,6 +106,7 @@ extension MGLMapView {
                 source.shape = arrowStrokeShape
             } else {
                 
+                arrowStroke.minimumZoomLevel = 14.5
                 arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
                 arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
                 arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)

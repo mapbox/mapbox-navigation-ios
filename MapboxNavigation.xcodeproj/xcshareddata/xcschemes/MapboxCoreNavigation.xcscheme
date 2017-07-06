@@ -39,9 +39,6 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "MapboxCoreNavigationTests/testLowAlert()">
-               </Test>
-               <Test
                   Identifier = "MapboxNavigationTests/testLowAlert()">
                </Test>
             </SkippedTests>

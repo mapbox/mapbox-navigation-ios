@@ -33,6 +33,14 @@ class RouteMapViewController: UIViewController {
         }
         return parent.pendingCamera
     }
+    var tiltedCamera: MGLMapCamera {
+        get {
+            let camera = mapView.camera
+            camera.altitude = 600
+            camera.pitch = 45
+            return camera
+        }
+    }
     weak var delegate: RouteMapViewControllerDelegate?
 
     weak var routeController: RouteController!
@@ -46,11 +54,6 @@ class RouteMapViewController: UIViewController {
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
-
-    var simulatesLocationUpdates: Bool {
-        guard let parent = parent as? NavigationViewController else { return false }
-        return parent.simulatesLocationUpdates
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +75,10 @@ class RouteMapViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
+        mapView.locationManager.stopUpdatingLocation()
+        mapView.locationManager.stopUpdatingHeading()
+        
         mapView.compassView.isHidden = true
         
         for leg in route.legs {
@@ -84,46 +90,30 @@ class RouteMapViewController: UIViewController {
         if let camera = pendingCamera {
             mapView.camera = camera
         } else {
-            setDefaultCamera(animated: false)
+            let camera = tiltedCamera
+            if let coordinates = route.coordinates, coordinates.count > 1 {
+                camera.centerCoordinate = coordinates.first!
+                camera.heading = coordinates[0].direction(to: coordinates[1])
+            }
+            mapView.setCamera(camera, animated: false)
         }
-
-        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: .initial, context: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-        mapView.setUserTrackingMode(.followWithCourse, animated: false)
-
-        if simulatesLocationUpdates {
-            mapView.locationManager.stopUpdatingLocation()
-            mapView.locationManager.stopUpdatingHeading()
-        }
         
+        mapView.setUserTrackingMode(.followWithCourse, animated: false)
+        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setContentInset(contentInsets, animated: false)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
         webImageManager.cancelAll()
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "batteryState" {
-            let batteryState = UIDevice.current.batteryState
-            let pluggedIn = batteryState == .charging || batteryState == .full
-            routeController.locationManager.desiredAccuracy = pluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
-        }
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
     @IBAction func recenter(_ sender: AnyObject) {
-        setDefaultCamera(animated: false)
+        mapView.setCamera(tiltedCamera, animated: false)
         mapView.userTrackingMode = .followWithCourse
 
         // Recenter also resets the current page. Same behavior as rerouting.
@@ -133,7 +123,7 @@ class RouteMapViewController: UIViewController {
     @IBAction func toggleOverview(_ sender: Any) {
         if isInOverviewMode {
             overviewButton.isHidden = false
-            setDefaultCamera(animated: false)
+            mapView.setCamera(tiltedCamera, animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
             wayNameView.isHidden = true
@@ -205,13 +195,6 @@ class RouteMapViewController: UIViewController {
         return navigationMapView(mapView, imageFor: annotation)
     }
 
-    func setDefaultCamera(animated: Bool) {
-        let camera = mapView.camera
-        camera.altitude = 600
-        camera.pitch = 50
-        mapView.setCamera(camera, animated: animated)
-    }
-
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         guard var controller = routePageViewController.currentManeuverPage else { return }
         
@@ -223,15 +206,17 @@ class RouteMapViewController: UIViewController {
             if previousStep != step {
                 controller = routePageViewController.routeManeuverViewController(with: step)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
-                routePageViewController(routePageViewController, willTransitionTo: controller)
+                routePageViewController.currentManeuverPage = controller
             }
         }
         
         previousStep = step
         
+        // Do not update if the current page doesn't represent the current step
+        guard step == controller.step else { return }
+        
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         updateShield(for: controller)
-        controller.step = step
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
@@ -260,10 +245,6 @@ class RouteMapViewController: UIViewController {
 
         let imageName = imageNamePattern.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "{ref}", with: number)
         let apiURL = URL(string: "https://commons.wikimedia.org/w/api.php?action=query&format=json&maxage=86400&prop=imageinfo&titles=File%3A\(imageName)&iiprop=url%7Csize&iiurlheight=\(Int(round(height)))")!
-
-        guard shieldAPIDataTask?.originalRequest?.url != apiURL else {
-            return nil
-        }
 
         shieldAPIDataTask?.cancel()
         return URLSession.shared.dataTask(with: apiURL) { [weak self] (data, response, error) in
@@ -518,11 +499,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 
     func updateShield(for controller: RouteManeuverViewController) {
-        let currentLegProgress = routeController.routeProgress.currentLegProgress
-
-        guard let upComingStep = currentLegProgress?.upComingStep else { return }
-        guard let ref = upComingStep.codes?.first else { return }
-        guard controller.shieldImage == nil else { return }
+        guard let ref = controller.step.codes?.first, controller.shieldImage == nil else { return }
 
         let components = ref.components(separatedBy: " ")
 
