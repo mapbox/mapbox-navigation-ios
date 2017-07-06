@@ -324,15 +324,13 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-        
-        guard hasFinishedLoadingStyle else { return nil }
 
         guard routeController.userIsOnRoute(location) else { return nil }
         guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
 
         // Add current way name to UI
-        if let style = mapView.style, recenterButton.isHidden{
+        if let style = mapView.style, recenterButton.isHidden && hasFinishedLoadingStyle {
             let closestCoordinate = snappedCoordinate.coordinate
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
