@@ -341,7 +341,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         tableViewController?.notifyAlertLevelDidChange()
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
-            giveLocalNotification(upComingStep)
+            scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+        }
+        
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
@@ -349,12 +353,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
     }
     
-    func giveLocalNotification(_ step: RouteStep) {
+    func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
         guard sendNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
         
         let notification = UILocalNotification()
-        notification.alertBody = routeStepFormatter.string(for: step)
+        notification.alertBody = routeStepFormatter.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: false)
         notification.fireDate = Date()
         
         UIApplication.shared.cancelAllLocalNotifications()
@@ -399,7 +403,8 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
-        giveLocalNotification(routeController.routeProgress.currentLegProgress.currentStep)
+        let routeProgress = routeController.routeProgress
+        scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: route.legs.count)
         
         mapViewController?.notifyDidReroute(route: route)
         tableViewController?.notifyDidReroute()
