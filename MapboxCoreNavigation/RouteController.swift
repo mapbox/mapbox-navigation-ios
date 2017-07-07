@@ -122,6 +122,7 @@ open class RouteController: NSObject {
     var lastReRouteLocation: CLLocation?
     
     var routeTask: URLSessionDataTask?
+    var lastLocationForFasterRoute: Date?
     
     /**
      Intializes a new `RouteController`.
@@ -265,6 +266,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         monitorStepProgress(location)
+        checkForFasterRoute(from: location)
     }
     
     func resetStartCounter() {
@@ -328,6 +330,47 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance
                 ])
         }
+    }
+    
+    func checkForFasterRoute(from location: CLLocation) {
+        
+        guard lastLocationForFasterRoute != nil else {
+            lastLocationForFasterRoute = location.timestamp
+            return
+        }
+        
+        guard location.timestamp.timeIntervalSince1970 - lastLocationForFasterRoute!.timeIntervalSince1970 > 5 else {
+            return
+        }
+        
+        routeTask?.cancel()
+        
+        let options = routeProgress.route.routeOptions
+        
+        options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
+        
+        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
+            firstWaypoint.heading = location.course
+            firstWaypoint.headingAccuracy = 90
+        }
+        
+        let durationRemaining = routeProgress.durationRemaining
+        
+        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.lastLocationForFasterRoute = nil
+            
+            if let route = routes?.first {
+                let percentDifference = ((durationRemaining - route.expectedTravelTime) / route.expectedTravelTime) * 100
+                if percentDifference > 10 {
+                    strongSelf.routeProgress = RouteProgress(route: route)
+                    strongSelf.routeProgress.currentLegProgress.stepIndex = 0
+                    strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                }
+            }
+        })
     }
     
     func reroute(from location: CLLocation) {
