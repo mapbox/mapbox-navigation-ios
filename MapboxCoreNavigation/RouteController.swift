@@ -144,7 +144,7 @@ open class RouteController: NSObject {
         self.locationManager.delegate = self
         
         // This is just a test!!! (needs a real access token, a user agent base, and the actual nav SDK version
-        events.initialize(withAccessToken: "your token here!", userAgentBase: "MapboxEventsiOSNavigation", hostSDKVersion: "42.42.42")
+        events.initialize(withAccessToken: "your token here!", userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: "42.42.42")
         events.isDebugLoggingEnabled = true
         events.sendTurnstileEvent()
     }
