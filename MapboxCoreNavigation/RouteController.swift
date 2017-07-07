@@ -334,34 +334,33 @@ extension RouteController: CLLocationManagerDelegate {
     
     func checkForFasterRoute(from location: CLLocation) {
         
-//        // If the user is on a short route, don't check for faster alternatives
-//        guard routeProgress.durationRemaining > 600 else { return }
-//        
-//        // If the user is approaching a maneuver, don't check for a faster alternatives
-//        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > 70 else { return }
+        // If the user is on a short route, don't check for faster alternatives
+        guard routeProgress.durationRemaining > 600 else { return }
+
+        // If the user is approaching a maneuver, don't check for a faster alternatives
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > 70 else { return }
+        
+        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else { return }
         
         guard let lastLocationTimestamp = lastLocationTimestamp else {
             self.lastLocationTimestamp = location.timestamp
             return
         }
-        
-        guard location.timestamp.timeIntervalSince1970 - lastLocationTimestamp.timeIntervalSince1970 > 5 else {
-            return
-        }
-        
-        routeTask?.cancel()
+
+        // Only check ever 2 minutes for faster route
+        guard location.timestamp.timeIntervalSince1970 - lastLocationTimestamp.timeIntervalSince1970 > 120 else { return }
         
         let options = routeProgress.route.routeOptions
-        
         options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
-        
         if let firstWaypoint = options.waypoints.first, location.course >= 0 {
             firstWaypoint.heading = location.course
             firstWaypoint.headingAccuracy = 90
         }
         
         let durationRemaining = routeProgress.durationRemaining
+        let currentAlertLevel = routeProgress.currentLegProgress.alertUserLevel
         
+        routeTask?.cancel()
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             guard let strongSelf = self else { return }
             
@@ -369,16 +368,14 @@ extension RouteController: CLLocationManagerDelegate {
             
             if let route = routes?.first {
                 let percentDifference = ((durationRemaining - route.expectedTravelTime) / route.expectedTravelTime) * 100
-
-//                if percentDifference > 10 {
-//                    strongSelf.routeProgress = RouteProgress(route: route)
-//                    strongSelf.routeProgress.currentLegProgress.stepIndex = 0
-//                    strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
                 
-                    NotificationCenter.default.post(name: RouteControllerDidFindFasterAlternateRoute, object: self, userInfo: [
-                        MBRouteControllerDidFindFasterAlternateRouteKey: route
-                        ])
-//                }
+                // Only use new route if it's at least 10% faster
+                if percentDifference > 10 {
+                    
+                    // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
+                    strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentUpcomingManeuver.description == route.legs[0].steps[1].description ? currentAlertLevel : .none)
+                    strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                }
             }
         })
     }
