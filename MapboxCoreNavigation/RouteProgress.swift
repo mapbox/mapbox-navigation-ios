@@ -51,12 +51,12 @@ public enum AlertLevel: Int {
 @objc(MBRouteProgress)
 open class RouteProgress: NSObject {
     /**
-     Returns the current `Route`
+     Returns the current `Route`.
      */
     public let route: Route
 
     /**
-     Index representing current `RouteLeg`
+     Index representing current `RouteLeg`.
      */
     public var legIndex: Int {
         didSet {
@@ -84,7 +84,7 @@ open class RouteProgress: NSObject {
     
 
     /**
-     Total seconds remaining on all legs
+     Total seconds remaining on all legs.
      */
     public var durationRemaining: CLLocationDistance {
         return route.legs.suffix(from: legIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentLegProgress.durationRemaining
@@ -107,14 +107,14 @@ open class RouteProgress: NSObject {
     }
     
     /**
-     Number of waypoints remaining on the current route
+     Number of waypoints remaining on the current route.
      */
     public var remainingWaypoints: [Waypoint] {
         return route.legs.suffix(from: legIndex).map { $0.destination }
     }
     
     /**
-     Returns the progress along the current `RouteLeg`
+     Returns the progress along the current `RouteLeg`.
      */
     public var currentLegProgress: RouteLegProgress!
 
@@ -144,7 +144,7 @@ open class RouteLegProgress: NSObject {
     
     
     /**
-     Index representing the current step
+     Index representing the current step.
      */
     public var stepIndex: Int {
         didSet {
@@ -155,7 +155,7 @@ open class RouteLegProgress: NSObject {
 
 
     /**
-     Total distance traveled in meters along current leg
+     Total distance traveled in meters along current leg.
      */
     public var distanceTraveled: CLLocationDistance {
         return leg.steps.prefix(upTo: stepIndex).map { $0.distance }.reduce(0, +) + currentStepProgress.distanceTraveled
@@ -163,7 +163,7 @@ open class RouteLegProgress: NSObject {
     
     
     /**
-     Duration remaining in seconds on current leg
+     Duration remaining in seconds on current leg.
      */
     public var durationRemaining: TimeInterval {
         return leg.steps.suffix(from: stepIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
@@ -263,7 +263,7 @@ open class RouteLegProgress: NSObject {
     }
     
     /**
-     Returns the progress along the current `RouteStep`
+     Returns the progress along the current `RouteStep`.
      */
     public var currentStepProgress: RouteStepProgress
 
@@ -282,7 +282,7 @@ open class RouteLegProgress: NSObject {
     
     
     /**
-     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry
+     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
      */
     public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
@@ -318,14 +318,14 @@ open class RouteStepProgress: NSObject {
     public var userDistanceToManeuverLocation: CLLocationDistance? = nil
     
     /**
-     Total distance in meters remaining on current stpe
+     Total distance in meters remaining on current step.
      */
     public var distanceRemaining: CLLocationDistance {
         return step.distance - distanceTraveled
     }
 
     /**
-     Number between 0 and 1 representing fraction of current step traveled
+     Number between 0 and 1 representing fraction of current step traveled.
      */
     public var fractionTraveled: Double {
         return distanceTraveled / step.distance
@@ -333,7 +333,7 @@ open class RouteStepProgress: NSObject {
 
 
     /**
-     Number of seconds remaining on current step
+     Number of seconds remaining on current step.
      */
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime

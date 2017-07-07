@@ -53,17 +53,17 @@ public let RouteControllerProgressDidChange = Notification.Name(MBRouteControlle
 public let RouteControllerAlertLevelDidChange = Notification.Name(MBRouteControllerAlertLevelDidChange)
 
 /**
- Emitted when the user has gone offroute and the `RouteController` is about to reroute.
+ Emitted when the user has gone off-route and the `RouteController` is about to reroute.
  */
 public let RouteControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
 
 /**
- Emitted after the user has gone offroute and the `RouteController` rerouted.
+ Emitted after the user has gone off-route and the `RouteController` rerouted.
  */
 public let RouteControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
 
 /**
- Emitted after the user has gone offroute but the `RouteController` failed to reroute.
+ Emitted after the user has gone off-route but the `RouteController` failed to reroute.
  */
 public let RouteControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
 
