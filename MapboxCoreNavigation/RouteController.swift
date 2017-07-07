@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import MapboxMobileEvents
 
 /**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
@@ -75,6 +76,8 @@ open class RouteController: NSObject {
     
     var lastTimeStampSpentMovingAwayFromStart = Date()
     
+    let events = MMEEventsManager.shared()
+    
     /**
      The route controller’s delegate.
      */
@@ -139,6 +142,11 @@ open class RouteController: NSObject {
         super.init()
         
         self.locationManager.delegate = self
+        
+        // This is just a test!!! (needs a real access token, a user agent base, and the actual nav SDK version
+        events.initialize(withAccessToken: "your token here!", userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: "42.42.42")
+        events.isDebugLoggingEnabled = true
+        events.sendTurnstileEvent()
     }
     
     deinit {
