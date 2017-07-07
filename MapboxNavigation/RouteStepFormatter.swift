@@ -10,13 +10,13 @@ public class RouteStepFormatter: Formatter {
      Return an instruction as a `String`.
      */
     public override func string(for obj: Any?) -> String? {
-        return string(for: obj, markUpWithSSML: false)
+        return string(for: obj, legIndex: nil, numberOfLegs: nil, markUpWithSSML: false)
     }
     
     /**
      Returns an instruction as a `String`. Setting `markUpWithSSML` to `true` will return a string containing [SSML](https://www.w3.org/TR/speech-synthesis/) tag information around appropriate strings.
      */
-    public func string(for obj: Any?, markUpWithSSML: Bool) -> String? {
+    public func string(for obj: Any?, legIndex: Int?, numberOfLegs: Int?, markUpWithSSML: Bool) -> String? {
         guard let step = obj as? RouteStep else {
             return nil
         }
@@ -25,7 +25,7 @@ public class RouteStepFormatter: Formatter {
             return instructions.string(for: step)
         }
         
-        return instructions.string(for: step, modifyValueByKey: { (key, value) -> String in
+        return instructions.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, modifyValueByKey: { (key, value) -> String in
             switch key {
             case .wayName, .destination, .rotaryName:
                 return "<say-as interpret-as=\"address\">\(value.addingXMLEscapes)</say-as>"

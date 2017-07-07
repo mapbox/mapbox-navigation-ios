@@ -182,9 +182,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             return markUpWithSSML ? distance.addingXMLEscapes : distance
         }
         
+        // If the current step arrives at a waypoint, the upcoming step is part of the next leg.
+        let upcomingLegIndex = routeProgress.currentLegProgress.currentStep.maneuverType == .arrive ? routeProgress.legIndex + 1 :routeProgress.legIndex
+        // Even if the next waypoint and the waypoint after that have the same coordinates, there will still be a step in between the two arrival steps. So the upcoming and follow-on steps are guaranteed to be part of the same leg.
+        let followOnLegIndex = upcomingLegIndex
+        
         // Handle arriving at the final destination
-        guard let followOnInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.followOnStep, markUpWithSSML: markUpWithSSML) else {
-            let upComingStepInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, markUpWithSSML: markUpWithSSML)!
+        //
+        let numberOfLegs = routeProgress.route.legs.count
+        guard let followOnInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.followOnStep, legIndex: followOnLegIndex, numberOfLegs: numberOfLegs, markUpWithSSML: markUpWithSSML) else {
+            let upComingStepInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: upcomingLegIndex, numberOfLegs: numberOfLegs, markUpWithSSML: markUpWithSSML)!
             var text: String
             if alertLevel == .arrive {
                 text = upComingStepInstruction
@@ -197,9 +204,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         
         // If there is no `upComingStep`, there definitely should not be a followOnStep.
         // This should be caught above.
-        let upComingInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, markUpWithSSML: markUpWithSSML)!
+        let upComingInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: upcomingLegIndex, numberOfLegs: numberOfLegs, markUpWithSSML: markUpWithSSML)!
         let stepDistance = routeProgress.currentLegProgress.upComingStep!.distance
-        let currentInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.currentStep, markUpWithSSML: markUpWithSSML)
+        let currentInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: markUpWithSSML)
         let step = routeProgress.currentLegProgress.currentStep
         var text: String
         
