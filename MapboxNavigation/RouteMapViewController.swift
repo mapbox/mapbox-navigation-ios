@@ -27,6 +27,8 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
+    
+    var hasFinishedLoadingStyle = false
 
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera? {
@@ -323,6 +325,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return delegate?.navigationMapView(mapView, imageFor:annotation)
     }
+    
+    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
+        hasFinishedLoadingStyle = true
+    }
 
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
@@ -332,7 +338,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
 
         // Add current way name to UI
-        if let style = mapView.style, recenterButton.isHidden{
+        if let style = mapView.style, recenterButton.isHidden && hasFinishedLoadingStyle {
             let closestCoordinate = snappedCoordinate.coordinate
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
