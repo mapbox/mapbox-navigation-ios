@@ -95,6 +95,8 @@ class RouteMapViewController: UIViewController {
             }
             mapView.setCamera(camera, animated: false)
         }
+        
+        resumeNotifications()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -108,6 +110,15 @@ class RouteMapViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         webImageManager.cancelAll()
+        suspendNotifications()
+    }
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(didFindAlternateRoute(notification:)), name: RouteControllerDidFindFasterAlternateRoute, object: routeController)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidFindFasterAlternateRoute, object: routeController)
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -144,6 +155,13 @@ class RouteMapViewController: UIViewController {
         default:
             break
         }
+    }
+    
+    func didFindAlternateRoute(notification: NSNotification) {
+        let route = notification.userInfo![RouteControllerDidFindFasterAlternateRouteKey] as! Route
+        routeController.routeProgress = RouteProgress(route: route)
+        routePageViewController.notifyDidReRoute()
+        
     }
 
     func updateVisibleBounds(coordinates: [CLLocationCoordinate2D]) {

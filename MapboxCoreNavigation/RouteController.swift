@@ -122,7 +122,7 @@ open class RouteController: NSObject {
     var lastReRouteLocation: CLLocation?
     
     var routeTask: URLSessionDataTask?
-    var lastLocationForFasterRoute: Date?
+    var lastLocationTimestamp: Date?
     
     /**
      Intializes a new `RouteController`.
@@ -334,12 +334,18 @@ extension RouteController: CLLocationManagerDelegate {
     
     func checkForFasterRoute(from location: CLLocation) {
         
-        guard lastLocationForFasterRoute != nil else {
-            lastLocationForFasterRoute = location.timestamp
+//        // If the user is on a short route, don't check for faster alternatives
+//        guard routeProgress.durationRemaining > 600 else { return }
+//        
+//        // If the user is approaching a maneuver, don't check for a faster alternatives
+//        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > 70 else { return }
+        
+        guard let lastLocationTimestamp = lastLocationTimestamp else {
+            self.lastLocationTimestamp = location.timestamp
             return
         }
         
-        guard location.timestamp.timeIntervalSince1970 - lastLocationForFasterRoute!.timeIntervalSince1970 > 5 else {
+        guard location.timestamp.timeIntervalSince1970 - lastLocationTimestamp.timeIntervalSince1970 > 5 else {
             return
         }
         
@@ -357,18 +363,22 @@ extension RouteController: CLLocationManagerDelegate {
         let durationRemaining = routeProgress.durationRemaining
         
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
-            guard let strongSelf = self else {
-                return
-            }
-            strongSelf.lastLocationForFasterRoute = nil
+            guard let strongSelf = self else { return }
+            
+            strongSelf.lastLocationTimestamp = nil
             
             if let route = routes?.first {
                 let percentDifference = ((durationRemaining - route.expectedTravelTime) / route.expectedTravelTime) * 100
-                if percentDifference > 10 {
-                    strongSelf.routeProgress = RouteProgress(route: route)
-                    strongSelf.routeProgress.currentLegProgress.stepIndex = 0
-                    strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-                }
+
+//                if percentDifference > 10 {
+//                    strongSelf.routeProgress = RouteProgress(route: route)
+//                    strongSelf.routeProgress.currentLegProgress.stepIndex = 0
+//                    strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                
+                    NotificationCenter.default.post(name: RouteControllerDidFindFasterAlternateRoute, object: self, userInfo: [
+                        MBRouteControllerDidFindFasterAlternateRouteKey: route
+                        ])
+//                }
             }
         })
     }
