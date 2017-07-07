@@ -21,15 +21,33 @@ open class NavigationMapView: MGLMapView {
         22: MGLStyleValue(rawValue: 18)
     ]
     
+    var manuallyUpdatesLocation: Bool = false {
+        didSet {
+            if manuallyUpdatesLocation {
+                locationManager.stopUpdatingLocation()
+                locationManager.stopUpdatingHeading()
+                locationManager.delegate = nil
+            } else {
+                validateLocationServices()
+            }
+        }
+    }
+    
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
-    open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
+    override open func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
         guard let location = locations.first else { return }
         
         if let modifiedLocation = navigationMapDelegate?.navigationMapView?(self, shouldUpdateTo: location) {
             super.locationManager(manager, didUpdateLocations: [modifiedLocation])
         } else {
             super.locationManager(manager, didUpdateLocations: locations)
+        }
+    }
+    
+    override open func validateLocationServices() {
+        if !manuallyUpdatesLocation {
+            super.validateLocationServices()
         }
     }
     

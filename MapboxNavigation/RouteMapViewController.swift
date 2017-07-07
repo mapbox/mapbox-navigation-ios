@@ -61,6 +61,7 @@ class RouteMapViewController: UIViewController {
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
+        mapView.manuallyUpdatesLocation = true
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         recenterButton.applyDefaultCornerRadiusShadow()
@@ -73,9 +74,6 @@ class RouteMapViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        mapView.locationManager.stopUpdatingLocation()
-        mapView.locationManager.stopUpdatingHeading()
         
         mapView.compassView.isHidden = true
         mapView.addAnnotation(destination)
