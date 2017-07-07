@@ -204,15 +204,40 @@ open class RouteController: NSObject {
     /**
      Send feedback about the current road segment/maneuver to the Mapbox data team.
      
-     You can hook this up to a custom feedback UI in your app to flag problems during navigation
+     You can pair this with a custom feedback UI in your app to flag problems during navigation
      such as road closures, incorrect instructions, etc. 
      
      With the help of a custom `description` to elaborate on the nature of the problem, using
      this function will automatically flag the road segment/maneuver the user is currently on for 
      closer inspection by Mapbox's system and team.
+     
+     If you provide a custom feedback UI that lets users elaborate on an 
+     issue, you should call this before you show the custom UI so the 
+     location and timestamp are more accurate. You can then call 
+     `updateLastFeedback()` to attach any additional metadata to the 
+     feedback.
      */
-    public func sendFeedback(type: FeedbackType, description: String?) {
+    public func recordFeedback(type: FeedbackType, description: String?) {
         enqueueFeedbackEvent(type: type, description: description)
+    }
+    
+    /**
+     Update the last recorded feedback event, for example if you have a custom feedback UI that lets a user elaborate on an issue.
+     */
+    public func updateLastFeedback(type: FeedbackType, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.filter({$0 is FeedbackEvent}).last {
+            lastFeedback.eventDictionary["feedbackType"] = type.rawValue
+            lastFeedback.eventDictionary["description"] = description
+        }
+    }
+    
+    /**
+     Discard the last recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
+     */
+    public func cancelLastFeedback(type: FeedbackType, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.filter({$0 is FeedbackEvent}).last, let index = outstandingFeedbackEvents.index(of: lastFeedback) {
+            outstandingFeedbackEvents.remove(at: index)
+        }
     }
 }
 
@@ -616,7 +641,8 @@ extension RouteController {
         eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
         eventDictionary["feedbackType"] = type.rawValue
         eventDictionary["description"] = description
-        
+        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
+
         outstandingFeedbackEvents.append(FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary))
     }
     
@@ -634,7 +660,7 @@ extension RouteController {
         eventDictionary["newDistanceRemaining"] = -1
         eventDictionary["newDurationRemaining"] = -1
         eventDictionary["newGeometry"] = nil
-        eventDictionary["screenshot"] = captureScreen(scaledToFit: 200)?.base64EncodedString()
+        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
         sessionState.lastReroute = timestamp
         sessionState.numberOfReroutes += 1
@@ -652,7 +678,7 @@ extension RouteController {
     
     func resetSession() {
         sessionState = SessionState()
-        self.sessionState.originalRoute = routeProgress.route
-        self.sessionState.currentRoute = routeProgress.route
+        sessionState.originalRoute = routeProgress.route
+        sessionState.currentRoute = routeProgress.route
     }
 }

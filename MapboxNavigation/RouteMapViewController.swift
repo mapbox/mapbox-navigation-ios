@@ -136,7 +136,7 @@ class RouteMapViewController: UIViewController {
     
     @IBAction func report(_ sender: Any) {
         guard let parent = parent else { return }
-        routeController.sendFeedback(type: .general, description: nil)
+        routeController.recordFeedback(type: .general, description: nil)
         DialogViewController.present(on: parent)
     }
 
