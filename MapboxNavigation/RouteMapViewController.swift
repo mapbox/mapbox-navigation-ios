@@ -404,12 +404,12 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             return location
         }
         
-        guard location.course != -1 else {
+        guard location.course != -1, location.speed >= 0 else {
             return location
         }
         
         let nearByCoordinates = routeController.routeProgress.currentLegProgress.nearbyCoordinates
-        let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate)!
+        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return location }
         let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
         let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
 
