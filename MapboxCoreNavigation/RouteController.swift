@@ -90,7 +90,12 @@ open class RouteController: NSObject {
     /**
      The route controller’s associated location manager.
      */
-    public var locationManager: NavigationLocationManager!
+    public var locationManager: NavigationLocationManager! {
+        didSet {
+            oldValue?.delegate = nil
+            locationManager.delegate = self
+        }
+    }
     
     /**
      If true, location updates will be simulated when driving through tunnels or
@@ -291,8 +296,6 @@ extension RouteController: CLLocationManagerDelegate {
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         
         guard routeProgress.currentLegProgress.alertUserLevel != .arrive else {
-            // Don't advance nor check progress if the user has arrived at their destination
-            suspendLocationUpdates()
             NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
                 RouteControllerProgressDidChangeNotificationLocationKey: location,

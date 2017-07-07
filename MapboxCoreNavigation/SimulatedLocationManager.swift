@@ -26,6 +26,7 @@ fileprivate class SimulatedLocation: CLLocation {
  
  The route will be replaced upon a `RouteControllerDidReroute` notification.
  */
+@objc(MBSimulatedLocationManager)
 public class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var currentDistance: CLLocationDistance = 0
     fileprivate var currentLocation = CLLocation()

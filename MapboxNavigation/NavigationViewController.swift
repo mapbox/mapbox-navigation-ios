@@ -115,7 +115,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
     public var route: Route! {
         didSet {
-            routeController.routeProgress = RouteProgress(route: route)
+            if routeController == nil {
+                routeController = RouteController(along: route, directions: directions, locationManager: DefaultLocationManager())
+                routeController.delegate = self
+            } else {
+                routeController.routeProgress = RouteProgress(route: route)
+            }
             mapViewController?.notifyDidReroute(route: route)
             tableViewController?.notifyDidReroute()
         }
@@ -150,7 +155,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      The receiver’s delegate.
      */
-    public var navigationDelegate: NavigationViewControllerDelegate?
+    public weak var navigationDelegate: NavigationViewControllerDelegate?
     
     /**
      `voiceController` provides access to various speech synthesizer options.
@@ -162,9 +167,20 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      `routeController` provides all routing logic for the user.
 
-     See `RouteController` for more information
+     See `RouteController` for more information.
      */
     public var routeController: RouteController!
+    
+    /**
+     Styles that will be used for various system traits.
+     
+     See `Style` and `DefaultStyle` for more information.
+     */
+    public var styles: [Style] = [DefaultStyle()] {
+        didSet {
+            styles.forEach { $0.apply() }
+        }
+    }
     
     /**
      `mapView` provides access to the navigation's `MGLMapView` with all its styling capabilities.
@@ -195,7 +211,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     let routeStepFormatter = RouteStepFormatter()
     
     required public init?(coder aDecoder: NSCoder) {
-        Style.defaultStyle.apply()
         super.init(coder: aDecoder)
     }
     
@@ -213,9 +228,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
      for further information.
      */
-    @objc(initWithRoute:directions:locationManager:)
-    required public init(for route: Route,  directions: Directions = Directions.shared, locationManager: NavigationLocationManager? = DefaultLocationManager()) {
-        Style.defaultStyle.apply()
+    @objc(initWithRoute:directions:style:locationManager:)
+    required public init(for route: Route,
+                         directions: Directions = Directions.shared,
+                         styles: [Style]? = [DefaultStyle()],
+                         locationManager: NavigationLocationManager? = DefaultLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
@@ -223,6 +240,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
+        self.styles = styles ?? [DefaultStyle()]
         self.directions = directions
         self.route = route
         
@@ -283,6 +301,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         super.viewWillAppear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = true
+        styles.forEach { $0.apply() }
         routeController.resume()
     }
     

@@ -72,7 +72,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View">
-                                        <rect key="frame" x="140" y="209" width="95" height="25"/>
+                                        <rect key="frame" x="141" y="209" width="94.5" height="25"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
                                                 <rect key="frame" x="8" y="2" width="79" height="21"/>
@@ -243,11 +243,11 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dhM-Ng-gx5">
                                         <rect key="frame" x="66" y="22" width="269" height="70"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-6D-Ukh">
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-6D-Ukh">
                                                 <rect key="frame" x="0.0" y="0.0" width="229" height="70"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="MBTitleLabel">
-                                                        <rect key="frame" x="0.0" y="0.0" width="53.5" height="31.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="MBDistanceLabel">
+                                                        <rect key="frame" x="0.0" y="0.0" width="53.5" height="35"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -260,8 +260,8 @@
                                                             </fragment>
                                                         </attributedString>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Elm St NW" textAlignment="natural" lineBreakMode="tailTruncation" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="StreetLabel" customModule="MapboxNavigation" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="31.5" width="150" height="38.5"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Elm St NW" textAlignment="natural" lineBreakMode="tailTruncation" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="MBDestinationLabel">
+                                                        <rect key="frame" x="0.0" y="35" width="150" height="35"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
                                                         <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -517,11 +517,11 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="343" height="185"/>
                     <connections>
+                        <outlet property="destinationLabel" destination="BR8-8N-Rhk" id="ypb-Nm-TKX"/>
                         <outlet property="distanceLabel" destination="u1L-N9-mMS" id="trZ-xg-0er"/>
                         <outlet property="rerouteView" destination="c9E-8M-S3k" id="Q9I-4d-Fnd"/>
                         <outlet property="shieldImageView" destination="gkj-hG-NxS" id="Yff-xC-gBo"/>
                         <outlet property="stackViewContainer" destination="7Fv-nY-OMF" id="73h-Ih-lpJ"/>
-                        <outlet property="streetLabel" destination="BR8-8N-Rhk" id="ypb-Nm-TKX"/>
                         <outlet property="turnArrowView" destination="dvV-hd-Sbg" id="PDr-bK-tVy"/>
                         <outletCollection property="separatorViews" destination="dBm-Eb-XvC" collectionClass="NSMutableArray" id="AV3-wo-X84"/>
                         <outletCollection property="separatorViews" destination="bvZ-78-dml" collectionClass="NSMutableArray" id="k48-9a-YhP"/>
@@ -621,7 +621,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="meX-oz-5Hs">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="294"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="293.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RouteTableViewCellId" rowHeight="118" id="6gn-fK-aZY" customClass="RouteTableViewCell" customModule="MapboxNavigation" customModuleProvider="target">
@@ -736,7 +736,7 @@
                                 <constraint firstAttribute="height" constant="3" id="XWE-Ju-Xz5"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="MBTitleLabel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="MBTimeRemainingLabel">
                             <rect key="frame" x="10" y="9" width="85" height="34"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
                             <nil key="textColor"/>
@@ -757,7 +757,7 @@
                                 <constraint firstAttribute="height" id="ViC-Ik-gLk"/>
                             </constraints>
                         </view>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="8.3 mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-ya-mrD" userLabel="distanceRemaining" customClass="MBSubtitleLabel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="8.3 mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-ya-mrD" userLabel="distanceRemaining" customClass="MBDistanceRemainingLabel">
                             <rect key="frame" x="10" y="43" width="51" height="31"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <color key="textColor" red="0.60179937490000002" green="0.60179937490000002" blue="0.60179937490000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -771,7 +771,7 @@
                                 </fragment>
                             </attributedString>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="MBTitleLabel">
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="MBArrivalTimeLabel">
                             <rect key="frame" x="238" y="32" width="48" height="22"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <nil key="textColor"/>
@@ -832,9 +832,9 @@
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                     <connections>
+                        <outlet property="arrivalTimeLabel" destination="HRl-MT-kqB" id="Nvg-Jp-KsB"/>
                         <outlet property="distanceRemaining" destination="6dE-ya-mrD" id="Qg0-hZ-tkK"/>
                         <outlet property="dividerView" destination="rwq-3y-Mg0" id="MlN-hT-NJe"/>
-                        <outlet property="etaLabel" destination="HRl-MT-kqB" id="Nvg-Jp-KsB"/>
                         <outlet property="progressBar" destination="MEj-M2-Aqd" id="2U4-W6-rv9"/>
                         <outlet property="progressBarWidthConstraint" destination="Dyb-zf-R8A" id="Jz1-i2-QOe"/>
                         <outlet property="timeRemaining" destination="82H-sg-SOL" id="tfh-39-juV"/>

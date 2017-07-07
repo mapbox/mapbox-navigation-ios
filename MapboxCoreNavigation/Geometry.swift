@@ -228,6 +228,11 @@ func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordi
 func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/index.js
     var traveled: CLLocationDistance = 0
+    
+    guard distance >= 0  else {
+        return polyline.first
+    }
+    
     for i in 0..<polyline.count {
         guard distance < traveled || i < polyline.count - 1 else {
             break
