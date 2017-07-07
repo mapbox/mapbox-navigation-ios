@@ -319,6 +319,19 @@ extension RouteController: CLLocationManagerDelegate {
         
         if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel {
             routeProgress.currentLegProgress.alertUserLevel = newlyCalculatedAlertLevel
+
+            guard routeProgress.currentLegProgress.alertUserLevel != .arrive else {
+                let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
+                let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
+                
+                NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
+                    RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
+                    RouteControllerProgressDidChangeNotificationLocationKey: location,
+                    RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
+                    ])
+                return
+            }
+            
             // Use fresh user location distance to end of step
             // since the step could of changed
             let userDistance = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
