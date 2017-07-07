@@ -324,10 +324,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.notifyDidChange(routeProgress: routeProgress)
-        
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
-        }
     }
     
     func alertLevelDidChange(notification: NSNotification) {
@@ -339,6 +335,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
             giveLocalNotification(upComingStep)
+        }
+        
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
     }
     
