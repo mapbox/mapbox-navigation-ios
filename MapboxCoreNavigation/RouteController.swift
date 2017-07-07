@@ -634,6 +634,7 @@ extension RouteController {
         eventDictionary["newDistanceRemaining"] = -1
         eventDictionary["newDurationRemaining"] = -1
         eventDictionary["newGeometry"] = nil
+        eventDictionary["screenshot"] = captureScreen(scaledToFit: 200)?.base64EncodedString()
         
         sessionState.lastReroute = timestamp
         sessionState.numberOfReroutes += 1
