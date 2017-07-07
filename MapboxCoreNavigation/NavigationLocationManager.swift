@@ -13,7 +13,12 @@ open class NavigationLocationManager: CLLocationManager {
     override public init() {
         super.init()
         
-        if CLLocationManager.authorizationStatus() == .notDetermined {
+        let always = Bundle.main.locationAlwaysUsageDescription
+        let both = Bundle.main.locationAlwaysAndWhenInUseUsageDescription
+        
+        if always != nil || both != nil {
+            requestAlwaysAuthorization()
+        } else {
             requestWhenInUseAuthorization()
         }
         
