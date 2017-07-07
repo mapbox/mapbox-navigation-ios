@@ -61,7 +61,9 @@ public class SimulatedLocationManager: NavigationLocationManager {
             
             currentDistance = 0
             currentSpeed = 30
-            startUpdatingLocation()
+            DispatchQueue.main.async {
+                self.startUpdatingLocation()
+            }
         }
     }
     
