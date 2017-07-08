@@ -383,6 +383,10 @@
 		DA625E951F105B1A00FBE176 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E961F105BAD00FBE176 /* fr */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA625E971F105BC100FBE176 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fr; path = fr.lproj/Abbreviations.plist; sourceTree = "<group>"; };
+		DA625E981F105C1200FBE176 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
+		DA625E991F105C1300FBE176 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
+		DA625E9A1F105C1300FBE176 /* hu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DA625E9C1F105CB100FBE176 /* hu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -1002,6 +1006,7 @@
 				ca,
 				fa,
 				fr,
+				hu,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1348,6 +1353,7 @@
 				35C6EDAD1EBB266300A27EF8 /* en */,
 				DA625E901F10557300FBE176 /* fa */,
 				DA625E931F105B1900FBE176 /* fr */,
+				DA625E981F105C1200FBE176 /* hu */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1363,6 +1369,7 @@
 				35C6EDB21EBB286500A27EF8 /* en */,
 				DA625E911F10559600FBE176 /* fa */,
 				DA625E941F105B1A00FBE176 /* fr */,
+				DA625E991F105C1300FBE176 /* hu */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1374,6 +1381,7 @@
 				C520EE941EBBBD55008805BC /* en */,
 				DA625E921F1055DE00FBE176 /* fa */,
 				DA625E951F105B1A00FBE176 /* fr */,
+				DA625E9A1F105C1300FBE176 /* hu */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
@@ -1399,6 +1407,7 @@
 				357F0DF11EB9DAB400A0B53C /* vi */,
 				35C6ED9A1EBB1DE400A27EF8 /* ca */,
 				DA625E961F105BAD00FBE176 /* fr */,
+				DA625E9C1F105CB100FBE176 /* hu */,
 			);
 			name = Localizable.strings;
 			path = Resources;
