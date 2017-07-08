@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;appartements&quot;, &quot;apts&quot;
+&quot;avenue&quot;, &quot;Av&quot;
+&quot;boulevard&quot;, &quot;Bd&quot;
+&quot;bourg&quot;, &quot;Bg&quot;
+&quot;carrefour&quot;, &quot;Car&quot;
+&quot;centre&quot;, &quot;Ctr&quot;
+&quot;cimetière&quot;, &quot;Cim&quot;
+&quot;collège&quot;, &quot;Coll&quot;
+&quot;docteur&quot;, &quot;Dr&quot;
+&quot;école&quot;, &quot;Éc&quot;
+&quot;étang&quot;, &quot;Étg&quot;
+&quot;étage&quot;, &quot;Ét&quot;
+&quot;fort&quot;, &quot;Ft&quot;
+&quot;général&quot;, &quot;Gal&quot;
+&quot;hauts&quot;, &quot;Hts&quot;
+&quot;immeuble&quot;, &quot;Imm&quot;
+&quot;international&quot;, &quot;Int&quot;
+&quot;junior&quot;, &quot;Jr&quot;
+&quot;lac&quot;, &quot;Lc&quot;
+&quot;marché&quot;, &quot;Mcé&quot;
+&quot;maréchal&quot;, &quot;Mal&quot;
+&quot;monseigneur&quot;, &quot;Mgr&quot;
+&quot;mont&quot;, &quot;Mt&quot;
+&quot;montagne&quot;, &quot;Mtg&quot;
+&quot;mémorial&quot;, &quot;Mém&quot;
+&quot;national&quot;, &quot;Nat&quot;
+&quot;parc&quot;, &quot;Pc&quot;
+&quot;place&quot;, &quot;Pl&quot;
+&quot;point&quot;, &quot;Pt&quot;
+&quot;pointe&quot;, &quot;Pnte&quot;
+&quot;pont&quot;, &quot;Pnt&quot;
+&quot;porte&quot;, &quot;Pte&quot;
+&quot;président&quot;, &quot;Pdt&quot;
+&quot;rivière&quot;, &quot;Riv&quot;
+&quot;route&quot;, &quot;Rte&quot;
+&quot;rue&quot;, &quot;R&quot;
+&quot;saint&quot;, &quot;St&quot;
+&quot;saint&quot;, &quot;Ste&quot;
+&quot;saints&quot;, &quot;Sts&quot;
+&quot;sénior&quot;, &quot;Sr&quot;
+&quot;square&quot;, &quot;Sq&quot;
+&quot;station&quot;, &quot;Sta&quot;
+&quot;tour&quot;, &quot;Tr&quot;
+&quot;tunnel&quot;, &quot;Tun&quot;
+&quot;université&quot;, &quot;Univ&quot;
+&quot;village&quot;, &quot;Vil&quot;
+</string>
+    <key>classifications</key>
+    <string>&quot;allée&quot;, &quot;All&quot;
+&quot;autoroute&quot;, &quot;A&quot;
+&quot;chemin&quot;, &quot;Chem&quot;
+&quot;cour&quot;, &quot;Cr&quot;
+&quot;impasse&quot;, &quot;Imp&quot;
+&quot;périphérique&quot;, &quot;Périph&quot;
+&quot;pic&quot;, &quot;Pc&quot;
+&quot;raccourci&quot;, &quot;Rac&quot;
+&quot;rond-point&quot;, &quot;Rd-Pt&quot;
+&quot;terrasse&quot;, &quot;Ter&quot;
+&quot;trottoir&quot;, &quot;Trot&quot;
+&quot;voie&quot;, &quot;V&quot;
+&quot;voie express&quot;, &quot;VEx&quot;
+</string>
+    <key>directions</key>
+    <string>&quot;est&quot;, &quot;E&quot;
+&quot;est-nord-est&quot;, &quot;ENE&quot;
+&quot;nord-est&quot;, &quot;NE&quot;
+&quot;nord-nord-est&quot;, &quot;NNE&quot;
+&quot;nord&quot;, &quot;N&quot;
+&quot;nord-nord-ouest&quot;, &quot;NNO&quot;
+&quot;nord-ouest&quot;, &quot;NO&quot;
+&quot;ouest-nord-ouest&quot;, &quot;ONO&quot;
+&quot;ouest&quot;, &quot;O&quot;
+&quot;ouest-sud-ouest&quot;, &quot;OSO&quot;
+&quot;sud-ouest&quot;, &quot;SO&quot;
+&quot;sud-sud-ouest&quot;, &quot;SSO&quot;
+&quot;sud&quot;, &quot;S&quot;
+&quot;sud-sud-est&quot;, &quot;SSE&quot;
+&quot;sud-est&quot;, &quot;SE&quot;
+&quot;est-sud-est&quot;, &quot;ESE&quot;
+</string>
+  </dict>
+</plist>
