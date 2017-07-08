@@ -391,6 +391,8 @@
 		DA625E9E1F105D1A00FBE176 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625EA31F105E3400FBE176 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = lt; path = lt.lproj/Abbreviations.plist; sourceTree = "<group>"; };
 		DA625EA41F1060E300FBE176 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DA625EA51F10614500FBE176 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DA625EA71F10616600FBE176 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -1012,6 +1014,7 @@
 				fr,
 				hu,
 				lt,
+				es,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1390,6 +1393,7 @@
 				DA625E951F105B1A00FBE176 /* fr */,
 				DA625E9A1F105C1300FBE176 /* hu */,
 				DA625EA41F1060E300FBE176 /* ca */,
+				DA625EA51F10614500FBE176 /* es */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
@@ -1417,6 +1421,7 @@
 				35C6ED9A1EBB1DE400A27EF8 /* ca */,
 				DA625E961F105BAD00FBE176 /* fr */,
 				DA625E9C1F105CB100FBE176 /* hu */,
+				DA625EA71F10616600FBE176 /* es */,
 			);
 			name = Localizable.strings;
 			path = Resources;
