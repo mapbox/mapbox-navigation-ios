@@ -375,6 +375,9 @@
 		C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgress.swift; sourceTree = "<group>"; };
 		C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
+		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
+		DA625E911F10559600FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
+		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -992,6 +995,7 @@
 				sv,
 				vi,
 				ca,
+				fa,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1336,6 +1340,7 @@
 				35C6EDA01EBB224E00A27EF8 /* vi */,
 				35C6EDA21EBB224F00A27EF8 /* ca */,
 				35C6EDAD1EBB266300A27EF8 /* en */,
+				DA625E901F10557300FBE176 /* fa */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1349,6 +1354,7 @@
 				35C6EDA81EBB227900A27EF8 /* vi */,
 				35C6EDAA1EBB228000A27EF8 /* ca */,
 				35C6EDB21EBB286500A27EF8 /* en */,
+				DA625E911F10559600FBE176 /* fa */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1358,6 +1364,7 @@
 			children = (
 				C520EE911EBB84F9008805BC /* Base */,
 				C520EE941EBBBD55008805BC /* en */,
+				DA625E921F1055DE00FBE176 /* fa */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
