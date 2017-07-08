@@ -14,6 +14,9 @@
 /* Class = "UILabel"; text = "10:09"; ObjectID = "HRl-MT-kqB"; Note = "DO NOT TRANSLATE"; */
 "HRl-MT-kqB.text" = "10:09";
 
+/* Class = "UILabel"; text = "Rerouting"; ObjectID = "bUX-dR-1V6"; */
+"bUX-dR-1V6.text" = "Rerouting";
+
 /* Class = "UILabel"; text = "Street Label"; ObjectID = "bcm-ca-nGv"; Note = "DO NOT TRANSLATE"; */
 "bcm-ca-nGv.text" = "Street Label";
 
