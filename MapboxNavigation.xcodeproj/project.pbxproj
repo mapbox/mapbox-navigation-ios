@@ -393,6 +393,7 @@
 		DA625EA41F1060E300FBE176 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625EA51F10614500FBE176 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625EA71F10616600FBE176 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DA625EA91F1061DA00FBE176 /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -1394,6 +1395,7 @@
 				DA625E9A1F105C1300FBE176 /* hu */,
 				DA625EA41F1060E300FBE176 /* ca */,
 				DA625EA51F10614500FBE176 /* es */,
+				DA625EA91F1061DA00FBE176 /* sv */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
