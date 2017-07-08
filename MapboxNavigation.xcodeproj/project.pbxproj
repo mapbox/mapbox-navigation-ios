@@ -387,6 +387,9 @@
 		DA625E991F105C1300FBE176 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E9A1F105C1300FBE176 /* hu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E9C1F105CB100FBE176 /* hu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DA625E9D1F105D1A00FBE176 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Main.strings; sourceTree = "<group>"; };
+		DA625E9E1F105D1A00FBE176 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Main.strings; sourceTree = "<group>"; };
+		DA625EA31F105E3400FBE176 /* lt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = lt; path = lt.lproj/Abbreviations.plist; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -1007,6 +1010,7 @@
 				fa,
 				fr,
 				hu,
+				lt,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1354,6 +1358,7 @@
 				DA625E901F10557300FBE176 /* fa */,
 				DA625E931F105B1900FBE176 /* fr */,
 				DA625E981F105C1200FBE176 /* hu */,
+				DA625E9D1F105D1A00FBE176 /* lt */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1370,6 +1375,7 @@
 				DA625E911F10559600FBE176 /* fa */,
 				DA625E941F105B1A00FBE176 /* fr */,
 				DA625E991F105C1300FBE176 /* hu */,
+				DA625E9E1F105D1A00FBE176 /* lt */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1393,6 +1399,7 @@
 				C5212B561EC4BE97009538EB /* Base */,
 				355EF9641EDF264200749641 /* sv */,
 				DA625E971F105BC100FBE176 /* fr */,
+				DA625EA31F105E3400FBE176 /* lt */,
 			);
 			name = Abbreviations.plist;
 			path = Resources;
