@@ -100,10 +100,6 @@ class RouteMapViewController: UIViewController {
         mapView.setContentInset(contentInsets, animated: false)
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
-
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.setCamera(tiltedCamera, animated: false)
         mapView.userTrackingMode = .followWithCourse
