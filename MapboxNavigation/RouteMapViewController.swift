@@ -3,8 +3,6 @@ import Pulley
 import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
-import SDWebImage
-
 
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
@@ -52,9 +50,6 @@ class RouteMapViewController: UIViewController {
 
     var resetTrackingModeTimer: Timer?
 
-    let webImageManager = SDWebImageManager.shared()
-    var shieldAPIDataTask: URLSessionDataTask?
-    var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
 
@@ -103,11 +98,6 @@ class RouteMapViewController: UIViewController {
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setContentInset(contentInsets, animated: false)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        webImageManager.cancelAll()
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -214,7 +204,7 @@ class RouteMapViewController: UIViewController {
         guard step == controller.step else { return }
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
-        updateShield(for: controller)
+        controller.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
@@ -234,45 +224,6 @@ class RouteMapViewController: UIViewController {
 
         let slicedLine = polyline(along: routeProgress.route.coordinates!, from: userLocation, to: routeProgress.route.coordinates!.last)
         updateVisibleBounds(coordinates: slicedLine)
-    }
-
-    func dataTaskForShieldImage(network: String, number: String, height: CGFloat, completion: @escaping (UIImage?) -> Void) -> URLSessionDataTask? {
-        guard let imageNamePattern = ShieldImageNamesByPrefix[network] else {
-            return nil
-        }
-
-        let imageName = imageNamePattern.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "{ref}", with: number)
-        let apiURL = URL(string: "https://commons.wikimedia.org/w/api.php?action=query&format=json&maxage=86400&prop=imageinfo&titles=File%3A\(imageName)&iiprop=url%7Csize&iiurlheight=\(Int(round(height)))")!
-
-        shieldAPIDataTask?.cancel()
-        return URLSession.shared.dataTask(with: apiURL) { [weak self] (data, response, error) in
-            var json: [String: Any] = [:]
-            if let data = data, response?.mimeType == "application/json" {
-                do {
-                    json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                } catch {
-                    assert(false, "Invalid data")
-                }
-            }
-
-            guard data != nil && error == nil else {
-                return
-            }
-
-            guard let query = json["query"] as? [String: Any],
-                let pages = query["pages"] as? [String: Any], let page = pages.first?.1 as? [String: Any],
-                let imageInfos = page["imageinfo"] as? [[String: Any]], let imageInfo = imageInfos.first,
-                let thumbURLString = imageInfo["thumburl"] as? String, let thumbURL = URL(string: thumbURLString) else {
-                    return
-            }
-
-            if thumbURL != self?.shieldImageDownloadToken?.url {
-                self?.webImageManager.imageDownloader?.cancel(self?.shieldImageDownloadToken)
-            }
-            self?.shieldImageDownloadToken = self?.webImageManager.imageDownloader?.downloadImage(with: thumbURL, options: .scaleDownLargeImages, progress: nil) { (image, data, error, isFinished) in
-                completion(image)
-            }
-        }
     }
     
     var contentInsets: UIEdgeInsets {
@@ -499,43 +450,25 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
         mapView.userTrackingMode = .followWithCourse
     }
-
-    func updateShield(for controller: RouteManeuverViewController) {
-        guard let ref = controller.step.codes?.first, controller.shieldImage == nil else { return }
-
-        let components = ref.components(separatedBy: " ")
-
-        if components.count > 1 {
-            shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { (image) in
-                controller.shieldImage = image
-            }
-            shieldAPIDataTask?.resume()
-        } else {
-            controller.shieldImage = nil
-        }
-    }
 }
 
 // MARK: RouteManeuverPageViewControllerDelegate
 
 extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
-        let step = maneuverViewController.step
+        let step = maneuverViewController.step!
 
         maneuverViewController.turnArrowView.step = step
         maneuverViewController.shieldImage = nil
-        maneuverViewController.distance = step!.distance > 0 ? step!.distance : nil
+        maneuverViewController.distance = step.distance > 0 ? step.distance : nil
+        maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        updateShield(for: maneuverViewController)
+        maneuverViewController.showLaneView(step: step)
         
-        if let step = step {
-            maneuverViewController.showLaneView(step: step)
-            
-            let initialPaddingForOverviewButton:CGFloat = maneuverViewController.stackViewContainer.isHidden ? -30 : -20 + maneuverViewController.laneViews.first!.frame.maxY
-            UIView.animate(withDuration: 0.5, animations: {
-                self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
-            })
+        let initialPaddingForOverviewButton:CGFloat = maneuverViewController.stackViewContainer.isHidden ? -30 : -20 + maneuverViewController.laneViews.first!.frame.maxY
+        UIView.animate(withDuration: 0.5) {
+            self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
         }
         
         maneuverViewController.isPagingThroughStepList = true
@@ -544,7 +477,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
                 mapView.userTrackingMode = .followWithCourse
             } else {
-                mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
+                mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
     }
