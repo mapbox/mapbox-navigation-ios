@@ -77,7 +77,6 @@ extension UIApplicationState {
             case .background:
                 return "Background"
             }
-            return "Unknown"
         }
     }
 }
