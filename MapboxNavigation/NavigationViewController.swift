@@ -112,7 +112,7 @@ public protocol NavigationViewControllerDelegate {
 public class NavigationViewController: NavigationPulleyViewController, RouteMapViewControllerDelegate {
     
     /** 
-     A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/)
+     A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
      
      In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
      */

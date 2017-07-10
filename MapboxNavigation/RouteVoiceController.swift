@@ -59,7 +59,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
-     Default initializer for `RouteVoiceController`
+     Default initializer for `RouteVoiceController`.
      */
     override public init() {
         super.init()
