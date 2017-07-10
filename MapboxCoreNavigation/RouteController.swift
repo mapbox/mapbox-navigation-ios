@@ -167,6 +167,11 @@ open class RouteController: NSObject {
         self.resetSession()
         
         self.resumeNotifications()
+        
+        if let accessToken = MGLAccountManager.accessToken() {
+            events.initialize(withAccessToken: accessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+            events.isDebugLoggingEnabled = true
+        }
     }
     
     deinit {
