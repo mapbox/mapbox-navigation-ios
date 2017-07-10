@@ -3,6 +3,8 @@ import CoreLocation
 import MapboxDirections
 import Mapbox
 import Polyline
+import MapboxMobileEvents
+
 
 /**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
@@ -76,6 +78,8 @@ open class RouteController: NSObject {
     var lastUserDistanceToStartOfRoute = Double.infinity
     
     var lastTimeStampSpentMovingAwayFromStart = Date()
+    
+    let events = MMEEventsManager.shared()
     
     /**
      The route controller’s delegate.
@@ -589,11 +593,11 @@ extension RouteController {
     func sendDepartEvent() {
         let eventName = "navigation.depart"
         
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        var eventDictionary = events.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
-
-        MGLMapboxEvents.pushEvent(eventName, withAttributes: eventDictionary)
-        MGLMapboxEvents.flush()
+        
+        events.enqueueEvent(withName: eventName, attributes: eventDictionary)
+        events.flush()
     }
     
     func sendFeedbackEvent(event: CoreFeedbackEvent) {
@@ -607,35 +611,35 @@ extension RouteController {
         event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter {$0.timestamp <= event.timestamp}.map {$0.dictionary}
         event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionary}
         
-        MGLMapboxEvents.pushEvent(eventName, withAttributes: event.eventDictionary)
-        MGLMapboxEvents.flush()
+        events.enqueueEvent(withName: eventName, attributes: event.eventDictionary)
+        events.flush()
     }
 
     func sendArriveEvent() {
         let eventName = "navigation.arrive"
         
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        var eventDictionary = events.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         
-        MGLMapboxEvents.pushEvent(eventName, withAttributes: eventDictionary)
-        MGLMapboxEvents.flush()
+        events.enqueueEvent(withName: eventName, attributes: eventDictionary)
+        events.flush()
     }
     
     func sendCancelEvent() {
         let eventName = "navigation.cancel"
 
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        var eventDictionary = events.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         eventDictionary["arrivalTimestamp"] = sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
 
-        MGLMapboxEvents.pushEvent(eventName, withAttributes: eventDictionary)
-        MGLMapboxEvents.flush()
+        events.enqueueEvent(withName: eventName, attributes: eventDictionary)
+        events.flush()
     }
     
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) {
         let eventName = "navigation.feedback"
         
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        var eventDictionary = events.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         
         eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
@@ -651,7 +655,7 @@ extension RouteController {
 
         let timestamp = Date()
         
-        var eventDictionary = MGLMapboxEvents.addDefaultEvents(routeController: self)
+        var eventDictionary = events.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         
         eventDictionary["secondsSinceLastReroute"] = sessionState.lastReroute != nil ? round(timestamp.timeIntervalSince(sessionState.lastReroute!)) : -1

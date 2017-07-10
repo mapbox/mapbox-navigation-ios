@@ -1,12 +1,12 @@
-import Mapbox
 import Polyline
 import MapboxDirections
 import AVFoundation
+import MapboxMobileEvents
 
 let SECONDS_FOR_COLLECTION_AFTER_FEEDBACK_EVENT: TimeInterval = 20
 
-extension MGLMapboxEvents {
-    class func addDefaultEvents(routeController: RouteController) -> [String: Any] {
+extension MMEEventsManager {
+    func addDefaultEvents(routeController: RouteController) -> [String: Any] {
         let session = routeController.sessionState
         let routeProgress = routeController.routeProgress
         
