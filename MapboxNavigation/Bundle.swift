@@ -1,17 +1,28 @@
 import Foundation
 
 extension Bundle {
-    class var navigationUI: Bundle {
-        get { return Bundle(for: NavigationViewController.self) }
-    }
     
-    var backgroundModeLocationSupported: Bool {
-        get {
+    struct BackgroundModes {
+        var location: Bool {
+            return backgroundModesContains("location")
+        }
+        
+        var audio: Bool {
+            return backgroundModesContains("audio")
+        }
+        
+        fileprivate func backgroundModesContains(_ key: String) -> Bool {
             if let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] {
-                return modes.contains("location")
+                return modes.contains(key)
             }
             return false
         }
+    }
+    
+    var backgroundModes: BackgroundModes { return BackgroundModes() }
+    
+    class var navigationUI: Bundle {
+        get { return Bundle(for: NavigationViewController.self) }
     }
 }
 

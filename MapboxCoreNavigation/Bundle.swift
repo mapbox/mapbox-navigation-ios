@@ -2,14 +2,20 @@ import Foundation
 
 extension Bundle {
     
-    var backgroundModeLocationSupported: Bool {
-        get {
-            if let modes = object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] {
-                return modes.contains("location")
+    struct BackgroundModes {
+        var location: Bool {
+            return backgroundModesContains("location")
+        }
+        
+        fileprivate func backgroundModesContains(_ key: String) -> Bool {
+            if let modes = Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] {
+                return modes.contains(key)
             }
             return false
         }
     }
+    
+    var backgroundModes: BackgroundModes { return BackgroundModes() }
     
     var locationAlwaysAndWhenInUseUsageDescription: String? {
         get {

@@ -63,6 +63,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
      */
     override public init() {
         super.init()
+        
+        if !Bundle.main.backgroundModes.audio {
+            print("Voice guidance may not work properly. " +
+                  "Add audio to the UIBackgroundModes key to your app’s Info.plist file")
+        }
+        
         speechSynth.delegate = self
         maneuverVoiceDistanceFormatter.unitStyle = .long
         maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
@@ -257,6 +263,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     func speak(_ text: String, error: String? = nil) {
         // Note why it failed
         if let error = error {
+            print(error)
+        }
+        
+        do {
+            try duckAudio()
+        } catch {
             print(error)
         }
         
