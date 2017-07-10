@@ -2,21 +2,69 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
+/**
+ Key used for accessing the `RouteProgress` object from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
+ */
 public let RouteControllerProgressDidChangeNotificationProgressKey = MBRouteControllerProgressDidChangeNotificationProgressKey
+
+/**
+ Key used for accessing the `CLLocation` object from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
+ */
 public let RouteControllerProgressDidChangeNotificationLocationKey = MBRouteControllerProgressDidChangeNotificationLocationKey
+
+/**
+ Key used for accessing the number of seconds left on a step (Double) from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
+ */
 public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey
 
+/**
+ Key used for accessing the `RouteProgress` object from a `RouteControllerAlertLevelDidChange` notification's `userInfo` dictionary.
+ */
 public let RouteControllerAlertLevelDidChangeNotificationRouteProgressKey = MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey
+
+/**
+ Key used for accessing the user's snapped distance to the end of the maneuver (CLLocationDistance) from a `RouteControllerAlertLevelDidChange` notification's `userInfo` dictionary.
+ */
 public let RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey = MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey
 
+/**
+ Key used for accessing the user's current `CLLocation` from a `RouteControllerWillReroute` notification's `userInfo` dictionary.
+ */
 public let RouteControllerNotificationLocationKey = MBRouteControllerNotificationLocationKey
+
+/**
+ Key used for accessing the newly rerouted `Route` from a `RouteControllerDidReroute` notification's `userInfo` dictionary.
+ */
 public let RouteControllerNotificationRouteKey = MBRouteControllerNotificationRouteKey
+
+/**
+ Key used for accessing the error from a `RouteControllerDidFailToReroute` notification's `userInfo` dictionary.
+ */
 public let RouteControllerNotificationErrorKey = MBRouteControllerNotificationErrorKey
 
+/**
+ Emitted when the user moves along the route.
+ */
 public let RouteControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
+
+/**
+ Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver.
+ */
 public let RouteControllerAlertLevelDidChange = Notification.Name(MBRouteControllerAlertLevelDidChange)
+
+/**
+ Emitted when the user has gone off-route and the `RouteController` is about to reroute.
+ */
 public let RouteControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
+
+/**
+ Emitted after the user has gone off-route and the `RouteController` rerouted.
+ */
 public let RouteControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
+
+/**
+ Emitted after the user has gone off-route but the `RouteController` failed to reroute.
+ */
 public let RouteControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
 
 /**

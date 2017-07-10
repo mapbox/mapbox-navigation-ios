@@ -1,6 +1,9 @@
 import Foundation
 import MapboxDirections
 
+/**
+ `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
+ */
 @objc(MBNavigationMapView)
 open class NavigationMapView: MGLMapView {
     
@@ -9,11 +12,6 @@ open class NavigationMapView: MGLMapView {
     let routeLayerIdentifier = "routeLayer"
     let routeLayerCasingIdentifier = "routeLayerCasing"
     
-    /**
-     Returns the map view used while navigating.
-     
-     This map inherits from `MGLMapView`.
-     */
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
