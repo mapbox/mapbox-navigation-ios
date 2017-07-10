@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;thành phố&quot;, &quot;Tp&quot;
+&quot;thị xã&quot;, &quot;Tx&quot;
+&quot;thị trấn&quot;, &quot;Tt&quot;
+&quot;sân bay&quot;, &quot;SB&quot;
+&quot;sân bay quốc tế&quot;, &quot;SBQT&quot;
+&quot;phi trường&quot;, &quot;PT&quot;
+&quot;trung tâm&quot;, &quot;TT&quot;
+&quot;khách sạn&quot;, &quot;KS&quot;
+&quot;bưu điện&quot;, &quot;BĐ&quot;
+&quot;đại học&quot;, &quot;ĐH&quot;
+&quot;cao đẳng&quot;, &quot;CĐ&quot;
+&quot;trung học phổ thông&quot;, &quot;THPT&quot;
+&quot;trung học cơ sở&quot;, &quot;THCS&quot;
+&quot;khu chung cư&quot;, &quot;KCC&quot;
+&quot;khu công nghiệp&quot;, &quot;KCN&quot;
+&quot;khu nghỉ mát&quot;, &quot;KNM&quot;
+&quot;khu du lịch&quot;, &quot;KDL&quot;
+&quot;công viên&quot;, &quot;CV&quot;
+&quot;vườn quốc gia&quot;, &quot;VQG&quot;
+&quot;viện bảo tàng&quot;, &quot;VBT&quot;
+&quot;sân vận động&quot;, &quot;SVĐ&quot;
+&quot;câu lạc bộ&quot;, &quot;CLB&quot;
+&quot;công ty&quot;, &quot;Cty&quot;
+&quot;tổng công ty&quot;, &quot;TCty&quot;
+&quot;căn cứ không quan&quot;, &quot;CCKQ&quot;
+&quot;linh mục&quot;, &quot;LM&quot;
+</string>
+    <key>classifications</key>
+    <string>&quot;quốc lộ&quot;, &quot;QL&quot;
+&quot;tỉnh lộ&quot;, &quot;TL&quot;
+&quot;hương lộ&quot;, &quot;HL&quot;
+&quot;huyện lộ&quot;, &quot;HL&quot;
+&quot;đường tỉnh&quot;, &quot;ĐT&quot;
+&quot;đường huyện&quot;, &quot;ĐH&quot;
+&quot;đường cao tốc&quot;, &quot;ĐCT&quot;
+&quot;đại lộ&quot;, &quot;ĐL&quot;
+&quot;xa lộ&quot;, &quot;XL&quot;
+&quot;quảng trường&quot;, &quot;QT&quot;
+&quot;đường bộ&quot;, &quot;ĐB&quot;
+&quot;việt nam&quot;, &quot;VN&quot;
+</string>
+    <key>directions</key>
+    <string>&quot;đông&quot;, &quot;Đ&quot;
+&quot;đông bắc&quot;, &quot;ĐB&quot;
+&quot;nam&quot;, &quot;N&quot;
+&quot;tây nam&quot;, &quot;TN&quot;
+&quot;bắc&quot;, &quot;B&quot;
+&quot;đông nam&quot;, &quot;ĐN&quot;
+&quot;tây nam&quot;, &quot;TN&quot;
+&quot;tây&quot;, &quot;T&quot;
+</string>
+  </dict>
+</plist>
