@@ -122,7 +122,7 @@ open class RouteController: NSObject {
     var lastReRouteLocation: CLLocation?
     
     var routeTask: URLSessionDataTask?
-    var lastLocationTimestamp: Date?
+    var lastLocationDate: Date?
     
     /**
      Intializes a new `RouteController`.
@@ -334,7 +334,7 @@ extension RouteController: CLLocationManagerDelegate {
     
     func checkForFasterRoute(from location: CLLocation) {
         
-        // If the user is on a short route, don't check for faster alternatives
+        // If the user does not have much time left on the route, don't check for faster alternatives
         guard routeProgress.durationRemaining > 600 else { return }
 
         // If the user is approaching a maneuver, don't check for a faster alternatives
@@ -342,20 +342,21 @@ extension RouteController: CLLocationManagerDelegate {
         
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else { return }
         
-        guard let lastLocationTimestamp = lastLocationTimestamp else {
-            self.lastLocationTimestamp = location.timestamp
+        guard let lastLocationTimestamp = lastLocationDate else {
+            lastLocationDate = location.timestamp
             return
         }
 
         // Only check ever 2 minutes for faster route
-        guard location.timestamp.timeIntervalSince1970 - lastLocationTimestamp.timeIntervalSince1970 > 120 else { return }
+        guard location.timestamp.timeIntervalSince(lastLocationTimestamp) > 120 else { return }
         
         let options = routeProgress.route.routeOptions
-        options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
-        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
+        let firstWaypoint = Waypoint(coordinate: location.coordinate)
+        if location.course >= 0 {
             firstWaypoint.heading = location.course
             firstWaypoint.headingAccuracy = 90
         }
+        options.waypoints = [firstWaypoint] + routeProgress.remainingWaypoints
         
         let durationRemaining = routeProgress.durationRemaining
         let currentAlertLevel = routeProgress.currentLegProgress.alertUserLevel
@@ -364,18 +365,18 @@ extension RouteController: CLLocationManagerDelegate {
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             guard let strongSelf = self else { return }
             
-            strongSelf.lastLocationTimestamp = nil
+            strongSelf.lastLocationDate = nil
             
-            if let route = routes?.first {
-                let percentDifference = ((durationRemaining - route.expectedTravelTime) / route.expectedTravelTime) * 100
+            guard let route = routes?.first else { return }
+            
+            let percentDifference = ((durationRemaining - route.expectedTravelTime) / durationRemaining) * 100
+            
+            // Only use new route if it's at least 10% faster
+            if percentDifference >= 10 {
                 
-                // Only use new route if it's at least 10% faster
-                if percentDifference > 10 {
-                    
-                    // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
-                    strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentUpcomingManeuver.description == route.legs[0].steps[1].description ? currentAlertLevel : .none)
-                    strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-                }
+                // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
+                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentUpcomingManeuver.description == route.legs[0].steps[1].description ? currentAlertLevel : .none)
+                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
             }
         })
     }
