@@ -266,6 +266,13 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         monitorStepProgress(location)
+        
+        // Check for faster route given users current location
+        //
+        // If the user does not have much time left on the route, don't check for faster alternatives
+        guard routeProgress.durationRemaining > 600 else { return }
+        // If the user is approaching a maneuver, don't check for a faster alternatives
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > 70 else { return }
         checkForFasterRoute(from: location)
     }
     
@@ -333,12 +340,6 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForFasterRoute(from location: CLLocation) {
-        // If the user does not have much time left on the route, don't check for faster alternatives
-        guard routeProgress.durationRemaining > 600 else { return }
-
-        // If the user is approaching a maneuver, don't check for a faster alternatives
-        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > 70 else { return }
-        
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else { return }
         
         guard let lastLocationDate = lastLocationDate else {
@@ -358,11 +359,26 @@ extension RouteController: CLLocationManagerDelegate {
             
             guard let route = route else { return }
             
-            // Only use new route if it's at least 10% faster
-            if route.expectedTravelTime <= 0.9 * durationRemaining {
-                // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
-                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentUpcomingManeuver.description == route.legs[0].steps[1].description ? currentAlertLevel : .none)
-                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+            if route.legs[0].steps[1].expectedTravelTime <= 70 {
+                let maneuverLocation = CLLocation(coordinate: currentUpcomingManeuver.maneuverLocation, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 1, course: currentUpcomingManeuver.finalHeading ?? currentUpcomingManeuver.initialHeading ?? location.course, speed: 10, timestamp: Date())
+                
+                strongSelf.getDirections(from: maneuverLocation, completion: { (route, error) in
+                    guard let route = route else { return }
+                    
+                    // Only use new route if it's at least 10% faster
+                    if route.expectedTravelTime <= 0.9 * durationRemaining {
+                        // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
+                        strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentUpcomingManeuver.description == route.legs[0].steps[1].description ? currentAlertLevel : .none)
+                        strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                    }
+                })
+            } else {
+                // Only use new route if it's at least 10% faster
+                if route.expectedTravelTime <= 0.9 * durationRemaining {
+                    // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
+                    strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentUpcomingManeuver.description == route.legs[0].steps[1].description ? currentAlertLevel : .none)
+                    strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                }
             }
         }
     }
