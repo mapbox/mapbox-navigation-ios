@@ -23,7 +23,7 @@ open class NavigationLocationManager: CLLocationManager {
         }
         
         if #available(iOS 9.0, *) {
-            if Bundle.main.backgroundModes.location {
+            if Bundle.main.backgroundModes.contains("location") {
                 allowsBackgroundLocationUpdates = true
             }
         }
