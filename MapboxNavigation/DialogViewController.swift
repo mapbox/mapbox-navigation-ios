@@ -14,7 +14,7 @@ class DialogViewController: UIViewController {
     }
     
     class func present(on viewController: UIViewController) {
-        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.mapboxNavigation   )
         let controller = storyboard.instantiateViewController(withIdentifier: "DialogViewController") as! DialogViewController
         
         controller.modalPresentationStyle = .overFullScreen
