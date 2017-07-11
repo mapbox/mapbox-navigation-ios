@@ -333,7 +333,6 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForFasterRoute(from location: CLLocation) {
-        
         // If the user does not have much time left on the route, don't check for faster alternatives
         guard routeProgress.durationRemaining > 600 else { return }
 
@@ -342,43 +341,30 @@ extension RouteController: CLLocationManagerDelegate {
         
         guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else { return }
         
-        guard let lastLocationTimestamp = lastLocationDate else {
-            lastLocationDate = location.timestamp
+        guard let lastLocationDate = lastLocationDate else {
+            self.lastLocationDate = location.timestamp
             return
         }
 
         // Only check ever 2 minutes for faster route
-        guard location.timestamp.timeIntervalSince(lastLocationTimestamp) > 120 else { return }
-        
-        let options = routeProgress.route.routeOptions
-        let firstWaypoint = Waypoint(coordinate: location.coordinate)
-        if location.course >= 0 {
-            firstWaypoint.heading = location.course
-            firstWaypoint.headingAccuracy = 90
-        }
-        options.waypoints = [firstWaypoint] + routeProgress.remainingWaypoints
-        
+        guard location.timestamp.timeIntervalSince(lastLocationDate) >= 120 else { return }
         let durationRemaining = routeProgress.durationRemaining
         let currentAlertLevel = routeProgress.currentLegProgress.alertUserLevel
         
-        routeTask?.cancel()
-        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+        getDirections(from: location) { [weak self] (route, error) in
             guard let strongSelf = self else { return }
             
             strongSelf.lastLocationDate = nil
             
-            guard let route = routes?.first else { return }
-            
-            let percentDifference = ((durationRemaining - route.expectedTravelTime) / durationRemaining) * 100
+            guard let route = route else { return }
             
             // Only use new route if it's at least 10% faster
-            if percentDifference >= 10 {
-                
+            if route.expectedTravelTime <= 0.9 * durationRemaining {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentUpcomingManeuver.description == route.legs[0].steps[1].description ? currentAlertLevel : .none)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
             }
-        })
+        }
     }
     
     func reroute(from location: CLLocation) {
@@ -394,32 +380,46 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
         
-        routeTask?.cancel()
-        
-        let options = routeProgress.route.routeOptions
-        
-        options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
-        
-        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
-            firstWaypoint.heading = location.course
-            firstWaypoint.headingAccuracy = 90
-        }
-        
-        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+        getDirections(from: location) { [weak self] (route, error) in
             guard let strongSelf = self else {
                 return
             }
             
-            if let route = routes?.first {
-                strongSelf.routeProgress = RouteProgress(route: route)
-                strongSelf.routeProgress.currentLegProgress.stepIndex = 0
-                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-            } else if let error = error {
+            if let error = error {
                 strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
                     MBRouteControllerNotificationErrorKey: error
                     ])
             }
+            
+            guard let route = route else { return }
+            
+            strongSelf.routeProgress = RouteProgress(route: route)
+            strongSelf.routeProgress.currentLegProgress.stepIndex = 0
+            strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+        }
+    }
+    
+    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->()) {
+        routeTask?.cancel()
+        
+        let options = routeProgress.route.routeOptions
+        options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
+        if let firstWaypoint = options.waypoints.first, location.course >= 0 {
+            firstWaypoint.heading = location.course
+            firstWaypoint.headingAccuracy = 90
+        }
+        
+        routeTask = directions.calculate(options, completionHandler: { (waypoints, routes, error) in
+            if let error = error {
+                return completion(nil, error)
+            }
+            
+            guard let route = routes?.first else {
+                return completion(nil, nil)
+            }
+            
+            return completion(route, error)
         })
     }
     
