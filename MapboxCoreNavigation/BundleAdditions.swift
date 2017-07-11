@@ -1,8 +1,10 @@
 import Foundation
 
 extension Bundle {
-    
-    var backgroundModes: Set<String> {
+    /**
+     Returns a set of strings containing supported background mode types.
+     */
+    public var backgroundModes: Set<String> {
         if let modes = object(forInfoDictionaryKey: "UIBackgroundModes") as? [String] {
             return Set<String>(modes)
         }
