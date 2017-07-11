@@ -1,6 +1,8 @@
 import Foundation
 import MapboxDirections
 
+typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
+
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
@@ -32,6 +34,11 @@ open class NavigationMapView: MGLMapView {
             }
         }
     }
+
+    let TrafficSevere = UIColor(red:0.54, green:0.06, blue:0.22, alpha:1.0)
+    let TrafficHeavy = UIColor(red:0.91, green:0.20, blue:0.25, alpha:1.0)
+    let TrafficModerate = UIColor(red:0.95, green:0.65, blue:0.31, alpha:1.0)
+    let TrafficLowUnknown = UIColor(red:0.00, green:0.70, blue:0.99, alpha:1.0)
     
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
@@ -112,22 +119,66 @@ open class NavigationMapView: MGLMapView {
     }
     
     func shape(describing route: Route) -> MGLShape? {
-        guard var coordinates = route.coordinates else {
-            return nil
+        guard let coordinates = route.coordinates else { return nil }
+        
+        let congestionPerLeg = route.legs.flatMap {
+            $0.segmentCongestionLevels
         }
         
-        return MGLPolylineFeature(coordinates: &coordinates, count: route.coordinateCount)
+        let combinedCongestionLevel = Array(congestionPerLeg.joined()) // Flatten all leg nodes
+        let destination = coordinates.suffix(from: 1)
+        let segment = zip(coordinates, destination).map { [$0.0, $0.1] }
+        
+        guard let leg = congestionPerLeg.first, leg.count == segment.count else {
+            let line = MGLPolylineFeature(coordinates: coordinates, count: UInt(coordinates.count))
+            line.attributes["congestion"] = "unknown"
+            return MGLShapeCollectionFeature(shapes: [line])
+        }
+        
+        let congestionSegments = Array(zip(segment, combinedCongestionLevel))
+        
+        // Merge adjacent segments with the same congestion level
+        var mergedCongestionSegments = [CongestionSegment]()
+        for seg in congestionSegments {
+            let coordinates = seg.0
+            let congestionLevel = seg.1
+            if let last = mergedCongestionSegments.last, last.1 == congestionLevel {
+                mergedCongestionSegments[mergedCongestionSegments.count - 1].0 += coordinates
+            } else {
+                mergedCongestionSegments.append(seg)
+            }
+        }
+        
+        // Filter out any segments with low congestion
+        let nontrivialCongestionSegments = mergedCongestionSegments.filter { $0.1 != CongestionLevel.unknown && $0.1 != CongestionLevel.low }
+        
+        let baseLine = MGLPolylineFeature(coordinates: coordinates, count: route.coordinateCount)
+        baseLine.attributes["congestion"] = "unknown"
+        let lines = nontrivialCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
+            let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
+            polyline.attributes["congestion"] = String(describing: congestionSegment.1)
+            return polyline
+        }
+        
+        return MGLShapeCollectionFeature(shapes: [baseLine] + lines)
     }
     
     func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
-        
+
         line.lineWidth = MGLStyleValue(interpolationMode: .exponential,
                                        cameraStops: routeLineWidthAtZoomLevels,
                                        options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
-        
-        line.lineColor = MGLStyleValue(rawValue: .defaultRouteLayer)
+
+        line.lineColor = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
+            "unknown": MGLStyleValue(rawValue: .defaultRouteLayer),
+            "low": MGLStyleValue(rawValue: TrafficLowUnknown),
+            "moderate": MGLStyleValue(rawValue: TrafficModerate),
+            "heavy": MGLStyleValue(rawValue: TrafficHeavy),
+            "severe": MGLStyleValue(rawValue: TrafficSevere)
+            ], attributeName: "congestion", options: nil)
+
         line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
