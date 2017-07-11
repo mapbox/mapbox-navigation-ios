@@ -12,6 +12,15 @@ open class NavigationMapView: MGLMapView {
     let routeLayerIdentifier = "routeLayer"
     let routeLayerCasingIdentifier = "routeLayerCasing"
     
+    let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
+        4: MGLStyleValue(rawValue: 2),
+        10: MGLStyleValue(rawValue: 3),
+        13: MGLStyleValue(rawValue: 4),
+        16: MGLStyleValue(rawValue: 7),
+        19: MGLStyleValue(rawValue: 14),
+        22: MGLStyleValue(rawValue: 18)
+    ]
+    
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     open override func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
@@ -96,9 +105,11 @@ open class NavigationMapView: MGLMapView {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         
-        line.lineColor = MGLStyleValue(rawValue: .defaultRouteLayer)
-        line.lineWidth = MGLStyleValue(rawValue: 5)
+        line.lineWidth = MGLStyleValue(interpolationMode: .exponential,
+                                       cameraStops: routeLineWidthAtZoomLevels,
+                                       options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
+        line.lineColor = MGLStyleValue(rawValue: .defaultRouteLayer)
         line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
@@ -109,9 +120,19 @@ open class NavigationMapView: MGLMapView {
         
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
-        lineCasing.lineColor = MGLStyleValue(rawValue: .defaultRouteCasing)
-        lineCasing.lineWidth = MGLStyleValue(rawValue: 9)
+        // Take the default line width and make it wider for the casing
+        var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
+        for stop in routeLineWidthAtZoomLevels {
+            let f = stop.value as! MGLConstantStyleValue
+            let newValue =  f.rawValue.doubleValue * 2
+            newCameraStop[stop.key] = MGLStyleValue<NSNumber>(rawValue: NSNumber(value:newValue))
+        }
+
+        lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
+                                             cameraStops: newCameraStop,
+                                             options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
+        lineCasing.lineColor = MGLStyleValue(rawValue: .defaultRouteCasing)
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
