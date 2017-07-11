@@ -221,7 +221,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                          styles: [Style]? = [DefaultStyle()],
                          locationManager: NavigationLocationManager? = DefaultLocationManager()) {
         
-        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         let tableViewController = storyboard.instantiateViewController(withIdentifier: "RouteTableViewController") as! RouteTableViewController
         

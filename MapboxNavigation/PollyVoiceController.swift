@@ -114,12 +114,27 @@ public class PollyVoiceController: RouteVoiceController {
         do {
             let soundData = try Data(contentsOf: url as URL)
             audioPlayer = try AVAudioPlayer(data: soundData)
+            audioPlayer?.delegate = self
+            
             if let audioPlayer = audioPlayer {
+                try duckAudio()
                 audioPlayer.volume = volume
                 audioPlayer.play()
             }
         } catch {
             super.speak(fallbackText, error: error.localizedDescription)
+        }
+    }
+}
+
+extension PollyVoiceController: AVAudioPlayerDelegate {
+    
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        guard audioPlayer?.isPlaying == false else { return }
+        do {
+            try unDuckAudio()
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }

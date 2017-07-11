@@ -50,7 +50,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
-    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: Bundle.navigationUI)!.data, fileTypeHint: AVFileTypeMPEGLayer3)
+    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileTypeMPEGLayer3)
     
     
     /**
@@ -63,6 +63,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
      */
     override public init() {
         super.init()
+        
+        if !Bundle.main.backgroundModes.contains("audio") {
+            print("Voice guidance may not work properly. " +
+                  "Add audio to the UIBackgroundModes key to your app’s Info.plist file")
+        }
+        
         speechSynth.delegate = self
         maneuverVoiceDistanceFormatter.unitStyle = .long
         maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
@@ -199,7 +205,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             if alertLevel == .arrive {
                 text = upComingStepInstruction
             } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .navigationUI, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingStepInstruction)
+                text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingStepInstruction)
             }
             
             return text
@@ -218,16 +224,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         // since the user will be approaching the maneuver location.
         if routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart {
             if userDistance < minimumDistanceForHighAlert {
-                text = String.localizedStringWithFormat(NSLocalizedString("LINKED_WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .navigationUI, value: "%@, then in %@, %@", comment: "Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction"), currentInstruction!, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
+                text = String.localizedStringWithFormat(NSLocalizedString("LINKED_WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "%@, then in %@, %@", comment: "Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction"), currentInstruction!, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
             } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .navigationUI, value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
+                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxNavigation, value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             }
         } else if routeProgress.currentLegProgress.currentStep.distance > 2_000 && routeProgress.currentLegProgress.alertUserLevel == .low {
-            text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .navigationUI, value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
+            text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxNavigation, value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
         } else if alertLevel == .high && stepDistance < minimumDistanceForHighAlert {
-            text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .navigationUI, value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
+            text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
         } else if alertLevel != .high {
-            text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .navigationUI, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
+            text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
         } else {
             text = upComingInstruction
         }
@@ -244,7 +250,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             if let code = step.codes?.first {
                 let markedUpName = markUpWithSSML ? "<say-as interpret-as=\"address\">\(name.addingXMLEscapes)</say-as>" : name
                 let markedUpCode = markUpWithSSML ? "<say-as interpret-as=\"address\">\(code.addingXMLEscapes)</say-as>" : code
-                road = String.localizedStringWithFormat(NSLocalizedString("NAME_AND_REF", bundle: .navigationUI, value: "%@ (%@)", comment: "Format for speech string; 1 = way name; 2 = way route number"), markedUpName, markedUpCode)
+                road = String.localizedStringWithFormat(NSLocalizedString("NAME_AND_REF", bundle: .mapboxNavigation, value: "%@ (%@)", comment: "Format for speech string; 1 = way name; 2 = way route number"), markedUpName, markedUpCode)
             } else {
                 road = escapeIfNecessary(name)
             }
@@ -257,6 +263,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     func speak(_ text: String, error: String? = nil) {
         // Note why it failed
         if let error = error {
+            print(error)
+        }
+        
+        do {
+            try duckAudio()
+        } catch {
             print(error)
         }
         
