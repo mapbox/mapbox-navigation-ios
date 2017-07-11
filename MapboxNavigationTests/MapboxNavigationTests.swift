@@ -23,7 +23,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     }
     
     func storyboard() -> UIStoryboard {
-        return UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        return UIStoryboard(name: "Navigation", bundle: Bundle.mapboxNavigation)
     }
     
     func testManeuverViewMultipleLines() {

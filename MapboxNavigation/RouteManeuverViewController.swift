@@ -78,9 +78,7 @@ class RouteManeuverViewController: UIViewController {
     }
     
     /** 
-     Returns maximum available size for street label with padding, turnArrowView
-     and shieldImage taken into account. Multiple lines will be used if distance
-     is nil.
+     Returns maximum available size for street label with padding, turnArrowView and shieldImage taken into account. Multiple lines will be used if distance is nil.
      
      width = | -8- TurnArrowView -8- availableWidth -8- shieldImage -8- |
      */

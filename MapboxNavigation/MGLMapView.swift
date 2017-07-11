@@ -7,8 +7,14 @@ let arrowSourceIdentifier = "arrowSource"
 let arrowSourceStrokeIdentifier = "arrowSourceStroke"
 let arrowLayerIdentifier = "arrowLayer"
 
+/**
+ An extension on `MGLMapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://www.mapbox.com/vector-tiles/mapbox-traffic-v1/).
+ */
 extension MGLMapView {
-    
+
+    /**
+     Toggle traffic on a map style that contains a Mapbox Traffic source.
+     */
     public var showsTraffic: Bool {
         get {
             if let style = style {
