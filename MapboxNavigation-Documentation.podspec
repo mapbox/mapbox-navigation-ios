@@ -49,5 +49,6 @@ Pod::Spec.new do |s|
   s.dependency "Pulley", "~> 1.3"
   s.dependency "SDWebImage", "~> 4.0"
   s.dependency "AWSPolly", "~> 2.5"
+  s.dependency "MapboxMobileEvents", "~> 0.2"
 
 end
