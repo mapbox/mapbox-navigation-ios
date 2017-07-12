@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;ayuntamiento&quot;, &quot;Ayto&quot;
+&quot;colonia&quot;, &quot;Col&quot;
+&quot;ciudad&quot;, &quot;Cdad&quot;
+&quot;departamento&quot;, &quot;Dep&quot;
+&quot;diciembre&quot;, &quot;10bre&quot;
+&quot;doctor&quot;, &quot;Dr&quot;
+&quot;doctora&quot;, &quot;Dra&quot;
+&quot;doctores&quot;, &quot;Drs&quot;
+&quot;doctoras&quot;, &quot;Drs&quot;
+&quot;don&quot;, &quot;D&quot;
+&quot;doña&quot;, &quot;Dña&quot;
+&quot;internacional&quot;, &quot;Intl&quot;
+&quot;noviembre&quot;, &quot;9bre&quot;
+&quot;octubre&quot;, &quot;8bre&quot;
+&quot;primero&quot;, &quot;1º&quot;
+&quot;primera&quot;, &quot;1ª&quot;
+&quot;san&quot;, &quot;S&quot;
+&quot;santa&quot;, &quot;Sta&quot;
+&quot;segundo&quot;, &quot;2º&quot;
+&quot;segunda&quot;, &quot;2ª&quot;
+&quot;señor&quot;, &quot;Sr&quot;
+&quot;señora&quot;, &quot;Sra&quot;
+&quot;señorita&quot;, &quot;Srta&quot;
+&quot;septiembre&quot;, &quot;7bre&quot;
+&quot;tercero&quot;, &quot;3º&quot;
+&quot;tercera&quot;, &quot;3ª&quot;
+</string>
+    <key>classifications</key>
+    <string>&quot;autopista&quot;, &quot;Auto&quot;
+&quot;avenida&quot;, &quot;Av&quot;
+&quot;calle&quot;, &quot;C&quot;
+&quot;camino&quot;, &quot;Cmno&quot;
+&quot;carretera&quot;, &quot;Crta&quot;
+&quot;paseo&quot;, &quot;Pº&quot;
+&quot;plaza&quot;, &quot;Pza&quot;
+</string>
+    <key>directions</key>
+    <string>&quot;este&quot;, &quot;E&quot;
+&quot;noreste&quot;, &quot;NE&quot;
+&quot;sur&quot;, &quot;S&quot;
+&quot;noroeste&quot;, &quot;NO&quot;
+&quot;norte&quot;, &quot;N&quot;
+&quot;sureste&quot;, &quot;SE&quot;
+&quot;suroeste&quot;, &quot;SO&quot;
+&quot;oeste&quot;, &quot;O&quot;
+</string>
+  </dict>
+</plist>
