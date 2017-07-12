@@ -23,7 +23,7 @@ open class NavigationMapView: MGLMapView {
         22: MGLStyleValue(rawValue: 18)
     ]
     
-    var manuallyUpdatesLocation: Bool = false {
+var manuallyUpdatesLocation: Bool = false {
         didSet {
             if manuallyUpdatesLocation {
                 locationManager.stopUpdatingLocation()
@@ -35,10 +35,6 @@ open class NavigationMapView: MGLMapView {
         }
     }
 
-    let TrafficSevere = UIColor(red:0.54, green:0.06, blue:0.22, alpha:1.0)
-    let TrafficHeavy = UIColor(red:0.91, green:0.20, blue:0.25, alpha:1.0)
-    let TrafficModerate = UIColor(red:0.95, green:0.65, blue:0.31, alpha:1.0)
-    
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     override open func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
@@ -171,11 +167,11 @@ open class NavigationMapView: MGLMapView {
                                        options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
 
         line.lineColor = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
-            "unknown": MGLStyleValue(rawValue: .defaultRouteLayer),
-            "low": MGLStyleValue(rawValue: .defaultRouteLayer),
-            "moderate": MGLStyleValue(rawValue: TrafficModerate),
-            "heavy": MGLStyleValue(rawValue: TrafficHeavy),
-            "severe": MGLStyleValue(rawValue: TrafficSevere)
+            "unknown": MGLStyleValue(rawValue: .trafficUnknown),
+            "low": MGLStyleValue(rawValue: .trafficLow),
+            "moderate": MGLStyleValue(rawValue: .trafficModerate),
+            "heavy": MGLStyleValue(rawValue: .trafficHeavy),
+            "severe": MGLStyleValue(rawValue: .trafficSevere)
             ], attributeName: "congestion", options: nil)
 
         line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))

@@ -165,6 +165,16 @@ public class Style: NSObject {
      */
     public var wayNameLabelFont: UIFont?
     
+    public var trafficModerate: UIColor?
+    
+    public var trafficHeavy: UIColor?
+    
+    public var trafficSevere: UIColor?
+    
+    public var trafficLow: UIColor?
+    
+    public var trafficUnknown: UIColor?
+    
     /**
      Applies the style for all changed properties.
      */

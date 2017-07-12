@@ -8,6 +8,12 @@ extension UIColor {
     
     class var defaultTurnArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var defaultTurnArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
+    
+    class var trafficUnknown: UIColor { get { return defaultRouteLayer } }
+    class var trafficLow: UIColor { get { return defaultRouteLayer } }
+    class var trafficModerate: UIColor { get { return #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0) } }
+    class var trafficHeavy: UIColor { get { return #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0) } }
+    class var trafficSevere: UIColor { get { return #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0) } }
 }
 
 extension UIColor {
@@ -80,6 +86,12 @@ public class DefaultStyle: Style {
         
         cellSubtitleLabelFont = .systemFont(ofSize: 17)
         cellSubtitleLabelTextColor = .defaultSecondaryText
+        
+        trafficUnknown = .trafficUnknown
+        trafficLow = .trafficLow
+        trafficModerate = .trafficModerate
+        trafficHeavy = .trafficHeavy
+        trafficSevere = .trafficSevere
     }
     
 }

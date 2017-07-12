@@ -115,7 +115,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         options.includesSteps = true
         options.routeShapeResolution = .full
         options.profileIdentifier = .automobileAvoidingTraffic
-        options.attributeOptions = [.openStreetMapNodeIdentifier, .speed, .congestionLevel]
+        
+        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
+        options.attributeOptions = [.congestionLevel]
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
@@ -254,7 +256,9 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
         options.includesSteps = true
         options.routeShapeResolution = .full
         options.profileIdentifier = navigationViewController.route.routeOptions.profileIdentifier
-        options.attributeOptions = [.openStreetMapNodeIdentifier, .speed, .congestionLevel]
+        
+        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
+        options.attributeOptions = [.congestionLevel]
 
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
