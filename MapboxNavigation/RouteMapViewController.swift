@@ -382,6 +382,20 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             }
             
             currentRoad = smallestLabelDistance < 5 ? closestRoad : nil
+            
+            let intersections = routeController.routeProgress.currentLegProgress.currentStepProgress.step.intersections
+            let labelFeatures = intersections?.map { intersection -> MGLPointFeature in
+                let feature = MGLPointFeature()
+                feature.coordinate = intersection.location
+                feature.attributes = [
+                    "name": "Cross Street",
+                ]
+                return feature
+            }
+            if let labelFeatures = labelFeatures,
+                let crossStreetLabelSource = style.source(withIdentifier: "navigation-cross-streets") as? MGLShapeSource {
+                crossStreetLabelSource.shape = MGLShapeCollectionFeature(shapes: labelFeatures)
+            }
         }
         
         
@@ -467,6 +481,17 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         let map = mapView as! NavigationMapView
         map.showRoute(route)
+        
+        let crossStreetLabelSource = MGLShapeSource(identifier: "navigation-cross-streets", shape: nil, options: nil)
+        style.addSource(crossStreetLabelSource)
+        
+        let crossStreetLabelLayer = MGLSymbolStyleLayer(identifier: "navigation-cross-streets", source: crossStreetLabelSource)
+        crossStreetLabelLayer.text = MGLStyleValue(interpolationMode: .identity, sourceStops: nil, attributeName: "name", options: nil)
+        crossStreetLabelLayer.textPitchAlignment = MGLStyleValue(rawValue: NSValue(mglTextPitchAlignment: .viewport))
+        crossStreetLabelLayer.textColor = MGLStyleValue(rawValue: .white)
+        crossStreetLabelLayer.textHaloColor = MGLStyleValue(rawValue: .black)
+        crossStreetLabelLayer.textHaloWidth = MGLStyleValue(rawValue: 3)
+        style.addLayer(crossStreetLabelLayer)
     }
 
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
