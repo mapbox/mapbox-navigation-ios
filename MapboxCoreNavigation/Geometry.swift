@@ -91,6 +91,11 @@ extension CLLocationCoordinate2D {
         let radianCoordinate = RadianCoordinate2D(self).coordinate(at: distance / metersPerRadian, facing: direction.toRadians())
         return CLLocationCoordinate2D(radianCoordinate)
     }
+    
+    static func ==(left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> Bool {
+        return left.latitude == right.latitude && left.longitude == right.longitude
+    }
+
 }
 
 
