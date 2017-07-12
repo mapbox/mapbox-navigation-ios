@@ -157,7 +157,7 @@ open class RouteController: NSObject {
      - parameter accessToken: Optional Mapbox accessToken.
      */
     @objc(initWithRoute:directions:locationManager:accessToken:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), accessToken: String?) {
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), accessToken: String? = nil) {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager

@@ -67,7 +67,7 @@ extension MMEEventsManager {
 }
 
 extension UIApplicationState {
-    @nonobjc var telemetryString: String {
+    var telemetryString: String {
         get {
             switch self {
             case .active:
@@ -82,7 +82,7 @@ extension UIApplicationState {
 }
 
 extension UIDevice {
-    var machine: String {
+    @nonobjc var machine: String {
         get {
             var systemInfo = utsname()
             uname(&systemInfo)
