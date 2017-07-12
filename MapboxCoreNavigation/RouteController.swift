@@ -1,7 +1,6 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
-import Mapbox
 import Polyline
 import MapboxMobileEvents
 
@@ -149,16 +148,16 @@ open class RouteController: NSObject {
     var sessionState = SessionState()
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    
     /**
      Intializes a new `RouteController`.
      
      - parameter route: The route to follow.
      - parameter directions: The Directions object that created `route`.
      - parameter locationManager: The associated location manager.
+     - parameter accessToken: Optional Mapbox accessToken.
      */
-    @objc(initWithRoute:directions:locationManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
+    @objc(initWithRoute:directions:locationManager:accessToken:)
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), accessToken: String?) {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
@@ -171,9 +170,23 @@ open class RouteController: NSObject {
         
         self.resumeNotifications()
         
-        if let accessToken = MGLAccountManager.accessToken() {
-            events.initialize(withAccessToken: accessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+        var mapboxAccessToken: String? = nil
+        if let stagingToken = UserDefaults.standard.object(forKey: "MMETelemetryTestServerAccessToken") as? String {
+            mapboxAccessToken = stagingToken
+        } else if let accessToken = accessToken {
+            mapboxAccessToken = accessToken
+        } else if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+            let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
+            let token = dict["MGLMapboxAccessToken"] as? String {
+            mapboxAccessToken = token
+        }
+        
+        if let mapboxAccessToken = mapboxAccessToken {
+            events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
             events.isDebugLoggingEnabled = true
+            events.sendTurnstileEvent()
+        } else {
+            assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken`m passed in as a String to `RouteController()`")
         }
     }
     
@@ -592,7 +605,7 @@ struct SessionState {
     var originalRoute: Route!
     var originalRequestIdentifier: String?
     
-    var pastLocations = FixedLengthBuffer<CLLocation>(length: 40)
+    var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
 }
 
 // MARK: - Telemetry
@@ -616,8 +629,8 @@ extension RouteController {
         
         let eventName = event.eventDictionary["event"] as! String
         
-        event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter {$0.timestamp <= event.timestamp}.map {$0.dictionary}
-        event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionary}
+        event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter {$0.timestamp <= event.timestamp}.map {$0.eventDictionary}
+        event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.eventDictionary}
         
         events.enqueueEvent(withName: eventName, attributes: event.eventDictionary)
         events.flush()
@@ -682,7 +695,7 @@ extension RouteController {
     
     func checkAndSendOutstandingFeedbackEvents(forceAll: Bool = false) {
         let now = Date()
-        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter({now.timeIntervalSince($0.timestamp) > SECONDS_FOR_COLLECTION_AFTER_FEEDBACK_EVENT})
+        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter({now.timeIntervalSince($0.timestamp) > SecondsForCollectionAfterFeedbackEvent})
         for event in eventsToPush {
             sendFeedbackEvent(event: event)
         }

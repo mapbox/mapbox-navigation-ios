@@ -4,7 +4,7 @@
     import WatchKit
 #endif
 
-extension String {
+extension ProcessInfo {
     static var systemName: String {
         #if os(iOS) || os(tvOS)
             return UIDevice.current.systemName

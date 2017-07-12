@@ -119,7 +119,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     public var route: Route! {
         didSet {
             if routeController == nil {
-                routeController = RouteController(along: route, directions: directions, locationManager: DefaultLocationManager())
+                routeController = RouteController(along: route, directions: directions, locationManager: DefaultLocationManager(), accessToken: MGLAccountManager.accessToken())
                 routeController.delegate = self
             } else {
                 routeController.routeProgress = RouteProgress(route: route)
@@ -237,7 +237,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.directions = directions
         self.route = route
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager())
+        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager(), accessToken: MGLAccountManager.accessToken())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         

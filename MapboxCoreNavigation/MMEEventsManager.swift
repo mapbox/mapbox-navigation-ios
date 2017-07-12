@@ -3,7 +3,7 @@ import MapboxDirections
 import AVFoundation
 import MapboxMobileEvents
 
-let SECONDS_FOR_COLLECTION_AFTER_FEEDBACK_EVENT: TimeInterval = 20
+let SecondsForCollectionAfterFeedbackEvent: TimeInterval = 20
 
 extension MMEEventsManager {
     func addDefaultEvents(routeController: RouteController) -> [String: Any] {
@@ -15,8 +15,8 @@ extension MMEEventsManager {
         modifiedEventDictionary["created"] = Date().ISO8601
         modifiedEventDictionary["startTimestamp"] = session.departureTimestamp?.ISO8601 ?? NSNull()
 
-        modifiedEventDictionary["platform"] = String.systemName
-        modifiedEventDictionary["operatingSystem"] = "\(String.systemName) \(String.systemVersion)"
+        modifiedEventDictionary["platform"] = ProcessInfo.systemName
+        modifiedEventDictionary["operatingSystem"] = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
         modifiedEventDictionary["device"] = UIDevice.current.machine
         
         modifiedEventDictionary["sdkIdentifier"] = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -58,7 +58,7 @@ extension MMEEventsManager {
 
         modifiedEventDictionary["batteryPluggedIn"] = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
         modifiedEventDictionary["batteryLevel"] = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
-        modifiedEventDictionary["applicationState"] = UIApplication.shared.applicationState.telemString
+        modifiedEventDictionary["applicationState"] = UIApplication.shared.applicationState.telemetryString
         
         //modifiedEventDictionary["connectivity"] = ??
         
@@ -67,7 +67,7 @@ extension MMEEventsManager {
 }
 
 extension UIApplicationState {
-    var telemString: String {
+    @nonobjc var telemetryString: String {
         get {
             switch self {
             case .active:
@@ -98,7 +98,7 @@ extension UIDevice {
 }
 
 extension CLLocation {
-    var dictionary: [String: Any] {
+    var eventDictionary: [String: Any] {
         get {
             var locationDictionary:[String: Any] = [:]
             locationDictionary["lat"] = coordinate.latitude
@@ -114,7 +114,7 @@ extension CLLocation {
     }
 }
 
-class FixedLengthBuffer<T> {
+class FixedLengthQueue<T> {
     private var objects = Array<T>()
     private var length: Int
     
