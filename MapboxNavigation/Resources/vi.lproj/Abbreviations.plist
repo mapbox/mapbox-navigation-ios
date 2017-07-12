@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>abbreviations</key>
+	<dict>
+		<key>bưu điện</key>
+		<string>BĐ</string>
+		<key>cao đẳng</key>
+		<string>CĐ</string>
+		<key>câu lạc bộ</key>
+		<string>CLB</string>
+		<key>công ty</key>
+		<string>Cty</string>
+		<key>công viên</key>
+		<string>CV</string>
+		<key>căn cứ không quan</key>
+		<string>CCKQ</string>
+		<key>khu chung cư</key>
+		<string>KCC</string>
+		<key>khu công nghiệp</key>
+		<string>KCN</string>
+		<key>khu du lịch</key>
+		<string>KDL</string>
+		<key>khu nghỉ mát</key>
+		<string>KNM</string>
+		<key>khách sạn</key>
+		<string>KS</string>
+		<key>linh mục</key>
+		<string>LM</string>
+		<key>phi trường</key>
+		<string>PT</string>
+		<key>sân bay</key>
+		<string>SB</string>
+		<key>sân bay quốc tế</key>
+		<string>SBQT</string>
+		<key>sân vận động</key>
+		<string>SVĐ</string>
+		<key>thành phố</key>
+		<string>Tp</string>
+		<key>thị trấn</key>
+		<string>Tt</string>
+		<key>thị xã</key>
+		<string>Tx</string>
+		<key>trung học cơ sở</key>
+		<string>THCS</string>
+		<key>trung học phổ thông</key>
+		<string>THPT</string>
+		<key>trung tâm</key>
+		<string>TT</string>
+		<key>tổng công ty</key>
+		<string>TCty</string>
+		<key>viện bảo tàng</key>
+		<string>VBT</string>
+		<key>vườn quốc gia</key>
+		<string>VQG</string>
+		<key>đại học</key>
+		<string>ĐH</string>
+	</dict>
+	<key>classifications</key>
+	<dict>
+		<key>huyện lộ</key>
+		<string>HL</string>
+		<key>hương lộ</key>
+		<string>HL</string>
+		<key>quảng trường</key>
+		<string>QT</string>
+		<key>quốc lộ</key>
+		<string>QL</string>
+		<key>tỉnh lộ</key>
+		<string>TL</string>
+		<key>việt nam</key>
+		<string>VN</string>
+		<key>xa lộ</key>
+		<string>XL</string>
+		<key>đường bộ</key>
+		<string>ĐB</string>
+		<key>đường cao tốc</key>
+		<string>ĐCT</string>
+		<key>đường huyện</key>
+		<string>ĐH</string>
+		<key>đường tỉnh</key>
+		<string>ĐT</string>
+		<key>đại lộ</key>
+		<string>ĐL</string>
+	</dict>
+	<key>directions</key>
+	<dict>
+		<key>bắc</key>
+		<string>B</string>
+		<key>nam</key>
+		<string>N</string>
+		<key>tây</key>
+		<string>T</string>
+		<key>tây nam</key>
+		<string>TN</string>
+		<key>đông</key>
+		<string>Đ</string>
+		<key>đông bắc</key>
+		<string>ĐB</string>
+		<key>đông nam</key>
+		<string>ĐN</string>
+	</dict>
+</dict>
+</plist>

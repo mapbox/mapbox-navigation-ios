@@ -46,7 +46,7 @@ class RoutePageViewController: UIPageViewController {
             return nil
         }
         
-        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let controller = storyboard.instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         controller.step = step
         return controller

@@ -2,5 +2,5 @@
 /* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "8Sl-bV-xyU"; */
 "8Sl-bV-xyU.normalTitle" = "Start Navigation";
 
-/* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "Hk0-SM-2Wl"; */
-"Hk0-SM-2Wl.text" = "Long press to select a destination";
+/* Class = "UILabel"; text = "Long press map to select a route"; ObjectID = "Hk0-SM-2Wl"; */
+"Hk0-SM-2Wl.text" = "Long press map to select a route";
