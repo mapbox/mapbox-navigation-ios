@@ -280,9 +280,3 @@ class GeometryTests: XCTestCase {
         XCTAssertEqualWithAccuracy(b, 229, accuracy: 1)
     }
 }
-
-extension CLLocationCoordinate2D: Equatable, Hashable {}
-
-public func ==(lhs: CLLocationCoordinate2D, rhs: CLLocationCoordinate2D) -> Bool {
-    return lhs.latitude == rhs.latitude && lhs.longitude == rhs.longitude
-}
