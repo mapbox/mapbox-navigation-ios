@@ -394,7 +394,7 @@ extension RouteController: CLLocationManagerDelegate {
             let initialHeadingNormalized = wrap(initialHeading, min: 0, max: 360)
             let finalHeadingNormalized = wrap(finalHeading, min: 0, max: 360)
             let userHeadingNormalized = wrap(location.course, min: 0, max: 360)
-            let differenceBetweenInitialAndFinalHeading = differenceBetweenAngles(initialHeadingNormalized, finalHeadingNormalized)
+            let expectedTurningAngle = differenceBetweenAngles(initialHeadingNormalized, finalHeadingNormalized)
             
             // If the upcoming maneuver is fairly straight,
             // do not check if the user is within x degrees of the exit heading.
@@ -402,7 +402,7 @@ extension RouteController: CLLocationManagerDelegate {
             // We need to wait until their moving away from the maneuver location instead.
             // We can do this by looking at their snapped distance from the maneuver.
             // Once this distance is zero, they are at more moving away from the maneuver location
-            if differenceBetweenInitialAndFinalHeading <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
+            if expectedTurningAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
                 courseMatchesManeuverFinalHeading = userSnapToStepDistanceFromManeuver == 0
             } else {
                 courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
