@@ -356,14 +356,22 @@ extension RouteController: CLLocationManagerDelegate {
             firstWaypoint.heading = location.course
             firstWaypoint.headingAccuracy = 90
         }
-        
+
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             guard let strongSelf = self else {
                 return
             }
             
             if let route = routes?.first {
-                strongSelf.routeProgress = RouteProgress(route: route)
+                
+                // If the new route has a first step that has a distance greater than 1km,
+                // surpress the first announcement since they have ample time until the next maneuver
+                var newAlertLevel: AlertLevel = .none
+                if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 1_000 {
+                    newAlertLevel = .depart
+                }
+                
+                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: newAlertLevel)
                 strongSelf.routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
             } else if let error = error {
