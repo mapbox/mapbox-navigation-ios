@@ -15,7 +15,7 @@ let waitForInterval: TimeInterval = 5
 class MapboxCoreNavigationTests: XCTestCase {
     
     func testDepart() {
-        let navigation = RouteController(along: route, directions: directions)
+        let navigation = RouteController(along: route, directions: directions, accessToken: "foo")
         navigation.resume()
         let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
@@ -39,7 +39,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         let locations = [CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789118, longitude: -122.432209),
                                     altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())]
         let locationManager = ReplayLocationManager(locations: locations)
-        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
+        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager, accessToken: "foo")
         
         self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 2)
@@ -68,7 +68,7 @@ class MapboxCoreNavigationTests: XCTestCase {
                                         timestamp: Date(timeIntervalSinceNow: 5))
         
         let locationManager = ReplayLocationManager(locations: [firstLocation, secondLocation])
-        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
+        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager, accessToken: "foo")
         
         self.expectation(forNotification: RouteControllerWillReroute.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
@@ -94,7 +94,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
         let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
-        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
+        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager, accessToken: "foo")
         
         self.expectation(forNotification: RouteControllerProgressDidChange.rawValue, object: navigation) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress

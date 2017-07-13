@@ -165,11 +165,19 @@ open class RouteController: NSObject {
         super.init()
         
         self.locationManager.delegate = self
-        
-        self.resetSession()
-        
         self.resumeNotifications()
-        
+        self.startEvents(accessToken: accessToken)
+        self.resetSession()
+    }
+    
+    deinit {
+        suspendLocationUpdates()
+        checkAndSendOutstandingFeedbackEvents(forceAll: true)
+        sendCancelEvent()
+        suspendNotifications()
+    }
+    
+    func startEvents(accessToken: String? = nil) {
         var mapboxAccessToken: String? = nil
         if let stagingToken = UserDefaults.standard.object(forKey: "MMETelemetryTestServerAccessToken") as? String {
             mapboxAccessToken = stagingToken
@@ -188,13 +196,6 @@ open class RouteController: NSObject {
         } else {
             assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken`m passed in as a String to `RouteController()`")
         }
-    }
-    
-    deinit {
-        suspendLocationUpdates()
-        checkAndSendOutstandingFeedbackEvents(forceAll: true)
-        sendCancelEvent()
-        suspendNotifications()
     }
     
     func resumeNotifications() {
