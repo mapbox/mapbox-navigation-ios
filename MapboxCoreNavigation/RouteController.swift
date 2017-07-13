@@ -390,10 +390,23 @@ extension RouteController: CLLocationManagerDelegate {
         
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
         // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
-        if let finalHeading = routeProgress.currentLegProgress.upComingStep?.finalHeading {
+        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, let finalHeading = upcomingStep.finalHeading, let initialHeading = upcomingStep.initialHeading {
+            let initialHeadingNormalized = wrap(initialHeading, min: 0, max: 360)
             let finalHeadingNormalized = wrap(finalHeading, min: 0, max: 360)
             let userHeadingNormalized = wrap(location.course, min: 0, max: 360)
-            courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
+            let expectedTurningAngle = differenceBetweenAngles(initialHeadingNormalized, finalHeadingNormalized)
+            
+            // If the upcoming maneuver is fairly straight,
+            // do not check if the user is within x degrees of the exit heading.
+            // For ramps, their current heading will very close to the exit heading.
+            // We need to wait until their moving away from the maneuver location instead.
+            // We can do this by looking at their snapped distance from the maneuver.
+            // Once this distance is zero, they are at more moving away from the maneuver location
+            if expectedTurningAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
+                courseMatchesManeuverFinalHeading = userSnapToStepDistanceFromManeuver == 0
+            } else {
+                courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
+            }
         }
 
         // When departing, `userSnapToStepDistanceFromManeuver` is most often less than `RouteControllerManeuverZoneRadius`
