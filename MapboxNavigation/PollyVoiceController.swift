@@ -1,6 +1,7 @@
 import Foundation
 import AWSPolly
 import AVFoundation
+import MapboxCoreNavigation
 
 /**
  `PollyVoiceController` extends the default `RouteVoiceController` by providing support for AWSPolly. `RouteVoiceController` will be used as a fallback during poor network conditions.
@@ -36,12 +37,22 @@ public class PollyVoiceController: RouteVoiceController {
     
     public override func alertLevelDidChange(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
-        speak(speechString(notification: notification, markUpWithSSML: true), error: nil)
+        
+        guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
+            assert(false)
+            return
+        }
+        
+        guard let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as? CLLocationDistance else {
+            assert(false)
+            return
+        }
+        speak(instruction: createSpeakText(from: routeProgress, at: userDistance, markUpWithSSML: true), error: nil)
         startAnnouncementTimer()
     }
     
-    override func speak(_ text: String, error: String?) {
-        assert(!text.isEmpty)
+    override public func speak(instruction: String, error: String?) {
+        assert(!instruction.isEmpty)
         
         let input = AWSPollySynthesizeSpeechURLBuilderRequest()
         input.textType = .ssml
@@ -78,7 +89,7 @@ public class PollyVoiceController: RouteVoiceController {
         case ("sv", _):
             input.voiceId = .astrid
         default:
-            super.speak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
+            super.speak(instruction: fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
             return
         }
         
@@ -86,7 +97,7 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = voiceId
         }
         
-        input.text = "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(text)</prosody></speak>"
+        input.text = "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(instruction)</prosody></speak>"
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
@@ -102,12 +113,12 @@ public class PollyVoiceController: RouteVoiceController {
     
     func handle(_ awsTask: AWSTask<NSURL>) {
         guard awsTask.error == nil else {
-            super.speak(fallbackText, error: awsTask.error!.localizedDescription)
+            super.speak(instruction: fallbackText, error: awsTask.error!.localizedDescription)
             return
         }
         
         guard let url = awsTask.result else {
-            super.speak(fallbackText, error: "No polly response")
+            super.speak(instruction: fallbackText, error: "No polly response")
             return
         }
         
@@ -122,7 +133,7 @@ public class PollyVoiceController: RouteVoiceController {
                 audioPlayer.play()
             }
         } catch {
-            super.speak(fallbackText, error: error.localizedDescription)
+            super.speak(instruction: fallbackText, error: error.localizedDescription)
         }
     }
 }
