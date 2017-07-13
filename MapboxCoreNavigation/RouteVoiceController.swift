@@ -154,15 +154,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     func shouldSpeak(for notification: NSNotification) -> Bool {
         guard isEnabled, volume > 0 else { return false }
         
-        guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
-            assert(false)
-            return false
-        }
-        
-        guard let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as? CLLocationDistance else {
-            assert(false)
-            return false
-        }
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         
         // We're guarding against two things here:
         //   1. `recentlyAnnouncedRouteStep` being nil.
