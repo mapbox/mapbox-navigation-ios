@@ -147,7 +147,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     open func alertLevelDidChange(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
         
-        speak(instruction: fallbackText, error: nil)
+        speak(fallbackText, error: nil)
         startAnnouncementTimer()
     }
     
@@ -175,7 +175,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         // Set recentlyAnnouncedRouteStep to the current step
         recentlyAnnouncedRouteStep = routeProgress.currentLegProgress.currentStep
         
-        fallbackText = createSpeakText(from: routeProgress, at: userDistance)
+        fallbackText = speechString(describing: routeProgress, at: userDistance)
         
         // If the user is merging onto a highway, an announcement to merge is a bit excessive
         if let upComingStep = routeProgress.currentLegProgress.upComingStep,
@@ -191,7 +191,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     /**
      Creates an audio instruction from a `RouteProgress`, the users distance from the maneuver. Optional `markUpWithSSML` will apply `SSML` to the string. This is useful when using AWS's Polly speech synthesizer.
     */
-    public func createSpeakText(from routeProgress: RouteProgress, at userDistance: CLLocationDistance, markUpWithSSML: Bool = false) -> String {
+    public func speechString(describing routeProgress: RouteProgress, at userDistance: CLLocationDistance, markUpWithSSML: Bool = false) -> String {
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
@@ -269,7 +269,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         return road
     }
     
-    public func speak(instruction: String, error: String? = nil) {
+    public func speak(_ instruction: String, error: String? = nil) {
         // Note why it failed
         if let error = error {
             print(error)

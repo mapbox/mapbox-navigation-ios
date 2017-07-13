@@ -38,20 +38,14 @@ public class PollyVoiceController: RouteVoiceController {
     public override func alertLevelDidChange(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
         
-        guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
-            assert(false)
-            return
-        }
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         
-        guard let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as? CLLocationDistance else {
-            assert(false)
-            return
-        }
-        speak(instruction: createSpeakText(from: routeProgress, at: userDistance, markUpWithSSML: true), error: nil)
+        speak(speechString(describing: routeProgress, at: userDistance, markUpWithSSML: true), error: nil)
         startAnnouncementTimer()
     }
     
-    override public func speak(instruction: String, error: String?) {
+    override public func speak(_ instruction: String, error: String?) {
         assert(!instruction.isEmpty)
         
         let input = AWSPollySynthesizeSpeechURLBuilderRequest()
@@ -89,7 +83,7 @@ public class PollyVoiceController: RouteVoiceController {
         case ("sv", _):
             input.voiceId = .astrid
         default:
-            super.speak(instruction: fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
+            super.speak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
             return
         }
         
@@ -113,12 +107,12 @@ public class PollyVoiceController: RouteVoiceController {
     
     func handle(_ awsTask: AWSTask<NSURL>) {
         guard awsTask.error == nil else {
-            super.speak(instruction: fallbackText, error: awsTask.error!.localizedDescription)
+            super.speak(fallbackText, error: awsTask.error!.localizedDescription)
             return
         }
         
         guard let url = awsTask.result else {
-            super.speak(instruction: fallbackText, error: "No polly response")
+            super.speak(fallbackText, error: "No polly response")
             return
         }
         
@@ -133,7 +127,7 @@ public class PollyVoiceController: RouteVoiceController {
                 audioPlayer.play()
             }
         } catch {
-            super.speak(instruction: fallbackText, error: error.localizedDescription)
+            super.speak(fallbackText, error: error.localizedDescription)
         }
     }
 }
