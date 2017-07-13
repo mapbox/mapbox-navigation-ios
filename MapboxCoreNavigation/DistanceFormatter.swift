@@ -54,7 +54,7 @@ public class DistanceFormatter: LengthFormatter {
         var unit: LengthFormatter.Unit = .millimeter
         unitString(fromMeters: distance, usedUnit: &unit)
         let replacesYardsWithMiles = unit == .yard && miles > 0.2
-        let showsMixedFraction = (unit == .mile && miles < 10) || replacesYardsWithMiles
+        let showsMixedFraction = forVoiceUse && ((unit == .mile && miles < 10) || replacesYardsWithMiles)
         
         // An elaborate hack to use vulgar fractions with miles regardless of
         // language.
