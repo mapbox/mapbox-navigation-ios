@@ -165,15 +165,35 @@ public class Style: NSObject {
      */
     public var wayNameLabelFont: UIFont?
     
-    public var trafficModerate: UIColor?
+    /**
+     Sets the color if the route’s casing color.
+     */
+    public var routeCasingColor: UIColor?
     
-    public var trafficHeavy: UIColor?
+    /**
+     Sets the traffic color for unknown congestion.
+     */
+    public var trafficUnknownColor: UIColor?
     
-    public var trafficSevere: UIColor?
+    /**
+     Sets the traffic color for low congestion.
+     */
+    public var trafficLowColor: UIColor?
     
-    public var trafficLow: UIColor?
+    /**
+     Sets the traffic color for moderate congestion.
+     */
+    public var trafficModerateColor: UIColor?
     
-    public var trafficUnknown: UIColor?
+    /**
+     Sets the traffic color for heavy congestion.
+     */
+    public var trafficHeavyColor: UIColor?
+    
+    /**
+     Sets the traffic color for severe congestion.
+     */
+    public var trafficSevereColor: UIColor?
     
     /**
      Applies the style for all changed properties.
@@ -286,6 +306,32 @@ public class Style: NSObject {
         
         if let color = cellSubtitleLabelTextColor {
             CellSubtitleLabel.appearance(for: traitCollection).textColor = color
+        }
+        
+        // Traffic
+        
+        if let color = routeCasingColor {
+            NavigationMapView.appearance(for: traitCollection).routeCasingColor = color
+        }
+        
+        if let color = trafficUnknownColor {
+            NavigationMapView.appearance(for: traitCollection).trafficUnknownColor = color
+        }
+        
+        if let color = trafficLowColor {
+            NavigationMapView.appearance(for: traitCollection).trafficLowColor = color
+        }
+        
+        if let color = trafficModerateColor {
+            NavigationMapView.appearance(for: traitCollection).trafficModerateColor = color
+        }
+        
+        if let color = trafficHeavyColor {
+            NavigationMapView.appearance(for: traitCollection).trafficHeavyColor = color
+        }
+        
+        if let color = trafficSevereColor {
+            NavigationMapView.appearance(for: traitCollection).trafficSevereColor = color
         }
     }
 }

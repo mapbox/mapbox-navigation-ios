@@ -23,7 +23,7 @@ open class NavigationMapView: MGLMapView {
         22: MGLStyleValue(rawValue: 18)
     ]
     
-var manuallyUpdatesLocation: Bool = false {
+    var manuallyUpdatesLocation: Bool = false {
         didSet {
             if manuallyUpdatesLocation {
                 locationManager.stopUpdatingLocation()
@@ -34,7 +34,20 @@ var manuallyUpdatesLocation: Bool = false {
             }
         }
     }
-
+    
+    dynamic var trafficUnknownColor: UIColor = .trafficUnknown
+    dynamic var trafficLowColor: UIColor = .trafficLow
+    dynamic var trafficModerateColor: UIColor = .trafficModerate
+    dynamic var trafficHeavyColor: UIColor = .trafficHeavy
+    dynamic var trafficSevereColor: UIColor = .trafficSevere
+    dynamic var routeCasingColor: UIColor = .defaultRouteCasing
+    
+    var showsRoute: Bool {
+        get {
+            return style?.layer(withIdentifier: routeLayerIdentifier) != nil
+        }
+    }
+    
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     override open func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
@@ -161,19 +174,18 @@ var manuallyUpdatesLocation: Bool = false {
     func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
-
         line.lineWidth = MGLStyleValue(interpolationMode: .exponential,
                                        cameraStops: routeLineWidthAtZoomLevels,
                                        options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
-
+        
         line.lineColor = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
-            "unknown": MGLStyleValue(rawValue: .trafficUnknown),
-            "low": MGLStyleValue(rawValue: .trafficLow),
-            "moderate": MGLStyleValue(rawValue: .trafficModerate),
-            "heavy": MGLStyleValue(rawValue: .trafficHeavy),
-            "severe": MGLStyleValue(rawValue: .trafficSevere)
+            "unknown": MGLStyleValue(rawValue: trafficUnknownColor),
+            "low": MGLStyleValue(rawValue: trafficLowColor),
+            "moderate": MGLStyleValue(rawValue: trafficModerateColor),
+            "heavy": MGLStyleValue(rawValue: trafficHeavyColor),
+            "severe": MGLStyleValue(rawValue: trafficSevereColor)
             ], attributeName: "congestion", options: nil)
-
+        
         line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
@@ -191,12 +203,12 @@ var manuallyUpdatesLocation: Bool = false {
             let newValue =  f.rawValue.doubleValue * 2
             newCameraStop[stop.key] = MGLStyleValue<NSNumber>(rawValue: NSNumber(value:newValue))
         }
-
+        
         lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
                                              cameraStops: newCameraStop,
                                              options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
-        lineCasing.lineColor = MGLStyleValue(rawValue: .defaultRouteCasing)
+        lineCasing.lineColor = MGLStyleValue(rawValue: routeCasingColor)
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         

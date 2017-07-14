@@ -87,11 +87,13 @@ public class DefaultStyle: Style {
         cellSubtitleLabelFont = .systemFont(ofSize: 17)
         cellSubtitleLabelTextColor = .defaultSecondaryText
         
-        trafficUnknown = .trafficUnknown
-        trafficLow = .trafficLow
-        trafficModerate = .trafficModerate
-        trafficHeavy = .trafficHeavy
-        trafficSevere = .trafficSevere
+        trafficUnknownColor = .trafficUnknown
+        trafficLowColor = .trafficLow
+        trafficModerateColor = .trafficModerate
+        trafficHeavyColor = .trafficHeavy
+        trafficSevereColor = .trafficSevere
+        
+        routeCasingColor = .defaultRouteCasing
     }
     
 }
