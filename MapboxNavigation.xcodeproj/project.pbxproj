@@ -114,6 +114,8 @@
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5000A921EC25C6E00563EA9 /* Abbreviations.swift */; };
+		C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
+		C51245F31F19471C00E33B52 /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C520EE921EBB84F9008805BC /* Navigation.storyboard */; };
 		C5212B551EC4BE97009538EB /* Abbreviations.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5212B571EC4BE97009538EB /* Abbreviations.plist */; };
 		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
@@ -137,7 +139,6 @@
 		C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
 		C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
-		C5EA98731F1943A700C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
@@ -255,6 +256,7 @@
 				352544A11E665AA3004C8F1C /* AWSPolly.framework in Embed Frameworks */,
 				354A01DC1E6626E900D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				354A01EB1E6626EF00D765C2 /* MapboxDirections.framework in Embed Frameworks */,
+				C51245F31F19471C00E33B52 /* MapboxMobileEvents.framework in Embed Frameworks */,
 				354A01E51E6626EF00D765C2 /* Polyline.framework in Embed Frameworks */,
 				354A01E11E6626EF00D765C2 /* SDWebImage.framework in Embed Frameworks */,
 				354A01DE1E6626EA00D765C2 /* MapboxNavigation.framework in Embed Frameworks */,
@@ -471,6 +473,7 @@
 				354A01EA1E6626EF00D765C2 /* MapboxDirections.framework in Frameworks */,
 				354A01E41E6626EF00D765C2 /* Polyline.framework in Frameworks */,
 				354BD4F51E6637D500AE1344 /* AWSPolly.framework in Frameworks */,
+				C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01E01E6626EF00D765C2 /* SDWebImage.framework in Frameworks */,
 				354A01DD1E6626EA00D765C2 /* MapboxNavigation.framework in Frameworks */,
 				C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
@@ -494,7 +497,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5EA98731F1943A700C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				3525449D1E663D32004C8F1C /* MapboxCoreNavigation.framework in Frameworks */,
 				35213DAF1EC456E800A62B21 /* FBSnapshotTestCase.framework in Frameworks */,
 				35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */,
