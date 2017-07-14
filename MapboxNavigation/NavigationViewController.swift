@@ -173,9 +173,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      
      See `Style` and `DefaultStyle` for more information.
      */
-    public var styles: [Style] = [DefaultStyle()] {
+    public var styles: [Style]? {
         didSet {
-            styles.forEach { $0.apply() }
+            styles?.forEach { $0.apply() }
         }
     }
     
@@ -287,8 +287,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         super.viewWillAppear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = true
-        styles.forEach { $0.apply() }
         routeController.resume()
+        
+        styles?.forEach { $0.apply() }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
