@@ -353,13 +353,14 @@ extension RouteController: CLLocationManagerDelegate {
             firstWaypoint.headingAccuracy = 90
         }
         
+        self.lastRerouteLocation = location
+        
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             guard let strongSelf = self else {
                 return
             }
             
             if let route = routes?.first {
-                strongSelf.lastRerouteLocation = location
                 strongSelf.routeProgress = RouteProgress(route: route)
                 strongSelf.routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
