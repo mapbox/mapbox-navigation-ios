@@ -1,7 +1,6 @@
 import Foundation
 import AWSPolly
 import AVFoundation
-import MapboxCoreNavigation
 
 /**
  `PollyVoiceController` extends the default `RouteVoiceController` by providing support for AWSPolly. `RouteVoiceController` will be used as a fallback during poor network conditions.
@@ -37,16 +36,12 @@ public class PollyVoiceController: RouteVoiceController {
     
     public override func alertLevelDidChange(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
-        
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
-        
-        speak(speechString(describing: routeProgress, at: userDistance, markUpWithSSML: true), error: nil)
+        speak(speechString(notification: notification, markUpWithSSML: true), error: nil)
         startAnnouncementTimer()
     }
     
-    override public func speak(_ instruction: String, error: String?) {
-        assert(!instruction.isEmpty)
+    override func speak(_ text: String, error: String?) {
+        assert(!text.isEmpty)
         
         let input = AWSPollySynthesizeSpeechURLBuilderRequest()
         input.textType = .ssml
@@ -91,7 +86,7 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = voiceId
         }
         
-        input.text = "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(instruction)</prosody></speak>"
+        input.text = "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(text)</prosody></speak>"
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
