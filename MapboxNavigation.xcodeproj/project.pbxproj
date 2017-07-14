@@ -539,8 +539,6 @@
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
 				351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */,
-				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
-				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				353E69001EF0C2B6007B2AE5 /* DefaultLocationManager.swift */,
 				351A40151F0291D100E6D378 /* PollyVoiceController.swift */,
 			);
@@ -712,6 +710,15 @@
 			name = Fixtures;
 			sourceTree = "<group>";
 		};
+		C537BB241F180E9B0075C110 /* voice */ = {
+			isa = PBXGroup;
+			children = (
+				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
+				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
+			);
+			name = voice;
+			sourceTree = "<group>";
+		};
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
@@ -743,6 +750,7 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				C537BB241F180E9B0075C110 /* voice */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
 				35D457A61E2D253100A89946 /* MBRouteController.h */,
 				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
