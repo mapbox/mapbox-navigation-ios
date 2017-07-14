@@ -123,7 +123,6 @@
 		C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53208AA1E81FFB900910266 /* NavigationMapView.swift */; };
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C549F8341F17F2EE001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C55CEB281EB7E4240065D7D9 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CEB271EB7E4240065D7D9 /* Locale.swift */; };
 		C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C578DA071EFD0FFF0052079F /* ProcessInfo.swift */; };
 		C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */; };
@@ -136,6 +135,8 @@
 		C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */; };
 		C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */; };
 		C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
+		C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
+		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
@@ -471,6 +472,7 @@
 				354BD4F51E6637D500AE1344 /* AWSPolly.framework in Frameworks */,
 				354A01E01E6626EF00D765C2 /* SDWebImage.framework in Frameworks */,
 				354A01DD1E6626EA00D765C2 /* MapboxNavigation.framework in Frameworks */,
+				C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01E21E6626EF00D765C2 /* Pulley.framework in Frameworks */,
 				354A01E61E6626EF00D765C2 /* OSRMTextInstructions.framework in Frameworks */,
 				354A01EC1E6626EF00D765C2 /* Mapbox.framework in Frameworks */,
@@ -481,7 +483,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C549F8341F17F2EE001A0A2D /* MapboxMobileEvents.framework in Frameworks */,
+				C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */,
 				359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */,
 			);
