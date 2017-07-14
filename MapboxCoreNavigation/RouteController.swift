@@ -366,7 +366,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
             
             if let route = routes?.first {
-                strongSelf.routeProgress = RouteProgress(route: route)
+                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: .depart)
                 strongSelf.routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
             } else if let error = error {
