@@ -5,64 +5,110 @@ import MapboxMobileEvents
 
 let SecondsForCollectionAfterFeedbackEvent: TimeInterval = 20
 
-extension MMEEventsManager {
-    func addDefaultEvents(routeController: RouteController) -> [String: Any] {
-        let session = routeController.sessionState
-        let routeProgress = routeController.routeProgress
+struct DefaultEventDictionary {
+    var arrivalTimestamp: String
+    var userId: String
+    var event: String
+    var feedbackType: Int
+    var description: String
+    var screenshot: String
+    var newDistanceRemaining: CLLocationDistance
+    var newDurationRemaining: TimeInterval
+    var secondsSinceLastReroute: TimeInterval
+    var newGeometry: String
+    var created: String
+    var startTimestamp: String
+    var platform: String
+    var operatingSystem: String
+    var device: String
+    var sdkIdentifier: String
+    var sdkVersion: String
+    var eventVersion: Int
+    var profile: String
+    var simulation: Bool
+    var sessionIdentifier: String
+    var originalRequestIdentifier: String
+    var requestIdentifier: String
+    var lat: CLLocationDegrees
+    var lng: CLLocationDegrees
+    var originalGeometry: String
+    var originalEstimatedDistance: CLLocationDistance
+    var originalEstimatedDuration: TimeInterval
+    var geometry: String
+    var estimatedDistance: CLLocationDistance
+    var estimatedDuration: TimeInterval
+    var distanceCompleted: CLLocationDistance
+    var distanceRemaining: TimeInterval
+    var durationRemaining: TimeInterval
+    var rerouteCount: Int
+    var volumeLevel: Int
+    var screenBrightness: Int
+    var batteryPluggedIn: Bool
+    var batteryLevel: Float
+    var applicationState: String
+    
+    init(routeProgress: RouteProgress, session: SessionState) {
+        created = Date().ISO8601
+        modifiedEventDictionary.startTimestamp = session.departureTimestamp?.ISO8601 ?? 0
         
-        var modifiedEventDictionary: [String: Any] = [:]
+        modifiedEventDictionary.platform = ProcessInfo.systemName
+        modifiedEventDictionary.operatingSystem = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
+        modifiedEventDictionary.device = UIDevice.current.machine
         
-        modifiedEventDictionary["created"] = Date().ISO8601
-        modifiedEventDictionary["startTimestamp"] = session.departureTimestamp?.ISO8601 ?? NSNull()
-
-        modifiedEventDictionary["platform"] = ProcessInfo.systemName
-        modifiedEventDictionary["operatingSystem"] = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
-        modifiedEventDictionary["device"] = UIDevice.current.machine
+        modifiedEventDictionary.sdkIdentifier = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+        modifiedEventDictionary.sdkVersion = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
         
-        modifiedEventDictionary["sdkIdentifier"] = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        modifiedEventDictionary["sdkVersion"] = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
+        modifiedEventDictionary.eventVersion = 2
         
-        modifiedEventDictionary["eventVersion"] = 2
+        modifiedEventDictionary.profile = routeProgress.route.routeOptions.profileIdentifier.rawValue
+        modifiedEventDictionary.simulation = routeController.locationManager is ReplayLocationManager || routeController.locationManager is SimulatedLocationManager ? true : false
         
-        modifiedEventDictionary["profile"] = routeProgress.route.routeOptions.profileIdentifier.rawValue
-        modifiedEventDictionary["simulation"] = routeController.locationManager is ReplayLocationManager || routeController.locationManager is SimulatedLocationManager ? true : false
-
-        modifiedEventDictionary["sessionIdentifier"] = session.identifier.uuidString
-        modifiedEventDictionary["originalRequestIdentifier"] = nil
-        modifiedEventDictionary["requestIdentifier"] = nil
+        modifiedEventDictionary.sessionIdentifier = session.identifier.uuidString
+        modifiedEventDictionary.originalRequestIdentifier = nil
+        modifiedEventDictionary.requestIdentifier = nil
         
         if let location = routeController.locationManager.location {
-            modifiedEventDictionary["lat"] = location.coordinate.latitude
-            modifiedEventDictionary["lng"] = location.coordinate.longitude
+            modifiedEventDictionary.lat = location.coordinate.latitude
+            modifiedEventDictionary.lng = location.coordinate.longitude
         }
         
         if let geometry = session.originalRoute.coordinates {
-            modifiedEventDictionary["originalGeometry"] = Polyline(coordinates: geometry).encodedPolyline
-            modifiedEventDictionary["originalEstimatedDistance"] = round(session.originalRoute.distance)
-            modifiedEventDictionary["originalEstimatedDuration"] = round(session.originalRoute.expectedTravelTime)
+            modifiedEventDictionary.originalGeometry = Polyline(coordinates: geometry).encodedPolyline
+            modifiedEventDictionary.originalEstimatedDistance = round(session.originalRoute.distance)
+            modifiedEventDictionary.originalEstimatedDuration = round(session.originalRoute.expectedTravelTime)
         }
         if let geometry = session.currentRoute.coordinates {
-            modifiedEventDictionary["geometry"] = Polyline(coordinates: geometry).encodedPolyline
-            modifiedEventDictionary["estimatedDistance"] = round(session.currentRoute.distance)
-            modifiedEventDictionary["estimatedDuration"] = round(session.currentRoute.expectedTravelTime)
+            modifiedEventDictionary.geometry = Polyline(coordinates: geometry).encodedPolyline
+            modifiedEventDictionary.estimatedDistance = round(session.currentRoute.distance)
+            modifiedEventDictionary.estimatedDuration = round(session.currentRoute.expectedTravelTime)
         }
         
-        modifiedEventDictionary["distanceCompleted"] = round(session.totalDistanceCompleted + routeProgress.distanceTraveled)
-        modifiedEventDictionary["distanceRemaining"] = round(routeProgress.distanceRemaining)
-        modifiedEventDictionary["durationRemaining"] = round(routeProgress.durationRemaining)
+        modifiedEventDictionary.distanceCompleted = round(session.totalDistanceCompleted + routeProgress.distanceTraveled)
+        modifiedEventDictionary.distanceRemaining = round(routeProgress.distanceRemaining)
+        modifiedEventDictionary.durationRemaining = round(routeProgress.durationRemaining)
         
-        modifiedEventDictionary["rerouteCount"] = session.numberOfReroutes
-
-        modifiedEventDictionary["volumeLevel"] = Int(AVAudioSession.sharedInstance().outputVolume * 100)
-        modifiedEventDictionary["screenBrightness"] = Int(UIScreen.main.brightness * 100)
-
-        modifiedEventDictionary["batteryPluggedIn"] = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
-        modifiedEventDictionary["batteryLevel"] = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
-        modifiedEventDictionary["applicationState"] = UIApplication.shared.applicationState.telemetryString
+        modifiedEventDictionary.rerouteCount = session.numberOfReroutes
         
-        //modifiedEventDictionary["connectivity"] = ??
+        modifiedEventDictionary.volumeLevel = Int(AVAudioSession.sharedInstance().outputVolume * 100)
+        modifiedEventDictionary.screenBrightness = Int(UIScreen.main.brightness * 100)
+        
+        modifiedEventDictionary.batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
+        modifiedEventDictionary.batteryLevel = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
+        modifiedEventDictionary.applicationState = UIApplication.shared.applicationState.telemetryString
+        
+        //modifiedEventDictionary.connectivity = ??
         
         return modifiedEventDictionary
+    }
+    
+    func convertToDictionary() -> [String: Any] {
+        return
+    }
+}
+
+extension MMEEventsManager {
+    func addDefaultEvents(routeController: RouteController) -> [String: Any] {
+        return DefaultEventDictionary(routeProgress: routeController.routeProgress, session: routeController.sessionState).convertToDictionary()
     }
 }
 
