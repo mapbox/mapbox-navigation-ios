@@ -122,7 +122,7 @@ open class RouteController: NSObject {
      */
     public var snapsUserLocationAnnotationToRoute = true
     
-    var lastReRouteLocation: CLLocation?
+    var lastRerouteLocation: CLLocation?
     
     var routeTask: URLSessionDataTask?
     
@@ -334,17 +334,18 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func reroute(from location: CLLocation) {
+        
+        if let lastRerouteLocation = lastRerouteLocation {
+            guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
+                return
+            }
+        }
+        
         resetStartCounter()
         delegate?.routeController?(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: RouteControllerWillReroute, object: self, userInfo: [
             MBRouteControllerNotificationLocationKey: location
             ])
-        
-        if let previousLocation = lastReRouteLocation {
-            guard location.distance(from: previousLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
-                return
-            }
-        }
         
         routeTask?.cancel()
         
@@ -356,7 +357,9 @@ extension RouteController: CLLocationManagerDelegate {
             firstWaypoint.heading = location.course
             firstWaypoint.headingAccuracy = 90
         }
-
+        
+        self.lastRerouteLocation = location
+        
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             guard let strongSelf = self else {
                 return
