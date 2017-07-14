@@ -207,7 +207,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         navigationViewController.navigationDelegate = self
         
         // Set a custom style URL
-        navigationViewController.mapView?.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v1")
+        navigationViewController.mapView?.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
         
         present(navigationViewController, animated: true, completion: nil)
     }
