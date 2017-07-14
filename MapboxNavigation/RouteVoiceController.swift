@@ -154,8 +154,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     func shouldSpeak(for notification: NSNotification) -> Bool {
         guard isEnabled, volume > 0 else { return false }
         
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+        guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
+            assert(false)
+            return false
+        }
         
         // We're guarding against two things here:
         //   1. `recentlyAnnouncedRouteStep` being nil.
@@ -168,23 +170,19 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         // Set recentlyAnnouncedRouteStep to the current step
         recentlyAnnouncedRouteStep = routeProgress.currentLegProgress.currentStep
         
-        fallbackText = speechString(describing: routeProgress, at: userDistance)
+        fallbackText = speechString(notification: notification, markUpWithSSML: false)
         
         // If the user is merging onto a highway, an announcement to merge is a bit excessive
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep,
-            routeProgress.currentLegProgress.currentStep.maneuverType == .takeOnRamp,
-            upComingStep.maneuverType == .merge,
-            routeProgress.currentLegProgress.alertUserLevel == .high {
+        if let upComingStep = routeProgress.currentLegProgress.upComingStep, routeProgress.currentLegProgress.currentStep.maneuverType == .takeOnRamp && upComingStep.maneuverType == .merge && routeProgress.currentLegProgress.alertUserLevel == .high {
             return false
         }
         
         return true
     }
     
-    /**
-     Creates an audio instruction from a `RouteProgress`, the users distance from the maneuver. Optional `markUpWithSSML` will apply `SSML` to the string. This is useful when using AWS's Polly speech synthesizer.
-    */
-    public func speechString(describing routeProgress: RouteProgress, at userDistance: CLLocationDistance, markUpWithSSML: Bool = false) -> String {
+    func speechString(notification: NSNotification, markUpWithSSML: Bool) -> String {
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
@@ -262,7 +260,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         return road
     }
     
-    public func speak(_ instruction: String, error: String? = nil) {
+    func speak(_ text: String, error: String? = nil) {
         // Note why it failed
         if let error = error {
             print(error)
@@ -274,7 +272,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
             print(error)
         }
         
-        let utterance = AVSpeechUtterance(string: instruction)
+        let utterance = AVSpeechUtterance(string: text)
         
         // Only localized languages will have a proper fallback voice
         utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
