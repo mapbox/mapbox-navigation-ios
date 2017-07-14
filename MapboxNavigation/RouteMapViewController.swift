@@ -26,7 +26,7 @@ class RouteMapViewController: UIViewController {
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
     
-    var hasFinishedLoadingStyle = false
+    var hasFinishedLoadingMap = false
 
     var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera? {
@@ -62,6 +62,7 @@ class RouteMapViewController: UIViewController {
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
+        mapView.manuallyUpdatesLocation = true
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
@@ -75,9 +76,6 @@ class RouteMapViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        mapView.locationManager.stopUpdatingLocation()
-        mapView.locationManager.stopUpdatingHeading()
         
         mapView.compassView.isHidden = true
         mapView.addAnnotation(destination)
@@ -100,6 +98,8 @@ class RouteMapViewController: UIViewController {
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setContentInset(contentInsets, animated: false)
+        
+        showRouteIfNeeded()
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -278,7 +278,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        hasFinishedLoadingStyle = true
+        hasFinishedLoadingMap = true
     }
 
     @objc(navigationMapView:shouldUpdateTo:)
@@ -289,7 +289,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
 
         // Add current way name to UI
-        if let style = mapView.style, recenterButton.isHidden && hasFinishedLoadingStyle {
+        if let style = mapView.style, recenterButton.isHidden && hasFinishedLoadingMap {
             let closestCoordinate = snappedCoordinate.coordinate
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
@@ -444,7 +444,15 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        let map = mapView as! NavigationMapView
+        // This method is called before the view is added to a window
+        // (if the style is cached) preventing UIAppearance to apply the style.
+        showRouteIfNeeded()
+    }
+    
+    func showRouteIfNeeded() {
+        guard isViewLoaded && view.window != nil else { return }
+        let map = mapView as NavigationMapView
+        guard !map.showsRoute else { return }
         map.showRoute(route)
     }
 

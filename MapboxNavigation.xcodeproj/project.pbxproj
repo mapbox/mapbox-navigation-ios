@@ -380,11 +380,11 @@
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		C52D09D21DEF636C00BE3C5C /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
 		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationMapView.swift; sourceTree = "<group>"; };
-		C537BB1F1F17F7C30075C110 /* api_mapbox_com-digicert_2016.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-digicert_2016.der"; sourceTree = "<group>"; };
-		C537BB201F17F7C30075C110 /* api_mapbox_com-digicert_2017.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-digicert_2017.der"; sourceTree = "<group>"; };
-		C537BB211F17F7C30075C110 /* api_mapbox_com-geotrust_2016.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-geotrust_2016.der"; sourceTree = "<group>"; };
-		C537BB221F17F7C30075C110 /* api_mapbox_com-geotrust_2017.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-geotrust_2017.der"; sourceTree = "<group>"; };
-		C537BB231F17F7C30075C110 /* api_mapbox_staging.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = api_mapbox_staging.der; sourceTree = "<group>"; };
+		C53814441F195658000CA991 /* api_mapbox_com-digicert_2016.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-digicert_2016.der"; sourceTree = "<group>"; };
+		C53814451F195658000CA991 /* api_mapbox_com-digicert_2017.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-digicert_2017.der"; sourceTree = "<group>"; };
+		C53814461F195658000CA991 /* api_mapbox_com-geotrust_2016.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-geotrust_2016.der"; sourceTree = "<group>"; };
+		C53814471F195658000CA991 /* api_mapbox_com-geotrust_2017.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "api_mapbox_com-geotrust_2017.der"; sourceTree = "<group>"; };
+		C53814481F195658000CA991 /* api_mapbox_staging.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = api_mapbox_staging.der; sourceTree = "<group>"; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C55CEB271EB7E4240065D7D9 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		C578DA071EFD0FFF0052079F /* ProcessInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
@@ -423,6 +423,12 @@
 		DA625EA91F1061DA00FBE176 /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625EAA1F10621A00FBE176 /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625EAB1F10622700FBE176 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = vi; path = vi.lproj/Abbreviations.plist; sourceTree = "<group>"; };
+		DAA292FE1F16CB5C00D94613 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = ca; path = ca.lproj/Abbreviations.plist; sourceTree = "<group>"; };
+		DAA292FF1F16CC2200D94613 /* lt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DAA293001F16CC6700D94613 /* lt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DAA293011F16DA0C00D94613 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		DAA293021F16DA1300D94613 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		DAA293041F16DA6A00D94613 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = es; path = es.lproj/Abbreviations.plist; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -563,8 +569,6 @@
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
 				351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */,
-				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
-				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				353E69001EF0C2B6007B2AE5 /* DefaultLocationManager.swift */,
 				351A40151F0291D100E6D378 /* PollyVoiceController.swift */,
 				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
@@ -738,14 +742,23 @@
 			name = Fixtures;
 			sourceTree = "<group>";
 		};
-		C537BB1E1F17F7AD0075C110 /* Resources */ = {
+		C537BB241F180E9B0075C110 /* voice */ = {
 			isa = PBXGroup;
 			children = (
-				C537BB1F1F17F7C30075C110 /* api_mapbox_com-digicert_2016.der */,
-				C537BB201F17F7C30075C110 /* api_mapbox_com-digicert_2017.der */,
-				C537BB211F17F7C30075C110 /* api_mapbox_com-geotrust_2016.der */,
-				C537BB221F17F7C30075C110 /* api_mapbox_com-geotrust_2017.der */,
-				C537BB231F17F7C30075C110 /* api_mapbox_staging.der */,
+				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
+				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
+			);
+			name = voice;
+			sourceTree = "<group>";
+		};
+		C53814431F1954F7000CA991 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C53814441F195658000CA991 /* api_mapbox_com-digicert_2016.der */,
+				C53814451F195658000CA991 /* api_mapbox_com-digicert_2017.der */,
+				C53814461F195658000CA991 /* api_mapbox_com-geotrust_2016.der */,
+				C53814471F195658000CA991 /* api_mapbox_com-geotrust_2017.der */,
+				C53814481F195658000CA991 /* api_mapbox_staging.der */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -781,7 +794,8 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				C537BB1E1F17F7AD0075C110 /* Resources */,
+				C53814431F1954F7000CA991 /* Resources */,
+				C537BB241F180E9B0075C110 /* voice */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
 				35D457A61E2D253100A89946 /* MBRouteController.h */,
 				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
@@ -1428,6 +1442,7 @@
 				DA625E931F105B1900FBE176 /* fr */,
 				DA625E981F105C1200FBE176 /* hu */,
 				DA625E9D1F105D1A00FBE176 /* lt */,
+				DAA293011F16DA0C00D94613 /* es */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1445,6 +1460,7 @@
 				DA625E941F105B1A00FBE176 /* fr */,
 				DA625E991F105C1300FBE176 /* hu */,
 				DA625E9E1F105D1A00FBE176 /* lt */,
+				DAA293021F16DA1300D94613 /* es */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1461,6 +1477,7 @@
 				DA625EA51F10614500FBE176 /* es */,
 				DA625EA91F1061DA00FBE176 /* sv */,
 				DA625EAA1F10621A00FBE176 /* vi */,
+				DAA292FF1F16CC2200D94613 /* lt */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
@@ -1474,6 +1491,8 @@
 				DA625E971F105BC100FBE176 /* fr */,
 				DA625EA31F105E3400FBE176 /* lt */,
 				DA625EAB1F10622700FBE176 /* vi */,
+				DAA292FE1F16CB5C00D94613 /* ca */,
+				DAA293041F16DA6A00D94613 /* es */,
 			);
 			name = Abbreviations.plist;
 			path = Resources;
@@ -1490,6 +1509,7 @@
 				DA625E961F105BAD00FBE176 /* fr */,
 				DA625E9C1F105CB100FBE176 /* hu */,
 				DA625EA71F10616600FBE176 /* es */,
+				DAA293001F16CC6700D94613 /* lt */,
 			);
 			name = Localizable.strings;
 			path = Resources;
@@ -1507,7 +1527,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 2;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1533,7 +1553,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 2;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1761,7 +1781,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1817,7 +1837,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1849,7 +1869,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 2;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1874,7 +1894,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 2;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
