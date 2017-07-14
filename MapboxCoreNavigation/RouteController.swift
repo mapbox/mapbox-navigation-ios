@@ -334,7 +334,12 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func reroute(from location: CLLocation) {
-        guard let lastRerouteLocation = lastRerouteLocation, location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else { return }
+        
+        if let lastRerouteLocation = lastRerouteLocation {
+            guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
+                return
+            }
+        }
         
         resetStartCounter()
         delegate?.routeController?(self, willRerouteFrom: location)
