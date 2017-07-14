@@ -186,7 +186,6 @@ open class NavigationMapView: MGLMapView {
             "severe": MGLStyleValue(rawValue: trafficSevereColor)
             ], attributeName: "congestion", options: nil)
         
-        line.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
         return line
@@ -200,7 +199,7 @@ open class NavigationMapView: MGLMapView {
         var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
         for stop in routeLineWidthAtZoomLevels {
             let f = stop.value as! MGLConstantStyleValue
-            let newValue =  f.rawValue.doubleValue * 2
+            let newValue =  f.rawValue.doubleValue * 1.5
             newCameraStop[stop.key] = MGLStyleValue<NSNumber>(rawValue: NSNumber(value:newValue))
         }
         
