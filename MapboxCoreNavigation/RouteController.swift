@@ -180,9 +180,7 @@ open class RouteController: NSObject {
     
     func startEvents(accessToken: String? = nil) {
         var mapboxAccessToken: String? = nil
-        if let stagingToken = UserDefaults.standard.object(forKey: "MMETelemetryTestServerAccessToken") as? String {
-            mapboxAccessToken = stagingToken
-        } else if let accessToken = accessToken {
+        if let accessToken = accessToken {
             mapboxAccessToken = accessToken
         } else if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
             let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
@@ -193,6 +191,7 @@ open class RouteController: NSObject {
         if let mapboxAccessToken = mapboxAccessToken {
             events.isDebugLoggingEnabled = true
             events.isMetricsEnabledInSimulator = true
+            events.isMetricsEnabledForInUsePermissions = true
             events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
             events.disableLocationMetrics()
             events.sendTurnstileEvent()
