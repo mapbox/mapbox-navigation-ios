@@ -201,10 +201,14 @@ extension RouteLegProgress {
     var upcomingManeuverDictionary: [String: Any] {
         get {
             return [
-                "instruction": upComingStep?.instructions ?? NSNull(),
-                "type": upComingStep?.maneuverType?.description ?? NSNull(),
-                "modifier": upComingStep?.maneuverDirection?.description ?? NSNull(),
-                "name": upComingStep?.names?.joined(separator: ";") ?? NSNull(),
+                "upcomingInstruction": upComingStep?.instructions ?? NSNull(),
+                "upcomingType": upComingStep?.maneuverType?.description ?? NSNull(),
+                "upcomingModifier": upComingStep?.maneuverDirection?.description ?? NSNull(),
+                "upcomingName": upComingStep?.names?.joined(separator: ";") ?? NSNull(),
+                "previousInstruction": currentStep.instructions,
+                "previousType": currentStep.maneuverType?.description ?? NSNull(),
+                "previousModifier": currentStep.maneuverDirection?.description ?? NSNull(),
+                "previousName": currentStep.names?.joined(separator: ";") ?? NSNull(),
                 "distance": Int(currentStep.distance),
                 "duration": Int(currentStep.expectedTravelTime),
                 "distanceRemaining": Int(currentStepProgress.distanceRemaining),
