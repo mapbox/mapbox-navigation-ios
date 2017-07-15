@@ -691,7 +691,7 @@ extension RouteController {
         eventDictionary["feedbackType"] = type.rawValue
         eventDictionary["description"] = description
         for (key, value) in routeProgress.currentLegProgress.upcomingManeuverDictionary {
-            eventDictionary["step\(key.capitalized)"] = value
+            eventDictionary["step\(key.uppercaseFirst)"] = value
         }
         // FIXME: Replace the above enumeration with the below once https://github.com/mapbox/api-events/issues/265 is fixed
         // eventDictionary["upcomingStep"] = routeProgress.currentLegProgress.upcomingManeuverDictionary
@@ -710,7 +710,7 @@ extension RouteController {
         
         eventDictionary["secondsSinceLastReroute"] = sessionState.lastReroute != nil ? round(timestamp.timeIntervalSince(sessionState.lastReroute!)) : -1
         for (key, value) in routeProgress.currentLegProgress.upcomingManeuverDictionary {
-            eventDictionary["step\(key.capitalized)"] = value
+            eventDictionary["step\(key.uppercaseFirst)"] = value
         }
         // FIXME: Replace the above enumeration with the below once https://github.com/mapbox/api-events/issues/265 is fixed
         // eventDictionary["upcomingStep"] = routeProgress.currentLegProgress.upcomingManeuverDictionary

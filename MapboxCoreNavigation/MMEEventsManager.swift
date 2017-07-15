@@ -197,6 +197,13 @@ extension CLLocation {
     }
 }
 
+// FIXME: Remove once https://github.com/mapbox/api-events/issues/265 is fixed
+extension String {
+    var uppercaseFirst: String {
+        return String(characters.prefix(1)).uppercased() + String(characters.dropFirst())
+    }
+}
+
 extension RouteLegProgress {
     var upcomingManeuverDictionary: [String: Any] {
         get {
