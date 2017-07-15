@@ -13,9 +13,11 @@ struct DefaultEventDictionary {
     var originalGeometry: String?
     var originalEstimatedDistance: CLLocationDistance?
     var originalEstimatedDuration: TimeInterval?
+    var originalStepCount: Int?
     var geometry: String?
     var estimatedDistance: CLLocationDistance?
     var estimatedDuration: TimeInterval?
+    var stepCount: Int?
     var created: String
     var startTimestamp: String
     var platform: String
@@ -66,11 +68,13 @@ struct DefaultEventDictionary {
             originalGeometry = Polyline(coordinates: geometry).encodedPolyline
             originalEstimatedDistance = round(session.originalRoute.distance)
             originalEstimatedDuration = round(session.originalRoute.expectedTravelTime)
+            originalStepCount = session.originalRoute.legs.map({$0.steps.count}).reduce(0, +)
         }
         if let geometry = session.currentRoute.coordinates {
             self.geometry = Polyline(coordinates: geometry).encodedPolyline
             estimatedDistance = round(session.currentRoute.distance)
             estimatedDuration = round(session.currentRoute.expectedTravelTime)
+            stepCount = session.currentRoute.legs.map({$0.steps.count}).reduce(0, +)
         }
         
         distanceCompleted = round(session.totalDistanceCompleted + routeController.routeProgress.distanceTraveled)
@@ -100,7 +104,7 @@ struct DefaultEventDictionary {
         modifiedEventDictionary["sdkIdentifier"] = sdkIdentifier
         modifiedEventDictionary["sdkVersion"] = sdkVersion
         
-        modifiedEventDictionary["eventVersion"] = 2
+        modifiedEventDictionary["eventVersion"] = 3
         
         modifiedEventDictionary["profile"] = profile
         modifiedEventDictionary["simulation"] = simulation
@@ -115,11 +119,13 @@ struct DefaultEventDictionary {
         modifiedEventDictionary["originalGeometry"] = originalGeometry
         modifiedEventDictionary["originalEstimatedDistance"] = originalEstimatedDistance
         modifiedEventDictionary["originalEstimatedDuration"] = originalEstimatedDuration
+        modifiedEventDictionary["originalStepCount"] = originalStepCount
         
         modifiedEventDictionary["geometry"] = geometry
         modifiedEventDictionary["estimatedDistance"] = estimatedDistance
         modifiedEventDictionary["estimatedDuration"] = estimatedDuration
-        
+        modifiedEventDictionary["stepCount"] = stepCount
+
         modifiedEventDictionary["distanceCompleted"] = distanceCompleted
         modifiedEventDictionary["distanceRemaining"] = distanceRemaining
         modifiedEventDictionary["durationRemaining"] = durationRemaining
@@ -187,6 +193,23 @@ extension CLLocation {
             locationDictionary["course"] = course
             locationDictionary["speed"] = speed
             return locationDictionary
+        }
+    }
+}
+
+extension RouteLegProgress {
+    var upcomingManeuverDictionary: [String: Any] {
+        get {
+            return [
+                "instruction": upComingStep?.instructions ?? NSNull(),
+                "type": upComingStep?.maneuverType?.description ?? NSNull(),
+                "modifier": upComingStep?.maneuverDirection?.description ?? NSNull(),
+                "name": upComingStep?.names?.joined(separator: ";") ?? NSNull(),
+                "distance": Int(currentStep.distance),
+                "duration": Int(currentStep.expectedTravelTime),
+                "distanceRemaining": Int(currentStepProgress.distanceRemaining),
+                "durationRemaining": Int(currentStepProgress.durationRemaining),
+            ]
         }
     }
 }
