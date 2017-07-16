@@ -11,8 +11,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     let directions = Directions.shared
     var routeController: RouteController!
 
-    let textDistanceFormatter = DistanceFormatter(approximate: true, forVoiceUse: false)
-    let voiceDistanceFormatter = DistanceFormatter(approximate: true, forVoiceUse: true)
+    let textDistanceFormatter = DistanceFormatter(approximate: true)
+    let voiceDistanceFormatter = SpokenDistanceFormatter(approximate: true)
     lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
     var simulateLocation = false
