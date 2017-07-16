@@ -13,6 +13,22 @@ public class DistanceFormatter: LengthFormatter {
     
     let nonFractionalLengthFormatter = LengthFormatter()
     
+    var forcedLocale: Locale?
+    
+    var preferredLocale: Locale {
+        // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
+        let locale = forcedLocale ?? Locale.current
+        return locale.identifier == "en-GB" ? Locale(identifier: "en-US") : locale
+    }
+    
+    var usesMetric: Bool {
+        let locale = preferredLocale as NSLocale
+        guard let measurementSystem = locale.object(forKey: .measurementSystem) as? String else {
+            return false
+        }
+        return measurementSystem.contains("Metric")
+    }
+    
     /**
      Intializes a new `DistanceFormatter`.
      
@@ -33,45 +49,37 @@ public class DistanceFormatter: LengthFormatter {
         aCoder.encode(approx, forKey: "approximate")
     }
     
+    func maximumFractionDigits(for distance: CLLocationDistance) -> Int {
+        if usesMetric {
+            return distance < 3_000 ? 1 : 0
+        } else {
+            return distance.miles < 3 ? 1 : 0
+        }
+    }
+    
     /**
      Returns a more human readable `String` from a given `CLLocationDistance`.
      
      The user’s `Locale` is used here to set the units.
     */
     public func string(from distance: CLLocationDistance) -> String {
-        let miles = distance / metersPerMile
-        let feet = miles * feetPerMile
-        
-        // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
-        let isBritish = Locale.current.identifier == "en-GB"
-        
-        numberFormatter.locale = isBritish ? Locale(identifier: "en-US") : Locale.current
+        numberFormatter.locale = preferredLocale
         numberFormatter.positivePrefix = ""
         numberFormatter.positiveSuffix = ""
         numberFormatter.decimalSeparator = nonFractionalLengthFormatter.numberFormatter.decimalSeparator
         numberFormatter.alwaysShowsDecimalSeparator = nonFractionalLengthFormatter.numberFormatter.alwaysShowsDecimalSeparator
         numberFormatter.roundingIncrement = 0.25
-        
-        if approx {
-            numberFormatter.usesSignificantDigits = true
-            numberFormatter.maximumSignificantDigits = 2
-        } else {
-            numberFormatter.usesSignificantDigits = false
-            numberFormatter.maximumFractionDigits = 0
-        }
+        numberFormatter.usesSignificantDigits = false
+        numberFormatter.maximumFractionDigits = maximumFractionDigits(for: distance)
         
         var unit: LengthFormatter.Unit = .millimeter
         unitString(fromMeters: distance, usedUnit: &unit)
         
         var formattedDistance: String
         if unit == .yard {
-            if miles > 0.2 {
+            if distance.miles > 0.2 {
                 unit = .mile
-                formattedDistance = string(fromValue: miles, unit: unit)
-            } else if !isBritish {
-                unit = .foot
-                numberFormatter.roundingIncrement = 50
-                formattedDistance = string(fromValue: feet, unit: unit)
+                formattedDistance = string(fromValue: distance.miles, unit: unit)
             } else {
                 numberFormatter.roundingIncrement = 50
                 formattedDistance = string(fromMeters: distance)
