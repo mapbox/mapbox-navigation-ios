@@ -1,15 +1,5 @@
 import CoreLocation
 
-extension CLLocationDistance {
-    var miles: CLLocationDistance {
-        return self / metersPerMile
-    }
-    
-    var feet: CLLocationDistance {
-        return miles / feetPerMile
-    }
-}
-
 /// Provides appropriately formatted, localized descriptions of linear distances for voice use.
 @objc(MBSpokenDistanceFormatter)
 public class SpokenDistanceFormatter: DistanceFormatter {
