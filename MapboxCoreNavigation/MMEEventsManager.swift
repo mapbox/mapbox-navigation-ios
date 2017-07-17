@@ -19,7 +19,7 @@ struct DefaultEventDictionary {
     var estimatedDuration: TimeInterval?
     var stepCount: Int?
     var created: String
-    var startTimestamp: String
+    var startTimestamp: String?
     var platform: String
     var operatingSystem: String
     var device: String
