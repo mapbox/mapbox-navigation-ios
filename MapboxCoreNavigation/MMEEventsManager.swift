@@ -41,7 +41,9 @@ struct DefaultEventDictionary {
     
     init(routeController: RouteController, session: SessionState) {
         created = Date().ISO8601
-        startTimestamp = session.departureTimestamp!.ISO8601
+        if let start = session.departureTimestamp?.ISO8601 {
+            startTimestamp =  start
+        }
         
         platform = ProcessInfo.systemName
         operatingSystem = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
