@@ -7,7 +7,7 @@ import MapboxCoreNavigation
  The `RouteVoiceController` class provides voice guidance.
  */
 @objc(MBRouteVoiceController)
-open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
+open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioPlayerDelegate {
     
     lazy var speechSynth = AVSpeechSynthesizer()
     var audioPlayer: AVAudioPlayer?
@@ -70,6 +70,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         }
         
         speechSynth.delegate = self
+        rerouteSoundPlayer.delegate = self
         maneuverVoiceDistanceFormatter.unitStyle = .long
         maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
         resumeNotifications()
@@ -96,12 +97,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         guard playRerouteSound else {
             return
         }
-        
+
         rerouteSoundPlayer.volume = volume
         rerouteSoundPlayer.play()
     }
     
-    func audioPlayerDidFinishPlaying(notification: NSNotification) {
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         do {
             try unDuckAudio()
         } catch {

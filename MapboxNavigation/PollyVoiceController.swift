@@ -126,15 +126,3 @@ public class PollyVoiceController: RouteVoiceController {
         }
     }
 }
-
-extension PollyVoiceController: AVAudioPlayerDelegate {
-    
-    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        guard audioPlayer?.isPlaying == false else { return }
-        do {
-            try unDuckAudio()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-}
