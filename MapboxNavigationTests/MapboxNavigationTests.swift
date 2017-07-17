@@ -96,7 +96,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
         let route = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
         
-        let navigation = NavigationViewController(for: route, directions: directions)
+        let navigation = NavigationViewController(for: route, directions: directions, accessToken: "foo")
         navigation.loadViewIfNeeded()
         
         filePath = bundle.path(forResource: "GGPark-to-BernalHeights", ofType: "route")!
