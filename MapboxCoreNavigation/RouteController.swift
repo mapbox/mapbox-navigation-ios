@@ -729,7 +729,9 @@ extension RouteController {
     
     func checkAndSendOutstandingFeedbackEvents(forceAll: Bool = false) {
         let now = Date()
-        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter({now.timeIntervalSince($0.timestamp) > SecondsForCollectionAfterFeedbackEvent})
+        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
+            now.timeIntervalSince($0.timestamp) > SecondsForCollectionAfterFeedbackEvent
+        }
         for event in eventsToPush {
             sendFeedbackEvent(event: event)
         }
