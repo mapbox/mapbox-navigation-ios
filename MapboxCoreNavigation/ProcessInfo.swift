@@ -9,7 +9,7 @@ extension ProcessInfo {
         #if os(iOS) || os(tvOS)
             return UIDevice.current.systemName
         #elseif os(watchOS)
-            return WKInterfaceDevice.current.systemVersion
+            return WKInterfaceDevice.current.systemName
         #elseif os(OSX)
             return "macOS"
         #else
