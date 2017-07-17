@@ -275,7 +275,7 @@ extension RouteController: CLLocationManagerDelegate {
         // Only check for faster alternatives if the user has plenty of time left on the route.
         guard routeProgress.durationRemaining > 600 else { return }
         // If the user is approaching a maneuver, don't check for a faster alternatives
-        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > 70 else { return }
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
     }
     
@@ -369,10 +369,9 @@ extension RouteController: CLLocationManagerDelegate {
         getDirections(from: location) { [weak self] (route, error) in
             guard let strongSelf = self else { return }
             guard let route = route else { return }
-            guard let firstLeg = route.legs.first, firstLeg.steps.count > 2 else { return }
             strongSelf.lastLocationDate = nil
             
-            if firstLeg.steps[1].expectedTravelTime <= 70 {
+            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval {
                 let course = currentUpcomingManeuver.finalHeading ?? currentUpcomingManeuver.initialHeading ?? location.course
                 let maneuverLocation = CLLocation(coordinate: currentUpcomingManeuver.maneuverLocation, altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: course, speed: 1, timestamp: Date())
                 
