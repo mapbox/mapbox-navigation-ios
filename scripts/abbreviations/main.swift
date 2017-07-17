@@ -21,12 +21,6 @@ extension Dictionary where Key == String, Value == String {
     }
 }
 
-extension String {
-    func trimmingCSV() -> String {
-        return trimmingCharacters(in: .whitespaces).replacingOccurrences(of: "\"", with: "")
-    }
-}
-
 extension URL {
     static func plistFilePath(for language: String) -> URL {
         let filePath = "\(lprojPath)/\(language).lproj/\(importFilename)"
@@ -72,20 +66,50 @@ struct Plist {
         let csvContent = csvPlist.content as! [String: String]
         var newContent = [String: AnyObject]()
         
-        for type in csvContent {
-            var newRow = [String: String]()
-            let rows = type.value.components(separatedBy: "\n")
-            
-            for row in rows {
-                let components = row.components(separatedBy: ",")
-                let key = components.first!.trimmingCSV()
-                let value = components.last!.trimmingCSV()
-                if !key.isEmpty {
-                    newRow[key] = value
+        for (type, csv) in csvContent {
+            var abbreviationsByWord: [String: String] = [:]
+            // Look for the following:
+            // "word", "abbr."
+            // "word" , "abbr."
+            // "word", "abbr.",
+            // "word ", " abbr."
+            let scanner = Scanner(string: csv)
+            scanner.charactersToBeSkipped = .whitespaces
+            while !scanner.isAtEnd {
+                guard scanner.scanString("\"", into: nil) else {
+                    break
+                }
+                var key: NSString?
+                guard scanner.scanUpTo("\"", into: &key), key != nil else {
+                    break
+                }
+                guard scanner.scanString("\"", into: nil) else {
+                    break
+                }
+                guard scanner.scanString(",", into: nil) else {
+                    break
+                }
+                
+                guard scanner.scanString("\"", into: nil) else {
+                    break
+                }
+                var value: NSString?
+                guard scanner.scanUpTo("\"", into: &value), value != nil else {
+                    break
+                }
+                guard scanner.scanString("\"", into: nil) else {
+                    break
+                }
+                
+                abbreviationsByWord[key! as String] = value! as String
+                
+                scanner.scanString(",", into: nil)
+                guard scanner.scanString("\n", into: nil) else {
+                    break
                 }
             }
             
-            newContent[type.key] = newRow as AnyObject
+            newContent[type] = abbreviationsByWord as NSDictionary
         }
         
         content = newContent

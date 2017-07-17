@@ -17,7 +17,7 @@
 		<key>fortas</key>
 		<string>ft</string>
 		<key>jaun.</key>
-		<string></string>
+		<string>jaun.</string>
 		<key>kaimas</key>
 		<string>km</string>
 		<key>kalnas</key>
@@ -47,7 +47,7 @@
 		<key>tarptautinis</key>
 		<string>trptaut</string>
 		<key>taškas</key>
-		<string></string>
+		<string>tšk</string>
 		<key>turgus</key>
 		<string>tgs</string>
 		<key>tėvas</key>
@@ -57,7 +57,7 @@
 		<key>upelis</key>
 		<string>up</string>
 		<key>upė</key>
-		<string></string>
+		<string>up</string>
 		<key>vyr.</key>
 		<string>vyr.</string>
 		<key>Šv</key>
@@ -66,7 +66,7 @@
 	<key>classifications</key>
 	<dict>
 		<key>aikštė</key>
-		<string></string>
+		<string>a.</string>
 		<key>aplinkkelis</key>
 		<string>aplnk</string>
 		<key>autostrada</key>
@@ -85,10 +85,12 @@
 		<string>pspkt</string>
 		<key>pusratis</key>
 		<string>psrt</string>
+		<key>takas</key>
+		<string>tak.</string>
 		<key>tiltas</key>
 		<string>tlt</string>
 		<key>vieta</key>
-		<string></string>
+		<string>vt</string>
 	</dict>
 	<key>directions</key>
 	<dict>
