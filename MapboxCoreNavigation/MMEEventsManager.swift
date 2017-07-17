@@ -3,9 +3,9 @@ import MapboxDirections
 import AVFoundation
 import MapboxMobileEvents
 
-let SecondsForCollectionAfterFeedbackEvent: TimeInterval = 20
+let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
 
-struct DefaultEventDictionary {
+struct EventDetails {
     var originalRequestIdentifier: String?
     var requestIdentifier: String?
     var lat: CLLocationDegrees?
@@ -93,7 +93,7 @@ struct DefaultEventDictionary {
         applicationState = UIApplication.shared.applicationState.telemetryString
     }
     
-    func convertToDictionary() -> [String: Any] {
+    func convertedToDictionary() -> [String: Any] {
         var modifiedEventDictionary: [String: Any] = [:]
         
         modifiedEventDictionary["created"] = created
@@ -147,7 +147,7 @@ struct DefaultEventDictionary {
 
 extension MMEEventsManager {
     func addDefaultEvents(routeController: RouteController) -> [String: Any] {
-        return DefaultEventDictionary(routeController: routeController, session: routeController.sessionState).convertToDictionary()
+        return EventDetails(routeController: routeController, session: routeController.sessionState).convertedToDictionary()
     }
 }
 
