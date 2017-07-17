@@ -8,17 +8,16 @@ let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
 struct EventDetails {
     var originalRequestIdentifier: String?
     var requestIdentifier: String?
-    var lat: CLLocationDegrees?
-    var lng: CLLocationDegrees?
-    var originalGeometry: String?
-    var originalEstimatedDistance: CLLocationDistance?
+    var coordinate: CLLocationCoordinate2D?
+    var originalGeometry: Polyline?
+    var originalDistance: CLLocationDistance?
     var originalEstimatedDuration: TimeInterval?
     var originalStepCount: Int?
-    var geometry: String?
-    var estimatedDistance: CLLocationDistance?
+    var geometry: Polyline?
+    var distance: CLLocationDistance?
     var estimatedDuration: TimeInterval?
     var stepCount: Int?
-    var created: String
+    var created: Date
     var startTimestamp: String?
     var platform: String
     var operatingSystem: String
@@ -40,7 +39,7 @@ struct EventDetails {
     var applicationState: String
     
     init(routeController: RouteController, session: SessionState) {
-        created = Date().ISO8601
+        created = Date()
         if let start = session.departureTimestamp?.ISO8601 {
             startTimestamp =  start
         }
@@ -62,19 +61,18 @@ struct EventDetails {
         requestIdentifier = nil
         
         if let location = routeController.locationManager.location {
-            lat = location.coordinate.latitude
-            lng = location.coordinate.longitude
+            coordinate = location.coordinate
         }
         
         if let geometry = session.originalRoute.coordinates {
-            originalGeometry = Polyline(coordinates: geometry).encodedPolyline
-            originalEstimatedDistance = round(session.originalRoute.distance)
+            originalGeometry = Polyline(coordinates: geometry)
+            originalDistance = round(session.originalRoute.distance)
             originalEstimatedDuration = round(session.originalRoute.expectedTravelTime)
             originalStepCount = session.originalRoute.legs.map({$0.steps.count}).reduce(0, +)
         }
         if let geometry = session.currentRoute.coordinates {
-            self.geometry = Polyline(coordinates: geometry).encodedPolyline
-            estimatedDistance = round(session.currentRoute.distance)
+            self.geometry = Polyline(coordinates: geometry)
+            distance = round(session.currentRoute.distance)
             estimatedDuration = round(session.currentRoute.expectedTravelTime)
             stepCount = session.currentRoute.legs.map({$0.steps.count}).reduce(0, +)
         }
@@ -96,7 +94,7 @@ struct EventDetails {
     func convertedToDictionary() -> [String: Any] {
         var modifiedEventDictionary: [String: Any] = [:]
         
-        modifiedEventDictionary["created"] = created
+        modifiedEventDictionary["created"] = created.ISO8601
         modifiedEventDictionary["startTimestamp"] = startTimestamp
         
         modifiedEventDictionary["platform"] = ProcessInfo.systemName
@@ -115,16 +113,16 @@ struct EventDetails {
         modifiedEventDictionary["originalRequestIdentifier"] = originalRequestIdentifier
         modifiedEventDictionary["requestIdentifier"] = requestIdentifier
         
-        modifiedEventDictionary["lat"] = lat
-        modifiedEventDictionary["lng"] = lng
+        modifiedEventDictionary["lat"] = coordinate?.latitude
+        modifiedEventDictionary["lng"] = coordinate?.longitude
         
-        modifiedEventDictionary["originalGeometry"] = originalGeometry
-        modifiedEventDictionary["originalEstimatedDistance"] = originalEstimatedDistance
+        modifiedEventDictionary["originalGeometry"] = originalGeometry?.encodedPolyline
+        modifiedEventDictionary["originalEstimatedDistance"] = originalDistance
         modifiedEventDictionary["originalEstimatedDuration"] = originalEstimatedDuration
         modifiedEventDictionary["originalStepCount"] = originalStepCount
         
-        modifiedEventDictionary["geometry"] = geometry
-        modifiedEventDictionary["estimatedDistance"] = estimatedDistance
+        modifiedEventDictionary["geometry"] = geometry?.encodedPolyline
+        modifiedEventDictionary["estimatedDistance"] = distance
         modifiedEventDictionary["estimatedDuration"] = estimatedDuration
         modifiedEventDictionary["stepCount"] = stepCount
 
