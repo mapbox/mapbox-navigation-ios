@@ -7,6 +7,10 @@ let arrowSourceIdentifier = "arrowSource"
 let arrowSourceStrokeIdentifier = "arrowSourceStroke"
 let arrowLayerIdentifier = "arrowLayer"
 
+let arrowSymbolLayerIdentifier = "arrowSymbolLayer"
+let arrowSymbolSourceIdentifier = "arrowSymbolSource"
+
+
 /**
  An extension on `MGLMapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://www.mapbox.com/vector-tiles/mapbox-traffic-v1/).
  */
@@ -49,6 +53,8 @@ extension MGLMapView {
             return
         }
         
+        let minimumZoomLevel: Float = 14.5
+        
         let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate!.latitude), 50), 10)
         let shaftCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!).reversed()
             + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
@@ -58,33 +64,11 @@ extension MGLMapView {
             var shaftStrokeCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate!).reversed()
                 + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
             let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
+            let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
+            let maneuverArrowStrokePolylines = [shaftStrokePolyline]
+            let shaftPolyline = ArrowFillPolyline(coordinates: shaftCoordinates, count: UInt(shaftCoordinates.count))
             
-            var maneuverArrowStrokePolylines = [shaftStrokePolyline]
-            
-            let headRadius = shaftLength / 2
-            let tipCoordinate = shaftStrokeCoordinates.last!
-            let shaftDirection = tipCoordinate.direction(to: shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2])
-            let leftTipCoordinate = tipCoordinate.coordinate(at: headRadius, facing: shaftDirection - 45)
-            let rightTipCoordinate = tipCoordinate.coordinate(at: headRadius, facing: shaftDirection + 45)
-            
-            let headStrokeRadius = headRadius * 1.05
-            let leftStrokeTipCoordinate = tipCoordinate.coordinate(at: headStrokeRadius, facing: shaftDirection - 45)
-            let rightStrokeTipCoordinate = tipCoordinate.coordinate(at: headStrokeRadius, facing: shaftDirection + 45)
-            var headStrokeCoordinates = [leftStrokeTipCoordinate, tipCoordinate, rightStrokeTipCoordinate]
-            let headStrokePolyline = ArrowStrokePolyline(coordinates: &headStrokeCoordinates, count: UInt(headStrokeCoordinates.count))
-            
-            maneuverArrowStrokePolylines.append(headStrokePolyline)
-            
-            var leftHookCoordinates = shaftCoordinates + [leftTipCoordinate]
-            let leftHookPolyline = ArrowFillPolyline(coordinates: &leftHookCoordinates, count: UInt(leftHookCoordinates.count))
-            var maneuverArrowPolylines = [leftHookPolyline]
-            var rightHookCoordinates = shaftCoordinates + [rightTipCoordinate]
-            let rightHookPolyline = ArrowFillPolyline(coordinates: &rightHookCoordinates, count: UInt(rightHookCoordinates.count))
-            maneuverArrowPolylines.append(rightHookPolyline)
-            
-            maneuverArrowPolylines.append(headStrokePolyline)
-            
-            let arrowShape = MGLShapeCollection(shapes: maneuverArrowPolylines)
+            let arrowShape = MGLShapeCollection(shapes: [shaftPolyline])
             let arrowStrokeShape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
             
             let cap = NSValue(mglLineCap: .round)
@@ -98,7 +82,7 @@ extension MGLMapView {
             if let source = style.source(withIdentifier: arrowSourceIdentifier) as? MGLShapeSource {
                 source.shape = arrowShape
             } else {
-                arrow.minimumZoomLevel = 14.5
+                arrow.minimumZoomLevel = minimumZoomLevel
                 arrow.lineCap = MGLStyleValue(rawValue: cap)
                 arrow.lineJoin = MGLStyleValue(rawValue: join)
                 arrow.lineWidth = MGLStyleValue(rawValue: 6)
@@ -112,7 +96,7 @@ extension MGLMapView {
                 source.shape = arrowStrokeShape
             } else {
                 
-                arrowStroke.minimumZoomLevel = 14.5
+                arrowStroke.minimumZoomLevel = minimumZoomLevel
                 arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
                 arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
                 arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
@@ -121,6 +105,30 @@ extension MGLMapView {
                 style.addSource(arrowSourceStroke)
                 style.insertLayer(arrowStroke, below: arrow)
             }
+            
+            // Arrow symbol
+            let point = MGLPointFeature()
+            point.coordinate = shaftStrokeCoordinates.last!
+            let arrowSymbolSource = MGLShapeSource(identifier: arrowSymbolSourceIdentifier, features: [point], options: nil)
+            
+            if let source = style.source(withIdentifier: arrowSymbolSourceIdentifier) as? MGLShapeSource {
+                source.shape = arrowSymbolSource.shape
+                if let arrowSymbolLayer = style.layer(withIdentifier: arrowSymbolLayerIdentifier) as? MGLSymbolStyleLayer {
+                    arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                }
+            } else {
+                let arrowSymbolLayer = MGLSymbolStyleLayer(identifier: arrowSymbolLayerIdentifier, source: arrowSymbolSource)
+                arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
+                arrowSymbolLayer.iconImageName = MGLStyleValue(rawValue: "triangle-15")
+                arrowSymbolLayer.iconColor = MGLStyleValue(rawValue: .white)
+                arrowSymbolLayer.iconHaloWidth = MGLStyleValue(rawValue: 3)
+                arrowSymbolLayer.iconHaloColor = MGLStyleValue(rawValue: .defaultArrowStroke)
+                arrowSymbolLayer.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
+                arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                style.addSource(arrowSymbolSource)
+                style.insertLayer(arrowSymbolLayer, above: arrow)
+            }
+            
         }
     }
 }
