@@ -401,7 +401,12 @@ extension RouteController: CLLocationManagerDelegate {
             
             guard let route = route else { return }
             
-            strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: .depart)
+            // If the first step of the new route is greater than 0.5km, let user continue without announcement.
+            var alertLevel: AlertLevel = .none
+            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 500 {
+                alertLevel = .depart
+            }
+            strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
             strongSelf.routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
         }
