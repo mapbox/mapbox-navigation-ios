@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>us-interstate</key>
+	<string>I</string>
+	<key>us-interstate-business</key>
+	<string>I</string>
+	<key>us-interstate-duplex</key>
+	<string>I</string>
+	<key>us-interstate-truck</key>
+	<string>I</string>
+	<key>us-highway</key>
+	<string>US</string>
+	<key>us-highway-duplex</key>
+	<string>US</string>
+	<key>us-highway-alternate</key>
+	<string>US</string>
+	<key>us-highway-business</key>
+	<string>US</string>
+	<key>us-highway-bypass</key>
+	<string>US</string>
+	<key>us-highway-truck</key>
+	<string>US</string>
+</dict>
+</plist>

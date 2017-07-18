@@ -340,13 +340,21 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                             if let name = line.attribute(forKey: "name") as? String, !name.isFreeway {
                                 currentName = name
                             } else if let ref = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String {
-                                currentName = "\(shield) \(ref)"
+                                if let highwayName = HighwayNamesByPrefix[shield] {
+                                    currentName = "\(highwayName) \(ref)"
+                                } else {
+                                    currentName = ref
+                                }
                             }
                         } else if let line = feature as? MGLMultiPolylineFeature {
                             if let name = line.attribute(forKey: "name") as? String, !name.isFreeway {
                                 currentName = name
                             } else if let ref = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String {
-                                currentName = "\(shield) \(ref)"
+                                if let highwayName = HighwayNamesByPrefix[shield] {
+                                    currentName = "\(highwayName) \(ref)"
+                                } else {
+                                    currentName = ref
+                                }
                             }
                         } else {
                             currentName = nil
@@ -355,7 +363,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 }
             }
             
-            if smallestLabelDistance < 5 && currentName != nil {
+            if smallestLabelDistance < 10 && currentName != nil {
                 wayNameLabel.text = currentName
                 wayNameView.isHidden = false
             } else {
