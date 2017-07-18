@@ -138,8 +138,17 @@ class RouteMapViewController: UIViewController {
     
     @IBAction func report(_ sender: Any) {
         guard let parent = parent else { return }
+        
         routeController.recordFeedback(type: .general, description: nil)
-        DialogViewController.present(on: parent)
+        
+        let controller = FeedbackViewController.loadFromStoryboard()
+        
+        controller.sendFeedbackHandler = { (item) in
+            print("Did select \(item.title)")
+            controller.dismiss(animated: true, completion: nil)
+        }
+        
+        parent.present(controller, animated: true, completion: nil)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
