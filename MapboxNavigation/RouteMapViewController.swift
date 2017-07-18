@@ -407,14 +407,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
-    
-    func choose(name: String, ref: String) -> String? {
-        if !["freeway", "expressway", "highway"].contains(name.lowercased()) {
-            return ref
-        } else {
-            return name
-        }
-    }
 }
 
 // MARK: MGLMapViewDelegate
