@@ -10,10 +10,7 @@ extension String {
             return NSRange(location: 0, length: characters.count)
         }
     }
-}
 
-
-extension String {
     typealias Replacement = (of: String, with: String)
 
     func byReplacing(_ replacements: [Replacement]) -> String {
@@ -27,5 +24,11 @@ extension String {
             ("\"", "&quot;"),
             ("'", "&apos;")
             ])
+    }
+
+    var isFreeway: Bool {
+        return self.components(separatedBy: " ").filter {
+            ["freeway", "expressway", "highway", "fwy", "hwy"].contains($0)
+        }.isEmpty
     }
 }

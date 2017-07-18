@@ -336,10 +336,18 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     if minDistanceBetweenPoints < smallestLabelDistance {
                         smallestLabelDistance = minDistanceBetweenPoints
                         
-                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
+                        if let line = feature as? MGLPolylineFeature {
+                            if let name = line.attribute(forKey: "name") as? String, !name.isFreeway {
+                                currentName = name
+                            } else if let ref = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String {
+                                currentName = "\(shield) \(ref)"
+                            }
+                        } else if let line = feature as? MGLMultiPolylineFeature {
+                            if let name = line.attribute(forKey: "name") as? String, !name.isFreeway {
+                                currentName = name
+                            } else if let ref = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String {
+                                currentName = "\(shield) \(ref)"
+                            }
                         } else {
                             currentName = nil
                         }
@@ -398,6 +406,14 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         }
         
         return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+    }
+    
+    func choose(name: String, ref: String) -> String? {
+        if !["freeway", "expressway", "highway"].contains(name.lowercased()) {
+            return ref
+        } else {
+            return name
+        }
     }
 }
 
