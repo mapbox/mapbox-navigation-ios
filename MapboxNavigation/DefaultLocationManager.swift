@@ -20,6 +20,6 @@ class DefaultLocationManager: NavigationLocationManager {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
     }
 }
