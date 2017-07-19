@@ -702,11 +702,8 @@ extension RouteController {
         eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
         eventDictionary["feedbackType"] = type.rawValue
         eventDictionary["description"] = description
-        for (key, value) in routeProgress.currentLegProgress.upcomingManeuverDictionary {
-            eventDictionary["step\(key.uppercaseFirst)"] = value
-        }
-        // FIXME: Replace the above enumeration with the below once https://github.com/mapbox/api-events/issues/265 is fixed
-        // eventDictionary["upcomingStep"] = routeProgress.currentLegProgress.upcomingManeuverDictionary
+        
+        eventDictionary["step"] = routeProgress.currentLegProgress.stepDictionary
         eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
 
         outstandingFeedbackEvents.append(FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary))
@@ -721,11 +718,7 @@ extension RouteController {
         eventDictionary["event"] = eventName
         
         eventDictionary["secondsSinceLastReroute"] = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
-        for (key, value) in routeProgress.currentLegProgress.upcomingManeuverDictionary {
-            eventDictionary["step\(key.uppercaseFirst)"] = value
-        }
-        // FIXME: Replace the above enumeration with the below once https://github.com/mapbox/api-events/issues/265 is fixed
-        // eventDictionary["upcomingStep"] = routeProgress.currentLegProgress.upcomingManeuverDictionary
+        eventDictionary["step"] = routeProgress.currentLegProgress.stepDictionary
         
         // These are placeholders until the RouteProgress is updated after rerouting
         eventDictionary["newDistanceRemaining"] = -1

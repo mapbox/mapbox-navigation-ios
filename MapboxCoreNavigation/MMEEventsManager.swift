@@ -4,6 +4,7 @@ import AVFoundation
 import MapboxMobileEvents
 
 let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
+let EventVersion = 4
 
 struct EventDetails {
     var originalRequestIdentifier: String?
@@ -98,9 +99,7 @@ struct EventDetails {
         
         modifiedEventDictionary["sdkIdentifier"] = sdkIdentifier
         modifiedEventDictionary["sdkVersion"] = sdkVersion
-        
-        modifiedEventDictionary["eventVersion"] = 3
-        
+                
         modifiedEventDictionary["profile"] = profile
         modifiedEventDictionary["simulation"] = simulation
         
@@ -192,15 +191,8 @@ extension CLLocation {
     }
 }
 
-// FIXME: Remove once https://github.com/mapbox/api-events/issues/265 is fixed
-extension String {
-    var uppercaseFirst: String {
-        return String(characters.prefix(1)).uppercased() + String(characters.dropFirst())
-    }
-}
-
 extension RouteLegProgress {
-    var upcomingManeuverDictionary: [String: Any] {
+    var stepDictionary: [String: Any] {
         get {
             return [
                 "upcomingInstruction": upComingStep?.instructions ?? NSNull(),
