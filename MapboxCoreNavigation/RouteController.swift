@@ -157,8 +157,8 @@ open class RouteController: NSObject {
      - parameter locationManager: The associated location manager.
      - parameter accessToken: Optional Mapbox accessToken.
      */
-    @objc(initWithRoute:directions:locationManager:accessToken:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), accessToken: String? = nil) {
+    @objc(initWithRoute:directions:locationManager:)
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
         self.sessionState = SessionState(currentRoute: route, originalRoute: route)
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
@@ -168,7 +168,7 @@ open class RouteController: NSObject {
         
         self.locationManager.delegate = self
         self.resumeNotifications()
-        self.startEvents(accessToken: accessToken)
+        self.startEvents(route: route)
         self.resetSession()
     }
     
@@ -179,9 +179,9 @@ open class RouteController: NSObject {
         suspendNotifications()
     }
     
-    func startEvents(accessToken: String? = nil) {
+    func startEvents(route: Route) {
         var mapboxAccessToken: String? = nil
-        if let accessToken = accessToken {
+        if let accessToken = route.accessToken {
             mapboxAccessToken = accessToken
         } else if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
             let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
@@ -197,7 +197,7 @@ open class RouteController: NSObject {
             events.disableLocationMetrics()
             events.sendTurnstileEvent()
         } else {
-            assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken`m passed in as a String to `RouteController()`")
+            assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
         }
     }
     
