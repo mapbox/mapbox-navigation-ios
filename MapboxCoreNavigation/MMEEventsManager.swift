@@ -18,13 +18,9 @@ struct EventDetails {
     var estimatedDuration: TimeInterval?
     var stepCount: Int?
     var created: Date
-    var startTimestamp: String?
-    var platform: String
-    var operatingSystem: String
-    var device: String
+    var startTimestamp: Date?
     var sdkIdentifier: String
     var sdkVersion: String
-    var eventVersion: Int
     var profile: String
     var simulation: Bool
     var sessionIdentifier: String
@@ -36,22 +32,16 @@ struct EventDetails {
     var screenBrightness: Int
     var batteryPluggedIn: Bool
     var batteryLevel: Float
-    var applicationState: String
+    var applicationState: UIApplicationState
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
-        if let start = session.departureTimestamp?.ISO8601 {
+        if let start = session.departureTimestamp {
             startTimestamp =  start
         }
         
-        platform = ProcessInfo.systemName
-        operatingSystem = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
-        device = UIDevice.current.machine
-        
         sdkIdentifier = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         sdkVersion = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
-        
-        eventVersion = 2
         
         profile = routeController.routeProgress.route.routeOptions.profileIdentifier.rawValue
         simulation = routeController.locationManager is ReplayLocationManager || routeController.locationManager is SimulatedLocationManager ? true : false
@@ -88,14 +78,19 @@ struct EventDetails {
         
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
         batteryLevel = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
-        applicationState = UIApplication.shared.applicationState.telemetryString
+        applicationState = UIApplication.shared.applicationState
     }
     
-    func convertedToDictionary() -> [String: Any] {
+    var eventDictionary: [String: Any] {
         var modifiedEventDictionary: [String: Any] = [:]
         
         modifiedEventDictionary["created"] = created.ISO8601
-        modifiedEventDictionary["startTimestamp"] = startTimestamp
+        
+        if let startTimestamp = startTimestamp {
+            modifiedEventDictionary["startTimestamp"] = startTimestamp.ISO8601
+        }
+        
+        modifiedEventDictionary["eventVersion"] = EventVersion
         
         modifiedEventDictionary["platform"] = ProcessInfo.systemName
         modifiedEventDictionary["operatingSystem"] = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
@@ -137,7 +132,7 @@ struct EventDetails {
         
         modifiedEventDictionary["batteryPluggedIn"] = batteryPluggedIn
         modifiedEventDictionary["batteryLevel"] = batteryLevel
-        modifiedEventDictionary["applicationState"] = applicationState
+        modifiedEventDictionary["applicationState"] = applicationState.telemetryString
         
         return modifiedEventDictionary
     }
@@ -145,7 +140,7 @@ struct EventDetails {
 
 extension MMEEventsManager {
     func addDefaultEvents(routeController: RouteController) -> [String: Any] {
-        return EventDetails(routeController: routeController, session: routeController.sessionState).convertedToDictionary()
+        return EventDetails(routeController: routeController, session: routeController.sessionState).eventDictionary
     }
 }
 

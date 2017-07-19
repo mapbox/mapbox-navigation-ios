@@ -146,7 +146,7 @@ open class RouteController: NSObject {
     /// :nodoc: This is used internally when the navigation UI is being used
     public var usesDefaultUserInterface = false
     
-    var sessionState = SessionState()
+    var sessionState:SessionState
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
     /**
@@ -159,6 +159,7 @@ open class RouteController: NSObject {
      */
     @objc(initWithRoute:directions:locationManager:accessToken:)
     public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), accessToken: String? = nil) {
+        self.sessionState = SessionState(currentRoute: route, originalRoute: route)
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
@@ -254,7 +255,7 @@ open class RouteController: NSObject {
      */
     public func updateLastFeedback(type: FeedbackType, description: String?) {
         if let lastFeedback = outstandingFeedbackEvents.filter({$0 is FeedbackEvent}).last {
-            lastFeedback.eventDictionary["feedbackType"] = type.rawValue
+            lastFeedback.eventDictionary["feedbackType"] = type.description
             lastFeedback.eventDictionary["description"] = description
         }
     }
@@ -275,7 +276,7 @@ extension RouteController {
             sessionState.departureTimestamp = Date()
             sendDepartEvent()
         }
-        checkAndSendOutstandingFeedbackEvents()
+        checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
     
     func alertLevelDidChange(notification: NSNotification) {
@@ -627,15 +628,20 @@ struct SessionState {
     var totalDistanceCompleted: CLLocationDistance = 0
     
     var numberOfReroutes = 0
-    var lastReroute: Date?
+    var lastRerouteDate: Date?
     
-    var currentRoute: Route!
+    var currentRoute: Route
     var currentRequestIdentifier: String?
     
-    var originalRoute: Route!
+    var originalRoute: Route
     var originalRequestIdentifier: String?
     
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
+    
+    init(currentRoute: Route, originalRoute: Route) {
+        self.currentRoute = currentRoute
+        self.originalRoute = originalRoute
+    }
 }
 
 // MARK: - Telemetry
@@ -714,7 +720,7 @@ extension RouteController {
         var eventDictionary = events.addDefaultEvents(routeController: self)
         eventDictionary["event"] = eventName
         
-        eventDictionary["secondsSinceLastReroute"] = sessionState.lastReroute != nil ? round(timestamp.timeIntervalSince(sessionState.lastReroute!)) : -1
+        eventDictionary["secondsSinceLastReroute"] = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
         for (key, value) in routeProgress.currentLegProgress.upcomingManeuverDictionary {
             eventDictionary["step\(key.uppercaseFirst)"] = value
         }
@@ -727,13 +733,13 @@ extension RouteController {
         eventDictionary["newGeometry"] = nil
         eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
-        sessionState.lastReroute = timestamp
+        sessionState.lastRerouteDate = timestamp
         sessionState.numberOfReroutes += 1
         
         outstandingFeedbackEvents.append(RerouteEvent(timestamp: timestamp, eventDictionary: eventDictionary))
     }
     
-    func checkAndSendOutstandingFeedbackEvents(forceAll: Bool = false) {
+    func checkAndSendOutstandingFeedbackEvents(forceAll: Bool) {
         let now = Date()
         let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
             now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
@@ -744,8 +750,6 @@ extension RouteController {
     }
     
     func resetSession() {
-        sessionState = SessionState()
-        sessionState.originalRoute = routeProgress.route
-        sessionState.currentRoute = routeProgress.route
+        sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
     }
 }
