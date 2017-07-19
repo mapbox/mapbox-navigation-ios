@@ -1,7 +1,6 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
-import Mapbox
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -93,10 +92,10 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     }
     
     func testRouteSwitching() {
-        MGLAccountManager.setAccessToken("foo")
         let bundle = Bundle(for: MapboxNavigationTests.self)
         var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
         let route = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
+        route.accessToken = "foo"
         
         let navigation = NavigationViewController(for: route, directions: directions)
         navigation.loadViewIfNeeded()
