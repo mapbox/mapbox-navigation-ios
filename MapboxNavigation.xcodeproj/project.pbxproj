@@ -103,6 +103,7 @@
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
 		35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A5413A1EFC052700E49846 /* RouteOptions.swift */; };
+		35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */; };
 		35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */; };
 		35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
@@ -382,6 +383,7 @@
 		359574A91F28CCBB00838209 /* LocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		35A1D3651E6624EF00A48FE8 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
 		35A5413A1EFC052700E49846 /* RouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteOptions.swift; sourceTree = "<group>"; };
+		35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCourseView.swift; sourceTree = "<group>"; };
 		35B711CF1E5E7AD2001EDA8D /* MapboxNavigationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationTests.swift; sourceTree = "<group>"; };
 		35B711D31E5E7AD2001EDA8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -648,6 +650,7 @@
 				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
 				35375EC01F31FA86004CE727 /* Settings.swift */,
 				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
+				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1379,6 +1382,7 @@
 				C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */,
 				351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */,
+				35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */,
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
