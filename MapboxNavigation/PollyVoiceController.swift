@@ -2,6 +2,7 @@ import Foundation
 import AWSPolly
 import AVFoundation
 import MapboxCoreNavigation
+import CoreLocation
 
 /**
  `PollyVoiceController` extends the default `RouteVoiceController` by providing support for AWSPolly. `RouteVoiceController` will be used as a fallback during poor network conditions.
