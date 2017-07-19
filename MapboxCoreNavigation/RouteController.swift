@@ -191,6 +191,7 @@ open class RouteController: NSObject {
         
         if let mapboxAccessToken = mapboxAccessToken {
             events.isDebugLoggingEnabled = true
+            events.isMetricsEnabledInSimulator = true
             events.isMetricsEnabledForInUsePermissions = true
             events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
             events.disableLocationMetrics()
