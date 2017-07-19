@@ -71,7 +71,6 @@ class RouteMapViewController: UIViewController {
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
-        mapView.manuallyUpdatesLocation = true
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
@@ -120,7 +119,7 @@ class RouteMapViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        mapView.setUserTrackingMode(.followWithCourse, animated: false)
+        mapView.tracksUserCourse = true
         
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
@@ -138,7 +137,7 @@ class RouteMapViewController: UIViewController {
 
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.camera = tiltedCamera
-        mapView.setUserTrackingMode(.followWithCourse, animated: true)
+        mapView.tracksUserCourse = true
         mapView.logoView.isHidden = false
         
         guard let controller = routePageViewController.currentManeuverPage else { return }
@@ -151,7 +150,7 @@ class RouteMapViewController: UIViewController {
             overviewButton.isHidden = false
             mapView.logoView.isHidden = false
             mapView.camera = tiltedCamera
-            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            mapView.tracksUserCourse = true
         } else {
             wayNameView.isHidden = true
             overviewButton.isHidden = true
@@ -239,7 +238,7 @@ class RouteMapViewController: UIViewController {
         if isInOverviewMode {
             updateVisibleBounds()
         } else {
-            mapView.userTrackingMode = .followWithCourse
+            mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
     }
@@ -507,6 +506,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
 extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
+        var mode = mode
+        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
+            mode = .followWithCourse
+        }
         if isInOverviewMode && mode != .followWithCourse {
             recenterButton.isHidden = false
             mapView.logoView.isHidden = true
@@ -530,7 +533,11 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        if mapView.userTrackingMode == .none && !isInOverviewMode {
+        var userTrackingMode = mapView.userTrackingMode
+        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
+            userTrackingMode = .followWithCourse
+        }
+        if userTrackingMode == .none && !isInOverviewMode {
             wayNameView.isHidden = true
         }
     }
@@ -571,7 +578,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             } else if mapView.userTrackingMode != .followWithCourse {
                 view.layoutIfNeeded()
                 mapView.camera = tiltedCamera
-                mapView.setUserTrackingMode(.followWithCourse, animated: true)
+                mapView.tracksUserCourse = true
             }
         }
         

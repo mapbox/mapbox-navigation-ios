@@ -118,8 +118,6 @@
 		35CC141A1F79A43B009E872A /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		35D825FB1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35DC9D8D1F431E59001ECD64 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */; };
@@ -168,6 +166,7 @@
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
+		DACCD9C91F1FDFD600BB09A1 /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 /* End PBXBuildFile section */
 
@@ -496,6 +495,7 @@
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
+		DACCD9CD1F1FE05C00BB09A1 /* Example-Swift-BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Example-Swift-BridgingHeader.h"; sourceTree = "<group>"; };
 		DAE7114C1F22E94E009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114D1F22E966009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114E1F22E977009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -596,6 +596,7 @@
 		35002D721E5F6C830090E733 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				DACCD9CD1F1FE05C00BB09A1 /* Example-Swift-BridgingHeader.h */,
 				355D20DB1EF30A6D0012B1E0 /* tunnel.route */,
 				354D9F871EF2FE900006FAA8 /* tunnel.json */,
 				35002D661E5F6B1B0090E733 /* Main.storyboard */,
@@ -713,6 +714,8 @@
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
+				35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */,
+				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -781,8 +784,6 @@
 				351BEC081E5BCC72006FE110 /* Bundle.swift */,
 				351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */,
 				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
-				35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */,
-				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
 				C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */,
 				351BEBF01E5BCC63006FE110 /* UIView.swift */,
 				35CF34B01F0A733200C2692E /* UIFont.swift */,
@@ -935,7 +936,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */,
-				35D825FB1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1363,7 +1363,6 @@
 			files = (
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
-				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
 				351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */,
 				351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */,
@@ -1418,6 +1417,7 @@
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
+				DACCD9C91F1FDFD600BB09A1 /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
@@ -1808,6 +1808,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Swift/Example-Swift-BridgingHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -1829,6 +1830,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Swift/Example-Swift-BridgingHeader.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

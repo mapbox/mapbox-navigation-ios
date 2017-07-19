@@ -1,4 +1,5 @@
 import Foundation
+import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
 import Turf
@@ -17,7 +18,7 @@ let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
 @objc(MBNavigationMapView)
-open class NavigationMapView: MGLMapView {
+open class NavigationMapView: MGLMapView, CLLocationManagerDelegate {
     
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
@@ -34,18 +35,14 @@ open class NavigationMapView: MGLMapView {
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
     let currentLegAttribute = "isCurrentLeg"
-    
-    var manuallyUpdatesLocation: Bool = false {
-        didSet {
-            if manuallyUpdatesLocation {
-                locationManager.stopUpdatingLocation()
-                locationManager.stopUpdatingHeading()
-                locationManager.delegate = nil
-            } else {
-                validateLocationServices()
-            }
-        }
-    }
+
+    let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
+        10: MGLStyleValue(rawValue: 8),
+        13: MGLStyleValue(rawValue: 9),
+        16: MGLStyleValue(rawValue: 12),
+        19: MGLStyleValue(rawValue: 24),
+        22: MGLStyleValue(rawValue: 30)
+    ]
     
     dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -90,20 +87,59 @@ open class NavigationMapView: MGLMapView {
         showsUserLocation = true
     }
     
-    override open func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
-        guard let location = locations.first else { return }
-        
-        if let modifiedLocation = navigationMapDelegate?.navigationMapView?(self, shouldUpdateTo: location) {
-            super.locationManager(manager, didUpdateLocations: [modifiedLocation])
-        } else {
-            super.locationManager(manager, didUpdateLocations: locations)
+    public var userLocationForCourseTracking: CLLocation? {
+        didSet {
+            guard let location = userLocationForCourseTracking, CLLocationCoordinate2DIsValid(location.coordinate) else {
+                return
+            }
+            
+            // didUpdateLocationWithUserTrackingAnimated
+            // didUpdateLocationIncrementallyAnimated
+            // TODO: Call setVisibleCoordinateBounds instead to account for the location view’s bottom-weighted position on-screen.
+            setCenter(location.coordinate, zoomLevel: zoomLevel, direction: location.course, animated: false, completionHandler: nil)
+            
+            // updateUserLocationAnnotationViewAnimatedWithDuration
+            if let userCourseView = userCourseView {
+                userCourseView.center = userCourseViewCenter
+            }
         }
     }
     
-    override open func validateLocationServices() {
-        if !manuallyUpdatesLocation {
-            super.validateLocationServices()
+    var tracksUserCourse: Bool = false {
+        didSet {
+            if tracksUserCourse {
+                tracksUserCourse = true
+                showsUserLocation = false
+                
+                if userCourseView == nil {
+                    let image = UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)
+                    userCourseView = UIImageView(image: image)
+                    addSubview(userCourseView!)
+                }
+                userCourseView?.isHidden = false
+            } else {
+                tracksUserCourse = false
+                showsUserLocation = true
+                userCourseView?.isHidden = true
+            }
         }
+    }
+    
+    var userCourseView: UIView?
+    
+    var userCourseViewCenter: CGPoint {
+        var edgePaddingForFollowingWithCourse = UIEdgeInsets(top: 50, left: 0, bottom: 50, right: 0)
+        if let annotationView = userCourseView {
+            edgePaddingForFollowingWithCourse.top += annotationView.frame.height
+            edgePaddingForFollowingWithCourse.bottom += annotationView.frame.height
+        }
+        
+        let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
+        var paddedContentFrame = UIEdgeInsetsInsetRect(contentFrame, edgePaddingForFollowingWithCourse)
+        if paddedContentFrame == .zero {
+            paddedContentFrame = contentFrame
+        }
+        return CGPoint(x: paddedContentFrame.midX, y: paddedContentFrame.maxY)
     }
     
     /**
@@ -549,9 +585,6 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
 
 @objc
 public protocol NavigationMapViewDelegate: class  {
-    @objc(navigationMapView:shouldUpdateToLocation:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation?
-    
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
