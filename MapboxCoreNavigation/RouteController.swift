@@ -180,6 +180,8 @@ open class RouteController: NSObject {
     }
     
     func startEvents(route: Route) {
+        var eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
+        
         var mapboxAccessToken: String? = nil
         if let accessToken = route.accessToken {
             mapboxAccessToken = accessToken
@@ -190,7 +192,7 @@ open class RouteController: NSObject {
         }
         
         if let mapboxAccessToken = mapboxAccessToken {
-            events.isDebugLoggingEnabled = true
+            events.isDebugLoggingEnabled = eventLoggingEnabled
             events.isMetricsEnabledInSimulator = true
             events.isMetricsEnabledForInUsePermissions = true
             events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
