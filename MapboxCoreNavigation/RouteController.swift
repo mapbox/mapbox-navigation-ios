@@ -702,7 +702,7 @@ extension RouteController {
         eventDictionary["event"] = eventName
         
         eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
-        eventDictionary["feedbackType"] = type.rawValue
+        eventDictionary["feedbackType"] = type.description
         eventDictionary["description"] = description
         
         eventDictionary["step"] = routeProgress.currentLegProgress.stepDictionary
