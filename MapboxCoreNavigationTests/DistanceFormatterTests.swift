@@ -14,61 +14,42 @@ class DistanceFormatterTests: XCTestCase {
         spokenDistanceFormatter.unitStyle = .long
     }
     
+    func assertDistance(_ distance: CLLocationDistance, spoken: String, displayed: String) {
+        let spokenString = spokenDistanceFormatter.string(from: distance)
+        let displayedString = distanceFormatter.string(from: distance)
+        XCTAssert(spokenString.contains(spoken), "Spoken '\(spokenString)' should be equal to '\(spoken)'")
+        XCTAssert(displayedString.contains(displayed), "Displayed: '\(displayedString)' should be equal to \(displayed)")
+    }
+    
     func testDistanceFormatters_US() {
-        spokenDistanceFormatter.forcedLocale = Locale(identifier: "en-US")
-        distanceFormatter.forcedLocale = Locale(identifier: "en-US")
+        spokenDistanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
+        distanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
         
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile/2).contains("a half mile"), "Spoken half mile")
-        XCTAssert(distanceFormatter.string(from: oneMile/2).contains("0.5 mi"), "Displayed half mile")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile).contains("1 mile"), "Spoken one mile")
-        XCTAssert(distanceFormatter.string(from: oneMile).contains("1 mi"), "Displayed one mile")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile*2.5).contains("2 & a half miles"), "Spoken 2.5 miles")
-        XCTAssert(distanceFormatter.string(from: oneMile*2.5).contains("2.5 mi"), "Displayed 2.5 miles")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile*3).contains("3 miles"), "Spoken 3 miles")
-        XCTAssert(distanceFormatter.string(from: oneMile*3).contains("3 mi"), "Displayed 3 miles")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile*3.5).contains("4 miles"), "Spoken 3.5 miles")
-        XCTAssert(distanceFormatter.string(from: oneMile*3.5).contains("4 mi"), "Displayed 3.5 miles")
+        assertDistance(oneMile/2,   spoken: "a half mile",        displayed: "0.5 mi")
+        assertDistance(oneMile,     spoken: "1 mile",             displayed: "1 mi")
+        assertDistance(oneMile*2.5, spoken: "2 & a half miles",   displayed: "2.5 mi")
+        assertDistance(oneMile*3,   spoken: "3 miles",            displayed: "3 mi")
+        assertDistance(oneMile*3.5, spoken: "4 miles",            displayed: "4 mi")
     }
     
     func testDistanceFormatters_DE() {
-        spokenDistanceFormatter.forcedLocale = Locale(identifier: "de-DE")
-        distanceFormatter.forcedLocale = Locale(identifier: "de-DE")
+        spokenDistanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
+        distanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
         
-        XCTAssert(spokenDistanceFormatter.string(from: 500).contains("500 Meter"), "Spoken 500 meter")
-        XCTAssert(distanceFormatter.string(from: 500).contains("500 m"), "Displayed 500 meter")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: 1_000).contains("1.000 Meter"), "Spoken 1000 meters")
-        XCTAssert(distanceFormatter.string(from: 1_000).contains("1.000 m"), "Displayed 1000 meters")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: 2_500).contains("2.5 Kilometer"), "Spoken 2.5 kilometers")
-        XCTAssert(distanceFormatter.string(from: 2_500).contains("2.5 km"), "Displayed 2.5 kilometers")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: 3_500).contains("4 Kilometer"), "Spoken 3.5 kilometers")
-        XCTAssert(distanceFormatter.string(from: 3_500).contains("4 km"), "Displayed 3.5 kilometers")
+        assertDistance(500,     spoken: "500 Meter",      displayed: "500 m")
+        assertDistance(1000,    spoken: "1.000 Meter",    displayed: "1.000 m")
+        assertDistance(2_500,   spoken: "2.5 Kilometer",  displayed: "2.5 km")
+        assertDistance(3_500,   spoken: "4 Kilometer",    displayed: "4 km")
     }
     
     func testDistanceFormatters_GB() {
-        spokenDistanceFormatter.forcedLocale = Locale(identifier: "en-GB")
-        distanceFormatter.forcedLocale = Locale(identifier: "en-GB")
+        spokenDistanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
+        distanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
         
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile/2).contains("a half mile"), "Spoken half mile")
-        XCTAssert(distanceFormatter.string(from: oneMile/2).contains("0.5 mi"), "Displayed half mile")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile).contains("1 mile"), "Spoken one mile")
-        XCTAssert(distanceFormatter.string(from: oneMile).contains("1 mi"), "Displayed one mile")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile*2.5).contains("2 & a half miles"), "Spoken 2.5 miles")
-        XCTAssert(distanceFormatter.string(from: oneMile*2.5).contains("2.5 mi"), "Displayed 2.5 miles")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile*3).contains("3 miles"), "Spoken 3 miles")
-        XCTAssert(distanceFormatter.string(from: oneMile*3).contains("3 mi"), "Displayed 3 miles")
-        
-        XCTAssert(spokenDistanceFormatter.string(from: oneMile*3.5).contains("4 miles"), "Spoken 3.5 miles")
-        XCTAssert(distanceFormatter.string(from: oneMile*3.5).contains("4 mi"), "Displayed 3.5 miles")
+        assertDistance(oneMile/2,   spoken: "a half mile",        displayed: "0.5 mi")
+        assertDistance(oneMile,     spoken: "1 mile",             displayed: "1 mi")
+        assertDistance(oneMile*2.5, spoken: "2 & a half miles",   displayed: "2.5 mi")
+        assertDistance(oneMile*3,   spoken: "3 miles",            displayed: "3 mi")
+        assertDistance(oneMile*3.5, spoken: "4 miles",            displayed: "4 mi")
     }
-    
 }

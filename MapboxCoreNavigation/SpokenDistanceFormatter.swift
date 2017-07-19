@@ -11,7 +11,11 @@ public class SpokenDistanceFormatter: DistanceFormatter {
      The user’s `Locale` is used here to set the units.
      */
     public override func string(from distance: CLLocationDistance) -> String {
-        numberFormatter.locale = preferredLocale
+        // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
+        let localeIdentifier = numberFormatter.locale.identifier
+        if localeIdentifier == "en-GB" || localeIdentifier == "en_GB" {
+            numberFormatter.locale = Locale(identifier: "en-US")
+        }
         
         var unit: LengthFormatter.Unit = .millimeter
         unitString(fromMeters: distance, usedUnit: &unit)

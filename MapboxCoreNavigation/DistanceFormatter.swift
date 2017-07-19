@@ -24,16 +24,8 @@ public class DistanceFormatter: LengthFormatter {
     
     let nonFractionalLengthFormatter = LengthFormatter()
     
-    var forcedLocale: Locale?
-    
-    var preferredLocale: Locale {
-        // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
-        let locale = forcedLocale ?? Locale.current
-        return locale.identifier == "en-GB" || locale.identifier == "en_GB" ? Locale(identifier: "en-US") : locale
-    }
-    
     var usesMetric: Bool {
-        let locale = preferredLocale as NSLocale
+        let locale = numberFormatter.locale as NSLocale
         guard let measurementSystem = locale.object(forKey: .measurementSystem) as? String else {
             return false
         }
@@ -74,7 +66,12 @@ public class DistanceFormatter: LengthFormatter {
      The user’s `Locale` is used here to set the units.
     */
     public func string(from distance: CLLocationDistance) -> String {
-        numberFormatter.locale = preferredLocale
+        // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
+        let localeIdentifier = numberFormatter.locale.identifier
+        if localeIdentifier == "en-GB" || localeIdentifier == "en_GB" {
+            numberFormatter.locale = Locale(identifier: "en-US")
+        }
+        
         numberFormatter.positivePrefix = ""
         numberFormatter.positiveSuffix = ""
         numberFormatter.decimalSeparator = nonFractionalLengthFormatter.numberFormatter.decimalSeparator
