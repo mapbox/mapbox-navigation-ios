@@ -25,7 +25,7 @@ public class RouteStepFormatter: Formatter {
             return instructions.string(for: step)
         }
         
-        return instructions.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, modifyValueByKey: { (key, value) -> String in
+        return instructions.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, roadClasses: step.intersections?.first?.outletRoadClasses, modifyValueByKey: { (key, value) -> String in
             switch key {
             case .wayName, .destination, .rotaryName:
                 return "<say-as interpret-as=\"address\">\(value.addingXMLEscapes)</say-as>"
