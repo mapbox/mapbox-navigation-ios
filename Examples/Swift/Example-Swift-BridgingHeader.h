@@ -1,3 +1,3 @@
 #pragma once
 
-#import "MGLMapView+MGLNavigationAdditions.h"
+#import "MGLMapView+CustomAdditions.h"

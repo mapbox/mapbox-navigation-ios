@@ -119,6 +119,7 @@
 		35CC141A1F79A43B009E872A /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35DC9D8D1F431E59001ECD64 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */; };
@@ -165,9 +166,10 @@
 		C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */; };
 		C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
+		DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
-		DACCD9C91F1FDFD600BB09A1 /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 /* End PBXBuildFile section */
 
@@ -462,6 +464,8 @@
 		DA33273D1F50C7CA00C5EE88 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
 		DA33273E1F50C7D800C5EE88 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
 		DA33273F1F50C7E400C5EE88 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DA23C9621F4FC0A600BA9522 /* MGLMapView+CustomAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+CustomAdditions.h"; sourceTree = "<group>"; };
+		DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+CustomAdditions.m"; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E911F10559600FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -717,8 +721,8 @@
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
-				35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */,
-				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
+				DA23C9621F4FC0A600BA9522 /* MGLMapView+CustomAdditions.h */,
+				DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -787,6 +791,8 @@
 				351BEC081E5BCC72006FE110 /* Bundle.swift */,
 				351BEC041E5BCC6C006FE110 /* ManeuverDirection.swift */,
 				351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */,
+				35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */,
+				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
 				C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */,
 				351BEBF01E5BCC63006FE110 /* UIView.swift */,
 				35CF34B01F0A733200C2692E /* UIFont.swift */,
@@ -938,6 +944,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */,
 				35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1366,6 +1373,7 @@
 			files = (
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
+				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
 				351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */,
 				351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */,
@@ -1421,7 +1429,7 @@
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
-				DACCD9C91F1FDFD600BB09A1 /* MGLMapView+MGLNavigationAdditions.m in Sources */,
+				DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
