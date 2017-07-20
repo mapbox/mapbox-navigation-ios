@@ -9,7 +9,7 @@ typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
 @objc(MBNavigationMapView)
-open class NavigationMapView: MGLMapView, CLLocationManagerDelegate {
+open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
     
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
@@ -87,8 +87,7 @@ open class NavigationMapView: MGLMapView, CLLocationManagerDelegate {
             // didUpdateLocationWithUserTrackingAnimated
             // didUpdateLocationIncrementallyAnimated
             // TODO: Call setVisibleCoordinateBounds instead to account for the location view’s bottom-weighted position on-screen.
-            let camera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 300, pitch: 45, heading: location.course)
-            setCamera(camera, animated: true)
+            setCenter(location.coordinate, edgePadding: followingEdgePadding, zoomLevel: zoomLevel, direction: location.course)
             
             // updateUserLocationAnnotationViewAnimatedWithDuration
             if let userCourseView = userCourseView {
@@ -96,6 +95,12 @@ open class NavigationMapView: MGLMapView, CLLocationManagerDelegate {
                 userCourseView.center = userCourseViewCenter
             }
         }
+    }
+    
+    var followingEdgePadding: UIEdgeInsets {
+        let point = userCourseViewCenter
+        let boundsAroundPoint = bounds.offsetBy(dx: point.x - bounds.midX, dy: point.y - bounds.midY)
+        return UIEdgeInsets(top: boundsAroundPoint.minY - bounds.minY, left: contentInset.left, bottom: bounds.maxY - boundsAroundPoint.maxY, right: contentInset.right)
     }
     
     var tracksUserCourse: Bool = false {

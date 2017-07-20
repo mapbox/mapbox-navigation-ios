@@ -69,10 +69,10 @@ class UserCourseView: UIView {
             layer.addSublayer(puckArrow!)
         }
         
-        if location.course >= 0 {
-            let angle = CLLocationDegrees(direction - location.course)
-            puckArrow?.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-        }
+//        if location.course >= 0 {
+//            let angle = CLLocationDegrees(direction - location.course)
+//            puckArrow?.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
+//        }
     }
     
 }
