@@ -648,14 +648,19 @@ struct SessionState {
 
 // MARK: - Telemetry
 extension RouteController {
-    
+    // MARK: Sending events
     func sendDepartEvent() {
-        let eventName = "navigation.depart"
-        
-        var eventDictionary = events.addDefaultEvents(routeController: self)
-        eventDictionary["event"] = eventName
-        
-        events.enqueueEvent(withName: eventName, attributes: eventDictionary)
+        events.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: events.navigationDepartEvent(routeController: self))
+        events.flush()
+    }
+
+    func sendArriveEvent() {
+        events.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: events.navigationArriveEvent(routeController: self))
+        events.flush()
+    }
+    
+    func sendCancelEvent() {
+        events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: events.navigationCancelEvent(routeController: self))
         events.flush()
     }
     
@@ -666,67 +671,23 @@ extension RouteController {
         }
         
         let eventName = event.eventDictionary["event"] as! String
-        
-        event.eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter {$0.timestamp <= event.timestamp}.map {$0.eventDictionary}
-        event.eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.eventDictionary}
-        
-        events.enqueueEvent(withName: eventName, attributes: event.eventDictionary)
-        events.flush()
-    }
-
-    func sendArriveEvent() {
-        let eventName = "navigation.arrive"
-        
-        var eventDictionary = events.addDefaultEvents(routeController: self)
-        eventDictionary["event"] = eventName
+        let eventDictionary = events.navigationFeedbackEventWithLocationsAdded(event: event.eventDictionary, eventTimestamp: event.timestamp, routeController: self)
         
         events.enqueueEvent(withName: eventName, attributes: eventDictionary)
         events.flush()
     }
     
-    func sendCancelEvent() {
-        let eventName = "navigation.cancel"
-
-        var eventDictionary = events.addDefaultEvents(routeController: self)
-        eventDictionary["event"] = eventName
-        eventDictionary["arrivalTimestamp"] = sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
-
-        events.enqueueEvent(withName: eventName, attributes: eventDictionary)
-        events.flush()
-    }
+    // MARK: Enqueue feedback
     
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) {
-        let eventName = "navigation.feedback"
-        
-        var eventDictionary = events.addDefaultEvents(routeController: self)
-        eventDictionary["event"] = eventName
-        
-        eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
-        eventDictionary["feedbackType"] = type.description
-        eventDictionary["description"] = description
-        
-        eventDictionary["step"] = routeProgress.currentLegProgress.stepDictionary
-        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
-
+        let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
         outstandingFeedbackEvents.append(FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary))
     }
     
     func enqueueRerouteEvent() {
-        let eventName = "navigation.reroute"
-
         let timestamp = Date()
         
-        var eventDictionary = events.addDefaultEvents(routeController: self)
-        eventDictionary["event"] = eventName
-        
-        eventDictionary["secondsSinceLastReroute"] = sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(sessionState.lastRerouteDate!)) : -1
-        eventDictionary["step"] = routeProgress.currentLegProgress.stepDictionary
-        
-        // These are placeholders until the RouteProgress is updated after rerouting
-        eventDictionary["newDistanceRemaining"] = -1
-        eventDictionary["newDurationRemaining"] = -1
-        eventDictionary["newGeometry"] = nil
-        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        let eventDictionary = events.navigationRerouteEvent(routeController: self)
         
         sessionState.lastRerouteDate = timestamp
         sessionState.numberOfReroutes += 1

@@ -141,6 +141,66 @@ extension MMEEventsManager {
     func addDefaultEvents(routeController: RouteController) -> [String: Any] {
         return EventDetails(routeController: routeController, session: routeController.sessionState).eventDictionary
     }
+    
+    func navigationDepartEvent(routeController: RouteController) -> [String: Any] {
+        var eventDictionary = self.addDefaultEvents(routeController: routeController)
+        eventDictionary["event"] = MMEEventTypeNavigationDepart
+        return eventDictionary
+    }
+    
+    func navigationArriveEvent(routeController: RouteController) -> [String: Any] {
+        var eventDictionary = self.addDefaultEvents(routeController: routeController)
+        eventDictionary["event"] = MMEEventTypeNavigationArrive
+        return eventDictionary
+    }
+    
+    func navigationCancelEvent(routeController: RouteController) -> [String: Any] {
+        var eventDictionary = self.addDefaultEvents(routeController: routeController)
+        eventDictionary["event"] = MMEEventTypeNavigationCancel
+        eventDictionary["arrivalTimestamp"] = routeController.sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
+        return eventDictionary
+    }
+    
+    func navigationFeedbackEvent(routeController: RouteController, type: FeedbackType, description: String?) -> [String: Any] {
+        var eventDictionary = self.addDefaultEvents(routeController: routeController)
+        eventDictionary["event"] = MMEEventTypeNavigationFeedback
+        
+        eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
+        eventDictionary["feedbackType"] = type.description
+        eventDictionary["description"] = description
+        
+        eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
+        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        
+        return eventDictionary
+    }
+    
+    func navigationRerouteEvent(routeController: RouteController) -> [String: Any] {
+        let timestamp = Date()
+        
+        var eventDictionary = self.addDefaultEvents(routeController: routeController)
+        eventDictionary["event"] = MMEEventTypeNavigationReroute
+        
+        eventDictionary["secondsSinceLastReroute"] = routeController.sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(routeController.sessionState.lastRerouteDate!)) : -1
+        eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
+        
+        // These are placeholders until the route controller's RouteProgress is updated after rerouting
+        eventDictionary["newDistanceRemaining"] = -1
+        eventDictionary["newDurationRemaining"] = -1
+        eventDictionary["newGeometry"] = nil
+        eventDictionary["screenshot"] = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        
+        return eventDictionary
+    }
+    
+    func navigationFeedbackEventWithLocationsAdded(event: [String: Any], eventTimestamp: Date, routeController: RouteController) -> [String: Any] {
+        var eventDictionary = event
+        
+        eventDictionary["locationsBefore"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp <= eventTimestamp}.map {$0.eventDictionary}
+        eventDictionary["locationsAfter"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp > eventTimestamp}.map {$0.eventDictionary}
+        
+        return eventDictionary
+    }
 }
 
 extension UIApplicationState {
