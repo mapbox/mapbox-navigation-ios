@@ -1,6 +1,7 @@
 import UIKit
 import Pulley
 import MapboxCoreNavigation
+import MapboxDirections
 
 class RouteTableViewController: UIViewController {
     
@@ -46,6 +47,32 @@ class RouteTableViewController: UIViewController {
             headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
         } else {
             headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
+            
+            let congestionPerLeg = routeProgress.route.legs.flatMap { $0.segmentCongestionLevels }
+            let combinedCongestionLevel = Array(congestionPerLeg.joined())
+            let timesPerLeg = routeProgress.route.legs.flatMap { $0.expectedSegmentTravelTimes }
+            let combinedTimes = Array(timesPerLeg.joined())
+            
+            var counts: [CongestionLevel: TimeInterval] = [:]
+
+            for (segmentCongestion, segmentTime) in zip(combinedCongestionLevel, combinedTimes) {
+                counts[segmentCongestion] = (counts[segmentCongestion] ?? 0) + segmentTime
+            }
+
+            if let max = counts.max(by: { a, b in a.value < b.value }) {
+                switch max.key {
+                case .unknown:
+                    return
+                case .low:
+                    headerView.timeRemaining.textColor = .green
+                case .moderate:
+                    headerView.timeRemaining.textColor = .orange
+                case .heavy:
+                    headerView.timeRemaining.textColor = .red
+                case .severe:
+                    headerView.timeRemaining.textColor = .purple
+                }
+            }
         }
     }
     
