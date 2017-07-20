@@ -317,6 +317,19 @@ class CoreFeedbackEvent: Hashable {
     }
 }
 
-class FeedbackEvent: CoreFeedbackEvent {}
+class FeedbackEvent: CoreFeedbackEvent {
+    func update(type: FeedbackType, description: String?) {
+        eventDictionary["feedbackType"] = type.description
+        eventDictionary["description"] = description
+    }
+}
 
-class RerouteEvent: CoreFeedbackEvent {}
+class RerouteEvent: CoreFeedbackEvent {
+    func update(newRoute: Route) {
+        if let geometry = newRoute.coordinates {
+            eventDictionary["newGeometry"] = Polyline(coordinates: geometry).encodedPolyline
+            eventDictionary["newDistanceRemaining"] = round(newRoute.distance)
+            eventDictionary["newDurationRemaining"] = round(newRoute.expectedTravelTime)
+        }
+    }
+}

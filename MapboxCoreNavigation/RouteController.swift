@@ -256,9 +256,8 @@ open class RouteController: NSObject {
      Update the last recorded feedback event, for example if you have a custom feedback UI that lets a user elaborate on an issue.
      */
     public func updateLastFeedback(type: FeedbackType, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.filter({$0 is FeedbackEvent}).last {
-            lastFeedback.eventDictionary["feedbackType"] = type.description
-            lastFeedback.eventDictionary["description"] = description
+        if let lastFeedback = outstandingFeedbackEvents.map({$0 as? FeedbackEvent}).last {
+            lastFeedback?.update(type: type, description: description)
         }
     }
     
@@ -294,13 +293,8 @@ extension RouteController {
     }
     
     func didReroute(notification: NSNotification) {
-        let route = routeProgress.route
-        if let lastReroute = outstandingFeedbackEvents.filter({$0 is RerouteEvent }).last {
-            if let geometry = route.coordinates {
-                lastReroute.eventDictionary["newGeometry"] = Polyline(coordinates: geometry).encodedPolyline
-                lastReroute.eventDictionary["newDistanceRemaining"] = round(route.distance)
-                lastReroute.eventDictionary["newDurationRemaining"] = round(route.expectedTravelTime)
-            }
+        if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
+            lastReroute?.update(newRoute: routeProgress.route)
         }
     }
 }
