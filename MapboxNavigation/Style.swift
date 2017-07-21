@@ -196,6 +196,11 @@ public class Style: NSObject {
     public var trafficSevereColor: UIColor?
     
     /**
+     Sets an alternate color used throughout the UI to denote low traffic congestion. Not used to style the route line.
+     */
+    public var trafficAlternateLowColor: UIColor?
+    
+    /**
      Applies the style for all changed properties.
      */
     public func apply() {
@@ -332,6 +337,10 @@ public class Style: NSObject {
         
         if let color = trafficSevereColor {
             NavigationMapView.appearance(for: traitCollection).trafficSevereColor = color
+        }
+        
+        if let color = trafficAlternateLowColor {
+            NavigationMapView.appearance(for: traitCollection).trafficAlternateLowColor = color
         }
     }
 }

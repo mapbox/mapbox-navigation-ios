@@ -48,29 +48,37 @@ class RouteTableViewController: UIViewController {
         } else {
             headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
             
-            let congestionPerLeg = routeProgress.route.legs.flatMap { $0.segmentCongestionLevels }
+            guard let coordinates = routeProgress.route.coordinates else { return }
+            
+            // To keep this cheap, use the fraction traveled along the current route.
+            // From this, we can estimate what coordinates in the route remain.
+            // This color change does not need to be 100% accurate, 
+            // just a rough estimation of remaining route congestion.
+            let estimatedCoordinatesRemaining = Int(floor(Double(coordinates.count) * routeProgress.fractionTraveled))
+            
+            let congestionPerLeg = routeProgress.route.legs.flatMap { $0.segmentCongestionLevels }.suffix(estimatedCoordinatesRemaining)
             let combinedCongestionLevel = Array(congestionPerLeg.joined())
             let timesPerLeg = routeProgress.route.legs.flatMap { $0.expectedSegmentTravelTimes }
-            let combinedTimes = Array(timesPerLeg.joined())
+            let combinedTimes = Array(timesPerLeg.joined()).suffix(estimatedCoordinatesRemaining)
             
-            var counts: [CongestionLevel: TimeInterval] = [:]
+            var travelTimePerCongestionLeve: [CongestionLevel: TimeInterval] = [:]
 
             for (segmentCongestion, segmentTime) in zip(combinedCongestionLevel, combinedTimes) {
-                counts[segmentCongestion] = (counts[segmentCongestion] ?? 0) + segmentTime
+                travelTimePerCongestionLeve[segmentCongestion] = (travelTimePerCongestionLeve[segmentCongestion] ?? 0) + segmentTime
             }
 
-            if let max = counts.max(by: { a, b in a.value < b.value }) {
+            if let max = travelTimePerCongestionLeve.max(by: { a, b in a.value < b.value }) {
                 switch max.key {
                 case .unknown:
-                    return
+                    headerView.timeRemaining.textColor = .trafficAlternateLow
                 case .low:
-                    headerView.timeRemaining.textColor = .green
+                    headerView.timeRemaining.textColor = .trafficAlternateLow
                 case .moderate:
-                    headerView.timeRemaining.textColor = .orange
+                    headerView.timeRemaining.textColor = .trafficModerate
                 case .heavy:
-                    headerView.timeRemaining.textColor = .red
+                    headerView.timeRemaining.textColor = .trafficHeavy
                 case .severe:
-                    headerView.timeRemaining.textColor = .purple
+                    headerView.timeRemaining.textColor = .trafficSevere
                 }
             }
         }
