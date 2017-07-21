@@ -283,7 +283,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-        guard let snappedLocation = locationSnappedToRoute(from: location) else {
+        guard let snappedLocation = routeController.snappedLocation else {
             return nil
         }
         updateWayNameLabel(for: snappedLocation)
@@ -291,13 +291,11 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func updateWayNameLabel(for location: CLLocation) {
-        guard routeController.userIsOnRoute(location) else { return }
         guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else { return }
-        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return }
-
+        
         // Add current way name to UI
         if let style = mapView.style, recenterButton.isHidden && hasFinishedLoadingMap {
-            let closestCoordinate = snappedCoordinate.coordinate
+            let closestCoordinate = location.coordinate
             let roadLabelLayerIdentifier = "roadLabelLayer"
             var streetsSources = style.sources.flatMap {
                 $0 as? MGLVectorSource
@@ -369,55 +367,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 wayNameView.isHidden = true
             }
         }
-    }
-    
-    func locationSnappedToRoute(from location: CLLocation) -> CLLocation? {
-        guard routeController.userIsOnRoute(location) else { return nil }
-        guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
-        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
-        
-        // Snap user and course to route
-        guard routeController.snapsUserLocationAnnotationToRoute else {
-            return location
-        }
-        
-        guard location.course != -1, location.speed >= 0 else {
-            return location
-        }
-        
-        let nearByCoordinates = routeController.routeProgress.currentLegProgress.nearbyCoordinates
-        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return location }
-        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
-        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
-
-        // Get closest point infront of user
-        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
-        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
-        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
-        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
-        
-        // Get direction of these points
-        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
-        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
-        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
-        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
-        let wrappedCourse = wrap(location.course, min: -180, max: 180)
-        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
-        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
-        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
-        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
-
-        guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
-            return location
-        }
-
-        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
-        
-        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
-            return location
-        }
-        
-        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 

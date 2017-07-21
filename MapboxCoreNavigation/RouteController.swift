@@ -232,6 +232,67 @@ open class RouteController: NSObject {
     }
     
     /**
+     The most recently received user location.
+     
+     This is a raw location received from `locationManager`. If `snapsUserLocationAnnotationToRoute` is set to `true`, you can obtain an idealized location from the `snappedLocation` property.
+     */
+    public var location: CLLocation?
+    
+    /**
+     The most recently received user location, snapped to the route line.
+     
+     If `snapsUserLocationAnnotationToRoute` is set to `true`, this property contains a `CLLocation` object located along the route line near the `CLLocation` object in the `location` property. This property is set to `nil` if the route controller is unable to snap `location` to the route line for some reason.
+     */
+    public var snappedLocation: CLLocation? {
+        guard let location = location, userIsOnRoute(location) else { return nil }
+        guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
+        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
+        
+        // Snap user and course to route
+        guard snapsUserLocationAnnotationToRoute else {
+            return location
+        }
+        
+        guard location.course != -1, location.speed >= 0 else {
+            return location
+        }
+        
+        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return location }
+        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
+        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
+
+        // Get closest point infront of user
+        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
+        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
+        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
+        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
+        
+        // Get direction of these points
+        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
+        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
+        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
+        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
+        let wrappedCourse = wrap(location.course, min: -180, max: 180)
+        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
+        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
+        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
+        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
+
+        guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
+            return location
+        }
+
+        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
+        
+        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
+            return location
+        }
+        
+        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+    }
+    
+    /**
      Send feedback about the current road segment/maneuver to the Mapbox data team.
      
      You can pair this with a custom feedback UI in your app to flag problems during navigation
@@ -330,6 +391,7 @@ extension RouteController: CLLocationManagerDelegate {
         guard let location = locations.last else {
             return
         }
+        self.location = location
         
         delegate?.routeController?(self, didUpdateLocations: [location])
         
