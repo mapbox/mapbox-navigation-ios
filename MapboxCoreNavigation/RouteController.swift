@@ -180,7 +180,7 @@ open class RouteController: NSObject {
     }
     
     func startEvents(route: Route) {
-        var eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
+        let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
         
         var mapboxAccessToken: String? = nil
         if let accessToken = route.accessToken {
