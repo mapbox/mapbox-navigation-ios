@@ -132,12 +132,6 @@ open class RouteController: NSObject {
         }
     }
     
-    /**
-     If true, the user puck is snapped to closest location on the route. 
-     Defaults to false.
-     */
-    public var snapsUserLocationAnnotationToRoute = true
-    
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
     
@@ -234,24 +228,19 @@ open class RouteController: NSObject {
     /**
      The most recently received user location.
      
-     This is a raw location received from `locationManager`. If `snapsUserLocationAnnotationToRoute` is set to `true`, you can obtain an idealized location from the `snappedLocation` property.
+     This is a raw location received from `locationManager`. To obtain an idealized location, use the `snappedLocation` property.
      */
     public var location: CLLocation?
     
     /**
      The most recently received user location, snapped to the route line.
      
-     If `snapsUserLocationAnnotationToRoute` is set to `true`, this property contains a `CLLocation` object located along the route line near the `CLLocation` object in the `location` property. This property is set to `nil` if the route controller is unable to snap `location` to the route line for some reason.
+     This property contains a `CLLocation` object located along the route line near the `CLLocation` object in the `location` property. This property is set to `nil` if the route controller is unable to snap `location` to the route line for some reason.
      */
     public var snappedLocation: CLLocation? {
         guard let location = location, userIsOnRoute(location) else { return nil }
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
-        
-        // Snap user and course to route
-        guard snapsUserLocationAnnotationToRoute else {
-            return location
-        }
         
         guard location.course != -1, location.speed >= 0 else {
             return location

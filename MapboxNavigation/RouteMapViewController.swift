@@ -18,6 +18,13 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
     
+    /**
+     Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
+     
+     By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
+     */
+    var snapsUserLocationAnnotationToRoute = true
+    
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
@@ -286,6 +293,9 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             return nil
         }
         labelCurrentRoad(at: snappedLocation)
+        guard snapsUserLocationAnnotationToRoute else {
+            return nil
+        }
         return snappedLocation
     }
     
