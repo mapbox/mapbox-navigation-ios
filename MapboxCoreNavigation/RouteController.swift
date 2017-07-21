@@ -1,6 +1,9 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import Polyline
+import MapboxMobileEvents
+
 
 /**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
@@ -78,6 +81,8 @@ open class RouteController: NSObject {
     
     var lastTimeStampSpentMovingAwayFromStart = Date()
     
+    let events = MMEEventsManager.shared()
+    
     /**
      The route controller’s delegate.
      */
@@ -107,7 +112,18 @@ open class RouteController: NSObject {
      Details about the user’s progress along the current route, leg, and step.
      */
     public var routeProgress: RouteProgress {
+        willSet {
+            // Save any progress completed up until now
+            sessionState.totalDistanceCompleted += routeProgress.distanceTraveled
+        }
         didSet {
+            // if the user has already arrived and a new route has been set, restart the navigation session
+            if sessionState.arrivalTimestamp != nil {
+                resetSession()
+            } else {
+                sessionState.currentRoute = routeProgress.route
+            }
+            
             var userInfo = [String: Any]()
             if let location = locationManager.location {
                 userInfo[MBRouteControllerNotificationLocationKey] = location
@@ -122,9 +138,16 @@ open class RouteController: NSObject {
      */
     public var snapsUserLocationAnnotationToRoute = true
     
+    var isRerouting = false
     var lastRerouteLocation: CLLocation?
     
     var routeTask: URLSessionDataTask?
+    
+    /// :nodoc: This is used internally when the navigation UI is being used
+    public var usesDefaultUserInterface = false
+    
+    var sessionState:SessionState
+    var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
     /**
      Intializes a new `RouteController`.
@@ -132,9 +155,11 @@ open class RouteController: NSObject {
      - parameter route: The route to follow.
      - parameter directions: The Directions object that created `route`.
      - parameter locationManager: The associated location manager.
+     - parameter accessToken: Optional Mapbox accessToken.
      */
     @objc(initWithRoute:directions:locationManager:)
     public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
+        self.sessionState = SessionState(currentRoute: route, originalRoute: route)
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
@@ -142,10 +167,51 @@ open class RouteController: NSObject {
         super.init()
         
         self.locationManager.delegate = self
+        self.resumeNotifications()
+        self.startEvents(route: route)
+        self.resetSession()
     }
     
     deinit {
         suspendLocationUpdates()
+        checkAndSendOutstandingFeedbackEvents(forceAll: true)
+        sendCancelEvent()
+        suspendNotifications()
+    }
+    
+    func startEvents(route: Route) {
+        var eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
+        
+        var mapboxAccessToken: String? = nil
+        if let accessToken = route.accessToken {
+            mapboxAccessToken = accessToken
+        } else if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+            let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
+            let token = dict["MGLMapboxAccessToken"] as? String {
+            mapboxAccessToken = token
+        }
+        
+        if let mapboxAccessToken = mapboxAccessToken {
+            events.isDebugLoggingEnabled = eventLoggingEnabled
+            events.isMetricsEnabledInSimulator = true
+            events.isMetricsEnabledForInUsePermissions = true
+            events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+            events.disableLocationMetrics()
+            events.sendTurnstileEvent()
+        } else {
+            assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
+        }
+    }
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self)
     }
     
     /**
@@ -164,6 +230,72 @@ open class RouteController: NSObject {
     public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+    }
+    
+    /**
+     Send feedback about the current road segment/maneuver to the Mapbox data team.
+     
+     You can pair this with a custom feedback UI in your app to flag problems during navigation
+     such as road closures, incorrect instructions, etc. 
+     
+     With the help of a custom `description` to elaborate on the nature of the problem, using
+     this function will automatically flag the road segment/maneuver the user is currently on for 
+     closer inspection by Mapbox's system and team.
+     
+     If you provide a custom feedback UI that lets users elaborate on an 
+     issue, you should call this before you show the custom UI so the 
+     location and timestamp are more accurate. You can then call 
+     `updateLastFeedback()` to attach any additional metadata to the 
+     feedback.
+     */
+    public func recordFeedback(type: FeedbackType, description: String?) {
+        enqueueFeedbackEvent(type: type, description: description)
+    }
+    
+    /**
+     Update the last recorded feedback event, for example if you have a custom feedback UI that lets a user elaborate on an issue.
+     */
+    public func updateLastFeedback(type: FeedbackType, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.map({$0 as? FeedbackEvent}).last {
+            lastFeedback?.update(type: type, description: description)
+        }
+    }
+    
+    /**
+     Discard the last recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
+     */
+    public func cancelLastFeedback(type: FeedbackType, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.filter({$0 is FeedbackEvent}).last, let index = outstandingFeedbackEvents.index(of: lastFeedback) {
+            outstandingFeedbackEvents.remove(at: index)
+        }
+    }
+}
+
+extension RouteController {
+    func progressDidChange(notification: NSNotification) {
+        if sessionState.departureTimestamp == nil {
+            sessionState.departureTimestamp = Date()
+            sendDepartEvent()
+        }
+        checkAndSendOutstandingFeedbackEvents(forceAll: false)
+    }
+    
+    func alertLevelDidChange(notification: NSNotification) {
+        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
+        if alertLevel == .arrive && sessionState.arrivalTimestamp == nil {
+            sessionState.arrivalTimestamp = Date()
+            sendArriveEvent()
+        }
+    }
+    
+    func willReroute(notification: NSNotification) {
+        enqueueRerouteEvent()
+    }
+    
+    func didReroute(notification: NSNotification) {
+        if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
+            lastReroute?.update(newRoute: routeProgress.route)
+        }
     }
 }
 
@@ -202,6 +334,8 @@ extension RouteController: CLLocationManagerDelegate {
         
         delegate?.routeController?(self, didUpdateLocations: [location])
         
+        sessionState.pastLocations.push(location)
+
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
         
         if isDeadReckoningEnabled {
@@ -334,12 +468,17 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func reroute(from location: CLLocation) {
-        
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
                 return
             }
         }
+
+        if isRerouting {
+            return
+        }
+        
+        isRerouting = true
         
         resetStartCounter()
         delegate?.routeController?(self, willRerouteFrom: location)
@@ -364,6 +503,10 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+            defer {
+                self?.isRerouting = false
+            }
+            
             guard let strongSelf = self else {
                 return
             }
@@ -473,5 +616,93 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         incrementRouteProgress(alertLevel, location: location, updateStepIndex: updateStepIndex)
+    }
+}
+
+struct SessionState {
+    let identifier = UUID()
+    var departureTimestamp: Date?
+    var arrivalTimestamp: Date?
+    
+    var totalDistanceCompleted: CLLocationDistance = 0
+    
+    var numberOfReroutes = 0
+    var lastRerouteDate: Date?
+    
+    var currentRoute: Route
+    var currentRequestIdentifier: String?
+    
+    var originalRoute: Route
+    var originalRequestIdentifier: String?
+    
+    var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
+    
+    init(currentRoute: Route, originalRoute: Route) {
+        self.currentRoute = currentRoute
+        self.originalRoute = originalRoute
+    }
+}
+
+// MARK: - Telemetry
+extension RouteController {
+    // MARK: Sending events
+    func sendDepartEvent() {
+        events.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: events.navigationDepartEvent(routeController: self))
+        events.flush()
+    }
+
+    func sendArriveEvent() {
+        events.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: events.navigationArriveEvent(routeController: self))
+        events.flush()
+    }
+    
+    func sendCancelEvent() {
+        events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: events.navigationCancelEvent(routeController: self))
+        events.flush()
+    }
+    
+    func sendFeedbackEvent(event: CoreFeedbackEvent) {
+        // remove from outstanding event queue
+        if let index = outstandingFeedbackEvents.index(of: event) {
+            outstandingFeedbackEvents.remove(at: index)
+        }
+        
+        let eventName = event.eventDictionary["event"] as! String
+        let eventDictionary = events.navigationFeedbackEventWithLocationsAdded(event: event.eventDictionary, eventTimestamp: event.timestamp, routeController: self)
+        
+        events.enqueueEvent(withName: eventName, attributes: eventDictionary)
+        events.flush()
+    }
+    
+    // MARK: Enqueue feedback
+    
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?) {
+        let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
+        outstandingFeedbackEvents.append(FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary))
+    }
+    
+    func enqueueRerouteEvent() {
+        let timestamp = Date()
+        
+        let eventDictionary = events.navigationRerouteEvent(routeController: self)
+        
+        sessionState.lastRerouteDate = timestamp
+        sessionState.numberOfReroutes += 1
+        
+        outstandingFeedbackEvents.append(RerouteEvent(timestamp: timestamp, eventDictionary: eventDictionary))
+    }
+    
+    func checkAndSendOutstandingFeedbackEvents(forceAll: Bool) {
+        let now = Date()
+        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
+            now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
+        }
+        for event in eventsToPush {
+            sendFeedbackEvent(event: event)
+        }
+    }
+    
+    func resetSession() {
+        sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
     }
 }

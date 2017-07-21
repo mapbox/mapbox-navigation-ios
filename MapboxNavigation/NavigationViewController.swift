@@ -195,6 +195,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var sendNotifications: Bool = true
     
+    public var showsReportFeedback: Bool = false {
+        didSet {
+            mapViewController?.reportButton.isHidden = !showsReportFeedback
+        }
+    }
+    
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     
@@ -232,6 +238,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.route = route
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager())
+        self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
         let annotation = MGLPointAnnotation()
@@ -329,6 +336,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+        }
+        
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {

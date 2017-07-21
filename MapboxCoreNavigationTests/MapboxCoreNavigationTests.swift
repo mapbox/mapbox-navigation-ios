@@ -15,6 +15,7 @@ let waitForInterval: TimeInterval = 5
 class MapboxCoreNavigationTests: XCTestCase {
     
     func testDepart() {
+        route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions)
         navigation.resume()
         let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
@@ -36,6 +37,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testLowAlert() {
+        route.accessToken = "foo"
         let locations = [CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789118, longitude: -122.432209),
                                     altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())]
         let locationManager = ReplayLocationManager(locations: locations)
@@ -59,6 +61,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testShouldReroute() {
+        route.accessToken = "foo"
         let firstLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123),
                                        altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 0,
                                        timestamp: Date())
@@ -94,6 +97,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
         let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
+        route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         
         self.expectation(forNotification: RouteControllerProgressDidChange.rawValue, object: navigation) { (notification) -> Bool in

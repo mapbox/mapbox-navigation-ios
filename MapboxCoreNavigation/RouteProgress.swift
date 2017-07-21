@@ -117,6 +117,7 @@ open class RouteProgress: NSObject {
      Returns the progress along the current `RouteLeg`.
      */
     public var currentLegProgress: RouteLegProgress!
+    
 
     /**
      Intializes a new `RouteProgress`.
