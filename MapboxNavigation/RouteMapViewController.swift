@@ -283,10 +283,17 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-
-        guard routeController.userIsOnRoute(location) else { return nil }
-        guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
-        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
+        guard let snappedLocation = locationSnappedToRoute(from: location) else {
+            return nil
+        }
+        updateWayNameLabel(for: snappedLocation)
+        return snappedLocation
+    }
+    
+    func updateWayNameLabel(for location: CLLocation) {
+        guard routeController.userIsOnRoute(location) else { return }
+        guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else { return }
+        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return }
 
         // Add current way name to UI
         if let style = mapView.style, recenterButton.isHidden && hasFinishedLoadingMap {
@@ -362,7 +369,12 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 wayNameView.isHidden = true
             }
         }
-        
+    }
+    
+    func locationSnappedToRoute(from location: CLLocation) -> CLLocation? {
+        guard routeController.userIsOnRoute(location) else { return nil }
+        guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
+        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
         // Snap user and course to route
         guard routeController.snapsUserLocationAnnotationToRoute else {
