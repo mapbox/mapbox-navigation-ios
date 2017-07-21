@@ -286,86 +286,92 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         guard let snappedLocation = routeController.snappedLocation else {
             return nil
         }
-        updateWayNameLabel(for: snappedLocation)
+        labelCurrentRoad(at: snappedLocation)
         return snappedLocation
     }
     
-    func updateWayNameLabel(for location: CLLocation) {
-        guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else { return }
+    /**
+     Updates the current road name label to reflect the road on which the user is currently traveling.
+     
+     - parameter location: The user’s current location.
+     */
+    func labelCurrentRoad(at location: CLLocation) {
+        guard let style = mapView.style,
+            let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
+            recenterButton.isHidden && hasFinishedLoadingMap else {
+            return
+        }
         
-        // Add current way name to UI
-        if let style = mapView.style, recenterButton.isHidden && hasFinishedLoadingMap {
-            let closestCoordinate = location.coordinate
-            let roadLabelLayerIdentifier = "roadLabelLayer"
-            var streetsSources = style.sources.flatMap {
-                $0 as? MGLVectorSource
-                }.filter {
-                    $0.isMapboxStreets
+        let closestCoordinate = location.coordinate
+        let roadLabelLayerIdentifier = "roadLabelLayer"
+        var streetsSources = style.sources.flatMap {
+            $0 as? MGLVectorSource
+            }.filter {
+                $0.isMapboxStreets
+        }
+        
+        // Add Mapbox Streets if the map does not already have it
+        if streetsSources.isEmpty {
+            let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
+            style.addSource(source)
+            streetsSources.append(source)
+        }
+        
+        if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
+            let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
+            streetLabelLayer.sourceLayerIdentifier = "road_label"
+            streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
+            streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 20)
+            streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
+            style.insertLayer(streetLabelLayer, at: 0)
+        }
+        
+        let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
+        let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+        var smallestLabelDistance = Double.infinity
+        var currentName: String?
+        
+        for feature in features {
+            var allLines: [MGLPolyline] = []
+            
+            if let line = feature as? MGLPolylineFeature {
+                allLines.append(line)
+            } else if let lines = feature as? MGLMultiPolylineFeature {
+                allLines = lines.polylines
             }
             
-            // Add Mapbox Streets if the map does not already have it
-            if streetsSources.isEmpty {
-                let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
-                style.addSource(source)
-                streetsSources.append(source)
-            }
-            
-            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
-                let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
-                streetLabelLayer.sourceLayerIdentifier = "road_label"
-                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
-                streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 20)
-                streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
-                style.insertLayer(streetLabelLayer, at: 0)
-            }
-            
-            let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
-            let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
-            var smallestLabelDistance = Double.infinity
-            var currentName: String?
-            
-            for feature in features {
-                var allLines: [MGLPolyline] = []
+            for line in allLines {
+                let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
+                let slicedLine = polyline(along: stepCoordinates, from: closestCoordinate)
                 
-                if let line = feature as? MGLPolylineFeature {
-                    allLines.append(line)
-                } else if let lines = feature as? MGLMultiPolylineFeature {
-                    allLines = lines.polylines
-                }
+                let lookAheadDistance:CLLocationDistance = 10
+                guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: closestCoordinate)) else { continue }
+                guard let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine) else { continue }
+                guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: closestCoordinate)) else { continue }
                 
-                for line in allLines {
-                    let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
-                    let slicedLine = polyline(along: stepCoordinates, from: closestCoordinate)
+                let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
+                let distanceBetweenReversedPoint = reversedPoint - pointAheadUser
+                let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenReversedPoint)
+                
+                if minDistanceBetweenPoints < smallestLabelDistance {
+                    smallestLabelDistance = minDistanceBetweenPoints
                     
-                    let lookAheadDistance:CLLocationDistance = 10
-                    guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: closestCoordinate)) else { continue }
-                    guard let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine) else { continue }
-                    guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: closestCoordinate)) else { continue }
-                    
-                    let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
-                    let distanceBetweenReversedPoint = reversedPoint - pointAheadUser
-                    let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenReversedPoint)
-                    
-                    if minDistanceBetweenPoints < smallestLabelDistance {
-                        smallestLabelDistance = minDistanceBetweenPoints
-                        
-                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else {
-                            currentName = nil
-                        }
+                    if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
+                        currentName = name
+                    } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
+                        currentName = name
+                    } else {
+                        currentName = nil
                     }
                 }
             }
-            
-            if smallestLabelDistance < 5 && currentName != nil {
-                wayNameLabel.text = currentName
-                wayNameView.isHidden = false
-            } else {
-                wayNameView.isHidden = true
-            }
+        }
+        
+        if smallestLabelDistance < 5 && currentName != nil {
+            wayNameLabel.text = currentName
+            wayNameView.isHidden = false
+        } else {
+            wayNameView.isHidden = true
         }
     }
 }
