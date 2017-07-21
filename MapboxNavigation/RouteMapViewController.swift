@@ -281,7 +281,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         hasFinishedLoadingMap = true
     }
 
-    @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
         guard let snappedLocation = routeController.snappedLocation else {
             return nil
