@@ -86,7 +86,7 @@ open class RouteController: NSObject {
     /**
      The Directions object used to create the route.
      */
-    public let directions: Directions
+    public var directions: Directions
     
     /**
      The route controller’s associated location manager.
@@ -350,7 +350,6 @@ extension RouteController: CLLocationManagerDelegate {
         routeTask?.cancel()
         
         let options = routeProgress.route.routeOptions
-        
         options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
         
         if let firstWaypoint = options.waypoints.first, location.course >= 0 {
@@ -359,6 +358,10 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         self.lastRerouteLocation = location
+        
+        if let accessToken = routeProgress.route.accessToken, let apiEndpoint = routeProgress.route.apiEndpoint, let host = apiEndpoint.host {
+            directions = Directions(accessToken: accessToken, host: host)
+        }
         
         routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
             guard let strongSelf = self else {
