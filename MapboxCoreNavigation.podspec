@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxCoreNavigation"
 
   s.dependency "MapboxDirections.swift", "~> 0.10.1"
-  s.dependency "OSRMTextInstructions", "~> 0.3"
+  s.dependency "OSRMTextInstructions", "~> 0.3.0"
   s.dependency "MapboxMobileEvents", "~> 0.2"
 
 end
