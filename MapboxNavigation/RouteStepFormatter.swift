@@ -21,18 +21,16 @@ public class RouteStepFormatter: Formatter {
             return nil
         }
         
-        guard markUpWithSSML else {
-            return instructions.string(for: step)
-        }
-        
-        return instructions.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, roadClasses: step.intersections?.first?.outletRoadClasses, modifyValueByKey: { (key, value) -> String in
+        let modifyValueByKey = { (key: OSRMTextInstructions.TokenType, value: String) -> String in
             switch key {
             case .wayName, .destination, .rotaryName:
                 return "<say-as interpret-as=\"address\">\(value.addingXMLEscapes)</say-as>"
             default:
                 return value
             }
-        })
+        }
+        
+        return instructions.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, roadClasses: step.intersections?.first?.outletRoadClasses, modifyValueByKey: markUpWithSSML ? modifyValueByKey : nil)
         
     }
     
