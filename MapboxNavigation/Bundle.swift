@@ -13,3 +13,10 @@ var ShieldImageNamesByPrefix: [String: String] = {
     }
     return NSDictionary(contentsOfFile: plistPath) as! [String: String]
 }()
+
+var HighwayNamesByPrefix: [String: String] = {
+    guard let plistPath = Bundle.mapboxNavigation.path(forResource: "Highways", ofType: "plist") else {
+        return [:]
+    }
+    return NSDictionary(contentsOfFile: plistPath) as! [String: String]
+}()

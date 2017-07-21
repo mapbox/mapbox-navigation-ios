@@ -170,10 +170,14 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func updateStreetNameForStep() {
-        if let name = step?.names?.first {
-            destinationLabel.unabridgedText = name
-        } else if let destinations = step?.destinations {
+        if let destinations = step?.destinations {
             destinationLabel.unabridgedText = destinations.prefix(min(numberOfDestinationLines, destinations.count)).joined(separator: "\n")
+        } else if let name = step?.names?.first {
+            if let ref = step.codes?.first, name.isFreeway {
+                destinationLabel.unabridgedText = ref
+            } else {
+                destinationLabel.unabridgedText = name
+            }
         } else if let step = step {
             destinationLabel.unabridgedText = routeStepFormatter.string(for: step)
         }

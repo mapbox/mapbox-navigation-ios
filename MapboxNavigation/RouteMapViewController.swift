@@ -344,10 +344,26 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                     if minDistanceBetweenPoints < smallestLabelDistance {
                         smallestLabelDistance = minDistanceBetweenPoints
                         
-                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
+                        if let line = feature as? MGLPolylineFeature {
+                            if let name = line.attribute(forKey: "name") as? String, !name.isFreeway {
+                                currentName = name
+                            } else if let ref = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String {
+                                if let highwayName = HighwayNamesByPrefix[shield] {
+                                    currentName = "\(highwayName) \(ref)"
+                                } else {
+                                    currentName = ref
+                                }
+                            }
+                        } else if let line = feature as? MGLMultiPolylineFeature {
+                            if let name = line.attribute(forKey: "name") as? String, !name.isFreeway {
+                                currentName = name
+                            } else if let ref = line.attribute(forKey: "ref") as? String, let shield = line.attribute(forKey: "shield") as? String {
+                                if let highwayName = HighwayNamesByPrefix[shield] {
+                                    currentName = "\(highwayName) \(ref)"
+                                } else {
+                                    currentName = ref
+                                }
+                            }
                         } else {
                             currentName = nil
                         }
@@ -355,7 +371,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 }
             }
             
-            if smallestLabelDistance < 5 && currentName != nil {
+            if smallestLabelDistance < 10 && currentName != nil {
                 wayNameLabel.text = currentName
                 wayNameView.isHidden = false
             } else {
