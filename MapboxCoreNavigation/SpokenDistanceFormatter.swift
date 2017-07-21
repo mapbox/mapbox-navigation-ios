@@ -38,25 +38,13 @@ public class SpokenDistanceFormatter: DistanceFormatter {
         
         numberFormatter.usesSignificantDigits = false
         numberFormatter.maximumFractionDigits = maximumFractionDigits(for: distance)
-        numberFormatter.roundingIncrement = 0.25
+        numberFormatter.roundingIncrement = roundingIncrement(for: distance, unit: unit) as NSNumber
         
-        var formattedDistance: String
-        if unit == .yard {
-            if distance.miles > 0.2 {
-                unit = .mile
-                formattedDistance = string(fromValue: distance.miles, unit: unit)
-            } else {
-                unit = .foot
-                numberFormatter.roundingIncrement = 50
-                formattedDistance = string(fromValue: distance.feet, unit: unit)
-            }
-        } else {
-            formattedDistance = string(fromMeters: distance)
-        }
+        var distanceString = formattedDistance(distance, modify: &unit)
         
         // Elaborate hack continued.
         if showsMixedFraction {
-            var parts = formattedDistance.components(separatedBy: "|")
+            var parts = distanceString.components(separatedBy: "|")
             assert(parts.count == 3, "Positive format should’ve inserted two pipe characters.")
             var numberParts = parts[1].components(separatedBy: "!")
             assert(numberParts.count == 2, "Decimal separator should be present.")
@@ -88,10 +76,10 @@ public class SpokenDistanceFormatter: DistanceFormatter {
             } else {
                 parts[1] = numberParts.joined(separator: nonFractionalLengthFormatter.numberFormatter.decimalSeparator)
             }
-            formattedDistance = parts.joined(separator: "")
+            distanceString = parts.joined(separator: "")
         }
         
-        return formattedDistance
+        return distanceString
     }
     
     

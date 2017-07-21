@@ -14,6 +14,10 @@ extension CLLocationDistance {
     var feet: CLLocationDistance {
         return self * feetPerMeter
     }
+    
+    var kilometers: CLLocationDistance {
+        return self / 1000
+    }
 }
 
 /// Provides appropriately formatted, localized descriptions of linear distances.
@@ -60,6 +64,27 @@ public class DistanceFormatter: LengthFormatter {
         }
     }
     
+    func roundingIncrement(for distance: CLLocationDistance, unit: LengthFormatter.Unit) -> Double {
+        if usesMetric {
+            if distance < 100 {
+                return 25
+            } else if distance < 1_000 {
+                return 50
+            }
+            return distance < 3_000 ? 0 : 0.5
+        } else {
+            if unit == .yard {
+                if distance.miles > 0.2 {
+                    return 0
+                } else {
+                    return 50
+                }
+            } else {
+                return 0.25
+            }
+        }
+    }
+    
     /**
      Returns a more human readable `String` from a given `CLLocationDistance`.
      
@@ -76,25 +101,38 @@ public class DistanceFormatter: LengthFormatter {
         numberFormatter.positiveSuffix = ""
         numberFormatter.decimalSeparator = nonFractionalLengthFormatter.numberFormatter.decimalSeparator
         numberFormatter.alwaysShowsDecimalSeparator = nonFractionalLengthFormatter.numberFormatter.alwaysShowsDecimalSeparator
-        numberFormatter.roundingIncrement = 0.25
         numberFormatter.usesSignificantDigits = false
         numberFormatter.maximumFractionDigits = maximumFractionDigits(for: distance)
         
         var unit: LengthFormatter.Unit = .millimeter
         unitString(fromMeters: distance, usedUnit: &unit)
         
+        numberFormatter.roundingIncrement = roundingIncrement(for: distance, unit: unit) as NSNumber
+        
+        return formattedDistance(distance, modify: &unit)
+    }
+    
+    func formattedDistance(_ distance: CLLocationDistance, modify unit: inout LengthFormatter.Unit) -> String {
         var formattedDistance: String
-        if unit == .yard {
-            if distance.miles > 0.2 {
-                unit = .mile
-                formattedDistance = string(fromValue: distance.miles, unit: unit)
+        if usesMetric {
+            if distance >= 1000 {
+                unit = .kilometer
+                formattedDistance = string(fromValue: distance.kilometers, unit: unit)
             } else {
-                unit = .foot
-                numberFormatter.roundingIncrement = 50
-                formattedDistance = string(fromValue: distance.feet, unit: unit)
+                formattedDistance = string(fromMeters: distance)
             }
         } else {
-            formattedDistance = string(fromMeters: distance)
+            if unit == .yard {
+                if distance.miles > 0.2 {
+                    unit = .mile
+                    formattedDistance = string(fromValue: distance.miles, unit: unit)
+                } else {
+                    unit = .foot
+                    formattedDistance = string(fromValue: distance.feet, unit: unit)
+                }
+            } else {
+                formattedDistance = string(fromMeters: distance)
+            }
         }
         
         return formattedDistance
