@@ -155,7 +155,6 @@ open class RouteController: NSObject {
      - parameter route: The route to follow.
      - parameter directions: The Directions object that created `route`.
      - parameter locationManager: The associated location manager.
-     - parameter accessToken: Optional Mapbox accessToken.
      */
     @objc(initWithRoute:directions:locationManager:)
     public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
