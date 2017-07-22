@@ -226,11 +226,17 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         if routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart {
             if userDistance < minimumDistanceForHighAlert {
                 text = String.localizedStringWithFormat(NSLocalizedString("LINKED_WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "%@, then in %@, %@", comment: "Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction"), currentInstruction!, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
+            } else if let roadDescription = step.roadDescription(markedUpWithSSML: markUpWithSSML) {
+                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE_ON_ROAD", bundle: .mapboxNavigation, value: "Continue on %@ for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance"), roadDescription, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxNavigation, value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
+                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             }
         } else if routeProgress.currentLegProgress.currentStep.distance > 2_000 && routeProgress.currentLegProgress.alertUserLevel == .low {
-            text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxNavigation, value: "Continue on %@ for %@", comment: "Format for speech string; 1 = way name; 2 = distance"), localizeRoadDescription(step, markUpWithSSML: markUpWithSSML), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
+            if let roadDescription = step.roadDescription(markedUpWithSSML: markUpWithSSML) {
+                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE_ON_ROAD", bundle: .mapboxNavigation, value: "Continue on %@ for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance"), roadDescription, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
+            } else {
+                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
+            }
         } else if alertLevel == .high && stepDistance < minimumDistanceForHighAlert {
             text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
         } else if alertLevel != .high {
@@ -240,25 +246,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         }
         
         return text
-    }
-    
-    func localizeRoadDescription(_ step: RouteStep, markUpWithSSML: Bool) -> String {
-        var road = ""
-        let escapeIfNecessary = {(distance: String) -> String in
-            return markUpWithSSML ? distance.addingXMLEscapes : distance
-        }
-        if let name = step.names?.first {
-            if let code = step.codes?.first {
-                let markedUpName = markUpWithSSML ? "<say-as interpret-as=\"address\">\(name.addingXMLEscapes)</say-as>" : name
-                let markedUpCode = markUpWithSSML ? "<say-as interpret-as=\"address\">\(code.addingXMLEscapes)</say-as>" : code
-                road = String.localizedStringWithFormat(NSLocalizedString("NAME_AND_REF", bundle: .mapboxNavigation, value: "%@ (%@)", comment: "Format for speech string; 1 = way name; 2 = way route number"), markedUpName, markedUpCode)
-            } else {
-                road = escapeIfNecessary(name)
-            }
-        } else if let code = step.codes?.first {
-            road = escapeIfNecessary(code)
-        }
-        return road
     }
     
     func speak(_ text: String, error: String? = nil) {
