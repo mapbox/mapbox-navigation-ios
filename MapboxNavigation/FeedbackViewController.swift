@@ -8,6 +8,7 @@ class FeedbackViewController: UIViewController {
     struct FeedbackItem {
         var title: String
         var image: UIImage?
+        var backgroundColor: UIColor?
     }
     
     var sections = [FeedbackSection]()
@@ -30,17 +31,27 @@ class FeedbackViewController: UIViewController {
         self.view.backgroundColor = .clear
         containerView.applyDefaultCornerRadiusShadow(cornerRadius: 8)
         
-        let accident            = FeedbackItem(title: "Accident", image: nil)
-        let hazard              = FeedbackItem(title: "Hazard", image: nil)
-        let wrongInstruction    = FeedbackItem(title: "Wrong instruction", image: nil)
-        let roadClosed          = FeedbackItem(title: "Road closed", image: nil)
-        let unallowedTurn       = FeedbackItem(title: "Turn not allowed", image: nil)
-        let other               = FeedbackItem(title: "Other", image: nil)
+        let colorOne = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
+        let colorTwo = #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1)
+        
+        let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")?.withRenderingMode(.alwaysTemplate)
+        let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")?.withRenderingMode(.alwaysTemplate)
+        let roadClosedImage     = Bundle.mapboxNavigation.image(named: "feedback_road_closed")?.withRenderingMode(.alwaysTemplate)
+        let unallowedTurnImage  = Bundle.mapboxNavigation.image(named: "feedback_turn_not_allowed")?.withRenderingMode(.alwaysTemplate)
+        let routingImage        = Bundle.mapboxNavigation.image(named: "feedback_routing")?.withRenderingMode(.alwaysTemplate)
+        let otherImage          = Bundle.mapboxNavigation.image(named: "feedback_other")?.withRenderingMode(.alwaysTemplate)
+        
+        let accident        = FeedbackItem(title: "Accident",           image: accidentImage,       backgroundColor: colorOne)
+        let hazard          = FeedbackItem(title: "Hazard",             image: hazardImage,         backgroundColor: colorOne)
+        let roadClosed      = FeedbackItem(title: "Road closed",        image: roadClosedImage,     backgroundColor: colorTwo)
+        let unallowedTurn   = FeedbackItem(title: "Turn not allowed",   image: unallowedTurnImage,  backgroundColor: colorTwo)
+        let routingError    = FeedbackItem(title: "Routing error",      image: routingImage,        backgroundColor: colorTwo)
+        let other           = FeedbackItem(title: "Other",              image: otherImage,          backgroundColor: colorTwo)
         
         sections = [
             [accident, hazard],
-            [wrongInstruction, roadClosed],
-            [unallowedTurn, other]
+            [roadClosed, unallowedTurn],
+            [routingError, other]
         ]
     }
     
@@ -90,7 +101,9 @@ extension FeedbackViewController: UICollectionViewDataSource {
         let item = sections[indexPath.section][indexPath.row]
         
         cell.titleLabel.text = item.title
+        cell.imageView.tintColor = .white
         cell.imageView.image = item.image
+        cell.circleView.backgroundColor = item.backgroundColor
         
         return cell
     }
@@ -102,6 +115,10 @@ extension FeedbackViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return sections[section].count
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        abortAutodismiss()
+    }
 }
 
 extension FeedbackViewController: UICollectionViewDelegate {
@@ -110,9 +127,23 @@ extension FeedbackViewController: UICollectionViewDelegate {
     }
 }
 
+extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = collectionView.bounds.midX
+        return CGSize(width: width, height: width * 0.75)
+    }
+}
+
 class FeedbackCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var circleView: UIView!
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        circleView.layer.cornerRadius = circleView.bounds.midY
+    }
     
     override var isSelected: Bool {
         didSet {
