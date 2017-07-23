@@ -341,10 +341,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
-        
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
-        }
     }
     
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
