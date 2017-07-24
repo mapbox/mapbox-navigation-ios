@@ -145,10 +145,14 @@ class RouteMapViewController: UIViewController {
         
         controller.sendFeedbackHandler = { [weak self] (item) in
             self?.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
+            self?.dismiss(animated: true) {
+                DialogViewController.present(on: parent)
+            }
         }
         
         controller.dismissFeedbackHandler = { [weak self] in
             self?.routeController.cancelFeedback(feedbackId: feedbackId)
+            self?.dismiss(animated: true, completion: nil)
         }
         
         parent.present(controller, animated: true, completion: nil)

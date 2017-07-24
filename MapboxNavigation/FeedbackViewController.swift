@@ -78,8 +78,8 @@ class FeedbackViewController: UIViewController {
     }
     
     func dismissFeedback() {
+        abortAutodismiss()
         dismissFeedbackHandler?()
-        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -114,7 +114,6 @@ extension FeedbackViewController: UICollectionViewDelegate {
         abortAutodismiss()
         let item = sections[indexPath.section][indexPath.row]
         sendFeedbackHandler?(item)
-        dismiss(animated: true, completion: nil)
     }
 }
 
