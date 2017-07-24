@@ -11,7 +11,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     lazy var speechSynth = AVSpeechSynthesizer()
     var audioPlayer: AVAudioPlayer?
-    let maneuverVoiceDistanceFormatter = DistanceFormatter(approximate: true, forVoiceUse: true)
+    let maneuverVoiceDistanceFormatter = SpokenDistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
     var recentlyAnnouncedRouteStep: RouteStep?
     var fallbackText: String!

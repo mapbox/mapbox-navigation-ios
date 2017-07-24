@@ -23,7 +23,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     }
     
     func storyboard() -> UIStoryboard {
-        return UIStoryboard(name: "Navigation", bundle: Bundle.mapboxNavigation)
+        return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
     
     func testManeuverViewMultipleLines() {
@@ -43,7 +43,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
         
-        controller.distance = 1000
+        controller.distance = 804
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
         controller.destinationLabel.unabridgedText = "Single line"

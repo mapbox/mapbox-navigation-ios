@@ -95,6 +95,8 @@
 		35718BE71EF3194200AFA3D1 /* tunnel.json in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE41EF316BA00AFA3D1 /* tunnel.json */; };
 		35718BE81EF3194500AFA3D1 /* tunnel.route in Resources */ = {isa = PBXBuildFile; fileRef = 35718BE31EF316BA00AFA3D1 /* tunnel.route */; };
 		35726EE81F0856E900AFA1B6 /* DefaultStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DefaultStyle.swift */; };
+		357826C31F1B7CCE005C54FB /* SpokenDistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357826C21F1B7CCE005C54FB /* SpokenDistanceFormatter.swift */; };
+		357826C71F1B84F2005C54FB /* DistanceFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357826C61F1B84F2005C54FB /* DistanceFormatterTests.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
@@ -335,6 +337,8 @@
 		35718BE31EF316BA00AFA3D1 /* tunnel.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tunnel.route; sourceTree = "<group>"; };
 		35718BE41EF316BA00AFA3D1 /* tunnel.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tunnel.json; sourceTree = "<group>"; };
 		35726EE71F0856E900AFA1B6 /* DefaultStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultStyle.swift; sourceTree = "<group>"; };
+		357826C21F1B7CCE005C54FB /* SpokenDistanceFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpokenDistanceFormatter.swift; sourceTree = "<group>"; };
+		357826C61F1B84F2005C54FB /* DistanceFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceFormatterTests.swift; sourceTree = "<group>"; };
 		357F0DF01EB9D99F00A0B53C /* sv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		357F0DF11EB9DAB400A0B53C /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		358D14631E5E3B7700ADE590 /* Example-Swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -793,6 +797,7 @@
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				C578DA071EFD0FFF0052079F /* ProcessInfo.swift */,
 				351927351F0FA072003A702D /* ScreenCapture.swift */,
+				357826C21F1B7CCE005C54FB /* SpokenDistanceFormatter.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
@@ -807,6 +812,7 @@
 				C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */,
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
+				357826C61F1B84F2005C54FB /* DistanceFormatterTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -1323,6 +1329,7 @@
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */,
 				C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */,
+				357826C31F1B7CCE005C54FB /* SpokenDistanceFormatter.swift in Sources */,
 				354D9F861EF2FCF60006FAA8 /* CLLocation.swift in Sources */,
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
@@ -1343,6 +1350,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
+				357826C71F1B84F2005C54FB /* DistanceFormatterTests.swift in Sources */,
 				C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
 				C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */,
