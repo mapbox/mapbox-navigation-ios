@@ -140,10 +140,15 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
         
         let controller = FeedbackViewController.loadFromStoryboard()
+
+        let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
-            self?.routeController.recordFeedback(type: item.feedbackType, description: nil)
-            controller.dismiss(animated: true, completion: nil)
+            self?.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
+        }
+        
+        controller.dismissFeedbackHandler = { [weak self] in
+            self?.routeController.cancelFeedback(feedbackId: feedbackId)
         }
         
         parent.present(controller, animated: true, completion: nil)
