@@ -58,20 +58,8 @@ class FeedbackViewController: UIViewController {
         perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
     }
     
-    @IBAction func sendFeedback(_ sender: Any) {
-        abortAutodismiss()
-        
-        guard let selectedIndexPaths = collectionView.indexPathsForSelectedItems else {
-            presentError("You have to select a type")
-            return
-        }
-        guard let indexPath = selectedIndexPaths.first else {
-            presentError("You have to select a type")
-            return
-        }
-        
-        let item = sections[indexPath.section][indexPath.row]
-        sendFeedbackHandler?(item)
+    @IBAction func cancel(_ sender: Any) {
+        dismissFeedback()
     }
     
     func presentError(_ message: String) {

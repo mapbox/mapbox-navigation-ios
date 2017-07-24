@@ -721,17 +721,17 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="sendFeedback:" destination="TYi-N0-ngE" eventType="touchUpInside" id="r79-70-5aU"/>
+                                            <action selector="cancel:" destination="TYi-N0-ngE" eventType="touchUpInside" id="soP-NS-hCK"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Sne-Dn-jdt" secondAttribute="trailing" id="C1C-ZC-h73"/>
+                                    <constraint firstAttribute="trailing" secondItem="Sne-Dn-jdt" secondAttribute="trailing" constant="8" id="C1C-ZC-h73"/>
                                     <constraint firstAttribute="trailing" secondItem="JMs-xU-Gfd" secondAttribute="trailing" constant="20" id="YfG-cd-ah9"/>
                                     <constraint firstItem="JMs-xU-Gfd" firstAttribute="leading" secondItem="ecu-yz-M5j" secondAttribute="leading" constant="20" id="fu1-c0-rmd"/>
                                     <constraint firstItem="JMs-xU-Gfd" firstAttribute="top" secondItem="Sne-Dn-jdt" secondAttribute="bottom" constant="20" id="gKb-94-wHP"/>
-                                    <constraint firstItem="Sne-Dn-jdt" firstAttribute="leading" secondItem="ecu-yz-M5j" secondAttribute="leading" id="kod-zh-bcJ"/>
+                                    <constraint firstItem="Sne-Dn-jdt" firstAttribute="leading" secondItem="ecu-yz-M5j" secondAttribute="leading" constant="8" id="kod-zh-bcJ"/>
                                     <constraint firstAttribute="bottom" secondItem="JMs-xU-Gfd" secondAttribute="bottom" constant="20" id="qtY-Kk-tsV"/>
                                     <constraint firstItem="Sne-Dn-jdt" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="top" constant="10" id="vcz-gb-KKN"/>
                                 </constraints>
@@ -744,7 +744,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="ecu-yz-M5j" secondAttribute="trailing" constant="8" id="Cyb-Eg-iSY"/>
                             <constraint firstItem="EC5-ge-nz1" firstAttribute="top" secondItem="I7t-WT-lto" secondAttribute="top" id="VgD-ac-RQ2"/>
                             <constraint firstItem="ecu-yz-M5j" firstAttribute="top" secondItem="pGP-EB-Pif" secondAttribute="bottom" constant="40" id="cDD-7Q-8vJ"/>
-                            <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="bottom" constant="60" id="rzg-dk-UOe"/>
+                            <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="bottom" constant="40" id="rzg-dk-UOe"/>
                             <constraint firstAttribute="trailing" secondItem="EC5-ge-nz1" secondAttribute="trailing" id="wa9-2E-HRi"/>
                             <constraint firstItem="ecu-yz-M5j" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leadingMargin" constant="8" id="xiW-Wm-SI7"/>
                         </constraints>
