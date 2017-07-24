@@ -18,6 +18,7 @@ class FeedbackViewController: UIViewController {
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
     var sendFeedbackHandler: SendFeedbackHandler?
+    var dismissFeedbackHandler: ((Void) -> Void)?
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -77,6 +78,7 @@ class FeedbackViewController: UIViewController {
     }
     
     func dismissFeedback() {
+        dismissFeedbackHandler?()
         dismiss(animated: true, completion: nil)
     }
 }
@@ -111,6 +113,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = sections[indexPath.section][indexPath.row]
         sendFeedbackHandler?(item)
+        dismiss(animated: true, completion: nil)
     }
 }
 
