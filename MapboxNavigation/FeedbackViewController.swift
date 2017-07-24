@@ -111,6 +111,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
 
 extension FeedbackViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        abortAutodismiss()
         let item = sections[indexPath.section][indexPath.row]
         sendFeedbackHandler?(item)
         dismiss(animated: true, completion: nil)
