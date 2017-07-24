@@ -121,7 +121,7 @@ class RouteManeuverViewController: UIViewController {
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
-            destinationLabel.unabridgedText = routeProgress.remainingWaypoints.last?.name
+            destinationLabel.unabridgedText = routeProgress.remainingWaypoints.last?.name ?? routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
             updateStreetNameForStep()
             showLaneView(step: upComingStep)
