@@ -1,5 +1,5 @@
-﻿/* Format for speech string; 1 = way name; 2 = distance */
-"CONTINUE" = "继续沿%@行驶%@";
+﻿/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
+"CONTINUE_ON_ROAD" = "继续沿%@行驶%@";
 
 /* Format string for less than; 1 = duration remaining */
 "LESS_THAN" = "＜%@";
