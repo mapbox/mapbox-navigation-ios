@@ -230,15 +230,15 @@ open class RouteController: NSObject {
      
      This is a raw location received from `locationManager`. To obtain an idealized location, use the `snappedLocation` property.
      */
-    public var location: CLLocation?
+    var rawLocation: CLLocation?
     
     /**
      The most recently received user location, snapped to the route line.
      
-     This property contains a `CLLocation` object located along the route line near the `CLLocation` object in the `location` property. This property is set to `nil` if the route controller is unable to snap `location` to the route line for some reason.
+     This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
      */
-    public var snappedLocation: CLLocation? {
-        guard let location = location, userIsOnRoute(location) else { return nil }
+    public var location: CLLocation? {
+        guard let location = rawLocation, userIsOnRoute(location) else { return nil }
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
@@ -380,7 +380,7 @@ extension RouteController: CLLocationManagerDelegate {
         guard let location = locations.last else {
             return
         }
-        self.location = location
+        self.rawLocation = location
         
         delegate?.routeController?(self, didUpdateLocations: [location])
         

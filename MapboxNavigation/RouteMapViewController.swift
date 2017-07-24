@@ -289,14 +289,9 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
 
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-        guard let snappedLocation = routeController.snappedLocation else {
-            return nil
-        }
-        labelCurrentRoad(at: snappedLocation)
-        guard snapsUserLocationAnnotationToRoute else {
-            return nil
-        }
-        return snappedLocation
+        let snappedLocation = routeController.location
+        labelCurrentRoad(at: snappedLocation ?? location)
+        return snapsUserLocationAnnotationToRoute ? snappedLocation : nil
     }
     
     /**
