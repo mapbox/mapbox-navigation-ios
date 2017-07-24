@@ -191,6 +191,17 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /**
+     Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
+     
+     By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
+     */
+    public var snapsUserLocationAnnotationToRoute = true {
+        didSet {
+            mapViewController?.snapsUserLocationAnnotationToRoute = snapsUserLocationAnnotationToRoute
+        }
+    }
+    
+    /**
      Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
      */
     public var sendNotifications: Bool = true
@@ -336,10 +347,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
-        }
-        
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {

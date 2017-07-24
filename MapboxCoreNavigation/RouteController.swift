@@ -132,12 +132,6 @@ open class RouteController: NSObject {
         }
     }
     
-    /**
-     If true, the user puck is snapped to closest location on the route. 
-     Defaults to false.
-     */
-    public var snapsUserLocationAnnotationToRoute = true
-    
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
     
@@ -229,6 +223,62 @@ open class RouteController: NSObject {
     public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+    }
+    
+    /**
+     The most recently received user location.
+     
+     This is a raw location received from `locationManager`. To obtain an idealized location, use the `snappedLocation` property.
+     */
+    var rawLocation: CLLocation?
+    
+    /**
+     The most recently received user location, snapped to the route line.
+     
+     This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
+     */
+    public var location: CLLocation? {
+        guard let location = rawLocation, userIsOnRoute(location) else { return nil }
+        guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
+        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
+        
+        guard location.course != -1, location.speed >= 0 else {
+            return location
+        }
+        
+        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return location }
+        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
+        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
+
+        // Get closest point infront of user
+        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
+        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
+        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
+        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
+        
+        // Get direction of these points
+        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
+        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
+        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
+        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
+        let wrappedCourse = wrap(location.course, min: -180, max: 180)
+        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
+        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
+        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
+        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
+
+        guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
+            return location
+        }
+
+        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
+        
+        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
+            return location
+        }
+        
+        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
     
     /**
@@ -330,6 +380,7 @@ extension RouteController: CLLocationManagerDelegate {
         guard let location = locations.last else {
             return
         }
+        self.rawLocation = location
         
         delegate?.routeController?(self, didUpdateLocations: [location])
         
