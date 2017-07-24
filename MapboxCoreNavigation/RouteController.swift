@@ -291,37 +291,36 @@ open class RouteController: NSObject {
     /**
      Send feedback about the current road segment/maneuver to the Mapbox data team.
      
-     You can pair this with a custom feedback UI in your app to flag problems during navigation
-     such as road closures, incorrect instructions, etc. 
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
      
-     With the help of a custom `description` to elaborate on the nature of the problem, using
-     this function will automatically flag the road segment/maneuver the user is currently on for 
-     closer inspection by Mapbox's system and team.
+     @param type A `FeedbackType` used to specify the type of feedback
+     @param description A custom string used to describe the problem in detail.
+     @return Returns a UUID string used to identify the feedback event
      
-     If you provide a custom feedback UI that lets users elaborate on an 
-     issue, you should call this before you show the custom UI so the 
-     location and timestamp are more accurate. You can then call 
-     `updateLastFeedback()` to attach any additional metadata to the 
-     feedback.
+     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate. 
+     
+     You can then call `updateFeedback(feedbackId:)` with the returned feedback ID string to attach any additional metadata to the feedback.
      */
-    public func recordFeedback(type: FeedbackType, description: String?) {
-        enqueueFeedbackEvent(type: type, description: description)
+    public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> String {
+        return enqueueFeedbackEvent(type: type, description: description)
     }
     
     /**
-     Update the last recorded feedback event, for example if you have a custom feedback UI that lets a user elaborate on an issue.
+     Update the feedback event with a specific feedback ID. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
+     
+     Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
      */
-    public func updateLastFeedback(type: FeedbackType, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.map({$0 as? FeedbackEvent}).last {
+    public func updateFeedback(feedbackId: String, type: FeedbackType, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.first(where: {$0.id.uuidString == feedbackId}) {
             lastFeedback?.update(type: type, description: description)
         }
     }
     
     /**
-     Discard the last recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
+     Discard a recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
      */
-    public func cancelLastFeedback(type: FeedbackType, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.filter({$0 is FeedbackEvent}).last, let index = outstandingFeedbackEvents.index(of: lastFeedback) {
+    public func cancelFeedback(feedbackId: String) {
+        if let index = outstandingFeedbackEvents.index(where: {$0.id.uuidString == feedbackId}) {
             outstandingFeedbackEvents.remove(at: index)
         }
     }
@@ -345,7 +344,7 @@ extension RouteController {
     }
     
     func willReroute(notification: NSNotification) {
-        enqueueRerouteEvent()
+        _ = enqueueRerouteEvent()
     }
     
     func didReroute(notification: NSNotification) {
@@ -775,7 +774,7 @@ extension RouteController {
         }
         
         let eventName = event.eventDictionary["event"] as! String
-        let eventDictionary = events.navigationFeedbackEventWithLocationsAdded(event: event.eventDictionary, eventTimestamp: event.timestamp, routeController: self)
+        let eventDictionary = events.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
         
         events.enqueueEvent(withName: eventName, attributes: eventDictionary)
         events.flush()
@@ -783,12 +782,16 @@ extension RouteController {
     
     // MARK: Enqueue feedback
     
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?) {
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
         let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
-        outstandingFeedbackEvents.append(FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary))
+        let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
+        
+        outstandingFeedbackEvents.append(event)
+        
+        return event.id.uuidString
     }
     
-    func enqueueRerouteEvent() {
+    func enqueueRerouteEvent() -> String {
         let timestamp = Date()
         
         let eventDictionary = events.navigationRerouteEvent(routeController: self)
@@ -796,7 +799,11 @@ extension RouteController {
         sessionState.lastRerouteDate = timestamp
         sessionState.numberOfReroutes += 1
         
-        outstandingFeedbackEvents.append(RerouteEvent(timestamp: timestamp, eventDictionary: eventDictionary))
+        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
+
+        outstandingFeedbackEvents.append(event)
+        
+        return event.id.uuidString
     }
     
     func checkAndSendOutstandingFeedbackEvents(forceAll: Bool) {
