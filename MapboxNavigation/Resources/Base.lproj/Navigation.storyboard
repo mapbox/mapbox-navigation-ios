@@ -633,7 +633,7 @@
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Sne-Dn-jdt">
                                         <rect key="frame" x="0.0" y="10" width="327" height="453"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="unA-43-4hX">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="16" minimumInteritemSpacing="0.0" id="unA-43-4hX">
                                             <size key="itemSize" width="154" height="154"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -673,7 +673,7 @@
                                                 <constraints>
                                                     <constraint firstItem="R0k-uF-hfD" firstAttribute="centerX" secondItem="JPa-I2-DlD" secondAttribute="centerX" id="6kW-3D-0zh"/>
                                                     <constraint firstItem="qH5-Og-q0a" firstAttribute="centerX" secondItem="JPa-I2-DlD" secondAttribute="centerX" id="Dh3-nc-uR6"/>
-                                                    <constraint firstItem="R0k-uF-hfD" firstAttribute="top" secondItem="JPa-I2-DlD" secondAttribute="top" constant="8" id="PgW-ID-8cs"/>
+                                                    <constraint firstItem="R0k-uF-hfD" firstAttribute="top" secondItem="JPa-I2-DlD" secondAttribute="top" constant="16" id="PgW-ID-8cs"/>
                                                     <constraint firstItem="qH5-Og-q0a" firstAttribute="top" secondItem="R0k-uF-hfD" secondAttribute="bottom" constant="8" id="aX8-Ys-txz"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qH5-Og-q0a" secondAttribute="trailing" constant="8" id="d8H-By-dO8"/>
                                                     <constraint firstItem="qH5-Og-q0a" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="JPa-I2-DlD" secondAttribute="leading" constant="8" id="eF4-Fc-sW6"/>
