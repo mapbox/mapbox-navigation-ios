@@ -191,9 +191,26 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /**
+     Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
+     
+     By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
+     */
+    public var snapsUserLocationAnnotationToRoute = true {
+        didSet {
+            mapViewController?.snapsUserLocationAnnotationToRoute = snapsUserLocationAnnotationToRoute
+        }
+    }
+    
+    /**
      Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
      */
     public var sendNotifications: Bool = true
+    
+    public var showsReportFeedback: Bool = false {
+        didSet {
+            mapViewController?.reportButton.isHidden = !showsReportFeedback
+        }
+    }
     
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
@@ -232,6 +249,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.route = route
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager())
+        self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
         let annotation = MGLPointAnnotation()

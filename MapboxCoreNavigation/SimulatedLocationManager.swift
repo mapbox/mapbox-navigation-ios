@@ -35,6 +35,12 @@ public class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var locations: [SimulatedLocation]!
     fileprivate var routeLine = [CLLocationCoordinate2D]()
     
+    override public var location: CLLocation? {
+        get {
+            return currentLocation
+        }
+    }
+    
     var route: Route? {
         didSet {
             reset()
@@ -120,13 +126,15 @@ public class SimulatedLocationManager: NavigationLocationManager {
             currentSpeed = reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
         }
         
-        currentLocation = CLLocation(coordinate: newCoordinate,
+        let location = CLLocation(coordinate: newCoordinate,
                                      altitude: 0,
                                      horizontalAccuracy: horizontalAccuracy,
                                      verticalAccuracy: verticalAccuracy,
                                      course: wrap(floor(newCoordinate.direction(to: lookAheadCoordinate)), min: 0, max: 360),
                                      speed: currentSpeed,
                                      timestamp: Date())
+        currentLocation = location
+        lastKnownLocation = location
         
         delegate?.locationManager?(self, didUpdateLocations: [currentLocation])
         currentDistance += currentSpeed

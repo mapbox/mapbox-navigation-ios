@@ -197,3 +197,8 @@ public var RouteControllerDeadReckoningTimeInterval:TimeInterval = 1.0
  Maximum angle the user puck will be rotated when snapping the user's course to the route line.
  */
 public var RouteControllerMaxManipulatedCourseAngle:CLLocationDirection = 25
+
+/**
+ :nodoc This is used internally for debugging metrics
+ */
+public var NavigationMetricsDebugLoggingEnabled = "MBNavigationMetricsDebugLoggingEnabled"

@@ -56,13 +56,13 @@ class RoutePageViewController: UIPageViewController {
 extension RoutePageViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         let controller = viewController as! RouteManeuverViewController
-        let stepAfter = maneuverDelegate.stepAfter(controller.step)
+        let stepAfter = maneuverDelegate.stepAfter(controller.step!)
         return routeManeuverViewController(with: stepAfter)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         let controller = viewController as! RouteManeuverViewController
-        let stepBefore = maneuverDelegate.stepBefore(controller.step)
+        let stepBefore = maneuverDelegate.stepBefore(controller.step!)
         return routeManeuverViewController(with: stepBefore)
     }
     
