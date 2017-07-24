@@ -206,6 +206,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var sendNotifications: Bool = true
     
+    /**
+     Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
+     */
     public var showsReportFeedback: Bool = false {
         didSet {
             mapViewController?.reportButton.isHidden = !showsReportFeedback
