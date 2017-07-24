@@ -45,6 +45,7 @@ class RouteTableViewController: UIViewController {
         
         if routeProgress.durationRemaining < 60 {
             headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
+            headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
         } else {
             headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
             
@@ -55,6 +56,11 @@ class RouteTableViewController: UIViewController {
             // This color change does not need to be 100% accurate, 
             // just a rough estimation of remaining route congestion.
             let estimatedCoordinatesRemaining = Int(floor(Double(coordinates.count) * routeProgress.fractionTraveled))
+            
+            guard estimatedCoordinatesRemaining > 1 else {
+                headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
+                return
+            }
             
             let congestionPerLeg = routeProgress.route.legs.flatMap { $0.segmentCongestionLevels }.suffix(estimatedCoordinatesRemaining)
             let combinedCongestionLevel = Array(congestionPerLeg.joined())
@@ -70,7 +76,7 @@ class RouteTableViewController: UIViewController {
             if let max = travelTimePerCongestionLeve.max(by: { a, b in a.value < b.value }) {
                 switch max.key {
                 case .unknown:
-                    headerView.timeRemaining.textColor = .trafficAlternateLow
+                    headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
                 case .low:
                     headerView.timeRemaining.textColor = .trafficAlternateLow
                 case .moderate:

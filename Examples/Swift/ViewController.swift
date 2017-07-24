@@ -116,7 +116,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         options.routeShapeResolution = .full
         options.profileIdentifier = .automobileAvoidingTraffic
         
-        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
+        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line.
+        // Adding the optional attribute `.expectedTravelTime` ensures the ETA in the UI changes color depending on congestion.
         options.attributeOptions = [.congestionLevel, .expectedTravelTime]
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
@@ -266,7 +267,8 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
         options.routeShapeResolution = .full
         options.profileIdentifier = navigationViewController.route.routeOptions.profileIdentifier
         
-        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
+        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line.
+        // Adding the optional attribute `.expectedTravelTime` ensures the ETA in the UI changes color depending on congestion.
         options.attributeOptions = [.congestionLevel, .expectedTravelTime]
 
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
