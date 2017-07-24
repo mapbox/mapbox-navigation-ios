@@ -139,12 +139,10 @@ class RouteMapViewController: UIViewController {
     @IBAction func report(_ sender: Any) {
         guard let parent = parent else { return }
         
-        routeController.recordFeedback(type: .general, description: nil)
-        
         let controller = FeedbackViewController.loadFromStoryboard()
         
-        controller.sendFeedbackHandler = { (item) in
-            print("Did select \(item.title)")
+        controller.sendFeedbackHandler = { [weak self] (item) in
+            self?.routeController.recordFeedback(type: item.feedbackType, description: nil)
             controller.dismiss(animated: true, completion: nil)
         }
         
@@ -269,14 +267,6 @@ class RouteMapViewController: UIViewController {
 extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
     func drawerPositionDidChange(drawer: PulleyViewController) {
         mapView.setContentInset(contentInsets, animated: true)
-    }
-}
-
-// MARK: FeedbackViewControllerDelegate
-
-extension RouteMapViewController: FeedbackViewControllerDelegate {
-    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSelect: FeedbackItem) {
-        
     }
 }
 
