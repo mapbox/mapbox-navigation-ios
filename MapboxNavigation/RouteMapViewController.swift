@@ -272,6 +272,14 @@ extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
     }
 }
 
+// MARK: FeedbackViewControllerDelegate
+
+extension RouteMapViewController: FeedbackViewControllerDelegate {
+    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSelect: FeedbackItem) {
+        
+    }
+}
+
 // MARK: NavigationMapViewDelegate
 
 extension RouteMapViewController: NavigationMapViewDelegate {

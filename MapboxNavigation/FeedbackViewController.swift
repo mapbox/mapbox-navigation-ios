@@ -1,15 +1,22 @@
 import UIKit
+import MapboxCoreNavigation
 
+struct FeedbackItem {
+    var title: String
+    var image: UIImage?
+    var backgroundColor: UIColor?
+    var feedbackType: FeedbackType?
+}
+
+protocol FeedbackViewControllerDelegate: class {
+    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSelect: FeedbackItem)
+}
 
 class FeedbackViewController: UIViewController {
     
     typealias FeedbackSection = [FeedbackItem]
     
-    struct FeedbackItem {
-        var title: String
-        var image: UIImage?
-        var backgroundColor: UIColor?
-    }
+    weak var delegate: FeedbackViewControllerDelegate?
     
     var sections = [FeedbackSection]()
     let cellReuseIdentifier = "collectionViewCellId"
@@ -31,9 +38,6 @@ class FeedbackViewController: UIViewController {
         self.view.backgroundColor = .clear
         containerView.applyDefaultCornerRadiusShadow(cornerRadius: 8)
         
-        let colorOne = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
-        let colorTwo = #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1)
-        
         let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")?.withRenderingMode(.alwaysTemplate)
         let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")?.withRenderingMode(.alwaysTemplate)
         let roadClosedImage     = Bundle.mapboxNavigation.image(named: "feedback_road_closed")?.withRenderingMode(.alwaysTemplate)
@@ -41,12 +45,12 @@ class FeedbackViewController: UIViewController {
         let routingImage        = Bundle.mapboxNavigation.image(named: "feedback_routing")?.withRenderingMode(.alwaysTemplate)
         let otherImage          = Bundle.mapboxNavigation.image(named: "feedback_other")?.withRenderingMode(.alwaysTemplate)
         
-        let accident        = FeedbackItem(title: "Accident",           image: accidentImage,       backgroundColor: colorOne)
-        let hazard          = FeedbackItem(title: "Hazard",             image: hazardImage,         backgroundColor: colorOne)
-        let roadClosed      = FeedbackItem(title: "Road closed",        image: roadClosedImage,     backgroundColor: colorTwo)
-        let unallowedTurn   = FeedbackItem(title: "Turn not allowed",   image: unallowedTurnImage,  backgroundColor: colorTwo)
-        let routingError    = FeedbackItem(title: "Routing error",      image: routingImage,        backgroundColor: colorTwo)
-        let other           = FeedbackItem(title: "Other",              image: otherImage,          backgroundColor: colorTwo)
+        let accident        = FeedbackItem(title: "Accident",           image: accidentImage,       backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), feedbackType: .general)
+        let hazard          = FeedbackItem(title: "Hazard",             image: hazardImage,         backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), feedbackType: .general)
+        let roadClosed      = FeedbackItem(title: "Road closed",        image: roadClosedImage,     backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), feedbackType: .general)
+        let unallowedTurn   = FeedbackItem(title: "Turn not allowed",   image: unallowedTurnImage,  backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), feedbackType: .general)
+        let routingError    = FeedbackItem(title: "Routing error",      image: routingImage,        backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), feedbackType: .general)
+        let other           = FeedbackItem(title: "Other",              image: otherImage,          backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), feedbackType: .general)
         
         sections = [
             [accident, hazard],
@@ -123,7 +127,9 @@ extension FeedbackViewController: UICollectionViewDataSource {
 
 extension FeedbackViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        abortAutodismiss()
+        let item = sections[indexPath.section][indexPath.row]
+        delegate?.feedbackViewController(self, didSelect: item)
+        dismissFeedback()
     }
 }
 
@@ -145,9 +151,10 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         circleView.layer.cornerRadius = circleView.bounds.midY
     }
     
-    override var isSelected: Bool {
+    override var isHighlighted: Bool {
         didSet {
-            backgroundColor = isSelected ? .blue : .clear
+            backgroundColor = isHighlighted ? #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.6015074824) : .clear
+            imageView.tintColor = isHighlighted ? .lightGray : .white
         }
     }
 }
