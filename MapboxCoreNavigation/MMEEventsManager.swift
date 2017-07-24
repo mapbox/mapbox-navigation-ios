@@ -196,9 +196,10 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEventWithLocationsAdded(event: [String: Any], eventTimestamp: Date, routeController: RouteController) -> [String: Any] {
-        var eventDictionary = event
+    func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent, routeController: RouteController) -> [String: Any] {
+        var eventDictionary = event.eventDictionary
         
+        eventDictionary["feedbackId"] = event.id.uuidString
         eventDictionary["locationsBefore"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp <= eventTimestamp}.map {$0.dictionaryRepresentation}
         eventDictionary["locationsAfter"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp > eventTimestamp}.map {$0.dictionaryRepresentation}
         
