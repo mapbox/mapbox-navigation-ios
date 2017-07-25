@@ -245,7 +245,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             text = upComingInstruction
         }
         
-        return text
+        return text.removingPunctuation
     }
     
     func speak(_ text: String, error: String? = nil) {
