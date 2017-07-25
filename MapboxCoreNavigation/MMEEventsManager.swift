@@ -4,7 +4,7 @@ import AVFoundation
 import MapboxMobileEvents
 
 let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
-let EventVersion = 4
+let EventVersion = 5
 
 struct EventDetails {
     var originalRequestIdentifier: String?
@@ -30,6 +30,7 @@ struct EventDetails {
     var durationRemaining: TimeInterval
     var rerouteCount: Int
     var volumeLevel: Int
+    var audioType: String
     var screenBrightness: Int
     var batteryPluggedIn: Bool
     var batteryLevel: Float
@@ -75,6 +76,7 @@ struct EventDetails {
         rerouteCount = session.numberOfReroutes
         
         volumeLevel = Int(AVAudioSession.sharedInstance().outputVolume * 100)
+        audioType = AVAudioSession.sharedInstance().audioType
         screenBrightness = Int(UIScreen.main.brightness * 100)
         
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
@@ -127,12 +129,13 @@ struct EventDetails {
         modifiedEventDictionary["rerouteCount"] = rerouteCount
         
         modifiedEventDictionary["volumeLevel"] = volumeLevel
+        modifiedEventDictionary["audioType"] = audioType
         modifiedEventDictionary["screenBrightness"] = screenBrightness
         
         modifiedEventDictionary["batteryPluggedIn"] = batteryPluggedIn
         modifiedEventDictionary["batteryLevel"] = batteryLevel
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
-        
+
         return modifiedEventDictionary
     }
 }
@@ -215,6 +218,36 @@ extension UIApplicationState {
                 return "Background"
             }
         }
+    }
+}
+
+extension AVAudioSession {
+    var audioType: String {
+        if bluetoothAudioConnected() {
+            return "bluetooth"
+        }
+        if headphonesConnected() {
+            return "headphones"
+        }
+        return "speaker"
+    }
+    
+    func bluetoothAudioConnected() -> Bool{
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func headphonesConnected() -> Bool{
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
+                return true
+            }
+        }
+        return false
     }
 }
 
