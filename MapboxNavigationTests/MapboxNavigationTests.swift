@@ -97,7 +97,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
-        controller.distance = nil
+        controller.distance = 100
         controller.destinationLabel.unabridgedText = "Long destination / US-45 / Chicago / Indiana / Exit 204B / Long destination / US-45 / Chicago / Indiana / Exit 204B"
         controller.destinationLabel.backgroundColor = .red
         
