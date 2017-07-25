@@ -493,9 +493,11 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func incrementRouteProgress(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation, updateStepIndex: Bool) {
-        
+        var didIncrementStep = false
+
         if updateStepIndex {
             routeProgress.currentLegProgress.stepIndex += 1
+            didIncrementStep = true
         }
         
         // If the step is not being updated, don't accept a lower alert level.
@@ -504,7 +506,7 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
-        if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel {
+        if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel || didIncrementStep {
             routeProgress.currentLegProgress.alertUserLevel = newlyCalculatedAlertLevel
             // Use fresh user location distance to end of step
             // since the step could of changed
