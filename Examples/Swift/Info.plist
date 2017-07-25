@@ -28,8 +28,11 @@
 	<string>Get user location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Get user location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Get user location</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>location</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

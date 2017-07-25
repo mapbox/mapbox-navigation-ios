@@ -151,7 +151,7 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
     
     var closestCoordinate: CoordinateAlongPolyline?
     
-    for var index in 0..<polyline.count - 1 {
+    for index in 0..<polyline.count - 1 {
         let segment = (polyline[index], polyline[index + 1])
         let distances = (coordinate - segment.0, coordinate - segment.1)
         
@@ -166,11 +166,10 @@ func closestCoordinate(on polyline: [CLLocationCoordinate2D], to coordinate: CLL
             closestCoordinate = CoordinateAlongPolyline(coordinate: segment.0, index: index, distance: distances.0)
         }
         if distances.1 < closestCoordinate?.distance ?? CLLocationDistanceMax {
-            index = index + 1
-            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index, distance: distances.1)
+            closestCoordinate = CoordinateAlongPolyline(coordinate: segment.1, index: index+1, distance: distances.1)
         }
         if intersectionDistance != nil && intersectionDistance! < closestCoordinate?.distance ?? CLLocationDistanceMax {
-            closestCoordinate = CoordinateAlongPolyline(coordinate: intersectionPoint!, index: index, distance: intersectionDistance!)
+            closestCoordinate = CoordinateAlongPolyline(coordinate: intersectionPoint!, index: (distances.0 < distances.1 ? index : index+1), distance: intersectionDistance!)
         }
     }
     
@@ -228,6 +227,11 @@ func distance(along line: [CLLocationCoordinate2D], from start: CLLocationCoordi
 func coordinate(at distance: CLLocationDistance, fromStartOf polyline: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
     // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-along/index.js
     var traveled: CLLocationDistance = 0
+    
+    guard distance >= 0  else {
+        return polyline.first
+    }
+    
     for i in 0..<polyline.count {
         guard distance < traveled || i < polyline.count - 1 else {
             break

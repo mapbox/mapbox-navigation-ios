@@ -7,8 +7,14 @@ let arrowSourceIdentifier = "arrowSource"
 let arrowSourceStrokeIdentifier = "arrowSourceStroke"
 let arrowLayerIdentifier = "arrowLayer"
 
+/**
+ An extension on `MGLMapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://www.mapbox.com/vector-tiles/mapbox-traffic-v1/).
+ */
 extension MGLMapView {
-    
+
+    /**
+     Toggle traffic on a map style that contains a Mapbox Traffic source.
+     */
     public var showsTraffic: Bool {
         get {
             if let style = style {
@@ -44,13 +50,13 @@ extension MGLMapView {
         }
         
         let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate!.latitude), 50), 10)
-        let shaftCoordinates = polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!)
-            + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!)
+        let shaftCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!).reversed()
+            + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
         
         if shaftCoordinates.count > 1 {
             let shaftStrokeLength = shaftLength * 1.1
-            var shaftStrokeCoordinates = polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate!)
-                + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!)
+            var shaftStrokeCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate!).reversed()
+                + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
             let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
             
             var maneuverArrowStrokePolylines = [shaftStrokePolyline]

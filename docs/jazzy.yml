@@ -7,8 +7,8 @@ copyright: '© 2014–2017 [Mapbox](https://www.mapbox.com/). See [license](http
 
 head: |
   <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
-#skip_undocumented: Yes
-#hide_documentation_coverage: Yes
+skip_undocumented: Yes
+hide_documentation_coverage: Yes
 
 custom_categories:
   - name: Guides
@@ -18,6 +18,7 @@ custom_categories:
     children:
       - NavigationViewController
       - NavigationViewControllerDelegate
+      - RouteVoiceController
   - name: Core Navigation Logic
     children:
       - RouteController
@@ -36,6 +37,10 @@ custom_categories:
       - StyleKitArrows
       - StylableButton
       - StylableLabel
+  - name: Formatters
+    children:
+      - DistanceFormatter
+      - RouteStepFormatter
   - name: Notifications
     children:
       - AlertLevel
@@ -54,7 +59,6 @@ custom_categories:
       - RouteControllerWillReroute
   - name: UI Components
     children:
-      - RouteVoiceController
       - RouteTableViewController
       - NavigationPulleyViewController
       - Button
@@ -69,10 +73,6 @@ custom_categories:
       - TitleLabel
       - TurnArrowView
       - WayNameLabel
-  - name: Formatters
-    children:
-      - DistanceFormatter
-      - RouteStepFormatter
   - name: Configuration
     children:
       - MaxSecondsSpentTravelingAwayFromStartOfRoute

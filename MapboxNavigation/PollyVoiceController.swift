@@ -3,9 +3,7 @@ import AWSPolly
 import AVFoundation
 
 /**
- `PollyVoiceController` extends the default `RouteVoiceController` by providing
- support for AWSPolly. `RouteVoiceController` will be used as a fallback during
- poor network conditions.
+ `PollyVoiceController` extends the default `RouteVoiceController` by providing support for AWSPolly. `RouteVoiceController` will be used as a fallback during poor network conditions.
  */
 @objc(MBPollyVoiceController)
 public class PollyVoiceController: RouteVoiceController {
@@ -116,7 +114,10 @@ public class PollyVoiceController: RouteVoiceController {
         do {
             let soundData = try Data(contentsOf: url as URL)
             audioPlayer = try AVAudioPlayer(data: soundData)
+            audioPlayer?.delegate = self
+            
             if let audioPlayer = audioPlayer {
+                try duckAudio()
                 audioPlayer.volume = volume
                 audioPlayer.play()
             }

@@ -1,8 +1,9 @@
 import UIKit
 
 /**
- `Style` is a convenient wrapper for styling the appearance of various interface
- components throughout the Navigation UI.
+ `Style` is a convenient wrapper for styling the appearance of various interface components throughout the Navigation UI.
+ 
+ Styles are applied globally using `UIAppearance`. You should call `Style.apply()` to apply the style to the `NavigationViewController`.
  */
 @objc(MBStyle)
 public class Style: NSObject {
@@ -10,16 +11,14 @@ public class Style: NSObject {
     public var traitCollection: UITraitCollection
     
     /**
-     Initializes a style that will be applied for any system traits of an
-     interface’s environment.
+     Initializes a style that will be applied for any system traits of an interface’s environment.
      */
     convenience override public init() {
         self.init(traitCollection: UITraitCollection())
     }
     
     /**
-     Initializes a style for a specific system trait(s) of an interface’s
-     environment.
+     Initializes a style for a specific system trait(s) of an interface’s environment.
      */
     required public init(traitCollection: UITraitCollection) {
         self.traitCollection = traitCollection
@@ -38,8 +37,7 @@ public class Style: NSObject {
     ///  General styling
     
     /**
-     Sets the tint color for guidance arrow, highlighted text, progress bar
-     and more.
+     Sets the tint color for guidance arrow, highlighted text, progress bar and more.
      */
     public var tintColor: UIColor?
     
@@ -168,6 +166,36 @@ public class Style: NSObject {
     public var wayNameLabelFont: UIFont?
     
     /**
+     Sets the color if the route’s casing color.
+     */
+    public var routeCasingColor: UIColor?
+    
+    /**
+     Sets the traffic color for unknown congestion.
+     */
+    public var trafficUnknownColor: UIColor?
+    
+    /**
+     Sets the traffic color for low congestion.
+     */
+    public var trafficLowColor: UIColor?
+    
+    /**
+     Sets the traffic color for moderate congestion.
+     */
+    public var trafficModerateColor: UIColor?
+    
+    /**
+     Sets the traffic color for heavy congestion.
+     */
+    public var trafficHeavyColor: UIColor?
+    
+    /**
+     Sets the traffic color for severe congestion.
+     */
+    public var trafficSevereColor: UIColor?
+    
+    /**
      Applies the style for all changed properties.
      */
     public func apply() {
@@ -279,6 +307,32 @@ public class Style: NSObject {
         if let color = cellSubtitleLabelTextColor {
             CellSubtitleLabel.appearance(for: traitCollection).textColor = color
         }
+        
+        // Traffic
+        
+        if let color = routeCasingColor {
+            NavigationMapView.appearance(for: traitCollection).routeCasingColor = color
+        }
+        
+        if let color = trafficUnknownColor {
+            NavigationMapView.appearance(for: traitCollection).trafficUnknownColor = color
+        }
+        
+        if let color = trafficLowColor {
+            NavigationMapView.appearance(for: traitCollection).trafficLowColor = color
+        }
+        
+        if let color = trafficModerateColor {
+            NavigationMapView.appearance(for: traitCollection).trafficModerateColor = color
+        }
+        
+        if let color = trafficHeavyColor {
+            NavigationMapView.appearance(for: traitCollection).trafficHeavyColor = color
+        }
+        
+        if let color = trafficSevereColor {
+            NavigationMapView.appearance(for: traitCollection).trafficSevereColor = color
+        }
     }
 }
 
@@ -291,8 +345,7 @@ public class Button: StylableButton { }
 
 /**
  :nodoc:
- `HighlightedButton` sets the button’s titleColor for normal control state
- according to the style in addition to the styling behavior inherited from
+ `HighlightedButton` sets the button’s titleColor for normal control state according to the style in addition to the styling behavior inherited from
  `Button`.
  */
 @objc(MBHighlightedButton)

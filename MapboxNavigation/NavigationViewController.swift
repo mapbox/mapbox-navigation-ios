@@ -106,13 +106,16 @@ public protocol NavigationViewControllerDelegate {
 /**
  `NavigationViewController` is fully featured, turn by turn navigation UI.
  
- It provides step by step instructions, an overview of all steps
- for the given route and support for basic styling.
+ It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
 public class NavigationViewController: NavigationPulleyViewController, RouteMapViewControllerDelegate {
     
-    // A `route` object constructed by [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
+    /** 
+     A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
+     
+     In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
+     */
     public var route: Route! {
         didSet {
             if routeController == nil {
@@ -127,30 +130,24 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /** 
-     `destination` is an instance of `MGLAnnotation` that will be showned on
-     on the destination of your route. The last coordinate of the route will be
-     used if no destination is given.
+     An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
     */
     @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
     public var destination: MGLAnnotation!
     
     
     /**
-     `directions` is an instance of `Directions` need for rerouting.
-     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
-     for further information.
+     An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
     public var directions: Directions!
     
     /**
-     `pendingCamera` is an optional `MGLMapCamera` you can use to improve
-     the initial transition from a previous viewport and prevent a trigger
-     from an excessive significant location update.
+     An optional `MGLMapCamera` you can use to improve the initial transition from a previous viewport and prevent a trigger from an excessive significant location update.
      */
     public var pendingCamera: MGLMapCamera?
     
     /**
-     `origin` is an instance of `MGLAnnotation` representing the origin of your route.
+     An instance of `MGLAnnotation` representing the origin of your route.
      */
     public var origin: MGLAnnotation?
     
@@ -160,14 +157,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     public weak var navigationDelegate: NavigationViewControllerDelegate?
     
     /**
-     `voiceController` provides access to various speech synthesizer options.
+     Provides access to various speech synthesizer options.
      
      See `RouteVoiceController` for more information.
      */
     public var voiceController: RouteVoiceController? = RouteVoiceController()
     
     /**
-     `routeController` provides all routing logic for the user.
+     Provides all routing logic for the user.
 
      See `RouteController` for more information.
      */
@@ -178,14 +175,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      
      See `Style` and `DefaultStyle` for more information.
      */
-    public var styles: [Style] = [DefaultStyle()] {
+    public var styles: [Style]? {
         didSet {
-            styles.forEach { $0.apply() }
+            styles?.forEach { $0.apply() }
         }
     }
     
     /**
-     `mapView` provides access to the navigation's `MGLMapView` with all its styling capabilities.
+     Provides access to the navigation's `MGLMapView` with all its styling capabilities.
      
      Note that you should not change the `mapView`'s delegate.
      */
@@ -196,10 +193,26 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /**
-     `sendNotifications` toggle sending of UILocalNotification upon upcoming
-     steps when application is in the background.
+     Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
+     
+     By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
+     */
+    public var snapsUserLocationAnnotationToRoute = true {
+        didSet {
+            mapViewController?.snapsUserLocationAnnotationToRoute = snapsUserLocationAnnotationToRoute
+        }
+    }
+    
+    /**
+     Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
      */
     public var sendNotifications: Bool = true
+    
+    public var showsReportFeedback: Bool = false {
+        didSet {
+            mapViewController?.reportButton.isHidden = !showsReportFeedback
+        }
+    }
     
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
@@ -217,12 +230,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /**
-     Initializes a `NavigationViewController` that provides turn by turn navigation
-     for the given route. A optional `direction` object is needed for  potential
-     rerouting.
+     Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
 
-     See [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift)
-     for further information.
+     See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
@@ -230,7 +240,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                          styles: [Style]? = [DefaultStyle()],
                          locationManager: NavigationLocationManager? = DefaultLocationManager()) {
         
-        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         let tableViewController = storyboard.instantiateViewController(withIdentifier: "RouteTableViewController") as! RouteTableViewController
         
@@ -241,6 +251,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.route = route
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager())
+        self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
         let annotation = MGLPointAnnotation()
@@ -294,8 +305,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         super.viewWillAppear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = true
-        styles.forEach { $0.apply() }
         routeController.resume()
+        
+        styles?.forEach { $0.apply() }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -338,16 +350,20 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
-            giveLocalNotification(upComingStep)
+            scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+        }
+        
+        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
     }
     
-    func giveLocalNotification(_ step: RouteStep) {
+    func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
         guard sendNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
         
         let notification = UILocalNotification()
-        notification.alertBody = routeStepFormatter.string(for: step)
+        notification.alertBody = routeStepFormatter.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: false)
         notification.fireDate = Date()
         
         UIApplication.shared.cancelAllLocalNotifications()
@@ -392,7 +408,8 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
-        giveLocalNotification(routeController.routeProgress.currentLegProgress.currentStep)
+        let routeProgress = routeController.routeProgress
+        scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: route.legs.count)
         
         mapViewController?.notifyDidReroute(route: route)
         tableViewController?.notifyDidReroute()

@@ -2,8 +2,7 @@ import Foundation
 import MapboxCoreNavigation
 
 /**
- `DefaultLocationManager` is a location manager that tracks the battery state
- and modifies the desired accuracy accordingly.
+ `DefaultLocationManager` is a location manager that tracks the battery state and modifies the desired accuracy accordingly.
  */
 class DefaultLocationManager: NavigationLocationManager {
     
@@ -21,6 +20,6 @@ class DefaultLocationManager: NavigationLocationManager {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
     }
 }

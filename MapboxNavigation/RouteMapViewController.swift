@@ -3,8 +3,6 @@ import Pulley
 import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
-import SDWebImage
-
 
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
@@ -14,10 +12,18 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var mapView: NavigationMapView!
 
     @IBOutlet weak var overviewButton: Button!
+    @IBOutlet weak var reportButton: Button!
     @IBOutlet weak var recenterButton: Button!
     @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
+    
+    /**
+     Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
+     
+     By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
+     */
+    var snapsUserLocationAnnotationToRoute = true
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
@@ -26,6 +32,8 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
+    
+    var hasFinishedLoadingMap = false
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -49,9 +57,6 @@ class RouteMapViewController: UIViewController {
 
     var resetTrackingModeTimer: Timer?
 
-    let webImageManager = SDWebImageManager.shared()
-    var shieldAPIDataTask: URLSessionDataTask?
-    var shieldImageDownloadToken: SDWebImageDownloadToken?
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
 
@@ -63,8 +68,10 @@ class RouteMapViewController: UIViewController {
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
+        mapView.manuallyUpdatesLocation = true
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         recenterButton.applyDefaultCornerRadiusShadow()
         
         wayNameView.layer.borderWidth = 1
@@ -75,9 +82,6 @@ class RouteMapViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        mapView.locationManager.stopUpdatingLocation()
-        mapView.locationManager.stopUpdatingHeading()
         
         mapView.compassView.isHidden = true
         
@@ -105,11 +109,8 @@ class RouteMapViewController: UIViewController {
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setContentInset(contentInsets, animated: false)
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        webImageManager.cancelAll()
+        
+        showRouteIfNeeded()
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -134,6 +135,12 @@ class RouteMapViewController: UIViewController {
         isInOverviewMode = !isInOverviewMode
         
         routePageViewController.notifyDidReRoute()
+    }
+    
+    @IBAction func report(_ sender: Any) {
+        guard let parent = parent else { return }
+        routeController.recordFeedback(type: .general, description: nil)
+        DialogViewController.present(on: parent)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -216,7 +223,7 @@ class RouteMapViewController: UIViewController {
         guard step == controller.step else { return }
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
-        updateShield(for: controller)
+        controller.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         
         // Move the overview button if the lane views become visible
         if !controller.isPagingThroughStepList {
@@ -236,45 +243,6 @@ class RouteMapViewController: UIViewController {
 
         let slicedLine = polyline(along: routeProgress.route.coordinates!, from: userLocation, to: routeProgress.route.coordinates!.last)
         updateVisibleBounds(coordinates: slicedLine)
-    }
-
-    func dataTaskForShieldImage(network: String, number: String, height: CGFloat, completion: @escaping (UIImage?) -> Void) -> URLSessionDataTask? {
-        guard let imageNamePattern = ShieldImageNamesByPrefix[network] else {
-            return nil
-        }
-
-        let imageName = imageNamePattern.replacingOccurrences(of: " ", with: "_").replacingOccurrences(of: "{ref}", with: number)
-        let apiURL = URL(string: "https://commons.wikimedia.org/w/api.php?action=query&format=json&maxage=86400&prop=imageinfo&titles=File%3A\(imageName)&iiprop=url%7Csize&iiurlheight=\(Int(round(height)))")!
-
-        shieldAPIDataTask?.cancel()
-        return URLSession.shared.dataTask(with: apiURL) { [weak self] (data, response, error) in
-            var json: [String: Any] = [:]
-            if let data = data, response?.mimeType == "application/json" {
-                do {
-                    json = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-                } catch {
-                    assert(false, "Invalid data")
-                }
-            }
-
-            guard data != nil && error == nil else {
-                return
-            }
-
-            guard let query = json["query"] as? [String: Any],
-                let pages = query["pages"] as? [String: Any], let page = pages.first?.1 as? [String: Any],
-                let imageInfos = page["imageinfo"] as? [[String: Any]], let imageInfo = imageInfos.first,
-                let thumbURLString = imageInfo["thumburl"] as? String, let thumbURL = URL(string: thumbURLString) else {
-                    return
-            }
-
-            if thumbURL != self?.shieldImageDownloadToken?.url {
-                self?.webImageManager.imageDownloader?.cancel(self?.shieldImageDownloadToken)
-            }
-            self?.shieldImageDownloadToken = self?.webImageManager.imageDownloader?.downloadImage(with: thumbURL, options: .scaleDownLargeImages, progress: nil) { (image, data, error, isFinished) in
-                completion(image)
-            }
-        }
     }
     
     var contentInsets: UIEdgeInsets {
@@ -319,132 +287,100 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return delegate?.navigationMapView(mapView, imageFor:annotation)
     }
+    
+    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
+        hasFinishedLoadingMap = true
+    }
 
-    @objc(navigationMapView:shouldUpdateTo:)
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-
-        guard routeController.userIsOnRoute(location) else { return nil }
-        guard let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else  { return nil }
-        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
-
-        // Add current way name to UI
-        if let style = mapView.style, recenterButton.isHidden{
-            let closestCoordinate = snappedCoordinate.coordinate
-            let roadLabelLayerIdentifier = "roadLabelLayer"
-            var streetsSources = style.sources.flatMap {
-                $0 as? MGLVectorSource
-                }.filter {
-                    $0.isMapboxStreets
+        let snappedLocation = routeController.location
+        labelCurrentRoad(at: snappedLocation ?? location)
+        return snapsUserLocationAnnotationToRoute ? snappedLocation : nil
+    }
+    
+    /**
+     Updates the current road name label to reflect the road on which the user is currently traveling.
+     
+     - parameter location: The user’s current location.
+     */
+    func labelCurrentRoad(at location: CLLocation) {
+        guard let style = mapView.style,
+            let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
+            recenterButton.isHidden && hasFinishedLoadingMap else {
+            return
+        }
+        
+        let closestCoordinate = location.coordinate
+        let roadLabelLayerIdentifier = "roadLabelLayer"
+        var streetsSources = style.sources.flatMap {
+            $0 as? MGLVectorSource
+            }.filter {
+                $0.isMapboxStreets
+        }
+        
+        // Add Mapbox Streets if the map does not already have it
+        if streetsSources.isEmpty {
+            let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
+            style.addSource(source)
+            streetsSources.append(source)
+        }
+        
+        if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
+            let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
+            streetLabelLayer.sourceLayerIdentifier = "road_label"
+            streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
+            streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 20)
+            streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
+            style.insertLayer(streetLabelLayer, at: 0)
+        }
+        
+        let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
+        let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+        var smallestLabelDistance = Double.infinity
+        var currentName: String?
+        
+        for feature in features {
+            var allLines: [MGLPolyline] = []
+            
+            if let line = feature as? MGLPolylineFeature {
+                allLines.append(line)
+            } else if let lines = feature as? MGLMultiPolylineFeature {
+                allLines = lines.polylines
             }
             
-            // Add Mapbox Streets if the map does not already have it
-            if streetsSources.isEmpty {
-                let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
-                style.addSource(source)
-                streetsSources.append(source)
-            }
-            
-            if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
-                let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
-                streetLabelLayer.sourceLayerIdentifier = "road_label"
-                streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
-                streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 20)
-                streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
-                style.insertLayer(streetLabelLayer, at: 0)
-            }
-            
-            let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
-            let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
-            var smallestLabelDistance = Double.infinity
-            var currentName: String?
-            
-            for feature in features {
-                var allLines: [MGLPolyline] = []
+            for line in allLines {
+                let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
+                let slicedLine = polyline(along: stepCoordinates, from: closestCoordinate)
                 
-                if let line = feature as? MGLPolylineFeature {
-                    allLines.append(line)
-                } else if let lines = feature as? MGLMultiPolylineFeature {
-                    allLines = lines.polylines
-                }
+                let lookAheadDistance:CLLocationDistance = 10
+                guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: closestCoordinate)) else { continue }
+                guard let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine) else { continue }
+                guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: closestCoordinate)) else { continue }
                 
-                for line in allLines {
-                    let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
-                    let slicedLine = polyline(along: stepCoordinates, from: closestCoordinate)
+                let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
+                let distanceBetweenReversedPoint = reversedPoint - pointAheadUser
+                let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenReversedPoint)
+                
+                if minDistanceBetweenPoints < smallestLabelDistance {
+                    smallestLabelDistance = minDistanceBetweenPoints
                     
-                    let lookAheadDistance:CLLocationDistance = 10
-                    guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: closestCoordinate)) else { continue }
-                    guard let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine) else { continue }
-                    guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: closestCoordinate)) else { continue }
-                    
-                    let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
-                    let distanceBetweenReversedPoint = reversedPoint - pointAheadUser
-                    let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenReversedPoint)
-                    
-                    if minDistanceBetweenPoints < smallestLabelDistance {
-                        smallestLabelDistance = minDistanceBetweenPoints
-                        
-                        if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
-                            currentName = name
-                        } else {
-                            currentName = nil
-                        }
+                    if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
+                        currentName = name
+                    } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
+                        currentName = name
+                    } else {
+                        currentName = nil
                     }
                 }
             }
-            
-            if smallestLabelDistance < 5 && currentName != nil {
-                wayNameLabel.text = currentName
-                wayNameView.isHidden = false
-            } else {
-                wayNameView.isHidden = true
-            }
         }
         
-        
-        // Snap user and course to route
-        guard routeController.snapsUserLocationAnnotationToRoute else {
-            return location
+        if smallestLabelDistance < 5 && currentName != nil {
+            wayNameLabel.text = currentName
+            wayNameView.isHidden = false
+        } else {
+            wayNameView.isHidden = true
         }
-        
-        guard location.course != -1 else {
-            return location
-        }
-        
-        let nearByCoordinates = routeController.routeProgress.currentLegProgress.nearbyCoordinates
-        let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate)!
-        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
-        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
-
-        // Get closest point infront of user
-        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
-        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
-        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
-        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
-        
-        // Get direction of these points
-        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
-        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
-        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
-        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
-        let wrappedCourse = wrap(location.course, min: -180, max: 180)
-        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
-        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
-        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
-        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
-
-        guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
-            return location
-        }
-
-        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
-        
-        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
-            return location
-        }
-        
-        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
 }
 
@@ -483,7 +419,15 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        let map = mapView as! NavigationMapView
+        // This method is called before the view is added to a window
+        // (if the style is cached) preventing UIAppearance to apply the style.
+        showRouteIfNeeded()
+    }
+    
+    func showRouteIfNeeded() {
+        guard isViewLoaded && view.window != nil else { return }
+        let map = mapView as NavigationMapView
+        guard !map.showsRoute else { return }
         map.showRoute(route)
     }
 
@@ -497,43 +441,25 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
         mapView.userTrackingMode = .followWithCourse
     }
-
-    func updateShield(for controller: RouteManeuverViewController) {
-        guard let ref = controller.step.codes?.first, controller.shieldImage == nil else { return }
-
-        let components = ref.components(separatedBy: " ")
-
-        if components.count > 1 {
-            shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { (image) in
-                controller.shieldImage = image
-            }
-            shieldAPIDataTask?.resume()
-        } else {
-            controller.shieldImage = nil
-        }
-    }
 }
 
 // MARK: RouteManeuverPageViewControllerDelegate
 
 extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
-        let step = maneuverViewController.step
+        let step = maneuverViewController.step!
 
         maneuverViewController.turnArrowView.step = step
         maneuverViewController.shieldImage = nil
-        maneuverViewController.distance = step!.distance > 0 ? step!.distance : nil
+        maneuverViewController.distance = step.distance > 0 ? step.distance : nil
+        maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        updateShield(for: maneuverViewController)
+        maneuverViewController.showLaneView(step: step)
         
-        if let step = step {
-            maneuverViewController.showLaneView(step: step)
-            
-            let initialPaddingForOverviewButton:CGFloat = maneuverViewController.stackViewContainer.isHidden ? -30 : -20 + maneuverViewController.laneViews.first!.frame.maxY
-            UIView.animate(withDuration: 0.5, animations: {
-                self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
-            })
+        let initialPaddingForOverviewButton:CGFloat = maneuverViewController.stackViewContainer.isHidden ? -30 : -20 + maneuverViewController.laneViews.first!.frame.maxY
+        UIView.animate(withDuration: 0.5) {
+            self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
         }
         
         maneuverViewController.isPagingThroughStepList = true
@@ -542,7 +468,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
                 mapView.userTrackingMode = .followWithCourse
             } else {
-                mapView.setCenter(step!.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step!.initialHeading!, animated: true, completionHandler: nil)
+                mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
     }

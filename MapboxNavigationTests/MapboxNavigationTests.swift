@@ -1,6 +1,6 @@
 import XCTest
 import FBSnapshotTestCase
-@testable import MapboxDirections
+import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -23,7 +23,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     }
     
     func storyboard() -> UIStoryboard {
-        return UIStoryboard(name: "Navigation", bundle: Bundle.navigationUI)
+        return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
     
     func testManeuverViewMultipleLines() {
@@ -43,7 +43,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
         
-        controller.distance = 1000
+        controller.distance = 804
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
         controller.destinationLabel.unabridgedText = "Single line"
@@ -95,6 +95,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         let bundle = Bundle(for: MapboxNavigationTests.self)
         var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
         let route = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
+        route.accessToken = "foo"
         
         let navigation = NavigationViewController(for: route, directions: directions)
         navigation.loadViewIfNeeded()

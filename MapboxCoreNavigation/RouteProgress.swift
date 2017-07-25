@@ -50,10 +50,13 @@ public enum AlertLevel: Int {
  */
 @objc(MBRouteProgress)
 open class RouteProgress: NSObject {
+    /**
+     Returns the current `Route`.
+     */
     public let route: Route
 
     /**
-     Index representing current leg
+     Index representing current `RouteLeg`.
      */
     public var legIndex: Int {
         didSet {
@@ -80,7 +83,7 @@ open class RouteProgress: NSObject {
     
 
     /**
-     Total seconds remaining on all legs
+     Total seconds remaining on all legs.
      */
     public var durationRemaining: CLLocationDistance {
         return route.legs.suffix(from: legIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentLegProgress.durationRemaining
@@ -102,23 +105,31 @@ open class RouteProgress: NSObject {
         return route.distance - distanceTraveled
     }
     
+    /**
+     Number of waypoints remaining on the current route.
+     */
     public var remainingWaypoints: [Waypoint] {
         return route.legs.suffix(from: legIndex).map { $0.destination }
     }
     
+    /**
+     Returns the progress along the current `RouteLeg`.
+     */
     public var currentLegProgress: RouteLegProgress!
+    
 
     /**
      Intializes a new `RouteProgress`.
      
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
+     - parameter alertLevel: Optional `AlertLevel` to start the `RouteProgress` at.
      */
-    public init(route: Route, legIndex: Int = 0) {
+    public init(route: Route, legIndex: Int = 0, alertLevel: AlertLevel = .none) {
         self.route = route
         self.legIndex = legIndex
         super.init()
-        currentLegProgress = RouteLegProgress(leg: currentLeg)
+        currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
     }
 }
 
@@ -127,11 +138,14 @@ open class RouteProgress: NSObject {
  */
 @objc(MBRouteLegProgress)
 open class RouteLegProgress: NSObject {
+    /**
+     Returns the current `RouteLeg`.
+     */
     public let leg: RouteLeg
     
     
     /**
-     Index representing the current step
+     Index representing the current step.
      */
     public var stepIndex: Int {
         didSet {
@@ -142,7 +156,7 @@ open class RouteLegProgress: NSObject {
 
 
     /**
-     Total distance traveled in meters along current leg
+     Total distance traveled in meters along current leg.
      */
     public var distanceTraveled: CLLocationDistance {
         return leg.steps.prefix(upTo: stepIndex).map { $0.distance }.reduce(0, +) + currentStepProgress.distanceTraveled
@@ -150,7 +164,7 @@ open class RouteLegProgress: NSObject {
     
     
     /**
-     Duration remaining in seconds on current leg
+     Duration remaining in seconds on current leg.
      */
     public var durationRemaining: TimeInterval {
         return leg.steps.suffix(from: stepIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
@@ -197,7 +211,7 @@ open class RouteLegProgress: NSObject {
     }
     
     /**
-     Returns the `Step` before the current step.
+     Returns the `RouteStep` before the current step.
      
      If there is no `priorStep`, nil is returned.
      */
@@ -210,7 +224,7 @@ open class RouteLegProgress: NSObject {
     
     
     /**
-     Returns number representing current `Step` for the leg the user is on.
+     Returns the current `RouteStep` for the leg the user is on.
      */
     public var currentStep: RouteStep {
         return leg.steps[stepIndex]
@@ -218,7 +232,7 @@ open class RouteLegProgress: NSObject {
 
 
     /**
-     Returns the upcoming `Step`.
+     Returns the upcoming `RouteStep`.
      
      If there is no `upcomingStep`, nil is returned.
      */
@@ -243,12 +257,15 @@ open class RouteLegProgress: NSObject {
 
 
     /**
-     Return bool whether step provided is the current `Step` the user is on.
+     Return bool whether step provided is the current `RouteStep` the user is on.
      */
     public func isCurrentStep(_ step: RouteStep) -> Bool {
         return step == currentStep
     }
     
+    /**
+     Returns the progress along the current `RouteStep`.
+     */
     public var currentStepProgress: RouteStepProgress
 
 
@@ -257,16 +274,18 @@ open class RouteLegProgress: NSObject {
      
      - parameter leg: Leg on a `Route`.
      - parameter stepIndex: Current step the user is on.
+     - parameter alertLevel: Optional `AlertLevel` to start the `RouteProgress` at.
      */
-    public init(leg: RouteLeg, stepIndex: Int = 0) {
+    public init(leg: RouteLeg, stepIndex: Int = 0, alertLevel: AlertLevel = .none) {
         self.leg = leg
         self.stepIndex = stepIndex
+        self.alertUserLevel = alertLevel
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex])
     }
     
     
     /**
-     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry
+     Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
      */
     public var nearbyCoordinates: [CLLocationCoordinate2D] {
         let priorCoords = priorStep?.coordinates ?? []
@@ -302,14 +321,14 @@ open class RouteStepProgress: NSObject {
     public var userDistanceToManeuverLocation: CLLocationDistance? = nil
     
     /**
-     Total distance in meters remaining on current stpe
+     Total distance in meters remaining on current step.
      */
     public var distanceRemaining: CLLocationDistance {
         return step.distance - distanceTraveled
     }
 
     /**
-     Number between 0 and 1 representing fraction of current step traveled
+     Number between 0 and 1 representing fraction of current step traveled.
      */
     public var fractionTraveled: Double {
         return distanceTraveled / step.distance
@@ -317,13 +336,18 @@ open class RouteStepProgress: NSObject {
 
 
     /**
-     Number of seconds remaining on current step
+     Number of seconds remaining on current step.
      */
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
 
 
+    /**
+     Intializes a new `RouteStepProgress`.
+     
+     - parameter step: Step on a `RouteLeg`.
+     */
     public init(step: RouteStep) {
         self.step = step
     }

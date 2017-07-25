@@ -1,6 +1,6 @@
 import UIKit
 
-let path = Bundle.navigationUI.path(forResource: "Abbreviations", ofType: "plist")!
+let path = Bundle.mapboxNavigation.path(forResource: "Abbreviations", ofType: "plist")!
 let allAbbrevations = NSDictionary(contentsOfFile: path) as? [String: [String: String]]
 
 /// Options that specify what kinds of words in a string should be abbreviated.

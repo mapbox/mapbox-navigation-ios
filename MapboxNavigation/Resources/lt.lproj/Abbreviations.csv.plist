@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;upelis&quot;,&quot;up&quot;
+&quot;centras&quot;,&quot;ctr&quot;
+&quot;nacionalinis&quot;,&quot;nac&quot;
+&quot;kalnas&quot;,&quot;kln&quot;
+&quot;kalnas&quot;,&quot;kln&quot;
+&quot;sankryža&quot;,&quot;skrž&quot;
+&quot;miesto centras&quot;,&quot;m.ctr&quot;
+&quot;tarptautinis&quot;, &quot;trptaut&quot;
+&quot;parkas&quot;, &quot;pk&quot;
+&quot;skveras&quot;, &quot;skv&quot;
+&quot;Šv&quot;, &quot;Šv&quot;
+&quot;aukštumos&quot;,&quot;aukš&quot;
+&quot;kelias&quot;,&quot;kl&quot;
+&quot;Šv&quot;, &quot;Šv&quot;
+&quot;fortas&quot;,&quot;ft&quot;
+&quot;turgus&quot;,&quot;tgs&quot;
+&quot;centras&quot;,&quot;ctr&quot;
+&quot;Vilius&quot;,&quot;Vilius&quot;
+&quot;mokykla&quot;,&quot;mok&quot;
+&quot;vyr.&quot;,&quot;vyr.&quot;
+&quot;upė&quot;,&quot;up&quot;,
+&quot;sesė&quot;,&quot;sesė&quot;
+&quot;kaimas&quot;,&quot;km&quot;
+&quot;stotis&quot;,&quot;st&quot;
+&quot;apartamentai&quot;,&quot;apt&quot;
+&quot;universitetas&quot;,&quot;univ&quot;
+&quot;miestelis&quot;,&quot;mstl&quot;
+&quot;ežeras&quot;,&quot;ež&quot;
+&quot;jaun.&quot;,&quot;jaun.&quot;,
+&quot;tėvas&quot;,&quot;tėv&quot;
+&quot;taškas&quot;,&quot;tšk&quot;,
+&quot;paminklas&quot;,&quot;pmkl&quot;
+&quot;sankryža&quot;,&quot;skrž&quot;
+</string>
+    <key>classifications</key>
+    <string>&quot;kiemelis&quot;,&quot;kml&quot;
+&quot;aplinkkelis&quot;,&quot;aplnk&quot;
+&quot;kelias&quot;,&quot;kl&quot;
+&quot;greitkelis&quot;,&quot;grtkl&quot;
+&quot;tiltas&quot;, &quot;tlt&quot;
+&quot;vieta&quot;,&quot;vt&quot;,
+&quot;pusratis&quot;,&quot;psrt&quot;
+&quot;bulvaras&quot;,&quot;blvr&quot;
+&quot;juosta&quot;, &quot;jst&quot;
+&quot;prospektas&quot;, &quot;pspkt&quot;
+&quot;autostrada&quot;, &quot;auto.&quot;
+&quot;greitkelis&quot;,&quot;grtkl&quot;
+&quot;aikštė&quot;, &quot;a.&quot;,
+&quot;takas&quot;, &quot;tak.&quot;,
+</string>
+    <key>directions</key>
+    <string>&quot;rytai&quot;, &quot;R&quot;
+&quot;šiaurės rytai&quot;, &quot;ŠR&quot;
+&quot;pietūs&quot;, &quot;P&quot;
+&quot;šiaurės vakarai&quot;, &quot;ŠV&quot;
+&quot;šiaurė&quot;, &quot;Š&quot;
+&quot;pietryčiai&quot;, &quot;PR&quot;
+&quot;pietvakariai&quot;, &quot;PV&quot;
+&quot;vakarai&quot;, &quot;V&quot;
+</string>
+  </dict>
+</plist>

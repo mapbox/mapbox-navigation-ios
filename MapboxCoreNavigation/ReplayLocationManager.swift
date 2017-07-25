@@ -24,6 +24,12 @@ public class ReplayLocationManager: NavigationLocationManager {
         }
     }
     
+    override public var location: CLLocation? {
+        get {
+            return lastKnownLocation
+        }
+    }
+    
     public init(locations: [CLLocation]) {
         self.locations = locations
         super.init()

@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation"
-  s.version = "0.4.0"
+  s.version = "0.5.0"
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -44,9 +44,9 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
-  s.dependency "MapboxDirections.swift", "~> 0.9.0"
+  s.dependency "MapboxDirections.swift", "~> 0.10.1"
   s.dependency "Mapbox-iOS-SDK", "~> 3.5"
-  s.dependency "OSRMTextInstructions", "~> 0.1.2"
+  s.dependency "OSRMTextInstructions", "~> 0.3.0"
   s.dependency "Pulley", "~> 1.3"
   s.dependency "SDWebImage", "~> 4.0"
   s.dependency "AWSPolly", "~> 2.5"
