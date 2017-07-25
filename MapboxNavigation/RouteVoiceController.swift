@@ -239,7 +239,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             text = upComingInstruction
         }
         
-        return text.withoutPuncation
+        return text.removingPunctuation
     }
     
     func localizeRoadDescription(_ step: RouteStep, markUpWithSSML: Bool) -> String {

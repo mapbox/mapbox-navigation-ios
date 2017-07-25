@@ -29,7 +29,7 @@ extension String {
             ])
     }
     
-    var withoutPuncation: String {
+    var removingPunctuation: String {
         return byReplacing([
             ("(", ""),
             (")", ""),
