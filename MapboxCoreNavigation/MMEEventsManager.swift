@@ -223,16 +223,19 @@ extension UIApplicationState {
 
 extension AVAudioSession {
     var audioType: String {
-        if bluetoothAudioConnected() {
+        if isOutputBluetooth() {
             return "bluetooth"
         }
-        if headphonesConnected() {
+        if isOutputHeadphones() {
             return "headphones"
         }
-        return "speaker"
+        if isOutputSpeaker() {
+            return "speaker"
+        }
+        return "unknown"
     }
     
-    func bluetoothAudioConnected() -> Bool{
+    func isOutputBluetooth() -> Bool{
         for output in currentRoute.outputs {
             if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
                 return true
@@ -241,9 +244,18 @@ extension AVAudioSession {
         return false
     }
     
-    func headphonesConnected() -> Bool{
+    func isOutputHeadphones() -> Bool{
         for output in currentRoute.outputs {
             if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func isOutputSpeaker() -> Bool{
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
                 return true
             }
         }
