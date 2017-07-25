@@ -478,7 +478,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.shieldImage = nil
         maneuverViewController.distance = step.distance > 0 ? step.distance : nil
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
-        maneuverViewController.updateStreetNameForStep()
+        maneuverViewController.updateStreetNameForStep(currentLeg: routeController.routeProgress.currentLegProgress.leg)
         
         maneuverViewController.showLaneView(step: step)
         

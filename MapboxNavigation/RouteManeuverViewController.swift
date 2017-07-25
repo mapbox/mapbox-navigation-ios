@@ -20,7 +20,7 @@ class RouteManeuverViewController: UIViewController {
         didSet {
             if isViewLoaded {
                 roadCode = step?.codes?.first ?? step?.destinationCodes?.first ?? step?.destinations?.first
-                updateStreetNameForStep()
+                updateStreetNameForStep(currentLeg: nil)
             }
         }
     }
@@ -65,7 +65,7 @@ class RouteManeuverViewController: UIViewController {
     var shieldImage: UIImage? {
         didSet {
             shieldImageView.image = shieldImage
-            updateStreetNameForStep()
+            updateStreetNameForStep(currentLeg: nil)
         }
     }
     
@@ -169,7 +169,7 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    func updateStreetNameForStep(currentLeg: RouteLeg? = nil) {
+    func updateStreetNameForStep(currentLeg: RouteLeg?) {
         if let currentLeg = currentLeg, let step = step, step.maneuverType == .arrive {
             destinationLabel.unabridgedText = currentLeg.name
         } else if let step = step, step.isNumberedMotorway, let codes = step.codes {
