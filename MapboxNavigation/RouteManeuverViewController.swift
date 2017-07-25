@@ -20,7 +20,15 @@ class RouteManeuverViewController: UIViewController {
         didSet {
             if isViewLoaded {
                 roadCode = step?.codes?.first ?? step?.destinationCodes?.first ?? step?.destinations?.first
-                updateStreetNameForStep(currentLeg: nil)
+                updateStreetNameForStep()
+            }
+        }
+    }
+    
+    var leg: RouteLeg? {
+        didSet {
+            if let _ = roadCode {
+                updateStreetNameForStep()
             }
         }
     }
@@ -65,7 +73,7 @@ class RouteManeuverViewController: UIViewController {
     var shieldImage: UIImage? {
         didSet {
             shieldImageView.image = shieldImage
-            updateStreetNameForStep(currentLeg: nil)
+            updateStreetNameForStep()
         }
     }
     
@@ -123,7 +131,7 @@ class RouteManeuverViewController: UIViewController {
             distance = nil
             destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep)
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
-            updateStreetNameForStep(currentLeg: routeProgress.currentLegProgress.leg)
+            updateStreetNameForStep()
             showLaneView(step: upComingStep)
         }
         
@@ -169,8 +177,8 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    func updateStreetNameForStep(currentLeg: RouteLeg?) {
-        if let currentLeg = currentLeg, let step = step, step.maneuverType == .arrive {
+    func updateStreetNameForStep() {
+        if let currentLeg = leg, let step = step, step.maneuverType == .arrive {
             destinationLabel.unabridgedText = currentLeg.name
         } else if let step = step, step.isNumberedMotorway, let codes = step.codes {
             destinationLabel.unabridgedText = codes.joined(separator: NSLocalizedString("REF_DELIMITER", bundle: .mapboxNavigation, value: " / ", comment: "Delimiter between route numbers in a road concurrency"))
