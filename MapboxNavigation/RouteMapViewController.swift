@@ -13,7 +13,6 @@ class RouteMapViewController: UIViewController {
 
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
-    @IBOutlet weak var recenterButton: Button!
     @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
@@ -28,7 +27,7 @@ class RouteMapViewController: UIViewController {
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
-    let MBSecondsBeforeResetTrackingMode: TimeInterval = 25.0
+    let MBSecondsBeforeResetTrackingMode: TimeInterval = 4
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -46,7 +45,7 @@ class RouteMapViewController: UIViewController {
         get {
             let camera = mapView.camera
             camera.altitude = 600
-            camera.pitch = 45
+            camera.pitch = 60
             return camera
         }
     }
@@ -73,7 +72,6 @@ class RouteMapViewController: UIViewController {
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
-        recenterButton.applyDefaultCornerRadiusShadow()
         
         wayNameView.layer.borderWidth = 1
         wayNameView.layer.borderColor = UIColor.lightGray.cgColor
@@ -109,28 +107,19 @@ class RouteMapViewController: UIViewController {
         showRouteIfNeeded()
     }
 
-    @IBAction func recenter(_ sender: AnyObject) {
-        mapView.setCamera(tiltedCamera, animated: false)
-        mapView.userTrackingMode = .followWithCourse
-
-        // Recenter also resets the current page. Same behavior as rerouting.
-        routePageViewController.notifyDidReRoute()
-    }
-
     @IBAction func toggleOverview(_ sender: Any) {
-        if isInOverviewMode {
-            overviewButton.isHidden = false
+        if isInOverviewMode || mapView.userTrackingMode == .none {
+            isInOverviewMode = false
             mapView.setCamera(tiltedCamera, animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
-        } else {
-            wayNameView.isHidden = true
-            overviewButton.isHidden = true
+            overviewButton.setImage(#imageLiteral(resourceName: "overview"), for: .normal)
+        } else if mapView.userTrackingMode == .followWithCourse {
+            isInOverviewMode = true
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
+            overviewButton.setImage(#imageLiteral(resourceName: "location"), for: .normal)
         }
+
         resetTrackingModeTimer?.invalidate()
-        isInOverviewMode = !isInOverviewMode
-        
-        routePageViewController.notifyDidReRoute()
     }
     
     @IBAction func report(_ sender: Any) {
@@ -184,7 +173,6 @@ class RouteMapViewController: UIViewController {
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
         } else {
             mapView.userTrackingMode = .followWithCourse
-            wayNameView.isHidden = true
         }
     }
 
@@ -301,8 +289,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
      */
     func labelCurrentRoad(at location: CLLocation) {
         guard let style = mapView.style,
-            let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
-            recenterButton.isHidden && hasFinishedLoadingMap else {
+            let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates, hasFinishedLoadingMap else {
             return
         }
         
@@ -384,31 +371,15 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
 extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if isInOverviewMode && mode != .followWithCourse {
-            recenterButton.isHidden = false
-            wayNameView.isHidden = true
-            startResetTrackingModeTimer()
-        } else {
+        if mode == .none {
             resetTrackingModeTimer?.invalidate()
-            
-            if mode != .followWithCourse {
-                recenterButton.isHidden = false
-                startResetTrackingModeTimer()
-            } else {
-                recenterButton.isHidden = true
-            }
-        }
-        
-        if isInOverviewMode {
-            overviewButton.isHidden = false
-            recenterButton.isHidden = true
-            isInOverviewMode = false
+            startResetTrackingModeTimer()
+            overviewButton.setImage(#imageLiteral(resourceName: "location"), for: .normal)
         }
     }
 
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         if mapView.userTrackingMode == .none && !isInOverviewMode {
-            wayNameView.isHidden = true
             resetTrackingModeTimer?.invalidate()
             startResetTrackingModeTimer()
         }
