@@ -25,9 +25,15 @@ extension String {
             ("&", "&amp;"),
             ("<", "&lt;"),
             ("\"", "&quot;"),
-            ("'", "&apos;"),
+            ("'", "&apos;")
+            ])
+    }
+    
+    var withoutPuncation: String {
+        return byReplacing([
             ("(", ""),
-            (")", "")
+            (")", ""),
+            ("_", "")
             ])
     }
 }
