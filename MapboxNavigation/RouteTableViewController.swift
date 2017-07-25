@@ -80,14 +80,12 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         
         let sourceName = leg.source.name
         let destinationName = leg.destination.name
-        
-        if let sourceName = sourceName?.nonEmptyString, let destinationName = destinationName?.nonEmptyString {
-            return "\(sourceName) to \(destinationName)"
-        }
-        
         let legToFrom = leg.name.components(separatedBy: ", ")
-        if legToFrom.count == 2 {
-            return "\(legToFrom[0]) to \(legToFrom[1])"
+        
+        if let destinationName = destinationName?.nonEmptyString, legToFrom.count > 1 {
+            return "\(destinationName) via \(legToFrom.joined(separator: " and "))"
+        } else if let sourceName = sourceName?.nonEmptyString, let destinationName = destinationName?.nonEmptyString {
+            return "\(sourceName) anz \(destinationName)"
         } else {
             return leg.name
         }

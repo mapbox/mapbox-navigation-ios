@@ -354,7 +354,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
+            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
     }
     
