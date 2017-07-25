@@ -16,7 +16,7 @@
 /* Delimiter between route numbers in a road concurrency */
 "REF_DELIMITER" = " / ";
 
-/* Delimiter between destinations in a road concurrency */
+/* Delimiter between multiple destinations */
 "DESTINATION_DELIMITER" = " / ";
 
 /* Format for speech string; 1 = formatted distance; 2 = instruction */
