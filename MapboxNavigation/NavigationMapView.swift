@@ -87,29 +87,58 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
         showsUserLocation = true
     }
     
-    public var userLocationForCourseTracking: CLLocation? {
-        didSet {
-            guard let location = userLocationForCourseTracking, CLLocationCoordinate2DIsValid(location.coordinate) else {
-                return
+    var userLocationForCourseTracking: CLLocation?
+    var animatesUserLocation: Bool = false
+    
+    public func updateCourseTracking(location: CLLocation?, animated: Bool) {
+        animatesUserLocation = animated
+        userLocationForCourseTracking = location
+        guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
+            return
+        }
+        
+        let point = targetPoint
+        let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
+        let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 1000, pitch: 45, heading: location.course)
+        
+        let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
+        let duration: TimeInterval = animated ? 1 : 0
+        setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+    }
+    
+    var targetPoint: CGPoint {
+        return CGPoint(x: bounds.midX, y: bounds.height*0.75)
+    }
+    
+    open override func mapViewDidFinishRenderingFrameFullyRendered(_ fullyRendered: Bool) {
+        super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
+        
+        guard let location = userLocationForCourseTracking else { return }
+        self.userCourseView?.update(location: location, pitch: camera.pitch, direction: direction, animated: false)
+        let userPoint = self.convert(location.coordinate, toPointTo: self)
+        
+        if animatesUserLocation {
+            UIView.animate(withDuration: 1, delay: 0, options: .curveLinear, animations: {
+                self.userCourseView?.center = userPoint
+            }) { (completed) in
+                
             }
-            
-            // didUpdateLocationWithUserTrackingAnimated
-            // didUpdateLocationIncrementallyAnimated
-            // TODO: Call setVisibleCoordinateBounds instead to account for the location view’s bottom-weighted position on-screen.
-            setCenter(location.coordinate, edgePadding: followingEdgePadding, zoomLevel: zoomLevel, direction: location.course)
-            
-            // updateUserLocationAnnotationViewAnimatedWithDuration
-            if let userCourseView = userCourseView {
-                userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: false)
-                userCourseView.center = userCourseViewCenter
-            }
+        } else {
+            self.userCourseView?.center = userPoint
         }
     }
     
-    var followingEdgePadding: UIEdgeInsets {
+    
+    var boundsAroundPoint: CGRect {
         let point = userCourseViewCenter
-        let boundsAroundPoint = bounds.offsetBy(dx: point.x - bounds.midX, dy: point.y - bounds.midY)
-        return UIEdgeInsets(top: boundsAroundPoint.minY - bounds.minY, left: contentInset.left, bottom: bounds.maxY - boundsAroundPoint.maxY, right: contentInset.right)
+        return bounds.offsetBy(dx: point.x - bounds.midX, dy: point.y - bounds.midY)
+    }
+    
+    var followingEdgePadding: UIEdgeInsets {
+//        let point = userCourseViewCenter
+//        let correctBounds = boundsAroundPoint
+        let b = boundsAroundPoint
+        return UIEdgeInsets(top: b.minY - bounds.minY, left: contentInset.left, bottom: bounds.maxY - b.maxY, right: contentInset.right)
     }
     
     var tracksUserCourse: Bool = false {
