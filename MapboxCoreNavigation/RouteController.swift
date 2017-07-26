@@ -108,6 +108,12 @@ open class RouteController: NSObject {
      */
     public var isDeadReckoningEnabled = false
     
+    
+    /**
+     If true, every 2 minutes the `RouteController` will check for a faster route for the user.
+     */
+    public var checkForFasterRouteInBackground = false
+    
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
@@ -455,7 +461,7 @@ extension RouteController: CLLocationManagerDelegate {
         monitorStepProgress(location)
         
         // Check for faster route given users current location
-        //
+        guard checkForFasterRouteInBackground else { return }
         // Only check for faster alternatives if the user has plenty of time left on the route.
         guard routeProgress.durationRemaining > 600 else { return }
         // If the user is approaching a maneuver, don't check for a faster alternatives
