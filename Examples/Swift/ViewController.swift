@@ -261,7 +261,7 @@ extension ViewController: NavigationViewControllerDelegate {
 }
 
 extension ViewController: WaypointConfirmationViewControllerDelegate {
-    func confirmationControllerDidConfirm(controller confirmationController: WaypointConfirmationViewController) {
+    func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
         confirmationController.dismiss(animated: true, completion: nil) 
     }
 }
