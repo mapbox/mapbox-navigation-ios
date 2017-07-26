@@ -164,6 +164,7 @@ open class RouteController: NSObject {
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
+        UIDevice.current.isBatteryMonitoringEnabled = true
         super.init()
         
         self.locationManager.delegate = self
@@ -177,6 +178,7 @@ open class RouteController: NSObject {
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
         sendCancelEvent()
         suspendNotifications()
+        UIDevice.current.isBatteryMonitoringEnabled = false
     }
     
     func startEvents(route: Route) {
@@ -198,7 +200,6 @@ open class RouteController: NSObject {
             events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
             events.disableLocationMetrics()
             events.sendTurnstileEvent()
-            UIDevice.current.isBatteryMonitoringEnabled = true
         } else {
             assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
         }
