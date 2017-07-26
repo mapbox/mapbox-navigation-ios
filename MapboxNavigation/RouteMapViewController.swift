@@ -210,7 +210,7 @@ class RouteMapViewController: UIViewController {
         // to avoid going back to an already completed step and avoid duplicated future steps
         if let previousStep = previousStep {
             if previousStep != step {
-                controller = routePageViewController.routeManeuverViewController(with: step)!
+                controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
                 routePageViewController.currentManeuverPage = controller
             }
@@ -474,6 +474,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
+    }
+    
+    var currentLeg: RouteLeg {
+        return routeController.routeProgress.currentLeg
     }
     
     var upComingStep: RouteStep? {
