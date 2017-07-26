@@ -25,9 +25,9 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    var leg: RouteLeg? {
+    weak var leg: RouteLeg? {
         didSet {
-            if let _ = roadCode {
+            if isViewLoaded {
                 updateStreetNameForStep()
             }
         }
