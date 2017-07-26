@@ -199,8 +199,8 @@ extension MMEEventsManager {
     func navigationFeedbackEventWithLocationsAdded(event: [String: Any], eventTimestamp: Date, routeController: RouteController) -> [String: Any] {
         var eventDictionary = event
         
-        eventDictionary["locationsBefore"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp <= eventTimestamp}.map {$0.eventDictionary}
-        eventDictionary["locationsAfter"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp > eventTimestamp}.map {$0.eventDictionary}
+        eventDictionary["locationsBefore"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp <= eventTimestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsAfter"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp > eventTimestamp}.map {$0.dictionaryRepresentation}
         
         return eventDictionary
     }
@@ -275,23 +275,6 @@ extension UIDevice {
             }
             
             return identifier
-        }
-    }
-}
-
-extension CLLocation {
-    var eventDictionary: [String: Any] {
-        get {
-            var locationDictionary:[String: Any] = [:]
-            locationDictionary["lat"] = coordinate.latitude
-            locationDictionary["lng"] = coordinate.longitude
-            locationDictionary["altitude"] = altitude
-            locationDictionary["timestamp"] = timestamp.ISO8601
-            locationDictionary["horizontalAccuracy"] = horizontalAccuracy
-            locationDictionary["verticalAccuracy"] = verticalAccuracy
-            locationDictionary["course"] = course
-            locationDictionary["speed"] = speed
-            return locationDictionary
         }
     }
 }
