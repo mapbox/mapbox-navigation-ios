@@ -1,5 +1,8 @@
 import Foundation
 import CoreLocation
+#if os(iOS)
+import UIKit
+#endif
 
 #if os(iOS)
 import UIKit
