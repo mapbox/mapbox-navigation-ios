@@ -33,7 +33,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
         
         routeController = RouteController(along: userRoute!, directions: directions, locationManager: locationManager)
-        routeController.snapsUserLocationAnnotationToRoute = true
         
         mapView.userLocationVerticalAlignment = .center
         mapView.userTrackingMode = .followWithCourse

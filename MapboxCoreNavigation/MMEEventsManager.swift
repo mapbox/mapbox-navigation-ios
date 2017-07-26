@@ -4,7 +4,7 @@ import AVFoundation
 import MapboxMobileEvents
 
 let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
-let EventVersion = 4
+let EventVersion = 5
 
 struct EventDetails {
     var originalRequestIdentifier: String?
@@ -30,6 +30,7 @@ struct EventDetails {
     var durationRemaining: TimeInterval
     var rerouteCount: Int
     var volumeLevel: Int
+    var audioType: String
     var screenBrightness: Int
     var batteryPluggedIn: Bool
     var batteryLevel: Float
@@ -75,6 +76,7 @@ struct EventDetails {
         rerouteCount = session.numberOfReroutes
         
         volumeLevel = Int(AVAudioSession.sharedInstance().outputVolume * 100)
+        audioType = AVAudioSession.sharedInstance().audioType
         screenBrightness = Int(UIScreen.main.brightness * 100)
         
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
@@ -127,12 +129,13 @@ struct EventDetails {
         modifiedEventDictionary["rerouteCount"] = rerouteCount
         
         modifiedEventDictionary["volumeLevel"] = volumeLevel
+        modifiedEventDictionary["audioType"] = audioType
         modifiedEventDictionary["screenBrightness"] = screenBrightness
         
         modifiedEventDictionary["batteryPluggedIn"] = batteryPluggedIn
         modifiedEventDictionary["batteryLevel"] = batteryLevel
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
-        
+
         return modifiedEventDictionary
     }
 }
@@ -196,8 +199,8 @@ extension MMEEventsManager {
     func navigationFeedbackEventWithLocationsAdded(event: [String: Any], eventTimestamp: Date, routeController: RouteController) -> [String: Any] {
         var eventDictionary = event
         
-        eventDictionary["locationsBefore"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp <= eventTimestamp}.map {$0.eventDictionary}
-        eventDictionary["locationsAfter"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp > eventTimestamp}.map {$0.eventDictionary}
+        eventDictionary["locationsBefore"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp <= eventTimestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsAfter"] = routeController.sessionState.pastLocations.allObjects.filter {$0.timestamp > eventTimestamp}.map {$0.dictionaryRepresentation}
         
         return eventDictionary
     }
@@ -218,6 +221,48 @@ extension UIApplicationState {
     }
 }
 
+extension AVAudioSession {
+    var audioType: String {
+        if isOutputBluetooth() {
+            return "bluetooth"
+        }
+        if isOutputHeadphones() {
+            return "headphones"
+        }
+        if isOutputSpeaker() {
+            return "speaker"
+        }
+        return "unknown"
+    }
+    
+    func isOutputBluetooth() -> Bool{
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func isOutputHeadphones() -> Bool{
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    func isOutputSpeaker() -> Bool{
+        for output in currentRoute.outputs {
+            if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
+                return true
+            }
+        }
+        return false
+    }
+}
+
 extension UIDevice {
     @nonobjc var machine: String {
         get {
@@ -230,23 +275,6 @@ extension UIDevice {
             }
             
             return identifier
-        }
-    }
-}
-
-extension CLLocation {
-    var eventDictionary: [String: Any] {
-        get {
-            var locationDictionary:[String: Any] = [:]
-            locationDictionary["lat"] = coordinate.latitude
-            locationDictionary["lng"] = coordinate.longitude
-            locationDictionary["altitude"] = altitude
-            locationDictionary["timestamp"] = timestamp.ISO8601
-            locationDictionary["horizontalAccuracy"] = horizontalAccuracy
-            locationDictionary["verticalAccuracy"] = verticalAccuracy
-            locationDictionary["course"] = course
-            locationDictionary["speed"] = speed
-            return locationDictionary
         }
     }
 }

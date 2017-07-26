@@ -28,4 +28,12 @@ extension String {
             ("'", "&apos;")
             ])
     }
+    
+    var removingPunctuation: String {
+        return byReplacing([
+            ("(", ""),
+            (")", ""),
+            ("_", "")
+            ])
+    }
 }
