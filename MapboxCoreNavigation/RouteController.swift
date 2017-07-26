@@ -164,6 +164,7 @@ open class RouteController: NSObject {
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
+        UIDevice.current.isBatteryMonitoringEnabled = true
         super.init()
         
         self.locationManager.delegate = self
@@ -177,6 +178,7 @@ open class RouteController: NSObject {
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
         sendCancelEvent()
         suspendNotifications()
+        UIDevice.current.isBatteryMonitoringEnabled = false
     }
     
     func startEvents(route: Route) {
