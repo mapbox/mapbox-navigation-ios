@@ -16,7 +16,7 @@ class RouteManeuverViewController: UIViewController {
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
     
-    weak var step: RouteStep? {
+    var step: RouteStep? {
         didSet {
             if isViewLoaded {
                 roadCode = step?.codes?.first ?? step?.destinationCodes?.first ?? step?.destinations?.first
@@ -25,7 +25,7 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    weak var leg: RouteLeg? {
+    var leg: RouteLeg? {
         didSet {
             if isViewLoaded {
                 updateStreetNameForStep()
@@ -178,8 +178,8 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func updateStreetNameForStep() {
-        if let currentLeg = leg, let step = step, step.maneuverType == .arrive {
-            destinationLabel.unabridgedText = currentLeg.name
+        if let currentLeg = leg, let destinationName = currentLeg.destination.name, let step = step, step.maneuverType == .arrive {
+            destinationLabel.unabridgedText = destinationName
         } else if let step = step, step.isNumberedMotorway, let codes = step.codes {
             destinationLabel.unabridgedText = codes.joined(separator: NSLocalizedString("REF_DELIMITER", bundle: .mapboxNavigation, value: " / ", comment: "Delimiter between route numbers in a road concurrency"))
         } else if let name = step?.names?.first {
