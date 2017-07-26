@@ -11,7 +11,14 @@ class UserCourseView: UIView {
     var puckArrow: CAShapeLayer?
     var location: CLLocation = CLLocation()
     var heading: CLHeading = CLHeading()
-    var pitch: CGFloat = 0
+    
+    var pitch: CLLocationDegrees = 0 {
+        didSet {
+            if oldValue != pitch {
+                updatePitch()
+            }
+        }
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -20,6 +27,25 @@ class UserCourseView: UIView {
     
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool) {
         drawPuck(location, pitch, direction)
+        self.pitch = CLLocationDegrees(pitch)
+    }
+    
+    func updatePitch() {
+        CATransaction.begin()
+        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
+        
+        let t = CATransform3DRotate(CATransform3DIdentity, CGFloat(pitch.toRadians()), 1, 0, 0)
+        layer.sublayerTransform = t
+        
+        updateFaux3DEffect()
+        
+        CATransaction.commit()
+    }
+    
+    func updateFaux3DEffect() {
+        puckDot?.shadowColor = UIColor.black.cgColor
+        puckDot?.shadowOffset = CGSize(width: 0, height: CGFloat(fmaxf(Float(pitch.toRadians() * 10), 1)))
+        puckDot?.shadowRadius = CGFloat(fmaxf(Float(pitch.toRadians()) * 5, 0.75))
     }
     
     func circleLayer(with size: CGSize) -> CALayer {

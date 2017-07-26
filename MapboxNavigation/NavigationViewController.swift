@@ -609,6 +609,7 @@ extension NavigationViewController: RouteControllerDelegate {
     
     public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
         if let location = locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: routeController.locationManager.isPluggedIn)
             mapViewController?.mapView.userLocationForCourseTracking = location
             mapViewController?.labelCurrentRoad(at: location)
         }
