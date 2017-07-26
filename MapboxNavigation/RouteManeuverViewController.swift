@@ -170,12 +170,12 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func updateStreetNameForStep() {
-        if let step = step, step.isNumberedMotorway, let codes = step.codes {
+        if let destinations = step?.destinations {
+            destinationLabel.unabridgedText = destinations.joined(separator: NSLocalizedString("DESTINATION_DELIMITER", bundle: .mapboxNavigation, value: " / ", comment: "Delimiter between multiple destinations"))
+        } else if let step = step, step.isNumberedMotorway, let codes = step.codes {
             destinationLabel.unabridgedText = codes.joined(separator: NSLocalizedString("REF_DELIMITER", bundle: .mapboxNavigation, value: " / ", comment: "Delimiter between route numbers in a road concurrency"))
         } else if let name = step?.names?.first {
             destinationLabel.unabridgedText = name
-        } else if let destinations = step?.destinations {
-            destinationLabel.unabridgedText = destinations.prefix(min(numberOfDestinationLines, destinations.count)).joined(separator: "\n")
         } else if let step = step {
             destinationLabel.unabridgedText = routeStepFormatter.string(for: step)
         }
