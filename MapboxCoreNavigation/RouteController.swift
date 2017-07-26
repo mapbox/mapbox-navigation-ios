@@ -108,6 +108,12 @@ open class RouteController: NSObject {
      */
     public var isDeadReckoningEnabled = false
     
+    
+    /**
+     If true, every 2 minutes the `RouteController` will check for a faster route for the user.
+     */
+    public var checkForFasterRouteInBackground = false
+    
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
@@ -136,6 +142,7 @@ open class RouteController: NSObject {
     var lastRerouteLocation: CLLocation?
     
     var routeTask: URLSessionDataTask?
+    var lastLocationDate: Date?
     
     /// :nodoc: This is used internally when the navigation UI is being used
     public var usesDefaultUserInterface = false
@@ -452,6 +459,14 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         monitorStepProgress(location)
+        
+        // Check for faster route given users current location
+        guard checkForFasterRouteInBackground else { return }
+        // Only check for faster alternatives if the user has plenty of time left on the route.
+        guard routeProgress.durationRemaining > 600 else { return }
+        // If the user is approaching a maneuver, don't check for a faster alternatives
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
+        checkForFasterRoute(from: location)
     }
     
     func resetStartCounter() {
@@ -516,6 +531,35 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
+    func checkForFasterRoute(from location: CLLocation) {
+        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else { return }
+        
+        guard let lastLocationDate = lastLocationDate else {
+            self.lastLocationDate = location.timestamp
+            return
+        }
+
+        // Only check ever 2 minutes for faster route
+        guard location.timestamp.timeIntervalSince(lastLocationDate) >= 120 else { return }
+        let durationRemaining = routeProgress.durationRemaining
+        let currentAlertLevel = routeProgress.currentLegProgress.alertUserLevel
+        
+        getDirections(from: location) { [weak self] (route, error) in
+            guard let strongSelf = self else { return }
+            guard let route = route else { return }
+            strongSelf.lastLocationDate = nil
+            
+            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first,
+                firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval,
+                currentUpcomingManeuver == firstLeg.steps[1],
+                route.expectedTravelTime <= 0.9 * durationRemaining {
+                // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
+                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentAlertLevel)
+                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+            }
+        }
+    }
+    
     func reroute(from location: CLLocation) {
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
@@ -535,11 +579,38 @@ extension RouteController: CLLocationManagerDelegate {
             MBRouteControllerNotificationLocationKey: location
             ])
         
+        self.lastRerouteLocation = location
+        
+        getDirections(from: location) { [weak self] (route, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if let error = error {
+                strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
+                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
+                    MBRouteControllerNotificationErrorKey: error
+                    ])
+            }
+            
+            guard let route = route else { return }
+            
+            // If the first step of the new route is greater than 0.5km, let user continue without announcement.
+            var alertLevel: AlertLevel = .none
+            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 500 {
+                alertLevel = .depart
+            }
+            strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
+            strongSelf.routeProgress.currentLegProgress.stepIndex = 0
+            strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+        }
+    }
+    
+    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->()) {
         routeTask?.cancel()
         
         let options = routeProgress.route.routeOptions
         options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
-        
         if let firstWaypoint = options.waypoints.first, location.course >= 0 {
             firstWaypoint.heading = location.course
             firstWaypoint.headingAccuracy = 90
@@ -551,32 +622,19 @@ extension RouteController: CLLocationManagerDelegate {
             directions = Directions(accessToken: accessToken, host: host)
         }
         
-        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+        routeTask = directions.calculate(options) { [weak self] (waypoints, routes, error) in
             defer {
                 self?.isRerouting = false
             }
-            
-            guard let strongSelf = self else {
-                return
+            if let error = error {
+                return completion(nil, error)
+            }
+            guard let route = routes?.first else {
+                return completion(nil, nil)
             }
             
-            if let route = routes?.first {
-
-                // If the first step of the new route is greater than 0.5km, let user continue without announcement.
-                var alertLevel: AlertLevel = .none
-                if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 500 {
-                    alertLevel = .depart
-                }
-                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
-                strongSelf.routeProgress.currentLegProgress.stepIndex = 0
-                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-            } else if let error = error {
-                strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
-                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
-                    MBRouteControllerNotificationErrorKey: error
-                    ])
-            }
-        })
+            return completion(route, error)
+        }
     }
     
     func monitorStepProgress(_ location: CLLocation) {

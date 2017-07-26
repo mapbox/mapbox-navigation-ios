@@ -128,6 +128,7 @@
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C55CEB281EB7E4240065D7D9 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55CEB271EB7E4240065D7D9 /* Locale.swift */; };
+		C561735B1F182113005954F6 /* RouteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561735A1F182113005954F6 /* RouteStep.swift */; };
 		C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C578DA071EFD0FFF0052079F /* ProcessInfo.swift */; };
 		C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */; };
 		C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D6BAC1DDCF2AE00387F53 /* Constants.swift */; };
@@ -386,6 +387,7 @@
 		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationMapView.swift; sourceTree = "<group>"; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C55CEB271EB7E4240065D7D9 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
+		C561735A1F182113005954F6 /* RouteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStep.swift; sourceTree = "<group>"; };
 		C578DA071EFD0FFF0052079F /* ProcessInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 		C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLVectorSource.swift; sourceTree = "<group>"; };
 		C58D6BAC1DDCF2AE00387F53 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -747,6 +749,18 @@
 			name = Fixtures;
 			sourceTree = "<group>";
 		};
+		C56173591F182103005954F6 /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				353E68FD1EF0B985007B2AE5 /* BundleAdditions.swift */,
+				C5D9800E1EFBCDAD006DBF2E /* Date.swift */,
+				C578DA071EFD0FFF0052079F /* ProcessInfo.swift */,
+				C561735A1F182113005954F6 /* RouteStep.swift */,
+				351927351F0FA072003A702D /* ScreenCapture.swift */,
+			);
+			name = extensions;
+			sourceTree = "<group>";
+		};
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
@@ -778,11 +792,11 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				C56173591F182103005954F6 /* extensions */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
 				35D457A61E2D253100A89946 /* MBRouteController.h */,
 				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
-				353E68FD1EF0B985007B2AE5 /* BundleAdditions.swift */,
 				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
@@ -791,12 +805,9 @@
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
 				64847A031F04629D003F3A69 /* Feedback.swift */,
-				C5D9800E1EFBCDAD006DBF2E /* Date.swift */,
 				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
-				C578DA071EFD0FFF0052079F /* ProcessInfo.swift */,
-				351927351F0FA072003A702D /* ScreenCapture.swift */,
 				357826C21F1B7CCE005C54FB /* SpokenDistanceFormatter.swift */,
 			);
 			path = MapboxCoreNavigation;
@@ -1324,6 +1335,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
