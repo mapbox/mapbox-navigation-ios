@@ -49,7 +49,7 @@ class RouteManeuverViewController: UIViewController {
                 return
             }
             
-            if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West"].contains(components[2])) {
+            if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest"].contains(components[2])) {
                 shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { [weak self] (image) in
                     self?.shieldImage = image
                 }
