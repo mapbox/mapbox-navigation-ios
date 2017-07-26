@@ -49,7 +49,7 @@ class RouteManeuverViewController: UIViewController {
                 return
             }
             
-            if components.count > 1 {
+            if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest"].contains(components[2])) {
                 shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { [weak self] (image) in
                     self?.shieldImage = image
                 }
@@ -121,7 +121,7 @@ class RouteManeuverViewController: UIViewController {
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
-            destinationLabel.unabridgedText = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))
+            destinationLabel.unabridgedText = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
             updateStreetNameForStep()
             showLaneView(step: upComingStep)
