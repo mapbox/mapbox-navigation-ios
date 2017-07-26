@@ -49,31 +49,30 @@ class RouteTableViewController: UIViewController {
         } else {
             headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
             
-            guard let coordinates = routeProgress.route.coordinates else { return }
-            
             // To keep this cheap, use the fraction traveled along the current route.
             // From this, we can estimate what coordinates in the route remain.
             // This color change does not need to be 100% accurate, 
             // just a rough estimation of remaining route congestion.
-            let estimatedCoordinatesRemaining = Int(floor(Double(coordinates.count) * routeProgress.fractionTraveled))
+            guard let coordinates = routeProgress.currentLegProgress.currentStepProgress.step.coordinates else { return }
             
-            guard estimatedCoordinatesRemaining > 1 else {
+            let estimatedCoordinatesRemaining = Int(floor(Double(coordinates.count) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
+            
+            guard estimatedCoordinatesRemaining >= 1 else {
                 headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
                 return
             }
             
-            let congestionPerLeg = routeProgress.route.legs.flatMap { $0.segmentCongestionLevels }.suffix(estimatedCoordinatesRemaining)
-            let combinedCongestionLevel = Array(congestionPerLeg.joined())
-            let timesPerLeg = routeProgress.route.legs.flatMap { $0.expectedSegmentTravelTimes }
-            let combinedTimes = Array(timesPerLeg.joined()).suffix(estimatedCoordinatesRemaining)
+            let currentStepCongestionTimes = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex].suffix(estimatedCoordinatesRemaining)
+            let legSegments = Array(Array(routeProgress.congestionTravelTimesSegmentsByStep.joined()).joined())
+            let remaingCongestionSegmentTimes = legSegments + currentStepCongestionTimes
             
-            var travelTimePerCongestionLeve: [CongestionLevel: TimeInterval] = [:]
+            var travelTimePerCongestionLevel: [CongestionLevel: TimeInterval] = [:]
 
-            for (segmentCongestion, segmentTime) in zip(combinedCongestionLevel, combinedTimes) {
-                travelTimePerCongestionLeve[segmentCongestion] = (travelTimePerCongestionLeve[segmentCongestion] ?? 0) + segmentTime
+            for (segmentCongestion, segmentTime) in remaingCongestionSegmentTimes {
+                travelTimePerCongestionLevel[segmentCongestion] = (travelTimePerCongestionLevel[segmentCongestion] ?? 0) + segmentTime
             }
 
-            if let max = travelTimePerCongestionLeve.max(by: { a, b in a.value < b.value }) {
+            if let max = travelTimePerCongestionLevel.max(by: { a, b in a.value < b.value }) {
                 switch max.key {
                 case .unknown:
                     headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor

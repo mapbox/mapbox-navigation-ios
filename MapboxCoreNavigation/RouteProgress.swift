@@ -118,6 +118,10 @@ open class RouteProgress: NSObject {
      */
     public var currentLegProgress: RouteLegProgress!
     
+    /**
+     If the route contains both `segmentCongestionLevels` and `expectedSegmentTravelTimes`, this array will contain an array of arrays of tuples of `segmentCongestionLevels` and `expectedSegmentTravelTimes`.
+     */
+    public var congestionTravelTimesSegmentsByStep: [[[(CongestionLevel, TimeInterval)]]] = []
 
     /**
      Intializes a new `RouteProgress`.
@@ -131,6 +135,30 @@ open class RouteProgress: NSObject {
         self.legIndex = legIndex
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
+        
+        var coordinateIndex = 0
+        for leg in route.legs {
+            
+            var congestionTravelTimesSegmentsByLeg: [[(CongestionLevel, TimeInterval)]] = []
+            
+            for step in leg.steps {
+                if let lastCoord = step.coordinates?.last, let coordinates = route.coordinates, let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes  {
+                    guard let nextIndex = coordinates.index(where: {
+                        $0.latitude == lastCoord.latitude && $0.longitude == lastCoord.longitude
+                    }) else { continue }
+                    
+                    let congestionSegment = Array(segmentCongestionLevels[coordinateIndex..<nextIndex])
+                    let travelTimeSegment = Array(expectedSegmentTravelTimes[coordinateIndex..<nextIndex])
+                    
+                    let zipped = zip(congestionSegment, travelTimeSegment)
+                    
+                    congestionTravelTimesSegmentsByLeg.append(Array(zipped))
+                    coordinateIndex = nextIndex
+                }
+            }
+            
+            congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
+        }
     }
 }
 
@@ -342,7 +370,6 @@ open class RouteStepProgress: NSObject {
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
-
 
     /**
      Intializes a new `RouteStepProgress`.
