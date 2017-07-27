@@ -49,22 +49,20 @@ class RouteTableViewController: UIViewController {
         } else {
             headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
             
-            // To keep this cheap, use the fraction traveled along the current route.
-            // From this, we can estimate what coordinates in the route remain.
-            // This color change does not need to be 100% accurate, 
-            // just a rough estimation of remaining route congestion.
-            guard let coordinates = routeProgress.currentLegProgress.currentStepProgress.step.coordinates else { return }
+            let coordinatesRemainingOnStep = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
             
-            let estimatedCoordinatesRemaining = Int(floor(Double(coordinates.count) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
-            
-            guard estimatedCoordinatesRemaining >= 1 else {
+            guard coordinatesRemainingOnStep >= 0 else {
                 headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
                 return
             }
             
-            let currentStepCongestionTimes = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex].suffix(estimatedCoordinatesRemaining)
-            let legSegments = Array(Array(routeProgress.congestionTravelTimesSegmentsByStep.joined()).joined())
-            let remaingCongestionSegmentTimes = legSegments + currentStepCongestionTimes
+            let segementsForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
+            
+            guard coordinatesRemainingOnStep <= segementsForStep.count else { return }
+            
+            let currentStepCongestionTimes = segementsForStep.suffix(from: coordinatesRemainingOnStep)
+            let remainingStepSegments = Array(routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex].suffix(from: routeProgress.currentLegProgress.stepIndex)).joined()
+            let remaingCongestionSegmentTimes = remainingStepSegments + currentStepCongestionTimes
             
             var travelTimePerCongestionLevel: [CongestionLevel: TimeInterval] = [:]
 
