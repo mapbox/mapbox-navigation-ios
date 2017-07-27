@@ -16,10 +16,18 @@ class RouteManeuverViewController: UIViewController {
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
     
-    weak var step: RouteStep? {
+    var step: RouteStep? {
         didSet {
             if isViewLoaded {
                 roadCode = step?.codes?.first ?? step?.destinationCodes?.first ?? step?.destinations?.first
+                updateStreetNameForStep()
+            }
+        }
+    }
+    
+    var leg: RouteLeg? {
+        didSet {
+            if isViewLoaded {
                 updateStreetNameForStep()
             }
         }
@@ -49,7 +57,7 @@ class RouteManeuverViewController: UIViewController {
                 return
             }
             
-            if components.count > 1 {
+            if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest"].contains(components[2])) {
                 shieldAPIDataTask = dataTaskForShieldImage(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) { [weak self] (image) in
                     self?.shieldImage = image
                 }
@@ -121,7 +129,7 @@ class RouteManeuverViewController: UIViewController {
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
-            destinationLabel.unabridgedText = routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep))
+            destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
             updateStreetNameForStep()
             showLaneView(step: upComingStep)
@@ -170,12 +178,14 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func updateStreetNameForStep() {
-        if let step = step, step.isNumberedMotorway, let codes = step.codes {
+        if let currentLeg = leg, let destinationName = currentLeg.destination.name, let step = step, step.maneuverType == .arrive {
+            destinationLabel.unabridgedText = destinationName
+        } else if let destinations = step?.destinations {
+            destinationLabel.unabridgedText = destinations.joined(separator: NSLocalizedString("DESTINATION_DELIMITER", bundle: .mapboxNavigation, value: " / ", comment: "Delimiter between multiple destinations"))
+        } else if let step = step, step.isNumberedMotorway, let codes = step.codes {
             destinationLabel.unabridgedText = codes.joined(separator: NSLocalizedString("REF_DELIMITER", bundle: .mapboxNavigation, value: " / ", comment: "Delimiter between route numbers in a road concurrency"))
         } else if let name = step?.names?.first {
             destinationLabel.unabridgedText = name
-        } else if let destinations = step?.destinations {
-            destinationLabel.unabridgedText = destinations.prefix(min(numberOfDestinationLines, destinations.count)).joined(separator: "\n")
         } else if let step = step {
             destinationLabel.unabridgedText = routeStepFormatter.string(for: step)
         }

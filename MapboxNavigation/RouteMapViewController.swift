@@ -116,6 +116,7 @@ class RouteMapViewController: UIViewController {
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.setCamera(tiltedCamera, animated: false)
         mapView.userTrackingMode = .followWithCourse
+        mapView.logoView.isHidden = false
 
         // Recenter also resets the current page. Same behavior as rerouting.
         routePageViewController.notifyDidReRoute()
@@ -124,11 +125,13 @@ class RouteMapViewController: UIViewController {
     @IBAction func toggleOverview(_ sender: Any) {
         if isInOverviewMode {
             overviewButton.isHidden = false
+            mapView.logoView.isHidden = false
             mapView.setCamera(tiltedCamera, animated: false)
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
             wayNameView.isHidden = true
             overviewButton.isHidden = true
+            mapView.logoView.isHidden = true
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
         }
         resetTrackingModeTimer?.invalidate()
@@ -139,8 +142,24 @@ class RouteMapViewController: UIViewController {
     
     @IBAction func report(_ sender: Any) {
         guard let parent = parent else { return }
-        routeController.recordFeedback(type: .general, description: nil)
-        DialogViewController.present(on: parent)
+        
+        let controller = FeedbackViewController.loadFromStoryboard()
+
+        let feedbackId = routeController.recordFeedback()
+        
+        controller.sendFeedbackHandler = { [weak self] (item) in
+            self?.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
+            self?.dismiss(animated: true) {
+                DialogViewController.present(on: parent)
+            }
+        }
+        
+        controller.dismissFeedbackHandler = { [weak self] in
+            self?.routeController.cancelFeedback(feedbackId: feedbackId)
+            self?.dismiss(animated: true, completion: nil)
+        }
+        
+        parent.present(controller, animated: true, completion: nil)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -211,7 +230,7 @@ class RouteMapViewController: UIViewController {
         // to avoid going back to an already completed step and avoid duplicated future steps
         if let previousStep = previousStep {
             if previousStep != step {
-                controller = routePageViewController.routeManeuverViewController(with: step)!
+                controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
                 routePageViewController.currentManeuverPage = controller
             }
@@ -390,6 +409,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
         if isInOverviewMode && mode != .followWithCourse {
             recenterButton.isHidden = false
+            mapView.logoView.isHidden = true
             wayNameView.isHidden = true
             startResetTrackingModeTimer()
         } else {
@@ -397,15 +417,18 @@ extension RouteMapViewController: MGLMapViewDelegate {
             
             if mode != .followWithCourse {
                 recenterButton.isHidden = false
+                mapView.logoView.isHidden = true
                 startResetTrackingModeTimer()
             } else {
                 recenterButton.isHidden = true
+                mapView.logoView.isHidden = false
             }
         }
         
         if isInOverviewMode {
             overviewButton.isHidden = false
             recenterButton.isHidden = true
+            mapView.logoView.isHidden = false
             isInOverviewMode = false
         }
     }
@@ -471,6 +494,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
+    }
+    
+    var currentLeg: RouteLeg {
+        return routeController.routeProgress.currentLeg
     }
     
     var upComingStep: RouteStep? {
