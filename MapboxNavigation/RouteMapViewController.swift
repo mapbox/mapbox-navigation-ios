@@ -63,13 +63,12 @@ class RouteMapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        automaticallyAdjustsScrollViewInsets = false
+//        automaticallyAdjustsScrollViewInsets = false
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
-        mapView.manuallyUpdatesLocation = true
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
@@ -79,6 +78,27 @@ class RouteMapViewController: UIViewController {
         wayNameView.layer.borderColor = UIColor.lightGray.cgColor
         wayNameView.applyDefaultCornerRadiusShadow()
         wayNameLabel.layer.masksToBounds = true
+        
+        
+        mapView.setContentInset(contentInsets, animated: false)
+        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
+        mapView.setUserTrackingMode(.followWithCourse, animated: false)
+        
+        if let camera = pendingCamera {
+            mapView.camera = camera
+        } else {
+            let camera = MGLMapCamera()
+            if let userLocation = mapView.userLocation {
+                camera.centerCoordinate = userLocation.coordinate
+                if let course = userLocation.location?.course {
+                    camera.heading = course
+                }
+            }
+            camera.pitch = 60
+            camera.altitude = 600
+            mapView.setCamera(camera, animated: false)
+        }
+        mapView.manuallyUpdatesLocation = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -86,27 +106,6 @@ class RouteMapViewController: UIViewController {
         
         mapView.compassView.isHidden = true
         mapView.addAnnotation(destination)
-
-        if let camera = pendingCamera {
-            mapView.camera = camera
-        } else {
-            let camera = tiltedCamera
-            if let coordinates = route.coordinates, coordinates.count > 1 {
-                camera.centerCoordinate = coordinates.first!
-                camera.heading = coordinates[0].direction(to: coordinates[1])
-            }
-            mapView.setCamera(camera, animated: false)
-        }
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        mapView.setUserTrackingMode(.followWithCourse, animated: false)
-        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-        mapView.setContentInset(contentInsets, animated: false)
-        
-        showRouteIfNeeded()
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -444,7 +443,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func showRouteIfNeeded() {
-        guard isViewLoaded && view.window != nil else { return }
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
         map.showRoute(route)
@@ -483,7 +481,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         
         maneuverViewController.isPagingThroughStepList = true
 
-        if !isInOverviewMode {
+        if !isInOverviewMode && hasFinishedLoadingMap {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
                 mapView.userTrackingMode = .followWithCourse
             } else {
