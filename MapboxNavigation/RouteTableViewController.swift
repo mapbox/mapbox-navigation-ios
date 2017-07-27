@@ -49,24 +49,21 @@ class RouteTableViewController: UIViewController {
         } else {
             headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
             
-            let coordinatesRemainingOnStep = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
+            let countOfCoordinatesLeftOnStep = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
             
-            guard coordinatesRemainingOnStep >= 0 else {
+            guard countOfCoordinatesLeftOnStep >= 0 else {
                 headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
                 return
             }
             
-            let segementsForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
+            let stepTimedCongestionLevels = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
             
-            guard coordinatesRemainingOnStep <= segementsForStep.count else { return }
+            guard countOfCoordinatesLeftOnStep <= stepTimedCongestionLevels.count else { return }
             
-            let currentStepCongestionTimes = segementsForStep.suffix(from: coordinatesRemainingOnStep)
-            let remainingStepSegments = Array(routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex].suffix(from: routeProgress.currentLegProgress.stepIndex)).joined()
-            let remaingCongestionSegmentTimes = remainingStepSegments + currentStepCongestionTimes
-            
-            var travelTimePerCongestionLevel: [CongestionLevel: TimeInterval] = [:]
+            let timedCongestionLevelsLeftOnStep = stepTimedCongestionLevels.suffix(from: countOfCoordinatesLeftOnStep)
+            var travelTimePerCongestionLevel = routeProgress.timesLeftOnRouteByCongestionLevel
 
-            for (segmentCongestion, segmentTime) in remaingCongestionSegmentTimes {
+            for (segmentCongestion, segmentTime) in timedCongestionLevelsLeftOnStep {
                 travelTimePerCongestionLevel[segmentCongestion] = (travelTimePerCongestionLevel[segmentCongestion] ?? 0) + segmentTime
             }
 

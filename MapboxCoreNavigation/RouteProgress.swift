@@ -122,6 +122,8 @@ open class RouteProgress: NSObject {
      If the route contains both `segmentCongestionLevels` and `expectedSegmentTravelTimes`, this array will contain an array of arrays of tuples of `segmentCongestionLevels` and `expectedSegmentTravelTimes`.
      */
     public var congestionTravelTimesSegmentsByStep: [[[(CongestionLevel, TimeInterval)]]] = []
+    
+    public var timesLeftOnRouteByCongestionLevel: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
 
     /**
      Intializes a new `RouteProgress`.
@@ -149,13 +151,19 @@ open class RouteProgress: NSObject {
                     let congestionSegment = Array(segmentCongestionLevels[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
                     let travelTimeSegment = Array(expectedSegmentTravelTimes[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
                     
-                    let zipped = zip(congestionSegment, travelTimeSegment)
+                    let zipped = Array(zip(congestionSegment, travelTimeSegment))
                     
-                    congestionTravelTimesSegmentsByLeg.append(Array(zipped))
+                    congestionTravelTimesSegmentsByLeg.append(zipped)
                     coordinateIndex = stepCoordinatesCount
+                    
+                    var stepCongestion: [CongestionLevel: TimeInterval] = [:]
+                    for (segmentCongestion, segmentTime) in zipped {
+                        stepCongestion[segmentCongestion] = segmentTime
+                    }
+                    
+                    
                 }
             }
-            
             
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
