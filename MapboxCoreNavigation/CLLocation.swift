@@ -3,6 +3,12 @@ import CoreLocation
 
 extension CLLocation {
     
+    var isQualified: Bool {
+        return
+            0...100 ~= horizontalAccuracy &&
+            0...30 ~= verticalAccuracy
+    }
+    
     /// Returns a dictionary representation of the location.
     public var dictionaryRepresentation: [String: Any] {
         var locationDictionary: [String: Any] = [:]

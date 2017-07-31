@@ -4,7 +4,7 @@ import MapboxDirections
 fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
 fileprivate let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
 fileprivate var distanceFilter: CLLocationDistance = 10
-fileprivate var verticalAccuracy: CLLocationAccuracy = 40
+fileprivate var verticalAccuracy: CLLocationAccuracy = 10
 fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
 // minimumSpeed will be used when a location have maximumTurnPenalty
 fileprivate let maximumTurnPenalty: CLLocationDirection = 90
