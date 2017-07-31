@@ -34,6 +34,9 @@ public protocol NavigationViewControllerDelegate {
     @objc(navigationViewController:shouldRerouteFromLocation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
     
+    @objc(navigationViewController:shouldIncrementLegWhenArrivingAtWaypoints:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoints waypoint: Waypoint) -> Bool
+    
     /**
      Called immediately before the navigation view controller calculates a new route.
      
@@ -404,6 +407,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
         return navigationDelegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
+    }
+    
+    public func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoints waypoint: Waypoint) -> Bool {
+        return navigationDelegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoints: waypoint) ?? true
     }
     
     public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {

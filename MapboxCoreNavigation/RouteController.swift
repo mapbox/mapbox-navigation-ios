@@ -22,6 +22,9 @@ public protocol RouteControllerDelegate: class {
     @objc(routeController:shouldRerouteFromLocation:)
     optional func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool
     
+    @objc(routeController:shouldIncrementLegWhenArrivingAtWaypoints:)
+    optional func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoints waypoint: Waypoint) -> Bool
+    
     /**
      Called immediately before the route controller calculates a new route.
      
@@ -533,9 +536,9 @@ extension RouteController: CLLocationManagerDelegate {
                 ])
             
             if routeProgress.currentLegProgress.alertUserLevel == .arrive,
-                routeProgress.remainingWaypoints.count > 1 {
+                routeProgress.remainingWaypoints.count > 1,
+                (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoints: routeProgress.currentLeg.destination) ?? true) {
                 routeProgress.legIndex += 1
-                routeProgress.currentLegProgress.alertUserLevel = .depart
             }
         }
     }

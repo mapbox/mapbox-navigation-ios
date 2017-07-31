@@ -84,12 +84,6 @@ class RouteMapViewController: UIViewController {
         super.viewWillAppear(animated)
         
         mapView.compassView.isHidden = true
-        
-        for leg in route.legs {
-            let annotation = MGLPointAnnotation()
-            annotation.coordinate = leg.destination.coordinate
-            mapView.addAnnotation(annotation)
-        }
 
         if let camera = pendingCamera {
             mapView.camera = camera
@@ -109,8 +103,6 @@ class RouteMapViewController: UIViewController {
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setContentInset(contentInsets, animated: false)
-        
-        showRouteIfNeeded()
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -448,10 +440,52 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func showRouteIfNeeded() {
-        guard isViewLoaded && view.window != nil else { return }
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
         map.showRoute(route)
+        
+        if let lastLeg =  route.legs.last {
+            let destination = MGLPointAnnotation()
+            destination.coordinate = lastLeg.destination.coordinate
+            mapView.addAnnotation(destination)
+        }
+        
+        guard let style = map.style else { return }
+        
+        if route.legs.count > 1 {
+            var features = [MGLPointFeature]()
+            let letters = (97...122).map({Character(UnicodeScalar($0))}).map { String(describing:$0).uppercased() }
+            
+            for (legIndex, leg) in route.legs.enumerated().dropLast() {
+                let feature = MGLPointFeature()
+                feature.coordinate = leg.destination.coordinate
+                feature.attributes = [ "name": letters[legIndex] ]
+                features.append(feature)
+            }
+            
+            let source = MGLShapeSource(identifier: "waypoints-source", features: features, options: nil)
+            style.addSource(source)
+            
+            let circles = MGLCircleStyleLayer(identifier: "waypoints-circles", source: source)
+            circles.circleColor = MGLStyleValue(rawValue: .white)
+            circles.circleOpacity = MGLStyleValue(interpolationMode: .exponential,
+                                                  cameraStops: [2: MGLStyleValue(rawValue: 0.5),
+                                                                7: MGLStyleValue(rawValue: 1)],
+                                                  options: nil)
+            circles.circleRadius = MGLStyleValue(rawValue: 10)
+            circles.circleStrokeColor = MGLStyleValue(rawValue: .black)
+            circles.circleStrokeWidth = MGLStyleValue(rawValue: 1)
+            
+            
+            let symbols = MGLSymbolStyleLayer(identifier: "waypoints-symbols", source: source)
+            
+            symbols.text = MGLStyleValue(rawValue: "{name}")
+            symbols.textTranslation = MGLStyleValue(rawValue: NSValue(cgVector: CGVector(dx: 0, dy: 0)))
+            symbols.textFontSize = MGLStyleValue(rawValue: 10)
+            
+            style.addLayer(circles)
+            style.addLayer(symbols)
+        }
     }
 
     func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {

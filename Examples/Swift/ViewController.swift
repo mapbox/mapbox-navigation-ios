@@ -241,6 +241,13 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         present(navigationViewController, animated: true, completion: nil)
     }
+    
+    // By default, when the user arrives at a waypoint, the next leg starts immediately.
+    // If however you would like to pause and allow the user to provide input, set this delegate method to false.
+    // This does however require you to increment the leg count on your own. See the example below in `confirmationControllerDidConfirm()`.
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoints waypoint: Waypoint) -> Bool {
+        return false
+    }
 }
 
 extension ViewController: NavigationViewControllerDelegate {
@@ -261,6 +268,9 @@ extension ViewController: NavigationViewControllerDelegate {
 
 extension ViewController: WaypointConfirmationViewControllerDelegate {
     func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
-        confirmationController.dismiss(animated: true, completion: nil) 
+        confirmationController.dismiss(animated: true, completion: {
+            guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
+            navigationViewController.routeController.routeProgress.legIndex += 1
+        })
     }
 }
