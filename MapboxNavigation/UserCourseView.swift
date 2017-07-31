@@ -43,7 +43,6 @@ class UserCourseView: UIView {
     }
     
     func updateFaux3DEffect() {
-        puckDot?.shadowColor = UIColor.black.cgColor
         puckDot?.shadowOffset = CGSize(width: 0, height: CGFloat(fmaxf(Float(pitch.toRadians() * 10), 1)))
         puckDot?.shadowRadius = CGFloat(fmaxf(Float(pitch.toRadians()) * 5, 0.75))
     }
@@ -79,14 +78,17 @@ class UserCourseView: UIView {
             puckDot = circleLayer(with: CGSize(width: PuckSize, height: PuckSize))
             puckDot?.backgroundColor = UIColor.white.cgColor
             puckDot?.shadowColor = UIColor.black.cgColor
+            puckDot?.shadowOpacity = 0.25
             puckDot?.shadowPath = UIBezierPath(ovalIn: puckDot!.bounds).cgPath
             layer.addSublayer(puckDot!)
+            
+            updateFaux3DEffect()
         }
         
         if puckArrow == nil {
             puckArrow = CAShapeLayer()
             puckArrow?.path = puckArrowPath.cgPath
-            puckArrow?.fillColor = UIColor.red.cgColor
+            puckArrow?.fillColor = tintColor.cgColor
             puckArrow?.bounds = CGRect(origin: .zero, size: CGSize(width: ArrowSize, height: ArrowSize))
             puckArrow?.position = CGPoint(x: bounds.midX, y: bounds.midY)
             puckArrow?.shouldRasterize = true
@@ -95,10 +97,10 @@ class UserCourseView: UIView {
             layer.addSublayer(puckArrow!)
         }
         
-//        if location.course >= 0 {
-//            let angle = CLLocationDegrees(direction - location.course)
-//            puckArrow?.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-//        }
+        if location.course >= 0 {
+            let angle = CLLocationDegrees(direction - location.course)
+            puckArrow?.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
+        }
     }
     
 }
