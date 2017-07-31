@@ -123,7 +123,7 @@ open class RouteProgress: NSObject {
      */
     public var congestionTravelTimesSegmentsByStep: [[[(CongestionLevel, TimeInterval)]]] = []
     
-    public var timesLeftOnRouteByCongestionLevel: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
+    public var congestionTimesPerStep: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
 
     /**
      Intializes a new `RouteProgress`.
@@ -139,7 +139,7 @@ open class RouteProgress: NSObject {
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
         
         var coordinateIndex = 0
-        for leg in route.legs {
+        for (legIndex, leg) in route.legs.enumerated() {
             
             var congestionTravelTimesSegmentsByLeg: [[(CongestionLevel, TimeInterval)]] = []
             
@@ -151,20 +151,21 @@ open class RouteProgress: NSObject {
                     let congestionSegment = Array(segmentCongestionLevels[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
                     let travelTimeSegment = Array(expectedSegmentTravelTimes[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
                     
-                    let zipped = Array(zip(congestionSegment, travelTimeSegment))
+                    let zippedCongestionTimes = Array(zip(congestionSegment, travelTimeSegment))
                     
-                    congestionTravelTimesSegmentsByLeg.append(zipped)
+                    congestionTravelTimesSegmentsByLeg.append(zippedCongestionTimes)
                     coordinateIndex = stepCoordinatesCount
                     
-                    var stepCongestion: [CongestionLevel: TimeInterval] = [:]
-                    for (segmentCongestion, segmentTime) in zipped {
-                        stepCongestion[segmentCongestion] = segmentTime
+                    var stepCongestionValues: [CongestionLevel: TimeInterval] = [:]
+                    for (segmentCongestion, segmentTime) in zippedCongestionTimes {
+                        stepCongestionValues[segmentCongestion] = (stepCongestionValues[segmentCongestion] ?? 0) + segmentTime
                     }
                     
-                    
+                    congestionTimesPerStep[legIndex].append(stepCongestionValues)
                 }
             }
             
+            congestionTimesPerStep.append([])
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
     }
