@@ -25,10 +25,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var longPressHintView: UIView!
-    
+
     @IBOutlet weak var simulationButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
-    
+
     var exampleMode: ExampleMode?
     
     override func viewDidLoad() {
@@ -36,9 +36,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         automaticallyAdjustsScrollViewInsets = false
         mapView.delegate = self
-        
+
         mapView.userTrackingMode = .follow
-        
+
         simulationButton.isSelected = true
         startButton.isEnabled = false
     }
@@ -54,7 +54,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         guard sender.state == .began else {
             return
         }
-        
+
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {
             mapView.removeAnnotation(annotation)
         }
@@ -144,9 +144,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self?.mapView.showRoute(route)
         }
     }
-    
+
     // MARK: - Basic Navigation
-    
+
     func startBasicNavigation() {
         guard let route = currentRoute else { return }
         
@@ -158,22 +158,22 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         present(navigationViewController, animated: true, completion: nil)
     }
-    
+
     // MARK: - Custom Navigation UI
-    
+
     func startCustomNavigation() {
         guard let route = self.currentRoute else { return }
-        
+
         guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
         
         exampleMode = .custom
-        
+
         customViewController.simulateLocation = simulationButton.isSelected
         customViewController.userRoute = route
         
         present(customViewController, animated: true, completion: nil)
     }
-    
+
     // MARK: - Styling the default UI
     
     func startStyledNavigation() {
@@ -198,10 +198,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.distanceRemainingLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
         style.timeRemainingLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
         style.arrivalTimeLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
-        
+
         // Current street name label
         style.wayNameLabelTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
-        
+
         // Table view (Drawer)
         style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
         style.cellTitleLabelTextColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -220,7 +220,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         // Set a custom style URL
         navigationViewController.mapView?.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
-        
+
         present(navigationViewController, animated: true, completion: nil)
     }
     
@@ -233,15 +233,14 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     func startMultipleWaypoints() {
         guard let route = self.currentRoute else { return }
-        
+
         exampleMode = .multipleWaypoints
-        
+
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.navigationDelegate = self
         
         present(navigationViewController, animated: true, completion: nil)
     }
-    
 }
 
 extension ViewController: NavigationViewControllerDelegate {
