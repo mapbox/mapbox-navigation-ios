@@ -45,7 +45,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         // Reset the navigation styling to the defaults
         DefaultStyle().apply()
     }
@@ -178,7 +178,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     func startStyledNavigation() {
         guard let route = self.currentRoute else { return }
-        
+
         exampleMode = .styled
         
         let style = DefaultStyle()
@@ -248,7 +248,7 @@ extension ViewController: NavigationViewControllerDelegate {
         
         // Multiple waypoint demo
         guard exampleMode == .multipleWaypoints else { return }
-        
+
         // When the user arrives, present a view controller that prompts the user to continue to their next destination
         // This typ of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
         guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return }
