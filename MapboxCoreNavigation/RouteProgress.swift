@@ -86,7 +86,7 @@ open class RouteProgress: NSObject {
     /**
      Total seconds remaining on all legs.
      */
-    public var durationRemaining: CLLocationDistance {
+    public var durationRemaining: TimeInterval {
         return route.legs.suffix(from: legIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentLegProgress.durationRemaining
     }
 

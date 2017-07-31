@@ -74,6 +74,9 @@ func -(left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> CLLocatio
     return (RadianCoordinate2D(left) - RadianCoordinate2D(right)) * metersPerRadian
 }
 
+func ==(left: CLLocationCoordinate2D, right: CLLocationCoordinate2D) -> Bool {
+    return left.latitude == right.latitude && left.longitude == right.longitude
+}
 
 extension CLLocationCoordinate2D {
     init(_ radianCoordinate: RadianCoordinate2D) {

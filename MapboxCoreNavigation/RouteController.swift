@@ -108,6 +108,12 @@ open class RouteController: NSObject {
      */
     public var isDeadReckoningEnabled = false
     
+    
+    /**
+     If true, every 2 minutes the `RouteController` will check for a faster route for the user.
+     */
+    public var checkForFasterRouteInBackground = false
+    
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
@@ -132,16 +138,11 @@ open class RouteController: NSObject {
         }
     }
     
-    /**
-     If true, the user puck is snapped to closest location on the route. 
-     Defaults to false.
-     */
-    public var snapsUserLocationAnnotationToRoute = true
-    
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
     
     var routeTask: URLSessionDataTask?
+    var lastLocationDate: Date?
     
     /// :nodoc: This is used internally when the navigation UI is being used
     public var usesDefaultUserInterface = false
@@ -163,6 +164,7 @@ open class RouteController: NSObject {
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
+        UIDevice.current.isBatteryMonitoringEnabled = true
         super.init()
         
         self.locationManager.delegate = self
@@ -176,6 +178,7 @@ open class RouteController: NSObject {
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
         sendCancelEvent()
         suspendNotifications()
+        UIDevice.current.isBatteryMonitoringEnabled = false
     }
     
     func startEvents(route: Route) {
@@ -232,39 +235,94 @@ open class RouteController: NSObject {
     }
     
     /**
-     Send feedback about the current road segment/maneuver to the Mapbox data team.
+     The most recently received user location.
      
-     You can pair this with a custom feedback UI in your app to flag problems during navigation
-     such as road closures, incorrect instructions, etc. 
-     
-     With the help of a custom `description` to elaborate on the nature of the problem, using
-     this function will automatically flag the road segment/maneuver the user is currently on for 
-     closer inspection by Mapbox's system and team.
-     
-     If you provide a custom feedback UI that lets users elaborate on an 
-     issue, you should call this before you show the custom UI so the 
-     location and timestamp are more accurate. You can then call 
-     `updateLastFeedback()` to attach any additional metadata to the 
-     feedback.
+     This is a raw location received from `locationManager`. To obtain an idealized location, use the `snappedLocation` property.
      */
-    public func recordFeedback(type: FeedbackType, description: String?) {
-        enqueueFeedbackEvent(type: type, description: description)
+    var rawLocation: CLLocation?
+    
+    /**
+     The most recently received user location, snapped to the route line.
+     
+     This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
+     */
+    public var location: CLLocation? {
+        guard let location = rawLocation, userIsOnRoute(location) else { return nil }
+        guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
+        guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
+        
+        guard location.course != -1, location.speed >= 0 else {
+            return location
+        }
+        
+        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return location }
+        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
+        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
+
+        // Get closest point infront of user
+        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
+        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
+        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
+        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
+        
+        // Get direction of these points
+        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
+        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
+        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
+        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
+        let wrappedCourse = wrap(location.course, min: -180, max: 180)
+        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
+        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
+        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
+        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
+
+        guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
+            return location
+        }
+
+        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
+        
+        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
+            return location
+        }
+        
+        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
     
     /**
-     Update the last recorded feedback event, for example if you have a custom feedback UI that lets a user elaborate on an issue.
+     Send feedback about the current road segment/maneuver to the Mapbox data team.
+     
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
+     
+     @param type A `FeedbackType` used to specify the type of feedback
+     @param description A custom string used to describe the problem in detail.
+     @return Returns a UUID string used to identify the feedback event
+     
+     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate. 
+     
+     You can then call `updateFeedback(feedbackId:)` with the returned feedback ID string to attach any additional metadata to the feedback.
      */
-    public func updateLastFeedback(type: FeedbackType, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.map({$0 as? FeedbackEvent}).last {
-            lastFeedback?.update(type: type, description: description)
+    public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> String {
+        return enqueueFeedbackEvent(type: type, description: description)
+    }
+    
+    /**
+     Update the feedback event with a specific feedback ID. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
+     
+     Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
+     */
+    public func updateFeedback(feedbackId: String, type: FeedbackType, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id.uuidString == feedbackId}) as? FeedbackEvent {
+            lastFeedback.update(type: type, description: description)
         }
     }
     
     /**
-     Discard the last recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
+     Discard a recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
      */
-    public func cancelLastFeedback(type: FeedbackType, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.filter({$0 is FeedbackEvent}).last, let index = outstandingFeedbackEvents.index(of: lastFeedback) {
+    public func cancelFeedback(feedbackId: String) {
+        if let index = outstandingFeedbackEvents.index(where: {$0.id.uuidString == feedbackId}) {
             outstandingFeedbackEvents.remove(at: index)
         }
     }
@@ -288,7 +346,7 @@ extension RouteController {
     }
     
     func willReroute(notification: NSNotification) {
-        enqueueRerouteEvent()
+        _ = enqueueRerouteEvent()
     }
     
     func didReroute(notification: NSNotification) {
@@ -330,6 +388,7 @@ extension RouteController: CLLocationManagerDelegate {
         guard let location = locations.last else {
             return
         }
+        self.rawLocation = location
         
         delegate?.routeController?(self, didUpdateLocations: [location])
         
@@ -401,6 +460,14 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         monitorStepProgress(location)
+        
+        // Check for faster route given users current location
+        guard checkForFasterRouteInBackground else { return }
+        // Only check for faster alternatives if the user has plenty of time left on the route.
+        guard routeProgress.durationRemaining > 600 else { return }
+        // If the user is approaching a maneuver, don't check for a faster alternatives
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
+        checkForFasterRoute(from: location)
     }
     
     func resetStartCounter() {
@@ -442,7 +509,6 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func incrementRouteProgress(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation, updateStepIndex: Bool) {
-        
         if updateStepIndex {
             routeProgress.currentLegProgress.stepIndex += 1
         }
@@ -453,7 +519,7 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
-        if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel {
+        if routeProgress.currentLegProgress.alertUserLevel != newlyCalculatedAlertLevel || updateStepIndex {
             routeProgress.currentLegProgress.alertUserLevel = newlyCalculatedAlertLevel
             // Use fresh user location distance to end of step
             // since the step could of changed
@@ -463,6 +529,35 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress,
                 RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey: userDistance
                 ])
+        }
+    }
+    
+    func checkForFasterRoute(from location: CLLocation) {
+        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else { return }
+        
+        guard let lastLocationDate = lastLocationDate else {
+            self.lastLocationDate = location.timestamp
+            return
+        }
+
+        // Only check ever 2 minutes for faster route
+        guard location.timestamp.timeIntervalSince(lastLocationDate) >= 120 else { return }
+        let durationRemaining = routeProgress.durationRemaining
+        let currentAlertLevel = routeProgress.currentLegProgress.alertUserLevel
+        
+        getDirections(from: location) { [weak self] (route, error) in
+            guard let strongSelf = self else { return }
+            guard let route = route else { return }
+            strongSelf.lastLocationDate = nil
+            
+            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first,
+                firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval,
+                currentUpcomingManeuver == firstLeg.steps[1],
+                route.expectedTravelTime <= 0.9 * durationRemaining {
+                // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
+                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentAlertLevel)
+                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+            }
         }
     }
     
@@ -485,11 +580,38 @@ extension RouteController: CLLocationManagerDelegate {
             MBRouteControllerNotificationLocationKey: location
             ])
         
+        self.lastRerouteLocation = location
+        
+        getDirections(from: location) { [weak self] (route, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            if let error = error {
+                strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
+                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
+                    MBRouteControllerNotificationErrorKey: error
+                    ])
+            }
+            
+            guard let route = route else { return }
+            
+            // If the first step of the new route is greater than 0.5km, let user continue without announcement.
+            var alertLevel: AlertLevel = .none
+            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 500 {
+                alertLevel = .depart
+            }
+            strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
+            strongSelf.routeProgress.currentLegProgress.stepIndex = 0
+            strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+        }
+    }
+    
+    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->()) {
         routeTask?.cancel()
         
         let options = routeProgress.route.routeOptions
         options.waypoints = [Waypoint(coordinate: location.coordinate)] + routeProgress.remainingWaypoints
-        
         if let firstWaypoint = options.waypoints.first, location.course >= 0 {
             firstWaypoint.heading = location.course
             firstWaypoint.headingAccuracy = 90
@@ -501,32 +623,19 @@ extension RouteController: CLLocationManagerDelegate {
             directions = Directions(accessToken: accessToken, host: host)
         }
         
-        routeTask = directions.calculate(options, completionHandler: { [weak self] (waypoints, routes, error) in
+        routeTask = directions.calculate(options) { [weak self] (waypoints, routes, error) in
             defer {
                 self?.isRerouting = false
             }
-            
-            guard let strongSelf = self else {
-                return
+            if let error = error {
+                return completion(nil, error)
+            }
+            guard let route = routes?.first else {
+                return completion(nil, nil)
             }
             
-            if let route = routes?.first {
-
-                // If the first step of the new route is greater than 0.5km, let user continue without announcement.
-                var alertLevel: AlertLevel = .none
-                if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 500 {
-                    alertLevel = .depart
-                }
-                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
-                strongSelf.routeProgress.currentLegProgress.stepIndex = 0
-                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-            } else if let error = error {
-                strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
-                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
-                    MBRouteControllerNotificationErrorKey: error
-                    ])
-            }
-        })
+            return completion(route, error)
+        }
     }
     
     func monitorStepProgress(_ location: CLLocation) {
@@ -667,7 +776,7 @@ extension RouteController {
         }
         
         let eventName = event.eventDictionary["event"] as! String
-        let eventDictionary = events.navigationFeedbackEventWithLocationsAdded(event: event.eventDictionary, eventTimestamp: event.timestamp, routeController: self)
+        let eventDictionary = events.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
         
         events.enqueueEvent(withName: eventName, attributes: eventDictionary)
         events.flush()
@@ -675,12 +784,16 @@ extension RouteController {
     
     // MARK: Enqueue feedback
     
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?) {
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
         let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
-        outstandingFeedbackEvents.append(FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary))
+        let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
+        
+        outstandingFeedbackEvents.append(event)
+        
+        return event.id.uuidString
     }
     
-    func enqueueRerouteEvent() {
+    func enqueueRerouteEvent() -> String {
         let timestamp = Date()
         
         let eventDictionary = events.navigationRerouteEvent(routeController: self)
@@ -688,7 +801,11 @@ extension RouteController {
         sessionState.lastRerouteDate = timestamp
         sessionState.numberOfReroutes += 1
         
-        outstandingFeedbackEvents.append(RerouteEvent(timestamp: timestamp, eventDictionary: eventDictionary))
+        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
+
+        outstandingFeedbackEvents.append(event)
+        
+        return event.id.uuidString
     }
     
     func checkAndSendOutstandingFeedbackEvents(forceAll: Bool) {
