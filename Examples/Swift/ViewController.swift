@@ -250,6 +250,15 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
 }
 
+extension ViewController: WaypointConfirmationViewControllerDelegate {
+    func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
+        confirmationController.dismiss(animated: true, completion: {
+            guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
+            navigationViewController.routeController.routeProgress.legIndex += 1
+        })
+    }
+}
+
 extension ViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
         
@@ -263,14 +272,5 @@ extension ViewController: NavigationViewControllerDelegate {
         confirmationController.delegate = self
         
         navigationViewController.present(confirmationController, animated: true, completion: nil)
-    }
-}
-
-extension ViewController: WaypointConfirmationViewControllerDelegate {
-    func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
-        confirmationController.dismiss(animated: true, completion: {
-            guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
-            navigationViewController.routeController.routeProgress.legIndex += 1
-        })
     }
 }
