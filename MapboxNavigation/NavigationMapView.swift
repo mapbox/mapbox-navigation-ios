@@ -135,13 +135,6 @@ open class NavigationMapView: MGLMapView {
         let combinedCongestionLevel = Array(congestionPerLeg.joined()) // Flatten all leg nodes
         let destination = coordinates.suffix(from: 1)
         let segment = zip(coordinates, destination).map { [$0.0, $0.1] }
-        
-        guard let leg = congestionPerLeg.first, leg.count == segment.count else {
-            let line = MGLPolylineFeature(coordinates: coordinates, count: UInt(coordinates.count))
-            line.attributes["congestion"] = "unknown"
-            return MGLShapeCollectionFeature(shapes: [line])
-        }
-        
         let congestionSegments = Array(zip(segment, combinedCongestionLevel))
         
         // Merge adjacent segments with the same congestion level
