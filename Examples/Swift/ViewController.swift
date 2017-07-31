@@ -230,7 +230,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     // MARK: - Navigation with multiple waypoints
-    
+
     func startMultipleWaypoints() {
         guard let route = self.currentRoute else { return }
 
@@ -238,7 +238,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.navigationDelegate = self
-        
+
         present(navigationViewController, animated: true, completion: nil)
     }
 }

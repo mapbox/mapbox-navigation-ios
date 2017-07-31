@@ -66,6 +66,7 @@ open class RouteProgress: NSObject {
         }
     }
 
+
     /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
      */
