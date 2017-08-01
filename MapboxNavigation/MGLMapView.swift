@@ -71,7 +71,7 @@ extension MGLMapView {
             let arrowShape = MGLShapeCollection(shapes: [shaftPolyline])
             let arrowStrokeShape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
             
-            let cap = NSValue(mglLineCap: .round)
+            let cap = NSValue(mglLineCap: .butt)
             let join = NSValue(mglLineJoin: .round)
             
             let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: nil)
@@ -119,14 +119,15 @@ extension MGLMapView {
             } else {
                 let arrowSymbolLayer = MGLSymbolStyleLayer(identifier: arrowSymbolLayerIdentifier, source: arrowSymbolSource)
                 arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
-                arrowSymbolLayer.iconImageName = MGLStyleValue(rawValue: "triangle-15")
+                arrowSymbolLayer.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
                 arrowSymbolLayer.iconColor = MGLStyleValue(rawValue: .white)
-                arrowSymbolLayer.iconHaloWidth = MGLStyleValue(rawValue: 3)
                 arrowSymbolLayer.iconHaloColor = MGLStyleValue(rawValue: .defaultArrowStroke)
+                arrowSymbolLayer.iconHaloWidth = MGLStyleValue(rawValue: 1)
+                arrowSymbolLayer.iconHaloBlur = MGLStyleValue(rawValue: 1)
                 arrowSymbolLayer.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
                 arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
                 style.addSource(arrowSymbolSource)
-                style.insertLayer(arrowSymbolLayer, above: arrow)
+                style.insertLayer(arrowSymbolLayer, below: arrow)
             }
             
         }
