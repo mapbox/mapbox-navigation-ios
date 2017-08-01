@@ -141,6 +141,8 @@ open class RouteProgress: NSObject {
         var coordinateIndex = 0
         for (legIndex, leg) in route.legs.enumerated() {
             
+            congestionTimesPerStep.append([])
+            
             var congestionTravelTimesSegmentsByLeg: [[(CongestionLevel, TimeInterval)]] = []
             
             for (stepIndex, step) in leg.steps.enumerated() {
@@ -148,13 +150,15 @@ open class RouteProgress: NSObject {
                     
                     let stepCoordinatesCount = Int(step.coordinateCount) + coordinateIndex - 1
                     
+                    print(coordinateIndex, stepCoordinatesCount)
+                    
                     let congestionSegment = Array(segmentCongestionLevels[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
                     let travelTimeSegment = Array(expectedSegmentTravelTimes[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
                     
                     let zippedCongestionTimes = Array(zip(congestionSegment, travelTimeSegment))
                     
                     congestionTravelTimesSegmentsByLeg.append(zippedCongestionTimes)
-                    coordinateIndex = stepCoordinatesCount
+                    coordinateIndex = stepCoordinatesCount + 1
                     
                     var stepCongestionValues: [CongestionLevel: TimeInterval] = [:]
                     for (segmentCongestion, segmentTime) in zippedCongestionTimes {
@@ -165,7 +169,6 @@ open class RouteProgress: NSObject {
                 }
             }
             
-            congestionTimesPerStep.append([])
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
     }

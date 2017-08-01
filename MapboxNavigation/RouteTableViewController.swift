@@ -56,12 +56,12 @@ class RouteTableViewController: UIViewController {
                 return
             }
             
-            let congestionTimesForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
             
+            let congestionTimesForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
             guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return }
             
             let remainingCongestionTimesForStep = congestionTimesForStep.suffix(from: coordinatesLeftOnStepCount)
-            let remainingCongestionTimesForRoute = routeProgress.congestionTimesPerStep[routeProgress.legIndex].suffix(from: routeProgress.currentLegProgress.stepIndex).dropFirst()
+            let remainingCongestionTimesForRoute = routeProgress.congestionTimesPerStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex + 1..<routeProgress.currentLeg.steps.count]
             
             var remainingStepCongestionTotals: [CongestionLevel: TimeInterval] = [:]
             for stepValues in remainingCongestionTimesForRoute {
@@ -69,10 +69,12 @@ class RouteTableViewController: UIViewController {
                     remainingStepCongestionTotals[key] = (remainingStepCongestionTotals[key] ?? 0) + value
                 }
             }
-            
+
             for (segmentCongestion, segmentTime) in remainingCongestionTimesForStep {
-                remainingStepCongestionTotals[segmentCongestion] = (remainingStepCongestionTotals[segmentCongestion] ?? 0) + segmentTime
+                remainingStepCongestionTotals[segmentCongestion] = (round(remainingStepCongestionTotals[segmentCongestion] ?? 0)) + round(segmentTime)
             }
+            
+            print(remainingStepCongestionTotals)
             
             if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
                 switch max.key {
