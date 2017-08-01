@@ -4,9 +4,13 @@ import CoreLocation
 extension CLLocation {
     
     var isQualified: Bool {
-        return
-            0...100 ~= horizontalAccuracy &&
-            0...30 ~= verticalAccuracy
+        #if (arch(i386) || arch(x86_64)) && (os(iOS) || os(watchOS) || os(tvOS))
+            return true
+        #else
+            return
+                0...100 ~= horizontalAccuracy &&
+                0...30 ~= verticalAccuracy
+        #endif
     }
     
     /// Returns a dictionary representation of the location.
