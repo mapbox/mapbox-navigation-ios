@@ -119,7 +119,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     public var route: Route! {
         didSet {
             if routeController == nil {
-                routeController = RouteController(along: route, directions: directions, locationManager: DefaultLocationManager())
+                routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
                 routeController.delegate = self
             } else {
                 routeController.routeProgress = RouteProgress(route: route)
@@ -239,7 +239,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DefaultStyle()],
-                         locationManager: NavigationLocationManager? = DefaultLocationManager()) {
+                         locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
@@ -251,7 +251,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.directions = directions
         self.route = route
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? DefaultLocationManager())
+        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         

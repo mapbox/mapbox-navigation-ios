@@ -132,7 +132,9 @@ class RouteManeuverViewController: UIViewController {
             destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
             updateStreetNameForStep()
-            showLaneView(step: upComingStep)
+            if routeProgress.currentLegProgress.alertUserLevel == .medium || routeProgress.currentLegProgress.alertUserLevel == .high {
+                showLaneView(step: upComingStep)
+            }
         }
         
         turnArrowView.step = routeProgress.currentLegProgress.upComingStep
