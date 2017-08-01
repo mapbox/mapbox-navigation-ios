@@ -8,6 +8,7 @@ let arrowSourceStrokeIdentifier = "arrowSourceStroke"
 let arrowLayerIdentifier = "arrowLayer"
 
 let arrowSymbolLayerIdentifier = "arrowSymbolLayer"
+let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
 let arrowSymbolSourceIdentifier = "arrowSymbolSource"
 
 
@@ -121,13 +122,24 @@ extension MGLMapView {
                 arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
                 arrowSymbolLayer.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
                 arrowSymbolLayer.iconColor = MGLStyleValue(rawValue: .white)
-                arrowSymbolLayer.iconHaloColor = MGLStyleValue(rawValue: .defaultArrowStroke)
-                arrowSymbolLayer.iconHaloWidth = MGLStyleValue(rawValue: 1)
-                arrowSymbolLayer.iconHaloBlur = MGLStyleValue(rawValue: 1)
                 arrowSymbolLayer.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
                 arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                arrowSymbolLayer.iconAllowsOverlap = MGLStyleValue(rawValue: true)
+
+                
+                let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
+                arrowSymbolLayerCasing.minimumZoomLevel = minimumZoomLevel
+                arrowSymbolLayerCasing.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
+                arrowSymbolLayerCasing.iconColor = MGLStyleValue(rawValue: .defaultArrowStroke)
+                arrowSymbolLayerCasing.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
+                arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                arrowSymbolLayerCasing.iconScale = MGLStyleValue(rawValue: 1.2)
+                arrowSymbolLayerCasing.iconAllowsOverlap = MGLStyleValue(rawValue: true)
+                
+                
                 style.addSource(arrowSymbolSource)
-                style.insertLayer(arrowSymbolLayer, below: arrow)
+                style.insertLayer(arrowSymbolLayer, above: arrow)
+                style.insertLayer(arrowSymbolLayerCasing, below: arrow)
             }
             
         }
