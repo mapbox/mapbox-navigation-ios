@@ -58,7 +58,6 @@ public class DefaultStyle: Style {
         
         // Maneuver view (Page view)
         maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        maneuverViewHeight = 115
         
         distanceLabelFont = .systemFont(ofSize: 26, weight: UIFontWeightMedium)
         distanceLabelTextColor = .defaultPrimaryText
