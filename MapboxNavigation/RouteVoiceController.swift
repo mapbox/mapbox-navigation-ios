@@ -94,7 +94,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     func willReroute(notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)
         
-        guard playRerouteSound else {
+        guard playRerouteSound && !NavigationSettings.shared.muted else {
             return
         }
 
