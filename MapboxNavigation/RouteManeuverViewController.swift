@@ -12,6 +12,8 @@ class RouteManeuverViewController: UIViewController {
     @IBOutlet weak var destinationLabel: DestinationLabel!
     @IBOutlet var laneViews: [LaneArrowView]!
     @IBOutlet weak var rerouteView: UIView!
+    @IBOutlet weak var leftOverlayView: ManeuverView!
+    @IBOutlet weak var rightOverlayView: ManeuverView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()

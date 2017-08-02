@@ -14,7 +14,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
     @IBOutlet weak var recenterButton: Button!
-    @IBOutlet weak var overviewButtonTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
     
@@ -73,6 +73,7 @@ class RouteMapViewController: UIViewController {
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
+        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         recenterButton.applyDefaultCornerRadiusShadow()
         
         wayNameView.layer.borderWidth = 1
@@ -84,6 +85,7 @@ class RouteMapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        muteButton.isSelected = NavigationSettings.shared.muted
         mapView.compassView.isHidden = true
         mapView.addAnnotation(destination)
 
@@ -134,6 +136,13 @@ class RouteMapViewController: UIViewController {
         isInOverviewMode = !isInOverviewMode
         
         routePageViewController.notifyDidReRoute()
+    }
+    
+    @IBAction func toggleMute(_ sender: UIButton) {
+        sender.isSelected = !sender.isSelected
+        
+        let muted = sender.isSelected
+        NavigationSettings.shared.muted = muted
     }
     
     @IBAction func report(_ sender: Any) {
@@ -229,6 +238,7 @@ class RouteMapViewController: UIViewController {
                 controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
                 routePageViewController.currentManeuverPage = controller
+                routePageViewController.updateManeuverViewHeight(for: controller)
             }
         }
         
@@ -239,14 +249,6 @@ class RouteMapViewController: UIViewController {
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         controller.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
-        
-        // Move the overview button if the lane views become visible
-        if !controller.isPagingThroughStepList {
-            let initialPaddingForOverviewButton:CGFloat = controller.stackViewContainer.isHidden ? -30 : -20 + controller.laneViews.first!.frame.maxY
-            UIView.animate(withDuration: 0.5, animations: {
-                self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + controller.stackViewContainer.frame.maxY
-            })
-        }
 
         guard isInOverviewMode else {
             return
@@ -477,11 +479,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         
         maneuverViewController.showLaneView(step: step, alertLevel: .high)
         
-        let initialPaddingForOverviewButton:CGFloat = maneuverViewController.stackViewContainer.isHidden ? -30 : -20 + maneuverViewController.laneViews.first!.frame.maxY
-        UIView.animate(withDuration: 0.5) {
-            self.overviewButtonTopConstraint.constant = initialPaddingForOverviewButton + maneuverViewController.stackViewContainer.frame.maxY
-        }
-        
         maneuverViewController.isPagingThroughStepList = true
 
         if !isInOverviewMode {
@@ -491,6 +488,22 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
+        
+        let isFirstStep = stepBefore(step) == nil
+        let isCurrentStep = step == currentStep
+        
+        if isFirstStep || isCurrentStep {
+            maneuverViewController.leftOverlayView.isHidden = false
+            maneuverViewController.rightOverlayView.isHidden = true
+        } else if stepAfter(step) == nil {
+            maneuverViewController.leftOverlayView.isHidden = true
+            maneuverViewController.rightOverlayView.isHidden = false
+        } else {
+            maneuverViewController.leftOverlayView.isHidden = true
+            maneuverViewController.rightOverlayView.isHidden = true
+        }
+        
+        controller.updateManeuverViewHeight(for: maneuverViewController)
     }
     
     var currentLeg: RouteLeg {

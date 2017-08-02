@@ -15,6 +15,8 @@ class RoutePageViewController: UIPageViewController {
     
     weak var maneuverDelegate: RoutePageViewControllerDelegate!
     var currentManeuverPage: RouteManeuverViewController!
+    
+    var maneuverContainerView: ManeuverContainerView { return view.superview! as! ManeuverContainerView }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,13 +76,27 @@ extension RoutePageViewController: UIPageViewControllerDataSource, UIPageViewCon
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         let controller = pendingViewControllers.first! as! RouteManeuverViewController
         maneuverDelegate.routePageViewController(self, willTransitionTo: controller)
+        updateManeuverViewHeight(for: controller)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard let controller = pageViewController.viewControllers?.last as? RouteManeuverViewController else { return }
+        
         if completed {
-            if let controller = pageViewController.viewControllers?.last as? RouteManeuverViewController {
-                currentManeuverPage = controller
-            }
+            currentManeuverPage = controller
+        }
+        
+        updateManeuverViewHeight(for: controller)
+    }
+    
+    func updateManeuverViewHeight(for controller: RouteManeuverViewController) {
+        let newValue = controller.stackViewContainer.isHidden ? controller.stackViewContainer.frame.minY : controller.stackViewContainer.frame.maxY
+
+        if maneuverContainerView.height != newValue {
+            maneuverContainerView.height = newValue
+            UIView.defaultAnimation(0.25, animations: {
+                self.maneuverContainerView.superview?.layoutIfNeeded()
+            }, completion: nil)
         }
     }
 }
