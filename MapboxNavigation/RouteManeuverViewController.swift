@@ -215,6 +215,7 @@ class RouteManeuverViewController: UIViewController {
                 laneView.isValid = usableLanes.contains(i as Int)
                 laneView.setNeedsDisplay()
             }
+            stackViewContainer.isHidden = false
         } else {
             stackViewContainer.isHidden = true
         }

@@ -238,7 +238,7 @@ class RouteMapViewController: UIViewController {
                 controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
                 routePageViewController.currentManeuverPage = controller
-                routePageViewController.updateManeuverViewHeight(for: controller)
+                routePageViewController(routePageViewController, willTransitionTo: controller)
             }
         }
         
