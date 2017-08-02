@@ -251,7 +251,7 @@ open class RouteController: NSObject {
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
-        guard location.course != -1, location.speed >= 0 else {
+        guard location.speed >= 0 else {
             return location
         }
         
@@ -276,6 +276,13 @@ open class RouteController: NSObject {
         let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
         let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
         let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
+        
+        // If the course is inaccurate and the user is on the route,
+        // calculate a rough estimate as to what the course should be at that point on the route.
+        if location.course <= 0 && snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
+            let calculatedCourse = wrap((wrappedPointOne + wrappedPointTwo) / 2, min: 0 , max: 360)
+            return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedCourse, speed: location.speed, timestamp: location.timestamp)
+        }
 
         guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
             return location
@@ -286,7 +293,7 @@ open class RouteController: NSObject {
         guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
             return location
         }
-        
+
         return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
     }
     
