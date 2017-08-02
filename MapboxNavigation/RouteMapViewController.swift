@@ -475,7 +475,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        maneuverViewController.showLaneView(step: step)
+        maneuverViewController.showLaneView(step: step, alertLevel: .high)
         
         let initialPaddingForOverviewButton:CGFloat = maneuverViewController.stackViewContainer.isHidden ? -30 : -20 + maneuverViewController.laneViews.first!.frame.maxY
         UIView.animate(withDuration: 0.5) {
