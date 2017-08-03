@@ -12,6 +12,8 @@ class RouteManeuverViewController: UIViewController {
     @IBOutlet weak var destinationLabel: DestinationLabel!
     @IBOutlet var laneViews: [LaneArrowView]!
     @IBOutlet weak var rerouteView: UIView!
+    @IBOutlet weak var leftOverlayView: ManeuverView!
+    @IBOutlet weak var rightOverlayView: ManeuverView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
@@ -132,7 +134,7 @@ class RouteManeuverViewController: UIViewController {
             destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
         } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
             updateStreetNameForStep()
-            showLaneView(step: upComingStep)
+            showLaneView(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
         }
         
         turnArrowView.step = routeProgress.currentLegProgress.upComingStep
@@ -196,8 +198,10 @@ class RouteManeuverViewController: UIViewController {
         stackViewContainer.isHidden = true
     }
     
-    func showLaneView(step: RouteStep) {
-        if let allLanes = step.intersections?.first?.approachLanes, let usableLanes = step.intersections?.first?.usableApproachLanes {
+    func showLaneView(step: RouteStep, alertLevel: AlertLevel) {
+        if let allLanes = step.intersections?.first?.approachLanes,
+            let usableLanes = step.intersections?.first?.usableApproachLanes,
+            (alertLevel == .high || alertLevel == .medium) {
             for (i, lane) in allLanes.enumerated() {
                 guard i < laneViews.count else {
                     return
@@ -210,6 +214,7 @@ class RouteManeuverViewController: UIViewController {
                 laneView.isValid = usableLanes.contains(i as Int)
                 laneView.setNeedsDisplay()
             }
+            stackViewContainer.isHidden = false
         } else {
             stackViewContainer.isHidden = true
         }
