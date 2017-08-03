@@ -6,6 +6,11 @@ public class SpokenInstructionFormatter: NSObject {
     
     let routeStepFormatter = RouteStepFormatter()
     let maneuverVoiceDistanceFormatter = SpokenDistanceFormatter(approximate: true)
+    
+    public override init() {
+        maneuverVoiceDistanceFormatter.unitStyle = .long
+        maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
+    }
 
     public func string(routeProgress: RouteProgress, userDistance: CLLocationDistance, markUpWithSSML: Bool) -> String {
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
