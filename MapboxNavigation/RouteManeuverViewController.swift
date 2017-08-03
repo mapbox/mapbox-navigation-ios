@@ -201,8 +201,7 @@ class RouteManeuverViewController: UIViewController {
     func showLaneView(step: RouteStep, alertLevel: AlertLevel) {
         if let allLanes = step.intersections?.first?.approachLanes,
             let usableLanes = step.intersections?.first?.usableApproachLanes,
-            alertLevel == .high,
-            alertLevel == .medium {
+            (alertLevel == .high || alertLevel == .medium) {
             for (i, lane) in allLanes.enumerated() {
                 guard i < laneViews.count else {
                     return
