@@ -64,11 +64,6 @@ public class Style: NSObject {
     public var maneuverViewBackgroundColor: UIColor?
     
     /**
-     Sets the height of the maneuver view.
-     */
-    public var maneuverViewHeight: CGFloat?
-    
-    /**
      Sets the font on the distance label.
      */
     public var distanceLabelFont: UIFont?
@@ -240,10 +235,6 @@ public class Style: NSObject {
         
         if let color = maneuverViewBackgroundColor {
             ManeuverView.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let height = maneuverViewHeight {
-            ManeuverView.appearance(for: traitCollection).height = height
         }
         
         if let font = distanceLabelFont {
@@ -433,7 +424,10 @@ public class StylableButton: UIButton {
 }
 
 @objc(MBManeuverView)
-class ManeuverView: UIView {
+class ManeuverView: UIView { }
+
+@objc(MBManeuverContainerView)
+class ManeuverContainerView: UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     dynamic var height: CGFloat = 100 {

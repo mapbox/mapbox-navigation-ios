@@ -94,7 +94,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     func willReroute(notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)
         
-        guard playRerouteSound else {
+        guard playRerouteSound && !NavigationSettings.shared.muted else {
             return
         }
 
@@ -153,7 +153,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func shouldSpeak(for notification: NSNotification) -> Bool {
-        guard isEnabled, volume > 0 else { return false }
+        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return false }
         
         guard let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress else {
             assert(false)

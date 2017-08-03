@@ -390,9 +390,13 @@ extension RouteController: CLLocationManagerDelegate {
         }
         self.rawLocation = location
         
-        delegate?.routeController?(self, didUpdateLocations: [location])
-        
         sessionState.pastLocations.push(location)
+        
+        guard location.isQualified else {
+            return
+        }
+        
+        delegate?.routeController?(self, didUpdateLocations: [location])
 
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
         
