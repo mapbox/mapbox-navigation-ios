@@ -1,23 +1,13 @@
-//
-//  InstructionFormatter.swift
-//  MapboxNavigation
-//
-//  Created by Bobby Sudekum on 8/3/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 import Foundation
 import CoreLocation
 
 @objc(MBSpokenInstructionFormatter)
-open class SpokenInstructionFormatter: NSObject {
+public class SpokenInstructionFormatter: NSObject {
     
     let routeStepFormatter = RouteStepFormatter()
     let maneuverVoiceDistanceFormatter = SpokenDistanceFormatter(approximate: true)
 
-    public func speechString(notification: NSNotification, markUpWithSSML: Bool) -> String {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+    public func string(routeProgress: RouteProgress, userDistance: CLLocationDistance, markUpWithSSML: Bool) -> String {
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)

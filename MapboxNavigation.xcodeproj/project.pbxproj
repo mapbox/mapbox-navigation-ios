@@ -813,17 +813,17 @@
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
+				64847A031F04629D003F3A69 /* Feedback.swift */,
 				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
+				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
 				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
-				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
-				64847A031F04629D003F3A69 /* Feedback.swift */,
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
+				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				357826C21F1B7CCE005C54FB /* SpokenDistanceFormatter.swift */,
 				C588C3C01F3387C700520EF2 /* SpokenInstructionFormatter.swift */,
-				35C997401E732C5400544D1C /* RouteStepFormatter.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
