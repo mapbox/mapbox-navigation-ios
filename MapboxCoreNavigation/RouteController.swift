@@ -659,6 +659,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForHighAlert(identifier: profileIdentifier)
         let minimumDistanceForMediumAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
+        let outletRoadClasses = routeProgress.currentLegProgress.currentStepProgress.step.intersections?.first?.outletRoadClasses
         
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
         // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
@@ -690,6 +691,12 @@ extension RouteController: CLLocationManagerDelegate {
             if secondsToEndOfStep <= RouteControllerHighAlertInterval {
                 alertLevel = .high
             }
+        } else if let _ = outletRoadClasses?.contains(.motorway),
+            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= 402.336 {
+            alertLevel = .high
+        } else if let _ = outletRoadClasses?.contains(.motorway),
+            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= 3218.69 {
+            alertLevel = .medium
         } else if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
