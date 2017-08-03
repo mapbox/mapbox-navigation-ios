@@ -101,7 +101,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self.startMultipleWaypoints()
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
     // Helper for requesting a route
