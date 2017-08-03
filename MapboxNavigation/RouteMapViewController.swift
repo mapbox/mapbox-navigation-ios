@@ -238,7 +238,7 @@ class RouteMapViewController: UIViewController {
                 controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
                 routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
                 routePageViewController.currentManeuverPage = controller
-                routePageViewController.updateManeuverViewHeight(for: controller)
+                routePageViewController(routePageViewController, willTransitionTo: controller)
             }
         }
         
@@ -491,17 +491,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         
         let isFirstStep = stepBefore(step) == nil
         let isCurrentStep = step == currentStep
+        let isLastStep = stepAfter(step) == nil
         
-        if isFirstStep || isCurrentStep {
-            maneuverViewController.leftOverlayView.isHidden = false
-            maneuverViewController.rightOverlayView.isHidden = true
-        } else if stepAfter(step) == nil {
-            maneuverViewController.leftOverlayView.isHidden = true
-            maneuverViewController.rightOverlayView.isHidden = false
-        } else {
-            maneuverViewController.leftOverlayView.isHidden = true
-            maneuverViewController.rightOverlayView.isHidden = true
-        }
+        maneuverViewController.leftOverlayView.isHidden = !(isFirstStep || isCurrentStep)
+        maneuverViewController.rightOverlayView.isHidden = !isLastStep
         
         controller.updateManeuverViewHeight(for: maneuverViewController)
     }
