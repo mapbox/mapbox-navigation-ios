@@ -35,7 +35,7 @@ extension UIFont {
 /**
  `DefaultStyle` is default style for Mapbox Navigation SDK.
  */
-public class DefaultStyle: Style {
+open class DefaultStyle: Style {
     
     required public init(traitCollection: UITraitCollection) {
         super.init(traitCollection: traitCollection)
