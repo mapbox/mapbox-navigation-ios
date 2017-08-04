@@ -6,7 +6,7 @@ import UIKit
  Styles are applied globally using `UIAppearance`. You should call `Style.apply()` to apply the style to the `NavigationViewController`.
  */
 @objc(MBStyle)
-public class Style: NSObject {
+open class Style: NSObject {
     
     public var traitCollection: UITraitCollection
     
@@ -151,6 +151,16 @@ public class Style: NSObject {
     public var cellSubtitleLabelTextColor: UIColor?
     
     /**
+     Sets the background color of the current way name view.
+     */
+    public var wayNameViewBackgroundColor: UIColor?
+    
+    /**
+     Sets the border color of the current way name view.
+     */
+    public var wayNameViewBorderColor: UIColor?
+    
+    /**
      Sets the color for the current way name label.
      */
     public var wayNameLabelTextColor: UIColor?
@@ -221,6 +231,14 @@ public class Style: NSObject {
         
         if let font = wayNameLabelFont {
             WayNameLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
+        }
+        
+        if let color = wayNameViewBackgroundColor {
+            WayNameView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = wayNameViewBorderColor {
+            WayNameView.appearance(for: traitCollection).borderColor = color
         }
         
         if let color = turnArrowPrimaryColor {
@@ -393,6 +411,21 @@ public class CellSubtitleLabel: StylableLabel { }
 /// :nodoc:
 @objc(MBWayNameLabel)
 public class WayNameLabel: StylableLabel { }
+
+@objc(MBWayNameView)
+public class WayNameView: UIView {
+    
+    dynamic var borderColor: UIColor = .white {
+        didSet {
+            layer.borderColor = borderColor.cgColor
+        }
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.midY
+    }
+}
 
 /// :nodoc:
 @objc(MBProgressBar)

@@ -71,15 +71,13 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.manuallyUpdatesLocation = true
         
-        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
-        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
-        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
         recenterButton.applyDefaultCornerRadiusShadow()
         
-        wayNameView.layer.borderWidth = 1
-        wayNameView.layer.borderColor = UIColor.lightGray.cgColor
+        wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
-        wayNameLabel.layer.masksToBounds = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
