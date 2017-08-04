@@ -910,16 +910,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="371" height="80"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MEj-M2-Aqd" customClass="MBProgressBar">
-                            <rect key="frame" x="0.0" y="0.0" width="100" height="3"/>
-                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="100" id="Dyb-zf-R8A"/>
-                                <constraint firstAttribute="height" constant="3" id="XWE-Ju-Xz5"/>
-                            </constraints>
-                        </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="MBTimeRemainingLabel">
-                            <rect key="frame" x="10" y="9" width="87" height="34"/>
+                            <rect key="frame" x="10" y="11" width="87" height="34"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -991,10 +983,8 @@
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstItem="MEj-M2-Aqd" firstAttribute="top" secondItem="eu5-2S-xpm" secondAttribute="top" id="3A2-8d-UlI"/>
                         <constraint firstItem="6dE-ya-mrD" firstAttribute="top" secondItem="nqY-xY-Iz0" secondAttribute="bottom" constant="-2" id="6vR-tv-DwC"/>
                         <constraint firstItem="rwq-3y-Mg0" firstAttribute="leading" secondItem="HRl-MT-kqB" secondAttribute="trailing" constant="10" id="A39-Lw-WQZ"/>
-                        <constraint firstItem="MEj-M2-Aqd" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" id="ZC8-MR-XH9"/>
                         <constraint firstAttribute="trailing" secondItem="nqY-xY-Iz0" secondAttribute="trailing" id="ZcK-R7-EhS"/>
                         <constraint firstItem="nqY-xY-Iz0" firstAttribute="top" secondItem="82H-sg-SOL" secondAttribute="bottom" constant="-2" id="f0p-GJ-0lq"/>
                         <constraint firstItem="nqY-xY-Iz0" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" id="fRw-8W-bWR"/>
@@ -1008,17 +998,10 @@
                         <constraint firstItem="6dE-ya-mrD" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="10" id="tad-qV-G1m"/>
                         <constraint firstItem="82H-sg-SOL" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="10" id="zt1-Eq-Tuz"/>
                     </constraints>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="progress">
-                            <real key="value" value="0.5"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="arrivalTimeLabel" destination="HRl-MT-kqB" id="Nvg-Jp-KsB"/>
                         <outlet property="distanceRemaining" destination="6dE-ya-mrD" id="Qg0-hZ-tkK"/>
                         <outlet property="dividerView" destination="rwq-3y-Mg0" id="MlN-hT-NJe"/>
-                        <outlet property="progressBar" destination="MEj-M2-Aqd" id="2U4-W6-rv9"/>
-                        <outlet property="progressBarWidthConstraint" destination="Dyb-zf-R8A" id="Jz1-i2-QOe"/>
                         <outlet property="timeRemaining" destination="82H-sg-SOL" id="tfh-39-juV"/>
                     </connections>
                 </view>
