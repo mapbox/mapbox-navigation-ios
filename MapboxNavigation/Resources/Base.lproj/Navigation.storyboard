@@ -138,7 +138,8 @@
                                     <constraint firstAttribute="height" constant="40" id="o37-gV-IxI"/>
                                     <constraint firstAttribute="width" constant="40" id="vXa-Tt-AZm"/>
                                 </constraints>
-                                <state key="normal" image="bug_report"/>
+                                <inset key="imageEdgeInsets" minX="1" minY="2" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" image="feedback"/>
                                 <connections>
                                     <action selector="report:" destination="3z2-H5-unA" eventType="touchUpInside" id="2mO-AS-TQL"/>
                                 </connections>
@@ -1028,7 +1029,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="bug_report" width="16" height="18"/>
+        <image name="feedback" width="20" height="20"/>
         <image name="feedback_car_crash" width="38" height="33"/>
         <image name="location" width="22" height="22"/>
         <image name="overview" width="16" height="14"/>
