@@ -71,12 +71,11 @@
                             <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MBNavigationMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
                                 <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View">
-                                        <rect key="frame" x="141" y="209" width="94.5" height="25"/>
+                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
+                                        <rect key="frame" x="141" y="213" width="94.5" height="21"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
-                                                <rect key="frame" x="8" y="2" width="79" height="21"/>
-                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <rect key="frame" x="8" y="2" width="79" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -93,7 +92,6 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="bcm-ca-nGv" secondAttribute="trailing" constant="8" id="16w-UW-7Y7"/>
-                                            <constraint firstAttribute="height" constant="25" id="3NJ-aK-aiH"/>
                                             <constraint firstAttribute="bottom" secondItem="bcm-ca-nGv" secondAttribute="bottom" constant="2" id="Hs4-ZE-bmP"/>
                                             <constraint firstItem="bcm-ca-nGv" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="top" constant="2" id="N8i-oQ-85J"/>
                                             <constraint firstItem="bcm-ca-nGv" firstAttribute="leading" secondItem="drb-do-FoT" secondAttribute="leading" constant="8" id="gei-Oh-7XJ"/>

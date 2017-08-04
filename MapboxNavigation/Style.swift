@@ -151,6 +151,11 @@ open class Style: NSObject {
     public var cellSubtitleLabelTextColor: UIColor?
     
     /**
+     Sets the background color of the current way name view.
+     */
+    public var wayNameViewBackgroundColor: UIColor?
+    
+    /**
      Sets the color for the current way name label.
      */
     public var wayNameLabelTextColor: UIColor?
@@ -221,6 +226,10 @@ open class Style: NSObject {
         
         if let font = wayNameLabelFont {
             WayNameLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
+        }
+        
+        if let color = wayNameViewBackgroundColor {
+            WayNameView.appearance(for: traitCollection).backgroundColor = color
         }
         
         if let color = turnArrowPrimaryColor {
@@ -393,6 +402,14 @@ public class CellSubtitleLabel: StylableLabel { }
 /// :nodoc:
 @objc(MBWayNameLabel)
 public class WayNameLabel: StylableLabel { }
+
+@objc(MBWayNameView)
+public class WayNameView: UIView {
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.midY
+    }
+}
 
 /// :nodoc:
 @objc(MBProgressBar)

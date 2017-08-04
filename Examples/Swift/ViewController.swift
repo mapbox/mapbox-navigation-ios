@@ -188,7 +188,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.arrivalTimeLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
 
         // Current street name label
-        style.wayNameLabelTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+        style.wayNameLabelTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.wayNameViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1).withAlphaComponent(0.5)
             
         // Table view (Drawer)
         style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
