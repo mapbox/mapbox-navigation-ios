@@ -348,7 +348,6 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.99030783119999999" green="0.99866314420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstItem="dvV-hd-Sbg" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" constant="32" id="3Q9-Vw-R3s"/>
                                     <constraint firstAttribute="trailing" secondItem="dhM-Ng-gx5" secondAttribute="trailing" constant="4" id="89n-ce-bNw"/>
                                     <constraint firstAttribute="bottom" secondItem="bvZ-78-dml" secondAttribute="bottom" constant="-2" id="Bc5-Ji-bW4"/>
                                     <constraint firstItem="dhM-Ng-gx5" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" constant="30" id="FaC-Sw-ePv"/>
@@ -356,6 +355,7 @@
                                     <constraint firstItem="dhM-Ng-gx5" firstAttribute="leading" secondItem="dvV-hd-Sbg" secondAttribute="trailing" constant="8" id="Gou-LA-42q"/>
                                     <constraint firstAttribute="height" constant="115" id="IsE-zQ-C8r"/>
                                     <constraint firstAttribute="trailing" secondItem="bvZ-78-dml" secondAttribute="trailing" id="YYi-dU-nsG"/>
+                                    <constraint firstItem="dvV-hd-Sbg" firstAttribute="centerY" secondItem="dhM-Ng-gx5" secondAttribute="centerY" id="Ydu-hA-caa"/>
                                     <constraint firstItem="bvZ-78-dml" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" id="Znd-PG-ZQU"/>
                                     <constraint firstItem="c9E-8M-S3k" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" id="bkI-QJ-QrG"/>
                                     <constraint firstAttribute="bottom" secondItem="c9E-8M-S3k" secondAttribute="bottom" id="nbM-vd-u9C"/>
