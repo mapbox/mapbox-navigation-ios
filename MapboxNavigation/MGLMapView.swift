@@ -117,6 +117,9 @@ extension MGLMapView {
                 if let arrowSymbolLayer = style.layer(withIdentifier: arrowSymbolLayerIdentifier) as? MGLSymbolStyleLayer {
                     arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
                 }
+                if let arrowSymbolLayerCasing = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) as? MGLSymbolStyleLayer {
+                    arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                }
             } else {
                 let arrowSymbolLayer = MGLSymbolStyleLayer(identifier: arrowSymbolLayerIdentifier, source: arrowSymbolSource)
                 arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
@@ -135,7 +138,6 @@ extension MGLMapView {
                 arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
                 arrowSymbolLayerCasing.iconScale = MGLStyleValue(rawValue: 1.2)
                 arrowSymbolLayerCasing.iconAllowsOverlap = MGLStyleValue(rawValue: true)
-                
                 
                 style.addSource(arrowSymbolSource)
                 style.insertLayer(arrowSymbolLayer, above: arrow)
