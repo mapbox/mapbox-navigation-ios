@@ -209,7 +209,7 @@ open class Style: NSObject {
         
         if let color = tintColor {
             NavigationMapView.appearance(for: traitCollection).tintColor = color
-            ProgressBar.appearance(for: traitCollection).backgroundColor = color
+            ProgressBar.appearance(for: traitCollection).barColor = color
             Button.appearance(for: traitCollection).tintColor = color
             HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
         }
@@ -429,7 +429,49 @@ public class WayNameView: UIView {
 
 /// :nodoc:
 @objc(MBProgressBar)
-public class ProgressBar: UIView { }
+public class ProgressBar: UIView {
+    
+    let bar = UIView()
+    
+    dynamic var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
+        didSet {
+            bar.backgroundColor = barColor
+        }
+    }
+    
+    // Set the progress between 0.0-1.0
+    var progress: CGFloat = 0 {
+        didSet {
+            UIView.defaultAnimation(0.5, animations: { 
+                self.updateProgressBar()
+                self.layoutIfNeeded()
+            }, completion: nil)
+        }
+    }
+    
+    func dock(on view: UIView) {
+        translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(self)
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bar]-0-|", options: [], metrics: nil, views: ["bar": self]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bar(3)]-0-|", options: [], metrics: nil, views: ["bar": self]))
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if bar.superview == nil {
+            addSubview(bar)
+        }
+        
+        updateProgressBar()
+    }
+    
+    func updateProgressBar() {
+        if let superview = superview {
+            bar.frame = CGRect(origin: .zero, size: CGSize(width: superview.bounds.width*progress, height: 3))
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBLineView)
