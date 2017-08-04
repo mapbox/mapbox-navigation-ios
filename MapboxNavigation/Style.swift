@@ -156,6 +156,11 @@ open class Style: NSObject {
     public var wayNameViewBackgroundColor: UIColor?
     
     /**
+     Sets the border color of the current way name view.
+     */
+    public var wayNameViewBorderColor: UIColor?
+    
+    /**
      Sets the color for the current way name label.
      */
     public var wayNameLabelTextColor: UIColor?
@@ -230,6 +235,10 @@ open class Style: NSObject {
         
         if let color = wayNameViewBackgroundColor {
             WayNameView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = wayNameViewBorderColor {
+            WayNameView.appearance(for: traitCollection).borderColor = color
         }
         
         if let color = turnArrowPrimaryColor {
@@ -405,6 +414,13 @@ public class WayNameLabel: StylableLabel { }
 
 @objc(MBWayNameView)
 public class WayNameView: UIView {
+    
+    dynamic var borderColor: UIColor = .white {
+        didSet {
+            layer.borderColor = borderColor.cgColor
+        }
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = bounds.midY

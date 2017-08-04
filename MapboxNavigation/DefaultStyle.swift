@@ -50,8 +50,10 @@ open class DefaultStyle: Style {
         buttonTextColor = .defaultPrimaryText
         lineColor =  #colorLiteral(red: 0.7825912237, green: 0.7776457667, blue: 0.7863886952, alpha: 0.7)
         
-        wayNameLabelFont = .systemFont(ofSize: 14)
-        wayNameLabelTextColor = .defaultPrimaryText
+        wayNameLabelFont = .systemFont(ofSize: 15)
+        wayNameLabelTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        wayNameViewBorderColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        wayNameViewBackgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         
         turnArrowPrimaryColor = .defaultTurnArrowPrimary
         turnArrowSecondaryColor = .defaultTurnArrowSecondary

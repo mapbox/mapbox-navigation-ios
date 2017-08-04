@@ -76,10 +76,8 @@ class RouteMapViewController: UIViewController {
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 20)
         recenterButton.applyDefaultCornerRadiusShadow()
         
-        wayNameView.layer.borderWidth = 1
-        wayNameView.layer.borderColor = UIColor.lightGray.cgColor
+        wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
-        wayNameLabel.layer.masksToBounds = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
