@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import MapboxCoreNavigation
 
 typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 
@@ -13,6 +14,9 @@ open class NavigationMapView: MGLMapView {
     let sourceCasingIdentifier = "routeCasingSource"
     let routeLayerIdentifier = "routeLayer"
     let routeLayerCasingIdentifier = "routeLayerCasing"
+    let waypointSourceIdentifier = "waypointsSource"
+    let waypointCircleIdentifier = "waypointsCircle"
+    let waypointSymbolIdentifier = "waypointsSymbol"
     
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 6),
@@ -122,6 +126,56 @@ open class NavigationMapView: MGLMapView {
         
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
+        }
+    }
+    
+    public func showWaypoints(routeProgress: RouteProgress) {
+        guard let style = style else {
+            return
+        }
+        
+        let route = routeProgress.route
+        
+        if let lastLeg =  route.legs.last {
+            let destination = MGLPointAnnotation()
+            destination.coordinate = lastLeg.destination.coordinate
+            addAnnotation(destination)
+        }
+        
+        var features = [MGLPointFeature]()
+        let letters = (97...122).map({Character(UnicodeScalar($0))}).map { String(describing:$0).uppercased() }
+        
+        for (waypointIndex, waypoint) in routeProgress.remainingWaypoints.enumerated().dropLast() {
+            let feature = MGLPointFeature()
+            feature.coordinate = waypoint.coordinate
+            feature.attributes = [ "name": letters[waypointIndex] ]
+            features.append(feature)
+        }
+        
+        if let source = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
+            source.shape = MGLShapeSource(identifier: waypointSourceIdentifier, features: features, options: nil).shape
+        } else {
+            let source = MGLShapeSource(identifier: waypointSourceIdentifier, features: features, options: nil)
+            style.addSource(source)
+            
+            let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
+            circles.circleColor = MGLStyleValue(rawValue: .white)
+            circles.circleOpacity = MGLStyleValue(interpolationMode: .exponential,
+                                                  cameraStops: [2: MGLStyleValue(rawValue: 0.5),
+                                                                7: MGLStyleValue(rawValue: 1)],
+                                                  options: nil)
+            circles.circleRadius = MGLStyleValue(rawValue: 10)
+            circles.circleStrokeColor = MGLStyleValue(rawValue: .black)
+            circles.circleStrokeWidth = MGLStyleValue(rawValue: 1)
+            
+            
+            let symbols = MGLSymbolStyleLayer(identifier: waypointSymbolIdentifier, source: source)
+            
+            symbols.text = MGLStyleValue(rawValue: "{name}")
+            symbols.textFontSize = MGLStyleValue(rawValue: 10)
+            
+            style.addLayer(circles)
+            style.addLayer(symbols)
         }
     }
     
