@@ -35,7 +35,7 @@ extension UIFont {
 /**
  `DefaultStyle` is default style for Mapbox Navigation SDK.
  */
-public class DefaultStyle: Style {
+open class DefaultStyle: Style {
     
     required public init(traitCollection: UITraitCollection) {
         super.init(traitCollection: traitCollection)
@@ -48,10 +48,12 @@ public class DefaultStyle: Style {
         }
         
         buttonTextColor = .defaultPrimaryText
-        lineColor =  #colorLiteral(red: 0.7825912237, green: 0.7776457667, blue: 0.7863886952, alpha: 0.7)
+        lineColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         
-        wayNameLabelFont = .systemFont(ofSize: 14)
-        wayNameLabelTextColor = .defaultPrimaryText
+        wayNameLabelFont = .systemFont(ofSize: 16)
+        wayNameLabelTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        wayNameViewBorderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
+        wayNameViewBackgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         
         turnArrowPrimaryColor = .defaultTurnArrowPrimary
         turnArrowSecondaryColor = .defaultTurnArrowSecondary
@@ -59,11 +61,11 @@ public class DefaultStyle: Style {
         // Maneuver view (Page view)
         maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
-        distanceLabelFont = .systemFont(ofSize: 26, weight: UIFontWeightMedium)
-        distanceLabelTextColor = .defaultPrimaryText
+        distanceLabelFont = .systemFont(ofSize: 26)
+        distanceLabelTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         
         destinationLabelFont = .systemFont(ofSize: 32, weight: UIFontWeightMedium)
-        destinationLabelTextColor = .defaultPrimaryText
+        destinationLabelTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
         arrivalTimeLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
         arrivalTimeLabelTextColor = .defaultPrimaryText
@@ -74,7 +76,7 @@ public class DefaultStyle: Style {
         timeRemainingLabelTextColor = .defaultPrimaryText
         timeRemainingLabelFont = .systemFont(ofSize: 28, weight: UIFontWeightMedium)
         
-        distanceRemainingLabelTextColor = .defaultPrimaryText
+        distanceRemainingLabelTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         distanceRemainingLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
         
         arrivalTimeLabelTextColor = .defaultPrimaryText
