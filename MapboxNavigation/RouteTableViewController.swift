@@ -20,8 +20,9 @@ class RouteTableViewController: UIViewController {
         setupTableView()
         dateFormatter.timeStyle = .short
         dateComponentsFormatter.maximumUnitCount = 2
-        dateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
-        dateComponentsFormatter.unitsStyle = .short
+        dateComponentsFormatter.collapsesLargestUnit = true
+        dateComponentsFormatter.allowedUnits = [.hour, .minute]
+        dateComponentsFormatter.unitsStyle = .abbreviated
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         headerView.progress = CGFloat(routeController.routeProgress.fractionTraveled)
     }

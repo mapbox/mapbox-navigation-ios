@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.17" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13178.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -121,10 +121,10 @@
                                 </connections>
                             </containerView>
                             <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5HY-QD-dBq" customClass="MBHighlightedButton">
-                                <rect key="frame" x="10" y="189.5" width="112" height="42"/>
+                                <rect key="frame" x="10" y="181.5" width="112" height="50"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="42" id="QGu-S5-V3G"/>
+                                    <constraint firstAttribute="height" constant="50" id="QGu-S5-V3G"/>
                                     <constraint firstAttribute="width" constant="112" id="auw-yF-4hd"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -138,14 +138,14 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq">
-                                <rect key="frame" x="10" y="110" width="44" height="96"/>
+                                <rect key="frame" x="10" y="110" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBButton">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="Boe-Xa-uFI"/>
-                                            <constraint firstAttribute="height" constant="44" id="ybt-ny-GPN"/>
+                                            <constraint firstAttribute="width" constant="50" id="Boe-Xa-uFI"/>
+                                            <constraint firstAttribute="height" constant="50" id="ybt-ny-GPN"/>
                                         </constraints>
                                         <state key="normal" image="overview"/>
                                         <connections>
@@ -153,11 +153,11 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y2a-qB-86S" customClass="MBButton">
-                                        <rect key="frame" x="0.0" y="52" width="44" height="44"/>
+                                        <rect key="frame" x="0.0" y="58" width="50" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="DRa-a5-D9t"/>
-                                            <constraint firstAttribute="width" constant="44" id="Ejg-Q8-jZn"/>
+                                            <constraint firstAttribute="height" constant="50" id="DRa-a5-D9t"/>
+                                            <constraint firstAttribute="width" constant="50" id="Ejg-Q8-jZn"/>
                                         </constraints>
                                         <state key="normal" image="volume_up"/>
                                         <state key="selected" image="volume_off"/>
@@ -166,11 +166,11 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBButton">
-                                        <rect key="frame" x="0.0" y="96" width="44" height="44"/>
+                                        <rect key="frame" x="0.0" y="108" width="50" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="o37-gV-IxI"/>
-                                            <constraint firstAttribute="width" constant="44" id="vXa-Tt-AZm"/>
+                                            <constraint firstAttribute="height" constant="50" id="o37-gV-IxI"/>
+                                            <constraint firstAttribute="width" constant="50" id="vXa-Tt-AZm"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="3" minY="2" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" image="feedback"/>
@@ -658,13 +658,16 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
-                                <blurEffect style="extraLight"/>
+                                <color key="backgroundColor" red="0.5" green="0.5" blue="0.5" alpha="0.60378317636986301" colorSpace="custom" customColorSpace="sRGB"/>
+                                <vibrancyEffect>
+                                    <blurEffect style="extraLight"/>
+                                </vibrancyEffect>
                             </visualEffectView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecu-yz-M5j" userLabel="ContainerView">
-                                <rect key="frame" x="24" y="60" width="327" height="567"/>
+                                <rect key="frame" x="24" y="100" width="327" height="542"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Sne-Dn-jdt">
-                                        <rect key="frame" x="8" y="10" width="311" height="457"/>
+                                        <rect key="frame" x="8" y="10" width="311" height="432"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="16" minimumInteritemSpacing="0.0" id="unA-43-4hX">
                                             <size key="itemSize" width="155" height="134"/>
@@ -696,7 +699,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                            <rect key="frame" x="54.5" y="96" width="47.5" height="22"/>
+                                                            <rect key="frame" x="54.5" y="96" width="47.5" height="23"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
                                                             <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -741,7 +744,7 @@
                                         </connections>
                                     </collectionView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JMs-xU-Gfd">
-                                        <rect key="frame" x="20" y="487" width="287" height="60"/>
+                                        <rect key="frame" x="20" y="462" width="287" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="apY-WJ-qqF"/>
                                         </constraints>
@@ -777,8 +780,8 @@
                             <constraint firstItem="EC5-ge-nz1" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leading" id="9Wv-Am-mxS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ecu-yz-M5j" secondAttribute="trailing" constant="8" id="Cyb-Eg-iSY"/>
                             <constraint firstItem="EC5-ge-nz1" firstAttribute="top" secondItem="I7t-WT-lto" secondAttribute="top" id="VgD-ac-RQ2"/>
-                            <constraint firstItem="ecu-yz-M5j" firstAttribute="top" secondItem="pGP-EB-Pif" secondAttribute="bottom" constant="40" id="cDD-7Q-8vJ"/>
-                            <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="bottom" constant="40" id="rzg-dk-UOe"/>
+                            <constraint firstItem="ecu-yz-M5j" firstAttribute="top" secondItem="pGP-EB-Pif" secondAttribute="bottom" constant="80" id="cDD-7Q-8vJ"/>
+                            <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="bottom" constant="25" id="rzg-dk-UOe"/>
                             <constraint firstAttribute="trailing" secondItem="EC5-ge-nz1" secondAttribute="trailing" id="wa9-2E-HRi"/>
                             <constraint firstItem="ecu-yz-M5j" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leadingMargin" constant="8" id="xiW-Wm-SI7"/>
                         </constraints>
