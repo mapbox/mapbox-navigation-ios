@@ -189,7 +189,7 @@ class RouteMapViewController: UIViewController {
             return
         }
         
-        let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
+        let overviewContentInset = UIEdgeInsets(top: 65, left: 25, bottom: 55, right: 25)
         mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 
