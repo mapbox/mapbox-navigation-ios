@@ -33,7 +33,7 @@ extension Array {
                 locations.append(CLLocation(dictionary: dict))
             }
             
-            return locations.sorted(by: { $0.timestamp < $1.timestamp })
+            return locations.sorted { $0.timestamp < $1.timestamp }
             
         } catch {
             return []
