@@ -651,14 +651,11 @@ extension RouteController: CLLocationManagerDelegate {
         // Force an announcement when the user begins a route
         var alertLevel: AlertLevel = routeProgress.currentLegProgress.alertUserLevel == .none ? .depart : routeProgress.currentLegProgress.alertUserLevel
         var updateStepIndex = false
-        let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         
         let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
         let secondsToEndOfStep = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
         var courseMatchesManeuverFinalHeading = false
-        
-        let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForHighAlert(identifier: profileIdentifier)
-        let minimumDistanceForMediumAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
+
         let outletRoadClasses = routeProgress.currentLegProgress.currentStepProgress.step.intersections?.first?.outletRoadClasses
         
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
@@ -692,10 +689,10 @@ extension RouteController: CLLocationManagerDelegate {
                 alertLevel = .high
             }
         } else if let _ = outletRoadClasses?.contains(.motorway),
-            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= 402.336 {
+            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= RouteControllerMotorwayHighAlertDistance {
             alertLevel = .high
         } else if let _ = outletRoadClasses?.contains(.motorway),
-            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= 3218.69 {
+            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= RouteControllerMotorwayMediumAlertDistance {
             alertLevel = .medium
         } else if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             // Use the currentStep if there is not a next step
@@ -729,13 +726,9 @@ extension RouteController: CLLocationManagerDelegate {
                     assert(false, "In this case, there should always be an upcoming step")
                 }
             }
-        } else if secondsToEndOfStep <= RouteControllerHighAlertInterval && routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForHighAlert {
+        } else if secondsToEndOfStep <= RouteControllerHighAlertInterval {
             alertLevel = .high
-        } else if secondsToEndOfStep <= RouteControllerMediumAlertInterval &&
-            // Don't alert if the route segment is shorter than X
-            // However, if it's the beginning of the route
-            // There needs to be an alert
-            routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForMediumAlert {
+        } else if secondsToEndOfStep <= RouteControllerMediumAlertInterval {
             alertLevel = .medium
         }
         

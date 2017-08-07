@@ -185,8 +185,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
-        let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
-        let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
+        
         
         let escapeIfNecessary = {(distance: String) -> String in
             return markUpWithSSML ? distance.addingXMLEscapes : distance
@@ -215,16 +214,19 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         // If there is no `upComingStep`, there definitely should not be a followOnStep.
         // This should be caught above.
         let upComingInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: upcomingLegIndex, numberOfLegs: numberOfLegs, markUpWithSSML: markUpWithSSML)!
-        let stepDistance = routeProgress.currentLegProgress.upComingStep!.distance
+        let upcomingStepDuration = routeProgress.currentLegProgress.upComingStep!.expectedTravelTime
         let currentInstruction = routeStepFormatter.string(for: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: markUpWithSSML)
         let step = routeProgress.currentLegProgress.currentStep
         var text: String
+        
+        // Prevent back to back instructions
+        let linkedInstructionMultiplier = RouteControllerHighAlertInterval * 1.2
         
         // We only want to announce this special depature announcement once.
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
         // since the user will be approaching the maneuver location.
         if routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart {
-            if userDistance < minimumDistanceForHighAlert {
+            if upcomingStepDuration < linkedInstructionMultiplier {
                 text = String.localizedStringWithFormat(NSLocalizedString("LINKED_WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "%@, then in %@, %@", comment: "Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction"), currentInstruction!, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
             } else if let roadDescription = step.roadDescription(markedUpWithSSML: markUpWithSSML) {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE_ON_ROAD", bundle: .mapboxNavigation, value: "Continue on %@ for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance"), roadDescription, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
@@ -237,7 +239,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             } else {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             }
-        } else if alertLevel == .high && stepDistance < minimumDistanceForHighAlert {
+        } else if alertLevel == .high && upcomingStepDuration < linkedInstructionMultiplier {
             text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
         } else if alertLevel != .high {
             text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxNavigation, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)

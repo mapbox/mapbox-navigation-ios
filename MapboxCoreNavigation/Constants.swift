@@ -94,7 +94,7 @@ public var RouteControllerMediumAlertInterval: TimeInterval = 70
 /**
  Number of seconds left on step when a `high` alert is emitted.
  */
-public var RouteControllerHighAlertInterval: TimeInterval = 15
+public var RouteControllerHighAlertInterval: TimeInterval = 20
 
 
 /**
@@ -110,81 +110,15 @@ public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
 
 
 /**
- Distance in meters for the minimum length of a step for giving a `medium` alert while using `MBDirectionsProfileIdentifierAutomobile` or `MBDirectionsProfileIdentifierAutomobileAvoidingTraffic`.
+ Remaing distance on a motorway at which the `.high` `AlertLevel` will be given. This overrides `RouteControllerHighAlertInterval` only when the current step is a motorway.
  */
-public var RouteControllerMinimumDistanceForMediumAlertDriving: CLLocationDistance = 400
+public var RouteControllerMotorwayHighAlertDistance: CLLocationDistance = 804.672
 
 
 /**
- Distance in meters for the minimum length of a step for giving a `medium` alert while using `MBDirectionsProfileIdentifierCycling`.
+ Remaing distance on a motorway at which the `.medium` `AlertLevel` will be given. This overrides `RouteControllerMediumAlertInterval` only when the current step is a motorway.
  */
-public var RouteControllerMinimumDistanceForMediumAlertCycling: CLLocationDistance = 200
-
-
-/**
- Distance in meters for the minimum length of a step for giving a `medium` alert while using `MBDirectionsProfileIdentifierWalking`.
- */
-public var RouteControllerMinimumDistanceForMediumAlertWalking: CLLocationDistance = 100
-
-
-/**
- Returns the appropriate `mediium` `AlertLevel` distance for a given `MBDirectionsProfileIdentifier`.
- */
-public func RouteControllerMinimumDistanceForMediumAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
-    switch identifier {
-    case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:
-        return RouteControllerMinimumDistanceForMediumAlertDriving
-    case MBDirectionsProfileIdentifier.automobile:
-        return RouteControllerMinimumDistanceForMediumAlertDriving
-    case MBDirectionsProfileIdentifier.cycling:
-        return RouteControllerMinimumDistanceForMediumAlertCycling
-    case MBDirectionsProfileIdentifier.walking:
-        return RouteControllerMinimumDistanceForMediumAlertWalking
-    default:
-        break
-    }
-    
-    return RouteControllerMinimumDistanceForMediumAlertDriving
-}
-
-
-/**
- Distance in meters for the minimum length of a step for giving a `high` alert while using `MBDirectionsProfileIdentifierAutomobile` or `MBDirectionsProfileIdentifierAutomobileAvoidingTraffic`.
- */
-public var RouteControllerMinimumDistanceForHighAlertDriving: CLLocationDistance = 100
-
-
-/**
- Distance in meters for the minimum length of a step for giving a `high` alert while using `MBDirectionsProfileIdentifierCycling`.
- */
-public var RouteControllerMinimumDistanceForHighAlertCycling: CLLocationDistance = 60
-
-
-/**
- Distance in meters for the minimum length of a step for giving a `high` alert while using `MBDirectionsProfileIdentifierWalking`.
- */
-public var RouteControllerMinimumDistanceForHighAlertWalking: CLLocationDistance = 20
-
-
-/**
- Returns a the appropriate `high` `AlertLevel` distance for a given `MBDirectionsProfileIdentifier`.
- */
-public func RouteControllerMinimumDistanceForHighAlert(identifier: MBDirectionsProfileIdentifier) -> CLLocationDistance {
-    switch identifier {
-    case MBDirectionsProfileIdentifier.automobileAvoidingTraffic:
-        return RouteControllerMinimumDistanceForHighAlertDriving
-    case MBDirectionsProfileIdentifier.automobile:
-        return RouteControllerMinimumDistanceForHighAlertDriving
-    case MBDirectionsProfileIdentifier.cycling:
-        return RouteControllerMinimumDistanceForHighAlertCycling
-    case MBDirectionsProfileIdentifier.walking:
-        return RouteControllerMinimumDistanceForHighAlertWalking
-    default:
-        break
-    }
-    
-    return RouteControllerMinimumDistanceForHighAlertDriving
-}
+public var RouteControllerMotorwayMediumAlertDistance: CLLocationDistance = 3218.69
 
 
 /**
