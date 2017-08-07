@@ -45,8 +45,8 @@ class RouteMapViewController: UIViewController {
     var tiltedCamera: MGLMapCamera {
         get {
             let camera = mapView.camera
-            camera.altitude = 600
-            camera.pitch = 45
+            camera.altitude = 150
+            camera.pitch = 70
             return camera
         }
     }
