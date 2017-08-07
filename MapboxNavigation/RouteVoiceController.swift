@@ -219,7 +219,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         let step = routeProgress.currentLegProgress.currentStep
         var text: String
         
-        // Prevent back to back instructions
+        // Prevent back to back instructions by adding a little more wiggle room
         let linkedInstructionMultiplier = RouteControllerHighAlertInterval * 1.2
         
         // We only want to announce this special depature announcement once.
