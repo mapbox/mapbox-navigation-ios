@@ -30,6 +30,6 @@ extension Bundle {
     }
     
     class var mapboxCoreNavigation: Bundle {
-        get { return Bundle(for: self) }
+        get { return Bundle(for: RouteController.self) }
     }
 }
