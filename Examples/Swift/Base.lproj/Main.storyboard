@@ -106,8 +106,20 @@
                             <constraint firstAttribute="trailing" secondItem="Tfo-Ic-OqD" secondAttribute="trailing" constant="16" id="veQ-GA-9Zk"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Mapbox Navigation" id="zxr-0T-HBr"/>
+                    <navigationItem key="navigationItem" title="Mapbox Navigation" id="zxr-0T-HBr">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="XbQ-fY-lUb">
+                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6ux-mK-LQF">
+                                <rect key="frame" x="16" y="7" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Clear map"/>
+                                <connections>
+                                    <action selector="clearMapPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="SHt-XT-eUM"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="clearMap" destination="6ux-mK-LQF" id="9M7-CK-q1M"/>
                         <outlet property="longPressHintView" destination="Tfo-Ic-OqD" id="gYu-YW-6FX"/>
                         <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
                         <outlet property="simulationButton" destination="iiq-Gf-SKY" id="DHR-zB-Mwv"/>

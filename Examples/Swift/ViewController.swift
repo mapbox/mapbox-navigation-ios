@@ -28,6 +28,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
     @IBOutlet weak var simulationButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
+    
+    @IBOutlet weak var clearMap: UIButton!
 
     var exampleMode: ExampleMode?
     
@@ -54,6 +56,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         guard sender.state == .began else {
             return
         }
+        
+        clearMap.isHidden = false
 
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {
             mapView.removeAnnotation(annotation)
@@ -93,6 +97,13 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     
     @IBAction func simulateButtonPressed(_ sender: Any) {
         simulationButton.isSelected = !simulationButton.isSelected
+    }
+    
+    @IBAction func clearMapPressed(_ sender: Any) {
+        clearMap.isHidden = true
+        mapView.removeRoute()
+        mapView.removeAnnotations(mapView.annotations ?? [])
+        waypoints.removeAll()
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
