@@ -76,7 +76,6 @@ extension RoutePageViewController: UIPageViewControllerDataSource, UIPageViewCon
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         let controller = pendingViewControllers.first! as! RouteManeuverViewController
         maneuverDelegate.routePageViewController(self, willTransitionTo: controller)
-        updateManeuverViewHeight(for: controller)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
@@ -84,19 +83,6 @@ extension RoutePageViewController: UIPageViewControllerDataSource, UIPageViewCon
         
         if completed {
             currentManeuverPage = controller
-        }
-        
-        updateManeuverViewHeight(for: controller)
-    }
-    
-    func updateManeuverViewHeight(for controller: RouteManeuverViewController) {
-        let newValue = controller.stackViewContainer.isHidden ? controller.stackViewContainer.frame.minY : controller.stackViewContainer.frame.maxY
-
-        if maneuverContainerView.height != newValue {
-            maneuverContainerView.height = newValue
-            UIView.defaultAnimation(0.25, animations: {
-                self.maneuverContainerView.superview?.layoutIfNeeded()
-            }, completion: nil)
         }
     }
 }
