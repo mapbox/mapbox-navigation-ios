@@ -94,7 +94,7 @@ public var RouteControllerMediumAlertInterval: TimeInterval = 70
 /**
  Number of seconds left on step when a `high` alert is emitted.
  */
-public var RouteControllerHighAlertInterval: TimeInterval = 20
+public var RouteControllerHighAlertInterval: TimeInterval = 15
 
 
 /**
@@ -110,13 +110,13 @@ public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
 
 
 /**
- Remaing distance on a motorway at which the `.high` `AlertLevel` will be given. This overrides `RouteControllerHighAlertInterval` only when the current step is a motorway.
+ Remaing distance on a motorway at which the `.high` `AlertLevel` will be given. This overrides `RouteControllerHighAlertInterval` only when the current step is a motorway. Default value is a half mile.
  */
 public var RouteControllerMotorwayHighAlertDistance: CLLocationDistance = 804.672
 
 
 /**
- Remaing distance on a motorway at which the `.medium` `AlertLevel` will be given. This overrides `RouteControllerMediumAlertInterval` only when the current step is a motorway.
+ Remaing distance on a motorway at which the `.medium` `AlertLevel` will be given. This overrides `RouteControllerMediumAlertInterval` only when the current step is a motorway. Defauly value is 2 miles.
  */
 public var RouteControllerMotorwayMediumAlertDistance: CLLocationDistance = 3218.69
 
