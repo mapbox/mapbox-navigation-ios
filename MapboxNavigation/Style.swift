@@ -527,7 +527,7 @@ class StatusView: UIView {
         activityIndicatorView.isHidden = !showSpinner
         activityIndicatorView.startAnimating()
         
-        show()
+        updateConstraints(show: true)
         UIView.defaultAnimation(0.3, animations: {
             self.superview?.layoutIfNeeded()
         }) { (completed) in
@@ -539,26 +539,21 @@ class StatusView: UIView {
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
         if animated {
-            hide()
+            updateConstraints(show: false)
             UIView.defaultAnimation(0.3, delay: delay, animations: {
                 self.superview?.layoutIfNeeded()
             }, completion: { (completed) in
                 self.activityIndicatorView.stopAnimating()
             })
         } else {
-            hide()
+            updateConstraints(show: false)
             self.activityIndicatorView.stopAnimating()
             self.superview?.layoutIfNeeded()
         }
     }
     
-    fileprivate func hide() {
-        topConstraint.constant = -bounds.height
-        superview?.setNeedsUpdateConstraints()
-    }
-    
-    fileprivate func show() {
-        topConstraint.constant = 0
+    fileprivate func updateConstraints(show: Bool) {
+        topConstraint.constant = show ? 0 : -bounds.height
         superview?.setNeedsUpdateConstraints()
     }
 }
