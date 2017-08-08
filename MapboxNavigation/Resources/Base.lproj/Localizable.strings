@@ -4,6 +4,27 @@
 /* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
 "CONTINUE_ON_ROAD" = "Continue on %1$@ for %2$@";
 
+/* Delimiter between multiple destinations */
+"DESTINATION_DELIMITER" = " / ";
+
+/* Feedback type for Accident */
+"FEEDBACK_ACCIDENT" = "Accident";
+
+/* Feedback type for Closure */
+"FEEDBACK_CLOSURE" = "Closure";
+
+/* Feedback type for Confusing */
+"FEEDBACK_CONFUSING" = "Confusing";
+
+/* Feedback type for Hazard */
+"FEEDBACK_HAZARD" = "Hazard";
+
+/* Feedback type for Other Issue */
+"FEEDBACK_OTHER" = "Other Issue";
+
+/* Feedback type for Unallowed Turn */
+"FEEDBACK_UNALLOWED_TURN" = "Not Allowed";
+
 /* Format string for less than; 1 = duration remaining */
 "LESS_THAN" = "%@";
 
@@ -19,8 +40,8 @@
 /* Delimiter between route numbers in a road concurrency */
 "REF_DELIMITER" = " / ";
 
-/* Delimiter between multiple destinations */
-"DESTINATION_DELIMITER" = " / ";
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Rerouting…";
 
 /* Format for speech string; 1 = formatted distance; 2 = instruction */
 "WITH_DISTANCE_UTTERANCE_FORMAT" = "In %1$@, %2$@";
