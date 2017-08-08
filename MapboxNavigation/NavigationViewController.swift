@@ -300,7 +300,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     override public func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
-        drawerCornerRadius = 8
+        drawerCornerRadius = 0
         progressBar.dock(on: view)
         self.delegate = self
     }

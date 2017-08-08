@@ -108,10 +108,178 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/navigation-guidance-day-v2"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" userLabel="Maneuver Container View" customClass="MBManeuverContainerView">
-                                <rect key="frame" x="0.0" y="-0.5" width="375" height="100"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Stack View">
+                                <rect key="frame" x="0.0" y="114.5" width="375" height="40"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="D9e-aq-442" userLabel="Lane Stack View">
+                                        <rect key="frame" x="187.5" y="7.5" width="0.0" height="32.5"/>
+                                        <subviews>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xMK-ix-h83" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" priority="999" constant="30" id="5sC-IA-ynK"/>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="eFo-oh-D8F"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Ubg-JB-V89" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" priority="999" constant="30" id="QaH-MV-hA1"/>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="Yrb-L1-Yda"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1to-o2-XUJ" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" priority="998" constant="30" id="XqQ-bI-oTM"/>
+                                                    <constraint firstAttribute="height" constant="30" id="c02-Nl-37M"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="9Oc-7m-0dN" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="CGM-pJ-lk4"/>
+                                                    <constraint firstAttribute="width" priority="997" constant="30" id="cUc-ae-GQH"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="zJ7-cq-Mlb" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="UNJ-iN-Tdv"/>
+                                                    <constraint firstAttribute="width" priority="996" constant="30" id="q1y-a8-akI"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="vF3-W9-UzW" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" priority="995" constant="30" id="ATb-XJ-zBo"/>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="lwh-5Z-2nG"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eFU-s5-Zww" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" priority="994" constant="30" id="POv-3J-uon"/>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="oUN-3C-GdQ"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="aCw-bc-uSe" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="1Nn-Oh-Mdv"/>
+                                                    <constraint firstAttribute="width" priority="993" constant="30" id="cms-MY-UnQ"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Hqn-bl-B7o" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="2Ke-f9-e38"/>
+                                                    <constraint firstAttribute="width" priority="992" constant="30" id="gV9-SG-hCr"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="nT0-dD-cWg" customClass="MBLaneArrowView">
+                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" constant="30" id="bLR-Yq-IuZ"/>
+                                                    <constraint firstAttribute="width" priority="991" constant="30" id="wH0-gZ-Viw"/>
+                                                </constraints>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                        <real key="value" value="0.65000000000000002"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                            </view>
+                                        </subviews>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="xMK-ix-h83" secondAttribute="bottom" constant="2.5" id="5MZ-mh-7db"/>
+                                            <constraint firstItem="xMK-ix-h83" firstAttribute="leading" secondItem="D9e-aq-442" secondAttribute="leading" id="HCi-B6-Ape"/>
+                                            <constraint firstAttribute="trailing" secondItem="nT0-dD-cWg" secondAttribute="trailing" id="TN3-tr-d8L"/>
+                                            <constraint firstItem="xMK-ix-h83" firstAttribute="top" secondItem="D9e-aq-442" secondAttribute="top" id="wyw-Zu-VB1"/>
+                                        </constraints>
+                                    </stackView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JUM-jk-r2b" userLabel="Separator View" customClass="MBSeparatorView">
+                                        <rect key="frame" x="0.0" y="39" width="375" height="1"/>
+                                        <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="fur-xp-WRo"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="z8N-zg-uyY"/>
+                                    <constraint firstAttribute="trailing" secondItem="JUM-jk-r2b" secondAttribute="trailing" id="0Nd-j8-zNO"/>
+                                    <constraint firstAttribute="bottom" secondItem="D9e-aq-442" secondAttribute="bottom" id="MDI-8I-sBC"/>
+                                    <constraint firstAttribute="bottom" secondItem="JUM-jk-r2b" secondAttribute="bottom" id="gHw-DI-cFd"/>
+                                    <constraint firstItem="JUM-jk-r2b" firstAttribute="leading" secondItem="NE9-ru-uJw" secondAttribute="leading" id="hXj-Iy-A2J"/>
+                                    <constraint firstItem="D9e-aq-442" firstAttribute="centerX" secondItem="NE9-ru-uJw" secondAttribute="centerX" id="jtM-9g-ugM"/>
+                                    <constraint firstAttribute="height" constant="40" id="vE6-3z-p4c"/>
+                                </constraints>
+                                <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="76S-HP-bfy" userLabel="Background View" customClass="MBManeuverView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="114.5"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" userLabel="Maneuver Container View" customClass="MBManeuverContainerView">
+                                <rect key="frame" x="0.0" y="-0.5" width="375" height="115"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="115" id="z8N-zg-uyY"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="heightConstraint" destination="z8N-zg-uyY" id="eD8-5z-3bc"/>
@@ -135,11 +303,11 @@
                                     <action selector="recenter:" destination="3z2-H5-unA" eventType="touchUpInside" id="s72-hB-PTq"/>
                                 </connections>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq">
-                                <rect key="frame" x="10" y="110" width="110" height="200"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq">
+                                <rect key="frame" x="10" y="164.5" width="44" height="96"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBButton">
-                                        <rect key="frame" x="35" y="79.5" width="40" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="44" id="Boe-Xa-uFI"/>
@@ -151,7 +319,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y2a-qB-86S" customClass="MBButton">
-                                        <rect key="frame" x="35" y="79.5" width="40" height="40"/>
+                                        <rect key="frame" x="0.0" y="52" width="44" height="44"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="DRa-a5-D9t"/>
@@ -164,7 +332,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBButton">
-                                        <rect key="frame" x="35" y="79.5" width="40" height="40"/>
+                                        <rect key="frame" x="0.0" y="96" width="44" height="44"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="o37-gV-IxI"/>
@@ -178,23 +346,43 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C23-DT-v2t" customClass="MBSeparatorView">
+                                <rect key="frame" x="0.0" y="115" width="375" height="2"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="Qlo-Iw-KAF"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
+                            <constraint firstAttribute="trailing" secondItem="NE9-ru-uJw" secondAttribute="trailing" id="52l-ND-Jdc"/>
+                            <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="NE9-ru-uJw" secondAttribute="bottom" constant="10" id="6B7-Si-R4L"/>
                             <constraint firstItem="5HY-QD-dBq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leadingMargin" constant="-6" id="DLa-g1-fxC"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
-                            <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" constant="10" id="F30-vE-9xi"/>
+                            <constraint firstItem="C23-DT-v2t" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="HsP-If-DXW"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
+                            <constraint firstItem="NE9-ru-uJw" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" identifier="Lane Views Top Constraint" id="VHU-Yr-eQL" userLabel="Lane Views Top Constraint"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
-                            <constraint firstItem="8P3-NB-IRq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="dYD-jA-3Xs"/>
+                            <constraint firstItem="NE9-ru-uJw" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="ayw-dM-DXC"/>
+                            <constraint firstItem="76S-HP-bfy" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="azG-Bi-6NR"/>
+                            <constraint firstItem="76S-HP-bfy" firstAttribute="bottom" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="djD-Ab-lfr"/>
                             <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
+                            <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
+                            <constraint firstItem="8P3-NB-IRq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="kcQ-AN-lKG"/>
                             <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="5HY-QD-dBq" secondAttribute="bottom" constant="92" id="leu-SU-9Qj"/>
+                            <constraint firstItem="76S-HP-bfy" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="pfx-SS-Xux"/>
+                            <constraint firstItem="76S-HP-bfy" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="top" id="uLe-Ov-1yA"/>
+                            <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" constant="0.5" id="xsN-Bb-wmd"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="laneViewsContainerView" destination="NE9-ru-uJw" id="zAQ-tC-jK8"/>
+                        <outlet property="laneViewsTopConstraint" destination="VHU-Yr-eQL" id="PSb-AN-3Op"/>
+                        <outlet property="maneuverContainerView" destination="p9E-v0-Rt6" id="L5B-6a-0Aj"/>
                         <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
                         <outlet property="muteButton" destination="Y2a-qB-86S" id="YK6-ak-WNw"/>
                         <outlet property="overviewButton" destination="Dry-gO-T7u" id="8s7-hO-rHP"/>
@@ -202,6 +390,16 @@
                         <outlet property="reportButton" destination="EeE-dV-610" id="C8S-JP-WAr"/>
                         <outlet property="wayNameLabel" destination="bcm-ca-nGv" id="8Sy-Pk-fQZ"/>
                         <outlet property="wayNameView" destination="drb-do-FoT" id="oby-w9-mC3"/>
+                        <outletCollection property="laneViews" destination="xMK-ix-h83" collectionClass="NSMutableArray" id="3Oz-eZ-e73"/>
+                        <outletCollection property="laneViews" destination="Ubg-JB-V89" collectionClass="NSMutableArray" id="kCs-uj-ubn"/>
+                        <outletCollection property="laneViews" destination="1to-o2-XUJ" collectionClass="NSMutableArray" id="yfR-Vc-OUS"/>
+                        <outletCollection property="laneViews" destination="9Oc-7m-0dN" collectionClass="NSMutableArray" id="GvJ-Bi-pgG"/>
+                        <outletCollection property="laneViews" destination="zJ7-cq-Mlb" collectionClass="NSMutableArray" id="awG-oH-pGN"/>
+                        <outletCollection property="laneViews" destination="vF3-W9-UzW" collectionClass="NSMutableArray" id="yBp-vd-CgN"/>
+                        <outletCollection property="laneViews" destination="eFU-s5-Zww" collectionClass="NSMutableArray" id="2iX-OH-cO6"/>
+                        <outletCollection property="laneViews" destination="aCw-bc-uSe" collectionClass="NSMutableArray" id="Zfa-Oe-Jbb"/>
+                        <outletCollection property="laneViews" destination="Hqn-bl-B7o" collectionClass="NSMutableArray" id="Vkc-fw-W0l"/>
+                        <outletCollection property="laneViews" destination="nT0-dD-cWg" collectionClass="NSMutableArray" id="JIU-MA-Ubq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VoA-f6-EWh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -231,25 +429,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="343" height="185"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ur8-HZ-rqt" customClass="MBManeuverView">
-                                <rect key="frame" x="-200" y="0.0" width="200" height="114"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="wOo-06-EvM"/>
-                                </constraints>
-                            </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pNf-U8-pdZ" customClass="MBManeuverView">
-                                <rect key="frame" x="343" y="0.0" width="200" height="114"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="6RQ-Vp-GlJ"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h67-zB-BKz" userLabel="instructionView" customClass="MBManeuverView">
                                 <rect key="frame" x="0.0" y="0.0" width="343" height="115"/>
                                 <subviews>
                                     <view alpha="0.75" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="dvV-hd-Sbg" customClass="MBTurnArrowView">
-                                        <rect key="frame" x="8" y="32" width="50" height="50"/>
+                                        <rect key="frame" x="8" y="40" width="50" height="50"/>
                                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="Eo0-KT-TR5"/>
@@ -261,21 +445,14 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bvZ-78-dml" userLabel="Separator View" customClass="MBSeparatorView">
-                                        <rect key="frame" x="0.0" y="114" width="343" height="2"/>
-                                        <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="2" id="6ow-X6-80D"/>
-                                        </constraints>
-                                    </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dhM-Ng-gx5">
-                                        <rect key="frame" x="66" y="22" width="269" height="70"/>
+                                        <rect key="frame" x="66" y="30" width="273" height="70"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-6D-Ukh">
-                                                <rect key="frame" x="0.0" y="0.0" width="229" height="70"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="233" height="70"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="MBDistanceLabel">
-                                                        <rect key="frame" x="0.0" y="0.0" width="55" height="35"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="53.5" height="35"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -289,7 +466,7 @@
                                                         </attributedString>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Elm St NW" textAlignment="natural" lineBreakMode="tailTruncation" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="MBDestinationLabel">
-                                                        <rect key="frame" x="0.0" y="35" width="153" height="35"/>
+                                                        <rect key="frame" x="0.0" y="35" width="150" height="35"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
                                                         <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -305,7 +482,7 @@
                                                 </subviews>
                                             </stackView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gkj-hG-NxS">
-                                                <rect key="frame" x="237" y="19" width="32" height="32"/>
+                                                <rect key="frame" x="241" y="19" width="32" height="32"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="32" id="0ei-is-yQS"/>
                                                     <constraint firstAttribute="width" constant="32" id="4qd-KG-vi7"/>
@@ -321,226 +498,22 @@
                                             <constraint firstItem="c3B-6D-Ukh" firstAttribute="top" secondItem="dhM-Ng-gx5" secondAttribute="top" id="r0L-mL-w9Y"/>
                                         </constraints>
                                     </stackView>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c9E-8M-S3k" userLabel="Reroute View">
-                                        <rect key="frame" x="0.0" y="0.0" width="343" height="115"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bUX-dR-1V6" customClass="MBTitleLabel">
-                                                <rect key="frame" x="40" y="36" width="153" height="43"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="JY3-Q1-T0F">
-                                                <rect key="frame" x="266" y="42" width="37" height="37"/>
-                                                <color key="color" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                            </activityIndicatorView>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="bUX-dR-1V6" secondAttribute="bottom" constant="36" id="Rcv-5L-mWP"/>
-                                            <constraint firstItem="bUX-dR-1V6" firstAttribute="top" secondItem="c9E-8M-S3k" secondAttribute="top" constant="36" id="Rd0-YX-uil"/>
-                                            <constraint firstItem="JY3-Q1-T0F" firstAttribute="top" secondItem="c9E-8M-S3k" secondAttribute="top" constant="42" id="cCQ-KH-1ub"/>
-                                            <constraint firstItem="bUX-dR-1V6" firstAttribute="leading" secondItem="c9E-8M-S3k" secondAttribute="leading" constant="40" id="g36-qv-f10"/>
-                                            <constraint firstAttribute="bottom" secondItem="JY3-Q1-T0F" secondAttribute="bottom" constant="36" id="tTL-IC-7Sm"/>
-                                            <constraint firstAttribute="trailing" secondItem="JY3-Q1-T0F" secondAttribute="trailing" constant="40" id="weD-R6-rz7"/>
-                                        </constraints>
-                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.99030783119999999" green="0.99866314420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="dhM-Ng-gx5" secondAttribute="trailing" constant="4" id="89n-ce-bNw"/>
-                                    <constraint firstAttribute="bottom" secondItem="bvZ-78-dml" secondAttribute="bottom" constant="-2" id="Bc5-Ji-bW4"/>
                                     <constraint firstItem="dhM-Ng-gx5" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" constant="30" id="FaC-Sw-ePv"/>
-                                    <constraint firstItem="c9E-8M-S3k" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" id="GTN-ji-BrT"/>
                                     <constraint firstItem="dhM-Ng-gx5" firstAttribute="leading" secondItem="dvV-hd-Sbg" secondAttribute="trailing" constant="8" id="Gou-LA-42q"/>
                                     <constraint firstAttribute="height" constant="115" id="IsE-zQ-C8r"/>
-                                    <constraint firstAttribute="trailing" secondItem="bvZ-78-dml" secondAttribute="trailing" id="YYi-dU-nsG"/>
                                     <constraint firstItem="dvV-hd-Sbg" firstAttribute="centerY" secondItem="dhM-Ng-gx5" secondAttribute="centerY" id="Ydu-hA-caa"/>
-                                    <constraint firstItem="bvZ-78-dml" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" id="Znd-PG-ZQU"/>
-                                    <constraint firstItem="c9E-8M-S3k" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" id="bkI-QJ-QrG"/>
-                                    <constraint firstAttribute="bottom" secondItem="c9E-8M-S3k" secondAttribute="bottom" id="nbM-vd-u9C"/>
                                     <constraint firstItem="dvV-hd-Sbg" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="8" id="nf4-6t-r96"/>
-                                    <constraint firstAttribute="trailing" secondItem="c9E-8M-S3k" secondAttribute="trailing" id="oMw-Qa-CdI"/>
                                 </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Fv-nY-OMF" userLabel="StackViewContainer">
-                                <rect key="frame" x="0.0" y="115" width="343" height="40"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="b4Z-dg-EH7" userLabel="Lane Stack View">
-                                        <rect key="frame" x="21" y="5" width="300" height="30"/>
-                                        <subviews>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="0bs-3z-hNh" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="9u5-JM-rz5"/>
-                                                    <constraint firstAttribute="width" priority="999" constant="30" id="fvl-d7-GBY"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xwq-ce-lBE" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="30" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="Yj3-WT-VYi"/>
-                                                    <constraint firstAttribute="width" priority="999" constant="30" id="dF8-Bf-M2X"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eHe-aK-9BX" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="60" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="30" id="D5v-3d-Jeh"/>
-                                                    <constraint firstAttribute="width" priority="998" constant="30" id="tq0-e4-YFe"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="tg6-zK-yeN" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="90" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" priority="997" constant="30" id="MCS-vE-znn"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="cfn-Ge-Det"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1SY-R8-0Ga" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="120" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" priority="996" constant="30" id="IYA-R3-E7i"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="puW-Rk-hfY"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="wG2-Wg-gPO" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="150" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" priority="995" constant="30" id="SCC-vU-ZoY"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="gcm-Hm-TXN"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="y28-An-Esx" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="180" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" priority="994" constant="30" id="DsZ-2f-pEu"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="k78-y0-rs3"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="W9A-Qo-Q2I" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="210" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="18o-rV-gwp"/>
-                                                    <constraint firstAttribute="width" priority="993" constant="30" id="g9V-Ve-yIw"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Q0R-gA-tRA" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="240" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="CMh-Oa-n2C"/>
-                                                    <constraint firstAttribute="width" priority="992" constant="30" id="D0i-De-FJJ"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="WfH-xJ-3Pp" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="270" y="0.0" width="30" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="DAD-7R-XgQ"/>
-                                                    <constraint firstAttribute="width" priority="991" constant="30" id="KBW-jn-JyL"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                        </subviews>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstItem="0bs-3z-hNh" firstAttribute="top" secondItem="b4Z-dg-EH7" secondAttribute="top" id="QZy-Cn-3k6"/>
-                                            <constraint firstItem="0bs-3z-hNh" firstAttribute="leading" secondItem="b4Z-dg-EH7" secondAttribute="leading" id="axU-ep-vLl"/>
-                                            <constraint firstAttribute="bottom" secondItem="0bs-3z-hNh" secondAttribute="bottom" id="lHu-zR-3WY"/>
-                                            <constraint firstAttribute="trailing" secondItem="WfH-xJ-3Pp" secondAttribute="trailing" id="qiq-tX-giK"/>
-                                        </constraints>
-                                    </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dBm-Eb-XvC" userLabel="Separator View" customClass="MBSeparatorView">
-                                        <rect key="frame" x="0.0" y="39" width="343" height="1"/>
-                                        <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="lWt-eK-ahr"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="dBm-Eb-XvC" secondAttribute="bottom" id="DwU-ti-sJM"/>
-                                    <constraint firstItem="dBm-Eb-XvC" firstAttribute="leading" secondItem="7Fv-nY-OMF" secondAttribute="leading" id="IbN-dN-oKf"/>
-                                    <constraint firstItem="b4Z-dg-EH7" firstAttribute="centerX" secondItem="7Fv-nY-OMF" secondAttribute="centerX" id="XSo-o3-ZVm"/>
-                                    <constraint firstItem="b4Z-dg-EH7" firstAttribute="centerY" secondItem="7Fv-nY-OMF" secondAttribute="centerY" id="Xzu-5d-YNa"/>
-                                    <constraint firstAttribute="trailing" secondItem="dBm-Eb-XvC" secondAttribute="trailing" id="hIM-Wq-Pnp"/>
-                                    <constraint firstAttribute="height" constant="40" id="qJX-Tg-dOr"/>
-                                </constraints>
-                                <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
                             </view>
                         </subviews>
                         <constraints>
                             <constraint firstItem="h67-zB-BKz" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" id="3RK-9O-WM7"/>
-                            <constraint firstItem="pNf-U8-pdZ" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" id="55L-A8-DJA"/>
                             <constraint firstItem="h67-zB-BKz" firstAttribute="centerX" secondItem="pTy-lh-WI1" secondAttribute="centerX" id="9s2-bF-m5E"/>
                             <constraint firstItem="h67-zB-BKz" firstAttribute="width" secondItem="pTy-lh-WI1" secondAttribute="width" id="D5x-UI-oMM"/>
-                            <constraint firstItem="pNf-U8-pdZ" firstAttribute="bottom" secondItem="h67-zB-BKz" secondAttribute="bottom" constant="-1" id="HMM-0i-vhS"/>
-                            <constraint firstItem="pNf-U8-pdZ" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="trailing" id="MYQ-wn-Z8f"/>
-                            <constraint firstItem="7Fv-nY-OMF" firstAttribute="centerX" secondItem="pTy-lh-WI1" secondAttribute="centerX" id="Pyf-UA-pLh"/>
-                            <constraint firstItem="7Fv-nY-OMF" firstAttribute="width" secondItem="pTy-lh-WI1" secondAttribute="width" id="XXT-Kq-g3t"/>
-                            <constraint firstItem="h67-zB-BKz" firstAttribute="leading" secondItem="ur8-HZ-rqt" secondAttribute="trailing" id="XnQ-hH-7o1"/>
-                            <constraint firstItem="ur8-HZ-rqt" firstAttribute="bottom" secondItem="h67-zB-BKz" secondAttribute="bottom" constant="-1" id="fS4-5k-6LE"/>
-                            <constraint firstItem="7Fv-nY-OMF" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="bottom" id="jNM-No-R5B"/>
-                            <constraint firstItem="ur8-HZ-rqt" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" id="wpa-2d-g17"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -548,24 +521,8 @@
                     <connections>
                         <outlet property="destinationLabel" destination="BR8-8N-Rhk" id="ypb-Nm-TKX"/>
                         <outlet property="distanceLabel" destination="u1L-N9-mMS" id="trZ-xg-0er"/>
-                        <outlet property="leftOverlayView" destination="ur8-HZ-rqt" id="Rvn-dA-sMp"/>
-                        <outlet property="rerouteView" destination="c9E-8M-S3k" id="Q9I-4d-Fnd"/>
-                        <outlet property="rightOverlayView" destination="pNf-U8-pdZ" id="Wuv-Au-bdH"/>
                         <outlet property="shieldImageView" destination="gkj-hG-NxS" id="Yff-xC-gBo"/>
-                        <outlet property="stackViewContainer" destination="7Fv-nY-OMF" id="73h-Ih-lpJ"/>
                         <outlet property="turnArrowView" destination="dvV-hd-Sbg" id="PDr-bK-tVy"/>
-                        <outletCollection property="separatorViews" destination="dBm-Eb-XvC" collectionClass="NSMutableArray" id="AV3-wo-X84"/>
-                        <outletCollection property="separatorViews" destination="bvZ-78-dml" collectionClass="NSMutableArray" id="k48-9a-YhP"/>
-                        <outletCollection property="laneViews" destination="0bs-3z-hNh" collectionClass="NSMutableArray" id="qgT-1m-7rY"/>
-                        <outletCollection property="laneViews" destination="xwq-ce-lBE" collectionClass="NSMutableArray" id="U8m-AZ-I35"/>
-                        <outletCollection property="laneViews" destination="eHe-aK-9BX" collectionClass="NSMutableArray" id="7Tp-U0-QXq"/>
-                        <outletCollection property="laneViews" destination="tg6-zK-yeN" collectionClass="NSMutableArray" id="tkZ-5L-Put"/>
-                        <outletCollection property="laneViews" destination="1SY-R8-0Ga" collectionClass="NSMutableArray" id="pRd-vh-fiH"/>
-                        <outletCollection property="laneViews" destination="wG2-Wg-gPO" collectionClass="NSMutableArray" id="KPS-oc-eyi"/>
-                        <outletCollection property="laneViews" destination="y28-An-Esx" collectionClass="NSMutableArray" id="5cG-Xi-CoI"/>
-                        <outletCollection property="laneViews" destination="W9A-Qo-Q2I" collectionClass="NSMutableArray" id="ckJ-uK-WoH"/>
-                        <outletCollection property="laneViews" destination="Q0R-gA-tRA" collectionClass="NSMutableArray" id="Jc9-yJ-H7N"/>
-                        <outletCollection property="laneViews" destination="WfH-xJ-3Pp" collectionClass="NSMutableArray" id="mTU-sr-uRy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iiH-rk-KIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -694,7 +651,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                            <rect key="frame" x="54.5" y="96" width="47.5" height="22"/>
+                                                            <rect key="frame" x="54.5" y="96" width="47.5" height="23"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
                                                             <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -911,7 +868,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="MBTimeRemainingLabel">
-                            <rect key="frame" x="10" y="11" width="87" height="34"/>
+                            <rect key="frame" x="10" y="11" width="85" height="34"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -932,7 +889,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="8.3 mi" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="6dE-ya-mrD" userLabel="distanceRemaining" customClass="MBDistanceRemainingLabel">
-                            <rect key="frame" x="10" y="43" width="51" height="31"/>
+                            <rect key="frame" x="10" y="41" width="51" height="33"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <color key="textColor" red="0.60179937490000002" green="0.60179937490000002" blue="0.60179937490000002" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>

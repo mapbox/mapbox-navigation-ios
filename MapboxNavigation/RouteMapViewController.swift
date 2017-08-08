@@ -17,6 +17,10 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
+    @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
+    @IBOutlet weak var laneViewsTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var laneViewsContainerView: UIView!
+    @IBOutlet var laneViews: [LaneArrowView]!
     
     /**
      Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
@@ -50,9 +54,8 @@ class RouteMapViewController: UIViewController {
         }
     }
     weak var delegate: RouteMapViewControllerDelegate?
-
     weak var routeController: RouteController!
-
+    
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
@@ -228,6 +231,10 @@ class RouteMapViewController: UIViewController {
             }
         }
         
+        if let upComingStep = routeProgress.currentLegProgress?.upComingStep, routeProgress.currentLegProgress.alertUserLevel != .arrive {
+            updateLaneViews(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
+        }
+        
         previousStep = step
         
         // Do not update if the current page doesn't represent the current step
@@ -256,6 +263,46 @@ class RouteMapViewController: UIViewController {
                             left: 0,
                             bottom: drawer.drawerPosition == .partiallyRevealed ? tableViewController.partialRevealDrawerHeight() : tableViewController.collapsedDrawerHeight(),
                             right: 0)
+    }
+    
+    func updateLaneViews(step: RouteStep, alertLevel: AlertLevel) {
+        if let allLanes = step.intersections?.first?.approachLanes,
+            let usableLanes = step.intersections?.first?.usableApproachLanes,
+            (alertLevel == .high || alertLevel == .medium) {
+            for (i, lane) in allLanes.enumerated() {
+                guard i < laneViews.count else {
+                    return
+                }
+                let laneView = laneViews[i]
+                laneView.isHidden = false
+                laneView.lane = lane
+                laneView.maneuverDirection = step.maneuverDirection
+                laneView.isValid = usableLanes.contains(i as Int)
+                laneView.setNeedsDisplay()
+            }
+            
+            showLaneViews()
+        } else {
+            hideLaneViews()
+        }
+    }
+    
+    func showLaneViews() {
+        guard laneViewsTopConstraint.constant != 0 else { return }
+        laneViewsTopConstraint.constant = 0
+        view.setNeedsUpdateConstraints()
+        UIView.defaultAnimation(0.3, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    func hideLaneViews() {
+        guard laneViewsTopConstraint.constant != -laneViewsContainerView.bounds.height else { return }
+        laneViewsTopConstraint.constant = -laneViewsContainerView.bounds.height
+        view.setNeedsUpdateConstraints()
+        UIView.defaultAnimation(0.3, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
 }
 
@@ -450,7 +497,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        maneuverViewController.showLaneView(step: step, alertLevel: .high)
+        updateLaneViews(step: step, alertLevel: .high)
         
         maneuverViewController.isPagingThroughStepList = true
 
@@ -461,15 +508,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
-        
-        let isFirstStep = stepBefore(step) == nil
-        let isCurrentStep = step == currentStep
-        let isLastStep = stepAfter(step) == nil
-        
-        maneuverViewController.leftOverlayView.isHidden = !(isFirstStep || isCurrentStep)
-        maneuverViewController.rightOverlayView.isHidden = !isLastStep
-        
-        controller.updateManeuverViewHeight(for: maneuverViewController)
     }
     
     var currentLeg: RouteLeg {
