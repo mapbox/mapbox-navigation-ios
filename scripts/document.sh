@@ -23,7 +23,7 @@ RELEASE_VERSION=$( echo ${SHORT_VERSION} | sed -e 's/^v//' -e 's/-.*//' )
 DEFAULT_THEME="docs/theme"
 THEME=${JAZZY_THEME:-$DEFAULT_THEME}
 
-BASE_URL="https://mapbox.github.io/mapbox-navigation-ios"
+BASE_URL="https://www.mapbox.com/mapbox-navigation-ios"
 
 # Link to directions documentation
 DIRECTIONS_VERSION="0.9.1"
