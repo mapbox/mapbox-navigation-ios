@@ -20,8 +20,21 @@
     </style>
     <script type="text/javascript">
       !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
-        analytics.load("fl0c8p240n");
-      }}();
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
     </script>
   </head>
   <body>
@@ -50,7 +63,7 @@
           </p>
     
           <p class="header-col header-col--secondary">
-            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fmapbox%2Egithub%2Eio%2Fmapbox%2Dnavigation%2Dios%2Fdirections%2Fdocsets%2FMapboxDirections%2Exml">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fdirections%2Fdocsets%2FMapboxDirections%2Exml">
               <img style="margin-bottom: 1px;" class="header-icon" src="img/dash.png"/>
               Install in Dash
             </a>
@@ -163,10 +176,10 @@
             
             <h1 id='mapboxdirections' class='heading'>MapboxDirections</h1>
 
-<p><a href="https://www.bitrise.io/app/2f82077d3f083479">📱&nbsp;<img src="https://www.bitrise.io/app/2f82077d3f083479.svg?token=mC783nGMKA3XrvcMCJAOLg&branch=master" alt="iOS Build Status"></a> &nbsp;&nbsp;&nbsp;
-<a href="https://www.bitrise.io/app/3e18d5c284ee7fe4">🖥💻&nbsp;<img src="https://www.bitrise.io/app/3e18d5c284ee7fe4.svg?token=YCPg5FTvNCSoRBvECdFWtg&branch=master" alt="macOS Build Status"></a> &nbsp;&nbsp;&nbsp;
-<a href="https://www.bitrise.io/app/0dd69f13a42252d6">📺&nbsp;<img src="https://www.bitrise.io/app/0dd69f13a42252d6.svg?token=jin7-oeLn35GfZqWaqumtA&branch=master" alt="tvOS Build Status"></a> &nbsp;&nbsp;&nbsp;
-<a href="https://www.bitrise.io/app/6db52b89a8fbfb40">⌚️&nbsp;<img src="https://www.bitrise.io/app/6db52b89a8fbfb40.svg?token=v645xdLSJWX0uYxLU7CA3g&branch=master" alt="watchOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<p><a href="https://www.bitrise.io/app/2f82077d3f083479">📱&nbsp;<img src="https://www.bitrise.io/app/2f82077d3f083479.svg?token=mC783nGMKA3XrvcMCJAOLg&amp;branch=master" alt="iOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<a href="https://www.bitrise.io/app/3e18d5c284ee7fe4">🖥💻&nbsp;<img src="https://www.bitrise.io/app/3e18d5c284ee7fe4.svg?token=YCPg5FTvNCSoRBvECdFWtg&amp;branch=master" alt="macOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<a href="https://www.bitrise.io/app/0dd69f13a42252d6">📺&nbsp;<img src="https://www.bitrise.io/app/0dd69f13a42252d6.svg?token=jin7-oeLn35GfZqWaqumtA&amp;branch=master" alt="tvOS Build Status"></a> &nbsp;&nbsp;&nbsp;
+<a href="https://www.bitrise.io/app/6db52b89a8fbfb40">⌚️&nbsp;<img src="https://www.bitrise.io/app/6db52b89a8fbfb40.svg?token=v645xdLSJWX0uYxLU7CA3g&amp;branch=master" alt="watchOS Build Status"></a> &nbsp;&nbsp;&nbsp;
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a> &nbsp;&nbsp;&nbsp;
 <a href="http://cocoadocs.org/docsets/MapboxDirections.swift/"><img src="https://img.shields.io/cocoapods/v/MapboxDirections.swift.svg" alt="CocoaPods"></a></p>
 
@@ -192,11 +205,11 @@
 <p>This repository contains example applications written in Swift and Objective-C that demonstrate how to use the framework. To run them, you need to use <a href="https://github.com/Carthage/Carthage">Carthage</a> 0.19 or above to install the dependencies. More examples and detailed documentation are available in the <a href="https://www.mapbox.com/api-documentation/?language=Swift#directions">Mapbox API Documentation</a>.</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
-<p><strong><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/">API reference</a></strong></p>
+<p><strong><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/">API reference</a></strong></p>
 
 <p>You’ll need a <a href="https://www.mapbox.com/developers/api/#access-tokens">Mapbox access token</a> in order to use the API. If you’re already using the <a href="https://www.mapbox.com/ios-sdk/">Mapbox iOS SDK</a> or <a href="https://mapbox.github.io/mapbox-gl-native/macos/">macOS SDK</a>, MapboxDirections.swift automatically recognizes your access token, as long as you’ve placed it in the <code>MGLMapboxAccessToken</code> key of your application’s Info.plist file.</p>
 
-<p>The examples below are each provided in Swift (denoted with <code>main.swift</code>), Objective-C (<code>main.m</code>), and AppleScript (<code>AppDelegate.applescript</code>). For further details, see the <a href="https://mapbox.github.io/mapbox-navigation-ios/directions/">MapboxDirections.swift API reference</a>.</p>
+<p>The examples below are each provided in Swift (denoted with <code>main.swift</code>), Objective-C (<code>main.m</code>), and AppleScript (<code>AppDelegate.applescript</code>). For further details, see the <a href="https://www.mapbox.com/mapbox-navigation-ios/directions/">MapboxDirections.swift API reference</a>.</p>
 <h3 id='basics' class='heading'>Basics</h3>
 
 <p>The main directions class is Directions (in Swift) or MBDirections (in Objective-C or AppleScript). Create a directions object using your access token:</p>

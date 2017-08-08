@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Array Extension Reference</title>
+    <title>NavigationLocationManager Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset="utf-8">
@@ -10,8 +10,8 @@
     <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
 
     <style type="text/css">
-      .nav-group-name[data-name="Array"] > .small-heading,
-      .nav-group-task[data-name="Array"] {
+      .nav-group-name[data-name="NavigationLocationManager"] > .small-heading,
+      .nav-group-task[data-name="NavigationLocationManager"] {
         background-color: #f5f8fc;
         font-family: "Open Sans Bold";
         border-left: 3px solid #3a68d8;
@@ -39,9 +39,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/swift/Extension/Array" class="dashAnchor"></a>
+    <a name="//apple_ref/swift/Class/NavigationLocationManager" class="dashAnchor"></a>
 
-    <a title="Array Extension Reference"></a>
+    <a title="NavigationLocationManager Class Reference"></a>
 
     <header class="header-container">
       <div class="limiter">
@@ -77,7 +77,7 @@
       <div class="limiter">
         <a class="breadcrumb" href="../index.html">Mapbox Navigation SDK for iOS Reference</a>
         <img class="carat" src="../img/carat.png" />
-        Array Extension Reference
+        NavigationLocationManager Class Reference
       </div>
     </div>
 
@@ -317,14 +317,16 @@
 
         <section class="section">
           <div class="section-content">
-            <a href="#/Array"><h1 id="Array">Array<span class="anchor-icon" /></h1></a>
+            <a href="#/NavigationLocationManager"><h1 id="NavigationLocationManager">NavigationLocationManager<span class="anchor-icon" /></h1></a>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span> <span class="p">:</span> <span class="kt">RandomAccessCollection</span><span class="p">,</span> <span class="kt">MutableCollection</span></code></pre>
+                  <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">NavigationLocationManager</span><span class="p">:</span> <span class="kt">CLLocationManager</span></code></pre>
 
                 </div>
               </div>
-            
+            <p><code><a href="../Classes/NavigationViewController.html">NavigationViewController</a></code> is the base location manager which handles
+permissions and background modes.</p>
+
           </div>
         </section>
 
@@ -335,62 +337,27 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:ZFE16MapboxNavigationSa9locationsFT4fromSS_GSQGSaCSo10CLLocation__"></a>
-                    <a name="//apple_ref/swift/Method/locations(from:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:ZFE16MapboxNavigationSa9locationsFT4fromSS_GSQGSaCSo10CLLocation__"><span class="token-name">locations(from:)</span><span class="token-icon" /></a>
+                    <a name="/s:vC16MapboxNavigation25NavigationLocationManager11isPluggedInSb"></a>
+                    <a name="//apple_ref/swift/Property/isPluggedIn" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation25NavigationLocationManager11isPluggedInSb"><span class="token-name">isPluggedIn</span><span class="token-icon" /></a>
                     </code>
                   </div>
                   <div class="height-container">
                     <section class="section">
                       <div class="abstract">
-                        <p>Initializes a [CLLocation] from a JSON string at a given filePath.</p>
-
-<p>The JSON string must conform to the following structure:
-[{
-    <q>latitude</q>: 37.8,          // latitude or lat
-    <q>longitude</q>: -122.4        // longitude, lng, or lon
-    <q>verticalAccuracy</q>: 4,
-    <q>speed</q>: 21.0
-    <q>horizontalAccuracy</q>: 5,
-    <q>course</q>: 0.48
-    <q>timestamp</q>: 1497475447,   // timestamp as unix timestamp or ISO8601Date
-    <q>altitude</q>: 57.26
-}]</p>
+                        <p>Indicates whether the device is plugged in or not.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language keyline-blue">
                           <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">locations</span><span class="p">(</span><span class="n">from</span> <span class="nv">filePath</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">CLLocation</span><span class="p">]</span><span class="o">!</span></code></pre>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">isPluggedIn</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span></code></pre>
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                  filePath
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The file’s path.</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>A [CLLocation].</p>
-                      </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxCoreNavigation/Array.swift#L24-L41">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxCoreNavigation/NavigationLocationManager.swift#L20">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>

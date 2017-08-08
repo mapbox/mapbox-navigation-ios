@@ -20,8 +20,21 @@
     </style>
     <script type="text/javascript">
       !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
-	analytics.load("fl0c8p240n");
-      }}();
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
     </script>
   </head>
   <body>
@@ -50,7 +63,7 @@
           </p>
     
           <p class="header-col header-col--secondary">
-            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fmapbox%2Egithub%2Eio%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
               <img style="margin-bottom: 1px;" class="header-icon" src="img/dash.png"/>
               Install in Dash
             </a>
@@ -242,8 +255,8 @@
               <li class="nav-group-task" data-name="DefaultStyle" data-url="Classes/DefaultStyle.html">
                 <a title="DefaultStyle" class="nav-group-task-link" href="Classes/DefaultStyle.html">DefaultStyle</a>
               </li>
-              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">
-                <a title="NavigationLocationManager" class="nav-group-task-link" href="Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">NavigationLocationManager</a>
+              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Classes/NavigationLocationManager.html">
+                <a title="NavigationLocationManager" class="nav-group-task-link" href="Classes/NavigationLocationManager.html">NavigationLocationManager</a>
               </li>
               <li class="nav-group-task" data-name="PollyVoiceController" data-url="Classes/PollyVoiceController.html">
                 <a title="PollyVoiceController" class="nav-group-task-link" href="Classes/PollyVoiceController.html">PollyVoiceController</a>
@@ -306,7 +319,7 @@
             
             <h1 id='mapbox-navigation-sdk-for-ios' class='heading'>Mapbox Navigation SDK for iOS</h1>
 
-<p><a href="https://www.bitrise.io/app/6fc45a7e2817b859"><img src="https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q&branch=master" alt="Build Status"></a>
+<p><a href="https://www.bitrise.io/app/6fc45a7e2817b859"><img src="https://www.bitrise.io/app/6fc45a7e2817b859.svg?token=XTgNMVxObhd8w8EmsAgJ1Q&amp;branch=master" alt="Build Status"></a>
 <a href="https://github.com/Carthage/Carthage"><img src="https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat" alt="Carthage compatible"></a>
 <a href="https://cocoapods.org/pods/MapboxNavigation/"><img src="https://img.shields.io/cocoapods/v/MapboxNavigation.svg" alt="CocoaPods"></a></p>
 
@@ -362,18 +375,18 @@ pod &#39;MapboxNavigation&#39;, &#39;~&gt; 0.6.0&#39;
 </ol>
 <h2 id='usage' class='heading'>Usage</h2>
 
-<p><strong><a href="https://mapbox.github.io/mapbox-navigation-ios/navigation/">API reference</a></strong></p>
+<p><strong><a href="https://www.mapbox.com/mapbox-navigation-ios/navigation/">API reference</a></strong></p>
 <pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">MapboxDirections</span>
 <span class="kd">import</span> <span class="kt">MapboxNavigation</span>
 </code></pre>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">origin</span> <span class="o">=</span> <span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/Waypoint.html">Waypoint</a></span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">38.9131752</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">77.0324047</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Mapbox"</span><span class="p">)</span>
-<span class="k">let</span> <span class="nv">destination</span> <span class="o">=</span> <span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/Waypoint.html">Waypoint</a></span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">38.8977</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">77.0365</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"White House"</span><span class="p">)</span>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">origin</span> <span class="o">=</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.9.1/Classes/Waypoint.html">Waypoint</a></span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">38.9131752</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">77.0324047</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Mapbox"</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">destination</span> <span class="o">=</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.9.1/Classes/Waypoint.html">Waypoint</a></span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">38.8977</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="o">-</span><span class="mf">77.0365</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"White House"</span><span class="p">)</span>
 
-<span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/RouteOptions.html">RouteOptions</a></span><span class="p">(</span><span class="nv">waypoints</span><span class="p">:</span> <span class="p">[</span><span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">],</span> <span class="nv">profileIdentifier</span><span class="p">:</span> <span class="o">.</span><span class="n">automobileAvoidingTraffic</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.9.1/Classes/RouteOptions.html">RouteOptions</a></span><span class="p">(</span><span class="nv">waypoints</span><span class="p">:</span> <span class="p">[</span><span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">],</span> <span class="nv">profileIdentifier</span><span class="p">:</span> <span class="o">.</span><span class="n">automobileAvoidingTraffic</span><span class="p">)</span>
 <span class="n">options</span><span class="o">.</span><span class="n">routeShapeResolution</span> <span class="o">=</span> <span class="o">.</span><span class="n">full</span>
 <span class="n">options</span><span class="o">.</span><span class="n">includesSteps</span> <span class="o">=</span> <span class="kc">true</span>
 
-<span class="kt"><a href="https://mapbox.github.io/mapbox-navigation-ios/directions/0.9.1/Classes/Directions.html">Directions</a></span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">calculate</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">waypoints</span><span class="p">,</span> <span class="n">routes</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+<span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.9.1/Classes/Directions.html">Directions</a></span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">calculate</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">waypoints</span><span class="p">,</span> <span class="n">routes</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
     <span class="k">guard</span> <span class="k">let</span> <span class="nv">route</span> <span class="o">=</span> <span class="n">routes</span><span class="p">?</span><span class="o">.</span><span class="n">first</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
 
     <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="kt">NavigationViewController</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">route</span><span class="p">)</span>

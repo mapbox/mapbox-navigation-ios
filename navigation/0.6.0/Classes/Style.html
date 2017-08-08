@@ -20,8 +20,21 @@
     </style>
     <script type="text/javascript">
       !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
-	analytics.load("fl0c8p240n");
-      }}();
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
     </script>
   </head>
   <body>
@@ -51,7 +64,7 @@
           </p>
     
           <p class="header-col header-col--secondary">
-            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fmapbox%2Egithub%2Eio%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
               <img style="margin-bottom: 1px;" class="header-icon" src="../img/dash.png"/>
               Install in Dash
             </a>
@@ -243,8 +256,8 @@
               <li class="nav-group-task" data-name="DefaultStyle" data-url="Classes/DefaultStyle.html">
                 <a title="DefaultStyle" class="nav-group-task-link" href="../Classes/DefaultStyle.html">DefaultStyle</a>
               </li>
-              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">
-                <a title="NavigationLocationManager" class="nav-group-task-link" href="../Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">NavigationLocationManager</a>
+              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Classes/NavigationLocationManager.html">
+                <a title="NavigationLocationManager" class="nav-group-task-link" href="../Classes/NavigationLocationManager.html">NavigationLocationManager</a>
               </li>
               <li class="nav-group-task" data-name="PollyVoiceController" data-url="Classes/PollyVoiceController.html">
                 <a title="PollyVoiceController" class="nav-group-task-link" href="../Classes/PollyVoiceController.html">PollyVoiceController</a>
@@ -307,7 +320,7 @@
             <a href="#/Style"><h1 id="Style">Style<span class="anchor-icon" /></h1></a>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Style</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+                  <pre class="highlight"><code><span class="n">open</span> <span class="kd">class</span> <span class="kt">Style</span><span class="p">:</span> <span class="kt">NSObject</span></code></pre>
 
                 </div>
               </div>
@@ -542,37 +555,6 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:vC16MapboxNavigation5Style18maneuverViewHeightGSqV12CoreGraphics7CGFloat_"></a>
-                    <a name="//apple_ref/swift/Property/maneuverViewHeight" class="dashAnchor"></a>
-                    <a class="token" href="#/s:vC16MapboxNavigation5Style18maneuverViewHeightGSqV12CoreGraphics7CGFloat_"><span class="token-name">maneuverViewHeight</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>Sets the height of the maneuver view.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language keyline-blue">
-                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">maneuverViewHeight</span><span class="p">:</span> <span class="kt">CGFloat</span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L69">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
                     <a name="/s:vC16MapboxNavigation5Style17distanceLabelFontGSqCSo6UIFont_"></a>
                     <a name="//apple_ref/swift/Property/distanceLabelFont" class="dashAnchor"></a>
                     <a class="token" href="#/s:vC16MapboxNavigation5Style17distanceLabelFontGSqCSo6UIFont_"><span class="token-name">distanceLabelFont</span><span class="token-icon" /></a>
@@ -593,7 +575,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L74">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L69">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -624,7 +606,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L79">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L74">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -655,7 +637,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L84">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L79">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -686,7 +668,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L89">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L84">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -717,7 +699,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L94">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L89">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -748,7 +730,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L99">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L94">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -779,7 +761,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L106">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L101">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -810,7 +792,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L111">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L106">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -841,7 +823,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L116">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L111">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -872,7 +854,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L121">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L116">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -903,7 +885,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L126">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L121">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -934,7 +916,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L131">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L126">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -965,7 +947,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L136">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L131">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -996,7 +978,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L141">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L136">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1027,7 +1009,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L146">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L141">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1058,7 +1040,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L151">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L146">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1089,7 +1071,69 @@
                         </div>
                       </div>
                       <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L151">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation5Style26wayNameViewBackgroundColorGSqCSo7UIColor_"></a>
+                    <a name="//apple_ref/swift/Property/wayNameViewBackgroundColor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation5Style26wayNameViewBackgroundColorGSqCSo7UIColor_"><span class="token-name">wayNameViewBackgroundColor</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sets the background color of the current way name view.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">wayNameViewBackgroundColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
                         <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L156">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC16MapboxNavigation5Style22wayNameViewBorderColorGSqCSo7UIColor_"></a>
+                    <a name="//apple_ref/swift/Property/wayNameViewBorderColor" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC16MapboxNavigation5Style22wayNameViewBorderColorGSqCSo7UIColor_"><span class="token-name">wayNameViewBorderColor</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Sets the border color of the current way name view.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">wayNameViewBorderColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L161">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1120,7 +1164,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L161">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L166">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1151,7 +1195,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L166">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L171">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1182,7 +1226,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L171">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L176">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1213,7 +1257,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L176">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L181">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1244,7 +1288,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L181">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L186">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1275,7 +1319,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L186">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L191">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1306,7 +1350,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L191">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L196">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1337,7 +1381,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L196">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L201">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
@@ -1368,7 +1412,7 @@
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L201-L336">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxNavigation/Style.swift#L206-L345">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>

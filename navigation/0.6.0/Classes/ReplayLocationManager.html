@@ -20,8 +20,21 @@
     </style>
     <script type="text/javascript">
       !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
-	analytics.load("fl0c8p240n");
-      }}();
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
     </script>
   </head>
   <body>
@@ -51,7 +64,7 @@
           </p>
     
           <p class="header-col header-col--secondary">
-            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fmapbox%2Egithub%2Eio%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
               <img style="margin-bottom: 1px;" class="header-icon" src="../img/dash.png"/>
               Install in Dash
             </a>
@@ -243,8 +256,8 @@
               <li class="nav-group-task" data-name="DefaultStyle" data-url="Classes/DefaultStyle.html">
                 <a title="DefaultStyle" class="nav-group-task-link" href="../Classes/DefaultStyle.html">DefaultStyle</a>
               </li>
-              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">
-                <a title="NavigationLocationManager" class="nav-group-task-link" href="../Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">NavigationLocationManager</a>
+              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Classes/NavigationLocationManager.html">
+                <a title="NavigationLocationManager" class="nav-group-task-link" href="../Classes/NavigationLocationManager.html">NavigationLocationManager</a>
               </li>
               <li class="nav-group-task" data-name="PollyVoiceController" data-url="Classes/PollyVoiceController.html">
                 <a title="PollyVoiceController" class="nav-group-task-link" href="../Classes/PollyVoiceController.html">PollyVoiceController</a>
@@ -307,7 +320,7 @@
             <a href="#/ReplayLocationManager"><h1 id="ReplayLocationManager">ReplayLocationManager<span class="anchor-icon" /></h1></a>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ReplayLocationManager</span><span class="p">:</span> <span class="kt"><a href="../Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">NavigationLocationManager</a></span></code></pre>
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ReplayLocationManager</span><span class="p">:</span> <span class="kt"><a href="../Classes/NavigationLocationManager.html">NavigationLocationManager</a></span></code></pre>
 
                 </div>
               </div>
@@ -364,7 +377,7 @@ adjusted by interval between locations.</p>
                   <div class="height-container">
                     <section class="section">
                       <div class="abstract">
-                        <p><code>locations</code> to be replayed. These locations must be sorted by timestamp.</p>
+                        <p><code>locations</code> to be replayed.</p>
 
                       </div>
                       <div class="declaration">
@@ -376,7 +389,7 @@ adjusted by interval between locations.</p>
                         </div>
                       </div>
                       <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxCoreNavigation/ReplayLocationManager.swift#L21-L25">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.6.0/MapboxCoreNavigation/ReplayLocationManager.swift#L23-L27">
                           <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
                           View Source on GitHub
                         </a>
