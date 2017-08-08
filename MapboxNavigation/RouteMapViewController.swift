@@ -18,6 +18,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
+    @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var laneViewsContainerView: UIView!
     @IBOutlet var laneViews: [LaneArrowView]!
@@ -76,6 +77,13 @@ class RouteMapViewController: UIViewController {
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
+        statusView.hide(delay: 0, animated: false)
+        
+        resumeNotifications()
+    }
+    
+    deinit {
+        suspendNotifications()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -105,6 +113,14 @@ class RouteMapViewController: UIViewController {
         mapView.setContentInset(contentInsets, animated: false)
         
         showRouteIfNeeded()
+    }
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -202,6 +218,11 @@ class RouteMapViewController: UIViewController {
             mapView.userTrackingMode = .followWithCourse
             wayNameView.isHidden = true
         }
+    }
+    
+    func willReroute(notification: NSNotification) {
+        let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
+        statusView.show(title, showSpinner: true, duration: 3)
     }
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
