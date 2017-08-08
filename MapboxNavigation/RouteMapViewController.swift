@@ -232,7 +232,9 @@ class RouteMapViewController: UIViewController {
         }
         
         if let upComingStep = routeProgress.currentLegProgress?.upComingStep, routeProgress.currentLegProgress.alertUserLevel != .arrive {
-            updateLaneViews(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
+            if routePageViewController.currentManeuverPage.step == upComingStep {
+                updateLaneViews(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
+            }
         }
         
         previousStep = step
