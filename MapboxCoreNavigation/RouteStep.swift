@@ -22,7 +22,7 @@ extension RouteStep {
     /**
      Returns true if the route travels on a motorway primarily identified by a route number rather than a road name.
      */
-    public var isNumberedMotorway: Bool {
+    var isNumberedMotorway: Bool {
         guard intersections?.first?.outletRoadClasses?.contains(.motorway) == true else {
             return false
         }

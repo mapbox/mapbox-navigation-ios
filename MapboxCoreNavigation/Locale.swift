@@ -1,7 +1,7 @@
 import Foundation
 
 extension Locale {
-    public static var preferredLocalLanguageCountryCode: String {
+    static var preferredLocalLanguageCountryCode: String {
         let firstBundleLocale = Bundle.main.preferredLocalizations.first!
         let bundleLocale = firstBundleLocale.components(separatedBy: "-")
         
@@ -16,5 +16,5 @@ extension Locale {
         return firstBundleLocale
     }
     
-    public static var nationalizedCurrent = Locale(identifier: preferredLocalLanguageCountryCode)
+    static var nationalizedCurrent = Locale(identifier: preferredLocalLanguageCountryCode)
 }
