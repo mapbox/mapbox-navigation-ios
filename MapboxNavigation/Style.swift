@@ -498,9 +498,11 @@ public class StylableButton: UIButton {
     }
 }
 
+/// :nodoc:
 @objc(MBManeuverView)
 class ManeuverView: UIView { }
 
+/// :nodoc:
 @objc(MBManeuverContainerView)
 class ManeuverContainerView: UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
@@ -510,5 +512,53 @@ class ManeuverContainerView: UIView {
             heightConstraint.constant = height
             setNeedsUpdateConstraints()
         }
+    }
+}
+
+/// :nodoc:
+@objc(MBStatusView)
+class StatusView: UIView {
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var textLabel: UILabel!
+    @IBOutlet weak var topConstraint: NSLayoutConstraint!
+    
+    func show(_ title: String, showSpinner: Bool, duration: TimeInterval) {
+        textLabel.text = title
+        activityIndicatorView.isHidden = !showSpinner
+        activityIndicatorView.startAnimating()
+        
+        show()
+        UIView.defaultAnimation(0.3, animations: {
+            self.superview?.layoutIfNeeded()
+        }) { (completed) in
+            if completed && duration > 0 {
+                self.hide(delay: duration, animated: true)
+            }
+        }
+    }
+    
+    func hide(delay: TimeInterval = 0, animated: Bool = true) {
+        if animated {
+            hide()
+            UIView.defaultAnimation(0.3, delay: delay, animations: {
+                self.superview?.layoutIfNeeded()
+            }, completion: { (completed) in
+                self.activityIndicatorView.stopAnimating()
+            })
+        } else {
+            hide()
+            self.activityIndicatorView.stopAnimating()
+            self.superview?.layoutIfNeeded()
+        }
+    }
+    
+    fileprivate func hide() {
+        topConstraint.constant = -bounds.height
+        superview?.setNeedsUpdateConstraints()
+    }
+    
+    fileprivate func show() {
+        topConstraint.constant = 0
+        superview?.setNeedsUpdateConstraints()
     }
 }

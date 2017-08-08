@@ -101,20 +101,10 @@ class RouteManeuverViewController: UIViewController {
         super.viewDidLoad()
         turnArrowView.backgroundColor = .clear
         destinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
-        resumeNotifications()
     }
     
     deinit {
-        suspendNotifications()
         webImageManager.cancelAll()
-    }
-    
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
     }
     
     func notifyDidChange(routeProgress: RouteProgress, secondsRemaining: TimeInterval) {
@@ -184,9 +174,5 @@ class RouteManeuverViewController: UIViewController {
         } else if let step = step {
             destinationLabel.unabridgedText = routeStepFormatter.string(for: step)
         }
-    }
-    
-    func willReroute(notification: NSNotification) {
-        
     }
 }
