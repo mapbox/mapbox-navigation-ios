@@ -25,9 +25,17 @@ public class PollyVoiceController: RouteVoiceController {
      */
     public var identityPoolId: String
     
+    let alerts: [AlertLevel: TimeInterval] = [
+        .depart: 100,
+        .low: 100,
+        .medium: RouteControllerHighAlertInterval,
+        .high: RouteControllerHighAlertInterval
+    ]
+    
+    
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
-        
+
         let credentialsProvider = AWSCognitoCredentialsProvider(regionType: regionType, identityPoolId: identityPoolId)
         let configuration = AWSServiceConfiguration(region: regionType, credentialsProvider: credentialsProvider)
         AWSServiceManager.default().defaultServiceConfiguration = configuration
@@ -39,11 +47,68 @@ public class PollyVoiceController: RouteVoiceController {
         guard shouldSpeak(for: notification) == true else { return }
         
         let routeProgresss = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        getAllSpeechStrings(routeProgress: routeProgresss)
+        
+        let alertLevel = routeProgresss.currentLegProgress.alertUserLevel
         let userDistances = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let instruction = spokenInstructionFormatter.string(routeProgress: routeProgresss, userDistance: userDistances, markUpWithSSML: true)
         
+        if !mp3s.isEmpty {
+            do {
+                audioPlayer = try AVAudioPlayer(data: mp3s[routeProgresss.legIndex][routeProgresss.currentLegProgress.stepIndex + 1][alertLevel]!)
+                audioPlayer?.delegate = self
+                
+                if let audioPlayer = audioPlayer {
+                    try duckAudio()
+                    audioPlayer.volume = volume
+                    audioPlayer.play()
+                    return
+                }
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        
         speak(instruction, error: nil)
         startAnnouncementTimer()
+    }
+    
+    var mp3s:[[[AlertLevel: Data]]] = []
+    
+    
+    func getAllSpeechStrings(routeProgress: RouteProgress) {
+        mp3s.removeAll()
+        
+        for leg in routeProgress.route.legs {
+            var stepMp3s: [[AlertLevel: Data]] = []
+            
+            for step in leg.steps {
+                var alertDict: [AlertLevel: Data] = [:]
+                
+                for (key, _) in alerts {
+                    let input = AWSPollySynthesizeSpeechURLBuilderRequest()
+                    input.textType = .ssml
+                    input.outputFormat = .mp3
+                    input.voiceId = .brian
+                    input.text = "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>In \(step.distance) meters \(step.instructions)</prosody></speak>"
+                    
+                    let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
+                    builder.continueWith { (awsTask: AWSTask<NSURL>) -> AWSTask<NSURL>? in
+                        
+                        guard let url = awsTask.result else { return nil }
+                        
+                        do {
+                            alertDict[key] = try Data(contentsOf: url as URL)
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                        return nil
+                    }
+                }
+                stepMp3s.append(alertDict)
+            }
+            mp3s.append(stepMp3s)
+        }
     }
     
     override func speak(_ text: String, error: String?) {
