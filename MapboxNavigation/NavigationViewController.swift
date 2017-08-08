@@ -223,6 +223,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     
+    let progressBar = ProgressBar()
     let routeStepFormatter = RouteStepFormatter()
     
     required public init?(coder aDecoder: NSCoder) {
@@ -277,7 +278,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     deinit {
         suspendNotifications()
-        mapViewController?.resetTrackingModeTimer?.invalidate()
         voiceController?.announcementTimer?.invalidate()
     }
     
@@ -303,7 +303,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     override public func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
-        self.drawerCornerRadius = 0
+        drawerCornerRadius = 0
+        progressBar.dock(on: view)
         self.delegate = self
     }
     
@@ -342,6 +343,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.notifyDidChange(routeProgress: routeProgress)
+        progressBar.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
     }
     
     func alertLevelDidChange(notification: NSNotification) {

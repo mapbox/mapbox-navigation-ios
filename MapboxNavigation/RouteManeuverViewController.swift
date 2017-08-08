@@ -4,16 +4,10 @@ import MapboxCoreNavigation
 import SDWebImage
 
 class RouteManeuverViewController: UIViewController {
-    @IBOutlet var separatorViews: [SeparatorView]!
-    @IBOutlet weak var stackViewContainer: UIView!
     @IBOutlet fileprivate weak var distanceLabel: DistanceLabel!
     @IBOutlet fileprivate weak var shieldImageView: UIImageView!
     @IBOutlet weak var turnArrowView: TurnArrowView!
     @IBOutlet weak var destinationLabel: DestinationLabel!
-    @IBOutlet var laneViews: [LaneArrowView]!
-    @IBOutlet weak var rerouteView: UIView!
-    @IBOutlet weak var leftOverlayView: ManeuverView!
-    @IBOutlet weak var rightOverlayView: ManeuverView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
@@ -132,9 +126,8 @@ class RouteManeuverViewController: UIViewController {
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
             destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
-        } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
+        } else {
             updateStreetNameForStep()
-            showLaneView(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
         }
         
         turnArrowView.step = routeProgress.currentLegProgress.upComingStep
@@ -194,29 +187,6 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func willReroute(notification: NSNotification) {
-        rerouteView.isHidden = false
-        stackViewContainer.isHidden = true
-    }
-    
-    func showLaneView(step: RouteStep, alertLevel: AlertLevel) {
-        if let allLanes = step.intersections?.first?.approachLanes,
-            let usableLanes = step.intersections?.first?.usableApproachLanes,
-            (alertLevel == .high || alertLevel == .medium) {
-            for (i, lane) in allLanes.enumerated() {
-                guard i < laneViews.count else {
-                    return
-                }
-                stackViewContainer.isHidden = false
-                let laneView = laneViews[i]
-                laneView.isHidden = false
-                laneView.lane = lane
-                laneView.maneuverDirection = step.maneuverDirection
-                laneView.isValid = usableLanes.contains(i as Int)
-                laneView.setNeedsDisplay()
-            }
-            stackViewContainer.isHidden = false
-        } else {
-            stackViewContainer.isHidden = true
-        }
+        
     }
 }

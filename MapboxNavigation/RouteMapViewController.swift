@@ -17,6 +17,10 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
+    @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
+    @IBOutlet weak var laneViewsTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var laneViewsContainerView: UIView!
+    @IBOutlet var laneViews: [LaneArrowView]!
     
     /**
      Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
@@ -28,7 +32,6 @@ class RouteMapViewController: UIViewController {
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
-    let MBSecondsBeforeResetTrackingMode: TimeInterval = 25.0
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -50,13 +53,9 @@ class RouteMapViewController: UIViewController {
         }
     }
     weak var delegate: RouteMapViewControllerDelegate?
-
     weak var routeController: RouteController!
-
+    
     let distanceFormatter = DistanceFormatter(approximate: true)
-
-    var resetTrackingModeTimer: Timer?
-
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
 
@@ -126,7 +125,7 @@ class RouteMapViewController: UIViewController {
             mapView.logoView.isHidden = true
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
         }
-        resetTrackingModeTimer?.invalidate()
+        
         isInOverviewMode = !isInOverviewMode
         
         routePageViewController.notifyDidReRoute()
@@ -189,14 +188,6 @@ class RouteMapViewController: UIViewController {
         mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 
-    func startResetTrackingModeTimer() {
-        resetTrackingModeTimer = Timer.scheduledTimer(timeInterval: MBSecondsBeforeResetTrackingMode, target: self, selector: #selector(trackingModeTimerDone), userInfo: nil, repeats: false)
-    }
-
-    func trackingModeTimerDone() {
-        mapView.userTrackingMode = .followWithCourse
-    }
-
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
         mapView.addArrow(routeController.routeProgress)
@@ -238,6 +229,12 @@ class RouteMapViewController: UIViewController {
             }
         }
         
+        if let upComingStep = routeProgress.currentLegProgress?.upComingStep, routeProgress.currentLegProgress.alertUserLevel != .arrive {
+            if routePageViewController.currentManeuverPage.step == upComingStep {
+                updateLaneViews(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
+            }
+        }
+        
         previousStep = step
         
         // Do not update if the current page doesn't represent the current step
@@ -266,6 +263,46 @@ class RouteMapViewController: UIViewController {
                             left: 0,
                             bottom: drawer.drawerPosition == .partiallyRevealed ? tableViewController.partialRevealDrawerHeight() : tableViewController.collapsedDrawerHeight(),
                             right: 0)
+    }
+    
+    func updateLaneViews(step: RouteStep, alertLevel: AlertLevel) {
+        if let allLanes = step.intersections?.first?.approachLanes,
+            let usableLanes = step.intersections?.first?.usableApproachLanes,
+            (alertLevel == .high || alertLevel == .medium) {
+            for (i, lane) in allLanes.enumerated() {
+                guard i < laneViews.count else {
+                    return
+                }
+                let laneView = laneViews[i]
+                laneView.isHidden = false
+                laneView.lane = lane
+                laneView.maneuverDirection = step.maneuverDirection
+                laneView.isValid = usableLanes.contains(i as Int)
+                laneView.setNeedsDisplay()
+            }
+            
+            showLaneViews()
+        } else {
+            hideLaneViews()
+        }
+    }
+    
+    func showLaneViews() {
+        guard laneViewsTopConstraint.constant != 0 else { return }
+        laneViewsTopConstraint.constant = 0
+        view.setNeedsUpdateConstraints()
+        UIView.defaultAnimation(0.3, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    func hideLaneViews() {
+        guard laneViewsTopConstraint.constant != -laneViewsContainerView.bounds.height else { return }
+        laneViewsTopConstraint.constant = -laneViewsContainerView.bounds.height
+        view.setNeedsUpdateConstraints()
+        UIView.defaultAnimation(0.3, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
 }
 
@@ -405,14 +442,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
             recenterButton.isHidden = false
             mapView.logoView.isHidden = true
             wayNameView.isHidden = true
-            startResetTrackingModeTimer()
         } else {
-            resetTrackingModeTimer?.invalidate()
-            
             if mode != .followWithCourse {
                 recenterButton.isHidden = false
                 mapView.logoView.isHidden = true
-                startResetTrackingModeTimer()
             } else {
                 recenterButton.isHidden = true
                 mapView.logoView.isHidden = false
@@ -430,8 +463,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         if mapView.userTrackingMode == .none && !isInOverviewMode {
             wayNameView.isHidden = true
-            resetTrackingModeTimer?.invalidate()
-            startResetTrackingModeTimer()
         }
     }
 
@@ -447,13 +478,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard !map.showsRoute else { return }
         map.showRoute(route)
         map.showWaypoints(routeProgress: routeController.routeProgress)
-    }
-
-    func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
-        if !isInOverviewMode {
-            resetTrackingModeTimer?.invalidate()
-            startResetTrackingModeTimer()
-        }
     }
 
     func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
@@ -473,7 +497,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        maneuverViewController.showLaneView(step: step, alertLevel: .high)
+        updateLaneViews(step: step, alertLevel: .high)
         
         maneuverViewController.isPagingThroughStepList = true
 
@@ -484,15 +508,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
-        
-        let isFirstStep = stepBefore(step) == nil
-        let isCurrentStep = step == currentStep
-        let isLastStep = stepAfter(step) == nil
-        
-        maneuverViewController.leftOverlayView.isHidden = !(isFirstStep || isCurrentStep)
-        maneuverViewController.rightOverlayView.isHidden = !isLastStep
-        
-        controller.updateManeuverViewHeight(for: maneuverViewController)
     }
     
     var currentLeg: RouteLeg {

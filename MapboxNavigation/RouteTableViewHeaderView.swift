@@ -31,19 +31,6 @@ class RouteTableViewHeaderView: UIView {
         }
     }
     
-    // Set the progress between 0.0-1.0
-    @IBInspectable
-    var progress: CGFloat = 0 {
-        didSet {
-            if (progressBarWidthConstraint != nil) {
-                progressBarWidthConstraint.constant = bounds.width * progress
-                UIView.animate(withDuration: 0.5) { [weak self] in
-                    self?.layoutIfNeeded()
-                }
-            }
-        }
-    }
-    
     @IBAction func didTapCancel(_ sender: Any) {
         delegate?.didTapCancel()
     }
