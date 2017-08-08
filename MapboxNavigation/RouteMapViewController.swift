@@ -105,19 +105,17 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        mapView.setCamera(tiltedCamera, withDuration: 0, animationTimingFunction: nil) {
-            self.mapView.setUserTrackingMode(.followWithCourse, animated: true)
-            self.mapView.logoView.isHidden = false
-        }
+        mapView.camera = tiltedCamera
+        mapView.setUserTrackingMode(.followWithCourse, animated: true)
+        mapView.logoView.isHidden = false
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
         if isInOverviewMode {
             overviewButton.isHidden = false
             mapView.logoView.isHidden = false
-            mapView.setCamera(tiltedCamera, withDuration: 0, animationTimingFunction: nil) {
-                self.mapView.setUserTrackingMode(.followWithCourse, animated: true)
-            }
+            mapView.camera = tiltedCamera
+            mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
             wayNameView.isHidden = true
             overviewButton.isHidden = true
@@ -448,9 +446,8 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
 
         if !isInOverviewMode {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
-                mapView.setCamera(tiltedCamera, withDuration: 0, animationTimingFunction: nil) {
-                    self.mapView.setUserTrackingMode(.followWithCourse, animated: true)
-                }
+                mapView.camera = tiltedCamera
+                mapView.setUserTrackingMode(.followWithCourse, animated: true)
             } else {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
