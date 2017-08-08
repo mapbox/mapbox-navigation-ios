@@ -45,8 +45,8 @@ class RouteMapViewController: UIViewController {
     var tiltedCamera: MGLMapCamera {
         get {
             let camera = mapView.camera
-            camera.altitude = 600
-            camera.pitch = 45
+            camera.altitude = 150
+            camera.pitch = 70
             return camera
         }
     }
@@ -71,9 +71,9 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.manuallyUpdatesLocation = true
         
-        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
+        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
         recenterButton.applyDefaultCornerRadiusShadow()
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
@@ -189,7 +189,7 @@ class RouteMapViewController: UIViewController {
             return
         }
         
-        let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
+        let overviewContentInset = UIEdgeInsets(top: 65, left: 25, bottom: 55, right: 25)
         mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 

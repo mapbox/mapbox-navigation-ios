@@ -31,7 +31,7 @@ class FeedbackViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .clear
-        containerView.applyDefaultCornerRadiusShadow(cornerRadius: 8)
+        containerView.applyDefaultCornerRadiusShadow(cornerRadius: 16)
         
         let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
         let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
