@@ -274,7 +274,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     deinit {
         suspendNotifications()
-        mapViewController?.resetTrackingModeTimer?.invalidate()
         voiceController?.announcementTimer?.invalidate()
     }
     

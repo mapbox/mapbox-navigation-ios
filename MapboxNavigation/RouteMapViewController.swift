@@ -28,7 +28,6 @@ class RouteMapViewController: UIViewController {
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
-    let MBSecondsBeforeResetTrackingMode: TimeInterval = 25.0
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -55,9 +54,6 @@ class RouteMapViewController: UIViewController {
     weak var routeController: RouteController!
 
     let distanceFormatter = DistanceFormatter(approximate: true)
-
-    var resetTrackingModeTimer: Timer?
-
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
 
@@ -130,7 +126,7 @@ class RouteMapViewController: UIViewController {
             mapView.logoView.isHidden = true
             updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
         }
-        resetTrackingModeTimer?.invalidate()
+        
         isInOverviewMode = !isInOverviewMode
         
         routePageViewController.notifyDidReRoute()
@@ -191,14 +187,6 @@ class RouteMapViewController: UIViewController {
         
         let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
         mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
-    }
-
-    func startResetTrackingModeTimer() {
-        resetTrackingModeTimer = Timer.scheduledTimer(timeInterval: MBSecondsBeforeResetTrackingMode, target: self, selector: #selector(trackingModeTimerDone), userInfo: nil, repeats: false)
-    }
-
-    func trackingModeTimerDone() {
-        mapView.userTrackingMode = .followWithCourse
     }
 
     func notifyDidReroute(route: Route) {
@@ -407,14 +395,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
             recenterButton.isHidden = false
             mapView.logoView.isHidden = true
             wayNameView.isHidden = true
-            startResetTrackingModeTimer()
         } else {
-            resetTrackingModeTimer?.invalidate()
-            
             if mode != .followWithCourse {
                 recenterButton.isHidden = false
                 mapView.logoView.isHidden = true
-                startResetTrackingModeTimer()
             } else {
                 recenterButton.isHidden = true
                 mapView.logoView.isHidden = false
@@ -432,8 +416,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         if mapView.userTrackingMode == .none && !isInOverviewMode {
             wayNameView.isHidden = true
-            resetTrackingModeTimer?.invalidate()
-            startResetTrackingModeTimer()
         }
     }
 
@@ -449,13 +431,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
         map.showRoute(route)
-    }
-
-    func mapView(_ mapView: MGLMapView, didSelect annotation: MGLAnnotation) {
-        if !isInOverviewMode {
-            resetTrackingModeTimer?.invalidate()
-            startResetTrackingModeTimer()
-        }
     }
 
     func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
