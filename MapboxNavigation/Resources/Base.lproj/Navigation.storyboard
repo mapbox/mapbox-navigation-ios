@@ -272,6 +272,33 @@
                                 </constraints>
                                 <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
+                                <rect key="frame" x="0.0" y="155" width="375" height="30"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpZ-gr-OKM">
+                                        <rect key="frame" x="141.5" y="5" width="92.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                        <color key="textColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="jgC-8q-YUu">
+                                        <rect key="frame" x="345" y="5" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.67473591549295775" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="jgC-8q-YUu" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="Ghp-Pc-H3U"/>
+                                    <constraint firstAttribute="trailing" secondItem="jgC-8q-YUu" secondAttribute="trailing" constant="10" id="JTW-3W-9TJ"/>
+                                    <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerX" secondItem="Jym-DH-tdD" secondAttribute="centerX" id="gSp-Qg-FgY"/>
+                                    <constraint firstAttribute="height" constant="30" id="lnn-re-skW"/>
+                                    <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="uEG-1L-ErF"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="activityIndicatorView" destination="jgC-8q-YUu" id="mGB-sM-IEl"/>
+                                    <outlet property="textLabel" destination="UpZ-gr-OKM" id="aOh-bx-0nv"/>
+                                    <outlet property="topConstraint" destination="rsm-7B-ry2" id="5X1-Ym-fhx"/>
+                                </connections>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="76S-HP-bfy" userLabel="Background View" customClass="MBManeuverView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="114.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -359,11 +386,12 @@
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
                             <constraint firstAttribute="trailing" secondItem="NE9-ru-uJw" secondAttribute="trailing" id="52l-ND-Jdc"/>
-                            <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="NE9-ru-uJw" secondAttribute="bottom" constant="10" id="6B7-Si-R4L"/>
                             <constraint firstItem="5HY-QD-dBq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leadingMargin" constant="-6" id="DLa-g1-fxC"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="HsP-If-DXW"/>
+                            <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Jym-DH-tdD" secondAttribute="bottom" constant="10" id="IRw-J2-Ori"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
+                            <constraint firstAttribute="trailing" secondItem="Jym-DH-tdD" secondAttribute="trailing" id="Oy8-JD-Az4"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
                             <constraint firstItem="NE9-ru-uJw" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" identifier="Lane Views Top Constraint" id="VHU-Yr-eQL" userLabel="Lane Views Top Constraint"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
@@ -374,7 +402,9 @@
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="kcQ-AN-lKG"/>
                             <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="5HY-QD-dBq" secondAttribute="bottom" constant="92" id="leu-SU-9Qj"/>
+                            <constraint firstItem="Jym-DH-tdD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="nv3-G5-3zY"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="pfx-SS-Xux"/>
+                            <constraint firstItem="Jym-DH-tdD" firstAttribute="top" secondItem="NE9-ru-uJw" secondAttribute="bottom" id="rsm-7B-ry2" userLabel="Status View Top Constraint"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="top" id="uLe-Ov-1yA"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" constant="0.5" id="xsN-Bb-wmd"/>
                         </constraints>
@@ -388,6 +418,7 @@
                         <outlet property="overviewButton" destination="Dry-gO-T7u" id="8s7-hO-rHP"/>
                         <outlet property="recenterButton" destination="5HY-QD-dBq" id="6ev-zD-MJ9"/>
                         <outlet property="reportButton" destination="EeE-dV-610" id="C8S-JP-WAr"/>
+                        <outlet property="statusView" destination="Jym-DH-tdD" id="9Hw-jY-J4n"/>
                         <outlet property="wayNameLabel" destination="bcm-ca-nGv" id="8Sy-Pk-fQZ"/>
                         <outlet property="wayNameView" destination="drb-do-FoT" id="oby-w9-mC3"/>
                         <outletCollection property="laneViews" destination="xMK-ix-h83" collectionClass="NSMutableArray" id="3Oz-eZ-e73"/>
