@@ -85,7 +85,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line’s casing.
      
-     If this method is unimplemented, the navigation map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationMapView(_:routeWaypointCircleStyleLayerWithIdentifier:source:)`.
+     If this method is unimplemented, the navigation map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationMapView(_:routeStyleLayerWithIdentifier:source:)`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
