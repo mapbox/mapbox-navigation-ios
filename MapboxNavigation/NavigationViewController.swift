@@ -75,13 +75,11 @@ public protocol NavigationViewControllerDelegate {
      
      If this method is unimplemented, the navigation map view draws the route line using an `MGLLineStyleLayer`.
      */
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
-    /**
-     Returns an `MGLStyleLayer` that determines the appearance of the route line.
-     
-     If this method is unimplemented, the navigation map view draws the route line using an `MGLLineStyleLayer`.
-     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
