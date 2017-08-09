@@ -526,6 +526,7 @@ class StatusView: UIView {
         textLabel.text = title
         activityIndicatorView.isHidden = !showSpinner
         activityIndicatorView.startAnimating()
+        isHidden = false
         
         updateConstraints(show: true)
         UIView.defaultAnimation(0.3, animations: {
@@ -544,10 +545,12 @@ class StatusView: UIView {
                 self.superview?.layoutIfNeeded()
             }, completion: { (completed) in
                 self.activityIndicatorView.stopAnimating()
+                self.isHidden = true
             })
         } else {
             updateConstraints(show: false)
             self.activityIndicatorView.stopAnimating()
+            self.isHidden = true
             self.superview?.layoutIfNeeded()
         }
     }
