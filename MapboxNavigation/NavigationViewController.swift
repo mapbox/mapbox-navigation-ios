@@ -75,12 +75,19 @@ public protocol NavigationViewControllerDelegate {
      
      If this method is unimplemented, the navigation map view draws the route line using an `MGLLineStyleLayer`.
      */
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeWaypointCircleStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    /**
+     Returns an `MGLStyleLayer` that determines the appearance of the route line.
+     
+     If this method is unimplemented, the navigation map view draws the route line using an `MGLLineStyleLayer`.
+     */
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeWaypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
      Returns an `MGLStyleLayer` that determines the appearance of the route line’s casing.
      
-     If this method is unimplemented, the navigation map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationMapView(_:routeStyleLayerWithIdentifier:source:)`.
+     If this method is unimplemented, the navigation map view draws the route line’s casing using an `MGLLineStyleLayer` whose width is greater than that of the style layer returned by `navigationMapView(_:routeWaypointCircleStyleLayerWithIdentifier:source:)`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
@@ -97,6 +104,8 @@ public protocol NavigationViewControllerDelegate {
      If this method is unimplemented, the navigation map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationMapView(_:shapeDescribing:)`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
     /**
      Return an `MGLAnnotationImage` that represents the destination marker.
@@ -261,10 +270,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
-        let annotation = MGLPointAnnotation()
-        annotation.coordinate = route.coordinates!.last!
-        destination = annotation
-        
         self.mapViewController = mapViewController
         self.tableViewController = tableViewController
         
@@ -389,8 +394,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         return navigationDelegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return navigationDelegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+    func navigationMapView(_ mapView: NavigationMapView, routeWaypointCircleStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return navigationDelegate?.navigationMapView?(mapView, routeWaypointCircleStyleLayerWithIdentifier: identifier, source: source)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeWaypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return navigationDelegate?.navigationMapView?(mapView, routeWaypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
@@ -399,6 +408,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
+        return navigationDelegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {

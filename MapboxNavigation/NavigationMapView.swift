@@ -142,37 +142,17 @@ open class NavigationMapView: MGLMapView {
             addAnnotation(destination)
         }
         
-        var features = [MGLPointFeature]()
-        let letters = (97...122).map({Character(UnicodeScalar($0))}).map { String(describing:$0).uppercased() }
+        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: routeProgress.remainingWaypoints) ?? shape(for: Array(routeProgress.remainingWaypoints.dropLast()))
         
-        for (waypointIndex, waypoint) in routeProgress.remainingWaypoints.enumerated().dropLast() {
-            let feature = MGLPointFeature()
-            feature.coordinate = waypoint.coordinate
-            feature.attributes = [ "name": letters[waypointIndex] ]
-            features.append(feature)
-        }
-        
-        if let source = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
-            source.shape = MGLShapeSource(identifier: waypointSourceIdentifier, features: features, options: nil).shape
+        if let s = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
+            s.shape = source
         } else {
-            let source = MGLShapeSource(identifier: waypointSourceIdentifier, features: features, options: nil)
-            style.addSource(source)
+            let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: nil)
+            style.addSource(sourceShape)
             
-            let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
-            circles.circleColor = MGLStyleValue(rawValue: .white)
-            circles.circleOpacity = MGLStyleValue(interpolationMode: .exponential,
-                                                  cameraStops: [2: MGLStyleValue(rawValue: 0.5),
-                                                                7: MGLStyleValue(rawValue: 1)],
-                                                  options: nil)
-            circles.circleRadius = MGLStyleValue(rawValue: 10)
-            circles.circleStrokeColor = MGLStyleValue(rawValue: .black)
-            circles.circleStrokeWidth = MGLStyleValue(rawValue: 1)
+            let circles = navigationMapDelegate?.navigationMapView?(self, routeWaypointCircleStyleLayerWithIdentifier: waypointCircleIdentifier, source: sourceShape) ?? routeWaypointCircleStyleLayer(identifier: waypointCircleIdentifier, source: sourceShape)
             
-            
-            let symbols = MGLSymbolStyleLayer(identifier: waypointSymbolIdentifier, source: source)
-            
-            symbols.text = MGLStyleValue(rawValue: "{name}")
-            symbols.textFontSize = MGLStyleValue(rawValue: 10)
+            let symbols = navigationMapDelegate?.navigationMapView?(self, routeWaypointSymbolStyleLayerWithIdentifier: waypointSymbolIdentifier, source: sourceShape) ?? routeWaypointSymbolStyleLayer(identifier: waypointSymbolIdentifier, source: sourceShape)
             
             style.addLayer(circles)
             style.addLayer(symbols)
@@ -215,6 +195,45 @@ open class NavigationMapView: MGLMapView {
         }
         
         return MGLShapeCollectionFeature(shapes: [baseLine] + lines)
+    }
+    
+    func shape(for waypoints: [Waypoint]) -> MGLShape? {
+        var features = [MGLPointFeature]()
+        let letters = (97...122).map({Character(UnicodeScalar($0))}).map { String(describing:$0).uppercased() }
+        
+        for (waypointIndex, waypoint) in waypoints.enumerated() {
+            let feature = MGLPointFeature()
+            feature.coordinate = waypoint.coordinate
+            feature.attributes = [ "name": letters[waypointIndex] ]
+            features.append(feature)
+        }
+        
+        return MGLShapeCollectionFeature(shapes: features)
+    }
+    
+    func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+        let waypoint = MGLCircleStyleLayer(identifier: identifier, source: source)
+        
+        let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
+        circles.circleColor = MGLStyleValue(rawValue: .white)
+        circles.circleOpacity = MGLStyleValue(interpolationMode: .exponential,
+                                              cameraStops: [2: MGLStyleValue(rawValue: 0.5),
+                                                            7: MGLStyleValue(rawValue: 1)],
+                                              options: nil)
+        circles.circleRadius = MGLStyleValue(rawValue: 10)
+        circles.circleStrokeColor = MGLStyleValue(rawValue: .black)
+        circles.circleStrokeWidth = MGLStyleValue(rawValue: 1)
+        
+        return waypoint
+    }
+    
+    func routeWaypointSymbolStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+        let symbol = MGLSymbolStyleLayer(identifier: identifier, source: source)
+        
+        symbol.text = MGLStyleValue(rawValue: "{name}")
+        symbol.textFontSize = MGLStyleValue(rawValue: 10)
+        
+        return symbol
     }
     
     func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
@@ -268,6 +287,10 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeWaypointCircleStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, routeWaypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     @objc(navigationMapView:shapeDescribingRoute:)
@@ -275,4 +298,7 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc(navigationMapView:simplifiedShapeDescribingRoute:)
     optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    
+    @objc(navigationMapView:shapeDescribingWaypoints:)
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
 }
