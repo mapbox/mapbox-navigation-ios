@@ -1,7 +1,7 @@
 import UIKit
 
 protocol WaypointConfirmationViewControllerDelegate: NSObjectProtocol {
-    func confirmationControllerDidConfirm(_: WaypointConfirmationViewController)
+    func confirmationControllerDidConfirm(_ controller: WaypointConfirmationViewController)
 }
 
 class WaypointConfirmationViewController: UIViewController {
