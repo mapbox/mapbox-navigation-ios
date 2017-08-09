@@ -212,8 +212,6 @@ open class NavigationMapView: MGLMapView {
     }
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        let waypoint = MGLCircleStyleLayer(identifier: identifier, source: source)
-        
         let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
         circles.circleColor = MGLStyleValue(rawValue: .white)
         circles.circleOpacity = MGLStyleValue(interpolationMode: .exponential,
@@ -224,7 +222,7 @@ open class NavigationMapView: MGLMapView {
         circles.circleStrokeColor = MGLStyleValue(rawValue: .black)
         circles.circleStrokeWidth = MGLStyleValue(rawValue: 1)
         
-        return waypoint
+        return circles
     }
     
     func routeWaypointSymbolStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
