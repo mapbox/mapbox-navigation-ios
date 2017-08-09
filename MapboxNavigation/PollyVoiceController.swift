@@ -24,6 +24,8 @@ public class PollyVoiceController: RouteVoiceController {
      */
     public var identityPoolId: String
     
+    var pollyTask: URLSessionDataTask?
+    
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
         
@@ -100,6 +102,10 @@ public class PollyVoiceController: RouteVoiceController {
         }
     }
     
+    func callSuperSpeak(_ text: String, error: String) {
+        super.speak(fallbackText, error: error)
+    }
+    
     func handle(_ awsTask: AWSTask<NSURL>) {
         guard awsTask.error == nil else {
             super.speak(fallbackText, error: awsTask.error!.localizedDescription)
@@ -111,18 +117,38 @@ public class PollyVoiceController: RouteVoiceController {
             return
         }
         
-        do {
-            let soundData = try Data(contentsOf: url as URL)
-            audioPlayer = try AVAudioPlayer(data: soundData)
-            audioPlayer?.delegate = self
+        pollyTask = URLSession.shared.dataTask(with: url as URL) { [weak self] (data, response, error) in
+            guard let strongSelf = self else { return }
             
-            if let audioPlayer = audioPlayer {
-                try duckAudio()
-                audioPlayer.volume = volume
-                audioPlayer.play()
+            // If the task is canceled, don't speak.
+            // But if it's some sort of other error, use fallback voice.
+            if let error = error as NSError?, error.code == NSURLErrorCancelled {
+                return
+            } else if let error = error {
+                // Cannot call super in a closure
+                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
+                return
             }
-        } catch {
-            super.speak(fallbackText, error: error.localizedDescription)
+            
+            guard let data = data else { return }
+            
+            DispatchQueue.main.async {
+                do {
+                    strongSelf.audioPlayer = try AVAudioPlayer(data: data)
+                    strongSelf.audioPlayer?.delegate = self
+                    
+                    if let audioPlayer = strongSelf.audioPlayer {
+                        try strongSelf.duckAudio()
+                        audioPlayer.volume = strongSelf.volume
+                        audioPlayer.play()
+                    }
+                } catch  let error as NSError {
+                    strongSelf.speak(strongSelf.fallbackText, error: error.localizedDescription)
+                }
+            }
+
         }
+        
+        pollyTask?.resume()
     }
 }
