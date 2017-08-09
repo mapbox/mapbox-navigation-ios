@@ -102,6 +102,8 @@ class RouteMapViewController: UIViewController {
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
         mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
         mapView.setContentInset(contentInsets, animated: false)
+        
+        showRouteIfNeeded()
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -478,6 +480,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
     
     func showRouteIfNeeded() {
+        guard isViewLoaded && view.window != nil else { return }
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
         map.showRoute(route)
