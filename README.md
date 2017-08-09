@@ -57,7 +57,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 ## Usage
 
-**[API reference](https://mapbox.github.io/mapbox-navigation-ios/navigation/)**
+**[API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/)**
 
 ```swift
 import MapboxDirections
