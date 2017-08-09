@@ -256,18 +256,19 @@ open class RouteController: NSObject {
         }
         
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return location }
-        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
-        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
-
-        // Get closest point infront of user
-        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
-        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
-        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
-        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
+        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return nil }
+        
+        let slicedLineBehind = polyline(along: nearByCoordinates.reversed(), from: closest.coordinate, to: nearByCoordinates.reversed().last)
+        let slicedLineInfront = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
+        let userDistanceBuffer: CLLocationDistance = location.speed * RouteControllerDeadReckoningTimeInterval / 2
+        
+        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLineBehind) else { return nil }
+        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return nil }
+        guard let pointTwoSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLineInfront) else { return nil }
+        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return nil }
         
         // Get direction of these points
-        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
+        let pointOneDirection = pointOneClosest.coordinate.direction(to: closest.coordinate)
         let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
         let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
         let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
