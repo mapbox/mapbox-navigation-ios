@@ -87,21 +87,25 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
-        let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
-            self.startBasicNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
-            self.startCustomNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
-            self.startStyledNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-            self.startMultipleWaypoints()
-        }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         DispatchQueue.main.async {
+            let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+            alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
+                self.startBasicNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
+                self.startCustomNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
+                self.startStyledNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
+                self.startMultipleWaypoints()
+            }))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = self.startButton
+            }
             self.present(alertController, animated: true, completion: nil)
         }
     }
