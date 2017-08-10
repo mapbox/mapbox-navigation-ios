@@ -280,7 +280,9 @@ open class RouteController: NSObject {
         
         // If the course is inaccurate and the user is on the route,
         // calculate a rough estimate as to what the course should be at that point on the route.
-        if location.course <= 0 && snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
+        // Or if the user is going slow, snap the course to the calculated course given the route.
+        // This is because when a device is moving slowly, the course becomes more inaccurate.
+        if location.course <= 0 && snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance || location.speed <= 1 {
             let calculatedCourse = wrap((wrappedPointBehind + wrappedPointAhead) / 2, min: 0 , max: 360)
             return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedCourse, speed: location.speed, timestamp: location.timestamp)
         }
