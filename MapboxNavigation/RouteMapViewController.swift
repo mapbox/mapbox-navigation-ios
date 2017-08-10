@@ -117,10 +117,14 @@ class RouteMapViewController: UIViewController {
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidFailToReroute, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidFailToReroute, object: nil)
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -222,7 +226,11 @@ class RouteMapViewController: UIViewController {
     
     func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
-        statusView.show(title, showSpinner: true, duration: 3)
+        statusView.show(title, showSpinner: true)
+    }
+    
+    func didReroute(notification: NSNotification) {
+        statusView.hide(delay: 0.5, animated: true)
     }
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
