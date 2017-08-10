@@ -84,48 +84,40 @@ public var RouteControllerUserLocationSnappingDistance: CLLocationDistance = 10
  */
 public var RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion: Double = 30
 
-
 /**
- Number of seconds left on step when a `medium` alert is emitted.
+ Number of seconds left on step when a `AlertLevel.medium` alert is emitted.
  */
 public var RouteControllerMediumAlertInterval: TimeInterval = 70
 
-
 /**
- Number of seconds left on step when a `high` alert is emitted.
+ Number of seconds left on step when a `AlertLevel.high` alert is emitted.
  */
 public var RouteControllerHighAlertInterval: TimeInterval = 15
-
 
 /**
  Radius in meters the user must enter to count as completing a step. One of two heuristics used to know when a user completes a step, see `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`.
  */
 public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
-
 /**
  Maximum number of seconds the user can travel away from the start of the route before rerouting occurs
  */
 public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
 
+/**
+ Remaing distance on a motorway at which the `AlertLevel.high` `AlertLevel` will be given. This overrides `RouteControllerHighAlertInterval` only when the current step is a motorway. Default value is a half mile.
+ */
+public var RouteControllerMotorwayHighAlertDistance: CLLocationDistance = 0.5 * milesToMeters
 
 /**
- Remaing distance on a motorway at which the `.high` `AlertLevel` will be given. This overrides `RouteControllerHighAlertInterval` only when the current step is a motorway. Default value is a half mile.
+ Remaing distance on a motorway at which the `AlertLevel.medium` `AlertLevel` will be given. This overrides `RouteControllerMediumAlertInterval` only when the current step is a motorway. Defauly value is 2 miles.
  */
-public var RouteControllerMotorwayHighAlertDistance: CLLocationDistance = 804.672
-
-
-/**
- Remaing distance on a motorway at which the `.medium` `AlertLevel` will be given. This overrides `RouteControllerMediumAlertInterval` only when the current step is a motorway. Defauly value is 2 miles.
- */
-public var RouteControllerMotorwayMediumAlertDistance: CLLocationDistance = 3218.69
-
+public var RouteControllerMotorwayMediumAlertDistance: CLLocationDistance = 2 * milesToMeters
 
 /**
  When calculating whether or not the user is on the route, we look where the user will be given their speed and this variable.
  */
 public var RouteControllerDeadReckoningTimeInterval:TimeInterval = 1.0
-
 
 /**
  Maximum angle the user puck will be rotated when snapping the user's course to the route line.
@@ -136,3 +128,15 @@ public var RouteControllerMaxManipulatedCourseAngle:CLLocationDirection = 25
  :nodoc This is used internally for debugging metrics
  */
 public var NavigationMetricsDebugLoggingEnabled = "MBNavigationMetricsDebugLoggingEnabled"
+
+/**
+ For shorter upcoming steps, we link the `AlertLevel.high` instruction. If the upcoming step duration is near the duration of `RouteControllerHighAlertInterval`, we need to apply a bit of a buffer to prevent back to back notifications.
+ 
+ A multiplier of `1.2` gives us a buffer of 3 seconds, enough time insert a new instruction.
+ */
+let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
+
+/**
+ Approximately the number of meters in a mile.
+ */
+let milesToMeters = 1609.34

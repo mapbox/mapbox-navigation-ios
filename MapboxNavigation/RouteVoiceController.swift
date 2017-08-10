@@ -220,7 +220,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         var text: String
         
         // Prevent back to back instructions by adding a little more wiggle room
-        let linkedInstructionMultiplier = RouteControllerHighAlertInterval * 1.2
+        let linkedInstructionMultiplier = RouteControllerHighAlertInterval * RouteControllerMaxManipulatedCourseAngle
         
         // We only want to announce this special depature announcement once.
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
