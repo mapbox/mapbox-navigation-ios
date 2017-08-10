@@ -223,7 +223,6 @@ open class RouteLegProgress: NSObject {
         return leg.steps[stepIndex - 1]
     }
     
-    
     /**
      Returns the current `RouteStep` for the leg the user is on.
      */

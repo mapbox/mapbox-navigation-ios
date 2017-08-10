@@ -516,7 +516,37 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
         
+        if let intersections = routeProgress.currentLegProgress.currentStep.intersections, let upcomingStep = routeProgress.currentLegProgress.upComingStep, let upcomingIntersection = upcomingStep.intersections, let firstUpcomginIntersection = upcomingIntersection.first {
+            // The intersections array does not include the upcoming maneuver.
+            let i = intersections + [firstUpcomginIntersection]
+            if let currentIntersection = closestIntersection(intersections: i) {
+                return didMakeCorrectTurnAtIntersection(for: currentIntersection, course: location.course)
+            }
+        }
+        
         return isCloseToCurrentStep
+    }
+    
+    func didMakeCorrectTurnAtIntersection(for intersection: Intersection, course: CLLocationDirection) -> Bool {
+        print(differenceBetweenAngles(course, intersection.headings[intersection.outletIndex]))
+        
+        return differenceBetweenAngles(course, intersection.headings[intersection.outletIndex]) < 20
+    }
+    
+    func closestIntersection(intersections: [Intersection]) -> Intersection? {
+        guard let location = rawLocation else { return nil }
+        
+        var intersectionDistances: [Intersection: CLLocationDistance] = [:]
+        
+        for intersection in intersections {
+            if let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates {
+                intersectionDistances[intersection] = distance(along: stepCoordinates, from: location.coordinate, to: intersection.location)
+            }
+        }
+        
+        return intersectionDistances.min {
+            a, b in a.value < b.value
+        }?.key
     }
     
     func incrementRouteProgress(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation, updateStepIndex: Bool) {
