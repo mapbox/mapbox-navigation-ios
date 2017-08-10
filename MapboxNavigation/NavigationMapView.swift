@@ -149,7 +149,7 @@ open class NavigationMapView: MGLMapView {
             addAnnotation(destination)
         }
         
-        let source = navigationMapDelegate?.navigationMapView?(self, shapesFor: routeProgress.remainingWaypoints) ?? shapes(for: Array(routeProgress.remainingWaypoints.dropLast()))
+        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: routeProgress.remainingWaypoints) ?? shape(for: Array(routeProgress.remainingWaypoints.dropLast()))
         
         if let s = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
             s.shape = source
@@ -209,7 +209,7 @@ open class NavigationMapView: MGLMapView {
         return MGLShapeCollectionFeature(shapes: [baseLine] + lines)
     }
     
-    func shapes(for waypoints: [Waypoint]) -> MGLShape? {
+    func shape(for waypoints: [Waypoint]) -> MGLShape? {
         var features = [MGLPointFeature]()
         let letters = (97...122).map({Character(UnicodeScalar($0))}).map { String(describing:$0).uppercased() }
         
@@ -433,5 +433,5 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
     @objc(navigationMapView:shapeDescribingWaypoints:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shapesFor waypoints: [Waypoint]) -> MGLShape?
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
 }
