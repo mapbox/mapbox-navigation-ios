@@ -211,7 +211,7 @@ class RouteMapViewController: UIViewController {
 
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
-        mapView.hideArrow(routeController.routeProgress)
+        mapView.showArrow(routeController.routeProgress)
         mapView.showRoute(route)
 
         if isInOverviewMode {
@@ -233,7 +233,7 @@ class RouteMapViewController: UIViewController {
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            mapView.hideArrow(routeProgress)
+            mapView.showArrow(routeProgress)
         } else {
             mapView.removeArrow()
         }

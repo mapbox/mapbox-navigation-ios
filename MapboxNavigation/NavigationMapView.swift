@@ -289,7 +289,7 @@ open class NavigationMapView: MGLMapView {
         return lineCasing
     }
     
-    func hideArrow(_ routeProgress: RouteProgress) {
+    func showArrow(_ routeProgress: RouteProgress) {
         let maneuverCoordinate = routeProgress.currentLegProgress.upComingStep?.maneuverLocation
         let polylineCoordinates = routeProgress.route.coordinates
         
