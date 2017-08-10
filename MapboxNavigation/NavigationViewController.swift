@@ -356,10 +356,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
         tableViewController?.notifyAlertLevelDidChange()
         
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
-        }
-        
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }

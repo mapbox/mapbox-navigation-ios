@@ -154,7 +154,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self?.currentRoute = route
             
             // Open method for adding and updating the route line
-            self?.mapView.showRoute(route)
+            self?.mapView.showRoute(route, legIndex: 0)
         }
     }
 

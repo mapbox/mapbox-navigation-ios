@@ -212,7 +212,7 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         routePageViewController.notifyDidReRoute()
         mapView.showArrow(routeController.routeProgress)
-        mapView.showRoute(route)
+        mapView.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
 
         if isInOverviewMode {
             updateVisibleBounds()
@@ -508,7 +508,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard isViewLoaded && view.window != nil else { return }
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
-        map.showRoute(route)
+        map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         map.showWaypoints(routeProgress: routeController.routeProgress)
     }
 }

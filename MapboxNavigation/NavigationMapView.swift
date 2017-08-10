@@ -24,6 +24,7 @@ open class NavigationMapView: MGLMapView {
     let arrowLayerStrokeIdentifier = "arrowStrokeLayer"
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
+    let isOpaqueIdentifier = "isOpaqueIdentifier"
     
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 6),
@@ -79,13 +80,13 @@ open class NavigationMapView: MGLMapView {
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoute(_ route: Route) {
+    public func showRoute(_ route: Route, legIndex: Int?) {
         guard let style = style else {
             return
         }
         
-        let polyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: route) ?? shape(describing: route)
-        let polylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: route) ?? polyline
+        let polyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: route) ?? shape(describing: route, legIndex: legIndex)
+        let polylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: route) ?? shape(describingCasing: route, legIndex: legIndex)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
@@ -171,42 +172,69 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    func shape(describing route: Route) -> MGLShape? {
+    func shape(describing route: Route, legIndex: Int?) -> MGLShape? {
         guard let coordinates = route.coordinates else { return nil }
         
-        let congestionPerLeg = route.legs.flatMap {
-            $0.segmentCongestionLevels
-        }
+        var linesPerLeg: [[MGLPolylineFeature]] = []
+        var previousLegCongestionIndex = 0
         
-        let combinedCongestionLevel = Array(congestionPerLeg.joined()) // Flatten all leg nodes
-        let destination = coordinates.suffix(from: 1)
-        let segment = zip(coordinates, destination).map { [$0.0, $0.1] }
-        let congestionSegments = Array(zip(segment, combinedCongestionLevel))
-        
-        // Merge adjacent segments with the same congestion level
-        var mergedCongestionSegments = [CongestionSegment]()
-        for seg in congestionSegments {
-            let coordinates = seg.0
-            let congestionLevel = seg.1
-            if let last = mergedCongestionSegments.last, last.1 == congestionLevel {
-                mergedCongestionSegments[mergedCongestionSegments.count - 1].0 += coordinates
-            } else {
-                mergedCongestionSegments.append(seg)
+        for (index, leg) in route.legs.enumerated() {
+            let legCongestion = leg.segmentCongestionLevels!
+            let coordsForLeg = coordinates[previousLegCongestionIndex..<previousLegCongestionIndex + legCongestion.count + 1]
+            let combinedCongestionLevel = leg.segmentCongestionLevels!
+            let destination = coordinates.suffix(from: previousLegCongestionIndex + 1)
+            let segment = zip(coordsForLeg, destination).map { [$0.0, $0.1] }
+            let congestionSegments = Array(zip(segment, combinedCongestionLevel))
+            
+            previousLegCongestionIndex = legCongestion.count
+            
+            // Merge adjacent segments with the same congestion level
+            var mergedCongestionSegments = [CongestionSegment]()
+            for seg in congestionSegments {
+                let coordinates = seg.0
+                let congestionLevel = seg.1
+                if let last = mergedCongestionSegments.last, last.1 == congestionLevel {
+                    mergedCongestionSegments[mergedCongestionSegments.count - 1].0 += coordinates
+                } else {
+                    mergedCongestionSegments.append(seg)
+                }
             }
+            
+            let lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
+                let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
+                polyline.attributes["congestion"] = String(describing: congestionSegment.1)
+                if let legIndex = legIndex {
+                    polyline.attributes[isOpaqueIdentifier] = index != legIndex
+                } else {
+                    polyline.attributes[isOpaqueIdentifier] = true
+                }
+                return polyline
+            }
+            
+            linesPerLeg.append(lines)
         }
         
-        // Filter out any segments with low congestion
-        let nontrivialCongestionSegments = mergedCongestionSegments.filter { $0.1 != CongestionLevel.unknown && $0.1 != CongestionLevel.low }
+        return MGLShapeCollectionFeature(shapes: Array(linesPerLeg.joined()))
+    }
+    
+    func shape(describingCasing route: Route, legIndex: Int?) -> MGLShape? {
+        var linesPerLeg: [MGLPolylineFeature] = []
         
-        let baseLine = MGLPolylineFeature(coordinates: coordinates, count: route.coordinateCount)
-        baseLine.attributes["congestion"] = "unknown"
-        let lines = nontrivialCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
-            let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-            polyline.attributes["congestion"] = String(describing: congestionSegment.1)
-            return polyline
+        for (index, leg) in route.legs.enumerated() {
+            let legCoordinates = Array(leg.steps.flatMap {
+                $0.coordinates
+            }.joined())
+            
+            let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
+            if let legIndex = legIndex {
+                polyline.attributes[isOpaqueIdentifier] = index != legIndex
+            } else {
+                polyline.attributes[isOpaqueIdentifier] = false
+            }
+            linesPerLeg.append(polyline)
         }
         
-        return MGLShapeCollectionFeature(shapes: [baseLine] + lines)
+        return MGLShapeCollectionFeature(shapes: linesPerLeg)
     }
     
     func shape(for waypoints: [Waypoint]) -> MGLShape? {
@@ -261,6 +289,11 @@ open class NavigationMapView: MGLMapView {
             "severe": MGLStyleValue(rawValue: trafficSevereColor)
             ], attributeName: "congestion", options: nil)
         
+        line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
+            true: MGLStyleValue(rawValue: 0),
+            false: MGLStyleValue(rawValue: 1)
+            ], attributeName: isOpaqueIdentifier, options: nil)
+        
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
         return line
@@ -285,6 +318,11 @@ open class NavigationMapView: MGLMapView {
         lineCasing.lineColor = MGLStyleValue(rawValue: routeCasingColor)
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        
+        lineCasing.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
+            true: MGLStyleValue(rawValue: 0.4),
+            false: MGLStyleValue(rawValue: 1)
+            ], attributeName: isOpaqueIdentifier, options: nil)
         
         return lineCasing
     }
