@@ -522,20 +522,17 @@ class StatusView: UIView {
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var topConstraint: NSLayoutConstraint!
     
-    func show(_ title: String, showSpinner: Bool, duration: TimeInterval) {
+    func show(_ title: String, showSpinner: Bool) {
         textLabel.text = title
         activityIndicatorView.isHidden = !showSpinner
         activityIndicatorView.startAnimating()
         isHidden = false
         
         updateConstraints(show: true)
+        
         UIView.defaultAnimation(0.3, animations: {
             self.superview?.layoutIfNeeded()
-        }) { (completed) in
-            if completed && duration > 0 {
-                self.hide(delay: duration, animated: true)
-            }
-        }
+        }, completion: nil)
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
