@@ -251,16 +251,16 @@ open class RouteController: NSObject {
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
-        guard location.speed >= 0 else {
-            return location
-        }
-        
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
         guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return nil }
         
         let slicedLineBehind = polyline(along: nearByCoordinates.reversed(), from: closest.coordinate, to: nearByCoordinates.reversed().last)
         let slicedLineInfront = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
         let userDistanceBuffer: CLLocationDistance = location.speed * RouteControllerDeadReckoningTimeInterval / 2
+        
+        // At the beginning of the route, the `slicedLineBehind` will have no coordinates.
+        // This gives the user some time before we start snapping their course and location.
+        guard slicedLineBehind.count > 2 else { return location }
         
         guard let pointBehind = coordinate(at: userDistanceBuffer, fromStartOf: slicedLineBehind) else { return nil }
         guard let pointBehindClosest = closestCoordinate(on: nearByCoordinates, to: pointBehind) else { return nil }
@@ -280,7 +280,9 @@ open class RouteController: NSObject {
         
         // If the course is inaccurate and the user is on the route,
         // calculate a rough estimate as to what the course should be at that point on the route.
-        if location.course <= 0 && snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
+        // Or if the user is going slow, snap the course to the calculated course given the route.
+        // This is because when a device is moving slowly, the course becomes more inaccurate.
+        if location.course <= 0 && snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance || location.speed <= 1 {
             let calculatedCourse = wrap((wrappedPointBehind + wrappedPointAhead) / 2, min: 0 , max: 360)
             return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedCourse, speed: location.speed, timestamp: location.timestamp)
         }
