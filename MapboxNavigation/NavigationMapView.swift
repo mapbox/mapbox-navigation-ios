@@ -206,7 +206,7 @@ open class NavigationMapView: MGLMapView {
                 if let legIndex = legIndex {
                     polyline.attributes[isOpaqueIdentifier] = index != legIndex
                 } else {
-                    polyline.attributes[isOpaqueIdentifier] = true
+                    polyline.attributes[isOpaqueIdentifier] = false
                 }
                 return polyline
             }
