@@ -101,6 +101,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self.startMultipleWaypoints()
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = startButton
+        }
+        
         DispatchQueue.main.async {
             self.present(alertController, animated: true, completion: nil)
         }
