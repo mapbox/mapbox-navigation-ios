@@ -267,6 +267,8 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
     func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
         confirmationController.dismiss(animated: true, completion: {
             guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
+            
+            guard navigationViewController.routeController.routeProgress.route.legs.count > navigationViewController.routeController.routeProgress.legIndex + 1 else { return }
             navigationViewController.routeController.routeProgress.legIndex += 1
         })
     }

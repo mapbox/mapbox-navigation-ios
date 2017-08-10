@@ -58,6 +58,7 @@ class RouteMapViewController: UIViewController {
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
+    var currentLegIndexMapped = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,6 +112,7 @@ class RouteMapViewController: UIViewController {
         mapView.setContentInset(contentInsets, animated: false)
         
         showRouteIfNeeded()
+        currentLegIndexMapped = routeController.routeProgress.legIndex
     }
     
     func resumeNotifications() {
@@ -238,7 +240,12 @@ class RouteMapViewController: UIViewController {
             mapView.removeArrow()
         }
         
-        mapView.showWaypoints(routeProgress: routeController.routeProgress)
+        if currentLegIndexMapped != routeProgress.legIndex {
+            mapView.showWaypoints(routeProgress: routeController.routeProgress)
+            mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
+            
+            currentLegIndexMapped = routeProgress.legIndex
+        }
     }
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
