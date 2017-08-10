@@ -532,8 +532,7 @@ class StatusView: UIView {
         
         UIView.defaultAnimation(0.3, animations: {
             self.superview?.layoutIfNeeded()
-        }) { (completed) in
-        }
+        }, completion: nil)
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
