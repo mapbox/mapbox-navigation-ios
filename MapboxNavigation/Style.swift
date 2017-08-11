@@ -57,6 +57,11 @@ open class Style: NSObject {
     public var floatingButtonBackgroundColor: UIColor?
     
     /**
+     Sets the background color of the lanes view
+     */
+    public var lanesViewBackgroundColor: UIColor?
+    
+    /**
      Sets the color of dividers and separators.
      */
     public var lineColor: UIColor?
@@ -258,6 +263,10 @@ open class Style: NSObject {
             FloatingButton.appearance(for: traitCollection).backgroundColor = color
         }
         
+        if let color = lanesViewBackgroundColor {
+            LanesView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
         // Maneuver page view controller
         
         if let color = maneuverViewBackgroundColor {
@@ -364,6 +373,11 @@ public class Button: StylableButton { }
 /// :nodoc:
 @objc(MBFloatingButton)
 public class FloatingButton: Button { }
+
+
+/// :nodoc:
+@objc(MBLanesView)
+public class LanesView: UIView { }
 
 /**
  :nodoc:
