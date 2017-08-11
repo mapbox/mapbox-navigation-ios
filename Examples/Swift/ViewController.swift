@@ -118,12 +118,16 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
                 self.startStyledNavigation()
             }))
+            
             if self.waypoints.count > 2 {
                 alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
                     self.startMultipleWaypoints()
                 }))
             }
             alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = self.startButton
+            }
             self.present(alertController, animated: true, completion: nil)
         }
     }

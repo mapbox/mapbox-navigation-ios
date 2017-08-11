@@ -239,7 +239,7 @@ open class NavigationMapView: MGLMapView {
     
     func shape(for waypoints: [Waypoint]) -> MGLShape? {
         var features = [MGLPointFeature]()
-        let letters = String.localizedStringWithFormat(NSLocalizedString("ALPHABET", bundle: .mapboxNavigation, value: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", comment: "Format string for alphabet;")).components(separatedBy: "")
+        let letters = String.localizedStringWithFormat(NSLocalizedString("ALPHABET", bundle: .mapboxNavigation, value: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", comment: "Format string for alphabet;")).characters.map { String(describing: $0) }
         
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             let feature = MGLPointFeature()
