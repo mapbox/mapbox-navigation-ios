@@ -107,9 +107,12 @@ class RouteMapViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-        mapView.setContentInset(contentInsets, animated: false)
+        // For some reason, when completing a maneuver this function is called.
+        // If we try to set the insets/align twice, the UI locks momentarily.
+        if mapView.userLocationVerticalAlignment != .bottom {
+            mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
+            mapView.setContentInset(contentInsets, animated: false)
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
