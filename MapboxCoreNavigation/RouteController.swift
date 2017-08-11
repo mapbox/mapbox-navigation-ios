@@ -260,7 +260,7 @@ open class RouteController: NSObject {
         
         let slicedLineBehind = polyline(along: nearByCoordinates.reversed(), from: closest.coordinate, to: nearByCoordinates.reversed().last)
         let slicedLineInfront = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
-        let userDistanceBuffer: CLLocationDistance = location.speed * RouteControllerDeadReckoningTimeInterval / 2
+        let userDistanceBuffer: CLLocationDistance = max(location.speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
         
         guard let pointBehind = coordinate(at: userDistanceBuffer, fromStartOf: slicedLineBehind) else { return nil }
         guard let pointBehindClosest = closestCoordinate(on: nearByCoordinates, to: pointBehind) else { return nil }
