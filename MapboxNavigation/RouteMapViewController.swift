@@ -104,13 +104,18 @@ class RouteMapViewController: UIViewController {
             mapView.setCamera(camera, animated: false)
         }
     }
-
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
+        mapView.setContentInset(contentInsets, animated: false)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
-        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-        mapView.setContentInset(contentInsets, animated: false)
         
         showRouteIfNeeded()
     }
