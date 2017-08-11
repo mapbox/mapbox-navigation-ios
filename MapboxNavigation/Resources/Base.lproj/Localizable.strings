@@ -1,4 +1,7 @@
-﻿/* Format string for and; */
+﻿/* Format string for alphabet; */
+"ALPHABET" = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+/* Format string for and; */
 "AND" = "and";
 
 /* Format for speech string after completing a maneuver and starting a new step; 1 = distance */

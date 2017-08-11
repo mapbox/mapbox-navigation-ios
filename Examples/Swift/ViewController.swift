@@ -117,7 +117,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
             self.startStyledNavigation()
         }))
-        if waypoints.count > 2 {
+        if self.waypoints.count > 2 {
             alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
                 self.startMultipleWaypoints()
             }))
@@ -154,7 +154,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             self?.currentRoute = route
             
             // Open method for adding and updating the route line
-            self?.mapView.showRoute(route, legIndex: 0)
+            self?.mapView.showRoute(route)
         }
     }
 

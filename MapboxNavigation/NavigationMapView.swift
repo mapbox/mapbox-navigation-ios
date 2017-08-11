@@ -24,7 +24,7 @@ open class NavigationMapView: MGLMapView {
     let arrowLayerStrokeIdentifier = "arrowStrokeLayer"
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
-    let isOpaqueIdentifier = "isOpaqueIdentifier"
+    let isCurrentLeg = "isCurrentLeg"
     
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 6),
@@ -80,7 +80,7 @@ open class NavigationMapView: MGLMapView {
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoute(_ route: Route, legIndex: Int?) {
+    public func showRoute(_ route: Route, legIndex: Int? = nil) {
         guard let style = style else {
             return
         }
@@ -152,8 +152,8 @@ open class NavigationMapView: MGLMapView {
         
         let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: routeProgress.remainingWaypoints) ?? shape(for: Array(routeProgress.remainingWaypoints.dropLast()))
         
-        if let s = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
-            s.shape = source
+        if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
+            waypointSource.shape = source
         } else {
             let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: nil)
             style.addSource(sourceShape)
@@ -204,9 +204,9 @@ open class NavigationMapView: MGLMapView {
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
                 polyline.attributes["congestion"] = String(describing: congestionSegment.1)
                 if let legIndex = legIndex {
-                    polyline.attributes[isOpaqueIdentifier] = index != legIndex
+                    polyline.attributes[isCurrentLeg] = index != legIndex
                 } else {
-                    polyline.attributes[isOpaqueIdentifier] = false
+                    polyline.attributes[isCurrentLeg] = index != 0
                 }
                 return polyline
             }
@@ -227,9 +227,9 @@ open class NavigationMapView: MGLMapView {
             
             let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
             if let legIndex = legIndex {
-                polyline.attributes[isOpaqueIdentifier] = index != legIndex
+                polyline.attributes[isCurrentLeg] = index != legIndex
             } else {
-                polyline.attributes[isOpaqueIdentifier] = false
+                polyline.attributes[isCurrentLeg] = index != 0
             }
             linesPerLeg.append(polyline)
         }
@@ -239,7 +239,7 @@ open class NavigationMapView: MGLMapView {
     
     func shape(for waypoints: [Waypoint]) -> MGLShape? {
         var features = [MGLPointFeature]()
-        let letters = (97...122).map({Character(UnicodeScalar($0))}).map { String(describing:$0).uppercased() }
+        let letters = String.localizedStringWithFormat(NSLocalizedString("ALPHABET", bundle: .mapboxNavigation, value: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", comment: "Format string for alphabet;")).components(separatedBy: "")
         
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             let feature = MGLPointFeature()
@@ -292,7 +292,7 @@ open class NavigationMapView: MGLMapView {
         line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
             true: MGLStyleValue(rawValue: 0),
             false: MGLStyleValue(rawValue: 1)
-            ], attributeName: isOpaqueIdentifier, options: nil)
+            ], attributeName: isCurrentLeg, options: nil)
         
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
@@ -320,9 +320,9 @@ open class NavigationMapView: MGLMapView {
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
         lineCasing.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
-            true: MGLStyleValue(rawValue: 0.4),
+            true: MGLStyleValue(rawValue: 0.70),
             false: MGLStyleValue(rawValue: 1)
-            ], attributeName: isOpaqueIdentifier, options: nil)
+            ], attributeName: isCurrentLeg, options: nil)
         
         return lineCasing
     }
