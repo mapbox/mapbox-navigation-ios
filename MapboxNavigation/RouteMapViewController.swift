@@ -70,9 +70,9 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.manuallyUpdatesLocation = true
         
-        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
+        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
         recenterButton.applyDefaultCornerRadiusShadow()
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale

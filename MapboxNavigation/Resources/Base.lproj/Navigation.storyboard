@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13168.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13178.6" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13147.4"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13156.2"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -70,45 +70,39 @@
                         <subviews>
                             <view contentMode="scaleToFill" restorationIdentifier="mapView" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-30-cGD" customClass="MBNavigationMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="324"/>
-                                <subviews>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
-                                        <rect key="frame" x="141" y="213" width="94.5" height="21"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
-                                                <rect key="frame" x="8" y="2" width="79" height="17"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                                <attributedString key="userComments">
-                                                    <fragment content="DO NOT TRANSLATE">
-                                                        <attributes>
-                                                            <font key="NSFont" metaFont="smallSystem"/>
-                                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                </attributedString>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="bcm-ca-nGv" secondAttribute="trailing" constant="8" id="16w-UW-7Y7"/>
-                                            <constraint firstAttribute="bottom" secondItem="bcm-ca-nGv" secondAttribute="bottom" constant="2" id="Hs4-ZE-bmP"/>
-                                            <constraint firstItem="bcm-ca-nGv" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="top" constant="2" id="N8i-oQ-85J"/>
-                                            <constraint firstItem="bcm-ca-nGv" firstAttribute="leading" secondItem="drb-do-FoT" secondAttribute="leading" constant="8" id="gei-Oh-7XJ"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
                                 <color key="backgroundColor" red="0.90196078430000004" green="0.89019607840000003" blue="0.87450980389999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="0ay-99-AQJ"/>
-                                    <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="nNr-30-cGD" secondAttribute="centerX" id="TCg-jZ-7G3"/>
-                                </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showsUserLocation" value="YES"/>
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/navigation-guidance-day-v2"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Stack View">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
+                                <rect key="frame" x="134" y="204.5" width="106.5" height="29"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
+                                        <rect key="frame" x="14" y="6" width="78.5" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="smallSystem"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="bcm-ca-nGv" secondAttribute="trailing" constant="14" id="16w-UW-7Y7"/>
+                                    <constraint firstAttribute="bottom" secondItem="bcm-ca-nGv" secondAttribute="bottom" constant="6" id="Hs4-ZE-bmP"/>
+                                    <constraint firstItem="bcm-ca-nGv" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="top" constant="6" id="N8i-oQ-85J"/>
+                                    <constraint firstItem="bcm-ca-nGv" firstAttribute="leading" secondItem="drb-do-FoT" secondAttribute="leading" constant="14" id="gei-Oh-7XJ"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Stack View" customClass="MBLanesView">
                                 <rect key="frame" x="0.0" y="114.5" width="375" height="40"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="D9e-aq-442" userLabel="Lane Stack View">
@@ -314,10 +308,10 @@
                                 </connections>
                             </containerView>
                             <button opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5HY-QD-dBq" customClass="MBHighlightedButton">
-                                <rect key="frame" x="10" y="250" width="112" height="42"/>
+                                <rect key="frame" x="10" y="181.5" width="112" height="50"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="42" id="QGu-S5-V3G"/>
+                                    <constraint firstAttribute="height" constant="50" id="QGu-S5-V3G"/>
                                     <constraint firstAttribute="width" constant="112" id="auw-yF-4hd"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -331,26 +325,26 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq">
-                                <rect key="frame" x="10" y="164.5" width="44" height="96"/>
+                                <rect key="frame" x="10" y="195" width="50" height="108"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBButton">
-                                        <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="44" id="Boe-Xa-uFI"/>
-                                            <constraint firstAttribute="height" constant="44" id="ybt-ny-GPN"/>
+                                            <constraint firstAttribute="width" constant="50" id="Boe-Xa-uFI"/>
+                                            <constraint firstAttribute="height" constant="50" id="ybt-ny-GPN"/>
                                         </constraints>
                                         <state key="normal" image="overview"/>
                                         <connections>
                                             <action selector="toggleOverview:" destination="3z2-H5-unA" eventType="touchUpInside" id="2Bc-fq-C2C"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y2a-qB-86S" customClass="MBButton">
-                                        <rect key="frame" x="0.0" y="52" width="44" height="44"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y2a-qB-86S" customClass="MBFloatingButton">
+                                        <rect key="frame" x="0.0" y="58" width="50" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="DRa-a5-D9t"/>
-                                            <constraint firstAttribute="width" constant="44" id="Ejg-Q8-jZn"/>
+                                            <constraint firstAttribute="height" constant="50" id="DRa-a5-D9t"/>
+                                            <constraint firstAttribute="width" constant="50" id="Ejg-Q8-jZn"/>
                                         </constraints>
                                         <state key="normal" image="volume_up"/>
                                         <state key="selected" image="volume_off"/>
@@ -358,12 +352,12 @@
                                             <action selector="toggleMute:" destination="3z2-H5-unA" eventType="touchUpInside" id="2ZH-pI-vhy"/>
                                         </connections>
                                     </button>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBButton">
-                                        <rect key="frame" x="0.0" y="96" width="44" height="44"/>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBFloatingButton">
+                                        <rect key="frame" x="0.0" y="108" width="50" height="50"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="o37-gV-IxI"/>
-                                            <constraint firstAttribute="width" constant="44" id="vXa-Tt-AZm"/>
+                                            <constraint firstAttribute="height" constant="50" id="o37-gV-IxI"/>
+                                            <constraint firstAttribute="width" constant="50" id="vXa-Tt-AZm"/>
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="3" minY="2" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" image="feedback"/>
@@ -385,16 +379,20 @@
                         <constraints>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
+                            <constraint firstItem="drb-do-FoT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="20" id="4oP-yz-9W5"/>
                             <constraint firstAttribute="trailing" secondItem="NE9-ru-uJw" secondAttribute="trailing" id="52l-ND-Jdc"/>
                             <constraint firstItem="5HY-QD-dBq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leadingMargin" constant="-6" id="DLa-g1-fxC"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="HsP-If-DXW"/>
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Jym-DH-tdD" secondAttribute="bottom" constant="10" id="IRw-J2-Ori"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
+                            <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="Gvo-VD-DXF" secondAttribute="centerX" id="O0m-0k-ilC"/>
+                            <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
                             <constraint firstAttribute="trailing" secondItem="Jym-DH-tdD" secondAttribute="trailing" id="Oy8-JD-Az4"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
                             <constraint firstItem="NE9-ru-uJw" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" identifier="Lane Views Top Constraint" id="VHU-Yr-eQL" userLabel="Lane Views Top Constraint"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
                             <constraint firstItem="NE9-ru-uJw" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="ayw-dM-DXC"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="azG-Bi-6NR"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="bottom" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="djD-Ab-lfr"/>
@@ -647,10 +645,10 @@
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecu-yz-M5j" userLabel="ContainerView">
-                                <rect key="frame" x="24" y="60" width="327" height="567"/>
+                                <rect key="frame" x="24" y="100" width="327" height="542"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Sne-Dn-jdt">
-                                        <rect key="frame" x="8" y="10" width="311" height="457"/>
+                                        <rect key="frame" x="8" y="10" width="311" height="432"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="16" minimumInteritemSpacing="0.0" id="unA-43-4hX">
                                             <size key="itemSize" width="155" height="134"/>
@@ -727,7 +725,7 @@
                                         </connections>
                                     </collectionView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JMs-xU-Gfd">
-                                        <rect key="frame" x="20" y="487" width="287" height="60"/>
+                                        <rect key="frame" x="20" y="462" width="287" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="apY-WJ-qqF"/>
                                         </constraints>
@@ -763,8 +761,8 @@
                             <constraint firstItem="EC5-ge-nz1" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leading" id="9Wv-Am-mxS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ecu-yz-M5j" secondAttribute="trailing" constant="8" id="Cyb-Eg-iSY"/>
                             <constraint firstItem="EC5-ge-nz1" firstAttribute="top" secondItem="I7t-WT-lto" secondAttribute="top" id="VgD-ac-RQ2"/>
-                            <constraint firstItem="ecu-yz-M5j" firstAttribute="top" secondItem="pGP-EB-Pif" secondAttribute="bottom" constant="40" id="cDD-7Q-8vJ"/>
-                            <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="bottom" constant="40" id="rzg-dk-UOe"/>
+                            <constraint firstItem="ecu-yz-M5j" firstAttribute="top" secondItem="pGP-EB-Pif" secondAttribute="bottom" constant="80" id="cDD-7Q-8vJ"/>
+                            <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="bottom" constant="25" id="rzg-dk-UOe"/>
                             <constraint firstAttribute="trailing" secondItem="EC5-ge-nz1" secondAttribute="trailing" id="wa9-2E-HRi"/>
                             <constraint firstItem="ecu-yz-M5j" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leadingMargin" constant="8" id="xiW-Wm-SI7"/>
                         </constraints>
