@@ -58,6 +58,8 @@ open class DefaultStyle: Style {
         turnArrowPrimaryColor = .defaultTurnArrowPrimary
         turnArrowSecondaryColor = .defaultTurnArrowSecondary
         
+        floatingButtonBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
         // Maneuver view (Page view)
         maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         

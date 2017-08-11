@@ -52,6 +52,11 @@ open class Style: NSObject {
     public var buttonTextColor: UIColor?
     
     /**
+     Sets the background color on the floating buttons.
+     */
+    public var floatingButtonBackgroundColor: UIColor?
+    
+    /**
      Sets the color of dividers and separators.
      */
     public var lineColor: UIColor?
@@ -249,6 +254,10 @@ open class Style: NSObject {
             TurnArrowView.appearance(for: traitCollection).secondaryColor = color
         }
         
+        if let color = floatingButtonBackgroundColor {
+            FloatingButton.appearance(for: traitCollection).backgroundColor = color
+        }
+        
         // Maneuver page view controller
         
         if let color = maneuverViewBackgroundColor {
@@ -351,6 +360,10 @@ open class Style: NSObject {
  */
 @objc(MBButton)
 public class Button: StylableButton { }
+
+/// :nodoc:
+@objc(MBFloatingButton)
+public class FloatingButton: Button { }
 
 /**
  :nodoc:
