@@ -1,6 +1,9 @@
 import Foundation
 import CoreLocation
 
+/**
+ Formatter for creating speech strings.
+ */
 @objc(MBSpokenInstructionFormatter)
 public class SpokenInstructionFormatter: NSObject {
     
@@ -11,7 +14,12 @@ public class SpokenInstructionFormatter: NSObject {
         maneuverVoiceDistanceFormatter.unitStyle = .long
         maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
     }
-
+    
+    /**
+     Creates a string used for announcing a step.
+     
+     If `markUpWithSSML` is true, the string will contain [SSML](https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/speech-synthesis-markup-language-ssml-reference). Your speech synthesizer should accept this type of string. See `PolleyVoiceController`.
+    */
     public func string(routeProgress: RouteProgress, userDistance: CLLocationDistance, markUpWithSSML: Bool) -> String {
         let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         

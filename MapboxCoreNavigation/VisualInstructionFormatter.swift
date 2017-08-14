@@ -1,11 +1,17 @@
 import Foundation
 import MapboxDirections
 
+/**
+ Formatter for creating visual instructions.
+ */
 @objc(MBVisualInstructionFormatter)
 public class VisualInstructionFormatter: NSObject {
     
     let routeStepFormatter = RouteStepFormatter()
     
+    /**
+     Creates the optimal text to be displayed given a `RouteLeg` and `RouteStep`.
+     */
     public func string(leg: RouteLeg?, step: RouteStep?) -> String? {
         if let currentLeg = leg, let destinationName = currentLeg.destination.name, let step = step, step.maneuverType == .arrive {
             return destinationName
