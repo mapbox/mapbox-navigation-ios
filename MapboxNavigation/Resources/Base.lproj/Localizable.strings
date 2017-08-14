@@ -43,6 +43,9 @@
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Rerouting…";
 
+/* Button title for resume tracking */
+"RESUME" = "Resume";
+
 /* Format for speech string; 1 = formatted distance; 2 = instruction */
 "WITH_DISTANCE_UTTERANCE_FORMAT" = "In %1$@, %2$@";
 
