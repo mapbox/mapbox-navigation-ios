@@ -19,9 +19,8 @@ class RouteTableViewController: UIViewController {
         super.viewWillAppear(animated)
         setupTableView()
         dateFormatter.timeStyle = .short
-        dateComponentsFormatter.maximumUnitCount = 2
-        dateComponentsFormatter.allowedUnits = [.day, .hour, .minute]
-        dateComponentsFormatter.unitsStyle = .short
+        dateComponentsFormatter.allowedUnits = [.hour, .minute]
+        dateComponentsFormatter.unitsStyle = .abbreviated
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
     }
     
@@ -40,6 +39,8 @@ class RouteTableViewController: UIViewController {
         } else {
             headerView.distanceRemaining.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
         }
+        
+        dateComponentsFormatter.unitsStyle = routeProgress.durationRemaining < 3600 ? .short : .abbreviated
         
         if routeProgress.durationRemaining < 60 {
             headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "%@", comment: "Format string for less than; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)

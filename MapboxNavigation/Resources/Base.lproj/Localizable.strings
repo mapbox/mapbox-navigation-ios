@@ -55,6 +55,9 @@
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ and %2$@";
 
+/* Button title for resume tracking */
+"RESUME" = "Resume";
+
 /* Format for speech string; 1 = formatted distance; 2 = instruction */
 "WITH_DISTANCE_UTTERANCE_FORMAT" = "In %1$@, %2$@";
 

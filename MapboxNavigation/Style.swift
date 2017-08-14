@@ -52,6 +52,16 @@ open class Style: NSObject {
     public var buttonTextColor: UIColor?
     
     /**
+     Sets the background color on the floating buttons.
+     */
+    public var floatingButtonBackgroundColor: UIColor?
+    
+    /**
+     Sets the background color of the lanes view
+     */
+    public var lanesViewBackgroundColor: UIColor?
+    
+    /**
      Sets the color of dividers and separators.
      */
     public var lineColor: UIColor?
@@ -212,6 +222,7 @@ open class Style: NSObject {
             ProgressBar.appearance(for: traitCollection).barColor = color
             Button.appearance(for: traitCollection).tintColor = color
             HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
+            ResumeButton.appearance(for: traitCollection).tintColor = color
         }
         
         if let color = buttonTextColor {
@@ -247,6 +258,14 @@ open class Style: NSObject {
         
         if let color = turnArrowSecondaryColor {
             TurnArrowView.appearance(for: traitCollection).secondaryColor = color
+        }
+        
+        if let color = floatingButtonBackgroundColor {
+            FloatingButton.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = lanesViewBackgroundColor {
+            LanesView.appearance(for: traitCollection).backgroundColor = color
         }
         
         // Maneuver page view controller
@@ -352,6 +371,15 @@ open class Style: NSObject {
 @objc(MBButton)
 public class Button: StylableButton { }
 
+/// :nodoc:
+@objc(MBFloatingButton)
+public class FloatingButton: Button { }
+
+
+/// :nodoc:
+@objc(MBLanesView)
+public class LanesView: UIView { }
+
 /**
  :nodoc:
  `HighlightedButton` sets the button’s titleColor for normal control state according to the style in addition to the styling behavior inherited from
@@ -359,6 +387,54 @@ public class Button: StylableButton { }
  */
 @objc(MBHighlightedButton)
 public class HighlightedButton: Button { }
+
+@IBDesignable
+@objc(MBResumeButton)
+public class ResumeButton: UIControl {
+    public override dynamic var tintColor: UIColor! {
+        didSet {
+            imageView.tintColor = tintColor
+            titleLabel.textColor = tintColor
+        }
+    }
+    
+    let imageView = UIImageView(image: UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate))
+    let titleLabel = UILabel()
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        commonInit()
+    }
+    
+    func commonInit() {
+        titleLabel.text = NSLocalizedString("RESUME", bundle: .mapboxNavigation, value: "Resume", comment: "Button title for resume tracking")
+        titleLabel.sizeToFit()
+        addSubview(imageView)
+        addSubview(titleLabel)
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        let views = ["label": titleLabel, "imageView": imageView]
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[imageView]-8-[label]-8-|", options: [], metrics: nil, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|->=12-[imageView]->=12-|", options: [], metrics: nil, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|->=12-[label]->=12-|", options: [], metrics: nil, views: views))
+        setNeedsUpdateConstraints()
+        
+        applyDefaultCornerRadiusShadow()
+    }
+}
 
 /// :nodoc:
 @objc(MBStylableLabel)

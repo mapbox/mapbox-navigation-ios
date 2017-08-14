@@ -13,7 +13,7 @@ class RouteMapViewController: UIViewController {
 
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
-    @IBOutlet weak var recenterButton: Button!
+    @IBOutlet weak var recenterButton: ResumeButton!
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
@@ -70,10 +70,9 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.manuallyUpdatesLocation = true
         
-        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        recenterButton.applyDefaultCornerRadiusShadow()
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
+        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
@@ -103,13 +102,21 @@ class RouteMapViewController: UIViewController {
             mapView.setCamera(camera, animated: false)
         }
     }
-
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // For some reason, when completing a maneuver this function is called.
+        // If we try to set the insets/align twice, the UI locks momentarily.
+        if mapView.userLocationVerticalAlignment != .bottom {
+            mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
+            mapView.setContentInset(contentInsets, animated: false)
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
-        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-        mapView.setContentInset(contentInsets, animated: false)
         
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
