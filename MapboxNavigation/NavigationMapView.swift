@@ -145,9 +145,9 @@ open class NavigationMapView: MGLMapView {
             return
         }
         
-        let remainingWaypoints = route.legs.suffix(from: legIndex).map { $0.destination }
+        let remainingWaypoints = Array(route.legs.suffix(from: legIndex).map { $0.destination }.dropLast())
         
-        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: remainingWaypoints) ?? shape(for: Array(remainingWaypoints.dropLast()))
+        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: remainingWaypoints) ?? shape(for: remainingWaypoints)
         
         if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
             waypointSource.shape = source
