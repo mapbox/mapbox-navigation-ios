@@ -33,6 +33,9 @@ public protocol RouteControllerDelegate: class {
     @objc(routeController:willRerouteFromLocation:)
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
     
+    @objc(routeController:didDiscardLocation:)
+    optional func routeController(_ routeController: RouteController, didDiscard location: CLLocation)
+    
     /**
      Called immediately after the route controller receives a new route.
      
@@ -401,6 +404,7 @@ extension RouteController: CLLocationManagerDelegate {
         sessionState.pastLocations.push(location)
         
         guard location.isQualified else {
+            delegate?.routeController?(self, didDiscard: location)
             return
         }
         

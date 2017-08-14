@@ -596,40 +596,28 @@ class ManeuverContainerView: UIView {
 class StatusView: UIView {
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var textLabel: UILabel!
-    @IBOutlet weak var topConstraint: NSLayoutConstraint!
     
     func show(_ title: String, showSpinner: Bool) {
         textLabel.text = title
         activityIndicatorView.isHidden = !showSpinner
         activityIndicatorView.startAnimating()
-        isHidden = false
-        
-        updateConstraints(show: true)
         
         UIView.defaultAnimation(0.3, animations: {
-            self.superview?.layoutIfNeeded()
+            self.isHidden = false
         }, completion: nil)
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
+        
         if animated {
-            updateConstraints(show: false)
             UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.superview?.layoutIfNeeded()
+                self.isHidden = true
             }, completion: { (completed) in
                 self.activityIndicatorView.stopAnimating()
-                self.isHidden = true
             })
         } else {
-            updateConstraints(show: false)
             self.activityIndicatorView.stopAnimating()
             self.isHidden = true
-            self.superview?.layoutIfNeeded()
         }
-    }
-    
-    fileprivate func updateConstraints(show: Bool) {
-        topConstraint.constant = show ? 0 : -bounds.height
-        superview?.setNeedsUpdateConstraints()
     }
 }
