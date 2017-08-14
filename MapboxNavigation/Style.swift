@@ -391,7 +391,7 @@ public class HighlightedButton: Button { }
 @IBDesignable
 @objc(MBResumeButton)
 public class ResumeButton: UIControl {
-    public override var tintColor: UIColor! {
+    public override dynamic var tintColor: UIColor! {
         didSet {
             imageView.tintColor = tintColor
             titleLabel.textColor = tintColor
