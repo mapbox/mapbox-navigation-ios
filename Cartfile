@@ -1,7 +1,7 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 3.5
 github "mapbox/MapboxDirections.swift" ~> 0.10.1
-github "52inc/Pulley" ~> 1.3.1
+github "52inc/Pulley" == 1.4
 github "rs/SDWebImage" ~> 4.0
 github "Project-OSRM/osrm-text-instructions.swift" ~> 0.3.0
-github "frederoni/aws-sdk-ios" "40c7d5d60e0b80d70cd1502ef0cf8507f023f8d5"
+github "frederoni/aws-sdk-ios" "83c722a3e2aa9251d3d9f8e7b04339d5e6c83eab"
 github "mapbox/mapbox-telemetry-ios" ~> 0.2
