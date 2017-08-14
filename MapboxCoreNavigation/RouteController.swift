@@ -256,31 +256,32 @@ open class RouteController: NSObject {
         }
         
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return location }
-        let slicedLine = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
-        let userDistanceBuffer = location.speed * RouteControllerDeadReckoningTimeInterval
-
-        // Get closest point infront of user
-        guard let pointOneSliced = coordinate(at: userDistanceBuffer, fromStartOf: slicedLine) else { return location }
-        guard let pointOneClosest = closestCoordinate(on: nearByCoordinates, to: pointOneSliced) else { return location }
-        guard let pointTwoSliced = coordinate(at: userDistanceBuffer * 2, fromStartOf: slicedLine) else { return location }
-        guard let pointTwoClosest = closestCoordinate(on: nearByCoordinates, to: pointTwoSliced) else { return location }
+        guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return nil }
+        
+        let slicedLineBehind = polyline(along: nearByCoordinates.reversed(), from: closest.coordinate, to: nearByCoordinates.reversed().last)
+        let slicedLineInfront = polyline(along: nearByCoordinates, from: closest.coordinate, to: nearByCoordinates.last)
+        let userDistanceBuffer: CLLocationDistance = max(location.speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
+        
+        guard let pointBehind = coordinate(at: userDistanceBuffer, fromStartOf: slicedLineBehind) else { return nil }
+        guard let pointBehindClosest = closestCoordinate(on: nearByCoordinates, to: pointBehind) else { return nil }
+        guard let pointAhead = coordinate(at: userDistanceBuffer, fromStartOf: slicedLineInfront) else { return nil }
+        guard let pointAheadClosest = closestCoordinate(on: nearByCoordinates, to: pointAhead) else { return nil }
         
         // Get direction of these points
-        let pointOneDirection = closest.coordinate.direction(to: pointOneClosest.coordinate)
-        let pointTwoDirection = closest.coordinate.direction(to: pointTwoClosest.coordinate)
-        let wrappedPointOne = wrap(pointOneDirection, min: -180, max: 180)
-        let wrappedPointTwo = wrap(pointTwoDirection, min: -180, max: 180)
+        let pointBehindDirection = pointBehindClosest.coordinate.direction(to: closest.coordinate)
+        let pointAheadDirection = closest.coordinate.direction(to: pointAheadClosest.coordinate)
+        let wrappedPointBehind = wrap(pointBehindDirection, min: -180, max: 180)
+        let wrappedPointAhead = wrap(pointAheadDirection, min: -180, max: 180)
         let wrappedCourse = wrap(location.course, min: -180, max: 180)
-        let relativeAnglepointOne = wrap(wrappedPointOne - wrappedCourse, min: -180, max: 180)
-        let relativeAnglepointTwo = wrap(wrappedPointTwo - wrappedCourse, min: -180, max: 180)
-        let averageRelativeAngle = (relativeAnglepointOne + relativeAnglepointTwo) / 2
+        let relativeAnglepointBehind = wrap(wrappedPointBehind - wrappedCourse, min: -180, max: 180)
+        let relativeAnglepointAhead = wrap(wrappedPointAhead - wrappedCourse, min: -180, max: 180)
+        let averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
         let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
         
         // If the course is inaccurate and the user is on the route,
         // calculate a rough estimate as to what the course should be at that point on the route.
         if location.course <= 0 && snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
-            let calculatedCourse = wrap((wrappedPointOne + wrappedPointTwo) / 2, min: 0 , max: 360)
+            let calculatedCourse = wrap((wrappedPointBehind + wrappedPointAhead) / 2, min: 0 , max: 360)
             return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedCourse, speed: location.speed, timestamp: location.timestamp)
         }
 
@@ -509,9 +510,7 @@ extension RouteController: CLLocationManagerDelegate {
         if let upComingStep = routeProgress.currentLegProgress.upComingStep {
             let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
             if !isCloseToCurrentStep && isCloseToUpComingStep {
-                let userSnapToStepDistanceFromManeuver = distance(along: upComingStep.coordinates!, from: location.coordinate)
-                let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-                incrementRouteProgress(secondsToEndOfStep <= RouteControllerMediumAlertInterval ? .medium : .low, location: location, updateStepIndex: true)
+                incrementRouteProgress(newAlert(from: upComingStep), location: location, updateStepIndex: true)
                 return true
             }
         }
@@ -653,14 +652,12 @@ extension RouteController: CLLocationManagerDelegate {
         // Force an announcement when the user begins a route
         var alertLevel: AlertLevel = routeProgress.currentLegProgress.alertUserLevel == .none ? .depart : routeProgress.currentLegProgress.alertUserLevel
         var updateStepIndex = false
-        let profileIdentifier = routeProgress.route.routeOptions.profileIdentifier
         
         let userSnapToStepDistanceFromManeuver = distance(along: routeProgress.currentLegProgress.currentStep.coordinates!, from: location.coordinate)
-        let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
+        let secondsToEndOfStep = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
         var courseMatchesManeuverFinalHeading = false
-        
-        let minimumDistanceForHighAlert = RouteControllerMinimumDistanceForHighAlert(identifier: profileIdentifier)
-        let minimumDistanceForMediumAlert = RouteControllerMinimumDistanceForMediumAlert(identifier: profileIdentifier)
+
+        let outletRoadClasses = routeProgress.currentLegProgress.currentStepProgress.step.intersections?.first?.outletRoadClasses
         
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
         // we count this as within the `RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion`
@@ -692,6 +689,12 @@ extension RouteController: CLLocationManagerDelegate {
             if secondsToEndOfStep <= RouteControllerHighAlertInterval {
                 alertLevel = .high
             }
+        } else if let _ = outletRoadClasses?.contains(.motorway),
+            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= RouteControllerMotorwayHighAlertDistance {
+            alertLevel = .high
+        } else if let _ = outletRoadClasses?.contains(.motorway),
+            routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= RouteControllerMotorwayMediumAlertDistance {
+            alertLevel = .medium
         } else if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
@@ -719,22 +722,29 @@ extension RouteController: CLLocationManagerDelegate {
                 
                 // Look at the following step to determine what the new alert level should be
                 if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-                    alertLevel = upComingStep.expectedTravelTime <= RouteControllerMediumAlertInterval ? .medium : .low
+                    alertLevel = newAlert(from: upComingStep)
                 } else {
                     assert(false, "In this case, there should always be an upcoming step")
                 }
             }
-        } else if secondsToEndOfStep <= RouteControllerHighAlertInterval && routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForHighAlert {
+        } else if secondsToEndOfStep <= RouteControllerHighAlertInterval {
             alertLevel = .high
-        } else if secondsToEndOfStep <= RouteControllerMediumAlertInterval &&
-            // Don't alert if the route segment is shorter than X
-            // However, if it's the beginning of the route
-            // There needs to be an alert
-            routeProgress.currentLegProgress.currentStep.distance > minimumDistanceForMediumAlert {
+        } else if secondsToEndOfStep <= RouteControllerMediumAlertInterval {
             alertLevel = .medium
         }
         
         incrementRouteProgress(alertLevel, location: location, updateStepIndex: updateStepIndex)
+    }
+    
+    func newAlert(from upcomingStep: RouteStep) -> AlertLevel {
+        switch upcomingStep.expectedTravelTime {
+        case 0..<RouteControllerHighAlertInterval:
+            return .high
+        case RouteControllerHighAlertInterval..<RouteControllerMediumAlertInterval:
+            return .medium
+        default:
+            return .low
+        }
     }
 }
 

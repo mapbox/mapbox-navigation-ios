@@ -15,11 +15,11 @@ open class NavigationMapView: MGLMapView {
     let routeLayerCasingIdentifier = "routeLayerCasing"
     
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
-        10: MGLStyleValue(rawValue: 6),
-        13: MGLStyleValue(rawValue: 7),
-        16: MGLStyleValue(rawValue: 10),
-        19: MGLStyleValue(rawValue: 22),
-        22: MGLStyleValue(rawValue: 28)
+        10: MGLStyleValue(rawValue: 8),
+        13: MGLStyleValue(rawValue: 9),
+        16: MGLStyleValue(rawValue: 12),
+        19: MGLStyleValue(rawValue: 24),
+        22: MGLStyleValue(rawValue: 30)
     ]
     
     var manuallyUpdatesLocation: Bool = false {

@@ -87,21 +87,25 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
-        let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
-            self.startBasicNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
-            self.startCustomNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
-            self.startStyledNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-            self.startMultipleWaypoints()
-        }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         DispatchQueue.main.async {
+            let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+            alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
+                self.startBasicNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
+                self.startCustomNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
+                self.startStyledNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
+                self.startMultipleWaypoints()
+            }))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = self.startButton
+            }
             self.present(alertController, animated: true, completion: nil)
         }
     }
@@ -180,6 +184,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.fontFamily = "Georgia"
         style.turnArrowPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         style.turnArrowSecondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
+        style.floatingButtonBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        style.lanesViewBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)

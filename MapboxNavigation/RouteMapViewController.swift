@@ -13,11 +13,12 @@ class RouteMapViewController: UIViewController {
 
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
-    @IBOutlet weak var recenterButton: Button!
+    @IBOutlet weak var recenterButton: ResumeButton!
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
+    @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var laneViewsContainerView: UIView!
     @IBOutlet var laneViews: [LaneArrowView]!
@@ -55,7 +56,6 @@ class RouteMapViewController: UIViewController {
     }
     weak var delegate: RouteMapViewControllerDelegate?
     weak var routeController: RouteController!
-    
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
@@ -70,13 +70,19 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.manuallyUpdatesLocation = true
         
-        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: 22)
-        recenterButton.applyDefaultCornerRadiusShadow()
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
+        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
+        statusView.hide(delay: 0, animated: false)
+        
+        resumeNotifications()
+    }
+    
+    deinit {
+        suspendNotifications()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -97,39 +103,56 @@ class RouteMapViewController: UIViewController {
             mapView.setCamera(camera, animated: false)
         }
     }
-
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // For some reason, when completing a maneuver this function is called.
+        // If we try to set the insets/align twice, the UI locks momentarily.
+        if mapView.userLocationVerticalAlignment != .bottom {
+            mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
+            mapView.setContentInset(contentInsets, animated: false)
+        }
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
-        mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-        mapView.setContentInset(contentInsets, animated: false)
         
         showRouteIfNeeded()
     }
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidFailToReroute, object: nil)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidFailToReroute, object: nil)
+    }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        mapView.setCamera(tiltedCamera, animated: false)
-        mapView.userTrackingMode = .followWithCourse
+        mapView.camera = tiltedCamera
+        mapView.setUserTrackingMode(.followWithCourse, animated: true)
         mapView.logoView.isHidden = false
-
-        // Recenter also resets the current page. Same behavior as rerouting.
-        routePageViewController.notifyDidReRoute()
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
         if isInOverviewMode {
             overviewButton.isHidden = false
             mapView.logoView.isHidden = false
-            mapView.setCamera(tiltedCamera, animated: false)
+            mapView.camera = tiltedCamera
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
             wayNameView.isHidden = true
             overviewButton.isHidden = true
             mapView.logoView.isHidden = true
-            updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
+            updateVisibleBounds()
         }
-        
+
         isInOverviewMode = !isInOverviewMode
         
         routePageViewController.notifyDidReRoute()
@@ -175,21 +198,24 @@ class RouteMapViewController: UIViewController {
             break
         }
     }
-
-    func updateVisibleBounds(coordinates: [CLLocationCoordinate2D]) {
+    
+    func updateVisibleBounds() {
+        guard let userLocation = self.mapView.userLocation?.coordinate else { return }
+        
+        let overviewContentInset = UIEdgeInsets(top: 65, left: 20, bottom: 55, right: 20)
+        let slicedLine = polyline(along: polyline(along: self.routeController.routeProgress.route.coordinates!, from: userLocation, to: self.routeController.routeProgress.route.coordinates!.last))
+        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+        
+        mapView.userTrackingMode = .none
         let camera = mapView.camera
         camera.pitch = 0
         camera.heading = 0
         mapView.camera = camera
-
-        let polyline = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
-        // Don't keep zooming in
-        guard polyline.overlayBounds.ne - polyline.overlayBounds.sw > 200 else {
-            return
-        }
         
-        let overviewContentInset = UIEdgeInsets(top: 65, left: 15, bottom: 55, right: 15)
-        mapView.setVisibleCoordinateBounds(polyline.overlayBounds, edgePadding: overviewContentInset, animated: true)
+        // Don't keep zooming in
+        guard line.overlayBounds.ne - line.overlayBounds.sw > 200 else { return }
+        
+        mapView.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 
     func notifyDidReroute(route: Route) {
@@ -198,11 +224,20 @@ class RouteMapViewController: UIViewController {
         mapView.showRoute(route)
 
         if isInOverviewMode {
-            updateVisibleBounds(coordinates: routeController.routeProgress.route.coordinates!)
+            updateVisibleBounds()
         } else {
             mapView.userTrackingMode = .followWithCourse
             wayNameView.isHidden = true
         }
+    }
+    
+    func willReroute(notification: NSNotification) {
+        let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
+        statusView.show(title, showSpinner: true)
+    }
+    
+    func didReroute(notification: NSNotification) {
+        statusView.hide(delay: 0.5, animated: true)
     }
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
@@ -249,12 +284,7 @@ class RouteMapViewController: UIViewController {
             return
         }
 
-        guard let userLocation = mapView.userLocation?.coordinate else {
-            return
-        }
-
-        let slicedLine = polyline(along: routeProgress.route.coordinates!, from: userLocation, to: routeProgress.route.coordinates!.last)
-        updateVisibleBounds(coordinates: slicedLine)
+        updateVisibleBounds()
     }
     
     var contentInsets: UIEdgeInsets {
@@ -481,10 +511,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard !map.showsRoute else { return }
         map.showRoute(route)
     }
-
-    func mapView(_ mapView: MGLMapView, didDeselect annotation: MGLAnnotation) {
-        mapView.userTrackingMode = .followWithCourse
-    }
 }
 
 // MARK: RouteManeuverPageViewControllerDelegate
@@ -505,7 +531,8 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
 
         if !isInOverviewMode {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
-                mapView.userTrackingMode = .followWithCourse
+                mapView.camera = tiltedCamera
+                mapView.setUserTrackingMode(.followWithCourse, animated: true)
             } else {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
