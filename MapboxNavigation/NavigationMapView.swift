@@ -137,20 +137,14 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    public func showWaypoints(routeProgress: RouteProgress) {
+    public func showWaypoints(_ route: Route, legIndex: Int = 0) {
         guard let style = style else {
             return
         }
         
-        let route = routeProgress.route
+        let remainingWaypoints = route.legs.suffix(from: legIndex).map { $0.destination }
         
-        if let lastLeg =  route.legs.last {
-            let destination = MGLPointAnnotation()
-            destination.coordinate = lastLeg.destination.coordinate
-            addAnnotation(destination)
-        }
-        
-        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: routeProgress.remainingWaypoints) ?? shape(for: Array(routeProgress.remainingWaypoints.dropLast()))
+        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: remainingWaypoints) ?? shape(for: Array(remainingWaypoints.dropLast()))
         
         if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
             waypointSource.shape = source
@@ -169,6 +163,27 @@ open class NavigationMapView: MGLMapView {
             }
             
             style.insertLayer(symbols, above: circles)
+        }
+        
+        if let lastLeg =  route.legs.last {
+            removeAnnotations(annotations ?? [])
+            let destination = MGLPointAnnotation()
+            destination.coordinate = lastLeg.destination.coordinate
+            addAnnotation(destination)
+        }
+    }
+    
+    public func removeWaypoints() {
+        guard let style = style else {
+            return
+        }
+        
+        if let circleLayer = style.layer(withIdentifier: waypointCircleIdentifier) {
+            style.removeLayer(circleLayer)
+        }
+        
+        if let symbolLayer = style.layer(withIdentifier: waypointSymbolIdentifier) {
+            style.removeLayer(symbolLayer)
         }
     }
     
@@ -320,7 +335,7 @@ open class NavigationMapView: MGLMapView {
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
         lineCasing.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
-            true: MGLStyleValue(rawValue: 0.70),
+            true: MGLStyleValue(rawValue: 0.85),
             false: MGLStyleValue(rawValue: 1)
             ], attributeName: isCurrentLeg, options: nil)
         

@@ -58,6 +58,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         }
         
         clearMap.isHidden = false
+        longPressHintView.isHidden = true
 
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {
             mapView.removeAnnotation(annotation)
@@ -68,13 +69,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         }
         
         let coordinates = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
-        
-        let annotation = MGLPointAnnotation()
-        annotation.coordinate = coordinates
-        mapView.addAnnotation(annotation)
-        
-        longPressHintView.isHidden = true
-        
         let waypoint = Waypoint(coordinate: coordinates)
         waypoint.coordinateAccuracy = -1
         waypoints.append(waypoint)
@@ -102,7 +96,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     @IBAction func clearMapPressed(_ sender: Any) {
         clearMap.isHidden = true
         mapView.removeRoute()
-        mapView.removeAnnotations(mapView.annotations ?? [])
+        mapView.removeWaypoints()
         waypoints.removeAll()
     }
     
@@ -159,6 +153,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             
             // Open method for adding and updating the route line
             self?.mapView.showRoute(route)
+            self?.mapView.showWaypoints(route, legIndex: 0)
         }
     }
 

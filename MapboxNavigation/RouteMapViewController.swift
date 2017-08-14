@@ -248,7 +248,7 @@ class RouteMapViewController: UIViewController {
         }
         
         if currentLegIndexMapped != routeProgress.legIndex {
-            mapView.showWaypoints(routeProgress: routeController.routeProgress)
+            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
             mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
@@ -358,6 +358,10 @@ extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
 // MARK: NavigationMapViewDelegate
 
 extension RouteMapViewController: NavigationMapViewDelegate {
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+    }
 
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
@@ -523,7 +527,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
         map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
-        map.showWaypoints(routeProgress: routeController.routeProgress)
+        map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
     }
 }
 
@@ -584,6 +588,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
 }
 
 protocol RouteMapViewControllerDelegate: class {
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
