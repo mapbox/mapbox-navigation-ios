@@ -19,7 +19,6 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
     @IBOutlet weak var statusView: StatusView!
-    @IBOutlet weak var laneViewsTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var laneViewsContainerView: UIView!
     @IBOutlet var laneViews: [LaneArrowView]!
     
@@ -320,20 +319,18 @@ class RouteMapViewController: UIViewController {
     }
     
     func showLaneViews() {
-        guard laneViewsTopConstraint.constant != 0 else { return }
-        laneViewsTopConstraint.constant = 0
-        view.setNeedsUpdateConstraints()
+        guard laneViewsContainerView.isHidden == true else { return }
+        
         UIView.defaultAnimation(0.3, animations: {
-            self.view.layoutIfNeeded()
+            self.laneViewsContainerView.isHidden = false
         }, completion: nil)
     }
     
     func hideLaneViews() {
-        guard laneViewsTopConstraint.constant != -laneViewsContainerView.bounds.height else { return }
-        laneViewsTopConstraint.constant = -laneViewsContainerView.bounds.height
-        view.setNeedsUpdateConstraints()
+        guard laneViewsContainerView.isHidden == false else { return }
+        
         UIView.defaultAnimation(0.3, animations: {
-            self.view.layoutIfNeeded()
+            self.laneViewsContainerView.isHidden = true
         }, completion: nil)
     }
 }

@@ -102,197 +102,201 @@
                                     <constraint firstItem="bcm-ca-nGv" firstAttribute="leading" secondItem="drb-do-FoT" secondAttribute="leading" constant="14" id="gei-Oh-7XJ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Stack View" customClass="MBLanesView">
-                                <rect key="frame" x="0.0" y="114.5" width="375" height="40"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG">
+                                <rect key="frame" x="0.0" y="114.5" width="375" height="70"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="D9e-aq-442" userLabel="Lane Stack View">
-                                        <rect key="frame" x="187.5" y="7.5" width="0.0" height="32.5"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Stack View" customClass="MBLanesView">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                         <subviews>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xMK-ix-h83" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="D9e-aq-442" userLabel="Lane Stack View">
+                                                <rect key="frame" x="187.5" y="7.5" width="0.0" height="32.5"/>
+                                                <subviews>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="xMK-ix-h83" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="5sC-IA-ynK"/>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="eFo-oh-D8F"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Ubg-JB-V89" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" priority="999" constant="30" id="QaH-MV-hA1"/>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="Yrb-L1-Yda"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1to-o2-XUJ" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" priority="998" constant="30" id="XqQ-bI-oTM"/>
+                                                            <constraint firstAttribute="height" constant="30" id="c02-Nl-37M"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="9Oc-7m-0dN" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="CGM-pJ-lk4"/>
+                                                            <constraint firstAttribute="width" priority="997" constant="30" id="cUc-ae-GQH"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="zJ7-cq-Mlb" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="UNJ-iN-Tdv"/>
+                                                            <constraint firstAttribute="width" priority="996" constant="30" id="q1y-a8-akI"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="vF3-W9-UzW" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" priority="995" constant="30" id="ATb-XJ-zBo"/>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="lwh-5Z-2nG"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eFU-s5-Zww" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" priority="994" constant="30" id="POv-3J-uon"/>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="oUN-3C-GdQ"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="aCw-bc-uSe" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="1Nn-Oh-Mdv"/>
+                                                            <constraint firstAttribute="width" priority="993" constant="30" id="cms-MY-UnQ"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Hqn-bl-B7o" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="2Ke-f9-e38"/>
+                                                            <constraint firstAttribute="width" priority="992" constant="30" id="gV9-SG-hCr"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                    <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="nT0-dD-cWg" customClass="MBLaneArrowView">
+                                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" priority="999" constant="30" id="bLR-Yq-IuZ"/>
+                                                            <constraint firstAttribute="width" priority="991" constant="30" id="wH0-gZ-Viw"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
+                                                                <real key="value" value="0.65000000000000002"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" priority="999" constant="30" id="5sC-IA-ynK"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="eFo-oh-D8F"/>
+                                                    <constraint firstAttribute="bottom" secondItem="xMK-ix-h83" secondAttribute="bottom" constant="2.5" id="5MZ-mh-7db"/>
+                                                    <constraint firstItem="xMK-ix-h83" firstAttribute="leading" secondItem="D9e-aq-442" secondAttribute="leading" id="HCi-B6-Ape"/>
+                                                    <constraint firstAttribute="trailing" secondItem="nT0-dD-cWg" secondAttribute="trailing" id="TN3-tr-d8L"/>
+                                                    <constraint firstItem="xMK-ix-h83" firstAttribute="top" secondItem="D9e-aq-442" secondAttribute="top" id="wyw-Zu-VB1"/>
                                                 </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Ubg-JB-V89" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </stackView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JUM-jk-r2b" userLabel="Separator View" customClass="MBSeparatorView">
+                                                <rect key="frame" x="0.0" y="39" width="375" height="1"/>
+                                                <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" priority="999" constant="30" id="QaH-MV-hA1"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="Yrb-L1-Yda"/>
+                                                    <constraint firstAttribute="height" constant="1" id="fur-xp-WRo"/>
                                                 </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="1to-o2-XUJ" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" priority="998" constant="30" id="XqQ-bI-oTM"/>
-                                                    <constraint firstAttribute="height" constant="30" id="c02-Nl-37M"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="9Oc-7m-0dN" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="CGM-pJ-lk4"/>
-                                                    <constraint firstAttribute="width" priority="997" constant="30" id="cUc-ae-GQH"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="zJ7-cq-Mlb" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="UNJ-iN-Tdv"/>
-                                                    <constraint firstAttribute="width" priority="996" constant="30" id="q1y-a8-akI"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="vF3-W9-UzW" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" priority="995" constant="30" id="ATb-XJ-zBo"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="lwh-5Z-2nG"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="eFU-s5-Zww" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" priority="994" constant="30" id="POv-3J-uon"/>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="oUN-3C-GdQ"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="aCw-bc-uSe" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="1Nn-Oh-Mdv"/>
-                                                    <constraint firstAttribute="width" priority="993" constant="30" id="cms-MY-UnQ"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="Hqn-bl-B7o" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="-187.5" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="2Ke-f9-e38"/>
-                                                    <constraint firstAttribute="width" priority="992" constant="30" id="gV9-SG-hCr"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <view hidden="YES" contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="nT0-dD-cWg" customClass="MBLaneArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" priority="999" constant="30" id="bLR-Yq-IuZ"/>
-                                                    <constraint firstAttribute="width" priority="991" constant="30" id="wH0-gZ-Viw"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="0.65000000000000002"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="xMK-ix-h83" secondAttribute="bottom" constant="2.5" id="5MZ-mh-7db"/>
-                                            <constraint firstItem="xMK-ix-h83" firstAttribute="leading" secondItem="D9e-aq-442" secondAttribute="leading" id="HCi-B6-Ape"/>
-                                            <constraint firstAttribute="trailing" secondItem="nT0-dD-cWg" secondAttribute="trailing" id="TN3-tr-d8L"/>
-                                            <constraint firstItem="xMK-ix-h83" firstAttribute="top" secondItem="D9e-aq-442" secondAttribute="top" id="wyw-Zu-VB1"/>
+                                            <constraint firstAttribute="trailing" secondItem="JUM-jk-r2b" secondAttribute="trailing" id="0Nd-j8-zNO"/>
+                                            <constraint firstAttribute="bottom" secondItem="D9e-aq-442" secondAttribute="bottom" id="MDI-8I-sBC"/>
+                                            <constraint firstAttribute="bottom" secondItem="JUM-jk-r2b" secondAttribute="bottom" id="gHw-DI-cFd"/>
+                                            <constraint firstItem="JUM-jk-r2b" firstAttribute="leading" secondItem="NE9-ru-uJw" secondAttribute="leading" id="hXj-Iy-A2J"/>
+                                            <constraint firstItem="D9e-aq-442" firstAttribute="centerX" secondItem="NE9-ru-uJw" secondAttribute="centerX" id="jtM-9g-ugM"/>
+                                            <constraint firstAttribute="height" constant="40" id="vE6-3z-p4c"/>
                                         </constraints>
-                                    </stackView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JUM-jk-r2b" userLabel="Separator View" customClass="MBSeparatorView">
-                                        <rect key="frame" x="0.0" y="39" width="375" height="1"/>
-                                        <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
+                                        <rect key="frame" x="0.0" y="40" width="375" height="30"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpZ-gr-OKM">
+                                                <rect key="frame" x="141.5" y="5" width="92.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                                <color key="textColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="jgC-8q-YUu">
+                                                <rect key="frame" x="345" y="5" width="20" height="20"/>
+                                            </activityIndicatorView>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.67473591549295775" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="1" id="fur-xp-WRo"/>
+                                            <constraint firstItem="jgC-8q-YUu" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="Ghp-Pc-H3U"/>
+                                            <constraint firstAttribute="trailing" secondItem="jgC-8q-YUu" secondAttribute="trailing" constant="10" id="JTW-3W-9TJ"/>
+                                            <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerX" secondItem="Jym-DH-tdD" secondAttribute="centerX" id="gSp-Qg-FgY"/>
+                                            <constraint firstAttribute="height" constant="30" id="lnn-re-skW"/>
+                                            <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="uEG-1L-ErF"/>
                                         </constraints>
+                                        <connections>
+                                            <outlet property="activityIndicatorView" destination="jgC-8q-YUu" id="mGB-sM-IEl"/>
+                                            <outlet property="textLabel" destination="UpZ-gr-OKM" id="aOh-bx-0nv"/>
+                                        </connections>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="JUM-jk-r2b" secondAttribute="trailing" id="0Nd-j8-zNO"/>
-                                    <constraint firstAttribute="bottom" secondItem="D9e-aq-442" secondAttribute="bottom" id="MDI-8I-sBC"/>
-                                    <constraint firstAttribute="bottom" secondItem="JUM-jk-r2b" secondAttribute="bottom" id="gHw-DI-cFd"/>
-                                    <constraint firstItem="JUM-jk-r2b" firstAttribute="leading" secondItem="NE9-ru-uJw" secondAttribute="leading" id="hXj-Iy-A2J"/>
-                                    <constraint firstItem="D9e-aq-442" firstAttribute="centerX" secondItem="NE9-ru-uJw" secondAttribute="centerX" id="jtM-9g-ugM"/>
-                                    <constraint firstAttribute="height" constant="40" id="vE6-3z-p4c"/>
-                                </constraints>
-                                <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
-                                <rect key="frame" x="0.0" y="155" width="375" height="30"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpZ-gr-OKM">
-                                        <rect key="frame" x="141.5" y="5" width="92.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                        <color key="textColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="jgC-8q-YUu">
-                                        <rect key="frame" x="345" y="5" width="20" height="20"/>
-                                    </activityIndicatorView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.67473591549295775" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="jgC-8q-YUu" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="Ghp-Pc-H3U"/>
-                                    <constraint firstAttribute="trailing" secondItem="jgC-8q-YUu" secondAttribute="trailing" constant="10" id="JTW-3W-9TJ"/>
-                                    <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerX" secondItem="Jym-DH-tdD" secondAttribute="centerX" id="gSp-Qg-FgY"/>
-                                    <constraint firstAttribute="height" constant="30" id="lnn-re-skW"/>
-                                    <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="uEG-1L-ErF"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="activityIndicatorView" destination="jgC-8q-YUu" id="mGB-sM-IEl"/>
-                                    <outlet property="textLabel" destination="UpZ-gr-OKM" id="aOh-bx-0nv"/>
-                                    <outlet property="topConstraint" destination="rsm-7B-ry2" id="5X1-Ym-fhx"/>
-                                </connections>
-                            </view>
+                            </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="76S-HP-bfy" userLabel="Background View" customClass="MBManeuverView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="114.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -374,36 +378,32 @@
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="20" id="4oP-yz-9W5"/>
-                            <constraint firstAttribute="trailing" secondItem="NE9-ru-uJw" secondAttribute="trailing" id="52l-ND-Jdc"/>
+                            <constraint firstItem="Eeb-3z-AWG" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="81D-S0-3wU"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="HsP-If-DXW"/>
-                            <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Jym-DH-tdD" secondAttribute="bottom" constant="10" id="IRw-J2-Ori"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
                             <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="SKK-r5-nj0" secondAttribute="bottom" constant="92" id="KT2-TO-Mr4"/>
+                            <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="NZN-Hw-HBT"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="Gvo-VD-DXF" secondAttribute="centerX" id="O0m-0k-ilC"/>
                             <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
-                            <constraint firstAttribute="trailing" secondItem="Jym-DH-tdD" secondAttribute="trailing" id="Oy8-JD-Az4"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
-                            <constraint firstItem="NE9-ru-uJw" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" identifier="Lane Views Top Constraint" id="VHU-Yr-eQL" userLabel="Lane Views Top Constraint"/>
+                            <constraint firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
-                            <constraint firstItem="NE9-ru-uJw" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="ayw-dM-DXC"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="azG-Bi-6NR"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="bottom" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="djD-Ab-lfr"/>
                             <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
+                            <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gfU-Wb-qye"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="kcQ-AN-lKG"/>
-                            <constraint firstItem="Jym-DH-tdD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="nv3-G5-3zY"/>
                             <constraint firstItem="SKK-r5-nj0" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="pN3-Uj-cPZ"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="pfx-SS-Xux"/>
-                            <constraint firstItem="Jym-DH-tdD" firstAttribute="top" secondItem="NE9-ru-uJw" secondAttribute="bottom" id="rsm-7B-ry2" userLabel="Status View Top Constraint"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="top" id="uLe-Ov-1yA"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" constant="0.5" id="xsN-Bb-wmd"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="laneViewsContainerView" destination="NE9-ru-uJw" id="zAQ-tC-jK8"/>
-                        <outlet property="laneViewsTopConstraint" destination="VHU-Yr-eQL" id="PSb-AN-3Op"/>
                         <outlet property="maneuverContainerView" destination="p9E-v0-Rt6" id="L5B-6a-0Aj"/>
                         <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
                         <outlet property="muteButton" destination="Y2a-qB-86S" id="YK6-ak-WNw"/>
@@ -413,16 +413,16 @@
                         <outlet property="statusView" destination="Jym-DH-tdD" id="9Hw-jY-J4n"/>
                         <outlet property="wayNameLabel" destination="bcm-ca-nGv" id="8Sy-Pk-fQZ"/>
                         <outlet property="wayNameView" destination="drb-do-FoT" id="oby-w9-mC3"/>
-                        <outletCollection property="laneViews" destination="xMK-ix-h83" collectionClass="NSMutableArray" id="3Oz-eZ-e73"/>
-                        <outletCollection property="laneViews" destination="Ubg-JB-V89" collectionClass="NSMutableArray" id="kCs-uj-ubn"/>
-                        <outletCollection property="laneViews" destination="1to-o2-XUJ" collectionClass="NSMutableArray" id="yfR-Vc-OUS"/>
-                        <outletCollection property="laneViews" destination="9Oc-7m-0dN" collectionClass="NSMutableArray" id="GvJ-Bi-pgG"/>
-                        <outletCollection property="laneViews" destination="zJ7-cq-Mlb" collectionClass="NSMutableArray" id="awG-oH-pGN"/>
-                        <outletCollection property="laneViews" destination="vF3-W9-UzW" collectionClass="NSMutableArray" id="yBp-vd-CgN"/>
                         <outletCollection property="laneViews" destination="eFU-s5-Zww" collectionClass="NSMutableArray" id="2iX-OH-cO6"/>
-                        <outletCollection property="laneViews" destination="aCw-bc-uSe" collectionClass="NSMutableArray" id="Zfa-Oe-Jbb"/>
-                        <outletCollection property="laneViews" destination="Hqn-bl-B7o" collectionClass="NSMutableArray" id="Vkc-fw-W0l"/>
+                        <outletCollection property="laneViews" destination="vF3-W9-UzW" collectionClass="NSMutableArray" id="yBp-vd-CgN"/>
+                        <outletCollection property="laneViews" destination="9Oc-7m-0dN" collectionClass="NSMutableArray" id="GvJ-Bi-pgG"/>
+                        <outletCollection property="laneViews" destination="1to-o2-XUJ" collectionClass="NSMutableArray" id="yfR-Vc-OUS"/>
                         <outletCollection property="laneViews" destination="nT0-dD-cWg" collectionClass="NSMutableArray" id="JIU-MA-Ubq"/>
+                        <outletCollection property="laneViews" destination="Hqn-bl-B7o" collectionClass="NSMutableArray" id="Vkc-fw-W0l"/>
+                        <outletCollection property="laneViews" destination="zJ7-cq-Mlb" collectionClass="NSMutableArray" id="awG-oH-pGN"/>
+                        <outletCollection property="laneViews" destination="Ubg-JB-V89" collectionClass="NSMutableArray" id="kCs-uj-ubn"/>
+                        <outletCollection property="laneViews" destination="xMK-ix-h83" collectionClass="NSMutableArray" id="3Oz-eZ-e73"/>
+                        <outletCollection property="laneViews" destination="aCw-bc-uSe" collectionClass="NSMutableArray" id="Zfa-Oe-Jbb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VoA-f6-EWh" userLabel="First Responder" sceneMemberID="firstResponder"/>

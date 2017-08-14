@@ -424,6 +424,12 @@ extension NavigationViewController: RouteControllerDelegate {
     
     public func routeController(_ routeController: RouteController, didUpdateLocations locations: [CLLocation]) {
         mapViewController?.mapView.locationManager(routeController.locationManager, didUpdateLocations: locations)
+        mapViewController?.statusView.hide(delay: 0.3, animated: true)
+    }
+    
+    public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
+        let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
+        mapViewController?.statusView.show(title, showSpinner: true)
     }
 }
 
