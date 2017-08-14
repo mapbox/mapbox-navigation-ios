@@ -137,6 +137,9 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
+    /**
+     Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
+     */
     public func showWaypoints(_ route: Route, legIndex: Int = 0) {
         guard let style = style else {
             return
@@ -172,7 +175,9 @@ open class NavigationMapView: MGLMapView {
             addAnnotation(destination)
         }
     }
-    
+    /**
+     Removes all waypoints from the map.
+     */
     public func removeWaypoints() {
         guard let style = style else {
             return
@@ -342,7 +347,10 @@ open class NavigationMapView: MGLMapView {
         return lineCasing
     }
     
-    func showArrow(_ routeProgress: RouteProgress) {
+    /**
+     Shows the step arrow given the current `RouteProgress`.
+     */
+    public func showArrow(_ routeProgress: RouteProgress) {
         let maneuverCoordinate = routeProgress.currentLegProgress.upComingStep?.maneuverLocation
         let polylineCoordinates = routeProgress.route.coordinates
         
@@ -443,6 +451,10 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
+    
+    /**
+     Removes the step arrow from the map.
+     */
     func removeArrow() {
         guard let style = style else {
             return

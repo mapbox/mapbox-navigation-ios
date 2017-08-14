@@ -98,11 +98,26 @@ public protocol NavigationViewControllerDelegate {
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
-    
+    /*
+     Returns an` MGLStyleLayer` that determines the appearance of the circles used to symbolize the remaining waypoints.
+     
+     If this method is unimplemented, the navigation map view draws the route remaining waypoints using an `MGLSymbolStyleLayer` whose text is equal to the layer returned from  `navigationMapView(_:shapeFor:)` and will be inserted in the style below the symbol layer in navigationMapView(:waypointSymbolStyleLayerWithIdentifier:).
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
+    /*
+     Returns an` MGLStyleLayer` that determines the appearance of the text used to symbolize the remaining waypoints.
+     
+     If this method is unimplemented, the navigation map view draws the route remaining waypoints using an `MGLSymbolStyleLayer` whose text is equal to the layer returned from  `navigationMapView(_:shapeFor:)`.
+     This text will start at the letter `A` and continue on label each consecutive waypoint with the next letter in the alphabet. This letter is localized for supported languages.
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
+    /**
+     Returns an `MGLShape` that represents the routes waypoints
+     
+     If this method is unimplemented, the navigation map view represnts the route waypoints using `navigationMapView(_:shapeFor:)`.
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
     /**
