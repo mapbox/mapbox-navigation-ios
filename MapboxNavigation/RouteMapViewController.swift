@@ -19,8 +19,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
     @IBOutlet weak var statusView: StatusView!
-    @IBOutlet weak var laneViewsContainerView: UIView!
-    @IBOutlet var laneViews: [LaneArrowView]!
+    @IBOutlet weak var laneViewsContainerView: LanesContainerView!
     
     /**
      Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
@@ -75,7 +74,8 @@ class RouteMapViewController: UIViewController {
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
-        statusView.hide(delay: 0, animated: false)
+        laneViewsContainerView.isHidden = true
+        statusView.isHidden = true
         
         resumeNotifications()
     }
@@ -297,38 +297,28 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateLaneViews(step: RouteStep, alertLevel: AlertLevel) {
-        if let allLanes = step.intersections?.first?.approachLanes,
-            let usableLanes = step.intersections?.first?.usableApproachLanes,
-            (alertLevel == .high || alertLevel == .medium) {
-            for (i, lane) in allLanes.enumerated() {
-                guard i < laneViews.count else {
-                    return
-                }
-                let laneView = laneViews[i]
-                laneView.isHidden = false
-                laneView.lane = lane
-                laneView.maneuverDirection = step.maneuverDirection
-                laneView.isValid = usableLanes.contains(i as Int)
-                laneView.setNeedsDisplay()
-            }
-            
+        laneViewsContainerView.updateLaneViews(step: step, alertLevel: alertLevel)
+        
+        if laneViewsContainerView.stackView.arrangedSubviews.count > 0 {
             showLaneViews()
         } else {
             hideLaneViews()
         }
     }
     
-    func showLaneViews() {
+    func showLaneViews(animated: Bool = true) {
         guard laneViewsContainerView.isHidden == true else { return }
-        
-        UIView.defaultAnimation(0.3, animations: {
+        if animated {
+            UIView.defaultAnimation(0.3, animations: {
+                self.laneViewsContainerView.isHidden = false
+            }, completion: nil)
+        } else {
             self.laneViewsContainerView.isHidden = false
-        }, completion: nil)
+        }
     }
     
     func hideLaneViews() {
         guard laneViewsContainerView.isHidden == false else { return }
-        
         UIView.defaultAnimation(0.3, animations: {
             self.laneViewsContainerView.isHidden = true
         }, completion: nil)

@@ -68,7 +68,7 @@ public protocol RouteControllerDelegate: class {
      - parameter locations: The locations that were received from the associated location manager.
      */
     @objc(routeController:didUpdateLocations:)
-    optional func routeController(_ routeController: RouteController, didUpdateLocations locations: [CLLocation])
+    optional func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation])
 }
 
 /**
@@ -408,7 +408,7 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
-        delegate?.routeController?(self, didUpdateLocations: [location])
+        delegate?.routeController?(self, didUpdate: [location])
 
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
         
