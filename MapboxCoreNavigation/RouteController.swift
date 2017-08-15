@@ -33,6 +33,14 @@ public protocol RouteControllerDelegate: class {
     @objc(routeController:willRerouteFromLocation:)
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
     
+    /**
+     Called when a location has been discarded for being inaccurate.
+     
+     See `CLLocation.isQualified` for more information about what qualifies a location.
+     
+     - parameter routeController: The route controller that discarded the location.
+     - parameter location: The location that was discarded
+     */
     @objc(routeController:didDiscardLocation:)
     optional func routeController(_ routeController: RouteController, didDiscard location: CLLocation)
     
