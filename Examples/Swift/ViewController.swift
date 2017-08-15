@@ -242,6 +242,34 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         present(navigationViewController, animated: true, completion: nil)
     }
     
+    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        guard annotation is MGLUserLocation else { return nil }
+        
+        let reuseIdentifier = "userPuck"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+        
+        if annotationView == nil {
+            annotationView = CustomAnnotationView(reuseIdentifier: reuseIdentifier)
+            annotationView!.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            annotationView!.backgroundColor = .red
+        }
+        
+        return annotationView
+    }
+}
+
+class CustomAnnotationView: MGLUserLocationAnnotationView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Force the annotation view to maintain a constant size when the map is tilted.
+        scalesWithViewingDistance = false
+        
+        // Use CALayer’s corner radius to turn this view into a circle.
+        layer.cornerRadius = frame.width / 2
+        layer.borderWidth = 2
+        layer.borderColor = UIColor.white.cgColor
+    }
 }
 
 extension ViewController: NavigationViewControllerDelegate {

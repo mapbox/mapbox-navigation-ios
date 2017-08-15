@@ -249,6 +249,10 @@ class RouteMapViewController: UIViewController {
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationMapView(mapView, imageFor: annotation)
     }
+    
+    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        return navigationMapView(mapView, viewFor: annotation)
+    }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         guard var controller = routePageViewController.currentManeuverPage else { return }
@@ -367,7 +371,11 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return delegate?.navigationMapView(mapView, imageFor:annotation)
+        return delegate?.navigationMapView(mapView, imageFor :annotation)
+    }
+    
+    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        return delegate?.navigationMapView(mapView, viewFor: annotation)
     }
     
     func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
@@ -575,4 +583,5 @@ protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }

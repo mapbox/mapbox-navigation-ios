@@ -101,6 +101,8 @@ public protocol NavigationViewControllerDelegate {
      If this method is unimplemented, the navigation map view will represent the destination annotation with the default marker.
      */
     @objc optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+    
+    @objc optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
 
 /**
@@ -396,6 +398,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationDelegate?.navigationMapView?(mapView, imageFor: annotation)
+    }
+    
+    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        return navigationDelegate?.navigationMapView?(mapView, viewFor: annotation)
     }
 }
 
