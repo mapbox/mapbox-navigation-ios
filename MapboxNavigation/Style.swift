@@ -213,7 +213,7 @@ open class Style: NSObject {
     /**
      Applies the style for all changed properties.
      */
-    public func apply() {
+    open func apply() {
         
         // General styling
         
@@ -374,7 +374,6 @@ public class Button: StylableButton { }
 /// :nodoc:
 @objc(MBFloatingButton)
 public class FloatingButton: Button { }
-
 
 /// :nodoc:
 @objc(MBLanesView)
@@ -600,7 +599,11 @@ class StatusView: UIView {
     func show(_ title: String, showSpinner: Bool) {
         textLabel.text = title
         activityIndicatorView.isHidden = !showSpinner
-        activityIndicatorView.startAnimating()
+        if showSpinner {
+            activityIndicatorView.startAnimating()
+        }
+        
+        guard isHidden == true else { return }
         
         UIView.defaultAnimation(0.3, animations: {
             self.isHidden = false
@@ -610,6 +613,7 @@ class StatusView: UIView {
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
         
         if animated {
+            guard isHidden == false else { return }
             UIView.defaultAnimation(0.3, delay: delay, animations: {
                 self.isHidden = true
             }, completion: { (completed) in

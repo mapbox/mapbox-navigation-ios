@@ -11,6 +11,10 @@ class LaneArrowView: UIView {
     var maneuverDirection: ManeuverDirection?
     var isValid: Bool = false
     
+    override var intrinsicContentSize: CGSize {
+        return bounds.size
+    }
+    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         if let lane = lane {
