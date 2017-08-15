@@ -60,7 +60,7 @@ class RouteTableViewController: UIViewController {
             guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return }
             
             let remainingCongestionTimesForStep = congestionTimesForStep.suffix(from: coordinatesLeftOnStepCount)
-            let remainingCongestionTimesForRoute = routeProgress.congestionTimesPerStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex + 1..<routeProgress.currentLeg.steps.count]
+            let remainingCongestionTimesForRoute = routeProgress.congestionTimesPerStep[routeProgress.legIndex].suffix(from: routeProgress.currentLegProgress.stepIndex + 2)
             
             var remainingStepCongestionTotals: [CongestionLevel: TimeInterval] = [:]
             for stepValues in remainingCongestionTimesForRoute {
@@ -70,10 +70,8 @@ class RouteTableViewController: UIViewController {
             }
 
             for (segmentCongestion, segmentTime) in remainingCongestionTimesForStep {
-                remainingStepCongestionTotals[segmentCongestion] = (round(remainingStepCongestionTotals[segmentCongestion] ?? 0)) + round(segmentTime)
+                remainingStepCongestionTotals[segmentCongestion] = (remainingStepCongestionTotals[segmentCongestion] ?? 0) + segmentTime
             }
-            
-            print(remainingStepCongestionTotals)
             
             if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
                 switch max.key {

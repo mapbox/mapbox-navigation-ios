@@ -118,11 +118,16 @@ open class RouteProgress: NSObject {
      */
     public var currentLegProgress: RouteLegProgress!
     
+    public typealias TimedCongestionLevel = (CongestionLevel, TimeInterval)
+    
     /**
      If the route contains both `segmentCongestionLevels` and `expectedSegmentTravelTimes`, this array will contain an array of arrays of tuples of `segmentCongestionLevels` and `expectedSegmentTravelTimes`.
      */
-    public var congestionTravelTimesSegmentsByStep: [[[(CongestionLevel, TimeInterval)]]] = []
+    public var congestionTravelTimesSegmentsByStep: [[[TimedCongestionLevel]]] = []
     
+    /**
+     An dictionary containing a `TimeInterval` total per `CongestionLevel`. Only `CongestionLevel` founnd on that step will present. Broken up by leg and then step. 
+     */
     public var congestionTimesPerStep: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
 
     /**
@@ -138,27 +143,25 @@ open class RouteProgress: NSObject {
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
         
-        var coordinateIndex = 0
+        var maneuverCoordinateIndex = 0
         for (legIndex, leg) in route.legs.enumerated() {
             
             congestionTimesPerStep.append([])
             
-            var congestionTravelTimesSegmentsByLeg: [[(CongestionLevel, TimeInterval)]] = []
+            /// An index into the route’s coordinates and congestionTravelTimesSegmentsByStep that corresponds to a step’s maneuver location.
+            var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
             
-            for (stepIndex, step) in leg.steps.enumerated() {
-                if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes  {
+            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes  {
+                for (stepIndex, step) in leg.steps.enumerated() {
+                    let stepCoordinatesCount = Int(step.coordinateCount) + maneuverCoordinateIndex - 1
                     
-                    let stepCoordinatesCount = Int(step.coordinateCount) + coordinateIndex - 1
-                    
-                    print(coordinateIndex, stepCoordinatesCount)
-                    
-                    let congestionSegment = Array(segmentCongestionLevels[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
-                    let travelTimeSegment = Array(expectedSegmentTravelTimes[coordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
+                    let congestionSegment = Array(segmentCongestionLevels[maneuverCoordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
+                    let travelTimeSegment = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
                     
                     let zippedCongestionTimes = Array(zip(congestionSegment, travelTimeSegment))
                     
                     congestionTravelTimesSegmentsByLeg.append(zippedCongestionTimes)
-                    coordinateIndex = stepCoordinatesCount + 1
+                    maneuverCoordinateIndex = stepCoordinatesCount + 1
                     
                     var stepCongestionValues: [CongestionLevel: TimeInterval] = [:]
                     for (segmentCongestion, segmentTime) in zippedCongestionTimes {

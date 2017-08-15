@@ -97,7 +97,7 @@ open class DefaultStyle: Style {
         trafficModerateColor = .trafficModerate
         trafficHeavyColor = .trafficHeavy
         trafficSevereColor = .trafficSevere
-        trafficAlternateLowColor = .trafficAlternateLow
+        lowTrafficTextColor = .trafficAlternateLow
         
         routeCasingColor = .defaultRouteCasing
     }
