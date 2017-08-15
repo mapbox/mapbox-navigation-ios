@@ -35,11 +35,11 @@ class LanesContainerView: LanesView {
     }
     
     func updateLaneViews(step: RouteStep, alertLevel: AlertLevel) {
+        clearLaneViews()
+        
         if let allLanes = step.intersections?.first?.approachLanes,
             let usableLanes = step.intersections?.first?.usableApproachLanes,
             (alertLevel == .high || alertLevel == .medium) {
-            
-            clearLaneViews()
             
             for (i, lane) in allLanes.enumerated() {
                 let laneView = laneArrowView()
@@ -48,9 +48,6 @@ class LanesContainerView: LanesView {
                 laneView.isValid = usableLanes.contains(i as Int)
                 stackView.addArrangedSubview(laneView)
             }
-            
-        } else {
-            clearLaneViews()
         }
     }
     
