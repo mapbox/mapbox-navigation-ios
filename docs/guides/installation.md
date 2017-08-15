@@ -6,7 +6,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.6.1'
+   pod 'MapboxNavigation', '~> 0.6'
    ```
 1. Run `pod install` and open the resulting Xcode workspace.
 
@@ -30,6 +30,11 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
 1. If you need voice guidance while your app is in the background, you'll also need to add the `audio` and `location` value to the `UIBackgroundModes` array. You can also do this by navigating to the `Capabilities` tab -> `Background Modes` and enabling the following:
     - `Audio, AirPlay, and Picture in Picture`
     - `Location updates`
+
+
+## Install Mapbox
+
+Although not required if you are only using MapboxCoreNavigation, it is highly recommended to install the Mapbox iOS SDK. [Follow these instructions](https://www.mapbox.com/install/ios/) to do so.
 
 
 ## Required Info.plist Keys
