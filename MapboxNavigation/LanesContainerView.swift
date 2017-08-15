@@ -2,7 +2,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
-class LanesContainerView: UIView {
+class LanesContainerView: LanesView {
     var stackView: UIStackView!
     
     override init(frame: CGRect) {

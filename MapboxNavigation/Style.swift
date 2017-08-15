@@ -57,9 +57,19 @@ open class Style: NSObject {
     public var floatingButtonBackgroundColor: UIColor?
     
     /**
-     Sets the background color of the lanes view
+     Sets the background color of the lane views.
      */
     public var lanesViewBackgroundColor: UIColor?
+    
+    /**
+     Sets the lane views primary color.
+     */
+    public var laneViewPrimaryColor: UIColor?
+    
+    /**
+     Sets the lane views secondary color.
+     */
+    public var laneViewSecondaryColor: UIColor?
     
     /**
      Sets the color of dividers and separators.
@@ -266,6 +276,14 @@ open class Style: NSObject {
         
         if let color = lanesViewBackgroundColor {
             LanesView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = laneViewPrimaryColor {
+            LaneArrowView.appearance(for: traitCollection).primaryColor = color
+        }
+        
+        if let color = laneViewSecondaryColor {
+            LaneArrowView.appearance(for: traitCollection).secondaryColor = color
         }
         
         // Maneuver page view controller
