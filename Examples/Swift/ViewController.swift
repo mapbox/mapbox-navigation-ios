@@ -118,12 +118,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             mapView.userLocation!.coordinate,
             destination.coordinate,
         ])
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.profileIdentifier = .automobileAvoidingTraffic
-        
-        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
-        options.attributeOptions = [.congestionLevel]
+            // Dont forget to apply `preferredOptions`. This adds the necessary options needed to make a navigation experience 💯.
+            .preferredOptions
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
@@ -272,12 +268,8 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
             navigationViewController.mapView!.userLocation!.coordinate,
             nextDestination,
         ])
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.profileIdentifier = navigationViewController.route.routeOptions.profileIdentifier
-        
-        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
-        options.attributeOptions = [.congestionLevel]
+            // Dont forget to apply `preferredOptions`. This adds the necessary options needed to make a navigation experience 💯.
+            .preferredOptions
 
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
