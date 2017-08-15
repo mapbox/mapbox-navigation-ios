@@ -25,8 +25,8 @@ class LocationTests: XCTestCase {
         
         let location = CLLocation(dictionary: locationDictionary)
         
-        let lhs = locationDictionary as! NSDictionary
-        let rhs = location.dictionaryRepresentation as! NSDictionary
+        let lhs = locationDictionary as NSDictionary
+        let rhs = location.dictionaryRepresentation as NSDictionary
         
         XCTAssert(lhs == rhs)
     }

@@ -15,6 +15,8 @@ class RoutePageViewController: UIPageViewController {
     
     weak var maneuverDelegate: RoutePageViewControllerDelegate!
     var currentManeuverPage: RouteManeuverViewController!
+    
+    var maneuverContainerView: ManeuverContainerView { return view.superview! as! ManeuverContainerView }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -77,10 +79,10 @@ extension RoutePageViewController: UIPageViewControllerDataSource, UIPageViewCon
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        guard let controller = pageViewController.viewControllers?.last as? RouteManeuverViewController else { return }
+        
         if completed {
-            if let controller = pageViewController.viewControllers?.last as? RouteManeuverViewController {
-                currentManeuverPage = controller
-            }
+            currentManeuverPage = controller
         }
     }
 }

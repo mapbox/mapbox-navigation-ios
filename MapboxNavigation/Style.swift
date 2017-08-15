@@ -6,7 +6,7 @@ import UIKit
  Styles are applied globally using `UIAppearance`. You should call `Style.apply()` to apply the style to the `NavigationViewController`.
  */
 @objc(MBStyle)
-public class Style: NSObject {
+open class Style: NSObject {
     
     public var traitCollection: UITraitCollection
     
@@ -52,6 +52,16 @@ public class Style: NSObject {
     public var buttonTextColor: UIColor?
     
     /**
+     Sets the background color on the floating buttons.
+     */
+    public var floatingButtonBackgroundColor: UIColor?
+    
+    /**
+     Sets the background color of the lanes view
+     */
+    public var lanesViewBackgroundColor: UIColor?
+    
+    /**
      Sets the color of dividers and separators.
      */
     public var lineColor: UIColor?
@@ -62,11 +72,6 @@ public class Style: NSObject {
      Sets the background color of the maneuver view, positioned at the top.
      */
     public var maneuverViewBackgroundColor: UIColor?
-    
-    /**
-     Sets the height of the maneuver view.
-     */
-    public var maneuverViewHeight: CGFloat?
     
     /**
      Sets the font on the distance label.
@@ -156,6 +161,16 @@ public class Style: NSObject {
     public var cellSubtitleLabelTextColor: UIColor?
     
     /**
+     Sets the background color of the current way name view.
+     */
+    public var wayNameViewBackgroundColor: UIColor?
+    
+    /**
+     Sets the border color of the current way name view.
+     */
+    public var wayNameViewBorderColor: UIColor?
+    
+    /**
      Sets the color for the current way name label.
      */
     public var wayNameLabelTextColor: UIColor?
@@ -209,9 +224,10 @@ public class Style: NSObject {
         
         if let color = tintColor {
             NavigationMapView.appearance(for: traitCollection).tintColor = color
-            ProgressBar.appearance(for: traitCollection).backgroundColor = color
+            ProgressBar.appearance(for: traitCollection).barColor = color
             Button.appearance(for: traitCollection).tintColor = color
             HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
+            ResumeButton.appearance(for: traitCollection).tintColor = color
         }
         
         if let color = buttonTextColor {
@@ -233,6 +249,14 @@ public class Style: NSObject {
             WayNameLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
         }
         
+        if let color = wayNameViewBackgroundColor {
+            WayNameView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = wayNameViewBorderColor {
+            WayNameView.appearance(for: traitCollection).borderColor = color
+        }
+        
         if let color = turnArrowPrimaryColor {
             TurnArrowView.appearance(for: traitCollection).primaryColor = color
         }
@@ -241,14 +265,18 @@ public class Style: NSObject {
             TurnArrowView.appearance(for: traitCollection).secondaryColor = color
         }
         
+        if let color = floatingButtonBackgroundColor {
+            FloatingButton.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = lanesViewBackgroundColor {
+            LanesView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
         // Maneuver page view controller
         
         if let color = maneuverViewBackgroundColor {
             ManeuverView.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let height = maneuverViewHeight {
-            ManeuverView.appearance(for: traitCollection).height = height
         }
         
         if let font = distanceLabelFont {
@@ -352,6 +380,15 @@ public class Style: NSObject {
 @objc(MBButton)
 public class Button: StylableButton { }
 
+/// :nodoc:
+@objc(MBFloatingButton)
+public class FloatingButton: Button { }
+
+
+/// :nodoc:
+@objc(MBLanesView)
+public class LanesView: UIView { }
+
 /**
  :nodoc:
  `HighlightedButton` sets the button’s titleColor for normal control state according to the style in addition to the styling behavior inherited from
@@ -359,6 +396,54 @@ public class Button: StylableButton { }
  */
 @objc(MBHighlightedButton)
 public class HighlightedButton: Button { }
+
+@IBDesignable
+@objc(MBResumeButton)
+public class ResumeButton: UIControl {
+    public override dynamic var tintColor: UIColor! {
+        didSet {
+            imageView.tintColor = tintColor
+            titleLabel.textColor = tintColor
+        }
+    }
+    
+    let imageView = UIImageView(image: UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate))
+    let titleLabel = UILabel()
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        commonInit()
+    }
+    
+    func commonInit() {
+        titleLabel.text = NSLocalizedString("RESUME", bundle: .mapboxNavigation, value: "Resume", comment: "Button title for resume tracking")
+        titleLabel.sizeToFit()
+        addSubview(imageView)
+        addSubview(titleLabel)
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        let views = ["label": titleLabel, "imageView": imageView]
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[imageView]-8-[label]-8-|", options: [], metrics: nil, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|->=12-[imageView]->=12-|", options: [], metrics: nil, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|->=12-[label]->=12-|", options: [], metrics: nil, views: views))
+        setNeedsUpdateConstraints()
+        
+        applyDefaultCornerRadiusShadow()
+    }
+}
 
 /// :nodoc:
 @objc(MBStylableLabel)
@@ -412,9 +497,66 @@ public class CellSubtitleLabel: StylableLabel { }
 @objc(MBWayNameLabel)
 public class WayNameLabel: StylableLabel { }
 
+@objc(MBWayNameView)
+public class WayNameView: UIView {
+    
+    dynamic var borderColor: UIColor = .white {
+        didSet {
+            layer.borderColor = borderColor.cgColor
+        }
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.midY
+    }
+}
+
 /// :nodoc:
 @objc(MBProgressBar)
-public class ProgressBar: UIView { }
+public class ProgressBar: UIView {
+    
+    let bar = UIView()
+    
+    dynamic var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
+        didSet {
+            bar.backgroundColor = barColor
+        }
+    }
+    
+    // Set the progress between 0.0-1.0
+    var progress: CGFloat = 0 {
+        didSet {
+            UIView.defaultAnimation(0.5, animations: { 
+                self.updateProgressBar()
+                self.layoutIfNeeded()
+            }, completion: nil)
+        }
+    }
+    
+    func dock(on view: UIView) {
+        translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(self)
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bar]-0-|", options: [], metrics: nil, views: ["bar": self]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bar(3)]-0-|", options: [], metrics: nil, views: ["bar": self]))
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if bar.superview == nil {
+            addSubview(bar)
+        }
+        
+        updateProgressBar()
+    }
+    
+    func updateProgressBar() {
+        if let superview = superview {
+            bar.frame = CGRect(origin: .zero, size: CGSize(width: superview.bounds.width*progress, height: 3))
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBLineView)
@@ -441,8 +583,13 @@ public class StylableButton: UIButton {
     }
 }
 
+/// :nodoc:
 @objc(MBManeuverView)
-class ManeuverView: UIView {
+class ManeuverView: UIView { }
+
+/// :nodoc:
+@objc(MBManeuverContainerView)
+class ManeuverContainerView: UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     dynamic var height: CGFloat = 100 {
@@ -450,5 +597,48 @@ class ManeuverView: UIView {
             heightConstraint.constant = height
             setNeedsUpdateConstraints()
         }
+    }
+}
+
+/// :nodoc:
+@objc(MBStatusView)
+class StatusView: UIView {
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet weak var textLabel: UILabel!
+    @IBOutlet weak var topConstraint: NSLayoutConstraint!
+    
+    func show(_ title: String, showSpinner: Bool) {
+        textLabel.text = title
+        activityIndicatorView.isHidden = !showSpinner
+        activityIndicatorView.startAnimating()
+        isHidden = false
+        
+        updateConstraints(show: true)
+        
+        UIView.defaultAnimation(0.3, animations: {
+            self.superview?.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    func hide(delay: TimeInterval = 0, animated: Bool = true) {
+        if animated {
+            updateConstraints(show: false)
+            UIView.defaultAnimation(0.3, delay: delay, animations: {
+                self.superview?.layoutIfNeeded()
+            }, completion: { (completed) in
+                self.activityIndicatorView.stopAnimating()
+                self.isHidden = true
+            })
+        } else {
+            updateConstraints(show: false)
+            self.activityIndicatorView.stopAnimating()
+            self.isHidden = true
+            self.superview?.layoutIfNeeded()
+        }
+    }
+    
+    fileprivate func updateConstraints(show: Bool) {
+        topConstraint.constant = show ? 0 : -bounds.height
+        superview?.setNeedsUpdateConstraints()
     }
 }

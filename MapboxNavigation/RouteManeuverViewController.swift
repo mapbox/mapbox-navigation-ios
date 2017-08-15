@@ -4,14 +4,10 @@ import MapboxCoreNavigation
 import SDWebImage
 
 class RouteManeuverViewController: UIViewController {
-    @IBOutlet var separatorViews: [SeparatorView]!
-    @IBOutlet weak var stackViewContainer: UIView!
     @IBOutlet fileprivate weak var distanceLabel: DistanceLabel!
     @IBOutlet fileprivate weak var shieldImageView: UIImageView!
     @IBOutlet weak var turnArrowView: TurnArrowView!
     @IBOutlet weak var destinationLabel: DestinationLabel!
-    @IBOutlet var laneViews: [LaneArrowView]!
-    @IBOutlet weak var rerouteView: UIView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
@@ -105,36 +101,23 @@ class RouteManeuverViewController: UIViewController {
         super.viewDidLoad()
         turnArrowView.backgroundColor = .clear
         destinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
-        resumeNotifications()
     }
     
     deinit {
-        suspendNotifications()
         webImageManager.cancelAll()
-    }
-    
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
     }
     
     func notifyDidChange(routeProgress: RouteProgress, secondsRemaining: TimeInterval) {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
-        distance = distanceRemaining > 10 ? distanceRemaining : nil
+        distance = distanceRemaining > 5 ? distanceRemaining : 0
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
             destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
-        } else if let upComingStep = routeProgress.currentLegProgress?.upComingStep {
+        } else {
             updateStreetNameForStep()
-            if routeProgress.currentLegProgress.alertUserLevel == .medium || routeProgress.currentLegProgress.alertUserLevel == .high {
-                showLaneView(step: upComingStep)
-            }
         }
         
         turnArrowView.step = routeProgress.currentLegProgress.upComingStep
@@ -190,30 +173,6 @@ class RouteManeuverViewController: UIViewController {
             destinationLabel.unabridgedText = name
         } else if let step = step {
             destinationLabel.unabridgedText = routeStepFormatter.string(for: step)
-        }
-    }
-    
-    func willReroute(notification: NSNotification) {
-        rerouteView.isHidden = false
-        stackViewContainer.isHidden = true
-    }
-    
-    func showLaneView(step: RouteStep) {
-        if let allLanes = step.intersections?.first?.approachLanes, let usableLanes = step.intersections?.first?.usableApproachLanes {
-            for (i, lane) in allLanes.enumerated() {
-                guard i < laneViews.count else {
-                    return
-                }
-                stackViewContainer.isHidden = false
-                let laneView = laneViews[i]
-                laneView.isHidden = false
-                laneView.lane = lane
-                laneView.maneuverDirection = step.maneuverDirection
-                laneView.isValid = usableLanes.contains(i as Int)
-                laneView.setNeedsDisplay()
-            }
-        } else {
-            stackViewContainer.isHidden = true
         }
     }
 }

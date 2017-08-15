@@ -87,21 +87,27 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
-        let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
-            self.startBasicNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
-            self.startCustomNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
-            self.startStyledNavigation()
-        }))
-        alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-            self.startMultipleWaypoints()
-        }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        present(alertController, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+            alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
+                self.startBasicNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
+                self.startCustomNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
+                self.startStyledNavigation()
+            }))
+            alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
+                self.startMultipleWaypoints()
+            }))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            if let popoverController = alertController.popoverPresentationController {
+                popoverController.sourceView = self.startButton
+            }
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     
     // Helper for requesting a route
@@ -179,10 +185,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.fontFamily = "Georgia"
         style.turnArrowPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         style.turnArrowSecondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
+        style.floatingButtonBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        style.lanesViewBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
-        style.maneuverViewHeight = 100
         style.distanceLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
         style.destinationLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
         style.distanceRemainingLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
@@ -190,7 +197,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.arrivalTimeLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
 
         // Current street name label
-        style.wayNameLabelTextColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+        style.wayNameLabelTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        style.wayNameViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1).withAlphaComponent(0.5)
             
         // Table view (Drawer)
         style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
