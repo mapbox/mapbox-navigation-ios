@@ -8,52 +8,11 @@
 
 Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
 
-Get up and running in a few minutes with our drop-in turn-by-turn navigation `NavigationViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
-
-## Features
-
-- Drop-in turn-by-turn navigation UI
-- Automotive, cycling, and walking directions
-- Traffic avoidance
-- Maneuver announcements
-- Text instructions
-- Text to speech support via AVSpeechSynthesizer or Amazon Polly
-- Automatic rerouting
-- Snap to route
+## [Documentation](https://www.mapbox.com/mapbox-navigation-ios/navigation/)
 
 ## Installation
 
-To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
-
-1. Specify the following dependency in your Podfile:
-   ```ruby
-   pod 'MapboxNavigation', '~> 0.6.1'
-   ```
-1. Run `pod install` and open the resulting Xcode workspace.
-
-Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
-
-Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
-
-1. Specify the following dependency in your Cartfile:
-   ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.6.1
-   ```
-
-1. Run `carthage update --platform iOS` to build just the iOS dependencies.
-
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include MapboxNavigation.framework and MapboxCoreNavigation.framework.
-
-
-
-### Running the example project
-
-1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
-1. Run `carthage update --platform ios` to build just the iOS dependencies
-1. Open `MapboxNavigation.xcodeproj`
-1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
-1. Open the `Info.plist` for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`
-1. Build and run the `Example-Swift` or `Example-Objective-C` target
+## Running the example project
 
 ## Usage
 
@@ -74,42 +33,13 @@ options.includesSteps = true
 
 Directions.shared.calculate(options) { (waypoints, routes, error) in
     guard let route = routes?.first else { return }
-    
+
     let viewController = NavigationViewController(for: route)
     self.present(viewController, animated: true, completion: nil)
 }
 ```
 
-#### Required Info.plist Keys
-Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
-
-1. Add a `MGLMapboxAccessToken` key and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
-1. Add a `NSLocationWhenInUseUsageDescription` key if you haven't already
-1. If you need voice guidance while your app is in the background, you'll also need to add the `audio` and `location` value to the `UIBackgroundModes` array. You can also do this by navigating to the `Capabilities` tab -> `Background Modes` and enabling the following:
-    - `Audio, AirPlay, and Picture in Picture`
-    - `Location updates`
-
-#### Styling
-
-You can customize the appearance in order to blend in with the rest of your app.
-
-```swift
-let style = Style()
-style.maneuverViewHeight = 80
-style.primaryTextColor = .black
-style.headerBackgroundColor = .white
-style.cellTitleLabelFont = .preferredFont(forTextStyle: .headline)
-style.apply()
-```
-
-Or for a specific system trait in an interface’s environment.
-For instance only when being used on an iPad.
-
-```swift
-let style = Style(traitCollection: UITraitCollection(userInterfaceIdiom: .pad))
-style.cellTitleLabelFont = .preferredFont(forTextStyle: .title1)
-style.apply()
-```
+# [Styling]()
 
 #### NavigationViewController Delegate Methods
 
