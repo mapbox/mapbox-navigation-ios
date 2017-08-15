@@ -37,7 +37,7 @@ class LaneArrowView: UIView {
             var flipLane: Bool
             if lane.indications.isSuperset(of: [.straightAhead, .sharpRight]) || lane.indications.isSuperset(of: [.straightAhead, .right]) || lane.indications.isSuperset(of: [.straightAhead, .slightRight]) {
                 if !isValid {
-                    StyleKitArrows.drawLane_straight_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    StyleKitArrows.drawLane_straight_right(primaryColor: appropriatePrimaryColor)
                     alpha = invalidAlpha
                 } else if maneuverDirection == .straightAhead {
                     StyleKitArrows.drawLane_straight_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
