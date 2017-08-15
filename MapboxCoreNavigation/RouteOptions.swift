@@ -13,14 +13,13 @@ extension RouteOptions {
     /**
      Returns an optimal `RouteOptions` for navigation.
      */
-    public var preferredOptions: RouteOptions {
+    public convenience init(forNavigationWith waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+        self.init(waypoints: waypoints, profileIdentifier: profileIdentifier)
+        
         includesSteps = true
         routeShapeResolution = .full
-        profileIdentifier = .automobileAvoidingTraffic
         
         // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
         attributeOptions = [.congestionLevel]
-        
-        return self
     }
 }

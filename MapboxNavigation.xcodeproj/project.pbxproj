@@ -778,6 +778,7 @@
 				351927351F0FA072003A702D /* ScreenCapture.swift */,
 				35BF8CA11F28EB60003F6125 /* Array.swift */,
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
+				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
 			);
 			name = extensions;
 			sourceTree = "<group>";
@@ -826,7 +827,6 @@
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				C5ADFBF91DDCC9580011824B /* RouteController.swift */,
 				64847A031F04629D003F3A69 /* Feedback.swift */,
-				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				357826C21F1B7CCE005C54FB /* SpokenDistanceFormatter.swift */,
