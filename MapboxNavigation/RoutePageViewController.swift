@@ -29,14 +29,10 @@ class RoutePageViewController: UIPageViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        setupRoutePageViewController()
+        updateManeuverViewForStep()
     }
     
-    func notifyDidReRoute() {
-        setupRoutePageViewController()
-    }
-    
-    func setupRoutePageViewController() {
+    func updateManeuverViewForStep() {
         let step = maneuverDelegate.upComingStep ?? maneuverDelegate.currentStep
         let leg = maneuverDelegate.currentLeg
         let controller = routeManeuverViewController(with: step, leg: leg)!
