@@ -37,6 +37,17 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
     
     /**
+     Called when a location has been discarded for being inaccurate.
+     
+     See `CLLocation.isQualified` for more information about what qualifies a location.
+     
+     - parameter routeController: The route controller that discarded the location.
+     - parameter location: The location that was discarded
+     */
+    @objc(routeController:didDiscardLocation:)
+    optional func routeController(_ routeController: RouteController, didDiscard location: CLLocation)
+    
+    /**
      Called immediately after the route controller receives a new route.
      
      This method is called after `routeController(_:willRerouteFrom:)` and simultaneously with the `RouteControllerDidReroute` notification being posted.
@@ -68,7 +79,7 @@ public protocol RouteControllerDelegate: class {
      - parameter locations: The locations that were received from the associated location manager.
      */
     @objc(routeController:didUpdateLocations:)
-    optional func routeController(_ routeController: RouteController, didUpdateLocations locations: [CLLocation])
+    optional func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation])
 }
 
 /**
@@ -404,10 +415,11 @@ extension RouteController: CLLocationManagerDelegate {
         sessionState.pastLocations.push(location)
         
         guard location.isQualified else {
+            delegate?.routeController?(self, didDiscard: location)
             return
         }
         
-        delegate?.routeController?(self, didUpdateLocations: [location])
+        delegate?.routeController?(self, didUpdate: [location])
 
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
         

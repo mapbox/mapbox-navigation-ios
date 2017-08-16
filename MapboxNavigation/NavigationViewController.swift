@@ -126,6 +126,13 @@ public protocol NavigationViewControllerDelegate {
      If this method is unimplemented, the navigation map view will represent the destination annotation with the default marker.
      */
     @objc optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+    
+    /**
+     Returns a view object to mark the given point annotation object on the map.
+     
+     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof).
+     */
+    @objc optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
 
 /**
@@ -179,7 +186,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      The receiver’s delegate.
      */
-    public weak var navigationDelegate: NavigationViewControllerDelegate?
+    public weak var navigationDelegate: NavigationViewControllerDelegate? {
+        didSet {
+            mapViewController?.delegate = mapViewController?.delegate
+        }
+    }
     
     /**
      Provides access to various speech synthesizer options.
@@ -429,6 +440,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationDelegate?.navigationMapView?(mapView, imageFor: annotation)
     }
+    
+    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        return navigationDelegate?.navigationMapView?(mapView, viewFor: annotation)
+    }
 }
 
 extension NavigationViewController: RouteControllerDelegate {
@@ -458,8 +473,15 @@ extension NavigationViewController: RouteControllerDelegate {
         navigationDelegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
-    public func routeController(_ routeController: RouteController, didUpdateLocations locations: [CLLocation]) {
+    public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
         mapViewController?.mapView.locationManager(routeController.locationManager, didUpdateLocations: locations)
+        
+        mapViewController?.statusView.hide(delay: 3, animated: true)
+    }
+    
+    public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
+        let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
+        mapViewController?.statusView.show(title, showSpinner: false)
     }
 }
 

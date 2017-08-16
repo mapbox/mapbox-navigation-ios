@@ -4,7 +4,13 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
+let response = Fixture.JSONFromFileNamed(name: "route-with-lanes")
+let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
+let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+let bogusToken = "pk.feedCafeDeadBeefBadeBede"
+let directions = Directions(accessToken: bogusToken)
+let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: RouteOptions(waypoints: [waypoint1, waypoint2]))
 
 class MapboxNavigationTests: FBSnapshotTestCase {
     
@@ -124,6 +130,20 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         let numberOfRows = tableViewController.tableView(tableViewController.tableView, numberOfRowsInSection: 0)
         XCTAssertTrue(numberOfRows == newRoute.legs[0].steps.count,
                       "It should be same amount of cells as steps in the new route")
+    }
+    
+    func testLanes() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
+        XCTAssert(controller.view != nil)
+        
+        route.accessToken = bogusToken
+        let routeController = RouteController(along: route, directions: directions)
+        let steps = routeController.routeProgress.currentLeg.steps
+        let stepWithLanes = steps[8]
+        controller.updateLaneViews(step: stepWithLanes, alertLevel: .high)
+        controller.showLaneViews(animated: false)
+        
+        FBSnapshotVerifyView(controller.laneViewsContainerView)
     }
 }
 
