@@ -184,7 +184,6 @@ open class NavigationMapView: MGLMapView {
             style.addSource(sourceShape)
             
             let circles = navigationMapDelegate?.navigationMapView?(self, waypointStyleLayerWithIdentifier: waypointCircleIdentifier, source: sourceShape) ?? routeWaypointCircleStyleLayer(identifier: waypointCircleIdentifier, source: sourceShape)
-            
             let symbols = navigationMapDelegate?.navigationMapView?(self, waypointSymbolStyleLayerWithIdentifier: waypointSymbolIdentifier, source: sourceShape) ?? routeWaypointSymbolStyleLayer(identifier: waypointSymbolIdentifier, source: sourceShape)
             
             if let arrowLayer = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) {
@@ -207,16 +206,24 @@ open class NavigationMapView: MGLMapView {
      Removes all waypoints from the map.
      */
     public func removeWaypoints() {
-        guard let style = style else {
-            return
-        }
+        guard let style = style else { return }
+        
+        removeAnnotations(annotations ?? [])
         
         if let circleLayer = style.layer(withIdentifier: waypointCircleIdentifier) {
             style.removeLayer(circleLayer)
         }
-        
         if let symbolLayer = style.layer(withIdentifier: waypointSymbolIdentifier) {
             style.removeLayer(symbolLayer)
+        }
+        if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) {
+            style.removeSource(waypointSource)
+        }
+        if let circleSource = style.source(withIdentifier: waypointCircleIdentifier) {
+            style.removeSource(circleSource)
+        }
+        if let symbolSource = style.source(withIdentifier: waypointSymbolIdentifier) {
+            style.removeSource(symbolSource)
         }
     }
     
