@@ -54,7 +54,11 @@ class RouteMapViewController: UIViewController {
             return camera
         }
     }
-    weak var delegate: RouteMapViewControllerDelegate?
+    weak var delegate: RouteMapViewControllerDelegate? {
+        didSet {
+            mapView.delegate = mapView.delegate
+        }
+    }
     weak var routeController: RouteController!
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?

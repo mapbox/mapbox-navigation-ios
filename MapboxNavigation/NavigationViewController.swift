@@ -154,7 +154,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      The receiver’s delegate.
      */
-    public weak var navigationDelegate: NavigationViewControllerDelegate?
+    public weak var navigationDelegate: NavigationViewControllerDelegate? {
+        didSet {
+            mapViewController?.delegate = mapViewController?.delegate
+        }
+    }
     
     /**
      Provides access to various speech synthesizer options.
