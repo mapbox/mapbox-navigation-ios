@@ -16,6 +16,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
     var simulateLocation = false
+    let visualInstructionFormatter = VisualInstructionFormatter()
+    let spokenInstructionFormatter = SpokenInstructionFormatter()
     
     @IBOutlet var mapView: MGLMapView!
     @IBOutlet weak var arrowView: UILabel!
@@ -77,21 +79,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     // When the alert level changes, this signals the user is ready for a voice announcement
     func alertLevelDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
-        var text: String
-
-        let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
-        let formattedDistance = voiceDistanceFormatter.string(from: distance)
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-            // Don't give full instruction with distance if the alert type is high
-            if alertLevel == .high {
-                text = upComingStep.instructions
-            } else {
-                text = "In \(formattedDistance) \(upComingStep.instructions)"
-            }
-        } else {
-            text = "In \(formattedDistance) \(routeProgress.currentLegProgress.currentStep.instructions)"
-        }
+        let text = spokenInstructionFormatter.string(routeProgress: routeProgress, userDistance: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, markUpWithSSML: false)
 
         let utterance = AVSpeechUtterance(string: text)
         speechSynth.delegate = self
@@ -126,7 +114,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
                 self.arrowView.text = "⬆️"
             }
         }
-        self.instructionLabel.text = step.destinationCodes?.first ?? step.destinations?.first ?? step.names?.first ?? step.instructions
+        self.instructionLabel.text = visualInstructionFormatter.string(leg: routeProgress.currentLeg, step: routeProgress.currentLegProgress.upComingStep)
         let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
         self.distanceLabel.text = textDistanceFormatter.string(fromMeters: distance)
     }

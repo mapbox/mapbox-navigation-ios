@@ -1,6 +1,7 @@
 import Foundation
 import AWSPolly
 import AVFoundation
+import MapboxCoreNavigation
 
 /**
  `PollyVoiceController` extends the default `RouteVoiceController` by providing support for AWSPolly. `RouteVoiceController` will be used as a fallback during poor network conditions.
@@ -38,7 +39,12 @@ public class PollyVoiceController: RouteVoiceController {
     
     public override func alertLevelDidChange(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
-        speak(speechString(notification: notification, markUpWithSSML: true), error: nil)
+        
+        let routeProgresss = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let userDistances = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+        let instruction = spokenInstructionFormatter.string(routeProgress: routeProgresss, userDistance: userDistances, markUpWithSSML: true)
+        
+        speak(instruction, error: nil)
         startAnnouncementTimer()
     }
     

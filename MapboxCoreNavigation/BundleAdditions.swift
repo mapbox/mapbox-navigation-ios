@@ -28,4 +28,8 @@ extension Bundle {
             return object(forInfoDictionaryKey: "NSLocationAlwaysUsageDescription") as? String
         }
     }
+    
+    class var mapboxCoreNavigation: Bundle {
+        get { return Bundle(for: RouteController.self) }
+    }
 }

@@ -9,6 +9,11 @@ file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
 source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
 
+[mapbox-navigation-core-ios.localizablestrings]
+file_filter = MapboxCoreNavigation/Resources/<lang>.lproj/Localizable.strings
+source_file = MapboxCoreNavigation/Resources/Base.lproj/Localizable.strings
+source_lang = en
+
 [mapbox-navigation-ios.localizableabbreviations]
 file_filter = MapboxNavigation/Resources/<lang>.lproj/Abbreviations.csv.plist
 source_file = MapboxNavigation/Resources/Base.lproj/Abbreviations.csv.plist
