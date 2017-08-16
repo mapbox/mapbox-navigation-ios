@@ -507,7 +507,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         let step = maneuverViewController.step!
 
         maneuverViewController.turnArrowView.step = step
-        maneuverViewController.shieldImage = nil
         maneuverViewController.distance = step.distance > 0 ? step.distance : nil
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
