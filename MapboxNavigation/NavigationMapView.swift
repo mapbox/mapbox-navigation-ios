@@ -47,7 +47,35 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    public weak var navigationMapDelegate: NavigationMapViewDelegate?
+    open override var delegate: MGLMapViewDelegate? {
+        didSet {
+            refreshShowsUserLocation()
+        }
+    }
+    
+    public weak var navigationMapDelegate: NavigationMapViewDelegate? {
+        didSet {
+            refreshShowsUserLocation()
+        }
+    }
+    
+    open override var showsUserLocation: Bool {
+        get {
+            return super.showsUserLocation
+        }
+        
+        set {
+            super.showsUserLocation = newValue
+        }
+    }
+    
+    /**
+     Force MGLMapView to ask its delegate for the user location annotation’s view, in case that previously happened before there was a delegate.
+     */
+    func refreshShowsUserLocation() {
+        showsUserLocation = false
+        showsUserLocation = true
+    }
     
     override open func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
         guard let location = locations.first else { return }
