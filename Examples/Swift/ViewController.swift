@@ -114,12 +114,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func requestRoute() {
         guard let destination = destination else { return }
         
-        let options = RouteOptions(coordinates: [
+        let options = RouteOptions(forNavigationWithCoordinates: [
             mapView.userLocation!.coordinate,
-            destination.coordinate,
+            destination.coordinate
         ])
-            // Dont forget to apply `preferredOptions`. This adds the necessary options needed to make a navigation experience 💯.
-            .preferredOptions
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
@@ -264,12 +262,10 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
         guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
 
         // Calculate directions to the next waypoint
-        let options = RouteOptions(coordinates: [
+        let options = RouteOptions(forNavigationWithCoordinates: [
             navigationViewController.mapView!.userLocation!.coordinate,
-            nextDestination,
+            nextDestination
         ])
-            // Dont forget to apply `preferredOptions`. This adds the necessary options needed to make a navigation experience 💯.
-            .preferredOptions
 
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {

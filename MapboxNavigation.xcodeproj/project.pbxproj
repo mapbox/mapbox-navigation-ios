@@ -767,7 +767,7 @@
 			name = Fixtures;
 			sourceTree = "<group>";
 		};
-		C56173591F182103005954F6 /* extensions */ = {
+		C56173591F182103005954F6 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				359574A71F28CC3800838209 /* CLLocation.swift */,
@@ -780,7 +780,7 @@
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
 				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
 			);
-			name = extensions;
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		C5ADFBBF1DDCC7840011824B = {
@@ -814,7 +814,7 @@
 		C5ADFBCB1DDCC7840011824B /* MapboxCoreNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				C56173591F182103005954F6 /* extensions */,
+				C56173591F182103005954F6 /* Extensions */,
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
 				35D457A61E2D253100A89946 /* MBRouteController.h */,
 				35B839481E2E3D5D0045A868 /* MBRouteController.m */,
