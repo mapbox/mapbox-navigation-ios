@@ -140,7 +140,7 @@ class RouteMapViewController: UIViewController {
         
         guard let controller = routePageViewController.currentManeuverPage else { return }
         controller.step = currentStep
-        routePageViewController.notifyDidReRoute()
+        routePageViewController.updateManeuverViewForStep()
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
@@ -160,7 +160,7 @@ class RouteMapViewController: UIViewController {
         
         guard let controller = routePageViewController.currentManeuverPage else { return }
         controller.step = currentStep
-        routePageViewController.notifyDidReRoute()
+        routePageViewController.updateManeuverViewForStep()
     }
     
     @IBAction func toggleMute(_ sender: UIButton) {
@@ -224,7 +224,7 @@ class RouteMapViewController: UIViewController {
     }
 
     func notifyDidReroute(route: Route) {
-        routePageViewController.notifyDidReRoute()
+        routePageViewController.updateManeuverViewForStep()
         mapView.addArrow(routeController.routeProgress)
         mapView.showRoute(route)
 
@@ -262,13 +262,11 @@ class RouteMapViewController: UIViewController {
         
         // Clear the page view controller’s cached pages (before & after) if the step has been changed
         // to avoid going back to an already completed step and avoid duplicated future steps
-        if let previousStep = previousStep {
-            if previousStep != step {
-                controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
-                routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
-                routePageViewController.currentManeuverPage = controller
-                routePageViewController(routePageViewController, willTransitionTo: controller)
-            }
+        if let previousStep = previousStep, previousStep != step {
+            controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
+            routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
+            routePageViewController.currentManeuverPage = controller
+            routePageViewController(routePageViewController, willTransitionTo: controller)
         }
         
         if let upComingStep = routeProgress.currentLegProgress?.upComingStep, routeProgress.currentLegProgress.alertUserLevel != .arrive {
