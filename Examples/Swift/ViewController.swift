@@ -32,6 +32,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var exampleMode: ExampleMode?
     var nextWaypoint: CLLocationCoordinate2D?
     
+    // In this example, we show you how you can create custom UIView that is used to show the user's location.
+    // Set `showCustomUserPuck` to true to view the custom user puck.
+    var showCustomUserPuck = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -241,9 +245,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         present(navigationViewController, animated: true, completion: nil)
     }
-    
+}
+
+extension ViewController: NavigationViewControllerDelegate {
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        guard annotation is MGLUserLocation else { return nil }
+        guard annotation is MGLUserLocation && showCustomUserPuck else { return nil }
         
         let reuseIdentifier = "userPuck"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
@@ -256,23 +262,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         return annotationView
     }
-}
-
-class CustomAnnotationView: MGLUserLocationAnnotationView {
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        // Force the annotation view to maintain a constant size when the map is tilted.
-        scalesWithViewingDistance = false
-        
-        // Use CALayer’s corner radius to turn this view into a circle.
-        layer.cornerRadius = frame.width / 2
-        layer.borderWidth = 2
-        layer.borderColor = UIColor.white.cgColor
-    }
-}
-
-extension ViewController: NavigationViewControllerDelegate {
+    
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt destination: MGLAnnotation) {
         
         // Multiple waypoint demo
@@ -322,5 +312,19 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
             // Dismiss the confirmation screen
             confirmationController.dismiss(animated: true, completion: nil)
         }
+    }
+}
+
+class CustomAnnotationView: MGLUserLocationAnnotationView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Force the annotation view to maintain a constant size when the map is tilted.
+        scalesWithViewingDistance = false
+        
+        // Use CALayer’s corner radius to turn this view into a circle.
+        layer.cornerRadius = frame.width / 2
+        layer.borderWidth = 2
+        layer.borderColor = UIColor.white.cgColor
     }
 }

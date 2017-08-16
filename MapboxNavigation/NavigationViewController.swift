@@ -102,6 +102,11 @@ public protocol NavigationViewControllerDelegate {
      */
     @objc optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     
+    /**
+     Returns a view object to mark the given point annotation object on the map.
+     
+     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation` (or equal to the map view’s userLocation property), return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof).
+     */
     @objc optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
 
