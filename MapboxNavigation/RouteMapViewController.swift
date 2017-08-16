@@ -137,6 +137,10 @@ class RouteMapViewController: UIViewController {
         mapView.camera = tiltedCamera
         mapView.setUserTrackingMode(.followWithCourse, animated: true)
         mapView.logoView.isHidden = false
+        
+        guard let controller = routePageViewController.currentManeuverPage else { return }
+        controller.step = currentStep
+        routePageViewController.notifyDidReRoute()
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
@@ -154,6 +158,8 @@ class RouteMapViewController: UIViewController {
 
         isInOverviewMode = !isInOverviewMode
         
+        guard let controller = routePageViewController.currentManeuverPage else { return }
+        controller.step = currentStep
         routePageViewController.notifyDidReRoute()
     }
     
