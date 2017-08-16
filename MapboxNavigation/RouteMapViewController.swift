@@ -518,6 +518,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
 
         if !isInOverviewMode {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
+                view.layoutIfNeeded()
                 mapView.camera = tiltedCamera
                 mapView.setUserTrackingMode(.followWithCourse, animated: true)
             } else {
