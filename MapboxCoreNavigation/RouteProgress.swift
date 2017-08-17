@@ -118,6 +118,9 @@ open class RouteProgress: NSObject {
      */
     public var currentLegProgress: RouteLegProgress!
     
+    /**
+     Tupel containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
+     */
     public typealias TimedCongestionLevel = (CongestionLevel, TimeInterval)
     
     /**
@@ -152,19 +155,16 @@ open class RouteProgress: NSObject {
             var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
             
             if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes  {
-                for (stepIndex, step) in leg.steps.enumerated() {
-                    let stepCoordinatesCount = Int(step.coordinateCount) + maneuverCoordinateIndex - 1
+                for step in leg.steps {
+                    let stepCoordinatesCount = maneuverCoordinateIndex + Int(step.coordinateCount) - 1
+                    let stepSegmentCongestionLevels = Array(segmentCongestionLevels[maneuverCoordinateIndex..<stepCoordinatesCount])
+                    let stepSegmentTravelTimes = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex..<stepCoordinatesCount])
+                    maneuverCoordinateIndex = stepCoordinatesCount
                     
-                    let congestionSegment = Array(segmentCongestionLevels[maneuverCoordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
-                    let travelTimeSegment = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex-stepIndex..<stepCoordinatesCount - stepIndex])
-                    
-                    let zippedCongestionTimes = Array(zip(congestionSegment, travelTimeSegment))
-                    
-                    congestionTravelTimesSegmentsByLeg.append(zippedCongestionTimes)
-                    maneuverCoordinateIndex = stepCoordinatesCount + 1
-                    
+                    let stepTimedCongestionLevels = Array(zip(stepSegmentCongestionLevels, stepSegmentTravelTimes))
+                    congestionTravelTimesSegmentsByLeg.append(stepTimedCongestionLevels)
                     var stepCongestionValues: [CongestionLevel: TimeInterval] = [:]
-                    for (segmentCongestion, segmentTime) in zippedCongestionTimes {
+                    for (segmentCongestion, segmentTime) in stepTimedCongestionLevels {
                         stepCongestionValues[segmentCongestion] = (stepCongestionValues[segmentCongestion] ?? 0) + segmentTime
                     }
                     
