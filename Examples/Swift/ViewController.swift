@@ -138,13 +138,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         userWaypoint.coordinateAccuracy = -1
         waypoints.insert(userWaypoint, at: 0)
         
-        let options = RouteOptions(waypoints: waypoints)
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.profileIdentifier = .automobileAvoidingTraffic
-        
-        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line
-        options.attributeOptions = [.congestionLevel]
+        let options = RouteOptions(forNavigationWithWaypoints: waypoints)
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
