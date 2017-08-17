@@ -1,0 +1,30 @@
+﻿/* Feedback type for Accident */
+"FEEDBACK_ACCIDENT" = "Accident";
+
+/* Feedback type for Closure */
+"FEEDBACK_CLOSURE" = "Closure";
+
+/* Feedback type for Confusing */
+"FEEDBACK_CONFUSING" = "Confusing";
+
+/* Feedback type for Hazard */
+"FEEDBACK_HAZARD" = "Hazard";
+
+/* Feedback type for Other Issue */
+"FEEDBACK_OTHER" = "Other Issue";
+
+/* Feedback type for Unallowed Turn */
+"FEEDBACK_UNALLOWED_TURN" = "Not Allowed";
+
+/* Format string for less than; 1 = duration remaining */
+"LESS_THAN" = "%@";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Rerouting…";
+
+/* Button title for resume tracking */
+"RESUME" = "Resume";
+
+/* Inform user about weak GPS signal */
+"WEAK_GPS" = "Weak GPS signal";
+
