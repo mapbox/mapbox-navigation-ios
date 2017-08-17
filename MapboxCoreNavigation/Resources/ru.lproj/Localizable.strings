@@ -1,29 +1,29 @@
 /* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Baleset";
+"FEEDBACK_ACCIDENT" = "ДТП";
 
 /* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Lezárás";
+"FEEDBACK_CLOSURE" = "Перекрытие движения";
 
 /* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Megtévesztő";
+"FEEDBACK_CONFUSING" = "Ошибка";
 
 /* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Veszélyhelyzet";
+"FEEDBACK_HAZARD" = "Опасный участок";
 
 /* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Más probléma";
+"FEEDBACK_OTHER" = "Прочее";
 
 /* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "Nem engedélyezett";
+"FEEDBACK_UNALLOWED_TURN" = "Запрещено";
 
 /* Format string for less than; 1 = duration remaining */
 "LESS_THAN" = "%@";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Újratervezés...";
+"REROUTING" = "Перестраиваем маршрут...";
 
 /* Button title for resume tracking */
-"RESUME" = "Resume";
+"RESUME" = "Возобновить";
 
 /* Inform user about weak GPS signal */
 "WEAK_GPS" = "Weak GPS signal";

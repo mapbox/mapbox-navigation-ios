@@ -1,15 +1,15 @@
 
 /* Class = "UIButton"; normalTitle = "Continue to next destination"; ObjectID = "1vl-kS-fBt"; */
-"1vl-kS-fBt.normalTitle" = "Tovább a következő úticélra";
+"1vl-kS-fBt.normalTitle" = "К следующему пункту назначения";
 
 /* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "dEY-t6-Ect"; */
-"dEY-t6-Ect.text" = "Nyomd hosszan úticél kiválasztásához";
+"dEY-t6-Ect.text" = "Нажмите и удерживайте, чтобы выбрать пункт назначения";
 
 /* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
-"iiq-Gf-SKY.normalTitle" = "Simulate Locations";
+"iiq-Gf-SKY.normalTitle" = "Имитирование местоположения";
 
 /* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
-"nMe-Tl-a1N.normalTitle" = "Navigáció indítása";
+"nMe-Tl-a1N.normalTitle" = "Начать";
 
 /* Class = "UINavigationItem"; title = "Mapbox Navigation"; ObjectID = "zxr-0T-HBr"; */
-"zxr-0T-HBr.title" = "Mapbox Navigáció";
+"zxr-0T-HBr.title" = "Навигация Mapbox";

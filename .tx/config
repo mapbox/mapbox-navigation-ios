@@ -4,17 +4,17 @@ lang_map = pt_BR: pt-BR, pt_PT: pt-PT, zh_CN: zh-Hans, zh_TW: zh-Hant
 minimum_perc = 80
 type = STRINGS
 
-[mapbox-navigation-ios.localizablestrings]
+[mapbox-navigation-ios.LocalizableStrings]
 file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
 source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
 
-[mapbox-navigation-core-ios.localizablestrings]
+[mapbox-navigation-ios.LocalizableCoreStrings]
 file_filter = MapboxCoreNavigation/Resources/<lang>.lproj/Localizable.strings
 source_file = MapboxCoreNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
 
-[mapbox-navigation-ios.localizableabbreviations]
+[mapbox-navigation-ios.LocalizableAbbreviations]
 file_filter = MapboxNavigation/Resources/<lang>.lproj/Abbreviations.csv.plist
 source_file = MapboxNavigation/Resources/Base.lproj/Abbreviations.csv.plist
 source_lang = en

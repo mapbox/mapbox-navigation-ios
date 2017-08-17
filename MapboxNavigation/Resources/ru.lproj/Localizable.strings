@@ -1,26 +1,26 @@
-/* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Baleset";
+﻿/* Feedback type for Accident */
+"FEEDBACK_ACCIDENT" = "Accident";
 
 /* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Lezárás";
+"FEEDBACK_CLOSURE" = "Closure";
 
 /* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Megtévesztő";
+"FEEDBACK_CONFUSING" = "Confusing";
 
 /* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Veszélyhelyzet";
+"FEEDBACK_HAZARD" = "Hazard";
 
 /* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Más probléma";
+"FEEDBACK_OTHER" = "Other Issue";
 
 /* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "Nem engedélyezett";
+"FEEDBACK_UNALLOWED_TURN" = "Not Allowed";
 
 /* Format string for less than; 1 = duration remaining */
 "LESS_THAN" = "%@";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Újratervezés...";
+"REROUTING" = "Rerouting…";
 
 /* Button title for resume tracking */
 "RESUME" = "Resume";
