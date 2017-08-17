@@ -813,6 +813,7 @@
 				C561735A1F182113005954F6 /* RouteStep.swift */,
 				351927351F0FA072003A702D /* ScreenCapture.swift */,
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
+				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
