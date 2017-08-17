@@ -155,8 +155,9 @@ open class RouteProgress: NSObject {
             var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
             
             if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes  {
+                
                 for step in leg.steps.dropFirst() {
-                    let stepCoordinatesCount = maneuverCoordinateIndex + Int(step.coordinateCount) - 1
+                    let stepCoordinatesCount = maneuverCoordinateIndex + Int(step.coordinateCount)
                     let stepSegmentCongestionLevels = Array(segmentCongestionLevels[maneuverCoordinateIndex..<stepCoordinatesCount])
                     let stepSegmentTravelTimes = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex..<stepCoordinatesCount])
                     maneuverCoordinateIndex = stepCoordinatesCount
