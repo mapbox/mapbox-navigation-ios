@@ -10,10 +10,3 @@ extension Bundle {
         return UIImage(named: named, in: self, compatibleWith: nil)
     }
 }
-
-var ShieldImageNamesByPrefix: [String: String] = {
-    guard let plistPath = Bundle.mapboxNavigation.path(forResource: "Shields", ofType: "plist") else {
-        return [:]
-    }
-    return NSDictionary(contentsOfFile: plistPath) as! [String: String]
-}()

@@ -630,7 +630,6 @@
 			isa = PBXGroup;
 			children = (
 				351BEC281E5BD530006FE110 /* Assets.xcassets */,
-				351BEC2A1E5BD538006FE110 /* Shields.plist */,
 				C520EE921EBB84F9008805BC /* Navigation.storyboard */,
 				DAAE5F321EAE4C4700832871 /* Localizable.strings */,
 				C5212B571EC4BE97009538EB /* Abbreviations.plist */,
@@ -797,6 +796,7 @@
 		C53C196A1F38E9C1008DB406 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				351BEC2A1E5BD538006FE110 /* Shields.plist */,
 				C53C196F1F38EA25008DB406 /* Localizable.strings */,
 			);
 			name = Resources;

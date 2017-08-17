@@ -33,3 +33,11 @@ extension Bundle {
         get { return Bundle(for: RouteController.self) }
     }
 }
+
+public var ShieldImageNamesByPrefix: [String: String] = {
+    guard let plistPath = Bundle.mapboxCoreNavigation.path(forResource: "Shields", ofType: "plist") else {
+        return [:]
+    }
+    return NSDictionary(contentsOfFile: plistPath) as! [String: String]
+}()
+

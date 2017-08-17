@@ -23,6 +23,17 @@ public class RouteStepFormatter: Formatter {
         
         let modifyValueByKey = { (key: OSRMTextInstructions.TokenType, value: String) -> String in
             switch key {
+            case .code:
+                let refComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
+                let refsContainingShieldValue = refComponents.filter {
+                    return ShieldImageNamesByPrefix[$0] != nil
+                }
+                
+                guard refsContainingShieldValue.isEmpty else { return value }
+                
+                return refComponents.map {
+                    return Int($0) == nil ? "<say-as interpret-as=\"characters\">\($0.addingXMLEscapes)</say-as>" : "<say-as interpret-as=\"address\">\($0.addingXMLEscapes)</say-as>"
+                    }.joined(separator: " ")
             case .wayName, .destination, .rotaryName:
                 return "<say-as interpret-as=\"address\">\(value.addingXMLEscapes)</say-as>"
             default:
