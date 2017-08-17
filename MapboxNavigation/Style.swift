@@ -57,9 +57,19 @@ open class Style: NSObject {
     public var floatingButtonBackgroundColor: UIColor?
     
     /**
-     Sets the background color of the lanes view
+     Sets the background color of the lane views.
      */
     public var lanesViewBackgroundColor: UIColor?
+    
+    /**
+     Sets the lane views primary color.
+     */
+    public var laneViewPrimaryColor: UIColor?
+    
+    /**
+     Sets the lane views secondary color.
+     */
+    public var laneViewSecondaryColor: UIColor?
     
     /**
      Sets the color of dividers and separators.
@@ -218,7 +228,7 @@ open class Style: NSObject {
     /**
      Applies the style for all changed properties.
      */
-    public func apply() {
+    open func apply() {
         
         // General styling
         
@@ -271,6 +281,14 @@ open class Style: NSObject {
         
         if let color = lanesViewBackgroundColor {
             LanesView.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = laneViewPrimaryColor {
+            LaneArrowView.appearance(for: traitCollection).primaryColor = color
+        }
+        
+        if let color = laneViewSecondaryColor {
+            LaneArrowView.appearance(for: traitCollection).secondaryColor = color
         }
         
         // Maneuver page view controller
@@ -383,7 +401,6 @@ public class Button: StylableButton { }
 /// :nodoc:
 @objc(MBFloatingButton)
 public class FloatingButton: Button { }
-
 
 /// :nodoc:
 @objc(MBLanesView)
@@ -605,40 +622,33 @@ class ManeuverContainerView: UIView {
 class StatusView: UIView {
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var textLabel: UILabel!
-    @IBOutlet weak var topConstraint: NSLayoutConstraint!
     
     func show(_ title: String, showSpinner: Bool) {
         textLabel.text = title
         activityIndicatorView.isHidden = !showSpinner
-        activityIndicatorView.startAnimating()
-        isHidden = false
+        if showSpinner {
+            activityIndicatorView.startAnimating()
+        }
         
-        updateConstraints(show: true)
+        guard isHidden == true else { return }
         
         UIView.defaultAnimation(0.3, animations: {
-            self.superview?.layoutIfNeeded()
+            self.isHidden = false
         }, completion: nil)
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
+        
         if animated {
-            updateConstraints(show: false)
+            guard isHidden == false else { return }
             UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.superview?.layoutIfNeeded()
+                self.isHidden = true
             }, completion: { (completed) in
                 self.activityIndicatorView.stopAnimating()
-                self.isHidden = true
             })
         } else {
-            updateConstraints(show: false)
             self.activityIndicatorView.stopAnimating()
             self.isHidden = true
-            self.superview?.layoutIfNeeded()
         }
-    }
-    
-    fileprivate func updateConstraints(show: Bool) {
-        topConstraint.constant = show ? 0 : -bounds.height
-        superview?.setNeedsUpdateConstraints()
     }
 }

@@ -19,6 +19,12 @@ open class NavigationLocationManager: CLLocationManager {
      */
     public private(set) var isPluggedIn: Bool = false
     
+    /**
+     Indicates whether the location manager’s desired accuracy should update
+     when the battery state changes.
+     */
+    public var automaticallyUpdatesDesiredAccuracy = true
+    
     override public init() {
         super.init()
         
@@ -37,6 +43,8 @@ open class NavigationLocationManager: CLLocationManager {
             }
         }
         
+        desiredAccuracy = kCLLocationAccuracyBest
+        
         #if os(iOS)
             UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
         #endif
@@ -46,6 +54,8 @@ open class NavigationLocationManager: CLLocationManager {
         if keyPath == "batteryState" {
             let batteryState = UIDevice.current.batteryState
             isPluggedIn = batteryState == .charging || batteryState == .full
+            
+            guard automaticallyUpdatesDesiredAccuracy else { return }
             desiredAccuracy = isPluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
         }
     }

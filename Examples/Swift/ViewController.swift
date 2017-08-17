@@ -32,6 +32,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     var exampleMode: ExampleMode?
     var nextWaypoint: CLLocationCoordinate2D?
     
+    // In this example, we show you how you can create custom UIView that is used to show the user's location.
+    // Set `showCustomUserPuck` to true to view the custom user puck.
+    var showCustomUserPuck = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -114,17 +118,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
     func requestRoute() {
         guard let destination = destination else { return }
         
-        let options = RouteOptions(coordinates: [
+        let options = RouteOptions(forNavigationWithCoordinates: [
             mapView.userLocation!.coordinate,
-            destination.coordinate,
+            destination.coordinate
         ])
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.profileIdentifier = .automobileAvoidingTraffic
-        
-        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line.
-        // Adding the optional attribute `.expectedTravelTime` ensures the ETA in the UI changes color depending on congestion.
-        options.attributeOptions = [.congestionLevel, .expectedTravelTime]
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
@@ -187,6 +184,8 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.turnArrowSecondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
         style.floatingButtonBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
         style.lanesViewBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        style.laneViewPrimaryColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+        style.laneViewSecondaryColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
         
         // Maneuver view (Page view)
         style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
@@ -242,10 +241,24 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         present(navigationViewController, animated: true, completion: nil)
     }
-    
 }
 
 extension ViewController: NavigationViewControllerDelegate {
+    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        guard annotation is MGLUserLocation && showCustomUserPuck else { return nil }
+        
+        let reuseIdentifier = "userPuck"
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
+        
+        if annotationView == nil {
+            annotationView = CustomAnnotationView(reuseIdentifier: reuseIdentifier)
+            annotationView!.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            annotationView!.backgroundColor = .red
+        }
+        
+        return annotationView
+    }
+    
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt destination: MGLAnnotation) {
         
         // Multiple waypoint demo
@@ -267,17 +280,10 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
         guard let navigationViewController = self.presentedViewController as? NavigationViewController else { return }
 
         // Calculate directions to the next waypoint
-        let options = RouteOptions(coordinates: [
+        let options = RouteOptions(forNavigationWithCoordinates: [
             navigationViewController.mapView!.userLocation!.coordinate,
-            nextDestination,
+            nextDestination
         ])
-        options.includesSteps = true
-        options.routeShapeResolution = .full
-        options.profileIdentifier = navigationViewController.route.routeOptions.profileIdentifier
-        
-        // Adding the optional attribute `.congestionLevel` ensures the route line will show the congestion along the route line.
-        // Adding the optional attribute `.expectedTravelTime` ensures the ETA in the UI changes color depending on congestion.
-        options.attributeOptions = [.congestionLevel, .expectedTravelTime]
 
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
@@ -296,5 +302,19 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
             // Dismiss the confirmation screen
             confirmationController.dismiss(animated: true, completion: nil)
         }
+    }
+}
+
+class CustomAnnotationView: MGLUserLocationAnnotationView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Force the annotation view to maintain a constant size when the map is tilted.
+        scalesWithViewingDistance = false
+        
+        // Use CALayer’s corner radius to turn this view into a circle.
+        layer.cornerRadius = frame.width / 2
+        layer.borderWidth = 2
+        layer.borderColor = UIColor.white.cgColor
     }
 }

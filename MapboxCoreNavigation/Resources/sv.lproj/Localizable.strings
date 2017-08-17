@@ -1,0 +1,30 @@
+/* Feedback type for Accident */
+"FEEDBACK_ACCIDENT" = "Olycka";
+
+/* Feedback type for Closure */
+"FEEDBACK_CLOSURE" = "Avstängd";
+
+/* Feedback type for Confusing */
+"FEEDBACK_CONFUSING" = "Förvirrande";
+
+/* Feedback type for Hazard */
+"FEEDBACK_HAZARD" = "Fara";
+
+/* Feedback type for Other Issue */
+"FEEDBACK_OTHER" = "Annat";
+
+/* Feedback type for Unallowed Turn */
+"FEEDBACK_UNALLOWED_TURN" = "Ej Tillåtet";
+
+/* Format string for less than; 1 = duration remaining */
+"LESS_THAN" = "%@";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Uppdaterar rutt…";
+
+/* Button title for resume tracking */
+"RESUME" = "Återuppta";
+
+/* Inform user about weak GPS signal */
+"WEAK_GPS" = "Svag GPS-signal";
+
