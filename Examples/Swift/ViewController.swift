@@ -178,6 +178,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         // General styling
         style.tintColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
+        style.statusBarStyle = .lightContent
         style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         style.fontFamily = "Georgia"
         style.turnArrowPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
