@@ -21,7 +21,7 @@ extension Locale {
     }
     
     /**
-     Returns a the `Locale` from `preferredLocalLanguageCountryCode`.
+     Returns a `Locale` from `preferredLocalLanguageCountryCode`.
      */
     public static var nationalizedCurrent = Locale(identifier: preferredLocalLanguageCountryCode)
 }
