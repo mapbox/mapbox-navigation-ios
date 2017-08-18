@@ -63,7 +63,7 @@
 }
 
 - (void)alertLevelDidChange:(NSNotification *)notification {
-    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerNotificationProgressDidChange];
+    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerProgressDidChangeNotificationProgressKey];
     MBRouteStep *upcomingStep = routeProgress.currentLegProgress.upComingStep;
     
     NSString *text = nil;
@@ -151,16 +151,15 @@
 - (void)startNavigation:(MBRoute *)route {
     [self applyCustomStyle];
     
-    // Using storyboard
-    [self performSegueWithIdentifier:@"StartNavigation" sender:self];
+    MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:route];
+    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
+                                                                                    directions:[MBDirections sharedDirections]
+                                                                                         style:nil
+                                                                               locationManager:locationManager];
+    [self presentViewController:controller animated:YES completion:nil];
     
-    // Using code
-//    MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
-//                                                                                     directions:[MBDirections sharedDirections]
-//                                                                                locationManager:nil];
-//
-//    controller.pendingCamera = self.mapView.camera;
-//    [self presentViewController:controller animated:YES completion:nil];
+    // Suspend notifications and let `MBNavigationViewController` handle all progress and voice updates.
+    [self suspendNotifications];
 }
 
 - (void)applyCustomStyle {
