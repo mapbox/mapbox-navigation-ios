@@ -119,7 +119,8 @@ public class DistanceFormatter: LengthFormatter {
                 unit = .kilometer
                 formattedDistance = string(fromValue: distance.kilometers, unit: unit)
             } else {
-                formattedDistance = string(fromMeters: distance)
+                unit = .meter
+                formattedDistance = string(fromValue: distance, unit: unit)
             }
         } else {
             if unit == .yard {
