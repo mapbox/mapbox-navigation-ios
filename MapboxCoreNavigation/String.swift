@@ -48,4 +48,8 @@ extension String {
     var asSSMLCharacters: String {
         return "<say-as interpret-as=\"characters\">\(self.addingXMLEscapes)</say-as>"
     }
+    
+    func isUppercased() -> Bool {
+        return (self == self.uppercased()) && (self != self.lowercased())
+    }
 }

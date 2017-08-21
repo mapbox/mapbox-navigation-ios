@@ -27,7 +27,7 @@ public class RouteStepFormatter: Formatter {
                 let refComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
                 guard var firstRefComponent = refComponents.first else { return value.asSSMLAddress }
                 
-                firstRefComponent = ShieldImageNamesByPrefix[firstRefComponent] != nil ? firstRefComponent.asSSMLCharacters : firstRefComponent.asSSMLAddress
+                firstRefComponent = firstRefComponent.isUppercased() ? firstRefComponent.asSSMLCharacters : firstRefComponent.asSSMLAddress
                 
                 return "\(firstRefComponent) \(refComponents.suffix(from: 1).joined(separator: " ").asSSMLAddress)"
             case .wayName, .destination, .rotaryName:
