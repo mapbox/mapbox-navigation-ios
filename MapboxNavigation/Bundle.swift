@@ -11,7 +11,7 @@ extension Bundle {
     }
 }
 
-public var ShieldImageNamesByPrefix: [String: String] = {
+var ShieldImageNamesByPrefix: [String: String] = {
     guard let plistPath = Bundle.mapboxNavigation.path(forResource: "Shields", ofType: "plist") else {
         return [:]
     }
