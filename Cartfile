@@ -3,5 +3,5 @@ github "mapbox/MapboxDirections.swift" == 0.10.1
 github "52inc/Pulley" == 1.4
 github "rs/SDWebImage" == 4.1.0
 github "Project-OSRM/osrm-text-instructions.swift" == 0.3.0
-github "frederoni/aws-sdk-ios" "83c722a3e2aa9251d3d9f8e7b04339d5e6c83eab"
+github "frederoni/aws-sdk-ios" "ac6a35f135aca73c9d308e960a501fcc16a586a8"
 github "mapbox/mapbox-telemetry-ios" == 0.2.9
