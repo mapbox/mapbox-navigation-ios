@@ -14,9 +14,6 @@ extension String {
             return NSRange(location: 0, length: characters.count)
         }
     }
-}
-
-extension String {
     
     typealias Replacement = (of: String, with: String)
     
@@ -49,7 +46,7 @@ extension String {
         return "<say-as interpret-as=\"characters\">\(self.addingXMLEscapes)</say-as>"
     }
     
-    func isUppercased() -> Bool {
+    var isUppercased: Bool {
         return (self == self.uppercased()) && (self != self.lowercased())
     }
 }
