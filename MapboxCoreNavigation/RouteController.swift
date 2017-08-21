@@ -236,6 +236,9 @@ open class RouteController: NSObject {
      Will continue monitoring until `suspendLocationUpdates()` is called.
      */
     public func resume() {
+        if #available(iOS 11.0, *) {
+            locationManager.showsBackgroundLocationIndicator = true
+        }
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
     }
@@ -244,6 +247,9 @@ open class RouteController: NSObject {
      Stops monitoring the user’s location along the route.
      */
     public func suspendLocationUpdates() {
+        if #available(iOS 11.0, *) {
+            locationManager.showsBackgroundLocationIndicator = false
+        }
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
     }

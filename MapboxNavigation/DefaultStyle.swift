@@ -50,6 +50,8 @@ open class DefaultStyle: Style {
             tintColor = .defaultTint
         }
         
+        statusBarStyle = .default
+        
         buttonTextColor = .defaultPrimaryText
         lineColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         
