@@ -108,6 +108,23 @@ open class DefaultStyle: Style {
         lowTrafficTextColor = .trafficAlternateLow
         
         routeCasingColor = .defaultRouteCasing
+        
+        styleType = .daytimeStyle
     }
+}
+
+/**
+ `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied if `automaticallyAdjustStyleForSunPosition` and `isDaytime` are true.
+ */
+open class NightStyle: Style {
     
+    required public init(traitCollection: UITraitCollection) {
+        super.init(traitCollection: traitCollection)
+        
+        maneuverViewBackgroundColor = .black
+        
+        styleType = .nighttimeStyle
+        
+        headerBackgroundColor = .black
+    }
 }

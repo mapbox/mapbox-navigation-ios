@@ -3,6 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
 import Pulley
+import Solar
 
 @objc(MBNavigationPulleyViewController)
 public class NavigationPulleyViewController: PulleyViewController {}
@@ -186,7 +187,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var styles: [Style]? {
         didSet {
-            styles?.forEach { $0.apply() }
+            applyStyle()
         }
     }
     
@@ -226,6 +227,24 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
     }
     
+    /**
+     If true, the map style and UI will automatically be updated given the time of day and screen brightness.
+     */
+    public var automaticallyAdjustsStyleForTimeOfDayAndBrightness = true
+    
+    var styleForTimeOfDayAndBrightness: StyleType {
+        guard automaticallyAdjustsStyleForTimeOfDayAndBrightness else { return .daytimeStyle }
+        
+        guard UIScreen.main.brightness > 0.25 else { return .nighttimeStyle }
+        
+        if let location = routeController.location {
+            guard let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) else { return .daytimeStyle }
+            return solar.isDaytime ? .daytimeStyle : .nighttimeStyle
+        }
+        
+        return .daytimeStyle
+    }
+    
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     
@@ -250,7 +269,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
-                         styles: [Style]? = [DefaultStyle()],
+                         styles: [Style]? = [DefaultStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -259,7 +278,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
-        self.styles = styles ?? [DefaultStyle()]
+        self.styles = styles ?? [DefaultStyle(), NightStyle()]
         self.directions = directions
         self.route = route
         
@@ -322,7 +341,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
         
-        styles?.forEach { $0.apply() }
+        applyStyle()
         
         if routeController.locationManager is SimulatedLocationManager {
             let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
@@ -342,11 +361,13 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(updateStyleIfNeeded), name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
     }
     
     func progressDidChange(notification: NSNotification) {
@@ -372,6 +393,30 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
+        }
+        
+        updateStyleIfNeeded()
+    }
+    
+    func updateStyleIfNeeded() {
+        applyStyle()
+        refreshAppearance()
+    }
+    
+    func applyStyle() {
+        styles?.forEach {
+            if $0.styleType == styleForTimeOfDayAndBrightness {
+                $0.apply()
+            }
+        }
+    }
+    
+    func refreshAppearance() {
+        for window in UIApplication.shared.windows {
+            for view in window.subviews {
+                view.removeFromSuperview()
+                window.addSubview(view)
+            }
         }
     }
     

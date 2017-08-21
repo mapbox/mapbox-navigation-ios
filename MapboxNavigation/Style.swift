@@ -232,6 +232,11 @@ open class Style: NSObject {
     public var lowTrafficTextColor: UIColor?
     
     /**
+     Describes the situations in which the style should be used. By default, the style will be used during the daytime.
+     */
+    public var styleType: StyleType = .daytimeStyle
+    
+    /**
      Applies the style for all changed properties.
      */
     open func apply() {
