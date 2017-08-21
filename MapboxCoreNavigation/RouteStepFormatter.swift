@@ -25,17 +25,13 @@ public class RouteStepFormatter: Formatter {
             switch key {
             case .code:
                 let refComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
-                let refsContainingShieldValue = refComponents.filter {
-                    return ShieldImageNamesByPrefix[$0] != nil
-                }
+                guard var firstRefComponent = refComponents.first else { return value.asSSMLAddress }
                 
-                guard refsContainingShieldValue.isEmpty else { return value }
+                firstRefComponent = ShieldImageNamesByPrefix[firstRefComponent] != nil ? firstRefComponent.asSSMLCharacters : firstRefComponent.asSSMLAddress
                 
-                return refComponents.map {
-                    return Int($0) == nil ? "<say-as interpret-as=\"characters\">\($0.addingXMLEscapes)</say-as>" : "<say-as interpret-as=\"address\">\($0.addingXMLEscapes)</say-as>"
-                    }.joined(separator: " ")
+                return "\(firstRefComponent) \(refComponents.suffix(from: 1).joined(separator: " ").asSSMLAddress)"
             case .wayName, .destination, .rotaryName:
-                return "<say-as interpret-as=\"address\">\(value.addingXMLEscapes)</say-as>"
+                return value.asSSMLAddress
             default:
                 return value
             }
