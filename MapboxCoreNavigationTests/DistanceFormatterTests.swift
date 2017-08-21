@@ -26,6 +26,7 @@ class DistanceFormatterTests: XCTestCase {
         spokenDistanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
         
+        assertDistance(0,               spoken: "0 feet",               displayed: "0 ft")
         assertDistance(oneFeet*50,      spoken: "50 feet",              displayed: "50 ft")
         assertDistance(oneFeet*100,     spoken: "100 feet",             displayed: "100 ft")
         assertDistance(oneFeet*249,     spoken: "250 feet",             displayed: "250 ft")
@@ -45,6 +46,7 @@ class DistanceFormatterTests: XCTestCase {
         spokenDistanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
         distanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
         
+        assertDistance(0,       spoken: "0 Meter",          displayed: "0 m")
         assertDistance(10,      spoken: "0 Meter",          displayed: "0 m")
         assertDistance(15,      spoken: "25 Meter",         displayed: "25 m")
         assertDistance(24,      spoken: "25 Meter",         displayed: "25 m")
@@ -63,10 +65,11 @@ class DistanceFormatterTests: XCTestCase {
         spokenDistanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
         
-        assertDistance(oneMile/2,   spoken: "a half mile",        displayed: "0.5 mi")
-        assertDistance(oneMile,     spoken: "1 mile",             displayed: "1 mi")
-        assertDistance(oneMile*2.5, spoken: "2 & a half miles",   displayed: "2.5 mi")
-        assertDistance(oneMile*3,   spoken: "3 miles",            displayed: "3 mi")
-        assertDistance(oneMile*3.5, spoken: "4 miles",            displayed: "4 mi")
+        assertDistance(0,           spoken: "0 feet",               displayed: "0 ft")
+        assertDistance(oneMile/2,   spoken: "a half mile",          displayed: "0.5 mi")
+        assertDistance(oneMile,     spoken: "1 mile",               displayed: "1 mi")
+        assertDistance(oneMile*2.5, spoken: "2 & a half miles",     displayed: "2.5 mi")
+        assertDistance(oneMile*3,   spoken: "3 miles",              displayed: "3 mi")
+        assertDistance(oneMile*3.5, spoken: "4 miles",              displayed: "4 mi")
     }
 }
