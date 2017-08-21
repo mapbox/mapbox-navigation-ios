@@ -251,10 +251,11 @@ extension ViewController: NavigationViewControllerDelegate {
         let reuseIdentifier = "userPuck"
         var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseIdentifier)
         
-        if annotationView == nil {
+        if annotationView == nil, let course = mapView.userLocation?.location?.course {
+            let direction = mapView.direction
             annotationView = CustomAnnotationView(reuseIdentifier: reuseIdentifier)
-            annotationView!.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-            annotationView!.backgroundColor = .red
+            annotationView!.frame = CGRect(x: 0, y: 0, width: 40, height: 60)
+            annotationView!.transform = CGAffineTransform(rotationAngle: MGLRadiansFromDegrees(direction - course))
         }
         
         return annotationView
@@ -314,8 +315,7 @@ class CustomAnnotationView: MGLUserLocationAnnotationView {
         scalesWithViewingDistance = false
         
         // Use CALayer’s corner radius to turn this view into a circle.
-        layer.cornerRadius = frame.width / 2
-        layer.borderWidth = 2
-        layer.borderColor = UIColor.white.cgColor
+        layer.contents = #imageLiteral(resourceName: "car").cgImage
     }
 }
+
