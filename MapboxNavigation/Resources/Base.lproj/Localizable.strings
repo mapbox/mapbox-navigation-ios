@@ -25,6 +25,9 @@
 /* Button title for resume tracking */
 "RESUME" = "Resume";
 
+/* Inform the user they are in simulation mode */
+"USER_IN_SIMULATION_MODE" = "Simulating Route";
+
 /* Inform user about weak GPS signal */
 "WEAK_GPS" = "Weak GPS signal";
 

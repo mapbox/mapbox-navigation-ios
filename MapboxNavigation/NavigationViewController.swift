@@ -314,6 +314,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         drawerCornerRadius = 0
         progressBar.dock(on: view)
         self.delegate = self
+        
+        if routeController.isSimulationModeEnabled {
+            let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Route", comment: "Inform the user they are in simulation mode")
+            mapViewController?.statusView.show(title, showSpinner: false)
+        }
     }
     
     public override func viewWillAppear(_ animated: Bool) {

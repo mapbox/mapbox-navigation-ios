@@ -115,6 +115,11 @@ open class RouteController: NSObject {
     }
     
     /**
+     If true, the `RouteController` was initialized with a `SimulatedLocationManager` as the `NavigationLocationManager`. This `Bool` is used to notifiy the user they are currently viewing the `NavigationViewController` in simulation mode.
+     */
+    public var isSimulationModeEnabled = false
+    
+    /**
      If true, location updates will be simulated when driving through tunnels or other areas where there is none or bad GPS reception.
      */
     public var isDeadReckoningEnabled = false
@@ -182,6 +187,10 @@ open class RouteController: NSObject {
         self.resumeNotifications()
         self.startEvents(route: route)
         self.resetSession()
+        
+        if locationManager is SimulatedLocationManager {
+            isSimulationModeEnabled = true
+        }
     }
     
     deinit {
