@@ -136,7 +136,6 @@
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C561735B1F182113005954F6 /* RouteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561735A1F182113005954F6 /* RouteStep.swift */; };
-		C56AA2F41F3A409600772BAE /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C578DA071EFD0FFF0052079F /* ProcessInfo.swift */; };
 		C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */; };
 		C588C3C11F3387C700520EF2 /* SpokenInstructionFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C588C3C01F3387C700520EF2 /* SpokenInstructionFormatter.swift */; };
@@ -812,7 +811,6 @@
 				C5D9800E1EFBCDAD006DBF2E /* Date.swift */,
 				C51DF8651F38C31C006C6A15 /* Locale.swift */,
 				C578DA071EFD0FFF0052079F /* ProcessInfo.swift */,
-				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
 				C561735A1F182113005954F6 /* RouteStep.swift */,
 				351927351F0FA072003A702D /* ScreenCapture.swift */,
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
@@ -1342,7 +1340,6 @@
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */,
 				35375EC11F31FA86004CE727 /* Settings.swift in Sources */,
-				C56AA2F41F3A409600772BAE /* Locale.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				C51DF8671F38C337006C6A15 /* Date.swift in Sources */,
