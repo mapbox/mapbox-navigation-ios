@@ -14,9 +14,6 @@ extension String {
             return NSRange(location: 0, length: characters.count)
         }
     }
-}
-
-extension String {
     
     typealias Replacement = (of: String, with: String)
     
@@ -39,5 +36,17 @@ extension String {
             (")", ""),
             ("_", "")
             ])
+    }
+    
+    var asSSMLAddress: String {
+        return "<say-as interpret-as=\"address\">\(self.addingXMLEscapes)</say-as>"
+    }
+    
+    var asSSMLCharacters: String {
+        return "<say-as interpret-as=\"characters\">\(self.addingXMLEscapes)</say-as>"
+    }
+    
+    var isUppercased: Bool {
+        return self == uppercased() && self != lowercased()
     }
 }
