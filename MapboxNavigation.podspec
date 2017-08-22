@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
-  s.dependency "Mapbox-iOS-SDK", "3.6.1"
+  s.dependency "Mapbox-iOS-SDK", "3.6"
   s.dependency "Pulley", "1.4"
   s.dependency "SDWebImage", "4.1.0"
   s.dependency "AWSPolly", "2.5.10"

@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxDirections.swift", "0.10.1"
-  s.dependency "Mapbox-iOS-SDK", "3.6.1"
+  s.dependency "Mapbox-iOS-SDK", "3.6"
   s.dependency "OSRMTextInstructions", "0.3.1"
   s.dependency "Pulley", "1.4"
   s.dependency "SDWebImage", "4.1.0"
