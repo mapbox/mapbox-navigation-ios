@@ -626,9 +626,11 @@ class StatusView: UIView {
     
     func show(_ title: String, showSpinner: Bool) {
         textLabel.text = title
-        activityIndicatorView.isHidden = !showSpinner
+        activityIndicatorView.hidesWhenStopped = true
         if showSpinner {
             activityIndicatorView.startAnimating()
+        } else {
+            activityIndicatorView.stopAnimating()
         }
         
         guard isHidden == true else { return }
