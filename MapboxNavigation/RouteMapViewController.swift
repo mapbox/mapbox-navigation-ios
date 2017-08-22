@@ -246,7 +246,9 @@ class RouteMapViewController: UIViewController {
     }
     
     func didReroute(notification: NSNotification) {
-        statusView.hide(delay: 0.5, animated: true)
+        if !(routeController.locationManager is SimulatedLocationManager) {
+            statusView.hide(delay: 0.5, animated: true)
+        }
     }
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
@@ -546,10 +548,11 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.updateStreetNameForStep()
         
         updateLaneViews(step: step, alertLevel: .high)
-        
-        maneuverViewController.isPagingThroughStepList = true
 
-        if !isInOverviewMode {
+        
+        if !isInOverviewMode,
+            // This will be false when the user is swiping
+            mapView.userTrackingMode != .followWithCourse {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
                 view.layoutIfNeeded()
                 mapView.camera = tiltedCamera

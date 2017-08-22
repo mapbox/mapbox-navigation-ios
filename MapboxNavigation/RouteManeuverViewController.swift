@@ -96,8 +96,6 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    var isPagingThroughStepList = false
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         turnArrowView.backgroundColor = .clear
