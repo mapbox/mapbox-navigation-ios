@@ -529,7 +529,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         
         updateLaneViews(step: step, alertLevel: .high)
 
-        if !isInOverviewMode, mapView.userTrackingMode != .followWithCourse {
+        
+        if !isInOverviewMode,
+            // This will be false when the user is swiping
+            mapView.userTrackingMode != .followWithCourse {
             if step == routeController.routeProgress.currentLegProgress.upComingStep {
                 view.layoutIfNeeded()
                 mapView.camera = tiltedCamera
