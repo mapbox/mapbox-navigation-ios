@@ -114,7 +114,7 @@ open class DefaultStyle: Style {
 }
 
 /**
- `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied if `automaticallyAdjustStyleForSunPosition` and `isDaytime` are true.
+ `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
 open class NightStyle: Style {
     
