@@ -26,7 +26,7 @@
 "RESUME" = "Resume";
 
 /* Inform the user they are in simulation mode */
-"USER_IN_SIMULATION_MODE" = "Simulating Route";
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation";
 
 /* Inform user about weak GPS signal */
 "WEAK_GPS" = "Weak GPS signal";

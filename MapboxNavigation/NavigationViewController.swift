@@ -316,7 +316,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.delegate = self
         
         if routeController.isSimulationModeEnabled {
-            let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Route", comment: "Inform the user they are in simulation mode")
+            let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation", comment: "Inform the user they are in simulation mode")
             mapViewController?.statusView.show(title, showSpinner: false)
         }
     }
