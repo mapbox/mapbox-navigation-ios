@@ -325,7 +325,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         styles?.forEach { $0.apply() }
         
         if routeController.locationManager is SimulatedLocationManager {
-            let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation", comment: "Inform the user they are in simulation mode")
+            let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
             mapViewController?.statusView.show(title, showSpinner: false)
         }
     }
