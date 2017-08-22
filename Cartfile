@@ -1,7 +1,7 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" == 3.6.1
-github "mapbox/MapboxDirections.swift" == 0.10.1
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 3.6
+github "mapbox/MapboxDirections.swift" ~> 0.10
 github "52inc/Pulley" == 1.4
-github "rs/SDWebImage" == 4.1.0
-github "Project-OSRM/osrm-text-instructions.swift" == 0.3.1
+github "rs/SDWebImage" ~> 4.1
+github "Project-OSRM/osrm-text-instructions.swift" ~> 0.3.1
 github "frederoni/aws-sdk-ios" "ac6a35f135aca73c9d308e960a501fcc16a586a8"
-github "mapbox/mapbox-telemetry-ios" == 0.2.9
+github "mapbox/mapbox-telemetry-ios" ~> 0.2
