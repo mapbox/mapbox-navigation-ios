@@ -47,6 +47,6 @@ extension String {
     }
     
     var isUppercased: Bool {
-        return (self == self.uppercased()) && (self != self.lowercased())
+        return self == uppercased() && self != lowercased()
     }
 }
