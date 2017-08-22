@@ -25,6 +25,9 @@
 /* Button title for resume tracking */
 "RESUME" = "Resume";
 
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled */
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation";
+
 /* Inform user about weak GPS signal */
 "WEAK_GPS" = "Weak GPS signal";
 

@@ -246,7 +246,9 @@ class RouteMapViewController: UIViewController {
     }
     
     func didReroute(notification: NSNotification) {
-        statusView.hide(delay: 0.5, animated: true)
+        if !(routeController.locationManager is SimulatedLocationManager) {
+            statusView.hide(delay: 0.5, animated: true)
+        }
     }
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {

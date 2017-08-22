@@ -323,6 +323,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         routeController.resume()
         
         styles?.forEach { $0.apply() }
+        
+        if routeController.locationManager is SimulatedLocationManager {
+            let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
+            mapViewController?.statusView.show(title, showSpinner: false)
+        }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -440,7 +445,9 @@ extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
         mapViewController?.mapView.locationManager(routeController.locationManager, didUpdateLocations: locations)
         
-        mapViewController?.statusView.hide(delay: 3, animated: true)
+        if !(routeController.locationManager is SimulatedLocationManager) {
+            mapViewController?.statusView.hide(delay: 3, animated: true)
+        }
     }
     
     public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
