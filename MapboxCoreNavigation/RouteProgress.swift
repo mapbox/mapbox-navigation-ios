@@ -147,8 +147,8 @@ open class RouteProgress: NSObject {
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
         
-        var maneuverCoordinateIndex = 0
         for (legIndex, leg) in route.legs.enumerated() {
+            var maneuverCoordinateIndex = 0
             
             congestionTimesPerStep.append([])
             
