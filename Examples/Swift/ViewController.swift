@@ -213,11 +213,11 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.trafficHeavyColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         style.trafficSevereColor = #colorLiteral(red: 0.5725490451, green: 0, blue: 0.2313725501, alpha: 1)
         
+        // Set a custom style URL
+        style.mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")
+        
         let navigationViewController = NavigationViewController(for: route, styles: [style], locationManager: locationManager())
         navigationViewController.navigationDelegate = self
-        
-        // Set a custom style URL
-        navigationViewController.mapView?.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
         
         present(navigationViewController, animated: true, completion: nil)
     }

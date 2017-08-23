@@ -232,6 +232,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var automaticallyAdjustsStyleForTimeOfDayAndBrightness = true
     
+    var currentStyleType: StyleType?
+    
     var styleForTimeOfDayAndBrightness: StyleType {
         guard automaticallyAdjustsStyleForTimeOfDayAndBrightness else { return .lightStyle }
         guard UIScreen.main.brightness > 0.25 else { return .darkStyle }
@@ -404,12 +406,18 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func applyStyle() {
+        
+        // Don't update the style if they are equal
+        guard currentStyleType == nil || currentStyleType != styleForTimeOfDayAndBrightness else { return }
+        
         styles?.forEach {
             if $0.styleType == styleForTimeOfDayAndBrightness {
                 $0.apply()
+                mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
                 mapView?.styleURL = $0.mapStyleURL
                 UIApplication.shared.statusBarStyle = $0.statusBarStyle ?? .default
                 setNeedsStatusBarAppearanceUpdate()
+                currentStyleType = $0.styleType
             }
         }
         
