@@ -109,15 +109,15 @@ open class DefaultStyle: Style {
         
         routeCasingColor = .defaultRouteCasing
         
-        styleType = .daytimeStyle
-        mapStyle = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
+        styleType = .lightStyle
+        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
     }
 }
 
 /**
  `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
-open class NightStyle: Style {
+open class DefaultDarkStyle: Style {
     
     required public init(traitCollection: UITraitCollection) {
         super.init(traitCollection: traitCollection)
@@ -146,7 +146,7 @@ open class NightStyle: Style {
         laneViewPrimaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         statusBarStyle = .lightContent
-        styleType = .nighttimeStyle
-        mapStyle = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")
+        styleType = .darkStyle
+        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")
     }
 }

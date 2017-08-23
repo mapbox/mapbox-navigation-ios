@@ -234,12 +234,12 @@ open class Style: NSObject {
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
      */
-    public var styleType: StyleType = .daytimeStyle
+    public var styleType: StyleType = .lightStyle
     
     /**
      Map style to be used for the style.
      */
-    public var mapStyle: URL?
+    public var mapStyleURL: URL?
     
     /**
      Applies the style for all changed properties.

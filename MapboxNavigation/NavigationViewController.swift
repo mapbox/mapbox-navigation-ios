@@ -233,9 +233,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     public var automaticallyAdjustsStyleForTimeOfDayAndBrightness = true
     
     var styleForTimeOfDayAndBrightness: StyleType {
-        guard automaticallyAdjustsStyleForTimeOfDayAndBrightness else { return .daytimeStyle }
-        guard UIScreen.main.brightness > 0.25 else { return .nighttimeStyle }
-        let currentDate = Date()
+        guard automaticallyAdjustsStyleForTimeOfDayAndBrightness else { return .lightStyle }
+        guard UIScreen.main.brightness > 0.25 else { return .darkStyle }
         
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
@@ -243,10 +242,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             // [Ref](https://www.timeanddate.com/astronomy/different-types-twilight.html)
             let sunriseTime = solar.astronomicalSunrise,
             let sunsetTime = solar.astronomicalSunset else {
-                return .daytimeStyle
+                return .lightStyle
         }
         
-        return  currentDate > sunriseTime || currentDate < sunsetTime ? .daytimeStyle : .nighttimeStyle
+        let currentDate = Date()
+        
+        return  currentDate > sunriseTime || currentDate < sunsetTime ? .lightStyle : .darkStyle
     }
     
     var tableViewController: RouteTableViewController?
@@ -273,7 +274,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
-                         styles: [Style]? = [DefaultStyle(), NightStyle()],
+                         styles: [Style]? = [DefaultStyle(), DefaultDarkStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -282,7 +283,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
-        self.styles = styles ?? [DefaultStyle(), NightStyle()]
+        self.styles = styles ?? [DefaultStyle(), DefaultDarkStyle()]
         self.directions = directions
         self.route = route
         
@@ -406,7 +407,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         styles?.forEach {
             if $0.styleType == styleForTimeOfDayAndBrightness {
                 $0.apply()
-                mapView?.styleURL = $0.mapStyle
+                mapView?.styleURL = $0.mapStyleURL
                 UIApplication.shared.statusBarStyle = $0.statusBarStyle ?? .default
                 setNeedsStatusBarAppearanceUpdate()
             }
