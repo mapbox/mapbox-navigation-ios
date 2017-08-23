@@ -41,7 +41,10 @@ open class Style: NSObject {
      */
     public var tintColor: UIColor?
     
-    
+    /**
+     Sets the tint color on the map view.
+     */
+    public var mapViewTintColor: UIColor?
     
     /**
      Sets the status bar style.
@@ -271,6 +274,10 @@ open class Style: NSObject {
             Button.appearance(for: traitCollection).tintColor = color
             HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
             ResumeButton.appearance(for: traitCollection).tintColor = color
+        }
+        
+        if let color = mapViewTintColor {
+            NavigationMapView.appearance(for: traitCollection).tintColor = color
         }
         
         if let statusBarStyle = statusBarStyle {
