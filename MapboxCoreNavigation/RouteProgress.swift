@@ -118,6 +118,20 @@ open class RouteProgress: NSObject {
      */
     public var currentLegProgress: RouteLegProgress!
     
+    /**
+     Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
+     */
+    public typealias TimedCongestionLevel = (CongestionLevel, TimeInterval)
+    
+    /**
+     If the route contains both `segmentCongestionLevels` and `expectedSegmentTravelTimes`, this property is set to a deeply nested array of `TimeCongestionLevels` per segment per step per leg.
+     */
+    public var congestionTravelTimesSegmentsByStep: [[[TimedCongestionLevel]]] = []
+    
+    /**
+     An dictionary containing a `TimeInterval` total per `CongestionLevel`. Only `CongestionLevel` founnd on that step will present. Broken up by leg and then step. 
+     */
+    public var congestionTimesPerStep: [[[CongestionLevel: TimeInterval]]]  = [[[:]]]
 
     /**
      Intializes a new `RouteProgress`.
@@ -131,6 +145,36 @@ open class RouteProgress: NSObject {
         self.legIndex = legIndex
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
+        
+        var maneuverCoordinateIndex = 0
+        for (legIndex, leg) in route.legs.enumerated() {
+            
+            congestionTimesPerStep.append([])
+            
+            /// An index into the route’s coordinates and congestionTravelTimesSegmentsByStep that corresponds to a step’s maneuver location.
+            var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
+            
+            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes  {
+                
+                for step in leg.steps.dropFirst() {
+                    let stepCoordinatesCount = maneuverCoordinateIndex + Int(step.coordinateCount) - 1
+                    let stepSegmentCongestionLevels = Array(segmentCongestionLevels[maneuverCoordinateIndex..<stepCoordinatesCount])
+                    let stepSegmentTravelTimes = Array(expectedSegmentTravelTimes[maneuverCoordinateIndex..<stepCoordinatesCount])
+                    maneuverCoordinateIndex = stepCoordinatesCount
+                    
+                    let stepTimedCongestionLevels = Array(zip(stepSegmentCongestionLevels, stepSegmentTravelTimes))
+                    congestionTravelTimesSegmentsByLeg.append(stepTimedCongestionLevels)
+                    var stepCongestionValues: [CongestionLevel: TimeInterval] = [:]
+                    for (segmentCongestion, segmentTime) in stepTimedCongestionLevels {
+                        stepCongestionValues[segmentCongestion] = (stepCongestionValues[segmentCongestion] ?? 0) + segmentTime
+                    }
+                    
+                    congestionTimesPerStep[legIndex].append(stepCongestionValues)
+                }
+            }
+            
+            congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
+        }
     }
 }
 
@@ -342,7 +386,6 @@ open class RouteStepProgress: NSObject {
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
-
 
     /**
      Intializes a new `RouteStepProgress`.

@@ -39,6 +39,7 @@ open class NavigationMapView: MGLMapView {
     dynamic var trafficModerateColor: UIColor = .trafficModerate
     dynamic var trafficHeavyColor: UIColor = .trafficHeavy
     dynamic var trafficSevereColor: UIColor = .trafficSevere
+    dynamic var lowTrafficTextColor: UIColor = .trafficAlternateLow
     dynamic var routeCasingColor: UIColor = .defaultRouteCasing
     
     var showsRoute: Bool {

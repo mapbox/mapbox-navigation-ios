@@ -18,7 +18,7 @@ extension RouteOptions {
         
         includesSteps = true
         routeShapeResolution = .full
-        attributeOptions = [.congestionLevel]
+        attributeOptions = [.congestionLevel, .expectedTravelTime]
     }
     
     /**
@@ -29,7 +29,7 @@ extension RouteOptions {
         
         includesSteps = true
         routeShapeResolution = .full
-        attributeOptions = [.congestionLevel]
+        attributeOptions = [.congestionLevel, .expectedTravelTime]
     }
     
     /**
@@ -40,6 +40,6 @@ extension RouteOptions {
         
         includesSteps = true
         routeShapeResolution = .full
-        attributeOptions = [.congestionLevel]
+        attributeOptions = [.congestionLevel, .expectedTravelTime]
     }
 }
