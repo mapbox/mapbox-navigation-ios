@@ -119,12 +119,12 @@ open class RouteProgress: NSObject {
     public var currentLegProgress: RouteLegProgress!
     
     /**
-     Tupel containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
+     Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
      */
     public typealias TimedCongestionLevel = (CongestionLevel, TimeInterval)
     
     /**
-     If the route contains both `segmentCongestionLevels` and `expectedSegmentTravelTimes`, this array will contain an array of arrays of tuples of `segmentCongestionLevels` and `expectedSegmentTravelTimes`.
+     If the route contains both `segmentCongestionLevels` and `expectedSegmentTravelTimes`, this property is set to a deeply nested array of `TimeCongestionLevels` per segment per step per leg.
      */
     public var congestionTravelTimesSegmentsByStep: [[[TimedCongestionLevel]]] = []
     
