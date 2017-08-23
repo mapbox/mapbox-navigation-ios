@@ -41,6 +41,8 @@ open class Style: NSObject {
      */
     public var tintColor: UIColor?
     
+    
+    
     /**
      Sets the status bar style.
      `UIViewControllerBasedStatusBarAppearance` must be set to NO for this property to have any effect.
