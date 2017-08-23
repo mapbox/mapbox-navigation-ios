@@ -365,7 +365,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(updateStyleIfNeeded), name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applyStyle), name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
     }
     
     func suspendNotifications() {
@@ -399,12 +399,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
         
-        updateStyleIfNeeded()
-    }
-    
-    func updateStyleIfNeeded() {
         applyStyle()
-        refreshAppearance()
     }
     
     func applyStyle() {
@@ -412,11 +407,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             if $0.styleType == styleForTimeOfDayAndBrightness {
                 $0.apply()
                 mapView?.styleURL = $0.mapStyle
+                UIApplication.shared.statusBarStyle = $0.statusBarStyle ?? .default
+                setNeedsStatusBarAppearanceUpdate()
             }
         }
-    }
-    
-    func refreshAppearance() {
+        
         for window in UIApplication.shared.windows {
             for view in window.subviews {
                 view.removeFromSuperview()
