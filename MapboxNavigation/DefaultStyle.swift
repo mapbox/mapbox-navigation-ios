@@ -17,6 +17,7 @@ extension UIColor {
     class var trafficModerate: UIColor { get { return #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0) } }
     class var trafficHeavy: UIColor { get { return #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0) } }
     class var trafficSevere: UIColor { get { return #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0) } }
+    class var trafficAlternateLow: UIColor { get { return #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) } }
 }
 
 extension UIColor {
@@ -104,6 +105,7 @@ open class DefaultStyle: Style {
         trafficModerateColor = .trafficModerate
         trafficHeavyColor = .trafficHeavy
         trafficSevereColor = .trafficSevere
+        lowTrafficTextColor = .trafficAlternateLow
         
         routeCasingColor = .defaultRouteCasing
     }

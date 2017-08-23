@@ -285,7 +285,7 @@ class RouteMapViewController: UIViewController {
             controller = routePageViewController.routeManeuverViewController(with: step, leg: routeProgress.currentLeg)!
             routePageViewController.setViewControllers([controller], direction: .forward, animated: false, completion: nil)
             routePageViewController.currentManeuverPage = controller
-            routePageViewController(routePageViewController, willTransitionTo: controller)
+            routePageViewController(routePageViewController, willTransitionTo: controller, didSwipe: false)
         }
         
         if let upComingStep = routeProgress.currentLegProgress?.upComingStep, routeProgress.currentLegProgress.alertUserLevel != .arrive {
@@ -539,7 +539,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
 // MARK: RouteManeuverPageViewControllerDelegate
 
 extension RouteMapViewController: RoutePageViewControllerDelegate {
-    internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController) {
+    internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController, didSwipe: Bool) {
         let step = maneuverViewController.step!
 
         maneuverViewController.turnArrowView.step = step
@@ -550,15 +550,13 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         updateLaneViews(step: step, alertLevel: .high)
 
         
-        if !isInOverviewMode,
-            // This will be false when the user is swiping
-            mapView.userTrackingMode != .followWithCourse {
-            if step == routeController.routeProgress.currentLegProgress.upComingStep {
+        if !isInOverviewMode {
+            if didSwipe, step != routeController.routeProgress.currentLegProgress.upComingStep {
+                mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+            } else if mapView.userTrackingMode != .followWithCourse {
                 view.layoutIfNeeded()
                 mapView.camera = tiltedCamera
                 mapView.setUserTrackingMode(.followWithCourse, animated: true)
-            } else {
-                mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             }
         }
     }
