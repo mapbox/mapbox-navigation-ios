@@ -230,7 +230,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      If true, the map style and UI will automatically be updated given the time of day and screen brightness.
      */
-    public var automaticallyAdjustsStyleForTimeOfDayAndBrightness = true
+    public var automaticallyAdjustsStyleForTimeOfDayAndBrightness = false
     
     var currentStyleType: StyleType?
     
