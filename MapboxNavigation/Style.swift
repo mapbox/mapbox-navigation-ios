@@ -237,6 +237,11 @@ open class Style: NSObject {
     public var styleType: StyleType = .daytimeStyle
     
     /**
+     Map style to be used for the style.
+     */
+    public var mapStyle: URL?
+    
+    /**
      Applies the style for all changed properties.
      */
     open func apply() {

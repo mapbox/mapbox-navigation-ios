@@ -234,15 +234,19 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     var styleForTimeOfDayAndBrightness: StyleType {
         guard automaticallyAdjustsStyleForTimeOfDayAndBrightness else { return .daytimeStyle }
-        
         guard UIScreen.main.brightness > 0.25 else { return .nighttimeStyle }
+        let currentDate = Date()
         
-        if let location = routeController.location {
-            guard let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) else { return .daytimeStyle }
-            return solar.isDaytime ? .daytimeStyle : .nighttimeStyle
+        guard let location = routeController.location,
+            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
+            // `astronomicalSunrise` is when the sun is 18 degrees below the horizon. We should make sure it's actually dark before setting.
+            // [Ref](https://www.timeanddate.com/astronomy/different-types-twilight.html)
+            let sunriseTime = solar.astronomicalSunrise,
+            let sunsetTime = solar.astronomicalSunset else {
+                return .daytimeStyle
         }
         
-        return .daytimeStyle
+        return  currentDate > sunriseTime || currentDate < sunsetTime ? .daytimeStyle : .nighttimeStyle
     }
     
     var tableViewController: RouteTableViewController?
@@ -407,6 +411,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         styles?.forEach {
             if $0.styleType == styleForTimeOfDayAndBrightness {
                 $0.apply()
+                mapView?.styleURL = $0.mapStyle
             }
         }
     }

@@ -1,5 +1,5 @@
 import Foundation
-
+import Mapbox
 
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
@@ -110,6 +110,7 @@ open class DefaultStyle: Style {
         routeCasingColor = .defaultRouteCasing
         
         styleType = .daytimeStyle
+        mapStyle = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
     }
 }
 
@@ -146,5 +147,6 @@ open class NightStyle: Style {
         
         statusBarStyle = .lightContent
         styleType = .nighttimeStyle
+        mapStyle = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")
     }
 }
