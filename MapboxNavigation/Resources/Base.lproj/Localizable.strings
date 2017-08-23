@@ -16,8 +16,8 @@
 /* Feedback type for Unallowed Turn */
 "FEEDBACK_UNALLOWED_TURN" = "Not Allowed";
 
-/* Format string for less than; 1 = duration remaining */
-"LESS_THAN" = "%@";
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Rerouting…";
