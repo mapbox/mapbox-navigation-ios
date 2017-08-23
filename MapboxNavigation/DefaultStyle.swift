@@ -117,11 +117,11 @@ open class DefaultStyle: Style {
 /**
  `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
-open class DefaultDarkStyle: Style {
+open class DefaultDarkStyle: DefaultStyle {
     
     required public init(traitCollection: UITraitCollection) {
         super.init(traitCollection: traitCollection)
-        
+    
         buttonTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         maneuverViewBackgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
@@ -134,7 +134,6 @@ open class DefaultDarkStyle: Style {
         
         headerBackgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
         
-        wayNameLabelFont = .systemFont(ofSize:24, weight: UIFontWeightMedium)
         wayNameLabelTextColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
         wayNameViewBackgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
         wayNameViewBorderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
