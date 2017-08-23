@@ -8,6 +8,7 @@ protocol RoutePageViewControllerDelegate: class {
     var upComingStep: RouteStep? { get }
     func stepBefore(_ step: RouteStep) -> RouteStep?
     func stepAfter(_ step: RouteStep) -> RouteStep?
+    // `didSwipe` is only true when this function is invoked via the user swiping
     func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController, didSwipe: Bool)
 }
 
