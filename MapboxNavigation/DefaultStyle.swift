@@ -121,10 +121,37 @@ open class NightStyle: Style {
     required public init(traitCollection: UITraitCollection) {
         super.init(traitCollection: traitCollection)
         
-        maneuverViewBackgroundColor = .black
+        buttonTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
+        maneuverViewBackgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
+        distanceLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        destinationLabelTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        
+        timeRemainingLabelTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        distanceRemainingLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        arrivalTimeLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        
+        headerBackgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
+        
+        routeCasingColor = #colorLiteral(red: 0.2, green: 0.3921568627, blue: 0.6039215686, alpha: 1)
+        trafficUnknownColor = #colorLiteral(red: 0.3032055199, green: 0.5283420086, blue: 0.7775107026, alpha: 1)
+        trafficLowColor = #colorLiteral(red: 0.3032055199, green: 0.5283420086, blue: 0.7775107026, alpha: 1)
+        trafficModerateColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+        trafficHeavyColor = #colorLiteral(red: 0.8523078025, green: 0.4104907597, blue: 0.1019607857, alpha: 1)
+        trafficSevereColor = #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1)
+        
+        wayNameLabelFont = .systemFont(ofSize:24, weight: UIFontWeightMedium)
+        wayNameLabelTextColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
+        wayNameViewBackgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
+        wayNameViewBorderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
+        
+        turnArrowPrimaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        turnArrowSecondaryColor = #colorLiteral(red: 0.8, green: 0.8235294118, blue: 0.8481693864, alpha: 0.5)
+        
+        lanesViewBackgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
+        laneViewPrimaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        
+        statusBarStyle = .lightContent
         styleType = .nighttimeStyle
-        
-        headerBackgroundColor = .black
     }
 }
