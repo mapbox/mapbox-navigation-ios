@@ -89,6 +89,16 @@ open class Style: NSObject {
      */
     public var lineColor: UIColor?
     
+    /**
+     Sets the background of the resume bottom.
+     */
+    public var resumeButtonBackgroundColor: UIColor?
+    
+    /**
+     Sets the tint color of the resume button.
+     */
+    public var resumeButtonTintColor: UIColor?
+    
     /// Maneuver view (Page view)
     
     /**
@@ -320,6 +330,14 @@ open class Style: NSObject {
         
         if let color = laneViewSecondaryColor {
             LaneArrowView.appearance(for: traitCollection).secondaryColor = color
+        }
+        
+        if let color = resumeButtonBackgroundColor {
+            ResumeButton.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = resumeButtonTintColor {
+            ResumeButton.appearance(for: traitCollection).tintColor = color
         }
         
         // Maneuver page view controller
