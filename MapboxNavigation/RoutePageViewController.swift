@@ -8,7 +8,8 @@ protocol RoutePageViewControllerDelegate: class {
     var upComingStep: RouteStep? { get }
     func stepBefore(_ step: RouteStep) -> RouteStep?
     func stepAfter(_ step: RouteStep) -> RouteStep?
-    func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController)
+    // `didSwipe` is only true when this function is invoked via the user swiping
+    func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController, didSwipe: Bool)
 }
 
 class RoutePageViewController: UIPageViewController {
@@ -38,7 +39,7 @@ class RoutePageViewController: UIPageViewController {
         let controller = routeManeuverViewController(with: step, leg: leg)!
         setViewControllers([controller], direction: .forward, animated: false, completion: nil)
         currentManeuverPage = controller
-        maneuverDelegate.routePageViewController(self, willTransitionTo: controller)
+        maneuverDelegate.routePageViewController(self, willTransitionTo: controller, didSwipe: false)
     }
     
     func routeManeuverViewController(with step: RouteStep?, leg: RouteLeg?) -> RouteManeuverViewController? {
@@ -71,7 +72,7 @@ extension RoutePageViewController: UIPageViewControllerDataSource, UIPageViewCon
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         let controller = pendingViewControllers.first! as! RouteManeuverViewController
-        maneuverDelegate.routePageViewController(self, willTransitionTo: controller)
+        maneuverDelegate.routePageViewController(self, willTransitionTo: controller, didSwipe: true)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
