@@ -452,11 +452,11 @@ open class Style: NSObject {
  `MBButton` sets the tintColor according to the style.
  */
 @objc(MBButton)
-public class Button: StylableButton { }
+open class Button: StylableButton { }
 
 /// :nodoc:
 @objc(MBFloatingButton)
-public class FloatingButton: Button { }
+open class FloatingButton: Button { }
 
 /// :nodoc:
 @objc(MBLanesView)
@@ -520,15 +520,15 @@ public class ResumeButton: UIControl {
 
 /// :nodoc:
 @objc(MBStylableLabel)
-public class StylableLabel : UILabel { }
+open class StylableLabel : UILabel { }
 
 /// :nodoc:
 @objc(MBDistanceLabel)
-public class DistanceLabel: StylableLabel { }
+open class DistanceLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBDestinationLabel)
-public class DestinationLabel: StylableLabel {
+open class DestinationLabel: StylableLabel {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
     var unabridgedText: String? {
@@ -540,38 +540,38 @@ public class DestinationLabel: StylableLabel {
 
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
-public class TimeRemainingLabel: StylableLabel { }
+open class TimeRemainingLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBDistanceRemainingLabel)
-public class DistanceRemainingLabel: StylableLabel { }
+open class DistanceRemainingLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBArrivalTimeLabel)
-public class ArrivalTimeLabel: StylableLabel { }
+open class ArrivalTimeLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBTitleLabel)
-public class TitleLabel: StylableLabel { }
+open class TitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBSubtitleLabel)
-public class SubtitleLabel: StylableLabel { }
+open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBCellTitleLabel)
-public class CellTitleLabel: StylableLabel { }
+open class CellTitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBCellSubtitleLabel)
-public class CellSubtitleLabel: StylableLabel { }
+open class CellSubtitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBWayNameLabel)
-public class WayNameLabel: StylableLabel { }
+open class WayNameLabel: StylableLabel { }
 
 @objc(MBWayNameView)
-public class WayNameView: UIView {
+open class WayNameView: UIView {
     
     dynamic var borderColor: UIColor = .white {
         didSet {
@@ -579,7 +579,7 @@ public class WayNameView: UIView {
         }
     }
     
-    public override func layoutSubviews() {
+    open override func layoutSubviews() {
         super.layoutSubviews()
         layer.cornerRadius = bounds.midY
     }
@@ -648,7 +648,7 @@ public class SeparatorView: UIView { }
 
 /// :nodoc:
 @objc(MBStylableButton)
-public class StylableButton: UIButton {
+open class StylableButton: UIButton {
     dynamic var textColor: UIColor = .black {
         didSet {
             setTitleColor(textColor, for: .normal)
