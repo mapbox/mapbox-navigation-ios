@@ -63,6 +63,11 @@ open class Style: NSObject {
     public var floatingButtonBackgroundColor: UIColor?
     
     /**
+     Sets the tint color on the floating buttons.
+     */
+    public var floatingButtonTintColor: UIColor?
+    
+    /**
      Sets the background color of the lane views.
      */
     public var lanesViewBackgroundColor: UIColor?
@@ -297,6 +302,10 @@ open class Style: NSObject {
         
         if let color = floatingButtonBackgroundColor {
             FloatingButton.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = floatingButtonTintColor {
+            FloatingButton.appearance(for: traitCollection).tintColor = color
         }
         
         if let color = lanesViewBackgroundColor {
