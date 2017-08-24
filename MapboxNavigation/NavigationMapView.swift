@@ -308,7 +308,7 @@ open class NavigationMapView: MGLMapView {
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
-        circles.circleColor = MGLStyleValue(rawValue: .white)
+        circles.circleColor = MGLStyleValue(rawValue: UIColor(red:0.95, green:0.95, blue:0.95, alpha:1.0))
         circles.circleOpacity = MGLStyleValue(interpolationMode: .exponential,
                                               cameraStops: [2: MGLStyleValue(rawValue: 0.5),
                                                             7: MGLStyleValue(rawValue: 1)],
@@ -325,6 +325,8 @@ open class NavigationMapView: MGLMapView {
         
         symbol.text = MGLStyleValue(rawValue: "{name}")
         symbol.textFontSize = MGLStyleValue(rawValue: 10)
+        symbol.textHaloWidth = MGLStyleValue(rawValue: 0.5)
+        symbol.textHaloColor = MGLStyleValue(rawValue: .black)
         
         return symbol
     }
