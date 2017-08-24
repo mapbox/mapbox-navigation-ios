@@ -37,7 +37,6 @@ class RouteMapViewController: UIViewController {
     
     var hasFinishedLoadingMap = false
 
-    var destination: MGLAnnotation!
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
             return nil
@@ -61,6 +60,7 @@ class RouteMapViewController: UIViewController {
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false
+    var currentLegIndexMapped = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,7 +93,6 @@ class RouteMapViewController: UIViewController {
         
         muteButton.isSelected = NavigationSettings.shared.muted
         mapView.compassView.isHidden = true
-        mapView.addAnnotation(destination)
 
         if let camera = pendingCamera {
             mapView.camera = camera
@@ -123,6 +122,7 @@ class RouteMapViewController: UIViewController {
         mapView.setUserTrackingMode(.followWithCourse, animated: false)
         
         showRouteIfNeeded()
+        currentLegIndexMapped = routeController.routeProgress.legIndex
     }
     
     func resumeNotifications() {
@@ -229,8 +229,9 @@ class RouteMapViewController: UIViewController {
 
     func notifyDidReroute(route: Route) {
         routePageViewController.updateManeuverViewForStep()
-        mapView.addArrow(routeController.routeProgress)
-        mapView.showRoute(route)
+
+        mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        mapView.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
 
         if isInOverviewMode {
             updateVisibleBounds()
@@ -253,7 +254,16 @@ class RouteMapViewController: UIViewController {
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            mapView.addArrow(routeProgress)
+            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        } else {
+            mapView.removeArrow()
+        }
+        
+        if currentLegIndexMapped != routeProgress.legIndex {
+            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
+            mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
+            
+            currentLegIndexMapped = routeProgress.legIndex
         }
     }
     
@@ -350,13 +360,21 @@ extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
 // MARK: NavigationMapViewDelegate
 
 extension RouteMapViewController: NavigationMapViewDelegate {
+    
+    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+    }
 
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
 
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return delegate?.navigationMapView(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
@@ -514,7 +532,8 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard isViewLoaded && view.window != nil else { return }
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
-        map.showRoute(route)
+        map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
     }
 }
 
@@ -540,6 +559,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.camera = tiltedCamera
                 mapView.setUserTrackingMode(.followWithCourse, animated: true)
             }
+        }
+        
+        if let stepIndex = routeController.routeProgress.currentLeg.steps.index(where: { $0 == step }) {
+            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: stepIndex)
         }
     }
     
@@ -578,6 +601,9 @@ protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
 }
