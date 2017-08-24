@@ -5,7 +5,10 @@ extension String {
         return DateFormatter.ISO8601.date(from: self)
     }
     
-    var nonEmptyString: String? {
+    /**
+     Check if the current string is empty. If the string is empty, `nil` is returned, otherwise, the string is returned.
+     */
+    public var nonEmptyString: String? {
         return isEmpty ? nil : self
     }
     
