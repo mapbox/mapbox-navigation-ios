@@ -8,6 +8,8 @@
 // FIXME: This will be removed once https://github.com/mapbox/mapbox-navigation-ios/issues/352 is implemented.
 - (void)validateLocationServices;
 
+- (void)mapViewDidFinishRenderingFrameFullyRendered:(BOOL)fullyRendered;
+
 @property (nonatomic, readonly) CLLocationManager *locationManager;
 
 @end

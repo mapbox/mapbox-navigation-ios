@@ -150,6 +150,8 @@
 		C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */; };
 		C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */; };
 		C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
+		C5E7A3201F4F857B001CB015 /* UserCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A31F1F4F857B001CB015 /* UserCourseView.swift */; };
+		C5E7A3221F4F859B001CB015 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A3211F4F859B001CB015 /* UIEdgeInsets.swift */; };
 		C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
@@ -312,7 +314,6 @@
 		351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
 		351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewHeaderView.swift; sourceTree = "<group>"; };
 		351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		351BEBEB1E5BCC63006FE110 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKitArrows.swift; sourceTree = "<group>"; };
 		351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnArrowView.swift; sourceTree = "<group>"; };
 		351BEBF01E5BCC63006FE110 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
@@ -436,6 +437,8 @@
 		C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMEEventsManager.swift; sourceTree = "<group>"; };
 		C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		C5E7A31F1F4F857B001CB015 /* UserCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCourseView.swift; sourceTree = "<group>"; };
+		C5E7A3211F4F859B001CB015 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E911F10559600FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -614,6 +617,8 @@
 				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
 				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
 				35375EC01F31FA86004CE727 /* Settings.swift */,
+				C5E7A31F1F4F857B001CB015 /* UserCourseView.swift */,
+				C5E7A3211F4F859B001CB015 /* UIEdgeInsets.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1336,12 +1341,14 @@
 				351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */,
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
+				C5E7A3221F4F859B001CB015 /* UIEdgeInsets.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */,
 				35375EC11F31FA86004CE727 /* Settings.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
+				C5E7A3201F4F857B001CB015 /* UserCourseView.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				C51DF8671F38C337006C6A15 /* Date.swift in Sources */,
 				35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */,

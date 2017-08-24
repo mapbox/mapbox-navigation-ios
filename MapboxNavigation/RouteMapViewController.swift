@@ -70,7 +70,6 @@ class RouteMapViewController: UIViewController {
         
         mapView.delegate = self
         mapView.navigationMapDelegate = self
-        mapView.manuallyUpdatesLocation = true
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
@@ -119,7 +118,7 @@ class RouteMapViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        mapView.setUserTrackingMode(.followWithCourse, animated: false)
+        mapView.tracksUserCourse = true
         
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
@@ -139,7 +138,7 @@ class RouteMapViewController: UIViewController {
 
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.camera = tiltedCamera
-        mapView.setUserTrackingMode(.followWithCourse, animated: true)
+        mapView.tracksUserCourse = true
         mapView.logoView.isHidden = false
         
         guard let controller = routePageViewController.currentManeuverPage else { return }
@@ -152,7 +151,7 @@ class RouteMapViewController: UIViewController {
             overviewButton.isHidden = false
             mapView.logoView.isHidden = false
             mapView.camera = tiltedCamera
-            mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            mapView.tracksUserCourse = true
         } else {
             wayNameView.isHidden = true
             overviewButton.isHidden = true
@@ -399,7 +398,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
         let snappedLocation = routeController.location
-        labelCurrentRoad(at: snappedLocation ?? location)
+        updateLabels(at: snappedLocation ?? location)
         return snapsUserLocationAnnotationToRoute ? snappedLocation : nil
     }
     
@@ -408,7 +407,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
      
      - parameter location: The user’s current location.
      */
-    func labelCurrentRoad(at location: CLLocation) {
+    func updateLabels(at location: CLLocation) {
         guard let style = mapView.style,
             let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
             recenterButton.isHidden && hasFinishedLoadingMap else {
@@ -557,7 +556,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             } else if mapView.userTrackingMode != .followWithCourse {
                 view.layoutIfNeeded()
                 mapView.camera = tiltedCamera
-                mapView.setUserTrackingMode(.followWithCourse, animated: true)
+                mapView.tracksUserCourse = true
             }
         }
         

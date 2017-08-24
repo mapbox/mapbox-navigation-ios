@@ -478,7 +478,13 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
-        mapViewController?.mapView.locationManager(routeController.locationManager, didUpdateLocations: locations)
+        guard let location = locations.last else {
+            return
+        }
+        
+        let courseTrackingLocation = routeController.location
+        mapViewController?.mapView.updateCourseTracking(location: courseTrackingLocation, animated: routeController.locationManager.isPluggedIn)
+        mapViewController?.updateLabels(at: location)
         
         if !(routeController.locationManager is SimulatedLocationManager) {
             mapViewController?.statusView.hide(delay: 3, animated: true)
