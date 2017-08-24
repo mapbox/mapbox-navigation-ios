@@ -62,6 +62,7 @@ open class RouteProgress: NSObject {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
+            currentLegProgress.alertUserLevel = .none
             currentLegProgress = RouteLegProgress(leg: currentLeg)
         }
     }
@@ -146,8 +147,8 @@ open class RouteProgress: NSObject {
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
         
-        var maneuverCoordinateIndex = 0
         for (legIndex, leg) in route.legs.enumerated() {
+            var maneuverCoordinateIndex = 0
             
             congestionTimesPerStep.append([])
             
