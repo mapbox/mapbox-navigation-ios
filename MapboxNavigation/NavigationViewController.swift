@@ -254,7 +254,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /**
-     If true, the map style and UI will automatically be updated given the time of day and screen brightness.
+     If true, the map style and UI will automatically be updated given the time of day.
      */
     public var automaticallyAdjustsStyleForTimeOfDay = false
     
@@ -262,7 +262,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     var styleTypeForTimeOfDay: StyleType {
         guard automaticallyAdjustsStyleForTimeOfDay else { return .lightStyle }
-        guard UIScreen.main.brightness > 0.25 else { return .darkStyle }
         
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
@@ -388,13 +387,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(forceRefreshAppearanceIfNeeded), name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
     }
     
     func progressDidChange(notification: NSNotification) {
