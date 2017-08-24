@@ -109,7 +109,7 @@ public protocol NavigationViewControllerDelegate {
      Returns an` MGLStyleLayer` that determines the appearance of the text used to symbolize the remaining waypoints.
      
      If this method is unimplemented, the navigation map view draws the route remaining waypoints using an `MGLSymbolStyleLayer` whose text is equal to the layer returned from  `navigationMapView(_:shapeFor:)`.
-     This text will start at the letter `A` and continue on label each consecutive waypoint with the next letter in the alphabet. This letter is localized for supported languages.
+     This text will start at the number `1` and continue on label each consecutive waypoint.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
