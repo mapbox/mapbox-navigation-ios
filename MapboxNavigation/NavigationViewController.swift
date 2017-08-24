@@ -99,24 +99,23 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
     /*
-     Returns an` MGLStyleLayer` that determines the appearance of the circles used to symbolize the remaining waypoints.
+     Returns an `MGLStyleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationMapView(_:waypointSymbolStyleLayerWithIdentifier:source:)`.
      
-     If this method is unimplemented, the navigation map view draws the route remaining waypoints using an `MGLSymbolStyleLayer` whose text is equal to the layer returned from  `navigationMapView(_:shapeFor:)` and will be inserted in the style below the symbol layer in navigationMapView(:waypointSymbolStyleLayerWithIdentifier:).
+     If this method is unimplemented, the navigation map view marks each destination waypoint with a circle.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /*
-     Returns an` MGLStyleLayer` that determines the appearance of the text used to symbolize the remaining waypoints.
+     Returns an `MGLStyleLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationMapView(_:waypointStyleLayerWithIdentifier:source:)`.
      
-     If this method is unimplemented, the navigation map view draws the route remaining waypoints using an `MGLSymbolStyleLayer` whose text is equal to the layer returned from  `navigationMapView(_:shapeFor:)`.
-     This text will start at the number `1` and continue on label each consecutive waypoint.
+     If this method is unimplemented, the navigation map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Returns an `MGLShape` that represents the routes waypoints
+     Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
      
-     If this method is unimplemented, the navigation map view represnts the route waypoints using `navigationMapView(_:shapeFor:)`.
+     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:)`.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     

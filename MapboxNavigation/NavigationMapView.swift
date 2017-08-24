@@ -24,7 +24,7 @@ open class NavigationMapView: MGLMapView {
     let arrowLayerStrokeIdentifier = "arrowStrokeLayer"
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
-    let isCurrentLeg = "isCurrentLeg"
+    let currentLegAttribute = "isCurrentLeg"
     
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -260,9 +260,9 @@ open class NavigationMapView: MGLMapView {
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
                 polyline.attributes["congestion"] = String(describing: congestionSegment.1)
                 if let legIndex = legIndex {
-                    polyline.attributes[isCurrentLeg] = index == legIndex
+                    polyline.attributes[currentLegAttribute] = index == legIndex
                 } else {
-                    polyline.attributes[isCurrentLeg] = index == 0
+                    polyline.attributes[currentLegAttribute] = index == 0
                 }
                 return polyline
             }
@@ -283,9 +283,9 @@ open class NavigationMapView: MGLMapView {
             
             let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
             if let legIndex = legIndex {
-                polyline.attributes[isCurrentLeg] = index == legIndex
+                polyline.attributes[currentLegAttribute] = index == legIndex
             } else {
-                polyline.attributes[isCurrentLeg] = index == 0
+                polyline.attributes[currentLegAttribute] = index == 0
             }
             linesPerLeg.append(polyline)
         }
@@ -349,7 +349,7 @@ open class NavigationMapView: MGLMapView {
         line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
             true: MGLStyleValue(rawValue: 1),
             false: MGLStyleValue(rawValue: 0)
-            ], attributeName: isCurrentLeg, options: nil)
+            ], attributeName: currentLegAttribute, options: nil)
         
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
@@ -379,7 +379,7 @@ open class NavigationMapView: MGLMapView {
         lineCasing.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
             true: MGLStyleValue(rawValue: 1),
             false: MGLStyleValue(rawValue: 0.85)
-            ], attributeName: isCurrentLeg, options: nil)
+            ], attributeName: currentLegAttribute, options: nil)
         
         return lineCasing
     }
