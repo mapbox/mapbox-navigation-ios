@@ -147,7 +147,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.showsReportFeedback = true
         navigationViewController.navigationDelegate = self
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDayAndBrightness = true
+        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -218,7 +218,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         style.mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")
         
         let navigationViewController = NavigationViewController(for: route, styles: [style], locationManager: locationManager())
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDayAndBrightness = true
+        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         navigationViewController.navigationDelegate = self
         
         present(navigationViewController, animated: true, completion: nil)
@@ -240,7 +240,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         nextWaypoint = self.currentRoute?.coordinates?.first
         
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDayAndBrightness = true
+        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)

@@ -230,12 +230,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      If true, the map style and UI will automatically be updated given the time of day and screen brightness.
      */
-    public var automaticallyAdjustsStyleForTimeOfDayAndBrightness = false
+    public var automaticallyAdjustsStyleForTimeOfDay = false
     
     var currentStyleType: StyleType?
     
-    var styleTypeForTimeOfDayAndBrightness: StyleType {
-        guard automaticallyAdjustsStyleForTimeOfDayAndBrightness else { return .lightStyle }
+    var styleTypeForTimeOfDay: StyleType {
+        guard automaticallyAdjustsStyleForTimeOfDay else { return .lightStyle }
         guard UIScreen.main.brightness > 0.25 else { return .darkStyle }
         
         guard let location = routeController.location,
@@ -411,13 +411,13 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func forceRefreshAppearanceIfNeeded() {
         // Don't update the style if they are equal
-        guard currentStyleType != nil && currentStyleType != styleTypeForTimeOfDayAndBrightness else {
-            currentStyleType = styleTypeForTimeOfDayAndBrightness
+        guard currentStyleType != nil && currentStyleType != styleTypeForTimeOfDay else {
+            currentStyleType = styleTypeForTimeOfDay
             return
         }
         
         styles?.forEach {
-            if $0.styleType == styleTypeForTimeOfDayAndBrightness {
+            if $0.styleType == styleTypeForTimeOfDay {
                 $0.apply()
                 mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
                 mapView?.styleURL = $0.mapStyleURL
