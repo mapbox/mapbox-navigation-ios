@@ -20,7 +20,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user arrives at the destination.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt destination: MGLAnnotation)
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint)
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -33,6 +33,9 @@ public protocol NavigationViewControllerDelegate {
     */
     @objc(navigationViewController:shouldRerouteFromLocation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
+    
+    @objc(navigationViewController:shouldIncrementLegWhenArrivingAtWaypoint:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool
     
     /**
      Called immediately before the navigation view controller calculates a new route.
@@ -95,6 +98,27 @@ public protocol NavigationViewControllerDelegate {
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
+    /*
+     Returns an `MGLStyleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationMapView(_:waypointSymbolStyleLayerWithIdentifier:source:)`.
+     
+     If this method is unimplemented, the navigation map view marks each destination waypoint with a circle.
+     */
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    /*
+     Returns an `MGLStyleLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationMapView(_:waypointStyleLayerWithIdentifier:source:)`.
+     
+     If this method is unimplemented, the navigation map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
+     */
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    /**
+     Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
+     
+     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:)`.
+     */
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    
     /**
      Return an `MGLAnnotationImage` that represents the destination marker.
      
@@ -139,7 +163,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /** 
      An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
     */
+    @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
     public var destination: MGLAnnotation!
+    
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
@@ -267,17 +293,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
-        let annotation = MGLPointAnnotation()
-        annotation.coordinate = route.coordinates!.last!
-        destination = annotation
-        
         self.mapViewController = mapViewController
         self.tableViewController = tableViewController
         
         mapViewController.delegate = self
         mapViewController.routeController = routeController
         mapViewController.routeTableViewController = tableViewController
-        mapViewController.destination = destination
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
@@ -293,7 +314,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         case "MapViewControllerSegueIdentifier":
             if let controller = segue.destination as? RouteMapViewController {
                 controller.routeController = routeController
-                controller.destination = destination
                 mapViewController = controller
                 controller.delegate = self
             }
@@ -371,7 +391,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
+            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
     }
     
@@ -410,6 +430,17 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
+    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return navigationDelegate?.navigationMapView?(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+        return navigationDelegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
+    }
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
+        return navigationDelegate?.navigationMapView?(mapView, shapeFor: waypoints)
+    }
+    
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationDelegate?.navigationMapView?(mapView, imageFor: annotation)
     }
@@ -422,6 +453,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
         return navigationDelegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
+    }
+    
+    public func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
+        return navigationDelegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint) ?? true
     }
     
     public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {

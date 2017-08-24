@@ -1,7 +1,7 @@
 import UIKit
 
 protocol WaypointConfirmationViewControllerDelegate: NSObjectProtocol {
-    func confirmationControllerDidConfirm(controller: WaypointConfirmationViewController)
+    func confirmationControllerDidConfirm(_ controller: WaypointConfirmationViewController)
 }
 
 class WaypointConfirmationViewController: UIViewController {
@@ -9,6 +9,6 @@ class WaypointConfirmationViewController: UIViewController {
     weak var delegate: WaypointConfirmationViewControllerDelegate?
 
     @IBAction func continueButtonPressed(_ sender: Any) {
-        delegate?.confirmationControllerDidConfirm(controller: self)
+        delegate?.confirmationControllerDidConfirm(self)
     }
 }
