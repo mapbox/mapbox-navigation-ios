@@ -47,45 +47,45 @@ class RouteTableViewController: UIViewController {
             headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
         } else {
             headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
+        }
             
-            let coordinatesLeftOnStepCount = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
-            
-            guard coordinatesLeftOnStepCount >= 0 else {
-                headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
-                return
+        let coordinatesLeftOnStepCount = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
+        
+        guard coordinatesLeftOnStepCount >= 0 else {
+            headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
+            return
+        }
+        
+        
+        let congestionTimesForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
+        guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return }
+        
+        let remainingCongestionTimesForStep = congestionTimesForStep.suffix(from: coordinatesLeftOnStepCount)
+        let remainingCongestionTimesForRoute = routeProgress.congestionTimesPerStep[routeProgress.legIndex].suffix(from: routeProgress.currentLegProgress.stepIndex + 1)
+        
+        var remainingStepCongestionTotals: [CongestionLevel: TimeInterval] = [:]
+        for stepValues in remainingCongestionTimesForRoute {
+            for (key, value) in stepValues {
+                remainingStepCongestionTotals[key] = (remainingStepCongestionTotals[key] ?? 0) + value
             }
-            
-            
-            let congestionTimesForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
-            guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return }
-            
-            let remainingCongestionTimesForStep = congestionTimesForStep.suffix(from: coordinatesLeftOnStepCount)
-            let remainingCongestionTimesForRoute = routeProgress.congestionTimesPerStep[routeProgress.legIndex].suffix(from: routeProgress.currentLegProgress.stepIndex + 1)
-            
-            var remainingStepCongestionTotals: [CongestionLevel: TimeInterval] = [:]
-            for stepValues in remainingCongestionTimesForRoute {
-                for (key, value) in stepValues {
-                    remainingStepCongestionTotals[key] = (remainingStepCongestionTotals[key] ?? 0) + value
-                }
-            }
+        }
 
-            for (segmentCongestion, segmentTime) in remainingCongestionTimesForStep {
-                remainingStepCongestionTotals[segmentCongestion] = (remainingStepCongestionTotals[segmentCongestion] ?? 0) + segmentTime
-            }
-            
-            if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
-                switch max.key {
-                case .unknown:
-                    headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
-                case .low:
-                    headerView.timeRemaining.textColor = .trafficAlternateLow
-                case .moderate:
-                    headerView.timeRemaining.textColor = .trafficModerate
-                case .heavy:
-                    headerView.timeRemaining.textColor = .trafficHeavy
-                case .severe:
-                    headerView.timeRemaining.textColor = .trafficSevere
-                }
+        for (segmentCongestion, segmentTime) in remainingCongestionTimesForStep {
+            remainingStepCongestionTotals[segmentCongestion] = (remainingStepCongestionTotals[segmentCongestion] ?? 0) + segmentTime
+        }
+        
+        if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
+            switch max.key {
+            case .unknown:
+                headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
+            case .low:
+                headerView.timeRemaining.textColor = .trafficAlternateLow
+            case .moderate:
+                headerView.timeRemaining.textColor = .trafficModerate
+            case .heavy:
+                headerView.timeRemaining.textColor = .trafficHeavy
+            case .severe:
+                headerView.timeRemaining.textColor = .trafficSevere
             }
         }
     }
@@ -108,20 +108,42 @@ class RouteTableViewController: UIViewController {
 extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return routeController.routeProgress.route.legs.count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        // Don't display section header if there is only one step
+        guard routeController.routeProgress.route.legs.count > 1 else {
+            return nil
+        }
+        let leg = routeController.routeProgress.route.legs[section]
+        
+        let sourceName = leg.source.name
+        let destinationName = leg.destination.name
+        let majorWays = leg.name.components(separatedBy: ", ")
+        
+        if let destinationName = destinationName?.nonEmptyString, majorWays.count > 1 {
+            let summary = String.localizedStringWithFormat(NSLocalizedString("LEG_MAJOR_WAYS_FORMAT", bundle: .mapboxNavigation, value: "%@ and %@", comment: "Format for displaying the first two major ways"), majorWays[0], majorWays[1])
+            return String.localizedStringWithFormat(NSLocalizedString("WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT", bundle: .mapboxNavigation, value: "%@, via %@", comment: "Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations"), destinationName, summary)
+        } else if let sourceName = sourceName?.nonEmptyString, let destinationName = destinationName?.nonEmptyString {
+            return String.localizedStringWithFormat(NSLocalizedString("WAYPOINT_SOURCE_DESTINATION_FORMAT", bundle: .mapboxNavigation, value: "%@ and %@", comment: "Format for displaying start and endpoint for leg; 1 = source ; 2 = destination"), sourceName, destinationName)
+        } else {
+            return leg.name
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return routeController.routeProgress.currentLeg.steps.count
+        return routeController.routeProgress.route.legs[section].steps.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: RouteTableViewCellIdentifier, for: indexPath) as! RouteTableViewCell
-        let leg = routeController.routeProgress.currentLeg
+        let legs = routeController.routeProgress.route.legs
         
-        cell.step = leg.steps[indexPath.row]
         
-        if routeController.routeProgress.currentLegProgress.stepIndex + 1 > indexPath.row {
+        cell.step = legs[indexPath.section].steps[indexPath.row]
+        
+        if indexPath.section < routeController.routeProgress.legIndex || (indexPath.section == routeController.routeProgress.legIndex && indexPath.row <= routeController.routeProgress.currentLegProgress.stepIndex) {
             cell.contentView.alpha = 0.4
         }
         
