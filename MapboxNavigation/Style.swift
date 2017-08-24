@@ -649,9 +649,27 @@ public class SeparatorView: UIView { }
 /// :nodoc:
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
-    dynamic var textColor: UIColor = .black {
+    dynamic open var textColor: UIColor = .black {
         didSet {
             setTitleColor(textColor, for: .normal)
+        }
+    }
+    
+    dynamic open var borderColor: UIColor = .clear {
+        didSet {
+            layer.borderColor = borderColor.cgColor
+        }
+    }
+    
+    dynamic open var borderWidth: CGFloat = 0 {
+        didSet {
+            layer.borderWidth = borderWidth
+        }
+    }
+    
+    dynamic open var cornerRadius: CGFloat = 0 {
+        didSet {
+            layer.cornerRadius = cornerRadius
         }
     }
 }
