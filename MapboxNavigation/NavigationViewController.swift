@@ -276,7 +276,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
-                         styles: [Style]? = [DefaultStyle(), DefaultDarkStyle()],
+                         styles: [Style]? = [DefaultStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -285,7 +285,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
-        self.styles = styles ?? [DefaultStyle(), DefaultDarkStyle()]
+        self.styles = styles ?? [DefaultStyle()]
         self.directions = directions
         self.route = route
         
@@ -368,7 +368,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(applyStyle), name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(forceRefreshAppearanceIfNeeded), name: NSNotification.Name.UIScreenBrightnessDidChange, object: nil)
     }
     
     func suspendNotifications() {
@@ -402,10 +402,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             navigationDelegate?.navigationViewController?(self, didArriveAt: destination)
         }
         
-        applyStyle()
+        forceRefreshAppearanceIfNeeded()
     }
     
     func applyStyle() {
+        styles?.forEach { $0.apply() }
+    }
+    
+    func forceRefreshAppearanceIfNeeded() {
         
         // Don't update the style if they are equal
         guard currentStyleType == nil || currentStyleType != styleForTimeOfDayAndBrightness else { return }
