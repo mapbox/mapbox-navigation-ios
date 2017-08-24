@@ -260,9 +260,9 @@ open class NavigationMapView: MGLMapView {
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
                 polyline.attributes["congestion"] = String(describing: congestionSegment.1)
                 if let legIndex = legIndex {
-                    polyline.attributes[isCurrentLeg] = index != legIndex
+                    polyline.attributes[isCurrentLeg] = index == legIndex
                 } else {
-                    polyline.attributes[isCurrentLeg] = index != 0
+                    polyline.attributes[isCurrentLeg] = index == 0
                 }
                 return polyline
             }
@@ -283,9 +283,9 @@ open class NavigationMapView: MGLMapView {
             
             let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
             if let legIndex = legIndex {
-                polyline.attributes[isCurrentLeg] = index != legIndex
+                polyline.attributes[isCurrentLeg] = index == legIndex
             } else {
-                polyline.attributes[isCurrentLeg] = index != 0
+                polyline.attributes[isCurrentLeg] = index == 0
             }
             linesPerLeg.append(polyline)
         }
@@ -346,8 +346,8 @@ open class NavigationMapView: MGLMapView {
             ], attributeName: "congestion", options: nil)
         
         line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
-            true: MGLStyleValue(rawValue: 0),
-            false: MGLStyleValue(rawValue: 1)
+            true: MGLStyleValue(rawValue: 1),
+            false: MGLStyleValue(rawValue: 0)
             ], attributeName: isCurrentLeg, options: nil)
         
         line.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
@@ -376,8 +376,8 @@ open class NavigationMapView: MGLMapView {
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         
         lineCasing.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
-            true: MGLStyleValue(rawValue: 0.85),
-            false: MGLStyleValue(rawValue: 1)
+            true: MGLStyleValue(rawValue: 1),
+            false: MGLStyleValue(rawValue: 0.85)
             ], attributeName: isCurrentLeg, options: nil)
         
         return lineCasing
