@@ -135,10 +135,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         guard waypoints.count > 0 else { return }
         
         let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "user")
-        userWaypoint.coordinateAccuracy = -1
         waypoints.insert(userWaypoint, at: 0)
         
-        let options = RouteOptions(forNavigationWithWaypoints: waypoints)
+        let options = NavigationRouteOptions(waypoints: waypoints)
         
         _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
             guard error == nil else {
