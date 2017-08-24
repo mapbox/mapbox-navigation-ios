@@ -181,6 +181,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         customViewController.simulateLocation = simulationButton.isSelected
         customViewController.userRoute = route
         
+        let destination = MGLPointAnnotation()
+        destination.coordinate = route.coordinates!.last!
+        customViewController.destination = destination
+        
         present(customViewController, animated: true, completion: nil)
     }
 
