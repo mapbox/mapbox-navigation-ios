@@ -47,6 +47,9 @@ extension MGLMapView {
     }
     
     func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
+        guard route.legs.indices.contains(legIndex),
+            route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
+        
         let step = route.legs[legIndex].steps[stepIndex]
         let maneuverCoordinate = step.maneuverLocation
         let polylineCoordinates = route.coordinates
