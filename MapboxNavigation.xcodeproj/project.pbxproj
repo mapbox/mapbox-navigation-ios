@@ -135,6 +135,8 @@
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C561735B1F182113005954F6 /* RouteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561735A1F182113005954F6 /* RouteStep.swift */; };
+		C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
+		C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C578DA071EFD0FFF0052079F /* ProcessInfo.swift */; };
 		C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */; };
 		C58454161F4B9FD30057D8B3 /* Shields.plist in Resources */ = {isa = PBXBuildFile; fileRef = 351BEC2A1E5BD538006FE110 /* Shields.plist */; };
@@ -142,6 +144,9 @@
 		C588C3C21F33882100520EF2 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA31F28EBD8003F6125 /* String.swift */; };
 		C588C3C31F3388A100520EF2 /* RouteStepFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C997401E732C5400544D1C /* RouteStepFormatter.swift */; };
 		C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58D6BAC1DDCF2AE00387F53 /* Constants.swift */; };
+		C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */; };
+		C5A6B2DE1F4DE57E004260EA /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
+		C5A6B2DF1F4DE57E004260EA /* Solar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */; };
 		C5C94C1B1DDCD22B0097296A /* MapboxCoreNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* RouteController.swift */; };
@@ -248,6 +253,7 @@
 				3525449F1E664E2D004C8F1C /* AWSCore.framework in Embed Frameworks */,
 				3525449E1E664E0F004C8F1C /* AWSPolly.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
+				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
 				354A01D61E6626AC00D765C2 /* MapboxNavigation.framework in Embed Frameworks */,
 				354A01C81E66265800D765C2 /* Pulley.framework in Embed Frameworks */,
 				354A01C61E66265600D765C2 /* SDWebImage.framework in Embed Frameworks */,
@@ -269,6 +275,7 @@
 				352544A11E665AA3004C8F1C /* AWSPolly.framework in Embed Frameworks */,
 				354A01DC1E6626E900D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				354A01EB1E6626EF00D765C2 /* MapboxDirections.framework in Embed Frameworks */,
+				C5A6B2DF1F4DE57E004260EA /* Solar.framework in Embed Frameworks */,
 				C51245F31F19471C00E33B52 /* MapboxMobileEvents.framework in Embed Frameworks */,
 				354A01E51E6626EF00D765C2 /* Polyline.framework in Embed Frameworks */,
 				354A01E11E6626EF00D765C2 /* SDWebImage.framework in Embed Frameworks */,
@@ -420,10 +427,12 @@
 		C53C197A1F38EAEA008DB406 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C561735A1F182113005954F6 /* RouteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStep.swift; sourceTree = "<group>"; };
+		C57607B01F4CC97D00C27423 /* Solar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Solar.framework; path = Carthage/Build/iOS/Solar.framework; sourceTree = "<group>"; };
 		C578DA071EFD0FFF0052079F /* ProcessInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 		C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLVectorSource.swift; sourceTree = "<group>"; };
 		C588C3C01F3387C700520EF2 /* SpokenInstructionFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpokenInstructionFormatter.swift; sourceTree = "<group>"; };
 		C58D6BAC1DDCF2AE00387F53 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleType.swift; sourceTree = "<group>"; };
 		C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxCoreNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxCoreNavigation.h; sourceTree = "<group>"; };
 		C5ADFBCD1DDCC7840011824B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -506,6 +515,7 @@
 				354A01C51E66265600D765C2 /* SDWebImage.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				354A01CB1E66265D00D765C2 /* OSRMTextInstructions.framework in Frameworks */,
+				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
 				C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */,
 				354A01C91E66265B00D765C2 /* Polyline.framework in Frameworks */,
 				354A01C21E66265100D765C2 /* Mapbox.framework in Frameworks */,
@@ -520,6 +530,7 @@
 				354A01EA1E6626EF00D765C2 /* MapboxDirections.framework in Frameworks */,
 				354A01E41E6626EF00D765C2 /* Polyline.framework in Frameworks */,
 				354BD4F51E6637D500AE1344 /* AWSPolly.framework in Frameworks */,
+				C5A6B2DE1F4DE57E004260EA /* Solar.framework in Frameworks */,
 				C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01E01E6626EF00D765C2 /* SDWebImage.framework in Frameworks */,
 				354A01DD1E6626EA00D765C2 /* MapboxNavigation.framework in Frameworks */,
@@ -614,6 +625,7 @@
 				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
 				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
 				35375EC01F31FA86004CE727 /* Settings.swift */,
+				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -721,6 +733,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C57607B01F4CC97D00C27423 /* Solar.framework */,
 				C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */,
 				35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */,
 				354BD4F61E6638E800AE1344 /* AWSCore.framework */,
@@ -1280,6 +1293,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/AWSCore.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/FBSnapshotTestCase.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxMobileEvents.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Solar.framework",
 			);
 			name = "Carthage copy frameworks";
 			outputPaths = (
@@ -1345,6 +1359,7 @@
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				C51DF8671F38C337006C6A15 /* Date.swift in Sources */,
 				35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */,
+				C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
 			);

@@ -3,6 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
 import Pulley
+import Solar
 
 @objc(MBNavigationPulleyViewController)
 public class NavigationPulleyViewController: PulleyViewController {}
@@ -212,7 +213,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var styles: [Style]? {
         didSet {
-            styles?.forEach { $0.apply() }
+            applyStyle()
         }
     }
     
@@ -252,6 +253,30 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
     }
     
+    /**
+     If true, the map style and UI will automatically be updated given the time of day.
+     */
+    public var automaticallyAdjustsStyleForTimeOfDay = false
+    
+    var currentStyleType: StyleType?
+    
+    var styleTypeForTimeOfDay: StyleType {
+        guard automaticallyAdjustsStyleForTimeOfDay else { return .lightStyle }
+        
+        guard let location = routeController.location,
+            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
+            // `astronomicalSunrise` is when the sun is 18 degrees below the horizon. We should make sure it's actually dark before setting.
+            // [Ref](https://www.timeanddate.com/astronomy/different-types-twilight.html)
+            let sunriseTime = solar.astronomicalSunrise,
+            let sunsetTime = solar.astronomicalSunset else {
+                return .lightStyle
+        }
+        
+        let currentDate = Date()
+        
+        return  currentDate > sunriseTime || currentDate < sunsetTime ? .lightStyle : .darkStyle
+    }
+    
     var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
     
@@ -276,7 +301,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
-                         styles: [Style]? = [DefaultStyle()],
+                         styles: [Style]? = [DefaultStyle(), DefaultDarkStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -285,7 +310,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
-        self.styles = styles ?? [DefaultStyle()]
+        self.styles = styles ?? [DefaultStyle(), DefaultDarkStyle()]
         self.directions = directions
         self.route = route
         
@@ -342,7 +367,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
         
-        styles?.forEach { $0.apply() }
+        applyStyle()
         
         if routeController.locationManager is SimulatedLocationManager {
             let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
@@ -392,6 +417,38 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
+        }
+        
+        forceRefreshAppearanceIfNeeded()
+    }
+    
+    func applyStyle() {
+        styles?.forEach { $0.apply() }
+    }
+    
+    func forceRefreshAppearanceIfNeeded() {
+        // Don't update the style if they are equal
+        guard currentStyleType != nil && currentStyleType != styleTypeForTimeOfDay else {
+            currentStyleType = styleTypeForTimeOfDay
+            return
+        }
+        
+        styles?.forEach {
+            if $0.styleType == styleTypeForTimeOfDay {
+                $0.apply()
+                mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
+                mapView?.styleURL = $0.mapStyleURL
+                UIApplication.shared.statusBarStyle = $0.statusBarStyle ?? .default
+                setNeedsStatusBarAppearanceUpdate()
+                currentStyleType = $0.styleType
+            }
+        }
+        
+        for window in UIApplication.shared.windows {
+            for view in window.subviews {
+                view.removeFromSuperview()
+                window.addSubview(view)
+            }
         }
     }
     

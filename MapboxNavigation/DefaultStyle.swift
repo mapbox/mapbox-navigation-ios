@@ -1,5 +1,5 @@
 import Foundation
-
+import Mapbox
 
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
@@ -108,6 +108,43 @@ open class DefaultStyle: Style {
         lowTrafficTextColor = .trafficAlternateLow
         
         routeCasingColor = .defaultRouteCasing
+        
+        styleType = .lightStyle
+        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
     }
+}
+
+/**
+ `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
+ */
+open class DefaultDarkStyle: DefaultStyle {
     
+    required public init(traitCollection: UITraitCollection) {
+        super.init(traitCollection: traitCollection)
+        
+        let backgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
+        
+        buttonTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        maneuverViewBackgroundColor = backgroundColor
+        distanceLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        destinationLabelTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        timeRemainingLabelTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        distanceRemainingLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        arrivalTimeLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        headerBackgroundColor = backgroundColor
+        floatingButtonBackgroundColor = backgroundColor
+        floatingButtonTintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        buttonTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        wayNameLabelTextColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
+        wayNameViewBackgroundColor = backgroundColor
+        wayNameViewBorderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
+        turnArrowPrimaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        turnArrowSecondaryColor = #colorLiteral(red: 0.8, green: 0.8235294118, blue: 0.8481693864, alpha: 0.5)
+        lanesViewBackgroundColor = backgroundColor
+        laneViewPrimaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+
+        statusBarStyle = .lightContent
+        styleType = .darkStyle
+        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")
+    }
 }

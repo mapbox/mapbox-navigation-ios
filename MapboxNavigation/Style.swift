@@ -63,6 +63,11 @@ open class Style: NSObject {
     public var floatingButtonBackgroundColor: UIColor?
     
     /**
+     Sets the tint color on the floating buttons.
+     */
+    public var floatingButtonTintColor: UIColor?
+    
+    /**
      Sets the background color of the lane views.
      */
     public var lanesViewBackgroundColor: UIColor?
@@ -232,6 +237,16 @@ open class Style: NSObject {
     public var lowTrafficTextColor: UIColor?
     
     /**
+     Describes the situations in which the style should be used. By default, the style will be used during the daytime.
+     */
+    public var styleType: StyleType = .lightStyle
+    
+    /**
+     Map style to be used for the style.
+     */
+    public var mapStyleURL: URL?
+    
+    /**
      Applies the style for all changed properties.
      */
     open func apply() {
@@ -287,6 +302,10 @@ open class Style: NSObject {
         
         if let color = floatingButtonBackgroundColor {
             FloatingButton.appearance(for: traitCollection).backgroundColor = color
+        }
+        
+        if let color = floatingButtonTintColor {
+            FloatingButton.appearance(for: traitCollection).tintColor = color
         }
         
         if let color = lanesViewBackgroundColor {
