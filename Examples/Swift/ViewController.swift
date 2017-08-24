@@ -237,7 +237,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         let navigationViewController = NavigationViewController(for: route, styles: [style], locationManager: locationManager())
         navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         navigationViewController.navigationDelegate = self
-        
+
         present(navigationViewController, animated: true, completion: nil)
     }
     
