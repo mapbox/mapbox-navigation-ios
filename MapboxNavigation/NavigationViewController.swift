@@ -234,7 +234,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     var currentStyleType: StyleType?
     
-    var styleForTimeOfDayAndBrightness: StyleType {
+    var styleTypeForTimeOfDayAndBrightness: StyleType {
         guard automaticallyAdjustsStyleForTimeOfDayAndBrightness else { return .lightStyle }
         guard UIScreen.main.brightness > 0.25 else { return .darkStyle }
         
@@ -276,7 +276,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
-                         styles: [Style]? = [DefaultStyle()],
+                         styles: [Style]? = [DefaultStyle(), DefaultDarkStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -285,7 +285,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
-        self.styles = styles ?? [DefaultStyle()]
+        self.styles = styles ?? [DefaultStyle(), DefaultDarkStyle()]
         self.directions = directions
         self.route = route
         
@@ -410,12 +410,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func forceRefreshAppearanceIfNeeded() {
-        
         // Don't update the style if they are equal
-        guard currentStyleType == nil || currentStyleType != styleForTimeOfDayAndBrightness else { return }
+        guard currentStyleType != nil && currentStyleType != styleTypeForTimeOfDayAndBrightness else {
+            currentStyleType = styleTypeForTimeOfDayAndBrightness
+            return
+        }
         
         styles?.forEach {
-            if $0.styleType == styleForTimeOfDayAndBrightness {
+            if $0.styleType == styleTypeForTimeOfDayAndBrightness {
                 $0.apply()
                 mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
                 mapView?.styleURL = $0.mapStyleURL
