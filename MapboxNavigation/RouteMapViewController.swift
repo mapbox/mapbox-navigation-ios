@@ -229,7 +229,8 @@ class RouteMapViewController: UIViewController {
 
     func notifyDidReroute(route: Route) {
         routePageViewController.updateManeuverViewForStep()
-        mapView.showArrow(routeController.routeProgress)
+
+        mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
 
         if isInOverviewMode {
@@ -253,7 +254,7 @@ class RouteMapViewController: UIViewController {
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            mapView.showArrow(routeProgress)
+            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         } else {
             mapView.removeArrow()
         }
@@ -558,6 +559,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.camera = tiltedCamera
                 mapView.setUserTrackingMode(.followWithCourse, animated: true)
             }
+        }
+        
+        if let stepIndex = routeController.routeProgress.currentLeg.steps.index(where: { $0 == step }) {
+            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: stepIndex)
         }
     }
     

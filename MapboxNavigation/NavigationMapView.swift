@@ -387,9 +387,13 @@ open class NavigationMapView: MGLMapView {
     /**
      Shows the step arrow given the current `RouteProgress`.
      */
-    public func showArrow(_ routeProgress: RouteProgress) {
-        let maneuverCoordinate = routeProgress.currentLegProgress.upComingStep?.maneuverLocation
-        let polylineCoordinates = routeProgress.route.coordinates
+    public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
+        guard route.legs.indices.contains(legIndex),
+            route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
+        
+        let step = route.legs[legIndex].steps[stepIndex]
+        let maneuverCoordinate = step.maneuverLocation
+        let polylineCoordinates = route.coordinates
         
         guard let style = style else {
             return
@@ -397,14 +401,14 @@ open class NavigationMapView: MGLMapView {
         
         let minimumZoomLevel: Float = 14.5
         
-        let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate!.latitude), 50), 10)
-        let shaftCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate!).reversed()
-            + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
+        let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 50), 10)
+        let shaftCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate).reversed()
+            + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
         
         if shaftCoordinates.count > 1 {
             let shaftStrokeLength = shaftLength * 1.1
-            var shaftStrokeCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate!).reversed()
-                + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate!).suffix(from: 1))
+            var shaftStrokeCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate).reversed()
+                + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
             let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
             let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
             let maneuverArrowStrokePolylines = [shaftStrokePolyline]
