@@ -255,6 +255,12 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation?
     
+    var heading: CLHeading?
+    
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading = newHeading
+    }
+    
     /**
      The most recently received user location, snapped to the route line.
      
@@ -265,9 +271,6 @@ open class RouteController: NSObject {
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
-        guard location.speed >= 0 else {
-            return location
-        }
         
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
         guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return nil }
@@ -281,35 +284,46 @@ open class RouteController: NSObject {
         guard let pointAhead = coordinate(at: userDistanceBuffer, fromStartOf: slicedLineInfront) else { return nil }
         guard let pointAheadClosest = closestCoordinate(on: nearByCoordinates, to: pointAhead) else { return nil }
         
-        // Get direction of these points
-        let pointBehindDirection = pointBehindClosest.coordinate.direction(to: closest.coordinate)
-        let pointAheadDirection = closest.coordinate.direction(to: pointAheadClosest.coordinate)
-        let wrappedPointBehind = wrap(pointBehindDirection, min: -180, max: 180)
-        let wrappedPointAhead = wrap(pointAheadDirection, min: -180, max: 180)
-        let wrappedCourse = wrap(location.course, min: -180, max: 180)
-        let relativeAnglepointBehind = wrap(wrappedPointBehind - wrappedCourse, min: -180, max: 180)
-        let relativeAnglepointAhead = wrap(wrappedPointAhead - wrappedCourse, min: -180, max: 180)
-        let averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
-        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
+        let userAngles = interpretedAngles(userLocation: closest.coordinate, userDirection: location.course, pointBehindClosest: pointBehindClosest, pointAheadClosest: pointAheadClosest)
+        let absoluteDirection = userAngles.absoluteDirection
+        let averageRelativeAngle = userAngles.averageRelativeAngle
         
         // If the course is inaccurate and the user is on the route,
         // calculate a rough estimate as to what the course should be at that point on the route.
-        if location.course <= 0 && snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
-            let calculatedCourse = wrap((wrappedPointBehind + wrappedPointAhead) / 2, min: 0 , max: 360)
-            return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedCourse, speed: location.speed, timestamp: location.timestamp)
+        if let heading = heading, location.course <= 0 || location.speed <= 1 {
+            
+            // Since the user is moving slowly, use the users heading to calculate snapped course
+            let userAngles = interpretedAngles(userLocation: closest.coordinate, userDirection: heading.magneticHeading, pointBehindClosest: pointBehindClosest, pointAheadClosest: pointAheadClosest)
+            let snappedOrActualHeading = userAngles.averageRelativeAngle < RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? userAngles.absoluteDirection : heading.preferredHeading
+            let snappedOrActualLocation = snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance ? snappedCoordinate.coordinate : location.coordinate
+            return CLLocation(coordinate: snappedOrActualLocation, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: snappedOrActualHeading, speed: location.speed, timestamp: location.timestamp)
         }
-
+        
         guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
             return location
         }
-
+        
         let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
         
         guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
             return location
         }
-
+        
         return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+    }
+    
+    func interpretedAngles(userLocation: CLLocationCoordinate2D, userDirection: CLLocationDirection, pointBehindClosest: CoordinateAlongPolyline, pointAheadClosest: CoordinateAlongPolyline) -> (averageRelativeAngle: CLLocationDirection, absoluteDirection: CLLocationDirection) {
+        let pointBehindDirection = pointBehindClosest.coordinate.direction(to: userLocation)
+        let pointAheadDirection = userLocation.direction(to: pointAheadClosest.coordinate)
+        let wrappedPointBehind = wrap(pointBehindDirection, min: -180, max: 180)
+        let wrappedPointAhead = wrap(pointAheadDirection, min: -180, max: 180)
+        let wrappedCourse = wrap(userDirection, min: -180, max: 180)
+        let relativeAnglepointBehind = wrap(wrappedPointBehind - wrappedCourse, min: -180, max: 180)
+        let relativeAnglepointAhead = wrap(wrappedPointAhead - wrappedCourse, min: -180, max: 180)
+        let averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
+        let absoluteDirection = wrap(wrappedCourse + averageRelativeAngle, min: 0 , max: 360)
+        
+        return (averageRelativeAngle, absoluteDirection)
     }
     
     /**
