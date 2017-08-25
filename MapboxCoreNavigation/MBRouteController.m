@@ -17,3 +17,4 @@ NSString *const MBRouteControllerAlertLevelDidChange            = @"RouteControl
 NSString *const MBRouteControllerWillReroute                    = @"RouteControllerWillReroute";
 NSString *const MBRouteControllerDidReroute                     = @"RouteControllerDidReroute";
 NSString *const MBRouteControllerDidFailToReroute               = @"RouteControllerDidFailToReroute";
+NSString *const MBRouteControllerDidFindFasterRouteKey          = @"RouteControllerDidFindFasterRoute";

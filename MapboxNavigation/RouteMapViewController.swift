@@ -250,6 +250,12 @@ class RouteMapViewController: UIViewController {
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
         }
+        
+        if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
+            let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
+            statusView.show(title, showSpinner: true)
+            statusView.hide(delay: 5, animated: true)
+        }
     }
 
     func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
