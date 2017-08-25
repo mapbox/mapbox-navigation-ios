@@ -186,10 +186,10 @@ open class RouteController: NSObject {
         
         self.locationManager.delegate = self
         self.resumeNotifications()
+        self.resetSession()
         
         DispatchQueue.main.async {
             self.startEvents(route: route)
-            self.resetSession()
         }
     }
     
