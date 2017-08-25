@@ -149,8 +149,6 @@
 }
 
 - (void)startNavigation:(MBRoute *)route {
-    [self applyCustomStyle];
-    
     MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:route];
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
                                                                                     directions:[MBDirections sharedDirections]
@@ -160,12 +158,6 @@
     
     // Suspend notifications and let `MBNavigationViewController` handle all progress and voice updates.
     [self suspendNotifications];
-}
-
-- (void)applyCustomStyle {
-    MBStyle *style = [[MBStyle alloc] init];
-    style.headerBackgroundColor = [UIColor blueColor];
-    [style apply];
 }
 
 @end

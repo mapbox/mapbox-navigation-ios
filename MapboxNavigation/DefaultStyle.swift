@@ -41,8 +41,8 @@ extension UIFont {
  */
 open class DefaultStyle: Style {
     
-    required public init(traitCollection: UITraitCollection) {
-        super.init(traitCollection: traitCollection)
+    open override func apply() {
+        super.apply()
         
         // General styling
         if let color = UIApplication.shared.delegate?.window??.tintColor {
@@ -51,64 +51,65 @@ open class DefaultStyle: Style {
             tintColor = .defaultTint
         }
         
-        statusBarStyle = .default
+        UIApplication.shared.statusBarStyle = .default
         
-        buttonTextColor = .defaultPrimaryText
-        lineColor =  #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
+        Button.appearance().textColor = .defaultPrimaryText
         
-        wayNameLabelFont = .systemFont(ofSize: 16)
-        wayNameLabelTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
-        wayNameViewBorderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
-        wayNameViewBackgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
+        LineView.appearance().lineColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
+        SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         
-        turnArrowPrimaryColor = .defaultTurnArrowPrimary
-        turnArrowSecondaryColor = .defaultTurnArrowSecondary
+        WayNameLabel.appearance().font = UIFont.systemFont(ofSize: 16).adjustedFont
+        WayNameLabel.appearance().textColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
+        WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         
-        laneViewPrimaryColor = .defaultLaneArrowPrimary
-        laneViewSecondaryColor = .defaultLaneArrowSecondary
+        TurnArrowView.appearance().primaryColor = .defaultTurnArrowPrimary
+        TurnArrowView.appearance().secondaryColor = .defaultTurnArrowSecondary
         
-        floatingButtonBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        floatingButtonTintColor = tintColor
-        lanesViewBackgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        LaneArrowView.appearance().primaryColor = .defaultLaneArrowPrimary
+        LaneArrowView.appearance().secondaryColor = .defaultLaneArrowSecondary
+        
+        FloatingButton.appearance().tintColor = tintColor
+        FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         // Maneuver view (Page view)
-        maneuverViewBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        ManeuverView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
-        distanceLabelFont = .systemFont(ofSize: 26)
-        distanceLabelTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+        DistanceLabel.appearance().font = UIFont.systemFont(ofSize: 26).adjustedFont
+        DistanceLabel.appearance().textColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         
-        destinationLabelFont = .systemFont(ofSize: 32, weight: UIFontWeightMedium)
-        destinationLabelTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+        DestinationLabel.appearance().font = UIFont.systemFont(ofSize: 32, weight: UIFontWeightMedium).adjustedFont
+        DestinationLabel.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        arrivalTimeLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
-        arrivalTimeLabelTextColor = .defaultPrimaryText
+        ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
+        ArrivalTimeLabel.appearance().textColor = .defaultPrimaryText
         
         // Table view (Drawer)
-        headerBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        RouteTableViewHeaderView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
-        timeRemainingLabelTextColor = .defaultPrimaryText
-        timeRemainingLabelFont = .systemFont(ofSize: 28, weight: UIFontWeightMedium)
+        TimeRemainingLabel.appearance().textColor = .defaultPrimaryText
+        TimeRemainingLabel.appearance().font = UIFont.systemFont(ofSize: 28, weight: UIFontWeightMedium).adjustedFont
         
-        distanceRemainingLabelTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
-        distanceRemainingLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
+        DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+        DistanceRemainingLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
         
-        arrivalTimeLabelTextColor = .defaultPrimaryText
-        arrivalTimeLabelFont = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
+        ArrivalTimeLabel.appearance().textColor = .defaultPrimaryText
+        ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
         
-        cellTitleLabelFont = .systemFont(ofSize: 17)
-        cellTitleLabelTextColor = .defaultPrimaryText
+        CellTitleLabel.appearance().font = UIFont.systemFont(ofSize: 17).adjustedFont
+        CellTitleLabel.appearance().textColor = .defaultPrimaryText
         
-        cellSubtitleLabelFont = .systemFont(ofSize: 17)
-        cellSubtitleLabelTextColor = .defaultSecondaryText
+        CellSubtitleLabel.appearance().font = UIFont.systemFont(ofSize: 17).adjustedFont
+        CellSubtitleLabel.appearance().textColor = .defaultSecondaryText
         
-        trafficUnknownColor = .trafficUnknown
-        trafficLowColor = .trafficLow
-        trafficModerateColor = .trafficModerate
-        trafficHeavyColor = .trafficHeavy
-        trafficSevereColor = .trafficSevere
-        lowTrafficTextColor = .trafficAlternateLow
-        
-        routeCasingColor = .defaultRouteCasing
+        NavigationMapView.appearance().routeCasingColor         = .defaultRouteCasing
+        NavigationMapView.appearance().trafficUnknownColor      = .trafficUnknown
+        NavigationMapView.appearance().trafficLowColor          = .trafficLow
+        NavigationMapView.appearance().trafficModerateColor     = .trafficModerate
+        NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy
+        NavigationMapView.appearance().trafficSevereColor       = .trafficSevere
+        NavigationMapView.appearance().lowTrafficTextColor      = .trafficAlternateLow
         
         styleType = .lightStyle
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
@@ -120,31 +121,36 @@ open class DefaultStyle: Style {
  */
 open class DefaultDarkStyle: DefaultStyle {
     
-    required public init(traitCollection: UITraitCollection) {
-        super.init(traitCollection: traitCollection)
+    open override func apply() {
+        super.apply()
         
         let backgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
         
-        buttonTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        maneuverViewBackgroundColor = backgroundColor
-        distanceLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        destinationLabelTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        timeRemainingLabelTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        distanceRemainingLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        arrivalTimeLabelTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        headerBackgroundColor = backgroundColor
-        floatingButtonBackgroundColor = backgroundColor
-        floatingButtonTintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        buttonTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        wayNameLabelTextColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
-        wayNameViewBackgroundColor = backgroundColor
-        wayNameViewBorderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
-        turnArrowPrimaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        turnArrowSecondaryColor = #colorLiteral(red: 0.8, green: 0.8235294118, blue: 0.8481693864, alpha: 0.5)
-        lanesViewBackgroundColor = backgroundColor
-        laneViewPrimaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-
-        statusBarStyle = .lightContent
+        Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        ManeuverView.appearance().backgroundColor = backgroundColor
+        
+        DistanceLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        DestinationLabel.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        TimeRemainingLabel.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        
+        RouteTableViewHeaderView.appearance().backgroundColor = backgroundColor
+        
+        FloatingButton.appearance().backgroundColor = backgroundColor
+        FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        
+        WayNameLabel.appearance().textColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
+        WayNameLabel.appearance().backgroundColor = backgroundColor
+        WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
+        
+        TurnArrowView.appearance().primaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        TurnArrowView.appearance().secondaryColor = #colorLiteral(red: 0.8, green: 0.8235294118, blue: 0.8481693864, alpha: 0.5)
+        
+        LanesView.appearance().backgroundColor = backgroundColor
+        LaneArrowView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        
+        UIApplication.shared.statusBarStyle = .lightContent
         styleType = .darkStyle
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")
     }

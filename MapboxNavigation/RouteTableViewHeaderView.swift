@@ -5,7 +5,8 @@ protocol RouteTableViewHeaderViewDelegate: class {
 }
 
 @IBDesignable
-class RouteTableViewHeaderView: UIView {
+@objc(MBRouteTableViewHeaderView)
+open class RouteTableViewHeaderView: UIView {
     
     @IBOutlet weak var progressBarWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var progressBar: ProgressBar!
@@ -16,7 +17,7 @@ class RouteTableViewHeaderView: UIView {
     
     weak var delegate: RouteTableViewHeaderViewDelegate?
     
-    override func awakeFromNib() {
+    override open func awakeFromNib() {
         super.awakeFromNib()
         
         //clear default values from the storyboard so user does not see a 'flash' of random values
@@ -25,7 +26,7 @@ class RouteTableViewHeaderView: UIView {
         arrivalTimeLabel.text = ""
     }
     
-    override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         get {
             return CGSize(width: bounds.width, height: 80)
         }

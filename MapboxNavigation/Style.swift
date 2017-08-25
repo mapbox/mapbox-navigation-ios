@@ -42,11 +42,6 @@ open class Style: NSObject {
     public var tintColor: UIColor?
     
     /**
-     Sets the tint color on the map view.
-     */
-    public var mapViewTintColor: UIColor?
-    
-    /**
      Sets the status bar style.
      `UIViewControllerBasedStatusBarAppearance` must be set to NO for this property to have any effect.
      */
@@ -56,200 +51,6 @@ open class Style: NSObject {
      Sets the font family for all labels.
      */
     public var fontFamily: String?
-    
-    /**
-     Sets the text color on buttons for normal state.
-     */
-    public var buttonTextColor: UIColor?
-    
-    /**
-     Sets the background color on the floating buttons.
-     */
-    public var floatingButtonBackgroundColor: UIColor?
-    
-    /**
-     Sets the tint color on the floating buttons.
-     */
-    public var floatingButtonTintColor: UIColor?
-    
-    /**
-     Sets the background color of the lane views.
-     */
-    public var lanesViewBackgroundColor: UIColor?
-    
-    /**
-     Sets the lane views primary color.
-     */
-    public var laneViewPrimaryColor: UIColor?
-    
-    /**
-     Sets the lane views secondary color.
-     */
-    public var laneViewSecondaryColor: UIColor?
-    
-    /**
-     Sets the color of dividers and separators.
-     */
-    public var lineColor: UIColor?
-    
-    /**
-     Sets the background of the resume bottom.
-     */
-    public var resumeButtonBackgroundColor: UIColor?
-    
-    /**
-     Sets the tint color of the resume button.
-     */
-    public var resumeButtonTintColor: UIColor?
-    
-    /// Maneuver view (Page view)
-    
-    /**
-     Sets the background color of the maneuver view, positioned at the top.
-     */
-    public var maneuverViewBackgroundColor: UIColor?
-    
-    /**
-     Sets the font on the distance label.
-     */
-    public var distanceLabelFont: UIFont?
-    
-    /**
-     Sets the text color on the distance label.
-     */
-    public var distanceLabelTextColor: UIColor?
-    
-    /**
-     Sets the font on the destination label.
-     */
-    public var destinationLabelFont: UIFont?
-    
-    /**
-     Set the text color on the destination label.
-     */
-    public var destinationLabelTextColor: UIColor?
-    
-    /**
-     Sets the prominent color on the turn arrow.
-     */
-    public var turnArrowPrimaryColor: UIColor?
-    
-    /**
-     Sets the subtle color on the turn arrow.
-     */
-    public var turnArrowSecondaryColor: UIColor?
-    
-    /// Table view (Drawer)
-    
-    /**
-     Sets the color of the drawer header, positioned at the bottom.
-     */
-    public var headerBackgroundColor: UIColor?
-    
-    /**
-     Sets the font on the time remaining label.
-     */
-    public var timeRemainingLabelFont: UIFont?
-    
-    /**
-     Sets the text color on the time remaining label.
-     */
-    public var timeRemainingLabelTextColor: UIColor?
-    
-    /**
-     Sets the font on the distance remaining label.
-     */
-    public var distanceRemainingLabelFont: UIFont?
-    
-    /**
-     Sets the text color on the distance remaining label.
-     */
-    public var distanceRemainingLabelTextColor: UIColor?
-    
-    /**
-     Sets the font on the arrival time label.
-     */
-    public var arrivalTimeLabelFont: UIFont?
-    
-    /**
-     Sets the text color on the ETA label.
-     */
-    public var arrivalTimeLabelTextColor: UIColor?
-    
-    /**
-     Sets the font of the title labels in table views.
-     */
-    public var cellTitleLabelFont: UIFont?
-    
-    /**
-     Sets the title text color in table views.
-     */
-    public var cellTitleLabelTextColor: UIColor?
-    
-    /**
-     Sets the font of the subtitle label in table views.
-     */
-    public var cellSubtitleLabelFont: UIFont?
-    
-    /**
-     Sets the text color of the subtitle label in table views.
-     */
-    public var cellSubtitleLabelTextColor: UIColor?
-    
-    /**
-     Sets the background color of the current way name view.
-     */
-    public var wayNameViewBackgroundColor: UIColor?
-    
-    /**
-     Sets the border color of the current way name view.
-     */
-    public var wayNameViewBorderColor: UIColor?
-    
-    /**
-     Sets the color for the current way name label.
-     */
-    public var wayNameLabelTextColor: UIColor?
-    
-    /**
-     Sets the font of the current way name label.
-     */
-    public var wayNameLabelFont: UIFont?
-    
-    /**
-     Sets the color if the route’s casing color.
-     */
-    public var routeCasingColor: UIColor?
-    
-    /**
-     Sets the traffic color for unknown congestion.
-     */
-    public var trafficUnknownColor: UIColor?
-    
-    /**
-     Sets the traffic color for low congestion.
-     */
-    public var trafficLowColor: UIColor?
-    
-    /**
-     Sets the traffic color for moderate congestion.
-     */
-    public var trafficModerateColor: UIColor?
-    
-    /**
-     Sets the traffic color for heavy congestion.
-     */
-    public var trafficHeavyColor: UIColor?
-    
-    /**
-     Sets the traffic color for severe congestion.
-     */
-    public var trafficSevereColor: UIColor?
-    
-    /**
-     Sets an alternate color used throughout the UI to denote low traffic congestion. Not used to style the route line.
-     */
-    public var lowTrafficTextColor: UIColor?
     
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
@@ -266,184 +67,6 @@ open class Style: NSObject {
      */
     open func apply() {
         
-        // General styling
-        
-        if let color = tintColor {
-            NavigationMapView.appearance(for: traitCollection).tintColor = color
-            ProgressBar.appearance(for: traitCollection).barColor = color
-            Button.appearance(for: traitCollection).tintColor = color
-            HighlightedButton.appearance(for: traitCollection).setTitleColor(color, for: .normal)
-            ResumeButton.appearance(for: traitCollection).tintColor = color
-        }
-        
-        if let color = mapViewTintColor {
-            NavigationMapView.appearance(for: traitCollection).tintColor = color
-        }
-        
-        if let statusBarStyle = statusBarStyle {
-            UIApplication.shared.statusBarStyle = statusBarStyle
-        }
-        
-        if let color = buttonTextColor {
-            Button.appearance(for: traitCollection).textColor = color
-        }
-        
-        if let color = lineColor {
-            // Line view can be a dashed line view so we add a lineColor to avoid changing the background.
-            LineView.appearance(for: traitCollection).lineColor = color
-            // Separator view can also be a divider (vertical/horizontal) with a solid background color.
-            SeparatorView.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let color = wayNameLabelTextColor {
-            WayNameLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        if let font = wayNameLabelFont {
-            WayNameLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let color = wayNameViewBackgroundColor {
-            WayNameView.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let color = wayNameViewBorderColor {
-            WayNameView.appearance(for: traitCollection).borderColor = color
-        }
-        
-        if let color = turnArrowPrimaryColor {
-            TurnArrowView.appearance(for: traitCollection).primaryColor = color
-        }
-        
-        if let color = turnArrowSecondaryColor {
-            TurnArrowView.appearance(for: traitCollection).secondaryColor = color
-        }
-        
-        if let color = floatingButtonBackgroundColor {
-            FloatingButton.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let color = floatingButtonTintColor {
-            FloatingButton.appearance(for: traitCollection).tintColor = color
-        }
-        
-        if let color = lanesViewBackgroundColor {
-            LanesView.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let color = laneViewPrimaryColor {
-            LaneArrowView.appearance(for: traitCollection).primaryColor = color
-        }
-        
-        if let color = laneViewSecondaryColor {
-            LaneArrowView.appearance(for: traitCollection).secondaryColor = color
-        }
-        
-        if let color = resumeButtonBackgroundColor {
-            ResumeButton.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let color = resumeButtonTintColor {
-            ResumeButton.appearance(for: traitCollection).tintColor = color
-        }
-        
-        // Maneuver page view controller
-        
-        if let color = maneuverViewBackgroundColor {
-            ManeuverView.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let font = distanceLabelFont {
-            DistanceLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let color = distanceLabelTextColor {
-            DistanceLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        if let font = destinationLabelFont {
-            DestinationLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let color = destinationLabelTextColor {
-            DestinationLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        // Table view (drawer)
-        
-        if let color = headerBackgroundColor {
-            RouteTableViewHeaderView.appearance(for: traitCollection).backgroundColor = color
-        }
-        
-        if let color = timeRemainingLabelTextColor {
-            TimeRemainingLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        if let font = timeRemainingLabelFont {
-            TimeRemainingLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let color = distanceRemainingLabelTextColor {
-            DistanceRemainingLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        if let font = distanceRemainingLabelFont {
-            DistanceRemainingLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let color = arrivalTimeLabelTextColor {
-            ArrivalTimeLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        if let font = arrivalTimeLabelFont {
-            ArrivalTimeLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let font = cellTitleLabelFont {
-            CellTitleLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let color = cellTitleLabelTextColor {
-            CellTitleLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        if let font = cellSubtitleLabelFont {
-            CellSubtitleLabel.appearance(for: traitCollection).font = font.adjustedFont.with(fontFamily: fontFamily)
-        }
-        
-        if let color = cellSubtitleLabelTextColor {
-            CellSubtitleLabel.appearance(for: traitCollection).textColor = color
-        }
-        
-        // Traffic
-        
-        if let color = routeCasingColor {
-            NavigationMapView.appearance(for: traitCollection).routeCasingColor = color
-        }
-        
-        if let color = trafficUnknownColor {
-            NavigationMapView.appearance(for: traitCollection).trafficUnknownColor = color
-        }
-        
-        if let color = trafficLowColor {
-            NavigationMapView.appearance(for: traitCollection).trafficLowColor = color
-        }
-        
-        if let color = trafficModerateColor {
-            NavigationMapView.appearance(for: traitCollection).trafficModerateColor = color
-        }
-        
-        if let color = trafficHeavyColor {
-            NavigationMapView.appearance(for: traitCollection).trafficHeavyColor = color
-        }
-        
-        if let color = trafficSevereColor {
-            NavigationMapView.appearance(for: traitCollection).trafficSevereColor = color
-        }
-        
-        if let color = lowTrafficTextColor {
-            NavigationMapView.appearance(for: traitCollection).lowTrafficTextColor = color
-        }
     }
 }
 
@@ -453,6 +76,9 @@ open class Style: NSObject {
  */
 @objc(MBButton)
 open class Button: StylableButton { }
+
+@objc(MBCancelButton)
+open class CancelButton: Button { }
 
 /// :nodoc:
 @objc(MBFloatingButton)
@@ -573,7 +199,7 @@ open class WayNameLabel: StylableLabel { }
 @objc(MBWayNameView)
 open class WayNameView: UIView {
     
-    dynamic var borderColor: UIColor = .white {
+    dynamic public var borderColor: UIColor = .white {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
@@ -591,7 +217,7 @@ public class ProgressBar: UIView {
     
     let bar = UIView()
     
-    dynamic var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
+    dynamic public var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
         didSet {
             bar.backgroundColor = barColor
         }
@@ -676,7 +302,7 @@ open class StylableButton: UIButton {
 
 /// :nodoc:
 @objc(MBManeuverView)
-class ManeuverView: UIView { }
+public class ManeuverView: UIView { }
 
 /// :nodoc:
 @objc(MBManeuverContainerView)
@@ -693,7 +319,7 @@ class ManeuverContainerView: UIView {
 
 /// :nodoc:
 @objc(MBStatusView)
-class StatusView: UIView {
+public class StatusView: UIView {
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var textLabel: UILabel!
     

@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 @objc(MBLaneArrowView)
-class LaneArrowView: UIView {
+open class LaneArrowView: UIView {
     @IBInspectable
     var scale: CGFloat = 1
     let invalidAlpha: CGFloat = 0.4
@@ -11,7 +11,7 @@ class LaneArrowView: UIView {
     var maneuverDirection: ManeuverDirection?
     var isValid: Bool = false
     
-    override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         return bounds.size
     }
     
@@ -31,7 +31,7 @@ class LaneArrowView: UIView {
         return isValid ? primaryColor : secondaryColor
     }
     
-    override func draw(_ rect: CGRect) {
+    override open func draw(_ rect: CGRect) {
         super.draw(rect)
         if let lane = lane {
             var flipLane: Bool

@@ -161,10 +161,10 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         exampleMode = .default
         
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: [DefaultStyle()], locationManager: locationManager())
         navigationViewController.showsReportFeedback = true
         navigationViewController.navigationDelegate = self
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
+        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = false
         
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -195,44 +195,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         exampleMode = .styled
         
-        let style = DefaultStyle()
-        
-        // General styling
-        style.tintColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
-        style.statusBarStyle = .lightContent
-        style.buttonTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        style.fontFamily = "Georgia"
-        style.turnArrowPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        style.turnArrowSecondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
-        style.floatingButtonBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
-        style.lanesViewBackgroundColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
-        style.laneViewPrimaryColor = #colorLiteral(red: 0.9418798089, green: 0.3469682932, blue: 0.5911870599, alpha: 1)
-        style.laneViewSecondaryColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
-        
-        // Maneuver view (Page view)
-        style.maneuverViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
-        style.distanceLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
-        style.destinationLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
-        style.distanceRemainingLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
-        style.timeRemainingLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
-        style.arrivalTimeLabelTextColor = #colorLiteral(red: 0.9293526786, green: 0.9291852679, blue: 0.9280691964, alpha: 1)
-
-        // Current street name label
-        style.wayNameLabelTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        style.wayNameViewBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1).withAlphaComponent(0.5)
-            
-        // Table view (Drawer)
-        style.headerBackgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
-        style.cellTitleLabelTextColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        style.cellSubtitleLabelTextColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
-        
-        // Traffic
-        style.routeCasingColor = #colorLiteral(red: 0.1960784346, green: 0.3411764801, blue: 0.1019607857, alpha: 1)
-        style.trafficUnknownColor = #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)
-        style.trafficLowColor = #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1)
-        style.trafficModerateColor = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
-        style.trafficHeavyColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
-        style.trafficSevereColor = #colorLiteral(red: 0.5725490451, green: 0, blue: 0.2313725501, alpha: 1)
+        let style = CustomStyle()
         
         // Set a custom style URL
         style.mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")
@@ -323,5 +286,18 @@ class CustomAnnotationView: MGLUserLocationAnnotationView {
         layer.cornerRadius = frame.width / 2
         layer.borderWidth = 2
         layer.borderColor = UIColor.white.cgColor
+    }
+}
+
+class CustomStyle: DefaultStyle {
+    override func apply() {
+        super.apply()
+        ManeuverView.appearance().backgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        RouteTableViewHeaderView.appearance().backgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        
+        DistanceLabel.appearance().textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        DestinationLabel.appearance().textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        TimeRemainingLabel.appearance().textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
     }
 }

@@ -46,13 +46,13 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    dynamic var trafficUnknownColor: UIColor = .trafficUnknown
-    dynamic var trafficLowColor: UIColor = .trafficLow
-    dynamic var trafficModerateColor: UIColor = .trafficModerate
-    dynamic var trafficHeavyColor: UIColor = .trafficHeavy
-    dynamic var trafficSevereColor: UIColor = .trafficSevere
-    dynamic var lowTrafficTextColor: UIColor = .trafficAlternateLow
-    dynamic var routeCasingColor: UIColor = .defaultRouteCasing
+    dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
+    dynamic public var trafficLowColor: UIColor = .trafficLow
+    dynamic public var trafficModerateColor: UIColor = .trafficModerate
+    dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
+    dynamic public var trafficSevereColor: UIColor = .trafficSevere
+    dynamic public var lowTrafficTextColor: UIColor = .trafficAlternateLow
+    dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     
     var showsRoute: Bool {
         get {
