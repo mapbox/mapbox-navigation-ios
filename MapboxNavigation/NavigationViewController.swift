@@ -327,6 +327,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
+        
+        if !(route.routeOptions is NavigationRouteOptions) {
+            print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
+        }
     }
     
     deinit {
