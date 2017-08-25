@@ -186,8 +186,11 @@ open class RouteController: NSObject {
         
         self.locationManager.delegate = self
         self.resumeNotifications()
-        self.startEvents(route: route)
         self.resetSession()
+        
+        DispatchQueue.main.async {
+            self.startEvents(route: route)
+        }
     }
     
     deinit {
@@ -214,7 +217,8 @@ open class RouteController: NSObject {
             events.isDebugLoggingEnabled = eventLoggingEnabled
             events.isMetricsEnabledInSimulator = true
             events.isMetricsEnabledForInUsePermissions = true
-            events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: "MapboxEventsNavigationiOS", hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+            let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+            events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
             events.disableLocationMetrics()
             events.sendTurnstileEvent()
         } else {
