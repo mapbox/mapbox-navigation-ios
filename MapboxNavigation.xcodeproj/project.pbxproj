@@ -319,7 +319,6 @@
 		351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
 		351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewHeaderView.swift; sourceTree = "<group>"; };
 		351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		351BEBEB1E5BCC63006FE110 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKitArrows.swift; sourceTree = "<group>"; };
 		351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnArrowView.swift; sourceTree = "<group>"; };
 		351BEBF01E5BCC63006FE110 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
@@ -445,6 +444,9 @@
 		C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMEEventsManager.swift; sourceTree = "<group>"; };
 		C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		DA3327391F50C6DA00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
+		DA33273A1F50C6FC00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
+		DA33273B1F50C70E00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E911F10559600FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1158,6 +1160,7 @@
 				it,
 				"zh-Hant",
 				ru,
+				sl,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1534,6 +1537,7 @@
 				DAE7114C1F22E94E009AED76 /* it */,
 				DA8264851F2AAD8400454B24 /* zh-Hant */,
 				35190E911F461A32007C1393 /* ru */,
+				DA3327391F50C6DA00C5EE88 /* sl */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1555,6 +1559,7 @@
 				DAE7114D1F22E966009AED76 /* it */,
 				DA8264861F2AAD9F00454B24 /* zh-Hant */,
 				35190E921F461A32007C1393 /* ru */,
+				DA33273A1F50C6FC00C5EE88 /* sl */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1575,6 +1580,7 @@
 				DAE7114E1F22E977009AED76 /* it */,
 				DA8264871F2AADC200454B24 /* zh-Hant */,
 				35190E931F461A32007C1393 /* ru */,
+				DA33273B1F50C70E00C5EE88 /* sl */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
