@@ -56,6 +56,8 @@ class RouteTableViewController: UIViewController {
             return
         }
         
+        guard routeProgress.congestionTravelTimesSegmentsByStep.indices.contains(routeProgress.legIndex),
+            routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex].indices.contains(routeProgress.currentLegProgress.stepIndex) else { return }
         
         let congestionTimesForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
         guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return }
