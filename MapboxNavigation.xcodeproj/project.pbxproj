@@ -447,6 +447,9 @@
 		DA3327391F50C6DA00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
 		DA33273A1F50C6FC00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
 		DA33273B1F50C70E00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DA33273D1F50C7CA00C5EE88 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
+		DA33273E1F50C7D800C5EE88 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
+		DA33273F1F50C7E400C5EE88 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA625E901F10557300FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E911F10559600FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Main.strings; sourceTree = "<group>"; };
 		DA625E921F1055DE00FBE176 /* fa */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1161,6 +1164,7 @@
 				"zh-Hant",
 				ru,
 				sl,
+				uk,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1538,6 +1542,7 @@
 				DA8264851F2AAD8400454B24 /* zh-Hant */,
 				35190E911F461A32007C1393 /* ru */,
 				DA3327391F50C6DA00C5EE88 /* sl */,
+				DA33273D1F50C7CA00C5EE88 /* uk */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1560,6 +1565,7 @@
 				DA8264861F2AAD9F00454B24 /* zh-Hant */,
 				35190E921F461A32007C1393 /* ru */,
 				DA33273A1F50C6FC00C5EE88 /* sl */,
+				DA33273E1F50C7D800C5EE88 /* uk */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1581,6 +1587,7 @@
 				DA8264871F2AADC200454B24 /* zh-Hant */,
 				35190E931F461A32007C1393 /* ru */,
 				DA33273B1F50C70E00C5EE88 /* sl */,
+				DA33273F1F50C7E400C5EE88 /* uk */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
