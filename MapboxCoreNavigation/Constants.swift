@@ -140,3 +140,8 @@ let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
  Approximately the number of meters in a mile.
  */
 let milesToMeters = 1609.34
+
+/**
+ The mimimum speed value before the user is snapped to the route. This is used to overcome inaccurate course values when a user's speed is low.
+ */
+public var RouteControllerMinimumSpeedThresholdForSnappingUserToRoute: CLLocationSpeed = 2

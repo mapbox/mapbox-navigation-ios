@@ -290,7 +290,7 @@ open class RouteController: NSObject {
         
         // If the course is inaccurate or the speed is low and the user is on the route,
         // snap the users location and course since we know the snapped location and course is more accurate.
-        if location.course <= 0 || location.speed <= 2, snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
+        if location.course <= 0 || location.speed <= RouteControllerMinimumSpeedThresholdForSnappingUserToRoute, snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
             return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: absoluteDirection, speed: location.speed, timestamp: location.timestamp)
         }
 
