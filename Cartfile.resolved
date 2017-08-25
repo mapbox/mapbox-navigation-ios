@@ -1,7 +1,7 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.6.2"
 github "1ec5/Solar" "5ce2ca7baaa82b1abb0467642ae237faf674b645"
 github "52inc/Pulley" "1.4"
-github "Project-OSRM/osrm-text-instructions.swift" "v0.3.1"
+github "Project-OSRM/osrm-text-instructions.swift" "v0.3.2"
 github "facebook/ios-snapshot-test-case" "2.1.4"
 github "frederoni/aws-sdk-ios" "ac6a35f135aca73c9d308e960a501fcc16a586a8"
 github "mapbox/MapboxDirections.swift" "v0.10.1"
