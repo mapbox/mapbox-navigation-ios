@@ -84,7 +84,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing), name: RouteControllerWillReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
     }
     
@@ -98,11 +98,11 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         // Play reroute sound when a faster route is found
         if notification.userInfo?[RouteControllerDidFindFasterRouteKey] as! Bool {
-            pauseSpeechAndPlayReroutingDing()
+            pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
     
-    func pauseSpeechAndPlayReroutingDing() {
+    func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)
         
         guard playRerouteSound && !NavigationSettings.shared.muted else {
