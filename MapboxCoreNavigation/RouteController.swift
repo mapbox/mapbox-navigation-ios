@@ -128,6 +128,8 @@ open class RouteController: NSObject {
      */
     public var checkForFasterRouteInBackground = false
     
+    var didFindFasterRoute = false
+    
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
@@ -148,6 +150,7 @@ open class RouteController: NSObject {
             if let location = locationManager.location {
                 userInfo[MBRouteControllerNotificationLocationKey] = location
             }
+            userInfo[RouteControllerDidFindFasterRouteKey] = didFindFasterRoute
             NotificationCenter.default.post(name: RouteControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
@@ -582,9 +585,11 @@ extension RouteController: CLLocationManagerDelegate {
                 firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval,
                 currentUpcomingManeuver == firstLeg.steps[1],
                 route.expectedTravelTime <= 0.9 * durationRemaining {
+                strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentAlertLevel)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                strongSelf.didFindFasterRoute = false
             }
         }
     }

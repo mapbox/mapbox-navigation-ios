@@ -17,3 +17,4 @@ extern NSString *const MBRouteControllerAlertLevelDidChange;
 extern NSString *const MBRouteControllerWillReroute;
 extern NSString *const MBRouteControllerDidReroute;
 extern NSString *const MBRouteControllerDidFailToReroute;
+extern NSString *const MBRouteControllerDidFindFasterRouteKey;
