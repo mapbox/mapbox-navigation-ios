@@ -235,12 +235,15 @@ open class NavigationMapView: MGLMapView {
         var previousLegCongestionIndex = 0
         
         for (index, leg) in route.legs.enumerated() {
-            let legCongestion = leg.segmentCongestionLevels!
+            // If there is no congestion, don't try and add it
+            guard let legCongestion = leg.segmentCongestionLevels else {
+                return shape(describingCasing: route, legIndex: legIndex)
+            }
+            
             let coordsForLeg = coordinates[previousLegCongestionIndex..<previousLegCongestionIndex + legCongestion.count + 1]
-            let combinedCongestionLevel = leg.segmentCongestionLevels!
             let destination = coordinates.suffix(from: previousLegCongestionIndex + 1)
             let segment = zip(coordsForLeg, destination).map { [$0.0, $0.1] }
-            let congestionSegments = Array(zip(segment, combinedCongestionLevel))
+            let congestionSegments = Array(zip(segment, legCongestion))
             
             previousLegCongestionIndex = legCongestion.count
             
@@ -344,7 +347,7 @@ open class NavigationMapView: MGLMapView {
             "moderate": MGLStyleValue(rawValue: trafficModerateColor),
             "heavy": MGLStyleValue(rawValue: trafficHeavyColor),
             "severe": MGLStyleValue(rawValue: trafficSevereColor)
-            ], attributeName: "congestion", options: nil)
+            ], attributeName: "congestion", options: [.defaultValue: MGLStyleValue(rawValue: trafficUnknownColor)])
         
         line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
             true: MGLStyleValue(rawValue: 1),
@@ -393,7 +396,7 @@ open class NavigationMapView: MGLMapView {
         
         let step = route.legs[legIndex].steps[stepIndex]
         let maneuverCoordinate = step.maneuverLocation
-        let polylineCoordinates = route.coordinates
+        guard let routeCoordinates = route.coordinates else { return }
         
         guard let style = style else {
             return
@@ -402,13 +405,13 @@ open class NavigationMapView: MGLMapView {
         let minimumZoomLevel: Float = 14.5
         
         let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 50), 10)
-        let shaftCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftLength / 2, of: maneuverCoordinate).reversed()
-            + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
+        let shaftCoordinates = Array(polyline(along: routeCoordinates, within: -shaftLength / 2, of: maneuverCoordinate).reversed()
+            + polyline(along: routeCoordinates, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
         
         if shaftCoordinates.count > 1 {
             let shaftStrokeLength = shaftLength * 1.1
-            var shaftStrokeCoordinates = Array(polyline(along: polylineCoordinates!, within: -shaftStrokeLength / 2, of: maneuverCoordinate).reversed()
-                + polyline(along: polylineCoordinates!, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
+            var shaftStrokeCoordinates = Array(polyline(along: routeCoordinates, within: -shaftStrokeLength / 2, of: maneuverCoordinate).reversed()
+                + polyline(along: routeCoordinates, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
             let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
             let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
             let maneuverArrowStrokePolylines = [shaftStrokePolyline]
