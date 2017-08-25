@@ -5,4 +5,4 @@ github "rs/SDWebImage" ~> 4.1
 github "Project-OSRM/osrm-text-instructions.swift" ~> 0.3.1
 github "frederoni/aws-sdk-ios" "ac6a35f135aca73c9d308e960a501fcc16a586a8"
 github "mapbox/mapbox-telemetry-ios" ~> 0.2
-github "https://github.com/bsudekum/Solar" "c162c697652c3dfe389717f6c9070a0421b3f0cd"
+github "1ec5/Solar" "scheme-test-only"

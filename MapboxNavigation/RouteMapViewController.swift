@@ -376,6 +376,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
+    
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
+        return delegate?.navigationMapView(mapView, shapeFor: waypoints)
+    }
 
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView(mapView, shapeDescribing: route)
