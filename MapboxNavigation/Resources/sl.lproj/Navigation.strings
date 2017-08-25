@@ -1,0 +1,9 @@
+﻿
+/* Class = "UIButton"; normalTitle = "Resume"; ObjectID = "5HY-QD-dBq"; */
+"5HY-QD-dBq.normalTitle" = "Nadaljuj";
+
+/* Class = "UILabel"; text = "Rerouting"; ObjectID = "bUX-dR-1V6"; */
+"bUX-dR-1V6.text" = "Preusmerjanje";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "l2B-fb-Dkb"; */
+"l2B-fb-Dkb.normalTitle" = "Prekliči";
