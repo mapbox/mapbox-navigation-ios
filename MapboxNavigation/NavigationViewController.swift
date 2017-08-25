@@ -423,7 +423,13 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func applyStyle() {
-        styles?.forEach { $0.apply() }
+        guard let styles = styles else { return }
+        
+        for style in styles {
+            if style.styleType == styleTypeForTimeOfDay {
+                style.apply()
+            }
+        }
     }
     
     func forceRefreshAppearanceIfNeeded() {
