@@ -151,7 +151,7 @@ public class PollyVoiceController: RouteVoiceController {
                         audioPlayer.play()
                     }
                 } catch  let error as NSError {
-                    strongSelf.speak(strongSelf.fallbackText, error: error.localizedDescription)
+                    callSuperSpeak.speak(strongSelf.fallbackText, error: error.localizedDescription)
                 }
             }
 
