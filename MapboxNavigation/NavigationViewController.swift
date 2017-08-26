@@ -264,17 +264,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         guard automaticallyAdjustsStyleForTimeOfDay else { return .lightStyle }
         
         guard let location = routeController.location,
-            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
-            // `astronomicalSunrise` is when the sun is 18 degrees below the horizon. We should make sure it's actually dark before setting.
-            // [Ref](https://www.timeanddate.com/astronomy/different-types-twilight.html)
-            let sunriseTime = solar.astronomicalSunrise,
-            let sunsetTime = solar.astronomicalSunset else {
+            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) else {
                 return .lightStyle
         }
         
-        let currentDate = Date()
-        
-        return  currentDate > sunriseTime || currentDate < sunsetTime ? .lightStyle : .darkStyle
+        return  solar.isDaytime ? .lightStyle : .darkStyle
     }
     
     var tableViewController: RouteTableViewController?
@@ -434,7 +428,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func forceRefreshAppearanceIfNeeded() {
         // Don't update the style if they are equal
-        guard currentStyleType != nil && currentStyleType != styleTypeForTimeOfDay else {
+        guard currentStyleType != nil || currentStyleType != styleTypeForTimeOfDay else {
             currentStyleType = styleTypeForTimeOfDay
             return
         }
