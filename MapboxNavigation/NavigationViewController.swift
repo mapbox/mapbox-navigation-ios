@@ -321,6 +321,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
+        
+        self.currentStyleType = styleTypeForTimeOfDay
     }
     
     deinit {
@@ -428,7 +430,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func forceRefreshAppearanceIfNeeded() {
         // Don't update the style if they are equal
-        guard currentStyleType != nil || currentStyleType != styleTypeForTimeOfDay else {
+        guard currentStyleType != styleTypeForTimeOfDay else {
             currentStyleType = styleTypeForTimeOfDay
             return
         }
