@@ -18,10 +18,11 @@ class RouteTableViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupTableView()
-    }
-    
-    func setupTableView() {
+        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
+        dateFormatter.timeStyle = .short
+        dateComponentsFormatter.allowedUnits = [.hour, .minute]
+        dateComponentsFormatter.unitsStyle = .abbreviated
+        
         tableView.tableHeaderView = headerView
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 80
@@ -30,11 +31,6 @@ class RouteTableViewController: UIViewController {
     func showETA(routeProgress: RouteProgress) {
         let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
         headerView.arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate!)
-        
-        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
-        dateFormatter.timeStyle = .short
-        dateComponentsFormatter.allowedUnits = [.hour, .minute]
-        dateComponentsFormatter.unitsStyle = .abbreviated
         
         if routeProgress.durationRemaining < 5 {
             headerView.distanceRemaining.text = nil
