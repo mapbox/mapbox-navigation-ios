@@ -28,6 +28,7 @@ class RouteTableViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         defaultTimeRemainingColor = headerView.timeRemaining.textColor
     }
     
