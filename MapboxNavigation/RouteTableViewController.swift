@@ -16,9 +16,16 @@ class RouteTableViewController: UIViewController {
     @IBOutlet var headerView: RouteTableViewHeaderView!
     @IBOutlet weak var tableView: UITableView!
     
+    var defaultTimeRemainingColor: UIColor!
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupTableView()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        defaultTimeRemainingColor = headerView.timeRemaining.textColor
     }
     
     func setupTableView() {
@@ -53,7 +60,7 @@ class RouteTableViewController: UIViewController {
         let coordinatesLeftOnStepCount = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
         
         guard coordinatesLeftOnStepCount >= 0 else {
-            headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
+            headerView.timeRemaining.textColor = defaultTimeRemainingColor
             return
         }
         
@@ -80,7 +87,7 @@ class RouteTableViewController: UIViewController {
         if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
             switch max.key {
             case .unknown:
-                headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
+                headerView.timeRemaining.textColor = defaultTimeRemainingColor
             case .low:
                 headerView.timeRemaining.textColor = .trafficAlternateLow
             case .moderate:
