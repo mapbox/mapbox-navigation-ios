@@ -19,10 +19,6 @@ class RouteTableViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupTableView()
-        dateFormatter.timeStyle = .short
-        dateComponentsFormatter.allowedUnits = [.hour, .minute]
-        dateComponentsFormatter.unitsStyle = .abbreviated
-        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
     }
     
     func setupTableView() {
@@ -34,6 +30,11 @@ class RouteTableViewController: UIViewController {
     func showETA(routeProgress: RouteProgress) {
         let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
         headerView.arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate!)
+        
+        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
+        dateFormatter.timeStyle = .short
+        dateComponentsFormatter.allowedUnits = [.hour, .minute]
+        dateComponentsFormatter.unitsStyle = .abbreviated
         
         if routeProgress.durationRemaining < 5 {
             headerView.distanceRemaining.text = nil
@@ -56,6 +57,8 @@ class RouteTableViewController: UIViewController {
             return
         }
         
+        guard routeProgress.legIndex < routeProgress.congestionTravelTimesSegmentsByStep.count,
+            routeProgress.currentLegProgress.stepIndex < routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex].count else { return }
         
         let congestionTimesForStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
         guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return }

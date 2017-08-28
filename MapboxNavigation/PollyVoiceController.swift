@@ -79,6 +79,8 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = .miguel
         case ("fr", _):
             input.voiceId = .celine
+        case ("it", _):
+            input.voiceId = .giorgio
         case ("nl", _):
             input.voiceId = .lotte
         case ("ru", _):
@@ -149,7 +151,7 @@ public class PollyVoiceController: RouteVoiceController {
                         audioPlayer.play()
                     }
                 } catch  let error as NSError {
-                    strongSelf.speak(strongSelf.fallbackText, error: error.localizedDescription)
+                    strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
                 }
             }
 

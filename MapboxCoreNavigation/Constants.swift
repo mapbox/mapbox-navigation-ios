@@ -43,6 +43,11 @@ public let RouteControllerNotificationRouteKey = MBRouteControllerNotificationRo
 public let RouteControllerNotificationErrorKey = MBRouteControllerNotificationErrorKey
 
 /**
+ Key used for accessing a `Bool` as to whether the reroute occurced because a faster route was found.
+ */
+public let RouteControllerDidFindFasterRouteKey = MBRouteControllerDidFindFasterRouteKey
+
+/**
  Emitted when the user moves along the route.
  */
 public let RouteControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
@@ -140,3 +145,8 @@ let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
  Approximately the number of meters in a mile.
  */
 let milesToMeters = 1609.34
+
+/**
+ The mimimum speed value before the user is snapped to the route. This is used to overcome inaccurate course values when a user's speed is low.
+ */
+public var RouteControllerMinimumSpeedThresholdForSnappingUserToRoute: CLLocationSpeed = 2
