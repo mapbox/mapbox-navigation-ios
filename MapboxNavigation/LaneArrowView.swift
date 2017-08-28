@@ -88,10 +88,10 @@ class LaneArrowView: UIView {
                 // If the lane indication is `none` and the maneuver modifier has a turn in it,
                 // show the turn in the lane image.
                 if maneuverDirection == .sharpRight || maneuverDirection == .right || maneuverDirection == .slightRight {
-                    StyleKitArrows.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    StyleKitArrows.drawLane_right_h(primaryColor: appropriatePrimaryColor)
                     flipLane = false
                 } else if maneuverDirection == .sharpLeft || maneuverDirection == .left || maneuverDirection == .slightLeft {
-                    StyleKitArrows.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    StyleKitArrows.drawLane_right_h(primaryColor: appropriatePrimaryColor)
                     flipLane = true
                 } else {
                     StyleKitArrows.drawLane_straight(primaryColor: appropriatePrimaryColor)

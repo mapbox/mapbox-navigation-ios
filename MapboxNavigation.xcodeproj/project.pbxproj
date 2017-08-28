@@ -15,6 +15,8 @@
 		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
+		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
+		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
 		351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351174F31EF1C0530065E248 /* ReplayLocationManager.swift */; };
 		351927361F0FA072003A702D /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351927351F0FA072003A702D /* ScreenCapture.swift */; };
 		351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351A40151F0291D100E6D378 /* PollyVoiceController.swift */; };
@@ -300,6 +302,8 @@
 		35002D6D1E5F6C7F0090E733 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35002D751E5F6CD30090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
+		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
+		351030101F54B72000E3B7E7 /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
 		351174F31EF1C0530065E248 /* ReplayLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayLocationManager.swift; sourceTree = "<group>"; };
 		35190E911F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		35190E921F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
@@ -683,6 +687,7 @@
 				355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */,
 				355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */,
 				35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */,
+				351030101F54B72000E3B7E7 /* route-for-lane-testing.json */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -720,6 +725,7 @@
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
+				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -1236,6 +1242,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */,
 				3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */,
 				35DC9D8D1F431E59001ECD64 /* route.json in Resources */,
 				355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */,
@@ -1413,6 +1420,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */,
 				352690491ECC843700E387BD /* Fixture.swift in Sources */,
 			);
