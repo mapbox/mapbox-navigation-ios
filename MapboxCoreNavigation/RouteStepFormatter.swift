@@ -25,11 +25,10 @@ public class RouteStepFormatter: Formatter {
             switch key {
             case .wayName, .destination, .rotaryName, .code:
                 let stringComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
-                guard var firstRefComponent = stringComponents.first else { return value.asSSMLAddress }
                 
-                firstRefComponent = firstRefComponent.isUppercased ? firstRefComponent.asSSMLCharacters : firstRefComponent.asSSMLAddress
-                
-                return "\(firstRefComponent) \(stringComponents.suffix(from: 1).joined(separator: " ").asSSMLAddress)"
+                return stringComponents.map {
+                    $0.isInt ? $0.asSSMLAddress : $0
+                }.joined(separator: " ")
             default:
                 return value
             }

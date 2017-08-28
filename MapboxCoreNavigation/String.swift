@@ -52,4 +52,8 @@ extension String {
     var isUppercased: Bool {
         return self == uppercased() && self != lowercased()
     }
+    
+    var isInt: Bool {
+        return Int(self) != nil
+    }
 }
