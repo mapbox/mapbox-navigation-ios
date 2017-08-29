@@ -264,11 +264,15 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         guard automaticallyAdjustsStyleForTimeOfDay else { return .lightStyle }
         
         guard let location = routeController.location,
-            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) else {
+            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
+            let sunrise = solar.nauticalSunrise, let sunset = solar.nauticalSunset else {
                 return .lightStyle
         }
         
-        return  solar.isDaytime ? .lightStyle : .darkStyle
+        let isAfterSunrise = solar.date > sunrise
+        let isBeforeSunset = solar.date < sunset
+        
+        return isAfterSunrise && isBeforeSunset ? .lightStyle : .darkStyle
     }
     
     var tableViewController: RouteTableViewController?
