@@ -53,7 +53,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         super.viewWillAppear(animated)
 
         // Reset the navigation styling to the defaults
-        DefaultStyle().apply()
+        DayStyle().apply()
     }
     
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
@@ -162,7 +162,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         
         exampleMode = .default
         
-        let navigationViewController = NavigationViewController(for: route, styles: [DefaultStyle()], locationManager: locationManager())
+        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.showsReportFeedback = true
         navigationViewController.navigationDelegate = self
         navigationViewController.automaticallyAdjustsStyleForTimeOfDay = false
@@ -290,7 +290,7 @@ class CustomAnnotationView: MGLUserLocationAnnotationView {
     }
 }
 
-class CustomStyle: DefaultStyle {
+class CustomStyle: DayStyle {
     override func apply() {
         super.apply()
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
