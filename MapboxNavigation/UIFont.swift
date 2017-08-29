@@ -22,7 +22,9 @@ extension UIFont {
         }
     }
     
-    // Adjusted for preferredContentSizeCategory (`adjustsFontForContentSizeCategory` is supported iOS >= 10.0)
+    /**
+     Returns an adjusted font for the `preferredContentSizeCategory`.
+     */
     public var adjustedFont: UIFont {
         let font = with(multiplier: fontSizeMultiplier)
         return font
