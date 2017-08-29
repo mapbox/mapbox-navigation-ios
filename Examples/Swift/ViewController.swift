@@ -196,12 +196,9 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
         exampleMode = .styled
         
-        let style = CustomStyle()
+        let styles = [DayStyle(), CustomNightStyle()]
         
-        // Set a custom style URL
-        style.mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        
-        let navigationViewController = NavigationViewController(for: route, styles: [style], locationManager: locationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: locationManager())
         navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         navigationViewController.navigationDelegate = self
 
@@ -290,7 +287,14 @@ class CustomAnnotationView: MGLUserLocationAnnotationView {
     }
 }
 
-class CustomStyle: DayStyle {
+class CustomNightStyle: DayStyle {
+    
+    required init() {
+        super.init()
+        mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
+        styleType = .nightStyle
+    }
+    
     override func apply() {
         super.apply()
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
