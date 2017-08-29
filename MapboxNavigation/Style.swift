@@ -83,6 +83,7 @@ public class LanesView: UIView { }
 @objc(MBHighlightedButton)
 public class HighlightedButton: Button { }
 
+/// :nodoc:
 @IBDesignable
 @objc(MBResumeButton)
 public class ResumeButton: UIControl {
@@ -154,10 +155,16 @@ open class DestinationLabel: StylableLabel {
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
 open class TimeRemainingLabel: StylableLabel {
+    
+    // Sets the text color for no or unknown traffic
     dynamic public var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    // Sets the text color for low traffic
     dynamic public var trafficLowColor: UIColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+    // Sets the text color for moderate traffic
     dynamic public var trafficModerateColor: UIColor = #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0)
+    // Sets the text color for heavy traffic
     dynamic public var trafficHeavyColor: UIColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
+    // Sets the text color for severe traffic
     dynamic public var trafficSevereColor: UIColor = #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0)
 }
 
@@ -189,6 +196,7 @@ open class CellSubtitleLabel: StylableLabel { }
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel { }
 
+/// :nodoc:
 @objc(MBWayNameView)
 open class WayNameView: UIView {
     
@@ -210,6 +218,7 @@ public class ProgressBar: UIView {
     
     let bar = UIView()
     
+    // Sets the color of the progress bar.
     dynamic public var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
         didSet {
             bar.backgroundColor = barColor
@@ -253,7 +262,9 @@ public class ProgressBar: UIView {
 /// :nodoc:
 @objc(MBLineView)
 public class LineView: UIView {
-    dynamic var lineColor: UIColor = .black {
+    
+    // Set the line color on all line views.
+    dynamic public var lineColor: UIColor = .black {
         didSet {
             setNeedsDisplay()
             setNeedsLayout()
@@ -268,24 +279,29 @@ public class SeparatorView: UIView { }
 /// :nodoc:
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
+    
+    // Sets the text color for normal state
     dynamic open var textColor: UIColor = .black {
         didSet {
             setTitleColor(textColor, for: .normal)
         }
     }
     
+    // Sets the border color
     dynamic open var borderColor: UIColor = .clear {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
     }
     
+    // Sets the border width
     dynamic open var borderWidth: CGFloat = 0 {
         didSet {
             layer.borderWidth = borderWidth
         }
     }
     
+    // Sets the corner radius
     dynamic open var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
