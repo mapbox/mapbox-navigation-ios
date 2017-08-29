@@ -295,7 +295,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
-                         styles: [Style]? = [DefaultStyle(), DefaultDarkStyle()],
+                         styles: [Style]? = [DayStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -304,7 +304,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
-        self.styles = styles ?? [DefaultStyle(), DefaultDarkStyle()]
+        self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions
         self.route = route
         
