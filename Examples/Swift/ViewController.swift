@@ -164,7 +164,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
         navigationViewController.showsReportFeedback = true
         navigationViewController.navigationDelegate = self
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = false
+        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         
         present(navigationViewController, animated: true, completion: nil)
     }
