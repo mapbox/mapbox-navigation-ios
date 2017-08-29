@@ -53,7 +53,7 @@ extension String {
         return self == uppercased() && self != lowercased()
     }
     
-    var isInt: Bool {
-        return Int(self) != nil
+    var containsInt: Bool {
+        return self.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil
     }
 }

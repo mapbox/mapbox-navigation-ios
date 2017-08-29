@@ -27,7 +27,7 @@ public class RouteStepFormatter: Formatter {
                 let stringComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
                 
                 return stringComponents.map {
-                    $0.isInt ? $0.asSSMLAddress : $0
+                    $0.containsInt ? $0.asSSMLAddress : $0
                 }.joined(separator: " ")
             default:
                 return value
