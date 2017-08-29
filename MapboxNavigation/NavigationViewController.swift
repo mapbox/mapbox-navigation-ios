@@ -261,18 +261,18 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     var currentStyleType: StyleType?
     
     var styleTypeForTimeOfDay: StyleType {
-        guard automaticallyAdjustsStyleForTimeOfDay else { return .lightStyle }
+        guard automaticallyAdjustsStyleForTimeOfDay else { return .dayStyle }
         
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
             let sunrise = solar.nauticalSunrise, let sunset = solar.nauticalSunset else {
-                return .lightStyle
+                return .dayStyle
         }
         
         let isAfterSunrise = solar.date > sunrise
         let isBeforeSunset = solar.date < sunset
         
-        return isAfterSunrise && isBeforeSunset ? .lightStyle : .darkStyle
+        return isAfterSunrise && isBeforeSunset ? .dayStyle : .nightStyle
     }
     
     var tableViewController: RouteTableViewController?
@@ -299,7 +299,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     @objc(initWithRoute:directions:style:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
-                         styles: [Style]? = [DefaultStyle(), DefaultDarkStyle()],
+                         styles: [Style]? = [DayStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -308,7 +308,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
         
-        self.styles = styles ?? [DefaultStyle(), DefaultDarkStyle()]
+        self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions
         self.route = route
         
@@ -325,8 +325,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
-        
+
         self.currentStyleType = styleTypeForTimeOfDay
+        
+        if !(route.routeOptions is NavigationRouteOptions) {
+            print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
+        }
     }
     
     deinit {

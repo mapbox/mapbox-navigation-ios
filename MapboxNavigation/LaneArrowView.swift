@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 @objc(MBLaneArrowView)
-class LaneArrowView: UIView {
+open class LaneArrowView: UIView {
     @IBInspectable
     var scale: CGFloat = 1
     let invalidAlpha: CGFloat = 0.4
@@ -11,7 +11,7 @@ class LaneArrowView: UIView {
     var maneuverDirection: ManeuverDirection?
     var isValid: Bool = false
     
-    override var intrinsicContentSize: CGSize {
+    override open var intrinsicContentSize: CGSize {
         return bounds.size
     }
     
@@ -31,7 +31,7 @@ class LaneArrowView: UIView {
         return isValid ? primaryColor : secondaryColor
     }
     
-    override func draw(_ rect: CGRect) {
+    override open func draw(_ rect: CGRect) {
         super.draw(rect)
         if let lane = lane {
             var flipLane: Bool
@@ -88,10 +88,10 @@ class LaneArrowView: UIView {
                 // If the lane indication is `none` and the maneuver modifier has a turn in it,
                 // show the turn in the lane image.
                 if maneuverDirection == .sharpRight || maneuverDirection == .right || maneuverDirection == .slightRight {
-                    StyleKitArrows.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    StyleKitArrows.drawLane_right_h(primaryColor: appropriatePrimaryColor)
                     flipLane = false
                 } else if maneuverDirection == .sharpLeft || maneuverDirection == .left || maneuverDirection == .slightLeft {
-                    StyleKitArrows.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                    StyleKitArrows.drawLane_right_h(primaryColor: appropriatePrimaryColor)
                     flipLane = true
                 } else {
                     StyleKitArrows.drawLane_straight(primaryColor: appropriatePrimaryColor)

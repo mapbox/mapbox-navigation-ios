@@ -23,15 +23,12 @@ public class RouteStepFormatter: Formatter {
         
         let modifyValueByKey = { (key: OSRMTextInstructions.TokenType, value: String) -> String in
             switch key {
-            case .code:
-                let refComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
-                guard var firstRefComponent = refComponents.first else { return value.asSSMLAddress }
+            case .wayName, .destination, .rotaryName, .code:
+                let stringComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
                 
-                firstRefComponent = firstRefComponent.isUppercased ? firstRefComponent.asSSMLCharacters : firstRefComponent.asSSMLAddress
-                
-                return "\(firstRefComponent) \(refComponents.suffix(from: 1).joined(separator: " ").asSSMLAddress)"
-            case .wayName, .destination, .rotaryName:
-                return value.asSSMLAddress
+                return stringComponents.map {
+                    $0.containsDecimalDigit ? $0.asSSMLAddress : $0
+                }.joined(separator: " ")
             default:
                 return value
             }

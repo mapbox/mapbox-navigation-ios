@@ -52,4 +52,8 @@ extension String {
     var isUppercased: Bool {
         return self == uppercased() && self != lowercased()
     }
+    
+    var containsDecimalDigit: Bool {
+        return self.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil
+    }
 }
