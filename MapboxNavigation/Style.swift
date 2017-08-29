@@ -8,20 +8,7 @@ import UIKit
 @objc(MBStyle)
 open class Style: NSObject {
     
-    public var traitCollection: UITraitCollection
-    
-    /**
-     Initializes a style that will be applied for any system traits of an interface’s environment.
-     */
-    convenience override public init() {
-        self.init(traitCollection: UITraitCollection())
-    }
-    
-    /**
-     Initializes a style for a specific system trait(s) of an interface’s environment.
-     */
-    required public init(traitCollection: UITraitCollection) {
-        self.traitCollection = traitCollection
+    required public override init() {
         super.init()
         NotificationCenter.default.addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
     }
@@ -55,12 +42,12 @@ open class Style: NSObject {
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
      */
-    public var styleType: StyleType = .lightStyle
+    public var styleType: StyleType = .dayStyle
     
     /**
      Map style to be used for the style.
      */
-    public var mapStyleURL: URL?
+    open var mapStyleURL: URL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
     
     /**
      Applies the style for all changed properties.
@@ -166,7 +153,13 @@ open class DestinationLabel: StylableLabel {
 
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
-open class TimeRemainingLabel: StylableLabel { }
+open class TimeRemainingLabel: StylableLabel {
+    dynamic public var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    dynamic public var trafficLowColor: UIColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+    dynamic public var trafficModerateColor: UIColor = #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0)
+    dynamic public var trafficHeavyColor: UIColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
+    dynamic public var trafficSevereColor: UIColor = #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0)
+}
 
 /// :nodoc:
 @objc(MBDistanceRemainingLabel)

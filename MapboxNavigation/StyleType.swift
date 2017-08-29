@@ -3,16 +3,16 @@ import Foundation
 @objc(MBStyleType)
 public enum StyleType: Int, CustomStringConvertible {
     
-    case lightStyle
-    case darkStyle
+    case dayStyle
+    case nightStyle
     
     public init?(description: String) {
         let type: StyleType
         switch description {
-        case "lightStyle":
-            type = .lightStyle
-        case "darkStyle":
-            type = .darkStyle
+        case "dayStyle":
+            type = .dayStyle
+        case "nightStyle":
+            type = .nightStyle
         default:
             return nil
         }
@@ -21,10 +21,10 @@ public enum StyleType: Int, CustomStringConvertible {
     
     public var description: String {
         switch self {
-        case .lightStyle:
-            return "lightStyle"
-        case .darkStyle:
-            return "darkStyle"
+        case .dayStyle:
+            return "dayStyle"
+        case .nightStyle:
+            return "nightStyle"
         }
     }
 }

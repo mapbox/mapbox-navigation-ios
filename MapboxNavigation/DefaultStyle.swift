@@ -41,6 +41,11 @@ extension UIFont {
  */
 open class DefaultStyle: Style {
     
+    public required init() {
+        super.init()
+        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
+    }
+    
     open override func apply() {
         super.apply()
         
@@ -111,8 +116,7 @@ open class DefaultStyle: Style {
         NavigationMapView.appearance().trafficSevereColor       = .trafficSevere
         NavigationMapView.appearance().lowTrafficTextColor      = .trafficAlternateLow
         
-        styleType = .lightStyle
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
+        styleType = .dayStyle
     }
 }
 
@@ -120,6 +124,12 @@ open class DefaultStyle: Style {
  `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
 open class DefaultDarkStyle: DefaultStyle {
+    
+    public required init() {
+        super.init()
+        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")!
+        styleType = .nightStyle
+    }
     
     open override func apply() {
         super.apply()
@@ -151,7 +161,5 @@ open class DefaultDarkStyle: DefaultStyle {
         LaneArrowView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         UIApplication.shared.statusBarStyle = .lightContent
-        styleType = .darkStyle
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")
     }
 }

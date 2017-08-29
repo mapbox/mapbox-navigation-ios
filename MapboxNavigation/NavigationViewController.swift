@@ -261,14 +261,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     var currentStyleType: StyleType?
     
     var styleTypeForTimeOfDay: StyleType {
-        guard automaticallyAdjustsStyleForTimeOfDay else { return .lightStyle }
+        guard automaticallyAdjustsStyleForTimeOfDay else { return .dayStyle }
         
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude) else {
-                return .lightStyle
+                return .dayStyle
         }
         
-        return  solar.isDaytime ? .lightStyle : .darkStyle
+        return  solar.isDaytime ? .dayStyle : .nightStyle
     }
     
     var tableViewController: RouteTableViewController?

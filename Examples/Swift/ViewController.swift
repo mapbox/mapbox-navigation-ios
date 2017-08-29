@@ -198,7 +198,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         let style = CustomStyle()
         
         // Set a custom style URL
-        style.mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")
+        style.mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
         
         let navigationViewController = NavigationViewController(for: route, styles: [style], locationManager: locationManager())
         navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
