@@ -491,6 +491,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         monitorStepProgress(location)
+        monitorStepIntersectionProgress(location)
         
         // Check for faster route given users current location
         guard checkForFasterRouteInBackground else { return }
@@ -674,6 +675,37 @@ extension RouteController: CLLocationManagerDelegate {
             
             return completion(route, error)
         }
+    }
+    
+    func monitorStepIntersectionProgress(_ location: CLLocation) {
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
+        let interesectionIndex = routeProgress.currentLegProgress.currentStepProgress.intersectionIndex
+        
+        // Don't search for previous intersections
+        for intersection in intersections.suffix(from: interesectionIndex) {
+            let dist = distance(along: currentStepProgress.step.coordinates!, from: location.coordinate, to: intersection.location)
+            
+            // Check if the user is at an intersection
+            if dist < RouteControllerManeuverZoneRadius / 2 {
+                routeProgress.currentLegProgress.currentStepProgress.intersectionIndex += 1
+                guard let newCurrentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else { return }
+                
+                // Loop over all possible headings at an intersection.
+                // Check if the user's course is pretty close to an exit heading.
+                for (headingIndex, heading) in newCurrentIntersection.headings.enumerated() {
+                    guard intersection.outletIndex != headingIndex else { continue }
+                    let wrappedCoursae = wrap(location.course, min: 0, max: 360)
+                    let wrappedHeading = wrap(heading, min: 0, max: 360)
+                    if differenceBetweenAngles(wrappedCoursae, wrappedHeading) < RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
+                        print("reroute!")
+                    }
+                }
+                return
+            }
+        }
+        
+        print(routeProgress.currentLegProgress.currentStepProgress.intersectionIndex)
     }
     
     func monitorStepProgress(_ location: CLLocation) {

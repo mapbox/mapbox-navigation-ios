@@ -395,5 +395,24 @@ open class RouteStepProgress: NSObject {
      */
     public init(step: RouteStep) {
         self.step = step
+        self.intersectionIndex = 0
     }
+    
+    public var currentIntersection: Intersection? {
+        guard let intersections = step.intersections else { return nil }
+        return intersections[intersectionIndex]
+    }
+    
+    public var upcomingIntersection: Intersection? {
+        guard let intersections = step.intersections, intersectionIndex + 1 < intersections.endIndex else {
+            return nil
+        }
+        
+        return intersections[intersectionIndex]
+    }
+    
+    /**
+     Index representing the current step.
+     */
+    public var intersectionIndex: Int = 0
 }
