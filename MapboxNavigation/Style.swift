@@ -157,7 +157,11 @@ open class DestinationLabel: StylableLabel {
 open class TimeRemainingLabel: StylableLabel {
     
     // Sets the text color for no or unknown traffic
-    dynamic public var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    dynamic public var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
+        didSet {
+            textColor = trafficUnknownColor
+        }
+    }
     // Sets the text color for low traffic
     dynamic public var trafficLowColor: UIColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
     // Sets the text color for moderate traffic

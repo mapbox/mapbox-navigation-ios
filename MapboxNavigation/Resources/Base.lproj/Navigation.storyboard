@@ -833,9 +833,9 @@
                     </constraints>
                     <connections>
                         <outlet property="arrivalTimeLabel" destination="HRl-MT-kqB" id="Nvg-Jp-KsB"/>
-                        <outlet property="distanceRemaining" destination="6dE-ya-mrD" id="Qg0-hZ-tkK"/>
+                        <outlet property="distanceRemainingLabel" destination="6dE-ya-mrD" id="HoP-EZ-fPC"/>
                         <outlet property="dividerView" destination="rwq-3y-Mg0" id="MlN-hT-NJe"/>
-                        <outlet property="timeRemaining" destination="82H-sg-SOL" id="tfh-39-juV"/>
+                        <outlet property="timeRemainingLabel" destination="82H-sg-SOL" id="Bea-dd-jkr"/>
                     </connections>
                 </view>
             </objects>
