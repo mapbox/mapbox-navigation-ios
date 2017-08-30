@@ -93,8 +93,13 @@ open class DayStyle: Style {
         // Table view (Drawer)
         RouteTableViewHeaderView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
-        TimeRemainingLabel.appearance().textColor = .defaultPrimaryText
         TimeRemainingLabel.appearance().font = UIFont.systemFont(ofSize: 28, weight: UIFontWeightMedium).adjustedFont
+        TimeRemainingLabel.appearance().textColor = .defaultPrimaryText
+        TimeRemainingLabel.appearance().trafficUnknownColor = .defaultPrimaryText
+        TimeRemainingLabel.appearance().trafficLowColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+        TimeRemainingLabel.appearance().trafficModerateColor = #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0)
+        TimeRemainingLabel.appearance().trafficHeavyColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
+        TimeRemainingLabel.appearance().trafficSevereColor = #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0)
         
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         DistanceRemainingLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
@@ -114,7 +119,6 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficModerateColor     = .trafficModerate
         NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy
         NavigationMapView.appearance().trafficSevereColor       = .trafficSevere
-        NavigationMapView.appearance().lowTrafficTextColor      = .trafficAlternateLow
     }
 }
 
@@ -141,6 +145,7 @@ open class NightStyle: DayStyle {
         DistanceLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         DestinationLabel.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TimeRemainingLabel.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         

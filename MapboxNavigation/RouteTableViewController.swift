@@ -33,23 +33,23 @@ class RouteTableViewController: UIViewController {
         headerView.arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate!)
         
         if routeProgress.durationRemaining < 5 {
-            headerView.distanceRemaining.text = nil
+            headerView.distanceRemainingLabel.text = nil
         } else {
-            headerView.distanceRemaining.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
+            headerView.distanceRemainingLabel.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
         }
         
         dateComponentsFormatter.unitsStyle = routeProgress.durationRemaining < 3600 ? .short : .abbreviated
         
         if routeProgress.durationRemaining < 60 {
-            headerView.timeRemaining.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
+            headerView.timeRemainingLabel.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
         } else {
-            headerView.timeRemaining.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
+            headerView.timeRemainingLabel.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
         }
             
         let coordinatesLeftOnStepCount = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
         
         guard coordinatesLeftOnStepCount >= 0 else {
-            headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
+            headerView.timeRemainingLabel.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
             return
         }
         
@@ -72,19 +72,15 @@ class RouteTableViewController: UIViewController {
         for (segmentCongestion, segmentTime) in remainingCongestionTimesForStep {
             remainingStepCongestionTotals[segmentCongestion] = (remainingStepCongestionTotals[segmentCongestion] ?? 0) + segmentTime
         }
-        
-        if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
-            switch max.key {
-            case .unknown:
-                headerView.timeRemaining.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
-            case .low:
-                headerView.timeRemaining.textColor = .trafficAlternateLow
-            case .moderate:
-                headerView.timeRemaining.textColor = .trafficModerate
-            case .heavy:
-                headerView.timeRemaining.textColor = .trafficHeavy
-            case .severe:
-                headerView.timeRemaining.textColor = .trafficSevere
+
+        // Update text color on time remaining based on congestion level
+        if routeProgress.durationRemaining < 60 {
+            headerView.congestionLevel = .unknown
+        } else {
+            if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
+                headerView.congestionLevel = max.key
+            } else {
+                headerView.congestionLevel = .unknown
             }
         }
     }
