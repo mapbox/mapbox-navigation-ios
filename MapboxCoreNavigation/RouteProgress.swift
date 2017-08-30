@@ -398,13 +398,15 @@ open class RouteStepProgress: NSObject {
         self.intersectionIndex = 0
     }
     
+    public var intersectionsIncludingUpcomingManeuverIntersection: [Intersection]?
+    
     public var currentIntersection: Intersection? {
-        guard let intersections = step.intersections else { return nil }
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection else { return nil }
         return intersections[intersectionIndex]
     }
     
     public var upcomingIntersection: Intersection? {
-        guard let intersections = step.intersections, intersectionIndex + 1 < intersections.endIndex else {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersectionIndex + 1 < intersections.endIndex else {
             return nil
         }
         
