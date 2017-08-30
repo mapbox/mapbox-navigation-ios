@@ -265,7 +265,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
-            let sunrise = solar.nauticalSunrise, let sunset = solar.nauticalSunset else {
+            let sunrise = solar.civilSunrise, let sunset = solar.civilSunset else {
                 return .dayStyle
         }
         
