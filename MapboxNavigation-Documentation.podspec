@@ -48,7 +48,7 @@ Pod::Spec.new do |s|
   s.dependency "OSRMTextInstructions", "~> 0.3"
   s.dependency "Pulley", "1.4"
   s.dependency "SDWebImage", "~> 4.1"
-  s.dependency "AWSPolly", "~> 2.5"
+  s.dependency "AWSPolly", "~> 2.6"
   s.dependency "MapboxMobileEvents", "~> 0.2"
   s.dependency "Solar", "~> 2.0"
 
