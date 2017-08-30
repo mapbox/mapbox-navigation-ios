@@ -44,6 +44,8 @@ open class DayStyle: Style {
     public required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
+        styleType = .dayStyle
+        statusBarStyle = .default
     }
     
     open override func apply() {
@@ -55,8 +57,6 @@ open class DayStyle: Style {
         } else {
             tintColor = .defaultTint
         }
-        
-        UIApplication.shared.statusBarStyle = .default
         
         Button.appearance().textColor = .defaultPrimaryText
         
@@ -115,8 +115,6 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy
         NavigationMapView.appearance().trafficSevereColor       = .trafficSevere
         NavigationMapView.appearance().lowTrafficTextColor      = .trafficAlternateLow
-        
-        styleType = .dayStyle
     }
 }
 
@@ -129,6 +127,7 @@ open class NightStyle: DayStyle {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")!
         styleType = .nightStyle
+        statusBarStyle = .lightContent
     }
     
     open override func apply() {
@@ -151,7 +150,7 @@ open class NightStyle: DayStyle {
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         WayNameLabel.appearance().textColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
-        WayNameLabel.appearance().backgroundColor = backgroundColor
+        WayNameLabel.appearance().backgroundColor = .clear
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         
         TurnArrowView.appearance().primaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
@@ -160,6 +159,7 @@ open class NightStyle: DayStyle {
         LanesView.appearance().backgroundColor = backgroundColor
         LaneArrowView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
-        UIApplication.shared.statusBarStyle = .lightContent
+        ResumeButton.appearance().backgroundColor = backgroundColor
+        ResumeButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
     }
 }
