@@ -16,7 +16,10 @@ open class NavigationRouteOptions: RouteOptions {
      [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.10.1/Classes/RouteOptions.html)
      */
     public override init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
-        super.init(waypoints: waypoints, profileIdentifier: profileIdentifier)
+        super.init(waypoints: waypoints.map {
+            $0.coordinateAccuracy = -1
+            return $0
+        }, profileIdentifier: profileIdentifier)
         includesSteps = true
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]
