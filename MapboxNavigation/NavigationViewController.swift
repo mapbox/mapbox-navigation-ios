@@ -460,6 +460,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 window.addSubview(view)
             }
         }
+        
+        mapView?.reloadStyle(self)
     }
     
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
