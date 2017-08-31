@@ -70,6 +70,8 @@ open class DayStyle: Style {
         
         TurnArrowView.appearance().primaryColor = .defaultTurnArrowPrimary
         TurnArrowView.appearance().secondaryColor = .defaultTurnArrowSecondary
+        CellTurnArrowView.appearance().primaryColor = .defaultTurnArrowPrimary
+        CellTurnArrowView.appearance().secondaryColor = .defaultTurnArrowSecondary
         
         LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         LaneArrowView.appearance().primaryColor = .defaultLaneArrowPrimary
@@ -148,6 +150,9 @@ open class NightStyle: DayStyle {
         TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        
+        CellTurnArrowView.appearance().primaryColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        CellTurnArrowView.appearance().secondaryColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         
         RouteTableViewHeaderView.appearance().backgroundColor = backgroundColor
         
