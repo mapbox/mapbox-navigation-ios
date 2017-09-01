@@ -121,6 +121,8 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficModerateColor     = .trafficModerate
         NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy
         NavigationMapView.appearance().trafficSevereColor       = .trafficSevere
+        
+        UIApplication.shared.statusBarStyle = statusBarStyle ?? .default
     }
 }
 

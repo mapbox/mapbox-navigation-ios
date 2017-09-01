@@ -432,6 +432,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         for style in styles {
             if style.styleType == styleTypeForTimeOfDay {
                 style.apply()
+                
+                if mapView?.styleURL != style.mapStyleURL {
+                    mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
+                    mapView?.styleURL = style.mapStyleURL
+                }
             }
         }
     }
@@ -448,8 +453,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 $0.apply()
                 mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
                 mapView?.styleURL = $0.mapStyleURL
-                UIApplication.shared.statusBarStyle = $0.statusBarStyle ?? .default
-                setNeedsStatusBarAppearanceUpdate()
                 currentStyleType = $0.styleType
             }
         }
