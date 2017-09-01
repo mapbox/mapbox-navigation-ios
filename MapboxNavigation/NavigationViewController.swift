@@ -269,8 +269,19 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 return .dayStyle
         }
         
-        let isAfterSunrise = solar.date > sunrise
-        let isBeforeSunset = solar.date < sunset
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .full
+        dateFormatter.timeStyle = .full
+        dateFormatter.timeZone = TimeZone.current
+        let sunriseString = dateFormatter.string(from: sunrise)
+        let sunsetString = dateFormatter.string(from: sunset)
+        
+        guard let newSunrise = dateFormatter.date(from: sunriseString) else { return .dayStyle }
+        guard let newSunset = dateFormatter.date(from: sunsetString) else { return .dayStyle }
+        let now = Date()
+        
+        let isAfterSunrise = now > newSunrise
+        let isBeforeSunset = now < newSunset
         
         return isAfterSunrise && isBeforeSunset ? .dayStyle : .nightStyle
     }
