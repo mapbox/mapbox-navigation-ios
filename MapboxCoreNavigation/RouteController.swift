@@ -262,13 +262,12 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation?
     
-    struct PreviousLocationInfo {
+    struct LocationInterval {
         var location: CLLocation
-        var locationDelta: CLLocationDistance
-        var durationDelta: TimeInterval
+        var speedDelta: CLLocationSpeed
     }
     
-    var previousKnownLocation: PreviousLocationInfo?
+    var lastQualityLocationInterval: LocationInterval?
     
     /**
      The most recently received user location, snapped to the route line.
@@ -279,12 +278,8 @@ open class RouteController: NSObject {
         
         guard let location = rawLocation else { return nil }
         
-        if previousKnownLocation == nil {
-            previousKnownLocation = PreviousLocationInfo(location: location, locationDelta: 0, durationDelta: 0)
-        } else {
-            guard isQualityLocation(location: rawLocation) else {
-                return nil
-            }
+        if lastQualityLocationInterval == nil {
+            lastQualityLocationInterval = LocationInterval(location: location, speedDelta: 0)
         }
         
         guard userIsOnRoute(location) else { return nil }
@@ -320,6 +315,8 @@ open class RouteController: NSObject {
         if location.course <= 0 || location.speed <= RouteControllerMinimumSpeedThresholdForSnappingUserToRoute, snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
             let calculatedWrappedCourse = wrap((wrappedPointBehind + wrappedPointAhead) / 2, min: 0 , max: 360)
             return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedWrappedCourse, speed: location.speed, timestamp: location.timestamp)
+        } else if isQualityLocation(location: rawLocation) {
+            return nil
         }
 
         guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
@@ -345,24 +342,19 @@ open class RouteController: NSObject {
         // Any time we return in this func, reset the values.
         defer {
             if let location = location {
-                if let lastLocation = previousKnownLocation {
-                    previousKnownLocation?.locationDelta = location.distance(from: lastLocation.location)
-                    previousKnownLocation?.durationDelta = location.timestamp.timeIntervalSince(lastLocation.location.timestamp)
+                if let lastLocation = lastQualityLocationInterval {
+                    lastQualityLocationInterval?.speedDelta = location.speed - lastLocation.location.speed
                 }
                 
-                previousKnownLocation?.location = location
+                lastQualityLocationInterval?.location = location
             }
         }
         
-        guard let lastLocation = previousKnownLocation, let location = rawLocation else {
+        guard let lastLocation = lastQualityLocationInterval, let location = rawLocation else {
                 return false
         }
         
-        guard location.distance(from: lastLocation.location) <= lastLocation.locationDelta * 3 else {
-            return false
-        }
-        
-        guard location.timestamp.timeIntervalSince(lastLocation.location.timestamp) <= lastLocation.durationDelta * 3 else {
+        guard location.speed <= lastLocation.speedDelta * 3 else {
             return false
         }
         
