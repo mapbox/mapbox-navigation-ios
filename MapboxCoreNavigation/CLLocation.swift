@@ -9,7 +9,8 @@ extension CLLocation {
         #else
             return
                 0...100 ~= horizontalAccuracy &&
-                0...30 ~= verticalAccuracy
+                0...30 ~= verticalAccuracy &&
+                speed >= 0
         #endif
     }
     
