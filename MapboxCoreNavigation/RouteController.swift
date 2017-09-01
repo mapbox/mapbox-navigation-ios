@@ -354,7 +354,7 @@ open class RouteController: NSObject {
                 return false
         }
         
-        guard location.speed <= lastLocation.speedDelta * 3 else {
+        guard location.speed <= lastLocation.speedDelta * RouteControllerDifferenceInSpeedDeltaMultiplier else {
             return false
         }
         
