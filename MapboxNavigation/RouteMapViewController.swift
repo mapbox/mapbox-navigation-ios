@@ -47,7 +47,7 @@ class RouteMapViewController: UIViewController {
     var tiltedCamera: MGLMapCamera {
         get {
             let camera = mapView.camera
-            camera.altitude = 600
+            camera.altitude = 1000
             camera.pitch = 45
             return camera
         }
@@ -96,23 +96,11 @@ class RouteMapViewController: UIViewController {
 
         if let camera = pendingCamera {
             mapView.camera = camera
+        } else if let firstCoordinate = route.coordinates?.first {
+            let location = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
+            mapView.updateCourseTracking(location: location, animated: false)
         } else {
-            let camera = tiltedCamera
-            if let coordinates = route.coordinates, coordinates.count > 1 {
-                camera.centerCoordinate = coordinates.first!
-                camera.heading = coordinates[0].direction(to: coordinates[1])
-            }
-            mapView.setCamera(camera, animated: false)
-        }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        // For some reason, when completing a maneuver this function is called.
-        // If we try to set the insets/align twice, the UI locks momentarily.
-        if mapView.userLocationVerticalAlignment != .bottom {
-            mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-            mapView.setContentInset(contentInsets, animated: false)
+            mapView.setCamera(tiltedCamera, animated: false)
         }
     }
     
