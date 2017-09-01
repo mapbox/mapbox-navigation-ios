@@ -56,7 +56,7 @@ public class SpokenInstructionFormatter: NSObject {
         var text: String
         
         // Prevent back to back instructions by adding a little more wiggle room
-        let linkedInstructionMultiplier = RouteControllerHighAlertInterval * RouteControllerMaxManipulatedCourseAngle
+        let linkedInstructionMultiplier = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
         
         // We only want to announce this special depature announcement once.
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
