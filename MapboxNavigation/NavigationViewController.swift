@@ -415,6 +415,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
         tableViewController?.notifyAlertLevelDidChange()
         
+        // Any time the alert level changes, clear out previous notifications.
+        // When we give a high alert notification, we want to clear out this notification when completing that step.
+        clearStaleNotifications()
+        
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
@@ -475,15 +479,19 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         notification.alertBody = routeStepFormatter.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: false)
         notification.fireDate = Date()
         
-        UIApplication.shared.cancelAllLocalNotifications()
+        clearStaleNotifications()
         
+        UIApplication.shared.cancelAllLocalNotifications()
+        UIApplication.shared.scheduleLocalNotification(notification)
+    }
+    
+    func clearStaleNotifications() {
+        guard sendNotifications else { return }
         // Remove all outstanding notifications from notification center.
         // This will only work if it's set to 1 and then back to 0.
         // This way, there is always just one notification.
-        UIApplication.shared.applicationIconBadgeNumber = 0
         UIApplication.shared.applicationIconBadgeNumber = 1
-        
-        UIApplication.shared.scheduleLocalNotification(notification)
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
