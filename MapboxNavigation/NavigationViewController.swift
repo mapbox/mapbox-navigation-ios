@@ -265,7 +265,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
-            let sunrise = solar.civilSunrise, let sunset = solar.civilSunset else {
+            let sunrise = solar.sunrise, let sunset = solar.sunset else {
                 return .dayStyle
         }
         
@@ -273,10 +273,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func isNighttime(date: Date, sunrise: Date, sunset: Date) -> Bool {
-        let cal = Calendar.current
-        let currentMinutesFromMidnight = cal.component(.hour, from: date) * 60 + cal.component(.minute, from: date)
-        let sunriseMinutesFromMidnight = cal.component(.hour, from: sunrise) * 60 + cal.component(.minute, from: sunrise)
-        let sunsetMinutesFromMidnight = cal.component(.hour, from: sunset) * 60 + cal.component(.minute, from: sunset)
+        let calendar = Calendar.current
+        let currentMinutesFromMidnight = calendar.component(.hour, from: date) * 60 + calendar.component(.minute, from: date)
+        let sunriseMinutesFromMidnight = calendar.component(.hour, from: sunrise) * 60 + calendar.component(.minute, from: sunrise)
+        let sunsetMinutesFromMidnight = calendar.component(.hour, from: sunset) * 60 + calendar.component(.minute, from: sunset)
         return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
     }
     
