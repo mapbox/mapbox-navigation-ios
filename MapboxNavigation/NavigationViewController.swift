@@ -265,14 +265,19 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
-            let sunrise = solar.civilSunrise, let sunset = solar.civilSunset else {
+            let sunrise = solar.sunrise, let sunset = solar.sunset else {
                 return .dayStyle
         }
         
-        let isAfterSunrise = solar.date > sunrise
-        let isBeforeSunset = solar.date < sunset
-        
-        return isAfterSunrise && isBeforeSunset ? .dayStyle : .nightStyle
+        return isNighttime(date: solar.date, sunrise: sunrise, sunset: sunset) ? .nightStyle : .dayStyle
+    }
+    
+    func isNighttime(date: Date, sunrise: Date, sunset: Date) -> Bool {
+        let calendar = Calendar.current
+        let currentMinutesFromMidnight = calendar.component(.hour, from: date) * 60 + calendar.component(.minute, from: date)
+        let sunriseMinutesFromMidnight = calendar.component(.hour, from: sunrise) * 60 + calendar.component(.minute, from: sunrise)
+        let sunsetMinutesFromMidnight = calendar.component(.hour, from: sunset) * 60 + calendar.component(.minute, from: sunset)
+        return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
     }
     
     var tableViewController: RouteTableViewController?
