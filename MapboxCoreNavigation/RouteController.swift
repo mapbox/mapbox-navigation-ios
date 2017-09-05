@@ -262,7 +262,7 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation?
     
-    public var mofifiedRerouteDistanceGivenIntersectionLocation: CLLocationDistance {
+    public var modifiedRerouteDistanceGivenIntersectionLocation: CLLocationDistance {
         guard let userIsNearAnIntersection = routeProgress.currentLegProgress.currentStepProgress.userIsNearAnIntersection else {
             return RouteControllerMaximumDistanceBeforeRecalculating
         }
@@ -526,7 +526,7 @@ extension RouteController: CLLocationManagerDelegate {
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        let radius = max(mofifiedRerouteDistanceGivenIntersectionLocation, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
+        let radius = max(modifiedRerouteDistanceGivenIntersectionLocation, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
 
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
