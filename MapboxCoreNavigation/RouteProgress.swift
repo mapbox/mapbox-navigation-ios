@@ -417,4 +417,6 @@ open class RouteStepProgress: NSObject {
      Index representing the current step.
      */
     public var intersectionIndex: Int = 0
+    
+    public var userIsNearAnIntersection: Bool?
 }
