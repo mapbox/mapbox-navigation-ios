@@ -526,8 +526,7 @@ extension RouteController: CLLocationManagerDelegate {
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        let radius = max(RouteControllerMaximumDistanceBeforeRecalculating,
-                         location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
+        let radius = max(mofifiedRerouteDistanceGivenIntersectionLocation, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
 
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
@@ -686,8 +685,8 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    func monitorIntersectionProgress(_ location: CLLocation) -> Bool {
-        guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return false }
+    func monitorIntersectionProgress(_ location: CLLocation) {
+        guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         
         // The intersections array does not include the upcoming maneuver intersection.
@@ -708,8 +707,6 @@ extension RouteController: CLLocationManagerDelegate {
                 routeProgress.currentLegProgress.currentStepProgress.userIsNearAnIntersection = false
             }
         }
-
-        return false
     }
     
     func monitorStepProgress(_ location: CLLocation) {
