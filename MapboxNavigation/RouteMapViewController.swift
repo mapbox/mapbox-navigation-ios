@@ -128,13 +128,11 @@ class RouteMapViewController: UIViewController {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidFailToReroute, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerDidFailToReroute, object: nil)
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
