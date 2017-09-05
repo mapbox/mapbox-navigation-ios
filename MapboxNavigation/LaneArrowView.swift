@@ -36,25 +36,31 @@ open class LaneArrowView: UIView {
         if let lane = lane {
             var flipLane: Bool
             if lane.indications.isSuperset(of: [.straightAhead, .sharpRight]) || lane.indications.isSuperset(of: [.straightAhead, .right]) || lane.indications.isSuperset(of: [.straightAhead, .slightRight]) {
-                if !isValid {
-                    StyleKitArrows.drawLane_straight_right(primaryColor: appropriatePrimaryColor)
-                    alpha = invalidAlpha
-                } else if maneuverDirection == .straightAhead {
-                    StyleKitArrows.drawLane_straight_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
-                } else {
-                    StyleKitArrows.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
-                }
                 flipLane = false
-            } else if lane.indications.isSuperset(of: [.straightAhead, .sharpLeft]) || lane.indications.isSuperset(of: [.straightAhead, .left]) || lane.indications.isSuperset(of: [.straightAhead, .slightLeft]) {
                 if !isValid {
                     StyleKitArrows.drawLane_straight_right(primaryColor: appropriatePrimaryColor)
                     alpha = invalidAlpha
                 } else if maneuverDirection == .straightAhead {
                     StyleKitArrows.drawLane_straight_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                } else if maneuverDirection == .sharpLeft || maneuverDirection == .left || maneuverDirection == .slightLeft {
+                    StyleKitArrows.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                    flipLane = true
                 } else {
                     StyleKitArrows.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
                 }
+            } else if lane.indications.isSuperset(of: [.straightAhead, .sharpLeft]) || lane.indications.isSuperset(of: [.straightAhead, .left]) || lane.indications.isSuperset(of: [.straightAhead, .slightLeft]) {
                 flipLane = true
+                if !isValid {
+                    StyleKitArrows.drawLane_straight_right(primaryColor: appropriatePrimaryColor)
+                    alpha = invalidAlpha
+                } else if maneuverDirection == .straightAhead {
+                    StyleKitArrows.drawLane_straight_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                } else if maneuverDirection == .sharpRight || maneuverDirection == .right || maneuverDirection == .slightRight {
+                    StyleKitArrows.drawLane_right_h(primaryColor: appropriatePrimaryColor)
+                    flipLane = false
+                } else {
+                    StyleKitArrows.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+                }
             } else if lane.indications.description.components(separatedBy: ",").count >= 2 {
                 // Hack:
                 // Account for a configuation where there is no straight lane
