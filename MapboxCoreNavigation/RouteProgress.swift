@@ -398,13 +398,18 @@ open class RouteStepProgress: NSObject {
         self.intersectionIndex = 0
     }
     
+    /**
+     All intersections on the current `RouteStep` and also the first intersection on the upcoming `RouteStep`.
+     
+     The upcoming `RouteStep` first `Intersection` is added because it is omitted from the current step.
+     */
     public var intersectionsIncludingUpcomingManeuverIntersection: [Intersection]?
     
-    public var currentIntersection: Intersection? {
-        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection else { return nil }
-        return intersections[intersectionIndex]
-    }
-    
+    /**
+     The next intersection the user will travel through.
+     
+     The step must contains `Intersections` for this value not be `nil`.
+     */
     public var upcomingIntersection: Intersection? {
         guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersectionIndex + 1 < intersections.endIndex else {
             return nil
@@ -414,9 +419,13 @@ open class RouteStepProgress: NSObject {
     }
     
     /**
-     Index representing the current step.
+     Index representing the current intersection.
      */
     public var intersectionIndex: Int = 0
     
+    
+    /**
+     If true, the user is near an intersection on the current step.
+     */
     public var userIsNearAnIntersection: Bool?
 }
