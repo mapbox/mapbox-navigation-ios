@@ -63,7 +63,7 @@ open class DayStyle: Style {
         LineView.appearance().lineColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         
-        WayNameLabel.appearance().font = UIFont.systemFont(ofSize:24, weight: UIFontWeightMedium).adjustedFont
+        WayNameLabel.appearance().font = UIFont.systemFont(ofSize:20, weight: UIFontWeightMedium).adjustedFont
         WayNameLabel.appearance().textColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
