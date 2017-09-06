@@ -150,3 +150,8 @@ let milesToMeters = 1609.34
  The mimimum speed value before the user is snapped to the route. This is used to overcome inaccurate course values when a user's speed is low.
  */
 public var RouteControllerMinimumSpeedThresholdForSnappingUserToRoute: CLLocationSpeed = 2
+
+/**
+ Multiplier used to compare the current speed delta from the previous speed delta. When the difference in speed delta is greater than 3 times, the location is thrown out.
+ */
+public var RouteControllerDifferenceInSpeedDeltaMultiplier: CLLocationSpeed = 3

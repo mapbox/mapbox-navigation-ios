@@ -262,13 +262,28 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation?
     
+    struct LocationInterval {
+        var location: CLLocation
+        var speedDelta: CLLocationSpeed
+    }
+    
+    var lastQualityLocationInterval: LocationInterval?
+    
     /**
      The most recently received user location, snapped to the route line.
      
      This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
      */
     public var location: CLLocation? {
-        guard let location = rawLocation, userIsOnRoute(location) else { return nil }
+        
+        guard let location = rawLocation else { return nil }
+        
+        if lastQualityLocationInterval == nil {
+            lastQualityLocationInterval = LocationInterval(location: location, speedDelta: 0)
+        }
+        
+        guard userIsOnRoute(location) else { return nil }
+        
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
@@ -300,6 +315,8 @@ open class RouteController: NSObject {
         if location.course <= 0 || location.speed <= RouteControllerMinimumSpeedThresholdForSnappingUserToRoute, snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
             let calculatedWrappedCourse = wrap((wrappedPointBehind + wrappedPointAhead) / 2, min: 0 , max: 360)
             return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedWrappedCourse, speed: location.speed, timestamp: location.timestamp)
+        } else if isQualityLocation(location: rawLocation) {
+            return nil
         }
 
         guard differenceBetweenAngles(absoluteDirection, location.course) < RouteControllerMaxManipulatedCourseAngle else {
@@ -313,6 +330,35 @@ open class RouteController: NSObject {
         }
 
         return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+    }
+    
+    /**
+     Checks whether a new location is quality by comparing it to the previous location.
+     
+     We're attempting to throw out coordinates that have a large difference in location or time.
+     */
+    func isQualityLocation(location: CLLocation?) -> Bool {
+        
+        // Any time we return in this func, reset the values.
+        defer {
+            if let location = location {
+                if let lastLocation = lastQualityLocationInterval {
+                    lastQualityLocationInterval?.speedDelta = location.speed - lastLocation.location.speed
+                }
+                
+                lastQualityLocationInterval?.location = location
+            }
+        }
+        
+        guard let lastLocation = lastQualityLocationInterval, let location = rawLocation else {
+                return false
+        }
+        
+        guard location.speed <= lastLocation.speedDelta * RouteControllerDifferenceInSpeedDeltaMultiplier else {
+            return false
+        }
+        
+        return true
     }
     
     /**
