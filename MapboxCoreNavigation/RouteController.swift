@@ -796,7 +796,9 @@ struct SessionState {
     
     init(currentRoute: Route, originalRoute: Route) {
         self.currentRoute = currentRoute
+        self.currentRequestIdentifier = currentRoute.routeIdentifier
         self.originalRoute = originalRoute
+        self.originalRequestIdentifier = originalRoute.routeIdentifier
     }
 }
 
