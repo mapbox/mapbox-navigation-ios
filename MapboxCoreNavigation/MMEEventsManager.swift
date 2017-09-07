@@ -49,8 +49,8 @@ struct EventDetails {
         simulation = routeController.locationManager is ReplayLocationManager || routeController.locationManager is SimulatedLocationManager ? true : false
         
         sessionIdentifier = session.identifier.uuidString
-        originalRequestIdentifier = nil
-        requestIdentifier = nil
+        originalRequestIdentifier = session.originalRoute.routeIdentifier
+        requestIdentifier = routeController.routeProgress.route.routeIdentifier
         
         if let location = routeController.locationManager.location {
             coordinate = location.coordinate
