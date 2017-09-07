@@ -787,18 +787,13 @@ struct SessionState {
     var lastRerouteDate: Date?
     
     var currentRoute: Route
-    var currentRequestIdentifier: String?
-    
     var originalRoute: Route
-    var originalRequestIdentifier: String?
     
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
     
     init(currentRoute: Route, originalRoute: Route) {
         self.currentRoute = currentRoute
-        self.currentRequestIdentifier = currentRoute.routeIdentifier
         self.originalRoute = originalRoute
-        self.originalRequestIdentifier = originalRoute.routeIdentifier
     }
 }
 
