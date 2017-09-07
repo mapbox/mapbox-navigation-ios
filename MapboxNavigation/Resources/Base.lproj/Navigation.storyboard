@@ -799,12 +799,12 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l2B-fb-Dkb" customClass="MBCancelButton">
-                            <rect key="frame" x="307" y="23" width="54" height="40"/>
+                            <rect key="frame" x="291" y="0.0" width="80" height="80"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="40" id="xK5-tu-mEt"/>
+                                <constraint firstAttribute="width" constant="80" id="sHL-pF-e2v"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
-                            <state key="normal" title="Cancel">
+                            <state key="normal" image="cancel">
                                 <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
                             </state>
                             <connections>
@@ -818,15 +818,16 @@
                         <constraint firstItem="rwq-3y-Mg0" firstAttribute="leading" secondItem="HRl-MT-kqB" secondAttribute="trailing" constant="10" id="A39-Lw-WQZ"/>
                         <constraint firstItem="HRl-MT-kqB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="82H-sg-SOL" secondAttribute="trailing" constant="8" id="OtZ-1G-SqL"/>
                         <constraint firstAttribute="trailing" secondItem="nqY-xY-Iz0" secondAttribute="trailing" id="ZcK-R7-EhS"/>
+                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="top" secondItem="eu5-2S-xpm" secondAttribute="top" id="Znc-om-TZ9"/>
                         <constraint firstItem="nqY-xY-Iz0" firstAttribute="top" secondItem="82H-sg-SOL" secondAttribute="bottom" constant="-2" id="f0p-GJ-0lq"/>
                         <constraint firstItem="nqY-xY-Iz0" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" id="fRw-8W-bWR"/>
-                        <constraint firstAttribute="trailing" secondItem="l2B-fb-Dkb" secondAttribute="trailing" constant="10" id="gYj-gb-phz"/>
+                        <constraint firstAttribute="trailing" secondItem="l2B-fb-Dkb" secondAttribute="trailing" id="gYj-gb-phz"/>
                         <constraint firstItem="nqY-xY-Iz0" firstAttribute="centerY" secondItem="eu5-2S-xpm" secondAttribute="centerY" constant="3" id="hEr-C1-pKd"/>
-                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="centerY" secondItem="nqY-xY-Iz0" secondAttribute="centerY" id="hfE-Nk-gHi"/>
                         <constraint firstItem="HRl-MT-kqB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6dE-ya-mrD" secondAttribute="trailing" constant="8" id="iFP-th-huK"/>
                         <constraint firstAttribute="bottom" secondItem="6dE-ya-mrD" secondAttribute="bottom" constant="6" id="mRY-1L-KXm"/>
                         <constraint firstItem="rwq-3y-Mg0" firstAttribute="centerY" secondItem="nqY-xY-Iz0" secondAttribute="centerY" id="nvN-Qm-1MG"/>
-                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="leading" secondItem="rwq-3y-Mg0" secondAttribute="trailing" constant="10" id="pyV-PJ-nTT"/>
+                        <constraint firstItem="l2B-fb-Dkb" firstAttribute="leading" secondItem="rwq-3y-Mg0" secondAttribute="trailing" id="pyV-PJ-nTT"/>
+                        <constraint firstAttribute="bottom" secondItem="l2B-fb-Dkb" secondAttribute="bottom" id="s1k-9z-MQu"/>
                         <constraint firstItem="HRl-MT-kqB" firstAttribute="centerY" secondItem="rwq-3y-Mg0" secondAttribute="centerY" id="szt-mH-qz4"/>
                         <constraint firstItem="6dE-ya-mrD" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="10" id="tad-qV-G1m"/>
                         <constraint firstItem="82H-sg-SOL" firstAttribute="leading" secondItem="eu5-2S-xpm" secondAttribute="leading" constant="10" id="zt1-Eq-Tuz"/>
@@ -843,6 +844,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="cancel" width="20" height="20"/>
         <image name="feedback" width="20" height="20"/>
         <image name="feedback_car_crash" width="38" height="33"/>
         <image name="overview" width="16" height="14"/>
