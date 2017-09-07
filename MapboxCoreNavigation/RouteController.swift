@@ -262,12 +262,18 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation?
     
-    public var modifiedRerouteDistanceGivenIntersectionLocation: CLLocationDistance {
-        guard let userIsNearAnIntersection = routeProgress.currentLegProgress.currentStepProgress.userIsNearAnIntersection else {
-            return RouteControllerMaximumDistanceBeforeRecalculating
-        }
+    public var reroutingTolerance: CLLocationDistance {
+        guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }
+        guard let userLocation = rawLocation else { return RouteControllerMaximumDistanceBeforeRecalculating }
         
-        return userIsNearAnIntersection ? RouteControllerMaximumDistanceBeforeRecalculating / 2 : RouteControllerMaximumDistanceBeforeRecalculating
+        for intersection in intersections {
+            let distanceToIntersection = distance(along: routeProgress.currentLegProgress.currentStepProgress.step.coordinates!, from: userLocation.coordinate, to: intersection.location)
+            
+            if distanceToIntersection <= 20 {
+                return RouteControllerMaximumDistanceBeforeRecalculating / 2
+            }
+        }
+        return RouteControllerMaximumDistanceBeforeRecalculating
     }
     
     /**
@@ -498,7 +504,7 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
-        monitorIntersectionProgress(location)
+        updateDistanceToIntersection(from: location)
         monitorStepProgress(location)
         
         // Check for faster route given users current location
@@ -526,8 +532,7 @@ extension RouteController: CLLocationManagerDelegate {
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        let radius = max(modifiedRerouteDistanceGivenIntersectionLocation, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
-
+        let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
         // If the user is moving away from the maneuver location
@@ -685,7 +690,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    func monitorIntersectionProgress(_ location: CLLocation) {
+    func updateDistanceToIntersection(from location: CLLocation) {
         guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         
@@ -696,16 +701,8 @@ extension RouteController: CLLocationManagerDelegate {
         
         routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
         
-        // Don't search for previous intersections
-        for intersection in intersections.suffix(from: currentStepProgress.intersectionIndex) {
-            let dist = distance(along: currentStepProgress.step.coordinates!, from: location.coordinate, to: intersection.location)
-            // Check if the user is at an intersection
-            if dist <= RouteControllerManeuverZoneRadius {
-                routeProgress.currentLegProgress.currentStepProgress.userIsNearAnIntersection = true
-                routeProgress.currentLegProgress.currentStepProgress.intersectionIndex += 1
-            } else {
-                routeProgress.currentLegProgress.currentStepProgress.userIsNearAnIntersection = false
-            }
+        if let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
+            routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = distance(along: currentStepProgress.step.coordinates!, from: location.coordinate, to: upcomingIntersection.location)
         }
     }
     

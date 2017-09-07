@@ -425,7 +425,7 @@ open class RouteStepProgress: NSObject {
     
     
     /**
-     If true, the user is near an intersection on the current step.
+     The distance in meters the user is to the next intersection they will pass through.
      */
-    public var userIsNearAnIntersection: Bool?
+    public var userDistanceToUpcomingIntersection: CLLocationDistance?
 }
