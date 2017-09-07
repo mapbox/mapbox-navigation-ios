@@ -125,7 +125,7 @@ open class DayStyle: Style {
         ResumeButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         ResumeButton.appearance().tintColor = .defaultPrimaryText
         
-        CancelButton.appearance().textColor = .defaultPrimaryText
+        CancelButton.appearance().tintColor = .defaultPrimaryText
         
         UIApplication.shared.statusBarStyle = statusBarStyle ?? .default
     }
@@ -179,6 +179,6 @@ open class NightStyle: DayStyle {
         ResumeButton.appearance().backgroundColor = backgroundColor
         ResumeButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
-        CancelButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        CancelButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
     }
 }
