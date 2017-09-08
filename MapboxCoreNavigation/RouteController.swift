@@ -267,9 +267,9 @@ open class RouteController: NSObject {
         guard let userLocation = rawLocation else { return RouteControllerMaximumDistanceBeforeRecalculating }
         
         for intersection in intersections {
-            let distanceToIntersection = distance(along: routeProgress.currentLegProgress.currentStepProgress.step.coordinates!, from: userLocation.coordinate, to: intersection.location)
+            let absoluteDistanceToIntersection = userLocation.coordinate - intersection.location
             
-            if distanceToIntersection <= RouteControllerManeuverZoneRadius {
+            if absoluteDistanceToIntersection <= RouteControllerManeuverZoneRadius {
                 return RouteControllerMaximumDistanceBeforeRecalculating / 2
             }
         }
