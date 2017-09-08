@@ -28,7 +28,7 @@ class RouteTableViewController: UIViewController {
         tableView.estimatedRowHeight = 80
     }
     
-    func showETA(routeProgress: RouteProgress) {
+    func updateETA(routeProgress: RouteProgress) {
         let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
         headerView.arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate!)
         
@@ -84,15 +84,7 @@ class RouteTableViewController: UIViewController {
             }
         }
     }
-    
-    func notifyDidChange(routeProgress: RouteProgress) {
-        showETA(routeProgress: routeProgress)
-    }
-    
-    func notifyDidReroute() {
-        tableView.reloadData()
-    }
-    
+        
     func notifyAlertLevelDidChange() {
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             tableView.reloadRows(at: visibleIndexPaths, with: .fade)
