@@ -262,6 +262,20 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation?
     
+    public var reroutingTolerance: CLLocationDistance {
+        guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }
+        guard let userLocation = rawLocation else { return RouteControllerMaximumDistanceBeforeRecalculating }
+        
+        for intersection in intersections {
+            let absoluteDistanceToIntersection = userLocation.coordinate - intersection.location
+            
+            if absoluteDistanceToIntersection <= RouteControllerManeuverZoneRadius {
+                return RouteControllerMaximumDistanceBeforeRecalculating / 2
+            }
+        }
+        return RouteControllerMaximumDistanceBeforeRecalculating
+    }
+    
     /**
      The most recently received user location, snapped to the route line.
      
@@ -490,6 +504,7 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
         
+        updateDistanceToIntersection(from: location)
         monitorStepProgress(location)
         
         // Check for faster route given users current location
@@ -512,13 +527,12 @@ extension RouteController: CLLocationManagerDelegate {
      If the user is not on the route, they should be rerouted.
      */
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        
         // Find future location of user
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        let radius = max(RouteControllerMaximumDistanceBeforeRecalculating,
-                         location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
-
+        let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
         // If the user is moving away from the maneuver location
@@ -673,6 +687,22 @@ extension RouteController: CLLocationManagerDelegate {
             }
             
             return completion(route, error)
+        }
+    }
+    
+    func updateDistanceToIntersection(from location: CLLocation) {
+        guard var intersections = routeProgress.currentLegProgress.currentStepProgress.step.intersections else { return }
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        
+        // The intersections array does not include the upcoming maneuver intersection.
+        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, let upcomingIntersection = upcomingStep.intersections, let firstUpcomingIntersection = upcomingIntersection.first {
+            intersections += [firstUpcomingIntersection]
+        }
+        
+        routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection = intersections
+        
+        if let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
+            routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = distance(along: currentStepProgress.step.coordinates!, from: location.coordinate, to: upcomingIntersection.location)
         }
     }
     
