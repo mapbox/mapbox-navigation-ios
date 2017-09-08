@@ -290,7 +290,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         super.init(coder: aDecoder)
     }
     
-    var updateETAInfoTimer: Timer!
+    var updateETATimer: Timer?
     
     required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
         fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
@@ -455,12 +455,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         }
     }
     
-    func ETAIsStale() {
+    func updateETA() {
         tableViewController?.updateETA(routeProgress: routeController.routeProgress)
     }
     
     func resetETATimer() {
-       updateETAInfoTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(ETAIsStale), userInfo: nil, repeats: true)
+       updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
     
     func forceRefreshAppearanceIfNeeded() {
