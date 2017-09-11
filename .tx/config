@@ -33,5 +33,5 @@ source_lang = en
 
 [mapbox-navigation-ios.navigationstrings]
 file_filter = MapboxNavigation/Resources/<lang>.lproj/Navigation.strings
-source_file = MapboxNavigation/Resources/en.lproj/Navigation.strings
+source_file = MapboxNavigation/Resources/Base.lproj/Navigation.strings
 source_lang = en
