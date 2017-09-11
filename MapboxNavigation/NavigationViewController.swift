@@ -391,6 +391,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
+        updateETATimer?.invalidate()
         updateETATimer = nil
         routeController.suspendLocationUpdates()
     }
