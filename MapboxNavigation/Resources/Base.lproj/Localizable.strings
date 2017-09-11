@@ -1,4 +1,7 @@
-﻿/* Feedback type for Accident */
+﻿/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Faster Route Found";
+
+/* Feedback type for Accident */
 "FEEDBACK_ACCIDENT" = "Accident";
 
 /* Feedback type for Closure */
