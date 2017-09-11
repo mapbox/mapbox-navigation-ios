@@ -176,22 +176,26 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
         
         let controller = FeedbackViewController.loadFromStoryboard()
-
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
-            self?.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
-            self?.dismiss(animated: true) {
+            guard let strongSelf = self else { return }
+            strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
+            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
+            strongSelf.dismiss(animated: true) {
                 DialogViewController.present(on: parent)
             }
         }
         
         controller.dismissFeedbackHandler = { [weak self] in
-            self?.routeController.cancelFeedback(feedbackId: feedbackId)
-            self?.dismiss(animated: true, completion: nil)
+            guard let strongSelf = self else { return }
+            strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
+            strongSelf.routeController.cancelFeedback(feedbackId: feedbackId)
+            strongSelf.dismiss(animated: true, completion: nil)
         }
         
         parent.present(controller, animated: true, completion: nil)
+        delegate?.mapViewControllerDidOpenFeedback(self)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -614,4 +618,8 @@ protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
+    
+    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
+    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
+    func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
 }

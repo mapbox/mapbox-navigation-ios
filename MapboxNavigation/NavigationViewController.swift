@@ -133,6 +133,25 @@ public protocol NavigationViewControllerDelegate {
      The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof).
      */
     @objc optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
+    
+    /**
+     Called when the user opens the feedback form.
+     */
+    @objc optional func navigationViewControllerDidOpenFeedback(_ viewController: NavigationViewController)
+    
+    /**
+     Called when the user dismisses the feedback form.
+     */
+    @objc optional func navigationViewControllerDidCancelFeedback(_ viewController: NavigationViewController)
+    
+    /**
+     Called when the user sends feedback.
+     
+     - parameter viewController: The navigation view controller that reported the feedback.
+     - parameter feedbackId: A UUID string used to identify the feedback event.
+     - parameter feedbackType: The type of feedback event that was sent.
+     */
+    @objc optional func navigationViewController(_ viewController: NavigationViewController, didSend feedbackId: String, feedbackType: FeedbackType)
 }
 
 /**
@@ -532,6 +551,18 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return navigationDelegate?.navigationMapView?(mapView, viewFor: annotation)
+    }
+    
+    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController) {
+        navigationDelegate?.navigationViewControllerDidOpenFeedback?(self)
+    }
+    
+    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController) {
+        navigationDelegate?.navigationViewControllerDidCancelFeedback?(self)
+    }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType) {
+        navigationDelegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
     }
 }
 
