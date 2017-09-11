@@ -559,11 +559,11 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         
         updateLaneViews(step: step, alertLevel: .high)
 
-        
         if !isInOverviewMode {
             if didSwipe, step != routeController.routeProgress.currentLegProgress.upComingStep {
+                mapView.tracksUserCourse = false
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
-            } else if mapView.userTrackingMode != .followWithCourse {
+            } else if !mapView.tracksUserCourse {
                 view.layoutIfNeeded()
                 mapView.camera = tiltedCamera
                 mapView.tracksUserCourse = true

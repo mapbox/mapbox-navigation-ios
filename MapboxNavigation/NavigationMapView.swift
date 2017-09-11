@@ -97,13 +97,17 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
             return
         }
         
-        let point = targetPoint
-        let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
-        let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 1000, pitch: 45, heading: location.course)
-        
-        let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
-        let duration: TimeInterval = animated ? 1 : 0
-        setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+        if tracksUserCourse {
+            let point = targetPoint
+            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
+            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 1000, pitch: 45, heading: location.course)
+            
+            let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
+            let duration: TimeInterval = animated ? 1 : 0
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+        } else {
+            userCourseView?.center = convert(location.coordinate, toPointTo: self)
+        }
     }
     
     var targetPoint: CGPoint {
@@ -151,11 +155,9 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
                     userCourseView = UserCourseView()
                     addSubview(userCourseView!)
                 }
-                userCourseView?.isHidden = false
             } else {
                 tracksUserCourse = false
                 showsUserLocation = true
-                userCourseView?.isHidden = true
             }
         }
     }
