@@ -51,6 +51,26 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
     dynamic public var trafficSevereColor: UIColor = .trafficSevere
     dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        makeGestureRecognizersRespectCourseTracking()
+    }
+    
+    public required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
+        
+        makeGestureRecognizersRespectCourseTracking()
+    }
+    
+    /** Modifies the gesture recognizers to also disable course tracking. */
+    func makeGestureRecognizersRespectCourseTracking() {
+        for gestureRecognizer in gestureRecognizers ?? []
+            where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
+                gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
+        }
+    }
+    
     var showsRoute: Bool {
         get {
             return style?.layer(withIdentifier: routeLayerIdentifier) != nil
@@ -89,6 +109,10 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
+    
+    @objc func disableUserCourseTracking() {
+        tracksUserCourse = false
+    }
     
     public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         animatesUserLocation = animated
