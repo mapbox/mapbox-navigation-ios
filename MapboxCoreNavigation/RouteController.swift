@@ -167,6 +167,8 @@ open class RouteController: NSObject {
     var sessionState:SessionState
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
+    var isFirstLocationUpdate = true
+    
     /**
      Intializes a new `RouteController`.
      
@@ -431,10 +433,12 @@ extension RouteController: CLLocationManagerDelegate {
         
         sessionState.pastLocations.push(location)
         
-        guard location.isQualified else {
+        guard location.isQualified || isFirstLocationUpdate else {
             delegate?.routeController?(self, didDiscard: location)
             return
         }
+        
+        isFirstLocationUpdate = false
         
         delegate?.routeController?(self, didUpdate: [location])
 
