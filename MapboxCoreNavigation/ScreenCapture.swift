@@ -9,7 +9,7 @@ extension UIWindow {
         
         UIGraphicsBeginImageContextWithOptions(frame.size, isOpaque, UIScreen.main.scale)
         
-        drawHierarchy(in: bounds, afterScreenUpdates: true)
+        drawHierarchy(in: bounds, afterScreenUpdates: false)
         
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
         
