@@ -5,7 +5,18 @@ import Mapbox
 let PuckSize: CGFloat = 45
 let ArrowSize = PuckSize * 0.6
 
-class UserCourseView: UIView {
+/**
+ A view that represents the user’s location and course on a `NavigationMapView`.
+ */
+@objc(MBUserCourseView)
+public protocol UserCourseView {
+    /**
+     Updates the view to reflect the given location and other camera properties.
+     */
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool)
+}
+
+class UserPuckCourseView: UIView, UserCourseView {
     
     var puckDot: CALayer?
     var puckArrow: CAShapeLayer?

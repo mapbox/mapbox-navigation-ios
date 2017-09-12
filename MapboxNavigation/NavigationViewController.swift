@@ -130,7 +130,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Returns a view object to mark the given point annotation object on the map.
      
-     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof).
+     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof). Note that, when `NavigationMapView.tracksUserCourse` is set to `true`, the map view uses a distinct user course view; to customize it, set the `NavigationMapView.userCourseView` property of the map view returned by this view controller’s `mapView` property.
      */
     @objc optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
     
