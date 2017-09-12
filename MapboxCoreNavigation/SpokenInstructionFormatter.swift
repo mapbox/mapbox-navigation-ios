@@ -77,10 +77,10 @@ public class SpokenInstructionFormatter: NSObject {
             }
         } else if alertLevel == .high && upcomingStepDuration < linkedInstructionMultiplier {
             // If the upcoming step is an .exitRoundabout or .exitRotary, don't link the instruction
-            if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverType == .exitRoundabout || upcomingStep.maneuverType == .exitRotary {
+            if let followOnStep = routeProgress.currentLegProgress.followOnStep, followOnStep.maneuverType == .exitRoundabout || followOnStep.maneuverType == .exitRotary {
                 text = upComingInstruction
             } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "%@,     %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
+                text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
             }
         } else if alertLevel != .high {
             text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
