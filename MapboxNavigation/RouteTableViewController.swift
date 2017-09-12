@@ -118,7 +118,7 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         let majorWays = leg.name.components(separatedBy: ", ")
         
         if let destinationName = destinationName?.nonEmptyString, majorWays.count > 1 {
-            let summary = String.localizedStringWithFormat(NSLocalizedString("LEG_MAJOR_WAYS_FORMAT", bundle: .mapboxNavigation, value: "%@ and %@", comment: "Format for displaying the first two major ways"), majorWays[0], majorWays[1])
+            let summary = String.localizedConjunction(lhs: majorWays[0], rhs: majorWays[1], rule: .succeedingAIsound)
             return String.localizedStringWithFormat(NSLocalizedString("WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT", bundle: .mapboxNavigation, value: "%@, via %@", comment: "Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations"), destinationName, summary)
         } else if let sourceName = sourceName?.nonEmptyString, let destinationName = destinationName?.nonEmptyString {
             return String.localizedStringWithFormat(NSLocalizedString("WAYPOINT_SOURCE_DESTINATION_FORMAT", bundle: .mapboxNavigation, value: "%@ and %@", comment: "Format for displaying start and endpoint for leg; 1 = source ; 2 = destination"), sourceName, destinationName)
