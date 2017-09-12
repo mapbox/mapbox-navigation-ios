@@ -167,7 +167,7 @@ open class RouteController: NSObject {
     var sessionState:SessionState
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    var isFirstLocationUpdate = true
+    var hasFoundOneQualifiedLocation = false
     
     /**
      Intializes a new `RouteController`.
@@ -433,13 +433,15 @@ extension RouteController: CLLocationManagerDelegate {
         
         sessionState.pastLocations.push(location)
         
-        guard location.isQualified || isFirstLocationUpdate else {
+        if location.isQualified {
+            hasFoundOneQualifiedLocation = true
+        }
+        
+        if !location.isQualified && hasFoundOneQualifiedLocation {
             delegate?.routeController?(self, didDiscard: location)
             return
         }
-        
-        isFirstLocationUpdate = false
-        
+
         delegate?.routeController?(self, didUpdate: [location])
 
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
