@@ -60,7 +60,25 @@ class RouteMapViewController: UIViewController {
     weak var routeController: RouteController!
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
-    var isInOverviewMode = false
+    var isInOverviewMode = false {
+        didSet {
+            if isInOverviewMode {
+                overviewButton.isHidden = true
+                recenterButton.isHidden = false
+                wayNameView.isHidden = true
+                mapView.logoView.isHidden = true
+            } else {
+                overviewButton.isHidden = false
+                recenterButton.isHidden = true
+                mapView.logoView.isHidden = false
+            }
+            
+            if let controller = routePageViewController.currentManeuverPage {
+                controller.step = currentStep
+                routePageViewController.updateManeuverViewForStep()
+            }
+        }
+    }
     var currentLegIndexMapped = 0
 
     override func viewDidLoad() {
@@ -102,6 +120,7 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
+        recenter(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -126,31 +145,14 @@ class RouteMapViewController: UIViewController {
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.camera = tiltedCamera
         mapView.tracksUserCourse = true
-        mapView.logoView.isHidden = false
         
-        guard let controller = routePageViewController.currentManeuverPage else { return }
-        controller.step = currentStep
-        routePageViewController.updateManeuverViewForStep()
+        isInOverviewMode = false
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
-        if isInOverviewMode {
-            overviewButton.isHidden = false
-            mapView.logoView.isHidden = false
-            mapView.camera = tiltedCamera
-            mapView.tracksUserCourse = true
-        } else {
-            wayNameView.isHidden = true
-            overviewButton.isHidden = true
-            mapView.logoView.isHidden = true
-            updateVisibleBounds()
-        }
+        updateVisibleBounds()
 
-        isInOverviewMode = !isInOverviewMode
-        
-        guard let controller = routePageViewController.currentManeuverPage else { return }
-        controller.step = currentStep
-        routePageViewController.updateManeuverViewForStep()
+        isInOverviewMode = true
     }
     
     @IBAction func toggleMute(_ sender: UIButton) {
@@ -205,7 +207,7 @@ class RouteMapViewController: UIViewController {
         let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
-        mapView.userTrackingMode = .none
+        mapView.tracksUserCourse = false
         let camera = mapView.camera
         camera.pitch = 0
         camera.heading = 0
@@ -493,33 +495,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 // MARK: MGLMapViewDelegate
 
 extension RouteMapViewController: MGLMapViewDelegate {
-    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        var mode = mode
-        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
-            mode = .followWithCourse
-        }
-        if isInOverviewMode && mode != .followWithCourse {
-            recenterButton.isHidden = false
-            mapView.logoView.isHidden = true
-            wayNameView.isHidden = true
-        } else {
-            if mode != .followWithCourse {
-                recenterButton.isHidden = false
-                mapView.logoView.isHidden = true
-            } else {
-                recenterButton.isHidden = true
-                mapView.logoView.isHidden = false
-            }
-        }
-        
-        if isInOverviewMode {
-            overviewButton.isHidden = false
-            recenterButton.isHidden = true
-            mapView.logoView.isHidden = false
-            isInOverviewMode = false
-        }
-    }
-
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         var userTrackingMode = mapView.userTrackingMode
         if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {

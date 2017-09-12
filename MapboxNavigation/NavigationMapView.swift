@@ -170,6 +170,10 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
             if tracksUserCourse {
                 showsUserLocation = true
             }
+            
+            if let location = userLocationForCourseTracking {
+                updateCourseTracking(location: location, animated: true)
+            }
         }
     }
     
