@@ -77,34 +77,28 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
         }
     }
     
-    open override var delegate: MGLMapViewDelegate? {
-        didSet {
-            refreshShowsUserLocation()
-        }
-    }
-    
-    public weak var navigationMapDelegate: NavigationMapViewDelegate? {
-        didSet {
-            refreshShowsUserLocation()
-        }
-    }
+    public weak var navigationMapDelegate: NavigationMapViewDelegate?
     
     open override var showsUserLocation: Bool {
         get {
+            if tracksUserCourse || userLocationForCourseTracking != nil {
+                return !(userCourseView?.isHidden ?? true)
+            }
             return super.showsUserLocation
         }
-        
         set {
-            super.showsUserLocation = newValue
+            if tracksUserCourse || userLocationForCourseTracking != nil {
+                super.showsUserLocation = false
+                
+                if userCourseView == nil {
+                    userCourseView = UserPuckCourseView()
+                }
+                userCourseView?.isHidden = !newValue
+            } else {
+                userCourseView?.isHidden = true
+                super.showsUserLocation = newValue
+            }
         }
-    }
-    
-    /**
-     Force MGLMapView to ask its delegate for the user location annotation’s view, in case that previously happened before there was a delegate.
-     */
-    func refreshShowsUserLocation() {
-        showsUserLocation = false
-        showsUserLocation = true
     }
     
     var userLocationForCourseTracking: CLLocation?
@@ -142,7 +136,9 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
         super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
         
         guard let location = userLocationForCourseTracking else { return }
-        self.userCourseView?.update(location: location, pitch: camera.pitch, direction: direction, animated: false)
+        if let userCourseView = userCourseView as? UserCourseView {
+            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: false)
+        }
         let userPoint = self.convert(location.coordinate, toPointTo: self)
         
         if animatesUserLocation {
@@ -172,27 +168,29 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
     var tracksUserCourse: Bool = false {
         didSet {
             if tracksUserCourse {
-                tracksUserCourse = true
-                showsUserLocation = false
-                
-                if userCourseView == nil {
-                    userCourseView = UserCourseView()
-                    addSubview(userCourseView!)
-                }
-            } else {
-                tracksUserCourse = false
                 showsUserLocation = true
             }
         }
     }
     
-    var userCourseView: UserCourseView?
+    /**
+     A `UIView` used to indicate the user’s location and course on the map.
+     
+     If the view conforms to `UserCourseView`, its `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
+     */
+    public var userCourseView: UIView? {
+        didSet {
+            if let userCourseView = userCourseView {
+                addSubview(userCourseView)
+            }
+        }
+    }
     
     var userCourseViewCenter: CGPoint {
         var edgePaddingForFollowingWithCourse = UIEdgeInsets(top: 50, left: 0, bottom: 50, right: 0)
-        if let annotationView = userCourseView {
-            edgePaddingForFollowingWithCourse.top += annotationView.frame.height
-            edgePaddingForFollowingWithCourse.bottom += annotationView.frame.height
+        if let userCourseView = userCourseView {
+            edgePaddingForFollowingWithCourse.top += userCourseView.frame.height
+            edgePaddingForFollowingWithCourse.bottom += userCourseView.frame.height
         }
         
         let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
