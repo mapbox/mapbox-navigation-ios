@@ -76,8 +76,8 @@ public class SpokenInstructionFormatter: NSObject {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxCoreNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             }
         } else if alertLevel == .high && upcomingStepDuration < linkedInstructionMultiplier {
-            // If the user is entering the roundabout and there is exit information, don't link instruction
-            if let upcomingStep = routeProgress.currentLegProgress.upComingStep, (upcomingStep.maneuverType == .takeRotary || upcomingStep.maneuverType == .takeRoundabout) && upcomingStep.exitIndex != nil {
+            // If the upcoming step is an .exitRoundabout or .exitRotary, don't link the instruction
+            if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverType == .exitRoundabout || upcomingStep.maneuverType == .exitRotary {
                 text = upComingInstruction
             } else {
                 text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "%@,     %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
