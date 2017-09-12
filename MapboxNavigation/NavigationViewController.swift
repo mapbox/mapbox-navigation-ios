@@ -176,7 +176,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 routeController.routeProgress = RouteProgress(route: route)
             }
             mapViewController?.notifyDidReroute(route: route)
-            tableViewController?.notifyDidReroute()
+            tableViewController?.updateETA(routeProgress: routeController.routeProgress)
         }
     }
     
@@ -309,6 +309,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         super.init(coder: aDecoder)
     }
     
+    var updateETATimer: Timer?
+    
     required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
         fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
                    "Use init(for:directions:) if you are instantiating programmatically " +
@@ -394,6 +396,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
+        resetETATimer()
         
         applyStyle()
         
@@ -407,6 +410,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
+        updateETATimer?.invalidate()
+        updateETATimer = nil
         routeController.suspendLocationUpdates()
     }
     
@@ -423,12 +428,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func progressDidChange(notification: NSNotification) {
+        resetETATimer()
+        
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
         let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        tableViewController?.notifyDidChange(routeProgress: routeProgress)
+        tableViewController?.updateETA(routeProgress: routeProgress)
         progressBar.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
     }
     
@@ -467,6 +474,14 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 }
             }
         }
+    }
+    
+    func updateETA() {
+        tableViewController?.updateETA(routeProgress: routeController.routeProgress)
+    }
+    
+    func resetETATimer() {
+       updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
     
     func forceRefreshAppearanceIfNeeded() {
@@ -584,7 +599,8 @@ extension NavigationViewController: RouteControllerDelegate {
         scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: route.legs.count)
         
         mapViewController?.notifyDidReroute(route: route)
-        tableViewController?.notifyDidReroute()
+        tableViewController?.tableView.reloadData()
+        tableViewController?.updateETA(routeProgress: routeController.routeProgress)
         
         navigationDelegate?.navigationViewController?(self, didRerouteAlong: route)
     }
