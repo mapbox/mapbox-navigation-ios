@@ -23,6 +23,7 @@ open class NavigationRouteOptions: RouteOptions {
         includesSteps = true
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]
+        includesExitRoundaboutManeuver = true
     }
     
     
