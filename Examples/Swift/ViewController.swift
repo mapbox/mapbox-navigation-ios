@@ -14,7 +14,7 @@ enum ExampleMode {
     case multipleWaypoints
 }
 
-class ViewController: UIViewController, MGLMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
     var waypoints: [Waypoint] = []
     var currentRoute: Route? {
@@ -33,12 +33,18 @@ class ViewController: UIViewController, MGLMapViewDelegate {
 
     var exampleMode: ExampleMode?
     
+    var locManager = CLLocationManager()
+    
     // In this example, we show you how you can create custom UIView that is used to show the user's location.
     // Set `showCustomUserPuck` to true to view the custom user puck.
     var showCustomUserPuck = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        locManager.delegate = self
+        locManager.requestAlwaysAuthorization()
         
         automaticallyAdjustsScrollViewInsets = false
         mapView.delegate = self
