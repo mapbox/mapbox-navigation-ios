@@ -481,7 +481,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func resetETATimer() {
-       updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
+        updateETATimer?.invalidate()
+        updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
     
     func forceRefreshAppearanceIfNeeded() {
