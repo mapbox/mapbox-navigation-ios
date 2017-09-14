@@ -112,6 +112,10 @@ public class DistanceFormatter: LengthFormatter {
         return formattedDistance(distance, modify: &unit)
     }
     
+    public override func string(fromMeters numberInMeters: Double) -> String {
+        return self.string(from: numberInMeters)
+    }
+    
     func formattedDistance(_ distance: CLLocationDistance, modify unit: inout LengthFormatter.Unit) -> String {
         var formattedDistance: String
         if usesMetric {
@@ -132,7 +136,7 @@ public class DistanceFormatter: LengthFormatter {
                     formattedDistance = string(fromValue: distance.feet, unit: unit)
                 }
             } else {
-                formattedDistance = string(fromMeters: distance)
+                formattedDistance = super.string(fromMeters: distance)
             }
         }
         
