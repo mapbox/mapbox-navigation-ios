@@ -33,7 +33,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     var exampleMode: ExampleMode?
     
-    var locManager = CLLocationManager()
+    var locationManager = CLLocationManager()
     
     // In this example, we show you how you can create custom UIView that is used to show the user's location.
     // Set `showCustomUserPuck` to true to view the custom user puck.
@@ -43,8 +43,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         super.viewDidLoad()
         
         
-        locManager.delegate = self
-        locManager.requestAlwaysAuthorization()
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
         
         automaticallyAdjustsScrollViewInsets = false
         mapView.delegate = self
@@ -94,7 +94,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
         
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager)
+        let navigationViewController = NavigationViewController(for: route, locationManager: naviationLocationManager())
         
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -167,7 +167,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         exampleMode = .default
         
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
+        let navigationViewController = NavigationViewController(for: route, locationManager: naviationLocationManager())
         navigationViewController.navigationDelegate = self
         
         present(navigationViewController, animated: true, completion: nil)
@@ -201,13 +201,14 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         let styles = [DayStyle(), CustomNightStyle()]
         
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: locationManager())
+
+        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: naviationLocationManager())
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
     }
     
-    func locationManager() -> NavigationLocationManager {
+    func naviationLocationManager() -> NavigationLocationManager {
         guard let route = currentRoute else { return NavigationLocationManager() }
         return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
@@ -219,7 +220,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         exampleMode = .multipleWaypoints
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
+        let navigationViewController = NavigationViewController(for: route, locationManager: naviationLocationManager())
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
