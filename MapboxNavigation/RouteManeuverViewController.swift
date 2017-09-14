@@ -112,7 +112,7 @@ class RouteManeuverViewController: UIViewController {
         
         distance = distanceRemaining > 5 ? distanceRemaining : 0
         
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             distance = nil
             destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
         } else {

@@ -53,8 +53,7 @@ public class PollyVoiceController: RouteVoiceController {
         guard shouldSpeak(for: notification) == true else { return }
         
         let routeProgresss = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let userDistances = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
-        let instruction = spokenInstructionFormatter.string(routeProgress: routeProgresss, userDistance: userDistances, markUpWithSSML: true)
+        guard let instruction = routeProgresss.currentLegProgress.currentStepProgress.currentSpokenInstruction?.ssmlText else { return }
         
         pollyTask?.cancel()
         audioPlayer?.stop()
@@ -117,7 +116,10 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = voiceId
         }
         
-        input.text = "<speak><amazon:effect name=\"drc\"><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(text)</prosody></amazon:effect></speak>"
+        let removedClosingOpenTag = String(text.characters.dropFirst("<speak>".characters.count).dropLast("</speak>".characters.count))
+        let wrappedText = "<speak><amazon:effect name=\"drc\"><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(removedClosingOpenTag)</prosody></amazon:effect></speak>"
+        
+        input.text = wrappedText
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
