@@ -23,11 +23,6 @@ public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey
 public let RouteControllerAlertLevelDidChangeNotificationRouteProgressKey = MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey
 
 /**
- Key used for accessing the user's snapped distance to the end of the maneuver (CLLocationDistance) from a `RouteControllerAlertLevelDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey = MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey
-
-/**
  Key used for accessing the user's current `CLLocation` from a `RouteControllerWillReroute` notification's `userInfo` dictionary.
  */
 public let RouteControllerNotificationLocationKey = MBRouteControllerNotificationLocationKey
@@ -55,7 +50,7 @@ public let RouteControllerProgressDidChange = Notification.Name(MBRouteControlle
 /**
  Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver.
  */
-public let RouteControllerAlertLevelDidChange = Notification.Name(MBRouteControllerAlertLevelDidChange)
+public let RouteControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
 
 /**
  Emitted when the user has gone off-route and the `RouteController` is about to reroute.
