@@ -205,7 +205,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         let utterance = AVSpeechUtterance(string: text)
         
         // Only localized languages will have a proper fallback voice
-        utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
+        if Locale.preferredLocalLanguageCountryCode == "en-US" {
+            utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+        }
+        if utterance.voice == nil {
+            utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
+        }
         utterance.volume = volume
         
         speechSynth.speak(utterance)
