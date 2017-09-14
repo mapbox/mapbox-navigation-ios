@@ -1,4 +1,10 @@
-﻿/* Indicates a faster route was found */
+﻿/* Format for displaying a conjunction of two words or phrases */
+"CONJUNCTION_FORMAT" = "%1$@ and %2$@";
+
+/* Format for displaying two words or phrases where the right hand side starts with an AI sound */
+"CONJUNCTION_SUCCEEDING_AI_SOUND_FORMAT" = "%1$@ and %2$@";
+
+/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
 
 /* Feedback type for Accident */
@@ -18,9 +24,6 @@
 
 /* Feedback type for Unallowed Turn */
 "FEEDBACK_UNALLOWED_TURN" = "Not Allowed";
-
-/* Format for displaying the first two major ways */
-"LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
