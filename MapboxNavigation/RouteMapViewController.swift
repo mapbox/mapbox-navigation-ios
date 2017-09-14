@@ -289,9 +289,9 @@ class RouteMapViewController: UIViewController {
             routePageViewController(routePageViewController, willTransitionTo: controller, didSwipe: false)
         }
         
-        if let upComingStep = routeProgress.currentLegProgress?.upComingStep, routeProgress.currentLegProgress.alertUserLevel != .arrive {
+        if let upComingStep = routeProgress.currentLegProgress?.upComingStep, !routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             if routePageViewController.currentManeuverPage.step == upComingStep {
-                updateLaneViews(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
+                updateLaneViews(step: upComingStep, durationRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
             }
         }
         
@@ -320,8 +320,8 @@ class RouteMapViewController: UIViewController {
                             right: 0)
     }
     
-    func updateLaneViews(step: RouteStep, alertLevel: AlertLevel) {
-        laneViewsContainerView.updateLaneViews(step: step, alertLevel: alertLevel)
+    func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
+        laneViewsContainerView.updateLaneViews(step: step, durationRemaining: routeController.routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
         
         if laneViewsContainerView.stackView.arrangedSubviews.count > 0 {
             showLaneViews()
@@ -542,7 +542,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        updateLaneViews(step: step, alertLevel: .high)
+        updateLaneViews(step: step, durationRemaining: 0)
 
         if !isInOverviewMode {
             if didSwipe, step != routeController.routeProgress.currentLegProgress.upComingStep {

@@ -17,7 +17,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     var userRoute: Route?
     var simulateLocation = false
     let visualInstructionFormatter = VisualInstructionFormatter()
-    let spokenInstructionFormatter = SpokenInstructionFormatter()
     
     @IBOutlet var mapView: MGLMapView!
     @IBOutlet weak var arrowView: UILabel!
@@ -79,7 +78,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     // When the alert level changes, this signals the user is ready for a voice announcement
     func alertLevelDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let text = spokenInstructionFormatter.string(routeProgress: routeProgress, userDistance: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, markUpWithSSML: false)
 
         let utterance = AVSpeechUtterance(string: text)
         speechSynth.delegate = self

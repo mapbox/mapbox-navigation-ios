@@ -418,12 +418,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
     func progressDidChange(notification: NSNotification) {
@@ -435,12 +435,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.updateETA(routeProgress: routeProgress)
-        progressBar.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
+        progressBar.progress = routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled)
     }
     
     func alertLevelDidChange(notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
         
         mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
         tableViewController?.notifyAlertLevelDidChange()
@@ -449,11 +448,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         // When we give a high alert notification, we want to clear out this notification when completing that step.
         clearStaleNotifications()
         
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
+        if let upComingStep = routeProgress.currentLegProgress.upComingStep, routeProgress.currentLegProgress.currentStepProgress.durationRemaining < RouteControllerHighAlertInterval {
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
         
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
         

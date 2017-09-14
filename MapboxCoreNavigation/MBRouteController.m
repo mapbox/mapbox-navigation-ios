@@ -13,7 +13,7 @@ NSString *const MBRouteControllerNotificationRouteKey       = @"route";
 NSString *const MBRouteControllerNotificationErrorKey       = @"error";
 
 NSString *const MBRouteControllerNotificationProgressDidChange  = @"RouteControllerProgressDidChange";
-NSString *const MBRouteControllerAlertLevelDidChange            = @"RouteControllerAlertLevelDidChange";
+NSString *const MBRouteControllerDidPassSpokenInstructionPoint  = @"RouteControllerDidPassSpokenInstructionPoint";
 NSString *const MBRouteControllerWillReroute                    = @"RouteControllerWillReroute";
 NSString *const MBRouteControllerDidReroute                     = @"RouteControllerDidReroute";
 NSString *const MBRouteControllerDidFailToReroute               = @"RouteControllerDidFailToReroute";
