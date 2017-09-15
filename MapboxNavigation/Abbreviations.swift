@@ -35,25 +35,30 @@ extension String {
     
     /// Returns the string abbreviated only as much as necessary to fit the given width and font.
     func abbreviated(toFit bounds: CGRect, font: UIFont) -> String {
+        let availableSize = CGSize(width: bounds.width, height: .greatestFiniteMagnitude)
         var fittedString = self
-        let stringSize = fittedString.boundingRect(with: CGSize(width: bounds.width, height: .greatestFiniteMagnitude),
-                                                   options: [.usesLineFragmentOrigin, .usesFontLeading],
-                                                   attributes: [NSFontAttributeName: font], context: nil).size
+        var stringSize = fittedSize(with: availableSize, font: font)
         
         if stringSize.width < bounds.width && stringSize.height <= bounds.height {
             return fittedString
         }
         
         fittedString = fittedString.abbreviated(by: [.Classifications])
+        stringSize = fittedString.fittedSize(with: availableSize, font: font)
         if stringSize.width < bounds.width && stringSize.height <= bounds.height {
             return fittedString
         }
         
         fittedString = fittedString.abbreviated(by: [.Directions])
+        stringSize = fittedString.fittedSize(with: availableSize, font: font)
         if stringSize.width < bounds.width && stringSize.height <= bounds.height {
             return fittedString
         }
         
         return fittedString.abbreviated(by: [.Abbreviations])
+    }
+    
+    func fittedSize(with size: CGSize, font: UIFont) -> CGSize {
+        return self.boundingRect(with: size, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSFontAttributeName: font], context: nil).size
     }
 }
