@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxVoice
 
 /**
  The `RouteVoiceController` class provides voice guidance.
@@ -57,10 +58,18 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     */
     public var bufferBetweenAnnouncements: TimeInterval = 3
     
+    public var voice: Voice
+    
+    /**
+     Forces Polly voice to always be of specified type. If not set, a localized voice will be used.
+     */
+    public var globalVoiceId: VoiceId?
+    
     /**
      Default initializer for `RouteVoiceController`.
      */
     override public init() {
+        self.voice = Voice.shared
         super.init()
         
         if !Bundle.main.backgroundModes.contains("audio") {
@@ -157,7 +166,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
         
-        speak(fallbackText, error: nil)
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+        let instruction = spokenInstructionFormatter.string(routeProgress: routeProgress, userDistance: userDistance, markUpWithSSML: true)
+        fallbackText = spokenInstructionFormatter.string(routeProgress: routeProgress, userDistance: userDistance, markUpWithSSML: false)
+        
+        speak(instruction, error: nil)
         startAnnouncementTimer()
     }
     
@@ -194,7 +208,89 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             print(error)
         }
         
-        let utterance = AVSpeechUtterance(string: text)
+        let voiceOptions = VoiceOptions(text: "<speak><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>\(text)</prosody></speak>")
+        voiceOptions.textType = .ssml
+        
+        let langs = Locale.preferredLocalLanguageCountryCode.components(separatedBy: "-")
+        let langCode = langs[0]
+        var countryCode = ""
+        if langs.count > 1 {
+            countryCode = langs[1]
+        }
+        
+        switch (langCode, countryCode) {
+        case ("de", _):
+            voiceOptions.voiceId = .marlene
+        case ("en", "CA"):
+            voiceOptions.voiceId = .joanna
+        case ("en", "GB"):
+            voiceOptions.voiceId = .brian
+        case ("en", "AU"):
+            voiceOptions.voiceId = .nicole
+        case ("en", "IN"):
+            voiceOptions.voiceId = .raveena
+        case ("en", _):
+            voiceOptions.voiceId = .joanna
+        case ("es", _):
+            voiceOptions.voiceId = .miguel
+        case ("fr", _):
+            voiceOptions.voiceId = .celine
+        case ("it", _):
+            voiceOptions.voiceId = .giorgio
+        case ("nl", _):
+            voiceOptions.voiceId = .lotte
+        case ("ru", _):
+            voiceOptions.voiceId = .maxim
+        case ("sv", _):
+            voiceOptions.voiceId = .astrid
+        default:
+            speakFallback(error: "Voice \(langCode)-\(countryCode) not found")
+            return
+        }
+        
+        if let voiceId = globalVoiceId {
+            voiceOptions.voiceId = voiceId
+        }
+        
+        _ = voice.speak(voiceOptions) { [weak self] (data, error) in
+            guard let strongSelf = self else { return }
+            
+            if let error = error {
+                strongSelf.speakFallback(error: error.localizedDescription)
+            }
+            
+            guard let data = data else { return }
+            
+            DispatchQueue.main.async {
+                do {
+                    strongSelf.audioPlayer = try AVAudioPlayer(data: data)
+                    strongSelf.audioPlayer?.delegate = self
+                    
+                    if let audioPlayer = strongSelf.audioPlayer {
+                        try strongSelf.duckAudio()
+                        audioPlayer.volume = strongSelf.volume
+                        audioPlayer.play()
+                    }
+                } catch  let error as NSError {
+                    strongSelf.speakFallback(error: error.localizedDescription)
+                }
+            }
+        }.resume()
+    }
+    
+    func speakFallback(error: String? = nil) {
+        // Note why it failed
+        if let error = error {
+            print(error)
+        }
+        
+        do {
+            try duckAudio()
+        } catch {
+            print(error)
+        }
+        
+        let utterance = AVSpeechUtterance(string: fallbackText)
         
         // Only localized languages will have a proper fallback voice
         if Locale.preferredLocalLanguageCountryCode == "en-US" {
