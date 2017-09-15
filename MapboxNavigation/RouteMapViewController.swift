@@ -86,6 +86,7 @@ class RouteMapViewController: UIViewController {
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         
+        mapView.tracksUserCourse = true
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         
@@ -119,7 +120,6 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
-        recenter(self)
     }
     
     override func viewDidAppear(_ animated: Bool) {
