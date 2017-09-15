@@ -110,6 +110,18 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
     
+    func testPartiallyAbbreviated() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
+        XCTAssert(controller.view != nil)
+        
+        controller.turnArrowView.isEnd = true
+        controller.distance = 482
+        controller.destinationLabel.unabridgedText = "East Market Street"
+        controller.destinationLabel.backgroundColor = .red
+        
+        FBSnapshotVerifyView(controller.view)
+    }
+    
     func testRouteSwitching() {
         let bundle = Bundle(for: MapboxNavigationTests.self)
         var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
