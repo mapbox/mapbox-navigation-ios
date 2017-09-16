@@ -24,11 +24,18 @@ public class RouteStepFormatter: Formatter {
         let modifyValueByKey = { (key: OSRMTextInstructions.TokenType, value: String) -> String in
             switch key {
             case .wayName, .destination, .rotaryName, .code:
-                let stringComponents = value.addingXMLEscapes.components(separatedBy: .whitespaces)
-                
-                return stringComponents.map {
-                    $0.containsDecimalDigit ? $0.asSSMLAddress : $0
-                }.joined(separator: " ")
+                var value = value
+                value.enumerateSubstrings(in: value.wholeRange, options: .byWords) { (substring, substringRange, enclosingRange, stop) in
+                    guard var substring = substring?.addingXMLEscapes else {
+                        return
+                    }
+                    
+                    if substring.containsDecimalDigit {
+                        substring = substring.asSSMLAddress
+                    }
+                    value.replaceSubrange(substringRange, with: substring)
+                }
+                return value
             default:
                 return value
             }

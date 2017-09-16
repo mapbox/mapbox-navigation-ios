@@ -12,9 +12,9 @@ extension String {
         return isEmpty ? nil : self
     }
     
-    var wholeRange: NSRange {
+    var wholeRange: Range<String.Index> {
         get {
-            return NSRange(location: 0, length: characters.count)
+            return range(of: self)!
         }
     }
     
