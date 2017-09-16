@@ -1,4 +1,5 @@
 import MapboxDirections
+import OSRMTextInstructions
 
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
@@ -53,7 +54,17 @@ extension RouteStep {
             return codeSSML
         } else if let nameSSML = nameSSML {
             if let codeSSML = codeSSML {
-                return String.localizedStringWithFormat(NSLocalizedString("NAME_AND_REF", bundle: .mapboxCoreNavigation, value: "%@ (%@)", comment: "Format for speech string; 1 = way name; 2 = way route number"), nameSSML, codeSSML)
+                let phrase = RouteStepFormatter().instructions.phrase(named: .nameWithCode)
+                return phrase.replacingTokens { (tokenType) -> String in
+                    switch tokenType {
+                    case .wayName:
+                        return nameSSML
+                    case .code:
+                        return codeSSML
+                    default:
+                        fatalError("Unexpected token \(tokenType)")
+                    }
+                }
             } else {
                 return nameSSML
             }
