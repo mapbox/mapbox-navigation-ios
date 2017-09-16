@@ -13,9 +13,7 @@ extension String {
     }
     
     var wholeRange: Range<String.Index> {
-        get {
-            return range(of: self)!
-        }
+        return startIndex..<endIndex
     }
     
     typealias Replacement = (of: String, with: String)
