@@ -25,7 +25,7 @@ public class RouteStepFormatter: Formatter {
             switch key {
             case .wayName, .destination, .rotaryName, .code:
                 var value = value
-                value.enumerateSubstrings(in: value.wholeRange, options: .byWords) { (substring, substringRange, enclosingRange, stop) in
+                value.enumerateSubstrings(in: value.wholeRange, options: [.byWords, .reverse]) { (substring, substringRange, enclosingRange, stop) in
                     guard var substring = substring?.addingXMLEscapes else {
                         return
                     }

@@ -19,7 +19,7 @@ extension String {
     /// Returns an abbreviated copy of the string.
     func abbreviated(by options: StringAbbreviationOptions) -> String {
         var abbreviatedString = self
-        abbreviatedString.enumerateSubstrings(in: abbreviatedString.wholeRange, options: .byWords) { (substring, substringRange, enclosingRange, stop) in
+        abbreviatedString.enumerateSubstrings(in: abbreviatedString.wholeRange, options: [.byWords, .reverse]) { (substring, substringRange, enclosingRange, stop) in
             guard var word = substring?.lowercased() else {
                 return
             }
