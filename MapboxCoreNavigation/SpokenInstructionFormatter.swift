@@ -72,8 +72,10 @@ public class SpokenInstructionFormatter: NSObject {
         // We only want to announce this special depature announcement once.
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
         // since the user will be approaching the maneuver location.
-        if routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart {
-            if upcomingStepDuration < linkedInstructionMultiplier {
+        let isDeparture = routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart
+        let didCompleteManeuver = routeProgress.currentLegProgress.currentStep.distance > 2_000 && routeProgress.currentLegProgress.alertUserLevel == .low
+        if isDeparture || didCompleteManeuver {
+            if isDeparture && upcomingStepDuration < linkedInstructionMultiplier {
                 let phrase = escapeIfNecessary(routeStepFormatter.instructions.phrase(named: .twoInstructionsWithDistance))
                 text = phrase.replacingTokens { (tokenType) -> String in
                     switch tokenType {
@@ -88,12 +90,6 @@ public class SpokenInstructionFormatter: NSObject {
                     }
                 }
             } else if let roadDescription = step.roadDescription(markedUpWithSSML: markUpWithSSML) {
-                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE_ON_ROAD", bundle: .mapboxCoreNavigation, value: "Continue on %@ for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance"), roadDescription, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
-            } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxCoreNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
-            }
-        } else if routeProgress.currentLegProgress.currentStep.distance > 2_000 && routeProgress.currentLegProgress.alertUserLevel == .low {
-            if let roadDescription = step.roadDescription(markedUpWithSSML: markUpWithSSML) {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE_ON_ROAD", bundle: .mapboxCoreNavigation, value: "Continue on %@ for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance"), roadDescription, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             } else {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxCoreNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
