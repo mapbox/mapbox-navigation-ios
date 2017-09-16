@@ -22,6 +22,10 @@ public class RouteStepFormatter: Formatter {
         }
         
         let modifyValueByKey = { (key: OSRMTextInstructions.TokenType, value: String) -> String in
+            if key == .wayName || key == .rotaryName, let phoneticName = step.phoneticNames?.first {
+                return value.withSSMLPhoneme(ipaNotation: phoneticName)
+            }
+            
             switch key {
             case .wayName, .destination, .rotaryName, .code:
                 var value = value

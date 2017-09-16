@@ -47,6 +47,10 @@ extension String {
         return "<say-as interpret-as=\"characters\">\(self.addingXMLEscapes)</say-as>"
     }
     
+    func withSSMLPhoneme(ipaNotation: String) -> String {
+        return "<phoneme alphabet=\"ipa\" ph=\"\(ipaNotation.addingXMLEscapes)\">\(self.addingXMLEscapes)</phoneme>"
+    }
+    
     var isUppercased: Bool {
         return self == uppercased() && self != lowercased()
     }
