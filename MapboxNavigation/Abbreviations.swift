@@ -18,19 +18,25 @@ struct StringAbbreviationOptions : OptionSet {
 extension String {
     /// Returns an abbreviated copy of the string.
     func abbreviated(by options: StringAbbreviationOptions) -> String {
-        return characters.split(separator: " ").map(String.init).map { (word) -> String in
-            let lowercaseWord = word.lowercased()
-            if let abbreviation = allAbbrevations!["abbreviations"]![lowercaseWord], options.contains(.Abbreviations) {
-                return abbreviation
+        var abbreviatedString = self
+        abbreviatedString.enumerateSubstrings(in: abbreviatedString.wholeRange, options: [.byWords, .reverse]) { (substring, substringRange, enclosingRange, stop) in
+            guard var word = substring?.lowercased() else {
+                return
             }
-            if let direction = allAbbrevations!["directions"]![lowercaseWord], options.contains(.Directions) {
-                return direction
+            
+            if let abbreviation = allAbbrevations!["abbreviations"]![word], options.contains(.Abbreviations) {
+                word = abbreviation
+            } else if let direction = allAbbrevations!["directions"]![word], options.contains(.Directions) {
+                word = direction
+            } else if let classification = allAbbrevations!["classifications"]![word], options.contains(.Classifications) {
+                word = classification
+            } else {
+                return
             }
-            if let classification = allAbbrevations!["classifications"]![lowercaseWord], options.contains(.Classifications) {
-                return classification
-            }
-            return word
-            }.joined(separator: " ")
+            
+            abbreviatedString.replaceSubrange(substringRange, with: word)
+        }
+        return abbreviatedString
     }
     
     /// Returns the string abbreviated only as much as necessary to fit the given width and font.

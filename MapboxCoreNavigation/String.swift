@@ -12,10 +12,8 @@ extension String {
         return isEmpty ? nil : self
     }
     
-    var wholeRange: NSRange {
-        get {
-            return NSRange(location: 0, length: characters.count)
-        }
+    var wholeRange: Range<String.Index> {
+        return startIndex..<endIndex
     }
     
     typealias Replacement = (of: String, with: String)
