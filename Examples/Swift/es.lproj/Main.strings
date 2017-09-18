@@ -1,4 +1,4 @@
-
+﻿
 /* Class = "UIButton"; normalTitle = "Continue to next destination"; ObjectID = "1vl-kS-fBt"; */
 "1vl-kS-fBt.normalTitle" = "Continuar al próximo destino";
 
@@ -6,10 +6,10 @@
 "dEY-t6-Ect.text" = "Pulsar prolongadamente para elegir un destino";
 
 /* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
-"iiq-Gf-SKY.normalTitle" = "Simular Ubicaciones";
+"iiq-Gf-SKY.normalTitle" = "Simular ubicaciones";
 
 /* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
-"nMe-Tl-a1N.normalTitle" = "Empezar Navegación";
+"nMe-Tl-a1N.normalTitle" = "Empezar navegación";
 
 /* Class = "UINavigationItem"; title = "Mapbox Navigation"; ObjectID = "zxr-0T-HBr"; */
 "zxr-0T-HBr.title" = "Navegación por Mapbox";
