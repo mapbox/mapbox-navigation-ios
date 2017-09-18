@@ -4,4 +4,8 @@
 
 - (void)mapViewDidFinishRenderingFrameFullyRendered:(BOOL)fullyRendered { }
 
+- (CADisplayLink *)displayLink {
+    return [self valueForKey:@"_displayLink"];
+}
+
 @end
