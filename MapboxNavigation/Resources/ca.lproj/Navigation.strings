@@ -1,9 +1,10 @@
 ﻿
-/* Class = "UIButton"; normalTitle = "Resume"; ObjectID = "5HY-QD-dBq"; */
-"5HY-QD-dBq.normalTitle" = "Continua";
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "JMs-xU-Gfd"; */
+"JMs-xU-Gfd.normalTitle" = "Cancel·lar";
 
-/* Class = "UILabel"; text = "Rerouting"; ObjectID = "bUX-dR-1V6"; */
-"bUX-dR-1V6.text" = "Canvi de ruta";
+/* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
+"UpZ-gr-OKM.text" = "Recalculant la ruta…";
 
-/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "l2B-fb-Dkb"; */
-"l2B-fb-Dkb.normalTitle" = "Cancel·la";
+/* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
+"upm-fg-ffn.text" = "Gràcies pel vostre informe!";
+

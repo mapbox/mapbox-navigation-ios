@@ -1,9 +1,10 @@
+﻿
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "JMs-xU-Gfd"; */
+"JMs-xU-Gfd.normalTitle" = "Avbryt";
 
-/* Class = "UIButton"; normalTitle = "Resume"; ObjectID = "5HY-QD-dBq"; */
-"5HY-QD-dBq.normalTitle" = "Återuppta";
+/* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
+"UpZ-gr-OKM.text" = "Uppdaterar rutt…";
 
-/* Class = "UILabel"; text = "Rerouting"; ObjectID = "bUX-dR-1V6"; */
-"bUX-dR-1V6.text" = "Omdirigerar";
+/* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
+"upm-fg-ffn.text" = "Tack för din feedback!";
 
-/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "l2B-fb-Dkb"; */
-"l2B-fb-Dkb.normalTitle" = "Avbryt";

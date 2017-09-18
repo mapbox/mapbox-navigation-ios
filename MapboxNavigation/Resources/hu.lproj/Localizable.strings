@@ -1,2 +1,30 @@
-﻿/* Format string for less than; 1 = duration remaining */
-"LESS_THAN" = "<%@";
+﻿/* Feedback type for Accident */
+"FEEDBACK_ACCIDENT" = "Baleset";
+
+/* Feedback type for Closure */
+"FEEDBACK_CLOSURE" = "Lezárás";
+
+/* Feedback type for Confusing */
+"FEEDBACK_CONFUSING" = "Megtévesztő";
+
+/* Feedback type for Hazard */
+"FEEDBACK_HAZARD" = "Veszélyhelyzet";
+
+/* Feedback type for Other Issue */
+"FEEDBACK_OTHER" = "Más probléma";
+
+/* Feedback type for Unallowed Turn */
+"FEEDBACK_UNALLOWED_TURN" = "Nem engedélyezett";
+
+/* Format string for less than; 1 = duration remaining */
+"LESS_THAN" = "%@";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Újratervezés...";
+
+/* Button title for resume tracking */
+"RESUME" = "Resume";
+
+/* Inform user about weak GPS signal */
+"WEAK_GPS" = "Weak GPS signal";
+

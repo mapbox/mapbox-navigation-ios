@@ -1,30 +1,24 @@
-/* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Tai nạn";
+﻿/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
+"CONTINUE" = "Chạy tiếp cho %@";
 
-/* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Chặn đường";
+/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
+"CONTINUE_ON_ROAD" = "Chạy tiếp trên %1$@ cho %2$@";
 
-/* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Khó hiểu";
+/* Format for speech string; 1 = current instruction; 2 = the following linked instruction */
+"LINKED_UTTERANCE_FORMAT" = "%1$@, rồi %2$@";
 
-/* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Nguy hiểm";
+/* Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction */
+"LINKED_WITH_DISTANCE_UTTERANCE_FORMAT" = "%1$@, rồi %2$@ nữa thì %3$@";
 
-/* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Vấn đề Khác";
+/* Format for speech string; 1 = way name; 2 = way route number */
+"NAME_AND_REF" = "%1$@ (%2$@)";
 
-/* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "Cấm";
+/* Delimiter between route numbers in a road concurrency */
+"REF_DELIMITER" = " / ";
 
-/* Format string for less than; 1 = duration remaining */
-"LESS_THAN" = "<%@";
+/* Delimiter between multiple destinations */
+"DESTINATION_DELIMITER" = " / ";
 
-/* Indicates that rerouting is in progress */
-"REROUTING" = "Đang tính tuyến mới…";
-
-/* Button title for resume tracking */
-"RESUME" = "Tiếp tục";
-
-/* Inform user about weak GPS signal */
-"WEAK_GPS" = "Weak GPS signal";
+/* Format for speech string; 1 = formatted distance; 2 = instruction */
+"WITH_DISTANCE_UTTERANCE_FORMAT" = "%1$@ nữa thì %2$@";
 
