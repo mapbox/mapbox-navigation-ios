@@ -198,7 +198,7 @@ public class PollyVoiceController: RouteVoiceController {
             
             // If the task is canceled, don't speak.
             // But if it's some sort of other error, use fallback voice.
-            if let error = error as NSError?, error.code == NSURLErrorCancelled {
+            if let error = error as? URLError, error.code == .cancelled {
                 return
             } else if let error = error {
                 // Cannot call super in a closure
