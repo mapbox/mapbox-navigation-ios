@@ -1,5 +1,6 @@
 import Foundation
 import CoreLocation
+import OSRMTextInstructions
 
 /**
  Formatter for creating speech strings.
@@ -41,7 +42,17 @@ public class SpokenInstructionFormatter: NSObject {
             if alertLevel == .arrive {
                 text = upComingStepInstruction
             } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingStepInstruction)
+                let phrase = escapeIfNecessary(routeStepFormatter.instructions.phrase(named: .instructionWithDistance))
+                text = phrase.replacingTokens { (tokenType) -> String in
+                    switch tokenType {
+                    case .firstInstruction:
+                        return upComingStepInstruction
+                    case .distance:
+                        return escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance))
+                    default:
+                        fatalError("Unexpected token \(tokenType)")
+                    }
+                }
             }
             
             return text
@@ -61,16 +72,24 @@ public class SpokenInstructionFormatter: NSObject {
         // We only want to announce this special depature announcement once.
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
         // since the user will be approaching the maneuver location.
-        if routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart {
-            if upcomingStepDuration < linkedInstructionMultiplier {
-                text = String.localizedStringWithFormat(NSLocalizedString("LINKED_WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "%@, then in %@, %@", comment: "Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction"), currentInstruction!, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
+        let isDeparture = routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart
+        let didCompleteManeuver = routeProgress.currentLegProgress.currentStep.distance > 2_000 && routeProgress.currentLegProgress.alertUserLevel == .low
+        if isDeparture || didCompleteManeuver {
+            if isDeparture && upcomingStepDuration < linkedInstructionMultiplier {
+                let phrase = escapeIfNecessary(routeStepFormatter.instructions.phrase(named: .twoInstructionsWithDistance))
+                text = phrase.replacingTokens { (tokenType) -> String in
+                    switch tokenType {
+                    case .firstInstruction:
+                        return currentInstruction!
+                    case .secondInstruction:
+                        return upComingInstruction
+                    case .distance:
+                        return escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance))
+                    default:
+                        fatalError("Unexpected token \(tokenType)")
+                    }
+                }
             } else if let roadDescription = step.roadDescription(markedUpWithSSML: markUpWithSSML) {
-                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE_ON_ROAD", bundle: .mapboxCoreNavigation, value: "Continue on %@ for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance"), roadDescription, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
-            } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxCoreNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
-            }
-        } else if routeProgress.currentLegProgress.currentStep.distance > 2_000 && routeProgress.currentLegProgress.alertUserLevel == .low {
-            if let roadDescription = step.roadDescription(markedUpWithSSML: markUpWithSSML) {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE_ON_ROAD", bundle: .mapboxCoreNavigation, value: "Continue on %@ for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance"), roadDescription, escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
             } else {
                 text = String.localizedStringWithFormat(NSLocalizedString("CONTINUE", bundle: .mapboxCoreNavigation, value: "Continue for %@", comment: "Format for speech string after completing a maneuver and starting a new step; 1 = distance"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)))
@@ -80,10 +99,30 @@ public class SpokenInstructionFormatter: NSObject {
             if let followOnStep = routeProgress.currentLegProgress.followOnStep, followOnStep.maneuverType == .exitRoundabout || followOnStep.maneuverType == .exitRotary {
                 text = upComingInstruction
             } else {
-                text = String.localizedStringWithFormat(NSLocalizedString("LINKED_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "%@, then %@", comment: "Format for speech string; 1 = current instruction; 2 = the following linked instruction"), upComingInstruction, followOnInstruction)
+                let phrase = escapeIfNecessary(routeStepFormatter.instructions.phrase(named: .twoInstructions))
+                text = phrase.replacingTokens { (tokenType) -> String in
+                    switch tokenType {
+                    case .firstInstruction:
+                        return upComingInstruction
+                    case .secondInstruction:
+                        return followOnInstruction
+                    default:
+                        fatalError("Unexpected token \(tokenType)")
+                    }
+                }
             }
         } else if alertLevel != .high {
-            text = String.localizedStringWithFormat(NSLocalizedString("WITH_DISTANCE_UTTERANCE_FORMAT", bundle: .mapboxCoreNavigation, value: "In %@, %@", comment: "Format for speech string; 1 = formatted distance; 2 = instruction"), escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance)), upComingInstruction)
+            let phrase = escapeIfNecessary(routeStepFormatter.instructions.phrase(named: .instructionWithDistance))
+            text = phrase.replacingTokens { (tokenType) -> String in
+                switch tokenType {
+                case .firstInstruction:
+                    return upComingInstruction
+                case .distance:
+                    return escapeIfNecessary(maneuverVoiceDistanceFormatter.string(from: userDistance))
+                default:
+                    fatalError("Unexpected token \(tokenType)")
+                }
+            }
         } else {
             text = upComingInstruction
         }
