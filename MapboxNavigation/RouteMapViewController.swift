@@ -99,6 +99,7 @@ class RouteMapViewController: UIViewController {
         wayNameView.applyDefaultCornerRadiusShadow()
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
+        isInOverviewMode = false
         
         resumeNotifications()
     }
