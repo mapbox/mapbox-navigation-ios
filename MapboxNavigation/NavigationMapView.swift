@@ -9,7 +9,7 @@ typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
 @objc(MBNavigationMapView)
-open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
+open class NavigationMapView: MGLMapView {
     
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
@@ -150,8 +150,6 @@ open class NavigationMapView: MGLMapView/*, CLLocationManagerDelegate*/ {
     }
     
     var followingEdgePadding: UIEdgeInsets {
-//        let point = userCourseViewCenter
-//        let correctBounds = boundsAroundPoint
         let b = boundsAroundPoint
         return UIEdgeInsets(top: b.minY - bounds.minY, left: contentInset.left, bottom: bounds.maxY - b.maxY, right: contentInset.right)
     }
