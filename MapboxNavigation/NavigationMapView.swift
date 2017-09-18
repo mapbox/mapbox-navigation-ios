@@ -55,12 +55,16 @@ open class NavigationMapView: MGLMapView {
         super.init(frame: frame)
         
         makeGestureRecognizersRespectCourseTracking()
+        makeGestureRecognizersResetInactivityTimer()
+        resetInactivityTimer()
     }
     
     public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
         
         makeGestureRecognizersRespectCourseTracking()
+        makeGestureRecognizersResetInactivityTimer()
+        resetInactivityTimer()
     }
     
     /** Modifies the gesture recognizers to also disable course tracking. */
@@ -68,6 +72,21 @@ open class NavigationMapView: MGLMapView {
         for gestureRecognizer in gestureRecognizers ?? []
             where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
                 gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
+        }
+    }
+    
+    func makeGestureRecognizersResetInactivityTimer() {
+        for gestureRecognizer in gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(resetInactivityTimer(_:)))
+        }
+    }
+    
+    func resetInactivityTimer(_ sender: UIGestureRecognizer) {
+        if sender.state == .began {
+            isInactive = false
+        }
+        else if sender.state == .ended || sender.state == .failed {
+            resetInactivityTimer()
         }
     }
     
@@ -103,6 +122,30 @@ open class NavigationMapView: MGLMapView {
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
+    
+    fileprivate let inactivityInterval: TimeInterval = 10
+    fileprivate let decreasedFrameInterval: Int = 12
+    
+    func resetInactivityTimer() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(inactivityTimerFinished), object: nil)
+        self.perform(#selector(inactivityTimerFinished), with: nil, afterDelay: inactivityInterval)
+    }
+    
+    func inactivityTimerFinished() {
+        isInactive = true
+    }
+    
+    fileprivate var isInactive: Bool = false {
+        didSet {
+            if isInactive {
+                displayLink?.frameInterval = isPluggedIn ? 1 : decreasedFrameInterval
+            } else {
+                displayLink?.frameInterval = 1
+            }
+        }
+    }
+    
+    var isPluggedIn: Bool = true
     
     @objc func disableUserCourseTracking() {
         tracksUserCourse = false
