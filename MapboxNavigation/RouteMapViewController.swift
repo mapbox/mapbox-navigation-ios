@@ -202,7 +202,7 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateVisibleBounds() {
-        guard let userLocation = self.mapView.userLocation?.coordinate else { return }
+        guard let userLocation = routeController.locationManager.location?.coordinate else { return }
         
         let overviewContentInset = UIEdgeInsets(top: 65, left: 20, bottom: 55, right: 20)
         let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
