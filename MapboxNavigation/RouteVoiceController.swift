@@ -80,6 +80,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     deinit {
         suspendNotifications()
         speechSynth.stopSpeaking(at: .word)
+        resetAnnouncementTimer()
     }
     
     func resumeNotifications() {
