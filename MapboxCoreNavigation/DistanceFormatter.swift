@@ -69,7 +69,7 @@ public class DistanceFormatter: LengthFormatter {
             if distance < 100 {
                 return 25
             } else if distance < 1_000 {
-                return 50
+                return 100
             }
             return distance < 3_000 ? 0 : 0.5
         } else {
@@ -119,12 +119,15 @@ public class DistanceFormatter: LengthFormatter {
     func formattedDistance(_ distance: CLLocationDistance, modify unit: inout LengthFormatter.Unit) -> String {
         var formattedDistance: String
         if usesMetric {
-            if distance >= 1000 {
+            let roundedDistance: CLLocationDistance = numberFormatter.number(from: numberFormatter.string(from: distance as NSNumber)!)?.doubleValue ?? distance
+            numberFormatter.roundingIncrement = roundingIncrement(for: roundedDistance, unit: unit) as NSNumber
+            
+            if roundedDistance >= 1000 {
                 unit = .kilometer
-                formattedDistance = string(fromValue: distance.kilometers, unit: unit)
+                formattedDistance = string(fromValue: roundedDistance.kilometers, unit: unit)
             } else {
                 unit = .meter
-                formattedDistance = string(fromValue: distance, unit: unit)
+                formattedDistance = string(fromValue: roundedDistance, unit: unit)
             }
         } else {
             if unit == .yard {
