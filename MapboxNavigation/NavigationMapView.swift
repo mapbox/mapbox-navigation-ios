@@ -84,6 +84,10 @@ open class NavigationMapView: MGLMapView {
     func resetInactivityTimer(_ sender: UIGestureRecognizer) {
         if sender.state == .began {
             isInactive = false
+        } else if sender.state == .changed {
+            guard let location = userLocationForCourseTracking else { return }
+            userCourseView?.layer.removeAllAnimations()
+            userCourseView?.center = convert(location.coordinate, toPointTo: self)
         }
         else if sender.state == .ended || sender.state == .failed {
             resetInactivityTimer()
@@ -97,6 +101,7 @@ open class NavigationMapView: MGLMapView {
     }
     
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
+    weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate!
     
     open override var showsUserLocation: Bool {
         get {
@@ -167,7 +172,10 @@ open class NavigationMapView: MGLMapView {
             let duration: TimeInterval = animated ? 1 : 0
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         } else {
-            userCourseView?.center = convert(location.coordinate, toPointTo: self)
+            let duration: TimeInterval = animated ? 1 : 0
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+            }, completion: nil)
         }
     }
     
@@ -210,6 +218,9 @@ open class NavigationMapView: MGLMapView {
         didSet {
             if tracksUserCourse {
                 showsUserLocation = true
+                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
+            } else {
+                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse(self)
             }
             
             if let location = userLocationForCourseTracking {
@@ -705,4 +716,9 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc(navigationMapView:shapeDescribingWaypoints:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+}
+
+protocol NavigationMapViewCourseTrackingDelegate: class {
+    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
+    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
 }

@@ -90,6 +90,7 @@ class RouteMapViewController: UIViewController {
         mapView.tracksUserCourse = true
         mapView.delegate = self
         mapView.navigationMapDelegate = self
+        mapView.courseTrackingDelegate = self
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
@@ -356,6 +357,18 @@ extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
     }
 }
 
+// MARK: NavigationMapViewCourseTrackingDelegate
+
+extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
+    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
+        recenterButton.isHidden = true
+    }
+    
+    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
+        recenterButton.isHidden = false
+    }
+}
+
 // MARK: NavigationMapViewDelegate
 
 extension RouteMapViewController: NavigationMapViewDelegate {
@@ -539,10 +552,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             if didSwipe, step != routeController.routeProgress.currentLegProgress.upComingStep {
                 mapView.tracksUserCourse = false
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
-            } else if !mapView.tracksUserCourse {
-                view.layoutIfNeeded()
-                mapView.camera = tiltedCamera
-                mapView.tracksUserCourse = true
             }
         }
         
