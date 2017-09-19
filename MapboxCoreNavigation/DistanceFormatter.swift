@@ -80,7 +80,7 @@ public class DistanceFormatter: LengthFormatter {
                     return 50
                 }
             } else {
-                return 0.25
+                return 0.1
             }
         }
     }

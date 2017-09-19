@@ -37,9 +37,10 @@ class DistanceFormatterTests: XCTestCase {
         assertDistance(oneMile*0.75,    spoken: "3 quarters of a mile", displayed: "0.8 mi")
         assertDistance(oneMile,         spoken: "1 mile",               displayed: "1 mi")
         assertDistance(oneMile*2.5,     spoken: "2 & a half miles",     displayed: "2.5 mi")
-        assertDistance(oneMile*2.9,     spoken: "3 miles",              displayed: "3 mi")
+        assertDistance(oneMile*2.9,     spoken: "2.9 miles",            displayed: "2.9 mi")
         assertDistance(oneMile*3,       spoken: "3 miles",              displayed: "3 mi")
         assertDistance(oneMile*3.5,     spoken: "4 miles",              displayed: "4 mi")
+        assertDistance(oneMile*5.4,     spoken: "5 miles",              displayed: "5 mi")
     }
     
     func testDistanceFormatters_DE() {
