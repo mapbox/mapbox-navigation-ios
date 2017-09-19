@@ -16,7 +16,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     let routeStepFormatter = RouteStepFormatter()
     var recentlyAnnouncedRouteStep: RouteStep?
     var fallbackText: String!
-    var announcementTimer: Timer!
+    var announcementTimer: Timer?
     
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
@@ -148,12 +148,13 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func startAnnouncementTimer() {
+        announcementTimer?.invalidate()
         announcementTimer = Timer.scheduledTimer(timeInterval: bufferBetweenAnnouncements, target: self, selector: #selector(resetAnnouncementTimer), userInfo: nil, repeats: false)
     }
     
     func resetAnnouncementTimer() {
+        announcementTimer?.invalidate()
         recentlyAnnouncedRouteStep = nil
-        announcementTimer.invalidate()
     }
     
     open func alertLevelDidChange(notification: NSNotification) {
