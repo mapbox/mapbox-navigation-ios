@@ -69,7 +69,7 @@ public class DistanceFormatter: LengthFormatter {
             if distance < 100 {
                 return 25
             } else if distance < 1_000 {
-                return 100
+                return 50
             }
             return distance < 3_000 ? 0 : 0.5
         } else {
