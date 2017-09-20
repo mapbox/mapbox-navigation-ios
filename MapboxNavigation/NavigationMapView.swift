@@ -115,7 +115,7 @@ open class NavigationMapView: MGLMapView {
                 super.showsUserLocation = false
                 
                 if userCourseView == nil {
-                    userCourseView = UserPuckCourseView()
+                    userCourseView = NewUserPuckCourseView(frame: CGRect(origin: .zero, size: CGSize(width: 75, height: 75)))
                 }
                 userCourseView?.isHidden = !newValue
             } else {
