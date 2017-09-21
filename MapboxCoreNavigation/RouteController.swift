@@ -169,6 +169,8 @@ open class RouteController: NSObject {
     
     var hasFoundOneQualifiedLocation = false
     
+    var previousDistancesFromManeuver: [CLLocationDistance] = []
+    
     /**
      Intializes a new `RouteController`.
      
@@ -541,6 +543,28 @@ extension RouteController: CLLocationManagerDelegate {
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
+        
+        // Check to see if the user is moving away from the maneuver.
+        // Here, we store an array of distances. If the current distance is greater than the last distance,
+        // add it to the array. If the array grows larger than x, reroute the user.
+        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
+            let userDistanceToManeuver = distance(along: coordinates, from: location.coordinate)
+            
+            guard previousDistancesFromManeuver.count <= 3 else {
+                resetPreviousDistanceArray()
+                return false
+            }
+            
+            if previousDistancesFromManeuver.isEmpty {
+                previousDistancesFromManeuver.append(userDistanceToManeuver)
+            } else if let lastSpeed = previousDistancesFromManeuver.last, userDistanceToManeuver > lastSpeed {
+                previousDistancesFromManeuver.append(userDistanceToManeuver)
+            } else {
+                // If we get a descending distance, reset the counter
+                resetPreviousDistanceArray()
+            }
+        }
+        
         // If the user is moving away from the maneuver location
         // and they are close to the next step
         // we can safely say they have completed the maneuver.
@@ -557,9 +581,14 @@ extension RouteController: CLLocationManagerDelegate {
         return isCloseToCurrentStep
     }
     
+    func resetPreviousDistanceArray() {
+        previousDistancesFromManeuver.removeAll()
+    }
+    
     func incrementRouteProgress(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation, updateStepIndex: Bool) {
         if updateStepIndex {
             routeProgress.currentLegProgress.stepIndex += 1
+            resetPreviousDistanceArray()
         }
         
         // If the step is not being updated, don't accept a lower alert level.
@@ -584,6 +613,7 @@ extension RouteController: CLLocationManagerDelegate {
                 routeProgress.remainingWaypoints.count > 1,
                 (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
                 routeProgress.legIndex += 1
+                resetPreviousDistanceArray()
             }
         }
     }
@@ -662,6 +692,7 @@ extension RouteController: CLLocationManagerDelegate {
             strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
             strongSelf.routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+            strongSelf.resetPreviousDistanceArray()
         }
     }
     
