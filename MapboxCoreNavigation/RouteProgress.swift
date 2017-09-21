@@ -347,6 +347,17 @@ open class RouteLegProgress: NSObject {
         assert(!nearby.isEmpty, "Polyline must coordinates")
         return nearby
     }
+    
+    /**
+     Returns an array of `CLLocationCoordinate2D` of the current and upcoming step geometry.
+     */
+    public var currentAndUpcomgingStepCoordinates: [CLLocationCoordinate2D] {
+        let upcomingCoords = upComingStep?.coordinates ?? []
+        let currentCoords = currentStep.coordinates ?? []
+        let nearby = currentCoords + upcomingCoords
+        assert(!nearby.isEmpty, "Polyline must coordinates")
+        return nearby
+    }
 }
 
 /**

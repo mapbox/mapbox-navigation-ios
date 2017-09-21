@@ -288,7 +288,13 @@ open class RouteController: NSObject {
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
-        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        var nearByCoordinates = routeProgress.currentLegProgress.currentAndUpcomgingStepCoordinates
+        
+        // If the upcoming step is a roundabout, only look at the current step for snapping.
+        // Otherwise, we may get false positives from nearby step coordinates
+        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .uTurn, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
+           nearByCoordinates = coordinates
+        }
         guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return nil }
         
         let slicedLineBehind = polyline(along: nearByCoordinates.reversed(), from: closest.coordinate, to: nearByCoordinates.reversed().last)
@@ -741,6 +747,14 @@ extension RouteController: CLLocationManagerDelegate {
                 courseMatchesManeuverFinalHeading = userSnapToStepDistanceFromManeuver == 0
             } else {
                 courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
+            }
+            
+            // In some cases, the finalHeading can be inaccurate.
+            // This is a last ditch effort to try and see if the user's course
+            // is equal to the opposite way they came into e uturn maneuver.
+            if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .uTurn, courseMatchesManeuverFinalHeading == false {
+                let calculatedFinalHeadingFromInitialHeading = wrap(-initialHeading, min: 0, max: 360)
+                courseMatchesManeuverFinalHeading = differenceBetweenAngles(calculatedFinalHeadingFromInitialHeading, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
             }
         }
 
