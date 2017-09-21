@@ -162,9 +162,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         exampleMode = .default
         
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
-        navigationViewController.showsReportFeedback = true
         navigationViewController.navigationDelegate = self
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -198,7 +196,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         let styles = [DayStyle(), CustomNightStyle()]
         
         let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: locationManager())
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
@@ -217,7 +214,6 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         exampleMode = .multipleWaypoints
 
         let navigationViewController = NavigationViewController(for: route, locationManager: locationManager())
-        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = true
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
