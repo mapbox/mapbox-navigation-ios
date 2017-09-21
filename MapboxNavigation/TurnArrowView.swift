@@ -73,7 +73,14 @@ public class TurnArrowView: UIView {
             StyleKitArrows.drawFork(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
             flip = [.right, .slightRight, .sharpRight].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
-            StyleKitArrows.drawRoundabout(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+            switch direction {
+            case .straightAhead:
+                StyleKitArrows.drawRoundabout_180(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+            case .left, .slightLeft, .sharpLeft:
+                StyleKitArrows.drawRoundabout_275(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+            default:
+                StyleKitArrows.drawRoundabout(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+            }
         case .arrive:
             switch direction {
             case .right:
