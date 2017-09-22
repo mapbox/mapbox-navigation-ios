@@ -288,7 +288,14 @@ open class RouteController: NSObject {
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = closestCoordinate(on: stepCoordinates, to: location.coordinate) else { return location }
         
-        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        var nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        
+        // If the upcoming step is a roundabout, only look at the current step for snapping.
+        // Otherwise, we may get false positives from nearby step coordinates
+        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .uTurn, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
+           nearByCoordinates = coordinates
+        }
+
         guard let closest = closestCoordinate(on: nearByCoordinates, to: location.coordinate) else { return nil }
         
         let slicedLineBehind = polyline(along: nearByCoordinates.reversed(), from: closest.coordinate, to: nearByCoordinates.reversed().last)
