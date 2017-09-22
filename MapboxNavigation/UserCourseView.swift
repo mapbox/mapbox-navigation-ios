@@ -13,7 +13,7 @@ public protocol UserCourseView {
     /**
      Updates the view to reflect the given location and other camera properties.
      */
-    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool)
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
 }
 
 class UserPuckCourseView: UIView, UserCourseView {
@@ -43,14 +43,14 @@ class UserPuckCourseView: UIView, UserCourseView {
     
     var direction: CLLocationDirection = 0
     
-    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool) {
+    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         self.location = location
         self.direction = direction
         self.pitch = CLLocationDegrees(pitch)
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             
-            let angle = CLLocationDegrees(direction - location.course)
+            let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
             self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
             
             var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(self.pitch.toRadians()), 1.0, 0, 0)
