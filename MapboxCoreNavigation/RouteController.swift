@@ -386,7 +386,7 @@ extension RouteController {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
         }
-        resetPreviousDistanceArray()
+        recentDistancesFromManeuver.removeAll()
     }
     
     func willReroute(notification: NSNotification) {
@@ -397,7 +397,7 @@ extension RouteController {
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
-        resetPreviousDistanceArray()
+        recentDistancesFromManeuver.removeAll()
     }
 }
 
@@ -553,17 +553,16 @@ extension RouteController: CLLocationManagerDelegate {
             let userDistanceToManeuver = distance(along: coordinates, from: location.coordinate)
             
             guard recentDistancesFromManeuver.count <= 3 else {
-                resetPreviousDistanceArray()
                 return false
             }
             
             if recentDistancesFromManeuver.isEmpty {
                 recentDistancesFromManeuver.append(userDistanceToManeuver)
-            } else if let lastSpeed = recentDistancesFromManeuver.last, userDistanceToManeuver > lastSpeed {
+            } else if let lastDistance = recentDistancesFromManeuver.last, userDistanceToManeuver > lastDistance {
                 recentDistancesFromManeuver.append(userDistanceToManeuver)
             } else {
                 // If we get a descending distance, reset the counter
-                resetPreviousDistanceArray()
+                recentDistancesFromManeuver.removeAll()
             }
         }
         
@@ -581,10 +580,6 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         return isCloseToCurrentStep
-    }
-    
-    func resetPreviousDistanceArray() {
-        recentDistancesFromManeuver.removeAll()
     }
     
     func incrementRouteProgress(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation, updateStepIndex: Bool) {
