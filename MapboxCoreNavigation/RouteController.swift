@@ -386,6 +386,7 @@ extension RouteController {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
         }
+        resetPreviousDistanceArray()
     }
     
     func willReroute(notification: NSNotification) {
@@ -396,6 +397,7 @@ extension RouteController {
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
+        resetPreviousDistanceArray()
     }
 }
 
@@ -558,7 +560,7 @@ extension RouteController: CLLocationManagerDelegate {
             if recentDistancesFromManeuver.isEmpty {
                 recentDistancesFromManeuver.append(userDistanceToManeuver)
             } else if let lastSpeed = recentDistancesFromManeuver.last, userDistanceToManeuver > lastSpeed {
-                previousDistancesFromManeuver.append(userDistanceToManeuver)
+                recentDistancesFromManeuver.append(userDistanceToManeuver)
             } else {
                 // If we get a descending distance, reset the counter
                 resetPreviousDistanceArray()
@@ -582,13 +584,12 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func resetPreviousDistanceArray() {
-        previousDistancesFromManeuver.removeAll()
+        recentDistancesFromManeuver.removeAll()
     }
     
     func incrementRouteProgress(_ newlyCalculatedAlertLevel: AlertLevel, location: CLLocation, updateStepIndex: Bool) {
         if updateStepIndex {
             routeProgress.currentLegProgress.stepIndex += 1
-            resetPreviousDistanceArray()
         }
         
         // If the step is not being updated, don't accept a lower alert level.
@@ -613,7 +614,6 @@ extension RouteController: CLLocationManagerDelegate {
                 routeProgress.remainingWaypoints.count > 1,
                 (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
                 routeProgress.legIndex += 1
-                resetPreviousDistanceArray()
             }
         }
     }
@@ -692,7 +692,6 @@ extension RouteController: CLLocationManagerDelegate {
             strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
             strongSelf.routeProgress.currentLegProgress.stepIndex = 0
             strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-            strongSelf.resetPreviousDistanceArray()
         }
     }
     
