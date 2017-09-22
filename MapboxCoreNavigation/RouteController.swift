@@ -748,14 +748,6 @@ extension RouteController: CLLocationManagerDelegate {
             } else {
                 courseMatchesManeuverFinalHeading = differenceBetweenAngles(finalHeadingNormalized, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
             }
-            
-            // In some cases, the finalHeading can be inaccurate.
-            // This is a last ditch effort to try and see if the user's course
-            // is equal to the opposite way they came into e uturn maneuver.
-            if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .uTurn, courseMatchesManeuverFinalHeading == false {
-                let calculatedFinalHeadingFromInitialHeading = wrap(-initialHeading, min: 0, max: 360)
-                courseMatchesManeuverFinalHeading = differenceBetweenAngles(calculatedFinalHeadingFromInitialHeading, userHeadingNormalized) <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion
-            }
         }
 
         // When departing, `userSnapToStepDistanceFromManeuver` is most often less than `RouteControllerManeuverZoneRadius`
