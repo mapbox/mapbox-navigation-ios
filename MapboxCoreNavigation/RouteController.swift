@@ -169,6 +169,8 @@ open class RouteController: NSObject {
     
     var hasFoundOneQualifiedLocation = false
     
+    var recentDistancesFromManeuver: [CLLocationDistance] = []
+    
     /**
      Intializes a new `RouteController`.
      
@@ -391,6 +393,7 @@ extension RouteController {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
         }
+        recentDistancesFromManeuver.removeAll()
     }
     
     func willReroute(notification: NSNotification) {
@@ -401,6 +404,7 @@ extension RouteController {
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
+        recentDistancesFromManeuver.removeAll()
     }
 }
 
@@ -547,6 +551,27 @@ extension RouteController: CLLocationManagerDelegate {
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
+        
+        
+        // Check to see if the user is moving away from the maneuver.
+        // Here, we store an array of distances. If the current distance is greater than the last distance,
+        // add it to the array. If the array grows larger than x, reroute the user.
+        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
+            let userDistanceToManeuver = distance(along: coordinates, from: location.coordinate)
+            
+            guard recentDistancesFromManeuver.count <= 3 else {
+                return false
+            }
+            
+            if recentDistancesFromManeuver.isEmpty {
+                recentDistancesFromManeuver.append(userDistanceToManeuver)
+            } else if let lastDistance = recentDistancesFromManeuver.last, userDistanceToManeuver > lastDistance {
+                recentDistancesFromManeuver.append(userDistanceToManeuver)
+            } else {
+                // If we get a descending distance, reset the counter
+                recentDistancesFromManeuver.removeAll()
+            }
+        }
         
         // If the user is moving away from the maneuver location
         // and they are close to the next step
