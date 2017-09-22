@@ -37,40 +37,26 @@ class UserPuckCourseView: UIView, UserCourseView {
         addSubview(puckView)
     }
     
-    var shouldAnimatePitch: Bool = false
-    var shouldAnimateDirection: Bool = false
-    
     var location: CLLocation?
     
-    var pitch: CLLocationDegrees = 0 {
-        didSet {
-            shouldAnimatePitch = oldValue != pitch
-        }
-    }
+    var pitch: CLLocationDegrees = 0
     
-    var direction: CLLocationDirection = 0 {
-        didSet {
-            shouldAnimateDirection = oldValue != direction
-        }
-    }
+    var direction: CLLocationDirection = 0
     
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool) {
         self.location = location
         self.direction = direction
         self.pitch = CLLocationDegrees(pitch)
-        
-        UIView.animate(withDuration: 1, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            if self.shouldAnimateDirection {
-                guard let location = self.location else { return }
-                let angle = CLLocationDegrees(direction - location.course)
-                self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-            }
+        let duration: TimeInterval = animated ? 1 : 0
+        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             
-            if self.shouldAnimatePitch {
-                var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(self.pitch.toRadians()), 1.0, 0, 0)
-                transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
-                self.layer.sublayerTransform = transform
-            }
+            let angle = CLLocationDegrees(direction - location.course)
+            self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
+            
+            var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(self.pitch.toRadians()), 1.0, 0, 0)
+            transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
+            self.layer.sublayerTransform = transform
+            
         }, completion: nil)
     }
 }
