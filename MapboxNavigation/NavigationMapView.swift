@@ -203,7 +203,7 @@ open class NavigationMapView: MGLMapView {
         }, completion: nil)
         
         if let userCourseView = userCourseView as? UserCourseView {
-            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated)
+            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
         }
     }
     
