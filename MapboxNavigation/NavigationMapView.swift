@@ -55,6 +55,7 @@ open class NavigationMapView: MGLMapView {
         super.init(frame: frame)
         
         makeGestureRecognizersRespectCourseTracking()
+        makeGestureRecognizersUpdateCourseView()
         makeGestureRecognizersResetInactivityTimer()
         resetInactivityTimer()
     }
@@ -63,6 +64,7 @@ open class NavigationMapView: MGLMapView {
         super.init(coder: decoder)
         
         makeGestureRecognizersRespectCourseTracking()
+        makeGestureRecognizersUpdateCourseView()
         makeGestureRecognizersResetInactivityTimer()
         resetInactivityTimer()
     }
@@ -81,13 +83,23 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    func resetInactivityTimer(_ sender: UIGestureRecognizer) {
-        if sender.state == .began {
-            isInactive = false
-        } else if sender.state == .changed {
+    func makeGestureRecognizersUpdateCourseView() {
+        for gestureRecognizer in gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
+        }
+    }
+    
+    func updateCourseView(_ sender: UIGestureRecognizer) {
+        if sender.state == .changed {
             guard let location = userLocationForCourseTracking else { return }
             userCourseView?.layer.removeAllAnimations()
             userCourseView?.center = convert(location.coordinate, toPointTo: self)
+        }
+    }
+    
+    func resetInactivityTimer(_ sender: UIGestureRecognizer) {
+        if sender.state == .began {
+            isInactive = false
         }
         else if sender.state == .ended || sender.state == .failed {
             resetInactivityTimer()
@@ -167,51 +179,23 @@ open class NavigationMapView: MGLMapView {
             let point = targetPoint
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 1000, pitch: 45, heading: location.course)
-            
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             let duration: TimeInterval = animated ? 1 : 0
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
-        } else {
-            let duration: TimeInterval = animated ? 1 : 0
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-            }, completion: nil)
+        }
+        
+        let duration: TimeInterval = animated ? 1 : 0
+        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+        }, completion: nil)
+        
+        if let userCourseView = userCourseView as? UserCourseView {
+            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated)
         }
     }
     
     var targetPoint: CGPoint {
         return CGPoint(x: bounds.midX, y: bounds.height*0.75)
-    }
-    
-    open override func mapViewDidFinishRenderingFrameFullyRendered(_ fullyRendered: Bool) {
-        super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
-        
-        guard let location = userLocationForCourseTracking else { return }
-        if let userCourseView = userCourseView as? UserCourseView {
-            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: false)
-        }
-        let userPoint = self.convert(location.coordinate, toPointTo: self)
-        
-        if animatesUserLocation {
-            UIView.animate(withDuration: 1, delay: 0, options: .curveLinear, animations: {
-                self.userCourseView?.center = userPoint
-            }) { (completed) in
-                
-            }
-        } else {
-            self.userCourseView?.center = userPoint
-        }
-    }
-    
-    
-    var boundsAroundPoint: CGRect {
-        let point = userCourseViewCenter
-        return bounds.offsetBy(dx: point.x - bounds.midX, dy: point.y - bounds.midY)
-    }
-    
-    var followingEdgePadding: UIEdgeInsets {
-        let b = boundsAroundPoint
-        return UIEdgeInsets(top: b.minY - bounds.minY, left: contentInset.left, bottom: bounds.maxY - b.maxY, right: contentInset.right)
     }
     
     var tracksUserCourse: Bool = false {
