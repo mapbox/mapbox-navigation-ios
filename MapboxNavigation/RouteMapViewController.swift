@@ -123,6 +123,8 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
+        
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -132,6 +134,7 @@ class RouteMapViewController: UIViewController {
         
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     func resumeNotifications() {
@@ -145,9 +148,9 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
         mapView.camera = tiltedCamera
         mapView.tracksUserCourse = true
-        
         isInOverviewMode = false
     }
 

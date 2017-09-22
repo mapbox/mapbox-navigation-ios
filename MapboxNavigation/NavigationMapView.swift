@@ -97,6 +97,19 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
+    var shouldPositionCourseViewFrameByFrame = false
+    
+    // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
+    func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(disableFrameByFramePositioning), object: nil)
+        perform(#selector(disableFrameByFramePositioning), with: nil, afterDelay: duration)
+        shouldPositionCourseViewFrameByFrame = true
+    }
+    
+    @objc fileprivate func disableFrameByFramePositioning() {
+        shouldPositionCourseViewFrameByFrame = false
+    }
+    
     func resetInactivityTimer(_ sender: UIGestureRecognizer) {
         if sender.state == .began {
             isInactive = false
@@ -211,6 +224,15 @@ open class NavigationMapView: MGLMapView {
                 updateCourseTracking(location: location, animated: true)
             }
         }
+    }
+    
+    open override func mapViewDidFinishRenderingFrameFullyRendered(_ fullyRendered: Bool) {
+        super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
+        
+        guard shouldPositionCourseViewFrameByFrame else { return }
+        guard let location = userLocationForCourseTracking else { return }
+        
+        userCourseView?.center = convert(location.coordinate, toPointTo: self)
     }
     
     /**
