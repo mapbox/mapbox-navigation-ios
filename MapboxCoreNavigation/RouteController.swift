@@ -169,7 +169,7 @@ open class RouteController: NSObject {
     
     var hasFoundOneQualifiedLocation = false
     
-    var previousDistancesFromManeuver: [CLLocationDistance] = []
+    var recentDistancesFromManeuver: [CLLocationDistance] = []
     
     /**
      Intializes a new `RouteController`.
@@ -550,14 +550,14 @@ extension RouteController: CLLocationManagerDelegate {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             let userDistanceToManeuver = distance(along: coordinates, from: location.coordinate)
             
-            guard previousDistancesFromManeuver.count <= 3 else {
+            guard recentDistancesFromManeuver.count <= 3 else {
                 resetPreviousDistanceArray()
                 return false
             }
             
-            if previousDistancesFromManeuver.isEmpty {
-                previousDistancesFromManeuver.append(userDistanceToManeuver)
-            } else if let lastSpeed = previousDistancesFromManeuver.last, userDistanceToManeuver > lastSpeed {
+            if recentDistancesFromManeuver.isEmpty {
+                recentDistancesFromManeuver.append(userDistanceToManeuver)
+            } else if let lastSpeed = recentDistancesFromManeuver.last, userDistanceToManeuver > lastSpeed {
                 previousDistancesFromManeuver.append(userDistanceToManeuver)
             } else {
                 // If we get a descending distance, reset the counter
