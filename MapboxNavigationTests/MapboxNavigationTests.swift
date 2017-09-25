@@ -91,7 +91,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.turnArrowView.isEnd = true
         controller.shieldImage = shieldImage
         controller.distance = nil
-        controller.destinationLabel.unabridgedText = "This Drive Avenue should be abbreviated on multiple lines...................."
+        controller.destinationLabel.unabridgedText = "Drive Avenue should be abbreviated on multiple lines. Drive Avenue should be abbreviated on multiple lines."
         controller.destinationLabel.backgroundColor = .red
         
         FBSnapshotVerifyView(controller.view)

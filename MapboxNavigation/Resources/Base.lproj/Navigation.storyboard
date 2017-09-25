@@ -321,11 +321,11 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dhM-Ng-gx5">
                                         <rect key="frame" x="66" y="30" width="273" height="70"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-6D-Ukh">
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-6D-Ukh">
                                                 <rect key="frame" x="0.0" y="0.0" width="233" height="70"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="MBDistanceLabel">
-                                                        <rect key="frame" x="0.0" y="0.0" width="53.5" height="35"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="233" height="21.5"/>
                                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -338,20 +338,32 @@
                                                             </fragment>
                                                         </attributedString>
                                                     </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Elm St NW" textAlignment="natural" lineBreakMode="tailTruncation" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="MBDestinationLabel">
-                                                        <rect key="frame" x="0.0" y="35" width="150" height="35"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="32"/>
-                                                        <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <attributedString key="userComments">
-                                                            <fragment content="DO NOT TRANSLATE">
-                                                                <attributes>
-                                                                    <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                                </attributes>
-                                                            </fragment>
-                                                        </attributedString>
-                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YWf-jk-QP6">
+                                                        <rect key="frame" x="0.0" y="21.5" width="233" height="48.5"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Enter the roundabout and take the 4th exit onto New Hampshire Avenue Northwest" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="MBDestinationLabel">
+                                                                <rect key="frame" x="0.0" y="0.0" width="233" height="48.5"/>
+                                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="35"/>
+                                                                <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
+                                                                <nil key="highlightedColor"/>
+                                                                <attributedString key="userComments">
+                                                                    <fragment content="DO NOT TRANSLATE">
+                                                                        <attributes>
+                                                                            <font key="NSFont" size="11" name="HelveticaNeue"/>
+                                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
+                                                                        </attributes>
+                                                                    </fragment>
+                                                                </attributedString>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstItem="BR8-8N-Rhk" firstAttribute="leading" secondItem="YWf-jk-QP6" secondAttribute="leading" id="5r1-YN-VZn"/>
+                                                            <constraint firstItem="BR8-8N-Rhk" firstAttribute="top" secondItem="YWf-jk-QP6" secondAttribute="top" id="L9t-nN-h3S"/>
+                                                            <constraint firstAttribute="trailing" secondItem="BR8-8N-Rhk" secondAttribute="trailing" id="ZfG-Je-y0N"/>
+                                                            <constraint firstAttribute="bottom" secondItem="BR8-8N-Rhk" secondAttribute="bottom" id="bmi-U6-nDH"/>
+                                                        </constraints>
+                                                    </view>
                                                 </subviews>
                                             </stackView>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gkj-hG-NxS">
@@ -366,6 +378,7 @@
                                             <constraint firstItem="gkj-hG-NxS" firstAttribute="top" secondItem="dhM-Ng-gx5" secondAttribute="top" constant="19" id="AOc-29-8va"/>
                                             <constraint firstItem="c3B-6D-Ukh" firstAttribute="leading" secondItem="dhM-Ng-gx5" secondAttribute="leading" id="Dcy-eQ-VCk"/>
                                             <constraint firstAttribute="bottom" secondItem="gkj-hG-NxS" secondAttribute="bottom" constant="19" id="EBu-yb-gc6"/>
+                                            <constraint firstItem="gkj-hG-NxS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="c3B-6D-Ukh" secondAttribute="trailing" constant="8" id="O1s-6f-sPG"/>
                                             <constraint firstAttribute="bottom" secondItem="c3B-6D-Ukh" secondAttribute="bottom" id="Ofy-g6-EBl"/>
                                             <constraint firstAttribute="trailing" secondItem="gkj-hG-NxS" secondAttribute="trailing" id="oJb-qy-2NU"/>
                                             <constraint firstItem="c3B-6D-Ukh" firstAttribute="top" secondItem="dhM-Ng-gx5" secondAttribute="top" id="r0L-mL-w9Y"/>
