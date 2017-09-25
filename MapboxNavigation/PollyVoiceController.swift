@@ -25,7 +25,15 @@ public class PollyVoiceController: RouteVoiceController {
      */
     public var identityPoolId: String
     
+    /**
+     Number of seconds a Polly request can wait before it is canceled and the default speech synthesizer speaks the instruction.
+     */
+    public var timeoutIntervalForRequest:TimeInterval = 2
+    
     var pollyTask: URLSessionDataTask?
+    
+    let sessionConfiguration = URLSessionConfiguration.default
+    var urlSession: URLSession
     
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
@@ -33,6 +41,9 @@ public class PollyVoiceController: RouteVoiceController {
         let credentialsProvider = AWSCognitoCredentialsProvider(regionType: regionType, identityPoolId: identityPoolId)
         let configuration = AWSServiceConfiguration(region: regionType, credentialsProvider: credentialsProvider)
         AWSServiceManager.default().defaultServiceConfiguration = configuration
+        
+        sessionConfiguration.timeoutIntervalForRequest = timeoutIntervalForRequest;
+        urlSession = URLSession(configuration: sessionConfiguration)
         
         super.init()
     }
@@ -125,7 +136,7 @@ public class PollyVoiceController: RouteVoiceController {
             return
         }
         
-        pollyTask = URLSession.shared.dataTask(with: url as URL) { [weak self] (data, response, error) in
+        pollyTask = urlSession.dataTask(with: url as URL) { [weak self] (data, response, error) in
             guard let strongSelf = self else { return }
             
             // If the task is canceled, don't speak.
