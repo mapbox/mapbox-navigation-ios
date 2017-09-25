@@ -45,7 +45,7 @@ class RouteManeuverViewController: UIViewController {
     }
     
     var numberOfDestinationLines: Int {
-        return distance != nil ? 1 : 2
+        return distance != nil ? 2 : 3
     }
     
     var roadCode: String? {
