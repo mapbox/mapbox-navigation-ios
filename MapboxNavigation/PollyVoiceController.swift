@@ -122,6 +122,13 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     func callSuperSpeak(_ text: String, error: String) {
+        guard let audioPlayer = audioPlayer else {
+            super.speak(fallbackText, error: error)
+            return
+        }
+        
+        guard !audioPlayer.isPlaying else { return }
+        
         super.speak(fallbackText, error: error)
     }
     
