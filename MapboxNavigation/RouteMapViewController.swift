@@ -123,9 +123,6 @@ class RouteMapViewController: UIViewController {
                 camera.heading = coordinates[0].direction(to: coordinates[1])
             }
             mapView.setCamera(camera, animated: false)
-            mapView.setCamera(cameraCurrentForRouteProgress, withDuration: 0.5, animationTimingFunction: nil, completionHandler: {
-                self.mapView.setUserLocationVerticalAlignment(.bottom, animated: true)
-            })
         }
     }
     
