@@ -44,7 +44,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         
         locationManager.delegate = self
-        locationManager.requestAlwaysAuthorization()
+        locationManager.requestWhenInUseAuthorization()
         
         automaticallyAdjustsScrollViewInsets = false
         mapView.delegate = self
@@ -94,7 +94,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
         
-        let navigationViewController = NavigationViewController(for: route, locationManager: naviationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager)
         
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -167,7 +167,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         exampleMode = .default
         
-        let navigationViewController = NavigationViewController(for: route, locationManager: naviationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.navigationDelegate = self
         
         present(navigationViewController, animated: true, completion: nil)
@@ -200,15 +200,14 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         exampleMode = .styled
         
         let styles = [DayStyle(), CustomNightStyle()]
-        
 
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: naviationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
     }
     
-    func naviationLocationManager() -> NavigationLocationManager {
+    func navigationLocationManager() -> NavigationLocationManager {
         guard let route = currentRoute else { return NavigationLocationManager() }
         return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
@@ -220,7 +219,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         exampleMode = .multipleWaypoints
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: naviationLocationManager())
+
+        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
