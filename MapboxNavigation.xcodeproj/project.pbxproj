@@ -99,6 +99,8 @@
 		357826C71F1B84F2005C54FB /* DistanceFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 357826C61F1B84F2005C54FB /* DistanceFormatterTests.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
+		35924B9F1F86888A009C1493 /* FeedbackOverviewTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437287411F7AF0810039229F /* FeedbackOverviewTableViewController.swift */; };
+		35924BA01F868890009C1493 /* FeedbackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F12A601F7B0352007770B7 /* FeedbackTableViewCell.swift */; };
 		359574A81F28CC5A00838209 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A71F28CC3800838209 /* CLLocation.swift */; };
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
@@ -126,6 +128,9 @@
 		35DC9D911F4323AA001ECD64 /* LanesContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesContainerView.swift */; };
 		35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E407671F5625FF00EFC814 /* StyleKitMarker.swift */; };
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
+		43AA0E321F7AFD10007D0AB1 /* FeedbackEventTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43AA0E311F7AFD10007D0AB1 /* FeedbackEventTableViewController.swift */; };
+		43F12A5F1F7B0344007770B7 /* ArrivedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F12A5E1F7B0344007770B7 /* ArrivedTableViewCell.swift */; };
+		43F12A631F7B075B007770B7 /* CircularView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F12A621F7B075B007770B7 /* CircularView.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5000A921EC25C6E00563EA9 /* Abbreviations.swift */; };
@@ -416,6 +421,11 @@
 		35DC9D901F4323AA001ECD64 /* LanesContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesContainerView.swift; sourceTree = "<group>"; };
 		35E407671F5625FF00EFC814 /* StyleKitMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleKitMarker.swift; sourceTree = "<group>"; };
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
+		437287411F7AF0810039229F /* FeedbackOverviewTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackOverviewTableViewController.swift; sourceTree = "<group>"; };
+		43AA0E311F7AFD10007D0AB1 /* FeedbackEventTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackEventTableViewController.swift; sourceTree = "<group>"; };
+		43F12A5E1F7B0344007770B7 /* ArrivedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrivedTableViewCell.swift; sourceTree = "<group>"; };
+		43F12A601F7B0352007770B7 /* FeedbackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackTableViewCell.swift; sourceTree = "<group>"; };
+		43F12A621F7B075B007770B7 /* CircularView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularView.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		C5000A921EC25C6E00563EA9 /* Abbreviations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Abbreviations.swift; sourceTree = "<group>"; };
@@ -640,6 +650,7 @@
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
 				351BEBE31E5BCC63006FE110 /* RouteManeuverViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
+				43F12A5D1F7B030A007770B7 /* EOR Feedback */,
 				351BEBE51E5BCC63006FE110 /* RoutePageViewController.swift */,
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				351A40151F0291D100E6D378 /* PollyVoiceController.swift */,
@@ -753,6 +764,18 @@
 				352BBC561E5E78EA00703DF1 /* Objective-CTests */,
 			);
 			name = Examples;
+			sourceTree = "<group>";
+		};
+		43F12A5D1F7B030A007770B7 /* EOR Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				437287411F7AF0810039229F /* FeedbackOverviewTableViewController.swift */,
+				43AA0E311F7AFD10007D0AB1 /* FeedbackEventTableViewController.swift */,
+				43F12A5E1F7B0344007770B7 /* ArrivedTableViewCell.swift */,
+				43F12A621F7B075B007770B7 /* CircularView.swift */,
+				43F12A601F7B0352007770B7 /* FeedbackTableViewCell.swift */,
+			);
+			name = "EOR Feedback";
 			sourceTree = "<group>";
 		};
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
@@ -1364,9 +1387,12 @@
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
+				35924BA01F868890009C1493 /* FeedbackTableViewCell.swift in Sources */,
+				43AA0E321F7AFD10007D0AB1 /* FeedbackEventTableViewController.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
 				351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */,
 				351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */,
+				43F12A5F1F7B0344007770B7 /* ArrivedTableViewCell.swift in Sources */,
 				C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */,
 				35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */,
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
@@ -1382,9 +1408,11 @@
 				351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */,
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
+				35924B9F1F86888A009C1493 /* FeedbackOverviewTableViewController.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneArrowView.swift in Sources */,
+				43F12A631F7B075B007770B7 /* CircularView.swift in Sources */,
 				35375EC11F31FA86004CE727 /* Settings.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,

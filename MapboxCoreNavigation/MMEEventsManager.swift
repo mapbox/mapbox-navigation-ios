@@ -169,7 +169,7 @@ extension MMEEventsManager {
         eventDictionary["event"] = MMEEventTypeNavigationFeedback
         
         eventDictionary["userId"] = UIDevice.current.identifierForVendor?.uuidString
-        eventDictionary["feedbackType"] = type.description
+        eventDictionary["feedbackType"] = type.rawValue
         eventDictionary["description"] = description
         
         eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
@@ -321,37 +321,49 @@ class FixedLengthQueue<T> {
     }
 }
 
-class CoreFeedbackEvent: Hashable {
+public class CoreFeedbackEvent: Hashable {
     var id = UUID()
     
     var timestamp: Date
     
-    var eventDictionary: [String: Any]
+    public var eventDictionary: [String: Any]
     
     init(timestamp: Date, eventDictionary: [String: Any]) {
         self.timestamp = timestamp
         self.eventDictionary = eventDictionary
     }
     
-    var hashValue: Int {
+    public var hashValue: Int {
         get {
             return id.hashValue
         }
     }
     
-    static func ==(lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
+    public static func ==(lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
         return lhs.id == rhs.id
     }
 }
 
-class FeedbackEvent: CoreFeedbackEvent {
-    func update(type: FeedbackType, description: String?) {
-        eventDictionary["feedbackType"] = type.description
-        eventDictionary["description"] = description
+public class FeedbackEvent: CoreFeedbackEvent {
+    public var type: FeedbackType? {
+        didSet {
+            self.eventDictionary["feedbackType"] = type?.rawValue
+        }
+    }
+    
+    public var description: String? {
+        didSet {
+            eventDictionary["description"] = description
+        }
+    }
+    
+    public var coordinate: CLLocationCoordinate2D? {
+        guard let latitude = eventDictionary["lat"] as? CLLocationDegrees, let longitude = eventDictionary["lng"] as? CLLocationDegrees else { return nil }
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
 }
 
-class RerouteEvent: CoreFeedbackEvent {
+class RerouteEvent: FeedbackEvent {
     func update(newRoute: Route) {
         if let geometry = newRoute.coordinates {
             eventDictionary["newGeometry"] = Polyline(coordinates: geometry).encodedPolyline

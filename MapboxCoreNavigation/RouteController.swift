@@ -167,6 +167,7 @@ open class RouteController: NSObject {
     
     var sessionState:SessionState
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
+    public var feedbackEvents = [FeedbackEvent]()
     
     var hasFoundOneQualifiedLocation = false
     
@@ -370,7 +371,8 @@ open class RouteController: NSObject {
      */
     public func updateFeedback(feedbackId: String, type: FeedbackType, description: String?) {
         if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id.uuidString == feedbackId}) as? FeedbackEvent {
-            lastFeedback.update(type: type, description: description)
+            lastFeedback.type = type
+            lastFeedback.description = description
         }
     }
     
@@ -908,6 +910,7 @@ extension RouteController {
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
         
         outstandingFeedbackEvents.append(event)
+        feedbackEvents.append(event)
         
         return event.id.uuidString
     }
@@ -923,7 +926,8 @@ extension RouteController {
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
         outstandingFeedbackEvents.append(event)
-        
+        feedbackEvents.append(event)
+
         return event.id.uuidString
     }
     
