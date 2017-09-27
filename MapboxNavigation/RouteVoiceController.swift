@@ -39,7 +39,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     /**
      SSML option that specifies the voice loudness.
      */
-    public var instructionVoiceVolume = "x-loud"
+    public var instructionVoiceVolume = "default"
     
     
     /**
