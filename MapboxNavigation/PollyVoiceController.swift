@@ -165,8 +165,15 @@ public class PollyVoiceController: RouteVoiceController {
                     
                     if let audioPlayer = strongSelf.audioPlayer {
                         try strongSelf.duckAudio()
-                        audioPlayer.volume = strongSelf.volume
-                        audioPlayer.play()
+                        
+                        let readyToyPlay = audioPlayer.prepareToPlay()
+                        
+                        if readyToyPlay {
+                            audioPlayer.volume = strongSelf.volume
+                            audioPlayer.play()
+                        } else {
+                            strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Could not play audio")
+                        }
                     }
                 } catch  let error as NSError {
                     strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
