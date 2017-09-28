@@ -156,30 +156,31 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             }
             
-            guard let data = data else { return }
-            
-            DispatchQueue.main.async {
-                do {
-                    strongSelf.audioPlayer = try AVAudioPlayer(data: data)
-                    strongSelf.audioPlayer?.delegate = self
-                    
-                    if let audioPlayer = strongSelf.audioPlayer {
-                        try strongSelf.duckAudio()
-                        
-                        let readyToyPlay = audioPlayer.prepareToPlay()
-                        
-                        if readyToyPlay {
-                            audioPlayer.volume = strongSelf.volume
-                            audioPlayer.play()
-                        } else {
-                            strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Could not play audio")
-                        }
-                    }
-                } catch  let error as NSError {
-                    strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
-                }
+            guard let data = data else {
+                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "No data")
+                return
             }
-
+            
+            do {
+                strongSelf.audioPlayer = try AVAudioPlayer(data: data)
+                let prepared = strongSelf.audioPlayer?.prepareToPlay()
+                
+                guard let _ = prepared else {
+                    strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to prepare")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    let played = strongSelf.audioPlayer?.play() ?? false // Play must be called on UI thread?
+                    
+                    guard played else {
+                        strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to play")
+                        return
+                    }
+                }
+            } catch  let error as NSError {
+                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
+            }
         }
         
         pollyTask?.resume()
