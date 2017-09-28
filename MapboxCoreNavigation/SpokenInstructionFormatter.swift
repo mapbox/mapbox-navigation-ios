@@ -72,10 +72,34 @@ public class SpokenInstructionFormatter: NSObject {
         // We only want to announce this special depature announcement once.
         // Once it has been announced, all subsequnt announcements will not have an alert level of low
         // since the user will be approaching the maneuver location.
-        let isDeparture = routeProgress.currentLegProgress.currentStep.maneuverType == .depart && alertLevel == .depart
-        let didCompleteManeuver = routeProgress.currentLegProgress.currentStep.distance > 2_000 && routeProgress.currentLegProgress.alertUserLevel == .low
-        if isDeparture || didCompleteManeuver {
-            if isDeparture && upcomingStepDuration < linkedInstructionMultiplier {
+        let isStartingDeparture = routeProgress.currentLegProgress.currentStep.maneuverType == .depart && (alertLevel == .depart || alertLevel == .low)
+        if let currentInstruction = currentInstruction, isStartingDeparture {
+            if routeProgress.currentLegProgress.currentStep.distance > RouteControllerMinDistanceForContinueInstruction {
+                text = currentInstruction
+            } else if upcomingStepDuration > linkedInstructionMultiplier {
+                // If the upcoming step is an .exitRoundabout or .exitRotary, don't link the instruction
+                if let followOnStep = routeProgress.currentLegProgress.followOnStep, followOnStep.maneuverType == .exitRoundabout || followOnStep.maneuverType == .exitRotary {
+                    text = upComingInstruction
+                } else {
+                    let phrase = escapeIfNecessary(routeStepFormatter.instructions.phrase(named: .twoInstructionsWithDistance))
+                    text = phrase.replacingTokens { (tokenType) -> String in
+                        switch tokenType {
+                        case .firstInstruction:
+                            return currentInstruction
+                        case .secondInstruction:
+                            return upComingInstruction
+                        case .distance:
+                            return maneuverVoiceDistanceFormatter.string(from: userDistance)
+                        default:
+                            fatalError("Unexpected token \(tokenType)")
+                        }
+                    }
+                }
+            } else {
+                text = upComingInstruction
+            }
+        } else if routeProgress.currentLegProgress.currentStep.distance > RouteControllerMinDistanceForContinueInstruction && routeProgress.currentLegProgress.alertUserLevel == .low {
+            if isStartingDeparture && upcomingStepDuration < linkedInstructionMultiplier {
                 let phrase = escapeIfNecessary(routeStepFormatter.instructions.phrase(named: .twoInstructionsWithDistance))
                 text = phrase.replacingTokens { (tokenType) -> String in
                     switch tokenType {
