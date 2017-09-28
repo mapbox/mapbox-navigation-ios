@@ -2,12 +2,12 @@ import Foundation
 
 extension UserDefaults {
     fileprivate func registerNavigationDefaults() {
-        register(defaults: [NavigationSettingsKey.muted.rawValue: false])
+        register(defaults: [NavigationSettingsKey.voiceVolume.rawValue: false])
     }
 }
 
 enum NavigationSettingsKey: String {
-    case muted = "muted"
+    case voiceVolume = "voiceVolume"
 }
 
 struct NavigationSettings {
@@ -20,12 +20,12 @@ struct NavigationSettings {
         return NavigationSettings(defaults: defaults!)
     }()
     
-    public var muted: Bool {
+    public var voiceVolume: Float {
         get {
-            return defaults.bool(forKey: NavigationSettingsKey.muted.rawValue) 
+            return defaults.float(forKey: NavigationSettingsKey.voiceVolume.rawValue)
         }
         set {
-            defaults.set(newValue, forKey: NavigationSettingsKey.muted.rawValue)
+            defaults.set(newValue, forKey: NavigationSettingsKey.voiceVolume.rawValue)
         }
     }
 }

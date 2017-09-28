@@ -73,6 +73,11 @@ public let RouteControllerDidReroute = Notification.Name(MBRouteControllerDidRer
 public let RouteControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
 
 /**
+ Emitted after the user has gone off-route but the `RouteController` failed to reroute.
+ */
+public let RouteVoiceControllerVoiceVolumeDidChange = Notification.Name(MBRouteVoiceControllerVoiceVolumeDidChange)
+
+/**
  Maximum number of meters the user can travel away from step before `RouteControllerShouldReroute` is emitted.
  */
 public var RouteControllerMaximumDistanceBeforeRecalculating: CLLocationDistance = 50
