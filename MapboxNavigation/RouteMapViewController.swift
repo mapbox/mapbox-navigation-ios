@@ -148,15 +148,14 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        mapView.camera = tiltedCamera
         mapView.tracksUserCourse = true
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
         updateVisibleBounds()
-
         isInOverviewMode = true
     }
     
@@ -365,10 +364,12 @@ extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
 extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
         recenterButton.isHidden = true
+        mapView.logoView.isHidden = false
     }
     
     func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
         recenterButton.isHidden = false
+        mapView.logoView.isHidden = true
     }
 }
 

@@ -90,10 +90,31 @@ open class NavigationMapView: MGLMapView {
     }
     
     func updateCourseView(_ sender: UIGestureRecognizer) {
-        if sender.state == .changed {
-            guard let location = userLocationForCourseTracking else { return }
-            userCourseView?.layer.removeAllAnimations()
-            userCourseView?.center = convert(location.coordinate, toPointTo: self)
+        
+        // Disable course tracking when any kind of user interaction occurs
+        if tracksUserCourse {
+            tracksUserCourse = false
+        }
+        
+        if sender is UITapGestureRecognizer {
+            if sender.state == .ended {
+                enableFrameByFrameCourseViewTracking(for: 2)
+            }
+        } else if let pan = sender as? UIPanGestureRecognizer {
+            if sender.state == .ended || sender.state == .cancelled
+            {
+                let velocity = pan.velocity(in: self)
+                let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
+                if didFling {
+                    enableFrameByFrameCourseViewTracking(for: 1)
+                }
+            }
+            else if sender.state == .changed
+            {
+                guard let location = userLocationForCourseTracking else { return }
+                userCourseView?.layer.removeAllAnimations()
+                userCourseView?.center = convert(location.coordinate, toPointTo: self)
+            }
         }
     }
     
