@@ -292,9 +292,13 @@ open class RouteController: NSObject {
         
         var nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
         
-        // If the upcoming step is a roundabout, only look at the current step for snapping.
+        // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
         // Otherwise, we may get false positives from nearby step coordinates
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .uTurn, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
+        if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+            let initialHeading = upcomingStep.initialHeading,
+            let finalHeading = upcomingStep.finalHeading,
+            differenceBetweenAngles(initialHeading, finalHeading) < RouteControllerMaxManipulatedCourseAngle,
+            let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
            nearByCoordinates = coordinates
         }
 
@@ -574,7 +578,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         // If the user is moving away from the maneuver location
-        // and they are close to the next step
+        // and they are close to the upcoming or follow on step,
         // we can safely say they have completed the maneuver.
         // This is intended to be a fallback case when we do find
         // that the users course matches the exit bearing.
@@ -582,6 +586,13 @@ extension RouteController: CLLocationManagerDelegate {
             let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
             if !isCloseToCurrentStep && isCloseToUpComingStep {
                 incrementRouteProgress(newAlert(from: upComingStep), location: location, updateStepIndex: true)
+                return true
+            }
+        }
+        if let followOnStep = routeProgress.currentLegProgress.followOnStep {
+            let isCloseToUpComingStep = newLocation.isWithin(radius, of: followOnStep)
+            if !isCloseToCurrentStep && isCloseToUpComingStep {
+                incrementRouteProgress(newAlert(from: followOnStep), location: location, updateStepIndex: true)
                 return true
             }
         }
@@ -795,25 +806,13 @@ extension RouteController: CLLocationManagerDelegate {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
             let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
+            
             let userAbsoluteDistance = step - location.coordinate
-            
-            // userAbsoluteDistanceToManeuverLocation is set to nil by default
-            // If it's set to nil, we know the user has never entered the maneuver radius
-            if routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation == nil {
-                routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = RouteControllerManeuverZoneRadius
-            }
-            
             let lastKnownUserAbsoluteDistance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation
-            
-            // The objective here is to make sure the user is moving away from the maneuver location
-            // This helps on maneuvers where the difference between the exit and enter heading are similar
-            if  userAbsoluteDistance <= lastKnownUserAbsoluteDistance! {
-                routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
-            }
             
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 alertLevel = .arrive
-            } else if courseMatchesManeuverFinalHeading {
+            } else if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
                 updateStepIndex = true
                 
                 // Look at the following step to determine what the new alert level should be
@@ -823,6 +822,8 @@ extension RouteController: CLLocationManagerDelegate {
                     assert(false, "In this case, there should always be an upcoming step")
                 }
             }
+            
+            routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
         } else if secondsToEndOfStep <= RouteControllerHighAlertInterval {
             alertLevel = .high
         } else if secondsToEndOfStep <= RouteControllerMediumAlertInterval {
