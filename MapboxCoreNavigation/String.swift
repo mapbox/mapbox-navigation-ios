@@ -12,7 +12,7 @@ extension String {
         return isEmpty ? nil : self
     }
     
-    var wholeRange: Range<String.Index> {
+    public var wholeRange: Range<String.Index> {
         return startIndex..<endIndex
     }
     
