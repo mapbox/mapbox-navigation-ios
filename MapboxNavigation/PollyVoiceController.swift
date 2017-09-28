@@ -99,7 +99,7 @@ public class PollyVoiceController: RouteVoiceController {
         case ("sv", _):
             input.voiceId = .astrid
         default:
-            super.speak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
+            callSuperSpeak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
             return
         }
         
@@ -122,6 +122,8 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     func callSuperSpeak(_ text: String, error: String) {
+        pollyTask?.cancel()
+        
         guard let audioPlayer = audioPlayer else {
             super.speak(fallbackText, error: error)
             return
@@ -134,12 +136,12 @@ public class PollyVoiceController: RouteVoiceController {
     
     func handle(_ awsTask: AWSTask<NSURL>) {
         guard awsTask.error == nil else {
-            super.speak(fallbackText, error: awsTask.error!.localizedDescription)
+            callSuperSpeak(fallbackText, error: awsTask.error!.localizedDescription)
             return
         }
         
         guard let url = awsTask.result else {
-            super.speak(fallbackText, error: "No polly response")
+            callSuperSpeak(fallbackText, error: "No polly response")
             return
         }
         
