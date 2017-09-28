@@ -39,7 +39,7 @@ class RouteProgressTests: XCTestCase {
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.distanceTraveled, 0)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.durationRemaining, 101.7)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.fractionTraveled, 0)
-        XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation, nil)
+        XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation, Double.infinity)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.step.description, "Head south on Taylor Street")
     }
     
@@ -50,7 +50,7 @@ class RouteProgressTests: XCTestCase {
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.distanceTraveled, 0)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.durationRemaining, 288.9)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.fractionTraveled, 0)
-        XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation, nil)
+        XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation, Double.infinity)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.step.description, "Turn right onto California Street")
     }
 }
