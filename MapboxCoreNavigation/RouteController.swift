@@ -806,19 +806,13 @@ extension RouteController: CLLocationManagerDelegate {
             // Use the currentStep if there is not a next step
             // This occurs when arriving
             let step = routeProgress.currentLegProgress.upComingStep?.maneuverLocation ?? routeProgress.currentLegProgress.currentStep.maneuverLocation
+            
             let userAbsoluteDistance = step - location.coordinate
-            
-            // userAbsoluteDistanceToManeuverLocation is set to nil by default
-            // If it's set to nil, we know the user has never entered the maneuver radius
-            if routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation == nil {
-                routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = RouteControllerManeuverZoneRadius
-            }
-            
             let lastKnownUserAbsoluteDistance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation
             
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 alertLevel = .arrive
-            } else if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance! && lastKnownUserAbsoluteDistance! > RouteControllerManeuverZoneRadius) {
+            } else if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
                 updateStepIndex = true
                 
                 // Look at the following step to determine what the new alert level should be

@@ -370,7 +370,7 @@ open class RouteStepProgress: NSObject {
     /**
      Returns distance from user to end of step.
      */
-    public var userDistanceToManeuverLocation: CLLocationDistance? = nil
+    public var userDistanceToManeuverLocation: CLLocationDistance = Double.infinity
     
     /**
      Total distance in meters remaining on current step.
