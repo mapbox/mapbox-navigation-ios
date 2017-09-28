@@ -165,9 +165,9 @@ public class PollyVoiceController: RouteVoiceController {
             
             do {
                 strongSelf.audioPlayer = try AVAudioPlayer(data: data)
-                let prepared = strongSelf.audioPlayer?.prepareToPlay()
+                let prepared = strongSelf.audioPlayer?.prepareToPlay() ?? false
                 
-                guard let _ = prepared else {
+                guard prepared else {
                     strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to prepare")
                     return
                 }
