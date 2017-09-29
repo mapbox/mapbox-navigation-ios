@@ -173,7 +173,7 @@ public class PollyVoiceController: RouteVoiceController {
                 }
                 
                 DispatchQueue.main.async {
-                    let played = strongSelf.audioPlayer?.play() ?? false // Play must be called on UI thread?
+                    let played = strongSelf.audioPlayer?.play() ?? false
                     
                     guard played else {
                         strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to play")
