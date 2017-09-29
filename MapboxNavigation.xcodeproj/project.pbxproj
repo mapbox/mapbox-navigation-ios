@@ -47,7 +47,6 @@
 		3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */; };
 		352BBC3B1E5E6A0C00703DF1 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
 		352BBC401E5E6C9F00703DF1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A3471E5E418D0004CA57 /* AppDelegate.m */; };
-		352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
 		352BBC4A1E5E78D700703DF1 /* Example_SwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC491E5E78D700703DF1 /* Example_SwiftTests.swift */; };
 		352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */; };
 		35375EC11F31FA86004CE727 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35375EC01F31FA86004CE727 /* Settings.swift */; };
@@ -111,6 +110,12 @@
 		35BF8CA41F28EBD8003F6125 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA31F28EBD8003F6125 /* String.swift */; };
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */; };
+		35CC14151F7994B0009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
+		35CC14161F7994B1009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
+		35CC14171F79A434009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
+		35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35CC14191F79A43B009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
+		35CC141A1F79A43B009E872A /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FB1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -131,7 +136,6 @@
 		C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C520EE921EBB84F9008805BC /* Navigation.storyboard */; };
 		C5212B551EC4BE97009538EB /* Abbreviations.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5212B571EC4BE97009538EB /* Abbreviations.plist */; };
 		C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */; };
-		C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */; };
 		C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52D09D21DEF636C00BE3C5C /* Fixture.swift */; };
 		C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C53208AA1E81FFB900910266 /* NavigationMapView.swift */; };
@@ -156,7 +160,6 @@
 		C5C94C1B1DDCD22B0097296A /* MapboxCoreNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* RouteController.swift */; };
 		C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */; };
-		C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */; };
 		C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */; };
 		C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */; };
 		C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
@@ -258,6 +261,7 @@
 				C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */,
 				3525449F1E664E2D004C8F1C /* AWSCore.framework in Embed Frameworks */,
 				3525449E1E664E0F004C8F1C /* AWSPolly.framework in Embed Frameworks */,
+				35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
 				354A01D61E6626AC00D765C2 /* MapboxNavigation.framework in Embed Frameworks */,
@@ -280,6 +284,7 @@
 				352544A01E665AA3004C8F1C /* AWSCore.framework in Embed Frameworks */,
 				352544A11E665AA3004C8F1C /* AWSPolly.framework in Embed Frameworks */,
 				354A01DC1E6626E900D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
+				35CC141A1F79A43B009E872A /* Turf.framework in Embed Frameworks */,
 				354A01EB1E6626EF00D765C2 /* MapboxDirections.framework in Embed Frameworks */,
 				C5A6B2DF1F4DE57E004260EA /* Solar.framework in Embed Frameworks */,
 				C51245F31F19471C00E33B52 /* MapboxMobileEvents.framework in Embed Frameworks */,
@@ -401,6 +406,7 @@
 		35C6EDB21EBB286500A27EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteVoiceController.swift; sourceTree = "<group>"; };
 		35C997401E732C5400544D1C /* RouteStepFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepFormatter.swift; sourceTree = "<group>"; };
+		35CC14141F799496009E872A /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Turf.framework; path = Carthage/Build/iOS/Turf.framework; sourceTree = "<group>"; };
 		35CF34B01F0A733200C2692E /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
 		35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+MGLNavigationAdditions.h"; sourceTree = "<group>"; };
@@ -418,7 +424,6 @@
 		C520EE941EBBBD55008805BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Base.lproj/Navigation.strings; sourceTree = "<group>"; };
 		C5212B561EC4BE97009538EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Base; path = Base.lproj/Abbreviations.plist; sourceTree = "<group>"; };
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
-		C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeometryTests.swift; sourceTree = "<group>"; };
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		C52D09D21DEF636C00BE3C5C /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
 		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationMapView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -446,7 +451,6 @@
 		C5ADFBD91DDCC7840011824B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C5ADFBF91DDCC9580011824B /* RouteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteController.swift; sourceTree = "<group>"; };
 		C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgress.swift; sourceTree = "<group>"; };
-		C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMEEventsManager.swift; sourceTree = "<group>"; };
 		C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
@@ -503,6 +507,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				354A01BF1E6625D100D765C2 /* Mapbox.framework in Frameworks */,
+				35CC14161F7994B1009E872A /* Turf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +535,7 @@
 				354A01CB1E66265D00D765C2 /* OSRMTextInstructions.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
 				C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */,
+				35CC14171F79A434009E872A /* Turf.framework in Frameworks */,
 				354A01C91E66265B00D765C2 /* Polyline.framework in Frameworks */,
 				354A01C21E66265100D765C2 /* Mapbox.framework in Frameworks */,
 			);
@@ -542,6 +548,7 @@
 				354A01DB1E6626E900D765C2 /* MapboxCoreNavigation.framework in Frameworks */,
 				354A01EA1E6626EF00D765C2 /* MapboxDirections.framework in Frameworks */,
 				354A01E41E6626EF00D765C2 /* Polyline.framework in Frameworks */,
+				35CC14191F79A43B009E872A /* Turf.framework in Frameworks */,
 				354BD4F51E6637D500AE1344 /* AWSPolly.framework in Frameworks */,
 				C5A6B2DE1F4DE57E004260EA /* Solar.framework in Frameworks */,
 				C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */,
@@ -561,6 +568,7 @@
 				C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */,
 				359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */,
+				35CC14151F7994B0009E872A /* Turf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -750,6 +758,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				35CC14141F799496009E872A /* Turf.framework */,
 				C57607B01F4CC97D00C27423 /* Solar.framework */,
 				C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */,
 				35213DAD1EC456CF00A62B21 /* FBSnapshotTestCase.framework */,
@@ -891,7 +900,6 @@
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
 				C58D6BAC1DDCF2AE00387F53 /* Constants.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
-				C5ADFBFD1DDCC9CE0011824B /* Geometry.swift */,
 				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
 				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
@@ -910,7 +918,6 @@
 				351174F71EF1FC8F0065E248 /* Helpers */,
 				C52D09CF1DEF5E5F00BE3C5C /* Fixtures */,
 				C52D09D21DEF636C00BE3C5C /* Fixture.swift */,
-				C52D09CB1DEF444D00BE3C5C /* GeometryTests.swift */,
 				C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */,
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
@@ -1317,6 +1324,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/FBSnapshotTestCase.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxMobileEvents.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Solar.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Turf.framework",
 			);
 			name = "Carthage copy frameworks";
 			outputPaths = (
@@ -1354,7 +1362,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
-				352BBC421E5E72C500703DF1 /* Geometry.swift in Sources */,
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
@@ -1451,7 +1458,6 @@
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
-				C5C94C1E1DDCD23A0097296A /* Geometry.swift in Sources */,
 				357826C31F1B7CCE005C54FB /* SpokenDistanceFormatter.swift in Sources */,
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
@@ -1476,7 +1482,6 @@
 			files = (
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
 				357826C71F1B84F2005C54FB /* DistanceFormatterTests.swift in Sources */,
-				C52D09CC1DEF444D00BE3C5C /* GeometryTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
 				C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */,

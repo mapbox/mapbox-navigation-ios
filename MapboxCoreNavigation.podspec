@@ -43,5 +43,6 @@ Pod::Spec.new do |s|
   s.dependency "MapboxDirections.swift", "~> 0.10.5"
   s.dependency "OSRMTextInstructions", "~> 0.3"
   s.dependency "MapboxMobileEvents", "~> 0.2"
+  s.dependency "Turf", "~> 0.0.3"
 
 end

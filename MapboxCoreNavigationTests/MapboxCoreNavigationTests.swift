@@ -1,5 +1,6 @@
 import XCTest
 import MapboxDirections
+import Turf
 @testable import MapboxCoreNavigation
 
 let response = Fixture.JSONFromFileNamed(name: "route")

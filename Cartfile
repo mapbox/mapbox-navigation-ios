@@ -1,5 +1,6 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 3.6
 github "mapbox/MapboxDirections.swift" ~> 0.10.5
+github "mapbox/turf-swift" ~> 0.0.3
 github "52inc/Pulley" == 1.4
 github "rs/SDWebImage" ~> 4.1
 github "Project-OSRM/osrm-text-instructions.swift" ~> 0.3.5
