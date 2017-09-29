@@ -89,6 +89,8 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = .raveena
         case ("en", _):
             input.voiceId = .joanna
+        case ("es", "ES"):
+            input.voiceId = .enrique
         case ("es", _):
             input.voiceId = .miguel
         case ("fr", _):
@@ -97,10 +99,14 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = .giorgio
         case ("nl", _):
             input.voiceId = .lotte
+        case ("ro", _):
+            input.voiceId = .carmen
         case ("ru", _):
             input.voiceId = .maxim
         case ("sv", _):
             input.voiceId = .astrid
+        case ("tr", _):
+            input.voiceId = .filiz
         default:
             callSuperSpeak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
             return
