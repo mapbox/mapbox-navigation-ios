@@ -133,7 +133,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func voiceVolumeDidChange(notification: Notification) {
-        if let voiceVolume = notification.userInfo?["voiceVolume"] as? Float {
+        if let voiceVolume = notification.userInfo?[RouteControllerDidChangeVoiceVolumeKey] as? Float {
             self.volume = voiceVolume
             if volume == 0 {
                 speechSynth.stopSpeaking(at: .word)

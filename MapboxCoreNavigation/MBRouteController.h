@@ -7,6 +7,7 @@ extern NSString *const MBRouteControllerProgressDidChangeNotificationSecondsRema
 
 extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey;
 extern NSString *const MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey;
+extern NSString *const MBRouteControllerDidChangeVoiceVolumeKey;
 
 extern NSString *const MBRouteControllerNotificationLocationKey;
 extern NSString *const MBRouteControllerNotificationRouteKey;

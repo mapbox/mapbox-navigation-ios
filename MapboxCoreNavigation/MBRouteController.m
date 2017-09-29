@@ -19,3 +19,4 @@ NSString *const MBRouteControllerDidReroute                     = @"RouteControl
 NSString *const MBRouteControllerDidFailToReroute               = @"RouteControllerDidFailToReroute";
 NSString *const MBRouteControllerDidFindFasterRouteKey          = @"RouteControllerDidFindFasterRoute";
 NSString *const MBRouteVoiceControllerVoiceVolumeDidChange      = @"RouteVoiceControllerVoiceVolumeDidChange";
+NSString *const MBRouteControllerDidChangeVoiceVolumeKey        = @"RouteControllerDidChangeVoiceVolumeKey";

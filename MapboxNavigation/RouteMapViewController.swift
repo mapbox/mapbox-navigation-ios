@@ -157,7 +157,7 @@ class RouteMapViewController: UIViewController {
         NavigationSettings.shared.voiceVolume = muted ? 0 : 1
         
         NotificationCenter.default.post(name: RouteVoiceControllerVoiceVolumeDidChange, object: self, userInfo: [
-            "voiceVolume": NavigationSettings.shared.voiceVolume
+            RouteControllerDidChangeVoiceVolumeKey: NavigationSettings.shared.voiceVolume
             ])
     }
     
