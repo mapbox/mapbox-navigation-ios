@@ -99,7 +99,7 @@ public class PollyVoiceController: RouteVoiceController {
         case ("sv", _):
             input.voiceId = .astrid
         default:
-            super.speak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
+            callSuperSpeak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
             return
         }
         
@@ -122,17 +122,26 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     func callSuperSpeak(_ text: String, error: String) {
+        pollyTask?.cancel()
+        
+        guard let audioPlayer = audioPlayer else {
+            super.speak(fallbackText, error: error)
+            return
+        }
+        
+        guard !audioPlayer.isPlaying else { return }
+        
         super.speak(fallbackText, error: error)
     }
     
     func handle(_ awsTask: AWSTask<NSURL>) {
         guard awsTask.error == nil else {
-            super.speak(fallbackText, error: awsTask.error!.localizedDescription)
+            callSuperSpeak(fallbackText, error: awsTask.error!.localizedDescription)
             return
         }
         
         guard let url = awsTask.result else {
-            super.speak(fallbackText, error: "No polly response")
+            callSuperSpeak(fallbackText, error: "No polly response")
             return
         }
         
@@ -149,23 +158,31 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             }
             
-            guard let data = data else { return }
-            
-            DispatchQueue.main.async {
-                do {
-                    strongSelf.audioPlayer = try AVAudioPlayer(data: data)
-                    strongSelf.audioPlayer?.delegate = self
-                    
-                    if let audioPlayer = strongSelf.audioPlayer {
-                        try strongSelf.duckAudio()
-                        audioPlayer.volume = strongSelf.volume
-                        audioPlayer.play()
-                    }
-                } catch  let error as NSError {
-                    strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
-                }
+            guard let data = data else {
+                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "No data")
+                return
             }
-
+            
+            do {
+                strongSelf.audioPlayer = try AVAudioPlayer(data: data)
+                let prepared = strongSelf.audioPlayer?.prepareToPlay() ?? false
+                
+                guard prepared else {
+                    strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to prepare")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    let played = strongSelf.audioPlayer?.play() ?? false
+                    
+                    guard played else {
+                        strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to play")
+                        return
+                    }
+                }
+            } catch  let error as NSError {
+                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
+            }
         }
         
         pollyTask?.resume()
