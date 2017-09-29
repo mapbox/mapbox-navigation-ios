@@ -49,6 +49,8 @@ open class NavigationMapView: MGLMapView {
         makeGestureRecognizersUpdateCourseView()
         makeGestureRecognizersResetInactivityTimer()
         resetInactivityTimer()
+        
+        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
     }
     
     public required init?(coder decoder: NSCoder) {
@@ -58,6 +60,8 @@ open class NavigationMapView: MGLMapView {
         makeGestureRecognizersUpdateCourseView()
         makeGestureRecognizersResetInactivityTimer()
         resetInactivityTimer()
+        
+        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
     }
     
     /** Modifies the gesture recognizers to also disable course tracking. */
@@ -77,6 +81,17 @@ open class NavigationMapView: MGLMapView {
     func makeGestureRecognizersUpdateCourseView() {
         for gestureRecognizer in gestureRecognizers ?? [] {
             gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
+        }
+    }
+    
+    deinit {
+        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
+    }
+    
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "batteryState" {
+            let batteryState = UIDevice.current.batteryState
+            isPluggedIn = batteryState == .charging || batteryState == .full
         }
     }
     
@@ -187,7 +202,7 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    var isPluggedIn: Bool = true
+    var isPluggedIn: Bool = false
     
     @objc func disableUserCourseTracking() {
         tracksUserCourse = false
