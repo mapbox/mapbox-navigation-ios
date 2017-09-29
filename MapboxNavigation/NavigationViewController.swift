@@ -238,11 +238,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /**
-     Provides access to the navigation's `MGLMapView` with all its styling capabilities.
+     The main map view displayed inside the view controller.
      
-     Note that you should not change the `mapView`'s delegate.
+     - note: Do not change this map view’s delegate.
      */
-    public var mapView: MGLMapView? {
+    public var mapView: NavigationMapView? {
         get {
             return mapViewController?.mapView
         }
