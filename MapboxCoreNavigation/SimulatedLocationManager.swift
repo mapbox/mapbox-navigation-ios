@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import Turf
 
 fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
 fileprivate let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
@@ -96,19 +97,21 @@ public class SimulatedLocationManager: NavigationLocationManager {
     @objc fileprivate func tick() {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
         
-        guard let newCoordinate = coordinate(at: currentDistance, fromStartOf: routeLine) else {
+        let polyline = Polyline(routeLine)
+        
+        guard let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
             return
         }
         
         // Closest coordinate ahead
-        guard let lookAheadCoordinate = coordinate(at: currentDistance + 10, fromStartOf: routeLine) else { return }
-        guard let closestCoordinate = closestCoordinate(on: routeLine, to: newCoordinate) else { return }
+        guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: currentDistance + 10) else { return }
+        guard let closestCoordinate = polyline.closestCoordinate(to: newCoordinate) else { return }
         
         let closestLocation = locations[closestCoordinate.index]
         let distanceToClosest = closestLocation.distance(from: CLLocation(newCoordinate))
         
         let distance = min(max(distanceToClosest, 10), safeDistance)
-        let coordinatesNearby = polyline(along: routeLine, within: 100, of: newCoordinate)
+        let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100).coordinates
         
         // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
         if coordinatesNearby.count >= 10
@@ -130,7 +133,7 @@ public class SimulatedLocationManager: NavigationLocationManager {
                                      altitude: 0,
                                      horizontalAccuracy: horizontalAccuracy,
                                      verticalAccuracy: verticalAccuracy,
-                                     course: wrap(floor(newCoordinate.direction(to: lookAheadCoordinate)), min: 0, max: 360),
+                                     course: newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360),
                                      speed: currentSpeed,
                                      timestamp: Date())
         currentLocation = location
@@ -162,8 +165,8 @@ extension Array where Element == CLLocationCoordinate2D {
         
         for (coordinate, nextCoordinate) in zip(prefix(upTo: endIndex - 1), suffix(from: 1)) {
             let currentCoordinate = locations.isEmpty ? first! : coordinate
-            let course: CLLocationDirection = wrap(floor(coordinate.direction(to: nextCoordinate)), min: 0, max: 360)
-            let turnPenalty: Double = floor(differenceBetweenAngles(currentCoordinate.direction(to: coordinate), coordinate.direction(to: nextCoordinate)))
+            let course = coordinate.direction(to: nextCoordinate).wrap(min: 0, max: 360)
+            let turnPenalty = currentCoordinate.direction(to: coordinate).differenceBetween(coordinate.direction(to: nextCoordinate))
             let location = SimulatedLocation(coordinate: coordinate,
                                              altitude: 0,
                                              horizontalAccuracy: horizontalAccuracy,

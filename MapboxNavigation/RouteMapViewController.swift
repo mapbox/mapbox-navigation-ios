@@ -3,6 +3,7 @@ import Pulley
 import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
+import Turf
 
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
@@ -214,7 +215,7 @@ class RouteMapViewController: UIViewController {
         guard let userLocation = self.mapView.userLocation?.coordinate else { return }
         
         let overviewContentInset = UIEdgeInsets(top: 65, left: 20, bottom: 55, right: 20)
-        let slicedLine = polyline(along: polyline(along: self.routeController.routeProgress.route.coordinates!, from: userLocation, to: self.routeController.routeProgress.route.coordinates!.last))
+        let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
         mapView.userTrackingMode = .none
@@ -224,7 +225,7 @@ class RouteMapViewController: UIViewController {
         mapView.camera = camera
         
         // Don't keep zooming in
-        guard line.overlayBounds.ne - line.overlayBounds.sw > 200 else { return }
+        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > 200 else { return }
         
         mapView.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
@@ -467,15 +468,16 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             
             for line in allLines {
                 let featureCoordinates =  Array(UnsafeBufferPointer(start: line.coordinates, count: Int(line.pointCount)))
-                let slicedLine = polyline(along: stepCoordinates, from: closestCoordinate)
+                let featurePolyline = Polyline(featureCoordinates)
+                let slicedLine = Polyline(stepCoordinates).sliced(from: closestCoordinate)
                 
                 let lookAheadDistance:CLLocationDistance = 10
-                guard let pointAheadFeature = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates, from: closestCoordinate)) else { continue }
-                guard let pointAheadUser = coordinate(at: lookAheadDistance, fromStartOf: slicedLine) else { continue }
-                guard let reversedPoint = coordinate(at: lookAheadDistance, fromStartOf: polyline(along: featureCoordinates.reversed(), from: closestCoordinate)) else { continue }
+                guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
+                guard let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
+                guard let reversedPoint = Polyline(featureCoordinates.reversed()).sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
                 
-                let distanceBetweenPointsAhead = pointAheadFeature - pointAheadUser
-                let distanceBetweenReversedPoint = reversedPoint - pointAheadUser
+                let distanceBetweenPointsAhead = pointAheadFeature.distance(to: pointAheadUser)
+                let distanceBetweenReversedPoint = reversedPoint.distance(to: pointAheadUser)
                 let minDistanceBetweenPoints = min(distanceBetweenPointsAhead, distanceBetweenReversedPoint)
                 
                 if minDistanceBetweenPoints < smallestLabelDistance {

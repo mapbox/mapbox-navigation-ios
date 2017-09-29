@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
+import Turf
 
 typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 
@@ -404,13 +405,13 @@ open class NavigationMapView: MGLMapView {
         let minimumZoomLevel: Float = 14.5
         
         let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 50), 10)
-        let shaftCoordinates = Array(polyline(along: routeCoordinates, within: -shaftLength / 2, of: maneuverCoordinate).reversed()
-            + polyline(along: routeCoordinates, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
+        let polyline = Polyline(routeCoordinates)
+        let shaftCoordinates = Array(polyline.trimmed(from: maneuverCoordinate, distance: -shaftLength / 2).coordinates.reversed()
+            + polyline.trimmed(from: maneuverCoordinate, distance: shaftLength).coordinates.suffix(from: 1))
         
         if shaftCoordinates.count > 1 {
             let shaftStrokeLength = shaftLength * 1.1
-            var shaftStrokeCoordinates = Array(polyline(along: routeCoordinates, within: -shaftStrokeLength / 2, of: maneuverCoordinate).reversed()
-                + polyline(along: routeCoordinates, within: shaftLength, of: maneuverCoordinate).suffix(from: 1))
+            var shaftStrokeCoordinates = shaftCoordinates
             let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
             let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
             let maneuverArrowStrokePolylines = [shaftStrokePolyline]
