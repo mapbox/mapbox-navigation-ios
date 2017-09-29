@@ -592,7 +592,7 @@ extension RouteController: CLLocationManagerDelegate {
         if let followOnStep = routeProgress.currentLegProgress.followOnStep {
             let isCloseToUpComingStep = newLocation.isWithin(radius, of: followOnStep)
             if !isCloseToCurrentStep && isCloseToUpComingStep {
-                incrementRouteProgress(newAlert(from: followOnStep), location: location, updateStepIndex: true)
+                incrementRouteProgress()
                 return true
             }
         }
