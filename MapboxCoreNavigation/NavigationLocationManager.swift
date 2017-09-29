@@ -14,11 +14,6 @@ open class NavigationLocationManager: CLLocationManager {
     
     var lastKnownLocation: CLLocation?
     
-    /**
-     Indicates whether the device is plugged in or not.
-     */
-    public private(set) var isPluggedIn: Bool = false
-    
     override public init() {
         super.init()
         
