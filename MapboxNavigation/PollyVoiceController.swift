@@ -55,6 +55,9 @@ public class PollyVoiceController: RouteVoiceController {
         let userDistances = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
         let instruction = spokenInstructionFormatter.string(routeProgress: routeProgresss, userDistance: userDistances, markUpWithSSML: true)
         
+        pollyTask?.cancel()
+        audioPlayer?.stop()
+        
         speak(instruction, error: nil)
         startAnnouncementTimer()
     }
