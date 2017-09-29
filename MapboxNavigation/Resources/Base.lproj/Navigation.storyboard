@@ -356,7 +356,6 @@
                                                                 </attributedString>
                                                             </label>
                                                         </subviews>
-                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         <constraints>
                                                             <constraint firstItem="BR8-8N-Rhk" firstAttribute="leading" secondItem="YWf-jk-QP6" secondAttribute="leading" id="5r1-YN-VZn"/>
                                                             <constraint firstItem="BR8-8N-Rhk" firstAttribute="top" secondItem="YWf-jk-QP6" secondAttribute="top" id="L9t-nN-h3S"/>
