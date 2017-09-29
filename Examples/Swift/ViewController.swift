@@ -35,6 +35,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     var locationManager = CLLocationManager()
     
+    var alertController: UIAlertController!
+    
     // In this example, we show you how you can create custom UIView that is used to show the user's location.
     // Set `showCustomUserPuck` to true to view the custom user puck.
     var showCustomUserPuck = false
@@ -53,6 +55,23 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         simulationButton.isSelected = true
         startButton.isEnabled = false
+        
+        alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
+            self.startBasicNavigation()
+        }))
+        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
+            self.startCustomNavigation()
+        }))
+        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
+            self.startStyledNavigation()
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.startButton
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -83,6 +102,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         waypoint.coordinateAccuracy = -1
         waypoints.append(waypoint)
         
+        if waypoints.count >= 2 {
+            alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
+                self.startMultipleWaypoints()
+            }))
+        }
+        
         requestRoute()
     }
     
@@ -111,29 +136,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
-        DispatchQueue.main.async {
-            let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-            alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
-                self.startBasicNavigation()
-            }))
-            alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
-                self.startCustomNavigation()
-            }))
-            alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
-                self.startStyledNavigation()
-            }))
-            
-            if self.waypoints.count > 2 {
-                alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-                    self.startMultipleWaypoints()
-                }))
-            }
-            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            if let popoverController = alertController.popoverPresentationController {
-                popoverController.sourceView = self.startButton
-            }
-            self.present(alertController, animated: true, completion: nil)
-        }
+        present(alertController, animated: true, completion: nil)
     }
     
     // Helper for requesting a route
