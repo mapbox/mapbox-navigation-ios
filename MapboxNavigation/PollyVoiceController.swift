@@ -182,6 +182,7 @@ public class PollyVoiceController: RouteVoiceController {
                 }
                 
                 DispatchQueue.main.async {
+                    strongSelf.audioPlayer?.delegate = self
                     let played = strongSelf.audioPlayer?.play() ?? false
                     
                     guard played else {
