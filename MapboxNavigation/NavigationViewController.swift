@@ -176,6 +176,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
                 routeController.routeProgress = RouteProgress(route: route)
             }
             mapViewController?.notifyDidReroute(route: route)
+            tableViewController?.tableView.reloadData()
             tableViewController?.updateETA(routeProgress: routeController.routeProgress)
         }
     }
