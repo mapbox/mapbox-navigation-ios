@@ -33,5 +33,6 @@ open class NavigationLocationManager: CLLocationManager {
         }
         
         desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        distanceFilter = kCLDistanceFilterNone
     }
 }
