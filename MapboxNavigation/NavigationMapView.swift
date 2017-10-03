@@ -56,8 +56,6 @@ open class NavigationMapView: MGLMapView {
         
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
-        makeGestureRecognizersResetInactivityTimer()
-        resetInactivityTimer()
         
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
     }
@@ -67,8 +65,6 @@ open class NavigationMapView: MGLMapView {
         
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
-        makeGestureRecognizersResetInactivityTimer()
-        resetInactivityTimer()
         
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
     }
