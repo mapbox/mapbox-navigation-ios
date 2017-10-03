@@ -35,8 +35,6 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
-    
-    var hasFinishedLoadingMap = false
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -412,10 +410,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return delegate?.navigationMapView(mapView, viewFor: annotation)
     }
-    
-    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        hasFinishedLoadingMap = true
-    }
 
     func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
         let snappedLocation = routeController.location
@@ -431,7 +425,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func labelCurrentRoad(at location: CLLocation) {
         guard let style = mapView.style,
             let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
-            recenterButton.isHidden && hasFinishedLoadingMap else {
+            recenterButton.isHidden else {
             return
         }
         
