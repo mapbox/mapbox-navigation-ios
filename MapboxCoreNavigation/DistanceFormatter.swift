@@ -66,7 +66,9 @@ public class DistanceFormatter: LengthFormatter {
     
     func roundingIncrement(for distance: CLLocationDistance, unit: LengthFormatter.Unit) -> Double {
         if usesMetric {
-            if distance < 100 {
+            if distance < 25 {
+                return 5
+            } else if distance < 100 {
                 return 25
             } else if distance < 1_000 {
                 return 50
