@@ -48,6 +48,8 @@ public class SimulatedLocationManager: NavigationLocationManager {
         }
     }
     
+    var routeProgress: RouteProgress?
+    
     /**
      Initalizes a new `SimulatedLocationManager` with the given route.
      
@@ -58,7 +60,8 @@ public class SimulatedLocationManager: NavigationLocationManager {
         super.init()
         self.route = route
         reset()
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
     }
     
     private func reset() {
@@ -74,7 +77,11 @@ public class SimulatedLocationManager: NavigationLocationManager {
         }
     }
     
-    @objc private func didReroute(notification: Notification) {
+    @objc private func progressDidChange(_ notification: Notification) {
+        routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
+    }
+    
+    @objc private func didReroute(_ notification: Notification) {
         guard let routeController = notification.object as? RouteController else {
             return
         }
@@ -84,6 +91,7 @@ public class SimulatedLocationManager: NavigationLocationManager {
     
     deinit {
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
     }
     
     override public func startUpdatingLocation() {
@@ -113,8 +121,14 @@ public class SimulatedLocationManager: NavigationLocationManager {
         let distance = min(max(distanceToClosest, 10), safeDistance)
         let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100).coordinates
         
+        // Simulate expected speed
+        if let speeds = routeProgress?.currentLeg.segmentSpeeds,
+            let closestCoordinateOnRoute = Polyline(routeProgress!.route.coordinates!).closestCoordinate(to: lookAheadCoordinate),
+            closestCoordinateOnRoute.index < speeds.count {
+            currentSpeed = speeds[closestCoordinateOnRoute.index]
+        }
         // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
-        if coordinatesNearby.count >= 10
+        else if coordinatesNearby.count >= 10
         {
             currentSpeed = minimumSpeed
         }
