@@ -54,6 +54,7 @@ class UserPuckCourseView: UIView, UserCourseView {
             self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
             
             var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(self.pitch.toRadians()), 1.0, 0, 0)
+            transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
             
