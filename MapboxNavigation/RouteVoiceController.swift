@@ -87,14 +87,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(voiceVolumeDidChange(notification:)), name: RouteVoiceControllerVoiceVolumeDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(voiceVolumeDidChange(notification:)), name: UserDefaults.didChangeNotification, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteVoiceControllerVoiceVolumeDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UserDefaults.didChangeNotification, object: nil)
     }
     
     func didReroute(notification: NSNotification) {
@@ -133,12 +133,11 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func voiceVolumeDidChange(notification: Notification) {
-        if let voiceVolume = notification.userInfo?[RouteControllerDidChangeVoiceVolumeKey] as? Float {
-            self.volume = voiceVolume
-            if volume == 0 {
-                speechSynth.stopSpeaking(at: .word)
-                audioPlayer?.stop()
-            }
+        guard volume != NavigationSettings.shared.voiceVolume else { return }
+        volume = NavigationSettings.shared.voiceVolume
+        if volume == 0 {
+            speechSynth.stopSpeaking(at: .word)
+            audioPlayer?.stop()
         }
     }
     
