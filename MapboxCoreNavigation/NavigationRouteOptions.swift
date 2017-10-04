@@ -22,7 +22,7 @@ open class NavigationRouteOptions: RouteOptions {
         }, profileIdentifier: profileIdentifier)
         includesSteps = true
         routeShapeResolution = .full
-        attributeOptions = [.congestionLevel, .expectedTravelTime, .speed]
+        attributeOptions = [.congestionLevel, .expectedTravelTime]
         includesExitRoundaboutManeuver = true
     }
     
