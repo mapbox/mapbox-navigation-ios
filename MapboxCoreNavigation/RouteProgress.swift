@@ -1,5 +1,7 @@
 import Foundation
 import MapboxDirections
+import AVFoundation
+import MapboxVoice
 
 
 /**
@@ -103,6 +105,8 @@ open class RouteProgress: NSObject {
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0)
         
+        
+        
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
             
@@ -138,6 +142,41 @@ open class RouteProgress: NSObject {
             
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
+        
+        createAudioForRoute(route: route)
+    }
+    
+    
+    struct StepAudio {
+        var duration: TimeInterval?
+        var audio: Data?
+    }
+    
+    var audioForRoute: [[[StepAudio]]] = []
+    
+    
+    func createAudioForRoute(route: Route) {
+        let voice = Voice()
+        var legsAudio: [[StepAudio]] = []
+        
+        for leg in route.legs {
+            for step in leg.steps {
+                if let insrtructions = step.instructionsSpokenAlongStep {
+                    var stepAudio:[StepAudio] = []
+                    for instruction in insrtructions {
+                        let voiceOptions = VoiceOptions(text: instruction.ssmlText)
+                        voiceOptions.textType = .ssml
+                         _ = voice.speak(voiceOptions) { (data, error) in
+                            guard error == nil  else { return }
+                            let stepVoiceInstruction = StepAudio(duration: 0, audio: data ?? nil)
+                            stepAudio.append(stepVoiceInstruction)
+                        }.resume()
+                    }
+                    legsAudio.append(stepAudio)
+                }
+            }
+        }
+        audioForRoute.append(legsAudio)
     }
 }
 
