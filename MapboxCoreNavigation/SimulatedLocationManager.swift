@@ -121,11 +121,15 @@ public class SimulatedLocationManager: NavigationLocationManager {
         let distance = min(max(distanceToClosest, 10), safeDistance)
         let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100).coordinates
         
-        // Simulate expected speed
-        if let speeds = routeProgress?.currentLeg.segmentSpeeds,
-            let closestCoordinateOnRoute = Polyline(routeProgress!.route.coordinates!).closestCoordinate(to: lookAheadCoordinate),
-            closestCoordinateOnRoute.index < speeds.count {
-            currentSpeed = speeds[closestCoordinateOnRoute.index]
+        // Simulate speed based on expected segment travel time
+        if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
+            let coordinates = routeProgress?.route.coordinates,
+            let closestCoordinateOnRoute = Polyline(routeProgress!.route.coordinates!).closestCoordinate(to: newCoordinate),
+            let nextCoordinateOnRoute = coordinates.after(element: coordinates[closestCoordinateOnRoute.index]),
+            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRoute.index] {
+            
+            let distance = coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
+            currentSpeed = distance / time
         }
         // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
         else if coordinatesNearby.count >= 10
@@ -168,6 +172,28 @@ extension Double {
 extension CLLocation {
     fileprivate convenience init(_ coordinate: CLLocationCoordinate2D) {
         self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+}
+
+extension Array where Element : Hashable {
+    fileprivate struct OptionalSubscript {
+        var elements: [Element]
+        subscript (index: Int)  -> Element? {
+            return index < elements.count ? elements[index] : nil
+        }
+    }
+    
+    fileprivate var optional: OptionalSubscript {
+        get { return OptionalSubscript(elements: self) }
+    }
+}
+
+extension Array where Element : Equatable {
+    fileprivate func after(element: Element) -> Element? {
+        if let index = self.index(of: element), index + 1 <= self.count {
+            return index + 1 == self.count ? self[0] : self[index + 1]
+        }
+        return nil
     }
 }
 
