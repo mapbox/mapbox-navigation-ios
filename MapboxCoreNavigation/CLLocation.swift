@@ -63,4 +63,34 @@ extension CLLocation {
                   speed: speed,
                   timestamp: date!)
     }
+    
+    /**
+     Returns a `CLLocation` infront of the provided location given the interval
+     with the current speed taken into account.
+    */
+    public func advanced(by interval: TimeInterval) -> CLLocation {
+        let metersAhead = speed * interval
+        let locationInfrontOfUser = coordinate.coordinate(at: metersAhead, facing: course)
+        return CLLocation(coordinate: locationInfrontOfUser.coordinate(at: metersAhead, facing: course),
+                          altitude: altitude,
+                          horizontalAccuracy: horizontalAccuracy,
+                          verticalAccuracy: verticalAccuracy,
+                          course: course,
+                          speed: speed,
+                          timestamp: timestamp.addingTimeInterval(interval))
+    }
+    
+    /**
+     Returns the maximum reroute radius
+     */
+    public static func radiusForRerouting(with horizontalAccuracy: CLLocationAccuracy) -> CLLocationDistance {
+        return max(RouteControllerMaximumDistanceBeforeRecalculating, horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
+    }
+    
+    /**
+     Returns the maximum reroute radius
+     */
+    public var rerouteRadius: CLLocationDistance {
+        return CLLocation.radiusForRerouting(with: horizontalAccuracy)
+    }
 }

@@ -172,6 +172,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.navigationDelegate = self
+        navigationViewController.isDebugging = true
         
         present(navigationViewController, animated: true, completion: nil)
     }

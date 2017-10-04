@@ -265,7 +265,7 @@ open class RouteController: NSObject {
      
      This is a raw location received from `locationManager`. To obtain an idealized location, use the `snappedLocation` property.
      */
-    var rawLocation: CLLocation?
+    public var rawLocation: CLLocation?
     
     public var reroutingTolerance: CLLocationDistance {
         guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }

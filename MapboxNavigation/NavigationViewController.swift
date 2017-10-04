@@ -274,6 +274,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      */
     public var automaticallyAdjustsStyleForTimeOfDay = true
     
+    public var isDebugging: Bool = false
+    
     var currentStyleType: StyleType?
     
     var styleTypeForTimeOfDay: StyleType {
@@ -435,6 +437,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.updateETA(routeProgress: routeProgress)
         progressBar.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
+        
+        if isDebugging, let rawLocation = routeController.rawLocation {
+            mapViewController?.addDebugAnnotation(location: rawLocation)
+        }
     }
     
     func alertLevelDidChange(notification: NSNotification) {
