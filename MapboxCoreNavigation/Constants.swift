@@ -80,7 +80,7 @@ public var RouteControllerMaximumDistanceBeforeRecalculating: CLLocationDistance
 /**
  Accepted deviation excluding horizontal accuracy before the user is considered to be off route.
  */
-public var RouteControllerUserLocationSnappingDistance: CLLocationDistance = 20
+public var RouteControllerUserLocationSnappingDistance: CLLocationDistance = 15
 
 /**
  Threshold user must be in within to count as completing a step. One of two heuristics used to know when a user completes a step, see `RouteControllerManeuverZoneRadius`.
@@ -147,11 +147,21 @@ let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 let milesToMeters = 1609.34
 
 /**
- The mimimum speed value before the user is snapped to the route. This is used to overcome inaccurate course values when a user's speed is low.
+ The minimum speed value before the user's actual location can be considered over the snapped location.
  */
-public var RouteControllerMinimumSpeedThresholdForSnappingUserToRoute: CLLocationSpeed = 2
+public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 3
 
 /**
  The minimum distance threshold used for giving a "Continue" type instructions.
  */
 public var RouteControllerMinDistanceForContinueInstruction: CLLocationDistance = 2_000
+
+/**
+ Distance in the opposite direction of travel before a reroute occurs.
+ */
+public var RouteControllerMinimumBackupDistanceForRerouting: CLLocationDistance = 50
+
+/**
+ Minimum number of consecutive location updates moving backwards before the user is rerouted.
+ */
+public var RouteControllerMinimumNumberLocationUpdatesBackwards = 3

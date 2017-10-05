@@ -287,7 +287,7 @@ open class RouteController: NSObject {
      This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
      */
     public var location: CLLocation? {
-        guard let location = rawLocation, userIsOnRoute(location) else { return nil }
+        guard let location = rawLocation else { return nil }
         guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
         guard let snappedCoordinate = Polyline(stepCoordinates).closestCoordinate(to: location.coordinate) else { return location }
         
@@ -324,26 +324,22 @@ open class RouteController: NSObject {
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
         let averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
-        let absoluteDirection = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
+        let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
         
-        // If the course is inaccurate or the speed is low and the user is on the route,
-        // snap the users location and course since we know the snapped location and course is more accurate.
-        if location.course <= 0 || location.speed <= RouteControllerMinimumSpeedThresholdForSnappingUserToRoute, snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance {
-            let calculatedWrappedCourse = ((wrappedPointBehind + wrappedPointAhead) / 2).wrap(min: 0, max: 360)
-            return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: calculatedWrappedCourse, speed: location.speed, timestamp: location.timestamp)
-        }
-
-        guard absoluteDirection.differenceBetween(location.course) < RouteControllerMaxManipulatedCourseAngle else {
-            return location
-        }
-
-        let course = averageRelativeAngle <= RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion ? absoluteDirection : location.course
+        var userCourse = calculatedCourseForLocationOnStep
+        var userCoordinate = snappedCoordinate.coordinate
         
-        guard snappedCoordinate.distance < RouteControllerUserLocationSnappingDistance else {
-            return location
+        if location.course >= 0 || location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
+            if calculatedCourseForLocationOnStep.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle && location.horizontalAccuracy < 20 {
+                userCourse = location.course
+                
+                if snappedCoordinate.distance > RouteControllerUserLocationSnappingDistance && location.horizontalAccuracy < 20 {
+                    userCoordinate =  location.coordinate
+                }
+            }
         }
 
-        return CLLocation(coordinate: snappedCoordinate.coordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: course, speed: location.speed, timestamp: location.timestamp)
+        return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
     }
     
     /**
@@ -552,7 +548,7 @@ extension RouteController: CLLocationManagerDelegate {
      If the user is not on the route, they should be rerouted.
      */
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        
+
         // Find future location of user
         let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
         let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
@@ -567,8 +563,10 @@ extension RouteController: CLLocationManagerDelegate {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             let userDistanceToManeuver = Polyline(coordinates).distance(from: location.coordinate)
             
-            guard recentDistancesFromManeuver.count <= 3 else {
-                return false
+            if recentDistancesFromManeuver.reduce(0, +) < RouteControllerMinimumBackupDistanceForRerouting {
+                guard recentDistancesFromManeuver.count <= RouteControllerMinimumNumberLocationUpdatesBackwards else {
+                    return false
+                }
             }
             
             if recentDistancesFromManeuver.isEmpty {
