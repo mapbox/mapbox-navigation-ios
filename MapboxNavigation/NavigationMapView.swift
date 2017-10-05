@@ -5,6 +5,14 @@ import Turf
 
 typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 
+let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
+    10: MGLStyleValue(rawValue: 8),
+    13: MGLStyleValue(rawValue: 9),
+    16: MGLStyleValue(rawValue: 11),
+    19: MGLStyleValue(rawValue: 22),
+    22: MGLStyleValue(rawValue: 28)
+]
+
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
@@ -26,14 +34,6 @@ open class NavigationMapView: MGLMapView {
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
     let currentLegAttribute = "isCurrentLeg"
-    
-    let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
-        10: MGLStyleValue(rawValue: 8),
-        13: MGLStyleValue(rawValue: 9),
-        16: MGLStyleValue(rawValue: 12),
-        19: MGLStyleValue(rawValue: 24),
-        22: MGLStyleValue(rawValue: 30)
-    ]
     
     var manuallyUpdatesLocation: Bool = false {
         didSet {
@@ -364,15 +364,8 @@ open class NavigationMapView: MGLMapView {
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
         // Take the default line width and make it wider for the casing
-        var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
-        for stop in routeLineWidthAtZoomLevels {
-            let f = stop.value as! MGLConstantStyleValue
-            let newValue =  f.rawValue.doubleValue * 1.5
-            newCameraStop[stop.key] = MGLStyleValue<NSNumber>(rawValue: NSNumber(value:newValue))
-        }
-        
         lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                             cameraStops: newCameraStop,
+                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 1.5),
                                              options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
         lineCasing.lineColor = MGLStyleValue(rawValue: routeCasingColor)
@@ -404,13 +397,12 @@ open class NavigationMapView: MGLMapView {
         
         let minimumZoomLevel: Float = 14.5
         
-        let shaftLength = max(min(50 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 50), 10)
+        let shaftLength = max(min(30 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 30), 10)
         let polyline = Polyline(routeCoordinates)
-        let shaftCoordinates = Array(polyline.trimmed(from: maneuverCoordinate, distance: -shaftLength / 2).coordinates.reversed()
+        let shaftCoordinates = Array(polyline.trimmed(from: maneuverCoordinate, distance: -shaftLength).coordinates.reversed()
             + polyline.trimmed(from: maneuverCoordinate, distance: shaftLength).coordinates.suffix(from: 1))
         
         if shaftCoordinates.count > 1 {
-            let shaftStrokeLength = shaftLength * 1.1
             var shaftStrokeCoordinates = shaftCoordinates
             let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
             let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
@@ -434,7 +426,9 @@ open class NavigationMapView: MGLMapView {
                 arrow.minimumZoomLevel = minimumZoomLevel
                 arrow.lineCap = MGLStyleValue(rawValue: cap)
                 arrow.lineJoin = MGLStyleValue(rawValue: join)
-                arrow.lineWidth = MGLStyleValue(rawValue: 6)
+                arrow.lineWidth = MGLStyleValue(interpolationMode: .exponential,
+                                                     cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.70),
+                                                     options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
                 arrow.lineColor = MGLStyleValue(rawValue: .white)
                 
                 style.addSource(arrowSource)
@@ -448,7 +442,9 @@ open class NavigationMapView: MGLMapView {
                 arrowStroke.minimumZoomLevel = minimumZoomLevel
                 arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
                 arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
-                arrowStroke.lineWidth = MGLStyleValue(rawValue: 8)
+                arrowStroke.lineWidth = MGLStyleValue(interpolationMode: .exponential,
+                                                cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.80),
+                                                options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
                 arrowStroke.lineColor = MGLStyleValue(rawValue: .defaultArrowStroke)
                 
                 style.addSource(arrowSourceStroke)
@@ -475,6 +471,9 @@ open class NavigationMapView: MGLMapView {
                 arrowSymbolLayer.iconColor = MGLStyleValue(rawValue: .white)
                 arrowSymbolLayer.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
                 arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                arrowSymbolLayer.iconScale = MGLStyleValue(interpolationMode: .exponential,
+                                                     cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.12),
+                                                     options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
                 arrowSymbolLayer.iconAllowsOverlap = MGLStyleValue(rawValue: true)
                 
                 
@@ -484,7 +483,9 @@ open class NavigationMapView: MGLMapView {
                 arrowSymbolLayerCasing.iconColor = MGLStyleValue(rawValue: .defaultArrowStroke)
                 arrowSymbolLayerCasing.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
                 arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
-                arrowSymbolLayerCasing.iconScale = MGLStyleValue(rawValue: 1.2)
+                arrowSymbolLayerCasing.iconScale = MGLStyleValue(interpolationMode: .exponential,
+                                                           cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.14),
+                                                           options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
                 arrowSymbolLayerCasing.iconAllowsOverlap = MGLStyleValue(rawValue: true)
                 
                 style.addSource(arrowSymbolSource)
@@ -499,7 +500,7 @@ open class NavigationMapView: MGLMapView {
     /**
      Removes the step arrow from the map.
      */
-    func removeArrow() {
+    public func removeArrow() {
         guard let style = style else {
             return
         }
@@ -519,6 +520,30 @@ open class NavigationMapView: MGLMapView {
         if let arrowCasingSymbolLayer = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) {
             style.removeLayer(arrowCasingSymbolLayer)
         }
+        
+        if let arrowSource = style.source(withIdentifier: arrowSourceIdentifier) {
+            style.removeSource(arrowSource)
+        }
+        
+        if let arrowStrokeSource = style.source(withIdentifier: arrowSourceStrokeIdentifier) {
+            style.removeSource(arrowStrokeSource)
+        }
+        
+        if let arrowSymboleSource = style.source(withIdentifier: arrowSymbolSourceIdentifier) {
+            style.removeSource(arrowSymboleSource)
+        }
+    }
+}
+
+extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
+    func muliplied(by factor: Double) -> Dictionary {
+        var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
+        for stop in routeLineWidthAtZoomLevels {
+            let f = stop.value as! MGLConstantStyleValue
+            let newValue =  f.rawValue.doubleValue * factor
+            newCameraStop[stop.key] = MGLStyleValue<NSNumber>(rawValue: NSNumber(value:newValue))
+        }
+        return newCameraStop as! Dictionary<Key, Value>
     }
 }
 

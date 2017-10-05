@@ -575,8 +575,10 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             }
         }
         
-        if let stepIndex = routeController.routeProgress.currentLeg.steps.index(where: { $0 == step }) {
+        if let stepIndex = routeController.routeProgress.currentLeg.steps.index(where: { $0 == step }), stepAfter(step) != nil {
             mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: stepIndex)
+        } else {
+            mapView.removeArrow()
         }
     }
     
