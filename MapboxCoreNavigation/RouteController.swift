@@ -329,7 +329,7 @@ open class RouteController: NSObject {
         var userCourse = calculatedCourseForLocationOnStep
         var userCoordinate = snappedCoordinate.coordinate
         
-        if location.course >= 0 || location.speed >= RouteControllerMinSpeedForLocationSnapping {
+        if location.course >= 0 || location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
             if calculatedCourseForLocationOnStep.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle && location.horizontalAccuracy < 20 {
                 userCourse = location.course
                 
@@ -563,10 +563,8 @@ extension RouteController: CLLocationManagerDelegate {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             let userDistanceToManeuver = Polyline(coordinates).distance(from: location.coordinate)
             
-            let totalDistances = recentDistancesFromManeuver.reduce(0) { $0 + $1 }
-            
-            if totalDistances < RouteControllerMinDistanceForBackwardsProgressReroute {
-                guard recentDistancesFromManeuver.count <= 3 else {
+            if recentDistancesFromManeuver.reduce(0, +) < RouteControllerMinimumBackupDistanceForRerouting {
+                guard recentDistancesFromManeuver.count <= RouteControllerMinimumNumberLocationUpdatesBackwards else {
                     return false
                 }
             }

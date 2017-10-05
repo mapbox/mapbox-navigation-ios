@@ -149,7 +149,7 @@ let milesToMeters = 1609.34
 /**
  The minimum speed value before the user's actual location can be considered over the snapped location.
  */
-public var RouteControllerMinSpeedForLocationSnapping: CLLocationSpeed = 3
+public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 3
 
 /**
  The minimum distance threshold used for giving a "Continue" type instructions.
@@ -159,4 +159,9 @@ public var RouteControllerMinDistanceForContinueInstruction: CLLocationDistance 
 /**
  Distance in the opposite direction of travel before a reroute occurs.
  */
-public var RouteControllerMinDistanceForBackwardsProgressReroute: CLLocationDistance = 50
+public var RouteControllerMinimumBackupDistanceForRerouting: CLLocationDistance = 50
+
+/**
+ Minimum number of consecutive location updates moving backwards before the user is rerouted.
+ */
+public var RouteControllerMinimumNumberLocationUpdatesBackwards = 3
