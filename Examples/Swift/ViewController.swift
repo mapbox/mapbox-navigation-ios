@@ -150,11 +150,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
                 return
             }
             guard let route = routes?.first else { return }
+            guard let routes = routes else { return }
             
             self?.currentRoute = route
             
             // Open method for adding and updating the route line
-            self?.mapView.showRoute(route)
+            self?.mapView.showRoute(routes)
             self?.mapView.showWaypoints(route, legIndex: 0)
         }
     }

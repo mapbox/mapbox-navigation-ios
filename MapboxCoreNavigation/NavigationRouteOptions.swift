@@ -24,6 +24,7 @@ open class NavigationRouteOptions: RouteOptions {
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]
         includesExitRoundaboutManeuver = true
+        includesAlternativeRoutes = true
     }
     
     
