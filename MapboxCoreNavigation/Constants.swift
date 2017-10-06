@@ -154,12 +154,12 @@ public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 3
 /**
  The minimum distance threshold used for giving a "Continue" type instructions.
  */
-public var RouteControllerMinDistanceForContinueInstruction: CLLocationDistance = 2_000
+public var RouteControllerMinimumDistanceForContinueInstruction: CLLocationDistance = 2_000
 
 /**
- Distance in the opposite direction of travel before a reroute occurs.
+ The minimum distance in the opposite direction of travel that triggers rerouting.
  */
-public var RouteControllerMinimumBackupDistanceForRerouting: CLLocationDistance = 50
+public var RouteControllerMinimumBacktrackingDistanceForRerouting: CLLocationDistance = 50
 
 /**
  Minimum number of consecutive location updates moving backwards before the user is rerouted.
