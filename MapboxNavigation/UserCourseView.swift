@@ -23,7 +23,31 @@ public protocol UserCourseView {
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool)
 }
 
-class UserPuckCourseView: UIView, UserCourseView {
+/**
+ A view representing the user’s location on screen.
+ */
+public class UserPuckCourseView: UIView, UserCourseView {
+    
+    // Sets the color on the user puck
+    public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
+        didSet {
+            puckView.puckColor = puckColor
+        }
+    }
+    
+    // Sets the fill color on the circle around the user puck
+    public dynamic var fillColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
+        didSet {
+            puckView.fillColor = fillColor
+        }
+    }
+    
+    // Sets the shadow color around the user puck
+    public dynamic var shadowColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.16) {
+        didSet {
+            puckView.shadowColor = shadowColor
+        }
+    }
     
     var puckView: UserPuckStyleKitView!
     
@@ -32,7 +56,7 @@ class UserPuckCourseView: UIView, UserCourseView {
         commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -50,7 +74,7 @@ class UserPuckCourseView: UIView, UserCourseView {
     
     var direction: CLLocationDirection = 0
     
-    func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
+    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         self.location = location
         self.direction = direction
         self.pitch = CLLocationDegrees(pitch)
@@ -71,9 +95,27 @@ class UserPuckCourseView: UIView, UserCourseView {
 
 class UserPuckStyleKitView: UIView {
     
+    var fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000) {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    var puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000) {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    var shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160) {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        drawNavigation_puck()
+        drawNavigation_puck(fillColor: fillColor, puckColor: puckColor, shadowColor: shadowColor, circleColor: fillColor)
     }
     
     func drawNavigation_puck(fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160), circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {

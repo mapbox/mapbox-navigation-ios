@@ -80,6 +80,8 @@ open class DayStyle: Style {
         FloatingButton.appearance().tintColor = tintColor
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
+        UserPuckCourseView.appearance().puckColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1)
+        
         // Maneuver view (Page view)
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
