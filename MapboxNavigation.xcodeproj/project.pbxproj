@@ -105,6 +105,7 @@
 		35924BA91F87AE3D009C1493 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; };
 		35924BAA1F87AE3E009C1493 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; };
 		35924BAB1F87B0D5009C1493 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35924BAE1F87BF93009C1493 /* FeedbackEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35924BAD1F87BF93009C1493 /* FeedbackEventTableViewCell.swift */; };
 		35924BAF1F87C009009C1493 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		359574A81F28CC5A00838209 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A71F28CC3800838209 /* CLLocation.swift */; };
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
@@ -341,7 +342,7 @@
 		351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
 		351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewHeaderView.swift; sourceTree = "<group>"; };
-		351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		351BEBED1E5BCC63006FE110 /* StyleKitArrows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleKitArrows.swift; sourceTree = "<group>"; };
 		351BEBEF1E5BCC63006FE110 /* TurnArrowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TurnArrowView.swift; sourceTree = "<group>"; };
 		351BEBF01E5BCC63006FE110 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
@@ -392,6 +393,7 @@
 		358D14671E5E3B7700ADE590 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Objective-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
+		35924BAD1F87BF93009C1493 /* FeedbackEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackEventTableViewCell.swift; sourceTree = "<group>"; };
 		359574A71F28CC3800838209 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CLLocation.swift; path = MapboxCoreNavigation/CLLocation.swift; sourceTree = SOURCE_ROOT; };
 		359574A91F28CCBB00838209 /* LocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		35A1D3651E6624EF00A48FE8 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
@@ -753,6 +755,15 @@
 			path = "Examples/Objective-C";
 			sourceTree = "<group>";
 		};
+		35924BAC1F87BF7E009C1493 /* Event */ = {
+			isa = PBXGroup;
+			children = (
+				43AA0E311F7AFD10007D0AB1 /* FeedbackEventTableViewController.swift */,
+				35924BAD1F87BF93009C1493 /* FeedbackEventTableViewCell.swift */,
+			);
+			name = Event;
+			sourceTree = "<group>";
+		};
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -780,8 +791,8 @@
 		43F12A5D1F7B030A007770B7 /* EOR Feedback */ = {
 			isa = PBXGroup;
 			children = (
+				35924BAC1F87BF7E009C1493 /* Event */,
 				437287411F7AF0810039229F /* FeedbackOverviewTableViewController.swift */,
-				43AA0E311F7AFD10007D0AB1 /* FeedbackEventTableViewController.swift */,
 				43F12A5E1F7B0344007770B7 /* ArrivedTableViewCell.swift */,
 				43F12A621F7B075B007770B7 /* CircularView.swift */,
 				43F12A601F7B0352007770B7 /* FeedbackTableViewCell.swift */,
@@ -1421,6 +1432,7 @@
 				351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */,
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
+				35924BAE1F87BF93009C1493 /* FeedbackEventTableViewCell.swift in Sources */,
 				35924B9F1F86888A009C1493 /* FeedbackOverviewTableViewController.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				351BEBF71E5BCC63006FE110 /* RoutePageViewController.swift in Sources */,
