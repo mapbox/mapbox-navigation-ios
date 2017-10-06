@@ -101,6 +101,11 @@
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		35924B9F1F86888A009C1493 /* FeedbackOverviewTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437287411F7AF0810039229F /* FeedbackOverviewTableViewController.swift */; };
 		35924BA01F868890009C1493 /* FeedbackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F12A601F7B0352007770B7 /* FeedbackTableViewCell.swift */; };
+		35924BA81F87AE3C009C1493 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; };
+		35924BA91F87AE3D009C1493 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; };
+		35924BAA1F87AE3E009C1493 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; };
+		35924BAB1F87B0D5009C1493 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		35924BAF1F87C009009C1493 /* MapboxGeocoder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		359574A81F28CC5A00838209 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A71F28CC3800838209 /* CLLocation.swift */; };
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
@@ -263,6 +268,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				35924BAB1F87B0D5009C1493 /* MapboxGeocoder.framework in Embed Frameworks */,
 				C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */,
 				3525449F1E664E2D004C8F1C /* AWSCore.framework in Embed Frameworks */,
 				3525449E1E664E0F004C8F1C /* AWSPolly.framework in Embed Frameworks */,
@@ -286,6 +292,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				35924BAF1F87C009009C1493 /* MapboxGeocoder.framework in Embed Frameworks */,
 				352544A01E665AA3004C8F1C /* AWSCore.framework in Embed Frameworks */,
 				352544A11E665AA3004C8F1C /* AWSPolly.framework in Embed Frameworks */,
 				354A01DC1E6626E900D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
@@ -384,6 +391,7 @@
 		358D14651E5E3B7700ADE590 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		358D14671E5E3B7700ADE590 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Objective-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = Carthage/Build/iOS/MapboxGeocoder.framework; sourceTree = "<group>"; };
 		359574A71F28CC3800838209 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CLLocation.swift; path = MapboxCoreNavigation/CLLocation.swift; sourceTree = SOURCE_ROOT; };
 		359574A91F28CCBB00838209 /* LocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		35A1D3651E6624EF00A48FE8 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
@@ -436,7 +444,7 @@
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		C52D09D21DEF636C00BE3C5C /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
-		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationMapView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationMapView.swift; sourceTree = "<group>"; };
 		C53C193C1F38E0D5008DB406 /* VisualInstructionFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualInstructionFormatter.swift; sourceTree = "<group>"; };
 		C53C19701F38EACD008DB406 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C53C19711F38EADB008DB406 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -516,6 +524,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35924BAA1F87AE3E009C1493 /* MapboxGeocoder.framework in Frameworks */,
 				354A01BF1E6625D100D765C2 /* Mapbox.framework in Frameworks */,
 				35CC14161F7994B1009E872A /* Turf.framework in Frameworks */,
 			);
@@ -544,6 +553,7 @@
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				354A01CB1E66265D00D765C2 /* OSRMTextInstructions.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
+				35924BA81F87AE3C009C1493 /* MapboxGeocoder.framework in Frameworks */,
 				C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */,
 				35CC14171F79A434009E872A /* Turf.framework in Frameworks */,
 				354A01C91E66265B00D765C2 /* Polyline.framework in Frameworks */,
@@ -560,6 +570,7 @@
 				354A01E41E6626EF00D765C2 /* Polyline.framework in Frameworks */,
 				35CC14191F79A43B009E872A /* Turf.framework in Frameworks */,
 				354BD4F51E6637D500AE1344 /* AWSPolly.framework in Frameworks */,
+				35924BA91F87AE3D009C1493 /* MapboxGeocoder.framework in Frameworks */,
 				C5A6B2DE1F4DE57E004260EA /* Solar.framework in Frameworks */,
 				C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01E01E6626EF00D765C2 /* SDWebImage.framework in Frameworks */,
@@ -781,6 +792,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				35924BA71F87AE0E009C1493 /* MapboxGeocoder.framework */,
 				35CC14141F799496009E872A /* Turf.framework */,
 				C57607B01F4CC97D00C27423 /* Solar.framework */,
 				C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */,
@@ -1370,6 +1382,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AWSPolly.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AWSCore.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MapboxGeocoder.framework",
 			);
 			outputPaths = (
 			);

@@ -1,6 +1,7 @@
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxGeocoder
 
 //MARK: - View Reuse Identifier Enum
 enum ReuseIdentifier: String {
@@ -74,9 +75,8 @@ extension FeedbackOverviewTableViewController: UITableViewDelegate, UITableViewD
     }
     
     private func feedbackCell(for tableView: UITableView, indexPath: IndexPath) -> UITableViewCell {
-        //let cell = tableView.dequeue(cell: .feedback, for: indexPath) as! FeedbackTableViewCell
         let cell = tableView.dequeueReusableCell(withIdentifier: ReuseIdentifier.feedback.rawValue, for: indexPath) as! FeedbackTableViewCell
-        cell.feedback = feedbacks?[indexPath.row - 1]
+        cell.feedback = feedbacks![indexPath.row - 1]
         return cell
     }
 }

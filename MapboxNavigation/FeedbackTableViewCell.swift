@@ -1,13 +1,6 @@
-//
-//  FeedbackTableViewCell.swift
-//  MapboxNavigation
-//
-//  Created by Jerrad Thramer on 9/26/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 import UIKit
 import MapboxCoreNavigation
+import MapboxGeocoder
 
 private extension FeedbackType {
     var color: UIColor {
@@ -35,15 +28,35 @@ class FeedbackTableViewCell: UITableViewCell {
         }
     }
     
+    var task: URLSessionDataTask?
+    
     @IBOutlet weak var badge: CircularView!
-    @IBOutlet weak var type: UILabel!
-    @IBOutlet weak var location: UILabel!
+    @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        task?.cancel()
+    }
+    
+    deinit {
+        task?.cancel()
+        task = nil
+    }
     
     private func updateInterface() {
         badge.backgroundColor = feedback?.type?.color
-        type.text = feedback?.type?.description
-        if let coord = feedback?.coordinate {
-            location.text = "\(coord.latitude), \(coord.longitude)"
+        typeLabel.text = feedback?.type?.description
+        
+        if let coordinate = feedback?.coordinate {
+            locationLabel.text = "\(coordinate.latitude), \(coordinate.longitude)"
+            
+            let options = ReverseGeocodeOptions(coordinate: coordinate)
+            task?.cancel()
+            task = Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
+                guard let placemark = placemarks?.first else { return }
+                self?.locationLabel.text = placemark.name
+            })
         }
     }
 }

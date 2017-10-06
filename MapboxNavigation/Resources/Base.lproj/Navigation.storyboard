@@ -485,9 +485,8 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="badge" destination="EHf-Mp-IFV" id="Dnm-Ev-MsZ"/>
-                                            <outlet property="location" destination="1v8-cC-vyH" id="L3c-SJ-qlj"/>
-                                            <outlet property="type" destination="CBm-Ct-C1z" id="AZ6-Pc-Ex7"/>
-                                            <segue destination="LrD-tw-75L" kind="show" identifier="" id="Avh-5q-gsl"/>
+                                            <outlet property="locationLabel" destination="1v8-cC-vyH" id="L3c-SJ-qlj"/>
+                                            <outlet property="typeLabel" destination="CBm-Ct-C1z" id="AZ6-Pc-Ex7"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -513,26 +512,27 @@
                     <connections>
                         <outlet property="doneButton" destination="o9s-a8-EAv" id="8s7-Lw-2El"/>
                         <outlet property="tableView" destination="ujw-30-dNo" id="lQP-uU-o2c"/>
+                        <segue destination="LrD-tw-75L" kind="show" identifier="FeedbackEventTableViewController" id="1CY-R3-CDi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zkY-aD-2Ta" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5452" y="-824.43778110944538"/>
         </scene>
-        <!--Individual Feedback Table View Controller-->
+        <!--Feedback Event Table View Controller-->
         <scene sceneID="ydP-0h-PdY">
             <objects>
-                <viewController id="LrD-tw-75L" customClass="IndividualFeedbackTableViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="LrD-tw-75L" customClass="FeedbackEventTableViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yz8-wb-Sk7"/>
                         <viewControllerLayoutGuide type="bottom" id="4Nj-t9-k21"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="0d4-eV-5DZ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="323.5"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="QdC-IY-3ca">
-                                <rect key="frame" x="129" y="323" width="117" height="20.5"/>
+                                <rect key="frame" x="129" y="151.5" width="117" height="20.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Feedback Stuff" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n1s-c3-1Gh">
                                         <rect key="frame" x="0.0" y="0.0" width="117" height="20.5"/>
