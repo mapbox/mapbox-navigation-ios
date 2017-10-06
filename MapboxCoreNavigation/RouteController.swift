@@ -563,10 +563,9 @@ extension RouteController: CLLocationManagerDelegate {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             let userDistanceToManeuver = Polyline(coordinates).distance(from: location.coordinate)
             
-            if recentDistancesFromManeuver.reduce(0, +) < RouteControllerMinimumBackupDistanceForRerouting {
-                guard recentDistancesFromManeuver.count <= RouteControllerMinimumNumberLocationUpdatesBackwards else {
-                    return false
-                }
+            // If the location updates have been backtracking for a certain amount of time and over a certain distance, the user most likely turned around or made a wrong turn and need a new route.
+            if recentDistancesFromManeuver.count > RouteControllerMinimumNumberLocationUpdatesBackwards && recentDistancesFromManeuver.last! - recentDistancesFromManeuver.first! > RouteControllerMinimumBacktrackingDistanceForRerouting {
+                return false
             }
             
             if recentDistancesFromManeuver.isEmpty {
