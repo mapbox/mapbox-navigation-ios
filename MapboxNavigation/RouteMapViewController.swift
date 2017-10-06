@@ -207,9 +207,10 @@ class RouteMapViewController: UIViewController {
                 controller.maneuverDelegate = self
             }
         case String(describing: FeedbackOverviewTableViewController.self):
-            if let navCon = segue.destination as? UINavigationController, let destination = navCon.viewControllers.first as? FeedbackOverviewTableViewController {
+            if let navigationController = segue.destination as? UINavigationController,
+                let destination = navigationController.viewControllers.first as? FeedbackOverviewTableViewController {
                 destination.route = route
-                destination.feedbacks = routeController.feedbackEvents 
+                destination.feedbacks = routeController.feedbackEvents
             }
         default:
             break
