@@ -152,6 +152,11 @@ public protocol NavigationViewControllerDelegate {
      - parameter feedbackType: The type of feedback event that was sent.
      */
     @objc optional func navigationViewController(_ viewController: NavigationViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+    
+    /**
+     Returns the center point of the user course view in screen coordinates relative to the map view.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
 }
 
 /**
@@ -577,6 +582,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType) {
         navigationDelegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
+    }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint? {
+        return navigationDelegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
     }
 }
 

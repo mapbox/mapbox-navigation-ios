@@ -417,6 +417,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         return snapsUserLocationAnnotationToRoute ? snappedLocation : nil
     }
     
+    func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+        return delegate?.mapViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
+    }
+    
     /**
      Updates the current road name label to reflect the road on which the user is currently traveling.
      
@@ -604,4 +608,6 @@ protocol RouteMapViewControllerDelegate: class {
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
 }

@@ -221,7 +221,7 @@ open class NavigationMapView: MGLMapView {
         }
         
         if tracksUserCourse {
-            let point = targetPoint
+            let point = userAnchorPoint
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 1000, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
@@ -239,8 +239,28 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    var targetPoint: CGPoint {
-        return CGPoint(x: bounds.midX, y: bounds.height*0.75)
+    /**
+     Center point of the user course view in screen coordinates relative to the map view.
+     */
+    var userAnchorPoint: CGPoint {
+        if let anchorPoint = navigationMapDelegate?.navigationMapViewUserAnchorPoint?(self), anchorPoint != .zero {
+            return anchorPoint
+        }
+        
+        let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
+        let courseViewWidth = userCourseView?.frame.width ?? 0
+        let courseViewHeight = userCourseView?.frame.height ?? 0
+        let edgePadding = UIEdgeInsets(top: 50 + courseViewHeight / 2,
+                                       left: 50 + courseViewWidth / 2,
+                                       bottom: 50 + courseViewHeight / 2,
+                                       right: 50 + courseViewWidth / 2)
+        return CGPoint(x: max(min(contentFrame.midX,
+                              contentFrame.maxX - edgePadding.right),
+                              contentFrame.minX + edgePadding.left),
+                       y: max(max(min(contentFrame.minY + contentFrame.height * 0.8,
+                                      contentFrame.maxY - edgePadding.bottom),
+                                  contentFrame.minY + edgePadding.top),
+                              contentFrame.minY + contentFrame.height * 0.5))
     }
     
     var tracksUserCourse: Bool = false {
@@ -278,21 +298,6 @@ open class NavigationMapView: MGLMapView {
                 addSubview(userCourseView)
             }
         }
-    }
-    
-    var userCourseViewCenter: CGPoint {
-        var edgePaddingForFollowingWithCourse = UIEdgeInsets(top: 50, left: 0, bottom: 50, right: 0)
-        if let userCourseView = userCourseView {
-            edgePaddingForFollowingWithCourse.top += userCourseView.frame.height
-            edgePaddingForFollowingWithCourse.bottom += userCourseView.frame.height
-        }
-        
-        let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
-        var paddedContentFrame = UIEdgeInsetsInsetRect(contentFrame, edgePaddingForFollowingWithCourse)
-        if paddedContentFrame == .zero {
-            paddedContentFrame = contentFrame
-        }
-        return CGPoint(x: paddedContentFrame.midX, y: paddedContentFrame.maxY)
     }
     
     /**
@@ -754,6 +759,9 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc(navigationMapView:shapeDescribingWaypoints:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    
+    @objc(navigationMapViewUserAnchorPoint:)
+    optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
 }
 
 protocol NavigationMapViewCourseTrackingDelegate: class {
