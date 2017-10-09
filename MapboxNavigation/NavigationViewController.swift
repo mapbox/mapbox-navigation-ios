@@ -258,11 +258,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      
      By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
      */
-    public var snapsUserLocationAnnotationToRoute = true {
-        didSet {
-            mapViewController?.snapsUserLocationAnnotationToRoute = snapsUserLocationAnnotationToRoute
-        }
-    }
+    public var snapsUserLocationAnnotationToRoute = true
     
     /**
      Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
@@ -618,7 +614,10 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
-        if let location = locations.last {
+        if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+            mapViewController?.labelCurrentRoad(at: location)
+        } else if let location = locations.last {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
             mapViewController?.labelCurrentRoad(at: location)
         }

@@ -263,7 +263,7 @@ open class RouteController: NSObject {
     /**
      The most recently received user location.
      
-     This is a raw location received from `locationManager`. To obtain an idealized location, use the `snappedLocation` property.
+     This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
     var rawLocation: CLLocation?
     

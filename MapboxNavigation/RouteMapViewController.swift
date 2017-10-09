@@ -22,13 +22,6 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
     
-    /**
-     Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
-     
-     By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
-     */
-    var snapsUserLocationAnnotationToRoute = true
-    
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
@@ -414,12 +407,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return delegate?.navigationMapView(mapView, viewFor: annotation)
-    }
-
-    func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-        let snappedLocation = routeController.location
-        labelCurrentRoad(at: snappedLocation ?? location)
-        return snapsUserLocationAnnotationToRoute ? snappedLocation : nil
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
