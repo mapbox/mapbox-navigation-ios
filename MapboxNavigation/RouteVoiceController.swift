@@ -75,6 +75,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         maneuverVoiceDistanceFormatter.unitStyle = .long
         maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
         resumeNotifications()
+        
+        do {
+            try duckAudio()
+        } catch {
+            print(error)
+        }
     }
     
     deinit {
@@ -139,13 +145,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
 
     func duckAudio() throws {
         try validateDuckingOptions()
-        try AVAudioSession.sharedInstance().setActive(true)
     }
     
     func unDuckAudio() throws {
-        if !speechSynth.isSpeaking {
-            try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
-        }
+        try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
     }
     
     func startAnnouncementTimer() {
@@ -195,12 +198,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     func speak(_ text: String, error: String? = nil) {
         // Note why it failed
         if let error = error {
-            print(error)
-        }
-        
-        do {
-            try duckAudio()
-        } catch {
             print(error)
         }
         
