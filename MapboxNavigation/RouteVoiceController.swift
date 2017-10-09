@@ -75,6 +75,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         maneuverVoiceDistanceFormatter.unitStyle = .long
         maneuverVoiceDistanceFormatter.numberFormatter.locale = .nationalizedCurrent
         resumeNotifications()
+        
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     deinit {
