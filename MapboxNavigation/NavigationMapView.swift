@@ -240,6 +240,10 @@ open class NavigationMapView: MGLMapView {
                 return shape(describingCasing: route, legIndex: legIndex)
             }
             
+            guard legCongestion.count + 1 <= coordinates.count else {
+                return shape(describingCasing: route, legIndex: legIndex)
+            }
+            
             let coordsForLeg = coordinates[previousLegCongestionIndex..<previousLegCongestionIndex + legCongestion.count + 1]
             let destination = coordinates.suffix(from: previousLegCongestionIndex + 1)
             let segment = zip(coordsForLeg, destination).map { [$0.0, $0.1] }
