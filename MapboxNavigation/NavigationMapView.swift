@@ -101,12 +101,6 @@ open class NavigationMapView: MGLMapView {
     }
     
     func updateCourseView(_ sender: UIGestureRecognizer) {
-        
-        // Disable course tracking when any kind of user interaction occurs
-        if tracksUserCourse {
-            tracksUserCourse = false
-        }
-        
         if sender is UITapGestureRecognizer {
             if sender.state == .ended {
                 enableFrameByFrameCourseViewTracking(for: 2)
