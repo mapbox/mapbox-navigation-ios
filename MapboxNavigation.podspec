@@ -48,7 +48,7 @@ Pod::Spec.new do |s|
   s.dependency "Pulley", "1.4"
   s.dependency "SDWebImage", "~> 4.1"
   s.dependency "AWSPolly", "~> 2.6"
-  s.dependency "Solar", "~> 2.0"
+  s.dependency "Solar", "2.0.0"
   s.dependency "Turf", "~> 0.0.3"
 
 end
