@@ -12,7 +12,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     var routeController: RouteController!
 
     let textDistanceFormatter = DistanceFormatter(approximate: true)
-    let voiceDistanceFormatter = SpokenDistanceFormatter(approximate: true)
     lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
     var simulateLocation = false
@@ -60,13 +59,13 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(_ :)), name: RouteControllerAlertLevelDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(shouldSpeak(_:)), name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: RouteControllerWillReroute, object: nil)
     }
 
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
     }
@@ -76,8 +75,10 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     }
 
     // When the alert level changes, this signals the user is ready for a voice announcement
-    func alertLevelDidChange(_ notification: NSNotification) {
+    func shouldSpeak(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        
+        guard let text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text else { return }
 
         let utterance = AVSpeechUtterance(string: text)
         speechSynth.delegate = self
