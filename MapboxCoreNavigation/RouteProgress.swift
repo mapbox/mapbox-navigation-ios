@@ -141,8 +141,6 @@ open class RouteProgress: NSObject {
             
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
-        
-        createAudioForRoute(route: route)
     }
 }
 
