@@ -114,12 +114,12 @@ open class NavigationMapView: MGLMapView {
                     enableFrameByFrameCourseViewTracking(for: 1)
                 }
             }
-            else if sender.state == .changed
-            {
-                guard let location = userLocationForCourseTracking else { return }
-                userCourseView?.layer.removeAllAnimations()
-                userCourseView?.center = convert(location.coordinate, toPointTo: self)
-            }
+        }
+        
+        if sender.state == .changed {
+            guard let location = userLocationForCourseTracking else { return }
+            userCourseView?.layer.removeAllAnimations()
+            userCourseView?.center = convert(location.coordinate, toPointTo: self)
         }
     }
     
