@@ -728,7 +728,7 @@ extension RouteController: CLLocationManagerDelegate {
         routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
 
         guard let spokenInstructions = routeProgress.currentLegProgress.currentStep.instructionsSpokenAlongStep else {
-            print("The directions request was made without `includesVoiceInstructions` enabled. This will prevent users from getting voice alerts. It's recommended to make your directions request via `NavigationRouteOptions()`.")
+            print("The directions request was made without `includesVoiceInstructions` enabled. This will prevent users from getting voice instructions. It's recommended to make your directions request via `NavigationRouteOptions()`.")
             return
         }
 
