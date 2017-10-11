@@ -21,13 +21,12 @@ class MapboxCoreNavigationTests: XCTestCase {
         navigation.resume()
         let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
-        self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
+        self.expectation(forNotification: RouteControllerDidPassSpokenInstructionPoint.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 2)
             
-            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
-            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+            let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
             
-            return routeProgress != nil && routeProgress?.currentLegProgress.alertUserLevel == .depart && round(userDistance) == 384
+            return routeProgress != nil
         }
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
@@ -44,13 +43,12 @@ class MapboxCoreNavigationTests: XCTestCase {
         let locationManager = ReplayLocationManager(locations: locations)
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         
-        self.expectation(forNotification: RouteControllerAlertLevelDidChange.rawValue, object: navigation) { (notification) -> Bool in
+        self.expectation(forNotification: RouteControllerDidPassSpokenInstructionPoint.rawValue, object: navigation) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 2)
             
-            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
-            let userDistance = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey] as! CLLocationDistance
+            let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
             
-            return routeProgress?.currentLegProgress.alertUserLevel == .low && routeProgress?.currentLegProgress.stepIndex == 2 && round(userDistance) == 1786
+            return routeProgress?.currentLegProgress.stepIndex == 2
         }
         
         navigation.resume()
@@ -102,12 +100,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         
         self.expectation(forNotification: RouteControllerProgressDidChange.rawValue, object: navigation) { (notification) -> Bool in
-            let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as? RouteProgress
-            guard let alertLevel = routeProgress?.currentLegProgress.alertUserLevel else {
-                return false
-            }
-            
-            return alertLevel == .arrive
+            let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
+            return routeProgress != nil
         }
         
         navigation.resume()

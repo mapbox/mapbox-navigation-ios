@@ -18,11 +18,6 @@ public let RouteControllerProgressDidChangeNotificationLocationKey = MBRouteCont
 public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey
 
 /**
- Key used for accessing the `RouteProgress` object from a `RouteControllerAlertLevelDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerAlertLevelDidChangeNotificationRouteProgressKey = MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey
-
-/**
  Key used for accessing the user's current `CLLocation` from a `RouteControllerWillReroute` notification's `userInfo` dictionary.
  */
 public let RouteControllerNotificationLocationKey = MBRouteControllerNotificationLocationKey
@@ -48,9 +43,14 @@ public let RouteControllerDidFindFasterRouteKey = MBRouteControllerDidFindFaster
 public let RouteControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
 
 /**
- Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver.
+ Emitted when the user passing an instruction location location.
  */
 public let RouteControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
+
+/**
+ Key for accessing the `RouteProgress` key emitted when `RouteControllerDidPassSpokenInstructionPoint` is fired.
+ */
+public let RouteControllerDidPassSpokenInstructionPointRouteProgressKey = MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey
 
 /**
  Emitted when the user has gone off-route and the `RouteController` is about to reroute.
@@ -100,14 +100,9 @@ public var RouteControllerHighAlertInterval: TimeInterval = 15
 public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
 /**
- Remaing distance on a motorway at which the `AlertLevel.high` `AlertLevel` will be given. This overrides `RouteControllerHighAlertInterval` only when the current step is a motorway. Default value is a half mile.
+ Maximum number of seconds the user can travel away from the start of the route before rerouting occurs
  */
-public var RouteControllerMotorwayHighAlertDistance: CLLocationDistance = 0.25 * milesToMeters
-
-/**
- Remaing distance on a motorway at which the `AlertLevel.medium` `AlertLevel` will be given. This overrides `RouteControllerMediumAlertInterval` only when the current step is a motorway. Defauly value is 2 miles.
- */
-public var RouteControllerMotorwayMediumAlertDistance: CLLocationDistance = 2 * milesToMeters
+public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
 
 /**
  When calculating whether or not the user is on the route, we look where the user will be given their speed and this variable.

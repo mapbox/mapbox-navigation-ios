@@ -85,7 +85,7 @@ class RouteTableViewController: UIViewController {
         }
     }
         
-    func notifyAlertLevelDidChange() {
+    func shouldGiveVoiceInstruction() {
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             tableView.reloadRows(at: visibleIndexPaths, with: .fade)
         }

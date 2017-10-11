@@ -152,7 +152,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         let routeController = RouteController(along: route, directions: directions)
         let steps = routeController.routeProgress.currentLeg.steps
         let stepWithLanes = steps[8]
-        controller.updateLaneViews(step: stepWithLanes, alertLevel: .high)
+        controller.updateLaneViews(step: stepWithLanes, durationRemaining: 20)
         controller.showLaneViews(animated: false)
         
         FBSnapshotVerifyView(controller.laneViewsContainerView)

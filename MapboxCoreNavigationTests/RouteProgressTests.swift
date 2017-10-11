@@ -4,15 +4,6 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 
 class RouteProgressTests: XCTestCase {
-    func testAlertLevels() {
-        XCTAssertNotNil(AlertLevel.none)
-        XCTAssertNotNil(AlertLevel.depart)
-        XCTAssertNotNil(AlertLevel.low)
-        XCTAssertNotNil(AlertLevel.medium)
-        XCTAssertNotNil(AlertLevel.high)
-        XCTAssertNotNil(AlertLevel.arrive)
-    }
-    
     func testRouteProgress() {
         let routeProgress = RouteProgress(route: route)
         XCTAssertEqual(routeProgress.fractionTraveled, 0)
@@ -24,7 +15,6 @@ class RouteProgressTests: XCTestCase {
     func testRouteLegProgress() {
         let routeProgress = RouteProgress(route: route)
         XCTAssertEqual(routeProgress.currentLeg.description, "California Street, Webster Street")
-        XCTAssertEqual(routeProgress.currentLegProgress.alertUserLevel, .none)
         XCTAssertEqual(routeProgress.currentLegProgress.distanceTraveled, 0)
         XCTAssertEqual(round(routeProgress.currentLegProgress.durationRemaining), 790)
         XCTAssertEqual(routeProgress.currentLegProgress.fractionTraveled, 0)
