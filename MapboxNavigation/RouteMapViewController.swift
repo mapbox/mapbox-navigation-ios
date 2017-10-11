@@ -329,7 +329,7 @@ class RouteMapViewController: UIViewController {
                             right: 0)
     }
     
-    func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
+    func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval = 0) {
         laneViewsContainerView.updateLaneViews(step: step, durationRemaining: durationRemaining)
         
         if laneViewsContainerView.stackView.arrangedSubviews.count > 0 {
@@ -562,7 +562,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        updateLaneViews(step: step, durationRemaining: 0)
+        updateLaneViews(step: step)
 
         
         if !isInOverviewMode {
