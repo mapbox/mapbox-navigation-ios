@@ -418,7 +418,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
     func suspendNotifications() {
@@ -429,7 +429,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func progressDidChange(notification: NSNotification) {
         resetETATimer()
         
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
         let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
 
@@ -438,11 +438,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         progressBar.progress = routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled)
     }
     
-    func alertLevelDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+    func didPassInstructionPoint(notification: NSNotification) {
+        let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
-        mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
-        tableViewController?.notifyAlertLevelDidChange()
+        mapViewController?.shouldGiveVoiceInstruction(routeProgress: routeProgress)
+        tableViewController?.shouldGiveVoiceInstruction()
         
         // Any time the alert level changes, clear out previous notifications.
         // When we give a high alert notification, we want to clear out this notification when completing that step.
