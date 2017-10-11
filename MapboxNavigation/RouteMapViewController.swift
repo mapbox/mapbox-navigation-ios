@@ -321,7 +321,7 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
-        laneViewsContainerView.updateLaneViews(step: step, durationRemaining: routeController.routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
+        laneViewsContainerView.updateLaneViews(step: step, durationRemaining: durationRemaining)
         
         if laneViewsContainerView.stackView.arrangedSubviews.count > 0 {
             showLaneViews()

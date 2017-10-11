@@ -444,8 +444,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         mapViewController?.shouldGiveVoiceInstruction(routeProgress: routeProgress)
         tableViewController?.shouldGiveVoiceInstruction()
         
-        // Any time the alert level changes, clear out previous notifications.
-        // When we give a high alert notification, we want to clear out this notification when completing that step.
         clearStaleNotifications()
         
         if let upComingStep = routeProgress.currentLegProgress.upComingStep, routeProgress.currentLegProgress.currentStepProgress.durationRemaining < RouteControllerHighAlertInterval {
