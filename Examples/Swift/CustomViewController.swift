@@ -74,9 +74,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         addRouteToMap()
     }
 
-    // When the alert level changes, this signals the user is ready for a voice announcement
+    // When an instruction should be given
     func shouldSpeak(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
         guard let text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text else { return }
 
