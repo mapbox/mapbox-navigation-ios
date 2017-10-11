@@ -60,29 +60,29 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
-//    func testArrive() {
-//        let bundle = Bundle(for: MapboxCoreNavigationTests.self)
-//        let filePath = bundle.path(forResource: "tunnel", ofType: "json")!
-//        
-//        let locations = Array<CLLocation>.locations(from: filePath)!
-//        let locationManager = ReplayLocationManager(locations: locations)
-//        locationManager.speedMultiplier = 20
-//        
-//        let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
-//        let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
-//        route.accessToken = "foo"
-//        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
-//        
-//        self.expectation(forNotification: RouteControllerProgressDidChange.rawValue, object: navigation) { (notification) -> Bool in
-//            let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
-//            return routeProgress != nil
-//        }
-//        
-//        navigation.resume()
-//        
-//        let timeout = locations.last!.timestamp.timeIntervalSince(locations.first!.timestamp) / locationManager.speedMultiplier
-//        waitForExpectations(timeout: timeout + 2) { (error) in
-//            XCTAssertNil(error)
-//        }
-//    }
+    func testArrive() {
+        let bundle = Bundle(for: MapboxCoreNavigationTests.self)
+        let filePath = bundle.path(forResource: "tunnel", ofType: "json")!
+        
+        let locations = Array<CLLocation>.locations(from: filePath)!
+        let locationManager = ReplayLocationManager(locations: locations)
+        locationManager.speedMultiplier = 20
+        
+        let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
+        let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
+        route.accessToken = "foo"
+        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
+        
+        self.expectation(forNotification: RouteControllerProgressDidChange.rawValue, object: navigation) { (notification) -> Bool in
+            let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
+            return routeProgress != nil
+        }
+        
+        navigation.resume()
+        
+        let timeout = locations.last!.timestamp.timeIntervalSince(locations.first!.timestamp) / locationManager.speedMultiplier
+        waitForExpectations(timeout: timeout + 2) { (error) in
+            XCTAssertNil(error)
+        }
+    }
 }
