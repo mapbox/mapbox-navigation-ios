@@ -49,10 +49,10 @@ public class PollyVoiceController: RouteVoiceController {
         super.init()
     }
     
-    public override func alertLevelDidChange(notification: NSNotification) {
+    public override func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
         
-        let routeProgresss = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgresss = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         guard let instruction = routeProgresss.currentLegProgress.currentStepProgress.currentSpokenInstruction?.ssmlText else { return }
         
         pollyTask?.cancel()

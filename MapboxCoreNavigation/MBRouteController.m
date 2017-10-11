@@ -5,8 +5,7 @@ NSString *const MBRouteControllerProgressDidChangeNotificationProgressKey       
 NSString *const MBRouteControllerProgressDidChangeNotificationLocationKey               = @"location";
 NSString *const MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = @"seconds";
 
-NSString *const MBRouteControllerAlertLevelDidChangeNotificationRouteProgressKey            = @"progress";
-NSString *const MBRouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey  = @"distance";
+NSString *const MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey          = @"progress";
 
 NSString *const MBRouteControllerNotificationLocationKey    = @"location";
 NSString *const MBRouteControllerNotificationRouteKey       = @"route";

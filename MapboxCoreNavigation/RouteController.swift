@@ -235,7 +235,7 @@ open class RouteController: NSObject {
 
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
     }
@@ -391,7 +391,7 @@ extension RouteController {
         checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
 
-    func alertLevelDidChange(notification: NSNotification) {
+    func didPassSpokenInstructionPoint(notification: NSNotification) {
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
@@ -736,7 +736,7 @@ extension RouteController: CLLocationManagerDelegate {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.voiceInstructionIndex {
 
                 NotificationCenter.default.post(name: RouteControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    RouteControllerAlertLevelDidChangeNotificationRouteProgressKey: routeProgress
+                    MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
                     ])
 
                 routeProgress.currentLegProgress.currentStepProgress.voiceInstructionIndex += 1

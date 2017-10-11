@@ -80,7 +80,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
     }
@@ -154,7 +154,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         recentlyAnnouncedRouteStep = nil
     }
     
-    open func alertLevelDidChange(notification: NSNotification) {
+    open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard shouldSpeak(for: notification) == true else { return }
         
         speak(fallbackText, error: nil)
@@ -164,7 +164,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     func shouldSpeak(for notification: NSNotification) -> Bool {
         guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return false }
         
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
         // We're guarding against two things here:
         //   1. `recentlyAnnouncedRouteStep` being nil.
