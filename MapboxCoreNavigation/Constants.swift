@@ -105,11 +105,6 @@ public var RouteControllerHighAlertInterval: TimeInterval = 15
 public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
 /**
- Maximum number of seconds the user can travel away from the start of the route before rerouting occurs
- */
-public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
-
-/**
  Remaing distance on a motorway at which the `AlertLevel.high` `AlertLevel` will be given. This overrides `RouteControllerHighAlertInterval` only when the current step is a motorway. Default value is a half mile.
  */
 public var RouteControllerMotorwayHighAlertDistance: CLLocationDistance = 0.25 * milesToMeters

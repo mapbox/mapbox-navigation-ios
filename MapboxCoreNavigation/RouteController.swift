@@ -92,10 +92,6 @@ public protocol RouteControllerDelegate: class {
 @objc(MBRouteController)
 open class RouteController: NSObject {
     
-    var lastUserDistanceToStartOfRoute = Double.infinity
-    
-    var lastTimeStampSpentMovingAwayFromStart = Date()
-    
     let events = MMEEventsManager.shared()
     
     /**
@@ -494,32 +490,6 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
         
-        let step = routeProgress.currentLegProgress.currentStepProgress.step
-        if step.maneuverType == .depart && !userIsOnRoute(location) {
-            
-            guard let userSnappedDistanceToClosestCoordinate = Polyline(step.coordinates!).closestCoordinate(to: location.coordinate)?.distance else {
-                return
-            }
-            
-            // Give the user x seconds of moving away from the start of the route before rerouting
-            guard Date().timeIntervalSince(lastTimeStampSpentMovingAwayFromStart) > MaxSecondsSpentTravelingAwayFromStartOfRoute else {
-                lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
-                return
-            }
-            
-            // Don't check `userIsOnRoute` if the user has not moved
-            guard userSnappedDistanceToClosestCoordinate != lastUserDistanceToStartOfRoute else {
-                lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
-                return
-            }
-            
-            if userSnappedDistanceToClosestCoordinate > lastUserDistanceToStartOfRoute {
-                lastTimeStampSpentMovingAwayFromStart = location.timestamp
-            }
-            
-            lastUserDistanceToStartOfRoute = userSnappedDistanceToClosestCoordinate
-        }
-        
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
@@ -535,11 +505,6 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
-    }
-    
-    func resetStartCounter() {
-        lastTimeStampSpentMovingAwayFromStart = Date()
-        lastUserDistanceToStartOfRoute = Double.infinity
     }
     
     /**
@@ -675,8 +640,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         isRerouting = true
-        
-        resetStartCounter()
+
         delegate?.routeController?(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: RouteControllerWillReroute, object: self, userInfo: [
             MBRouteControllerNotificationLocationKey: location
