@@ -35,6 +35,10 @@ open class NavigationMapView: MGLMapView {
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
     let currentLegAttribute = "isCurrentLeg"
+    let alternateSourceIdentifier = "alternateSource"
+    let alternateLayerIdentifier = "alternateLayer"
+    let routeIndexAttribute = "routeIndex"
+    let legIndexAttribute = "legIndex"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -65,6 +69,12 @@ open class NavigationMapView: MGLMapView {
         
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
+        
+        let singleTapForAlternateRoute = UITapGestureRecognizer(target: self, action: #selector(didTapRoute(tap:)))
+        for recognizer in self.gestureRecognizers! where recognizer is UITapGestureRecognizer {
+            singleTapForAlternateRoute.require(toFail: recognizer)
+        }
+        self.addGestureRecognizer(singleTapForAlternateRoute)
         
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
     }
@@ -359,27 +369,22 @@ open class NavigationMapView: MGLMapView {
         guard routes.count > 1 else { return }
         var tmpRoutes = routes
         tmpRoutes.remove(at: activeRouteIndex)
-        guard let alternateRoutes = tmpRoutes.first else { return }
+        guard let alternateRoute = tmpRoutes.first else { return }
         
         self.routes = routes
         
-        let singleTap = UITapGestureRecognizer(target: self, action: #selector(handleSingleTap(tap:)))
-        for recognizer in self.gestureRecognizers! where recognizer is UITapGestureRecognizer {
-            singleTap.require(toFail: recognizer)
-        }
-        self.addGestureRecognizer(singleTap)
-        
-        let polyline = MGLPolylineFeature(coordinates: alternateRoutes.coordinates!, count: alternateRoutes.coordinateCount)
-        polyline.attributes["routeIndex"] = routes.index(of: alternateRoutes)
+        let polyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
+        polyline.attributes[routeIndexAttribute] = routes.index(of: alternateRoute)
+        polyline.attributes[legIndexAttribute] = legIndex ?? 0
         let alternatePolyline = MGLShapeCollectionFeature(shapes: [polyline])
         
-        if let source = style.source(withIdentifier: "alternateSource") as? MGLShapeSource {
+        if let source = style.source(withIdentifier: alternateSourceIdentifier) as? MGLShapeSource {
             source.shape = alternatePolyline
         } else {
-            let alternateSource = MGLShapeSource(identifier: "alternateSource", shape: alternatePolyline, options: nil)
+            let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
             style.addSource(alternateSource)
             
-            let alternateLayer = routeAlternateStyleLayer(identifier: "alternateLayer", source: alternateSource)
+            let alternateLayer = routeAlternateStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
             
             if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
                 style.insertLayer(alternateLayer, below: layer)
@@ -387,11 +392,15 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    func handleSingleTap(tap: UITapGestureRecognizer) {
-        let features = self.visibleFeatures(at: tap.location(in: self), styleLayerIdentifiers: Set(["alternateLayer"]))
+    /**
+     Fired when the user taps a route. If there is an alternate route, and an alternate route is tapped, it is selected.
+     */
+    public func didTapRoute(tap: UITapGestureRecognizer) {
+        let features = self.visibleFeatures(at: tap.location(in: self), styleLayerIdentifiers: Set([alternateLayerIdentifier]))
         for feature in features {
-            if let routeIndex = feature.attribute(forKey: "routeIndex") as? Int, let routes = routes {
-                self.showRoute(routes, legIndex: 0, activeRouteIndex: routeIndex)
+            if let routeIndex = feature.attribute(forKey: routeIndexAttribute) as? Int,
+                let legIndex = feature.attribute(forKey: legIndexAttribute) as? Int, let routes = routes {
+                self.showRoute(routes, legIndex: legIndex, activeRouteIndex: routeIndex)
                 return
             }
         }
@@ -419,6 +428,14 @@ open class NavigationMapView: MGLMapView {
         
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
+        }
+        
+        if let alternateLayer = style.layer(withIdentifier: alternateLayerIdentifier) {
+            style.removeLayer(alternateLayer)
+        }
+        
+        if let alternateSource = style.source(withIdentifier: alternateSourceIdentifier) {
+            style.removeSource(alternateSource)
         }
     }
     
@@ -646,13 +663,13 @@ open class NavigationMapView: MGLMapView {
         
         // Take the default line width and make it wider for the casing
         lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.5),
+                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.55),
                                              options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
         lineCasing.lineColor = MGLStyleValue(rawValue: .gray)
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-        lineCasing.lineOpacity = MGLStyleValue(rawValue: 1)
+        lineCasing.lineOpacity = MGLStyleValue(rawValue: 0.75)
         
         return lineCasing
     }
