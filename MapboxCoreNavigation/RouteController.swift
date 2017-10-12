@@ -733,13 +733,13 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         for (voiceInstructionIndex, voiceInstruction) in spokenInstructions.enumerated() {
-            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.voiceInstructionIndex {
+            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex {
 
                 NotificationCenter.default.post(name: RouteControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
                     ])
 
-                routeProgress.currentLegProgress.currentStepProgress.voiceInstructionIndex += 1
+                routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
                 return
             }
         }
