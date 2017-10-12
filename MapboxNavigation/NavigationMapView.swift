@@ -101,7 +101,10 @@ open class NavigationMapView: MGLMapView {
     }
     
     func updateCourseView(_ sender: UIGestureRecognizer) {
-        altitude = self.camera.altitude
+        
+        if sender.state == .ended {
+            altitude = self.camera.altitude
+        }
         
         if sender is UITapGestureRecognizer {
             if sender.state == .ended {
@@ -163,6 +166,7 @@ open class NavigationMapView: MGLMapView {
             return super.showsUserLocation
         }
         set {
+            altitude = defaultAltitude
             if tracksUserCourse || userLocationForCourseTracking != nil {
                 super.showsUserLocation = false
                 
