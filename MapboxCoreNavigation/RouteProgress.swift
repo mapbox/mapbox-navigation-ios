@@ -97,11 +97,11 @@ open class RouteProgress: NSObject {
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    public init(route: Route, legIndex: Int = 0) {
+    public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
         super.init()
-        currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0)
+        currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         
         
         
@@ -281,10 +281,10 @@ open class RouteLegProgress: NSObject {
      - parameter leg: Leg on a `Route`.
      - parameter stepIndex: Current step the user is on.
      */
-    public init(leg: RouteLeg, stepIndex: Int = 0) {
+    public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.leg = leg
         self.stepIndex = stepIndex
-        currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex])
+        currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
     
     
@@ -350,10 +350,10 @@ open class RouteStepProgress: NSObject {
      
      - parameter step: Step on a `RouteLeg`.
      */
-    public init(step: RouteStep) {
+    public init(step: RouteStep, spokenInstructionIndex: Int = 0) {
         self.step = step
         self.intersectionIndex = 0
-        self.spokenInstructionIndex = 0
+        self.spokenInstructionIndex = spokenInstructionIndex
     }
     
     /**
