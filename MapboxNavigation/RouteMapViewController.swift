@@ -546,8 +546,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
             if didSwipe, step != routeController.routeProgress.currentLegProgress.upComingStep {
                 mapView.tracksUserCourse = false
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
-            } else {
-                mapView.tracksUserCourse = true
             }
         }
         
