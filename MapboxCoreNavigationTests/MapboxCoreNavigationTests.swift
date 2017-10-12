@@ -3,12 +3,12 @@ import MapboxDirections
 import Turf
 @testable import MapboxCoreNavigation
 
-let response = Fixture.JSONFromFileNamed(name: "route")
+let response = Fixture.JSONFromFileNamed(name: "routeWithInstructions")
 let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
 let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
 let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
 let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
-let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: RouteOptions(waypoints: [waypoint1, waypoint2]))
+let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
 
 let waitForInterval: TimeInterval = 5
 
@@ -22,11 +22,11 @@ class MapboxCoreNavigationTests: XCTestCase {
         let depart = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 10, timestamp: Date())
         
         self.expectation(forNotification: RouteControllerDidPassSpokenInstructionPoint.rawValue, object: navigation) { (notification) -> Bool in
-            XCTAssertEqual(notification.userInfo?.count, 2)
+            XCTAssertEqual(notification.userInfo?.count, 1)
             
             let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
             
-            return routeProgress != nil
+            return routeProgress != nil && routeProgress?.currentLegProgress.userHasArrivedAtWaypoint == false
         }
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [depart])
@@ -36,19 +36,19 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
-    func testLowAlert() {
+    func testNewStep() {
         route.accessToken = "foo"
-        let locations = [CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.789118, longitude: -122.432209),
-                                    altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())]
-        let locationManager = ReplayLocationManager(locations: locations)
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.79132445827303, longitude: -122.42229044437408),
+                                    altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
+        let locationManager = ReplayLocationManager(locations: [location, location])
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         
         self.expectation(forNotification: RouteControllerDidPassSpokenInstructionPoint.rawValue, object: navigation) { (notification) -> Bool in
-            XCTAssertEqual(notification.userInfo?.count, 2)
+            XCTAssertEqual(notification.userInfo?.count, 1)
             
             let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
             
-            return routeProgress?.currentLegProgress.stepIndex == 2
+            return routeProgress?.currentLegProgress.stepIndex == 1
         }
         
         navigation.resume()

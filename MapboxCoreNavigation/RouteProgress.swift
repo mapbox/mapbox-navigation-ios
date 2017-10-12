@@ -353,7 +353,7 @@ open class RouteStepProgress: NSObject {
     public init(step: RouteStep) {
         self.step = step
         self.intersectionIndex = 0
-        self.voiceInstructionIndex = 0
+        self.spokenInstructionIndex = 0
     }
     
     /**
@@ -387,10 +387,16 @@ open class RouteStepProgress: NSObject {
      */
     public var userDistanceToUpcomingIntersection: CLLocationDistance?
     
-    public var voiceInstructionIndex = 0
+    /**
+     Index into `step.instructionsSpokenAlongStep` representing the current instruction.
+     */
+    public var spokenInstructionIndex = 0
     
+    /**
+     Current Instruction for the user's progress along a step.
+     */
     public var currentSpokenInstruction: SpokenInstruction? {
         guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep else { return nil }
-        return instructionsSpokenAlongStep[voiceInstructionIndex]
+        return instructionsSpokenAlongStep[spokenInstructionIndex]
     }
 }
