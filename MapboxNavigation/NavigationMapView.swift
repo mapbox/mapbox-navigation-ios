@@ -101,13 +101,14 @@ open class NavigationMapView: MGLMapView {
     }
     
     func updateCourseView(_ sender: UIGestureRecognizer) {
+        altitude = self.camera.altitude
+        
         if sender is UITapGestureRecognizer {
             if sender.state == .ended {
                 enableFrameByFrameCourseViewTracking(for: 2)
             }
         } else if let pan = sender as? UIPanGestureRecognizer {
-            if sender.state == .ended || sender.state == .cancelled
-            {
+            if sender.state == .ended || sender.state == .cancelled {
                 let velocity = pan.velocity(in: self)
                 let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
                 if didFling {
@@ -207,6 +208,9 @@ open class NavigationMapView: MGLMapView {
         tracksUserCourse = false
     }
     
+    var altitude: CLLocationDistance = 1000
+    let defaultAltitude:CLLocationDistance = 1000
+    
     public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         animatesUserLocation = animated
         userLocationForCourseTracking = location
@@ -217,7 +221,7 @@ open class NavigationMapView: MGLMapView {
         if tracksUserCourse {
             let point = userAnchorPoint
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
-            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: 1000, pitch: 45, heading: location.course)
+            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             let duration: TimeInterval = animated ? 1 : 0
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
