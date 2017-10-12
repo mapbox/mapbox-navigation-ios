@@ -130,7 +130,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Returns a view object to mark the given point annotation object on the map.
      
-     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof).
+     The user location annotation view can also be customized via this method. When annotation is an instance of `MGLUserLocation`, return an instance of `MGLUserLocationAnnotationView` (or a subclass thereof). Note that, when `NavigationMapView.tracksUserCourse` is set to `true`, the map view uses a distinct user course view; to customize it, set the `NavigationMapView.userCourseView` property of the map view returned by this view controller’s `mapView` property.
      */
     @objc optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
     
@@ -152,6 +152,11 @@ public protocol NavigationViewControllerDelegate {
      - parameter feedbackType: The type of feedback event that was sent.
      */
     @objc optional func navigationViewController(_ viewController: NavigationViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+    
+    /**
+     Returns the center point of the user course view in screen coordinates relative to the map view.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
 }
 
 /**
@@ -238,11 +243,11 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     /**
-     Provides access to the navigation's `MGLMapView` with all its styling capabilities.
+     The main map view displayed inside the view controller.
      
-     Note that you should not change the `mapView`'s delegate.
+     - note: Do not change this map view’s delegate.
      */
-    public var mapView: MGLMapView? {
+    public var mapView: NavigationMapView? {
         get {
             return mapViewController?.mapView
         }
@@ -253,11 +258,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      
      By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
      */
-    public var snapsUserLocationAnnotationToRoute = true {
-        didSet {
-            mapViewController?.snapsUserLocationAnnotationToRoute = snapsUserLocationAnnotationToRoute
-        }
-    }
+    public var snapsUserLocationAnnotationToRoute = true
     
     /**
      Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
@@ -578,6 +579,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType) {
         navigationDelegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
     }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint? {
+        return navigationDelegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
+    }
 }
 
 extension NavigationViewController: RouteControllerDelegate {
@@ -609,8 +614,14 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
-        mapViewController?.mapView.locationManager(routeController.locationManager, didUpdateLocations: locations)
-        
+        if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+            mapViewController?.labelCurrentRoad(at: location)
+        } else if let location = locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+            mapViewController?.labelCurrentRoad(at: location)
+        }
+    
         if !(routeController.locationManager is SimulatedLocationManager) {
             mapViewController?.statusView.hide(delay: 3, animated: true)
         }

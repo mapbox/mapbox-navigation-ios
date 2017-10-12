@@ -1,4 +1,5 @@
 import Foundation
+import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
 import Turf
@@ -34,18 +35,14 @@ open class NavigationMapView: MGLMapView {
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
     let currentLegAttribute = "isCurrentLeg"
-    
-    var manuallyUpdatesLocation: Bool = false {
-        didSet {
-            if manuallyUpdatesLocation {
-                locationManager.stopUpdatingLocation()
-                locationManager.stopUpdatingHeading()
-                locationManager.delegate = nil
-            } else {
-                validateLocationServices()
-            }
-        }
-    }
+
+    let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
+        10: MGLStyleValue(rawValue: 8),
+        13: MGLStyleValue(rawValue: 9),
+        16: MGLStyleValue(rawValue: 12),
+        19: MGLStyleValue(rawValue: 24),
+        22: MGLStyleValue(rawValue: 30)
+    ]
     
     dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -54,55 +51,267 @@ open class NavigationMapView: MGLMapView {
     dynamic public var trafficSevereColor: UIColor = .trafficSevere
     dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        makeGestureRecognizersRespectCourseTracking()
+        makeGestureRecognizersUpdateCourseView()
+        
+        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
+    }
+    
+    public required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
+        
+        makeGestureRecognizersRespectCourseTracking()
+        makeGestureRecognizersUpdateCourseView()
+        
+        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
+    }
+    
+    /** Modifies the gesture recognizers to also disable course tracking. */
+    func makeGestureRecognizersRespectCourseTracking() {
+        for gestureRecognizer in gestureRecognizers ?? []
+            where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
+                gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
+        }
+    }
+    
+    func makeGestureRecognizersResetInactivityTimer() {
+        for gestureRecognizer in gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(resetInactivityTimer(_:)))
+        }
+    }
+    
+    func makeGestureRecognizersUpdateCourseView() {
+        for gestureRecognizer in gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
+        }
+    }
+    
+    open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
+        if tracksUserCourse {
+            return userAnchorPoint
+        } else {
+            return super.anchorPoint(forGesture: gesture)
+        }
+    }
+    
+    deinit {
+        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
+    }
+    
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "batteryState" {
+            let batteryState = UIDevice.current.batteryState
+            isPluggedIn = batteryState == .charging || batteryState == .full
+        }
+    }
+    
+    func updateCourseView(_ sender: UIGestureRecognizer) {
+        
+        if sender.state == .ended {
+            altitude = self.camera.altitude
+            enableFrameByFrameCourseViewTracking(for: 2)
+        }
+        
+        // Capture altitude for double tap and two finger tap after animation finishes
+        if sender is UITapGestureRecognizer, sender.state == .ended {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                self.altitude = self.camera.altitude
+            })
+        }
+        
+        if let pan = sender as? UIPanGestureRecognizer {
+            if sender.state == .ended || sender.state == .cancelled {
+                let velocity = pan.velocity(in: self)
+                let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
+                if didFling {
+                    enableFrameByFrameCourseViewTracking(for: 1)
+                }
+            }
+        }
+        
+        if sender.state == .changed {
+            guard let location = userLocationForCourseTracking else { return }
+            userCourseView?.layer.removeAllAnimations()
+            userCourseView?.center = convert(location.coordinate, toPointTo: self)
+        }
+    }
+    
+    var shouldPositionCourseViewFrameByFrame = false
+    
+    // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
+    func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(disableFrameByFramePositioning), object: nil)
+        perform(#selector(disableFrameByFramePositioning), with: nil, afterDelay: duration)
+        shouldPositionCourseViewFrameByFrame = true
+    }
+    
+    @objc fileprivate func disableFrameByFramePositioning() {
+        shouldPositionCourseViewFrameByFrame = false
+    }
+    
+    func resetInactivityTimer(_ sender: UIGestureRecognizer) {
+        if sender.state == .began {
+            isInactive = false
+        }
+        else if sender.state == .ended || sender.state == .failed {
+            resetInactivityTimer()
+        }
+    }
+    
     var showsRoute: Bool {
         get {
             return style?.layer(withIdentifier: routeLayerIdentifier) != nil
         }
     }
     
-    open override var delegate: MGLMapViewDelegate? {
-        didSet {
-            refreshShowsUserLocation()
-        }
-    }
-    
-    public weak var navigationMapDelegate: NavigationMapViewDelegate? {
-        didSet {
-            refreshShowsUserLocation()
-        }
-    }
+    public weak var navigationMapDelegate: NavigationMapViewDelegate?
+    weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate!
     
     open override var showsUserLocation: Bool {
         get {
+            if tracksUserCourse || userLocationForCourseTracking != nil {
+                return !(userCourseView?.isHidden ?? true)
+            }
             return super.showsUserLocation
         }
-        
         set {
-            super.showsUserLocation = newValue
+            if tracksUserCourse || userLocationForCourseTracking != nil {
+                super.showsUserLocation = false
+                
+                if userCourseView == nil {
+                    userCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: CGSize(width: 75, height: 75)))
+                }
+                userCourseView?.isHidden = !newValue
+            } else {
+                userCourseView?.isHidden = true
+                super.showsUserLocation = newValue
+            }
+        }
+    }
+    
+    var userLocationForCourseTracking: CLLocation?
+    var animatesUserLocation: Bool = false
+    
+    fileprivate let inactivityInterval: TimeInterval = 10
+    fileprivate let decreasedFrameInterval: Int = 12
+    
+    func resetInactivityTimer() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(inactivityTimerFinished), object: nil)
+        self.perform(#selector(inactivityTimerFinished), with: nil, afterDelay: inactivityInterval)
+    }
+    
+    func inactivityTimerFinished() {
+        isInactive = true
+    }
+    
+    fileprivate var isInactive: Bool = false {
+        didSet {
+            if isInactive {
+                displayLink?.frameInterval = isPluggedIn ? 1 : decreasedFrameInterval
+            } else {
+                displayLink?.frameInterval = 1
+            }
+        }
+    }
+    
+    var isPluggedIn: Bool = false
+    
+    @objc func disableUserCourseTracking() {
+        tracksUserCourse = false
+    }
+    
+    var altitude: CLLocationDistance = 1000
+    let defaultAltitude: CLLocationDistance = 1000
+    
+    public func updateCourseTracking(location: CLLocation?, animated: Bool) {
+        animatesUserLocation = animated
+        userLocationForCourseTracking = location
+        guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
+            return
+        }
+        
+        if tracksUserCourse {
+            let point = userAnchorPoint
+            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
+            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
+            let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
+            let duration: TimeInterval = animated ? 1 : 0
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+        }
+        
+        let duration: TimeInterval = animated ? 1 : 0
+        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+        }, completion: nil)
+        
+        if let userCourseView = userCourseView as? UserCourseView {
+            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
         }
     }
     
     /**
-     Force MGLMapView to ask its delegate for the user location annotation’s view, in case that previously happened before there was a delegate.
+     Center point of the user course view in screen coordinates relative to the map view.
      */
-    func refreshShowsUserLocation() {
-        showsUserLocation = false
-        showsUserLocation = true
+    var userAnchorPoint: CGPoint {
+        if let anchorPoint = navigationMapDelegate?.navigationMapViewUserAnchorPoint?(self), anchorPoint != .zero {
+            return anchorPoint
+        }
+        
+        let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
+        let courseViewWidth = userCourseView?.frame.width ?? 0
+        let courseViewHeight = userCourseView?.frame.height ?? 0
+        let edgePadding = UIEdgeInsets(top: 50 + courseViewHeight / 2,
+                                       left: 50 + courseViewWidth / 2,
+                                       bottom: 50 + courseViewHeight / 2,
+                                       right: 50 + courseViewWidth / 2)
+        return CGPoint(x: max(min(contentFrame.midX,
+                              contentFrame.maxX - edgePadding.right),
+                              contentFrame.minX + edgePadding.left),
+                       y: max(max(min(contentFrame.minY + contentFrame.height * 0.8,
+                                      contentFrame.maxY - edgePadding.bottom),
+                                  contentFrame.minY + edgePadding.top),
+                              contentFrame.minY + contentFrame.height * 0.5))
     }
     
-    override open func locationManager(_ manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]!) {
-        guard let location = locations.first else { return }
-        
-        if let modifiedLocation = navigationMapDelegate?.navigationMapView?(self, shouldUpdateTo: location) {
-            super.locationManager(manager, didUpdateLocations: [modifiedLocation])
-        } else {
-            super.locationManager(manager, didUpdateLocations: locations)
+    var tracksUserCourse: Bool = false {
+        didSet {
+            if tracksUserCourse {
+                enableFrameByFrameCourseViewTracking(for: 3)
+                altitude = defaultAltitude
+                showsUserLocation = true
+                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
+            } else {
+                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse(self)
+            }
+            
+            if let location = userLocationForCourseTracking {
+                updateCourseTracking(location: location, animated: true)
+            }
         }
     }
     
-    override open func validateLocationServices() {
-        if !manuallyUpdatesLocation {
-            super.validateLocationServices()
+    open override func mapViewDidFinishRenderingFrameFullyRendered(_ fullyRendered: Bool) {
+        super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
+        
+        guard shouldPositionCourseViewFrameByFrame else { return }
+        guard let location = userLocationForCourseTracking else { return }
+        
+        userCourseView?.center = convert(location.coordinate, toPointTo: self)
+    }
+    
+    /**
+     A `UIView` used to indicate the user’s location and course on the map.
+     
+     If the view conforms to `UserCourseView`, its `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
+     */
+    public var userCourseView: UIView? {
+        didSet {
+            if let userCourseView = userCourseView {
+                addSubview(userCourseView)
+            }
         }
     }
     
@@ -553,9 +762,6 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
 
 @objc
 public protocol NavigationMapViewDelegate: class  {
-    @objc(navigationMapView:shouldUpdateToLocation:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation?
-    
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
@@ -572,4 +778,12 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc(navigationMapView:shapeDescribingWaypoints:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    
+    @objc(navigationMapViewUserAnchorPoint:)
+    optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
+}
+
+protocol NavigationMapViewCourseTrackingDelegate: class {
+    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
+    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
 }

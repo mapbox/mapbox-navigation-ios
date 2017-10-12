@@ -22,21 +22,12 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
     
-    /**
-     Determines whether the user location annotation is moved from the raw user location reported by the device to the nearest location along the route.
-     
-     By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
-     */
-    var snapsUserLocationAnnotationToRoute = true
-    
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
-    
-    var hasFinishedLoadingMap = false
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -47,7 +38,7 @@ class RouteMapViewController: UIViewController {
     var tiltedCamera: MGLMapCamera {
         get {
             let camera = mapView.camera
-            camera.altitude = 600
+            camera.altitude = 1000
             camera.pitch = 45
             return camera
         }
@@ -60,7 +51,25 @@ class RouteMapViewController: UIViewController {
     weak var routeController: RouteController!
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
-    var isInOverviewMode = false
+    var isInOverviewMode = false {
+        didSet {
+            if isInOverviewMode {
+                overviewButton.isHidden = true
+                recenterButton.isHidden = false
+                wayNameView.isHidden = true
+                mapView.logoView.isHidden = true
+            } else {
+                overviewButton.isHidden = false
+                recenterButton.isHidden = true
+                mapView.logoView.isHidden = false
+            }
+            
+            if let controller = routePageViewController.currentManeuverPage {
+                controller.step = currentStep
+                routePageViewController.updateManeuverViewForStep()
+            }
+        }
+    }
     var currentLegIndexMapped = 0
 
     override func viewDidLoad() {
@@ -69,9 +78,10 @@ class RouteMapViewController: UIViewController {
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         
+        mapView.tracksUserCourse = true
         mapView.delegate = self
         mapView.navigationMapDelegate = self
-        mapView.manuallyUpdatesLocation = true
+        mapView.courseTrackingDelegate = self
         
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
@@ -81,6 +91,7 @@ class RouteMapViewController: UIViewController {
         wayNameView.applyDefaultCornerRadiusShadow()
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
+        isInOverviewMode = false
         
         resumeNotifications()
     }
@@ -97,33 +108,24 @@ class RouteMapViewController: UIViewController {
 
         if let camera = pendingCamera {
             mapView.camera = camera
+        } else if let firstCoordinate = route.coordinates?.first {
+            let location = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
+            mapView.updateCourseTracking(location: location, animated: false)
         } else {
-            let camera = tiltedCamera
-            if let coordinates = route.coordinates, coordinates.count > 1 {
-                camera.centerCoordinate = coordinates.first!
-                camera.heading = coordinates[0].direction(to: coordinates[1])
-            }
-            mapView.setCamera(camera, animated: false)
+            mapView.setCamera(tiltedCamera, animated: false)
         }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        // For some reason, when completing a maneuver this function is called.
-        // If we try to set the insets/align twice, the UI locks momentarily.
-        if mapView.userLocationVerticalAlignment != .bottom {
-            mapView.setUserLocationVerticalAlignment(.bottom, animated: false)
-            mapView.setContentInset(contentInsets, animated: false)
-        }
+        
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        mapView.setUserTrackingMode(.followWithCourse, animated: false)
+        mapView.tracksUserCourse = true
         
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     func resumeNotifications() {
@@ -137,33 +139,15 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        mapView.camera = tiltedCamera
-        mapView.setUserTrackingMode(.followWithCourse, animated: true)
-        mapView.logoView.isHidden = false
-        
-        guard let controller = routePageViewController.currentManeuverPage else { return }
-        controller.step = currentStep
-        routePageViewController.updateManeuverViewForStep()
+        mapView.tracksUserCourse = true
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
+        isInOverviewMode = false
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
-        if isInOverviewMode {
-            overviewButton.isHidden = false
-            mapView.logoView.isHidden = false
-            mapView.camera = tiltedCamera
-            mapView.setUserTrackingMode(.followWithCourse, animated: true)
-        } else {
-            wayNameView.isHidden = true
-            overviewButton.isHidden = true
-            mapView.logoView.isHidden = true
-            updateVisibleBounds()
-        }
-
-        isInOverviewMode = !isInOverviewMode
-        
-        guard let controller = routePageViewController.currentManeuverPage else { return }
-        controller.step = currentStep
-        routePageViewController.updateManeuverViewForStep()
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
+        updateVisibleBounds()
+        isInOverviewMode = true
     }
     
     @IBAction func toggleMute(_ sender: UIButton) {
@@ -211,14 +195,19 @@ class RouteMapViewController: UIViewController {
         }
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
+    }
+    
     func updateVisibleBounds() {
-        guard let userLocation = self.mapView.userLocation?.coordinate else { return }
+        guard let userLocation = routeController.locationManager.location?.coordinate else { return }
         
         let overviewContentInset = UIEdgeInsets(top: 65, left: 20, bottom: 55, right: 20)
         let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
-        mapView.userTrackingMode = .none
+        mapView.tracksUserCourse = false
         let camera = mapView.camera
         camera.pitch = 0
         camera.heading = 0
@@ -239,7 +228,7 @@ class RouteMapViewController: UIViewController {
         if isInOverviewMode {
             updateVisibleBounds()
         } else {
-            mapView.userTrackingMode = .followWithCourse
+            mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
     }
@@ -366,6 +355,20 @@ extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
     }
 }
 
+// MARK: NavigationMapViewCourseTrackingDelegate
+
+extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
+    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
+        recenterButton.isHidden = true
+        mapView.logoView.isHidden = false
+    }
+    
+    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
+        recenterButton.isHidden = false
+        mapView.logoView.isHidden = true
+    }
+}
+
 // MARK: NavigationMapViewDelegate
 
 extension RouteMapViewController: NavigationMapViewDelegate {
@@ -406,14 +409,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         return delegate?.navigationMapView(mapView, viewFor: annotation)
     }
     
-    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        hasFinishedLoadingMap = true
-    }
-
-    func navigationMapView(_ mapView: NavigationMapView, shouldUpdateTo location: CLLocation) -> CLLocation? {
-        let snappedLocation = routeController.location
-        labelCurrentRoad(at: snappedLocation ?? location)
-        return snapsUserLocationAnnotationToRoute ? snappedLocation : nil
+    func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+        return delegate?.mapViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
     /**
@@ -424,7 +421,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     func labelCurrentRoad(at location: CLLocation) {
         guard let style = mapView.style,
             let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
-            recenterButton.isHidden && hasFinishedLoadingMap else {
+            recenterButton.isHidden else {
             return
         }
         
@@ -506,31 +503,12 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 // MARK: MGLMapViewDelegate
 
 extension RouteMapViewController: MGLMapViewDelegate {
-    func mapView(_ mapView: MGLMapView, didChange mode: MGLUserTrackingMode, animated: Bool) {
-        if isInOverviewMode && mode != .followWithCourse {
-            recenterButton.isHidden = false
-            mapView.logoView.isHidden = true
-            wayNameView.isHidden = true
-        } else {
-            if mode != .followWithCourse {
-                recenterButton.isHidden = false
-                mapView.logoView.isHidden = true
-            } else {
-                recenterButton.isHidden = true
-                mapView.logoView.isHidden = false
-            }
-        }
-        
-        if isInOverviewMode {
-            overviewButton.isHidden = false
-            recenterButton.isHidden = true
-            mapView.logoView.isHidden = false
-            isInOverviewMode = false
-        }
-    }
-
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        if mapView.userTrackingMode == .none && !isInOverviewMode {
+        var userTrackingMode = mapView.userTrackingMode
+        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
+            userTrackingMode = .followWithCourse
+        }
+        if userTrackingMode == .none && !isInOverviewMode {
             wayNameView.isHidden = true
         }
     }
@@ -564,14 +542,15 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         
         updateLaneViews(step: step, alertLevel: .high)
 
-        
         if !isInOverviewMode {
             if didSwipe, step != routeController.routeProgress.currentLegProgress.upComingStep {
+                mapView.enableFrameByFrameCourseViewTracking(for: 1)
+                mapView.tracksUserCourse = false
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
-            } else if mapView.userTrackingMode != .followWithCourse {
-                view.layoutIfNeeded()
-                mapView.camera = tiltedCamera
-                mapView.setUserTrackingMode(.followWithCourse, animated: true)
+            }
+            
+            if didSwipe, step == routeController.routeProgress.currentLegProgress.upComingStep {
+                mapView.tracksUserCourse = true
             }
         }
         
@@ -626,4 +605,6 @@ protocol RouteMapViewControllerDelegate: class {
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
 }

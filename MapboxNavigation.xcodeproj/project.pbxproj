@@ -103,6 +103,7 @@
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
 		35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A5413A1EFC052700E49846 /* RouteOptions.swift */; };
+		35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */; };
 		35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */; };
 		35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
@@ -118,7 +119,6 @@
 		35CC141A1F79A43B009E872A /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		35D825FB1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35DC9D8D1F431E59001ECD64 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
@@ -166,6 +166,8 @@
 		C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */; };
 		C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
+		DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
@@ -383,6 +385,7 @@
 		359574A91F28CCBB00838209 /* LocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		35A1D3651E6624EF00A48FE8 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
 		35A5413A1EFC052700E49846 /* RouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteOptions.swift; sourceTree = "<group>"; };
+		35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCourseView.swift; sourceTree = "<group>"; };
 		35B711CF1E5E7AD2001EDA8D /* MapboxNavigationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationTests.swift; sourceTree = "<group>"; };
 		35B711D31E5E7AD2001EDA8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -455,6 +458,8 @@
 		C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouteOptions.swift; sourceTree = "<group>"; };
+		DA23C9621F4FC0A600BA9522 /* MGLMapView+CustomAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+CustomAdditions.h"; sourceTree = "<group>"; };
+		DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+CustomAdditions.m"; sourceTree = "<group>"; };
 		DA3327391F50C6DA00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
 		DA33273A1F50C6FC00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
 		DA33273B1F50C70E00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -496,6 +501,7 @@
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
+		DACCD9CD1F1FE05C00BB09A1 /* Example-Swift-BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Example-Swift-BridgingHeader.h"; sourceTree = "<group>"; };
 		DAE7114C1F22E94E009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114D1F22E966009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114E1F22E977009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -596,6 +602,7 @@
 		35002D721E5F6C830090E733 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
+				DACCD9CD1F1FE05C00BB09A1 /* Example-Swift-BridgingHeader.h */,
 				355D20DB1EF30A6D0012B1E0 /* tunnel.route */,
 				354D9F871EF2FE900006FAA8 /* tunnel.json */,
 				35002D661E5F6B1B0090E733 /* Main.storyboard */,
@@ -647,6 +654,7 @@
 				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
 				35375EC01F31FA86004CE727 /* Settings.swift */,
 				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
+				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -713,6 +721,8 @@
 				358D14671E5E3B7700ADE590 /* ViewController.swift */,
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
+				DA23C9621F4FC0A600BA9522 /* MGLMapView+CustomAdditions.h */,
+				DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -934,8 +944,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */,
 				35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */,
-				35D825FB1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1380,6 +1390,7 @@
 				C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */,
 				351BEBF51E5BCC63006FE110 /* RouteManeuverViewController.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* TurnArrowView.swift in Sources */,
+				35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */,
 				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
@@ -1418,6 +1429,7 @@
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
+				DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */,
 				6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
@@ -1808,6 +1820,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Swift/Example-Swift-BridgingHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -1829,6 +1842,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-Swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Examples/Swift/Example-Swift-BridgingHeader.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
