@@ -279,6 +279,7 @@ open class NavigationMapView: MGLMapView {
     var tracksUserCourse: Bool = false {
         didSet {
             if tracksUserCourse {
+                enableFrameByFrameCourseViewTracking(for: 3)
                 altitude = defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
