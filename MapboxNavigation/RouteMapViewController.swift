@@ -44,7 +44,17 @@ class RouteMapViewController: UIViewController {
         }
         return parent.pendingCamera
     }
-    var tiltedCamera: MGLMapCamera {
+    
+    var overheadCamera: MGLMapCamera {
+        get {
+            let camera = mapView.camera
+            camera.altitude = 600
+            camera.pitch = 0
+            return camera
+        }
+    }
+    
+    var genericTiltedCamera: MGLMapCamera {
         get {
             let camera = mapView.camera
             camera.altitude = 600
@@ -52,6 +62,16 @@ class RouteMapViewController: UIViewController {
             return camera
         }
     }
+    
+    var motorwayCamera: MGLMapCamera {
+        get {
+            let camera = mapView.camera
+            camera.altitude = 1200
+            camera.pitch = 45
+            return camera
+        }
+    }
+    
     weak var delegate: RouteMapViewControllerDelegate? {
         didSet {
             mapView.delegate = mapView.delegate
@@ -98,7 +118,7 @@ class RouteMapViewController: UIViewController {
         if let camera = pendingCamera {
             mapView.camera = camera
         } else {
-            let camera = tiltedCamera
+            let camera = cameraCurrentForRouteProgress
             if let coordinates = route.coordinates, coordinates.count > 1 {
                 camera.centerCoordinate = coordinates.first!
                 camera.heading = coordinates[0].direction(to: coordinates[1])
@@ -137,7 +157,7 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        mapView.camera = tiltedCamera
+        mapView.camera = cameraCurrentForRouteProgress
         mapView.setUserTrackingMode(.followWithCourse, animated: true)
         mapView.logoView.isHidden = false
         
@@ -150,7 +170,7 @@ class RouteMapViewController: UIViewController {
         if isInOverviewMode {
             overviewButton.isHidden = false
             mapView.logoView.isHidden = false
-            mapView.camera = tiltedCamera
+            mapView.camera = cameraCurrentForRouteProgress
             mapView.setUserTrackingMode(.followWithCourse, animated: true)
         } else {
             wayNameView.isHidden = true
@@ -268,6 +288,12 @@ class RouteMapViewController: UIViewController {
             mapView.removeArrow()
         }
         
+        let camera = cameraCurrentForRouteProgress
+        
+        mapView.setCamera(camera, withDuration: 0.5, animationTimingFunction: nil, completionHandler: {
+            self.mapView.setUserLocationVerticalAlignment(camera.pitch == self.overheadCamera.pitch ? .center : .bottom, animated: true)
+        })
+        
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
             mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -282,6 +308,25 @@ class RouteMapViewController: UIViewController {
     
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return navigationMapView(mapView, viewFor: annotation)
+    }
+    
+    var cameraCurrentForRouteProgress: MGLMapCamera {
+        
+        guard !isInOverviewMode else {
+            return genericTiltedCamera
+        }
+        
+        guard let _ = routeController.routeProgress.currentLegProgress.upComingStep else {
+            return genericTiltedCamera
+        }
+        
+        if let _ = routeController.routeProgress.currentLegProgress.currentStep.intersections?.first?.outletRoadClasses?.contains(.motorway) {
+            return motorwayCamera
+        } else if routeController.routeProgress.currentLegProgress.alertUserLevel == .high {
+            return overheadCamera
+        } else {
+            return genericTiltedCamera
+        }
     }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
@@ -570,7 +615,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
                 mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
             } else if mapView.userTrackingMode != .followWithCourse {
                 view.layoutIfNeeded()
-                mapView.camera = tiltedCamera
+                mapView.camera = cameraCurrentForRouteProgress
                 mapView.setUserTrackingMode(.followWithCourse, animated: true)
             }
         }
