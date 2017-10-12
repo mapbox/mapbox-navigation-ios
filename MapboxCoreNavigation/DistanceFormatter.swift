@@ -28,14 +28,6 @@ public class DistanceFormatter: LengthFormatter {
     
     let nonFractionalLengthFormatter = LengthFormatter()
     
-    var usesMetric: Bool {
-        let locale = numberFormatter.locale as NSLocale
-        guard let measurementSystem = locale.object(forKey: .measurementSystem) as? String else {
-            return false
-        }
-        return measurementSystem == "Metric"
-    }
-    
     /**
      Intializes a new `DistanceFormatter`.
      
@@ -57,7 +49,7 @@ public class DistanceFormatter: LengthFormatter {
     }
     
     func maximumFractionDigits(for distance: CLLocationDistance) -> Int {
-        if usesMetric {
+        if Locale.usesMetric {
             return distance < 3_000 ? 1 : 0
         } else {
             return distance.miles < 3 ? 1 : 0
@@ -65,7 +57,7 @@ public class DistanceFormatter: LengthFormatter {
     }
     
     func roundingIncrement(for distance: CLLocationDistance, unit: LengthFormatter.Unit) -> Double {
-        if usesMetric {
+        if Locale.usesMetric {
             if distance < 25 {
                 return 5
             } else if distance < 100 {
@@ -120,7 +112,7 @@ public class DistanceFormatter: LengthFormatter {
     
     func formattedDistance(_ distance: CLLocationDistance, modify unit: inout LengthFormatter.Unit) -> String {
         var formattedDistance: String
-        if usesMetric {
+        if Locale.usesMetric {
             let roundedDistance: CLLocationDistance = numberFormatter.number(from: numberFormatter.string(from: distance as NSNumber)!)?.doubleValue ?? distance
             numberFormatter.roundingIncrement = roundingIncrement(for: roundedDistance, unit: unit) as NSNumber
             
