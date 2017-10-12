@@ -89,6 +89,14 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
+    open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
+        if tracksUserCourse {
+            return userAnchorPoint
+        } else {
+            return super.anchorPoint(forGesture: gesture)
+        }
+    }
+    
     deinit {
         UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
     }
@@ -104,13 +112,17 @@ open class NavigationMapView: MGLMapView {
         
         if sender.state == .ended {
             altitude = self.camera.altitude
+            enableFrameByFrameCourseViewTracking(for: 2)
         }
         
-        if sender is UITapGestureRecognizer {
-            if sender.state == .ended {
-                enableFrameByFrameCourseViewTracking(for: 2)
-            }
-        } else if let pan = sender as? UIPanGestureRecognizer {
+        // Capture altitude for double tap and two finger tap after animation finishes
+        if sender is UITapGestureRecognizer, sender.state == .ended {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                self.altitude = self.camera.altitude
+            })
+        }
+        
+        if let pan = sender as? UIPanGestureRecognizer {
             if sender.state == .ended || sender.state == .cancelled {
                 let velocity = pan.velocity(in: self)
                 let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
@@ -166,7 +178,6 @@ open class NavigationMapView: MGLMapView {
             return super.showsUserLocation
         }
         set {
-            altitude = defaultAltitude
             if tracksUserCourse || userLocationForCourseTracking != nil {
                 super.showsUserLocation = false
                 
@@ -213,7 +224,7 @@ open class NavigationMapView: MGLMapView {
     }
     
     var altitude: CLLocationDistance = 1000
-    let defaultAltitude:CLLocationDistance = 1000
+    let defaultAltitude: CLLocationDistance = 1000
     
     public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         animatesUserLocation = animated
@@ -268,6 +279,7 @@ open class NavigationMapView: MGLMapView {
     var tracksUserCourse: Bool = false {
         didSet {
             if tracksUserCourse {
+                altitude = defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
             } else {
