@@ -100,11 +100,6 @@ public var RouteControllerHighAlertInterval: TimeInterval = 15
 public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
 /**
- Maximum number of seconds the user can travel away from the start of the route before rerouting occurs
- */
-public var MaxSecondsSpentTravelingAwayFromStartOfRoute: TimeInterval = 3
-
-/**
  When calculating whether or not the user is on the route, we look where the user will be given their speed and this variable.
  */
 public var RouteControllerDeadReckoningTimeInterval:TimeInterval = 1.0
