@@ -109,7 +109,7 @@ open class NavigationMapView: MGLMapView {
     func progressDidChange(_ notification: Notification) {
         guard tracksUserCourse else { return }
         
-        let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as! RouteProgress
         
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let expectedTravelTime = stepProgress.step.expectedTravelTime
