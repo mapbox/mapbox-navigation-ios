@@ -1,5 +1,6 @@
 import UIKit
 import MapboxCoreNavigation
+import AVFoundation
 
 struct FeedbackItem {
     var title: String
@@ -8,7 +9,7 @@ struct FeedbackItem {
     var backgroundColor: UIColor
 }
 
-class FeedbackViewController: UIViewController {
+class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVAudioRecorderDelegate {
     
     typealias FeedbackSection = [FeedbackItem]
     
@@ -23,6 +24,22 @@ class FeedbackViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    var recordingSession: AVAudioSession?
+    var audioRecorder: AVAudioRecorder?
+    
+    var pulsingAnimation:CABasicAnimation {
+        let pulseAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
+        pulseAnimation.duration = 1
+        pulseAnimation.fromValue = 0.9
+        pulseAnimation.toValue = 1.1
+        pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        pulseAnimation.autoreverses = true
+        pulseAnimation.repeatCount = .greatestFiniteMagnitude
+        return pulseAnimation
+    }
+    
+    var currentAudioFile: URL?
+    
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         return storyboard.instantiateViewController(withIdentifier: "FeedbackViewController") as! FeedbackViewController
@@ -32,6 +49,18 @@ class FeedbackViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .clear
         containerView.applyDefaultCornerRadiusShadow(cornerRadius: 16)
+        
+        recordingSession = AVAudioSession.sharedInstance()
+        
+        recordingSession?.requestRecordPermission() { [unowned self] allowed in
+            if allowed {
+                let lpgr : UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
+                lpgr.minimumPressDuration = 0.5
+                lpgr.delegate = self
+                lpgr.delaysTouchesBegan = true
+                self.collectionView?.addGestureRecognizer(lpgr)
+            }
+        }
         
         let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
         let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
@@ -63,11 +92,84 @@ class FeedbackViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
+//        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
     }
     
     @IBAction func cancel(_ sender: Any) {
         dismissFeedback()
+    }
+    
+    func stopAnimations(feedbackItem: FeedbackItem) {
+        
+        sendFeedbackHandler?(feedbackItem)
+        
+        for view in collectionView.visibleCells {
+            view.layer.removeAllAnimations()
+        }
+        
+        abortAutodismiss()
+    }
+    
+    func didTapCell(_ sender: UIGestureRecognizer) {
+        
+        let p = sender.location(in: self.collectionView)
+        
+        if let indexPath = self.collectionView.indexPathForItem(at: p) {
+            // get the cell at indexPath (the one you long pressed)
+            let cell = self.collectionView.cellForItem(at: indexPath) as! FeedbackCollectionViewCell
+            cell.layer.add(pulsingAnimation, forKey: "animateOpacity")
+            
+            let item = sections[indexPath.section][indexPath.row]
+            
+            if audioRecorder == nil {
+                startRecording()
+            }
+            
+            guard sender.state != .ended else {
+                finishRecording()
+                if let path = currentAudioFile?.path {
+                    do {
+                        let fileData = try NSData(contentsOfFile: path, options: NSData.ReadingOptions.mappedIfSafe)
+                        let data = fileData.base64EncodedString()
+                        // Do something with the data
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
+                stopAnimations(feedbackItem: item)
+                return
+            }
+        }
+    }
+    
+    func startRecording() {
+        currentAudioFile = getDocumentsDirectory().appendingPathComponent("recording.m4a")
+        
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEGLayer3),
+            AVSampleRateKey: 12000,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.low.rawValue
+        ]
+        
+        do {
+            audioRecorder = try AVAudioRecorder(url: currentAudioFile!, settings: settings)
+            audioRecorder?.delegate = self
+            audioRecorder?.record()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func finishRecording() {
+        audioRecorder?.stop()
+        audioRecorder = nil
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        let documentsDirectory = paths[0]
+        return documentsDirectory
     }
     
     func presentError(_ message: String) {
