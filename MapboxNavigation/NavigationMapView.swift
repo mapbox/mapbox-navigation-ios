@@ -51,13 +51,37 @@ open class NavigationMapView: MGLMapView {
     dynamic public var trafficSevereColor: UIColor = .trafficSevere
     dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     
+    var userLocationForCourseTracking: CLLocation?
+    var animatesUserLocation: Bool = false
+    var isPluggedIn: Bool = false
+    var altitude: CLLocationDistance = 1000
+    let defaultAltitude: CLLocationDistance = 1000
+    
+    struct FrameIntervalOptions {
+        fileprivate static let durationUntilNextManeuver: TimeInterval = 30
+        fileprivate static let durationSincePreviousManeuver: TimeInterval = 10
+        fileprivate static let decreasedFrameInterval: Int = 12
+        fileprivate static let defaultFrameInterval: Int = 1
+    }
+    
+    fileprivate var frameInterval: Int {
+        get {
+            return displayLink?.frameInterval ?? FrameIntervalOptions.defaultFrameInterval
+        }
+        set {
+            if displayLink?.frameInterval != newValue {
+                displayLink?.frameInterval = newValue
+            }
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
-        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
+        resumeNotifications()
     }
     
     public required init?(coder decoder: NSCoder) {
@@ -66,7 +90,37 @@ open class NavigationMapView: MGLMapView {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
+        resumeNotifications()
+    }
+    
+    func resumeNotifications() {
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
+        
+    }
+    
+    func suspendNotifications() {
+        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
+        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
+    }
+    
+    func progressDidChange(_ notification: Notification) {
+        guard tracksUserCourse else { return }
+        
+        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let expectedTravelTime = stepProgress.step.expectedTravelTime
+        let durationUntilNextManeuver = stepProgress.durationRemaining
+        let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
+        
+        if !isPluggedIn,
+            durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver,
+            durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
+            frameInterval = FrameIntervalOptions.decreasedFrameInterval
+        } else {
+            frameInterval = FrameIntervalOptions.defaultFrameInterval
+        }
     }
     
     /** Modifies the gesture recognizers to also disable course tracking. */
@@ -74,12 +128,6 @@ open class NavigationMapView: MGLMapView {
         for gestureRecognizer in gestureRecognizers ?? []
             where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
                 gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
-        }
-    }
-    
-    func makeGestureRecognizersResetInactivityTimer() {
-        for gestureRecognizer in gestureRecognizers ?? [] {
-            gestureRecognizer.addTarget(self, action: #selector(resetInactivityTimer(_:)))
         }
     }
     
@@ -98,7 +146,7 @@ open class NavigationMapView: MGLMapView {
     }
     
     deinit {
-        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
+        suspendNotifications()
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -109,6 +157,7 @@ open class NavigationMapView: MGLMapView {
     }
     
     func updateCourseView(_ sender: UIGestureRecognizer) {
+        frameInterval = FrameIntervalOptions.defaultFrameInterval
         
         if sender.state == .ended {
             altitude = self.camera.altitude
@@ -152,15 +201,6 @@ open class NavigationMapView: MGLMapView {
         shouldPositionCourseViewFrameByFrame = false
     }
     
-    func resetInactivityTimer(_ sender: UIGestureRecognizer) {
-        if sender.state == .began {
-            isInactive = false
-        }
-        else if sender.state == .ended || sender.state == .failed {
-            resetInactivityTimer()
-        }
-    }
-    
     var showsRoute: Bool {
         get {
             return style?.layer(withIdentifier: routeLayerIdentifier) != nil
@@ -192,39 +232,9 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    var userLocationForCourseTracking: CLLocation?
-    var animatesUserLocation: Bool = false
-    
-    fileprivate let inactivityInterval: TimeInterval = 10
-    fileprivate let decreasedFrameInterval: Int = 12
-    
-    func resetInactivityTimer() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(inactivityTimerFinished), object: nil)
-        self.perform(#selector(inactivityTimerFinished), with: nil, afterDelay: inactivityInterval)
-    }
-    
-    func inactivityTimerFinished() {
-        isInactive = true
-    }
-    
-    fileprivate var isInactive: Bool = false {
-        didSet {
-            if isInactive {
-                displayLink?.frameInterval = isPluggedIn ? 1 : decreasedFrameInterval
-            } else {
-                displayLink?.frameInterval = 1
-            }
-        }
-    }
-    
-    var isPluggedIn: Bool = false
-    
     @objc func disableUserCourseTracking() {
         tracksUserCourse = false
     }
-    
-    var altitude: CLLocationDistance = 1000
-    let defaultAltitude: CLLocationDistance = 1000
     
     public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         animatesUserLocation = animated
