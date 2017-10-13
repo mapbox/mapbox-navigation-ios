@@ -252,7 +252,7 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    func shouldGiveVoiceInstruction(routeProgress: RouteProgress) {
+    func updateMapOverlays(for routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
             mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         } else {
