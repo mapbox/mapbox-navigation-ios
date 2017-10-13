@@ -441,8 +441,8 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func didPassInstructionPoint(notification: NSNotification) {
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
-        mapViewController?.shouldGiveVoiceInstruction(routeProgress: routeProgress)
-        tableViewController?.shouldGiveVoiceInstruction()
+        mapViewController?.updateMapOverlays(for: routeProgress)
+        tableViewController?.reload()
         
         clearStaleNotifications()
         
