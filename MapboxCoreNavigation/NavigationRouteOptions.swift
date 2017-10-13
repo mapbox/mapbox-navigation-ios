@@ -23,7 +23,7 @@ open class NavigationRouteOptions: RouteOptions {
         includesSteps = true
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]
-        includesVoiceInstructions = true
+        includesSpokenInstructions = true
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
     }
 
