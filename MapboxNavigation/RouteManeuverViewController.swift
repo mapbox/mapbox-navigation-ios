@@ -1,17 +1,20 @@
-import UIKit
+ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 import SDWebImage
 
 class RouteManeuverViewController: UIViewController {
-    @IBOutlet fileprivate weak var distanceLabel: DistanceLabel!
-    @IBOutlet fileprivate weak var shieldImageView: UIImageView!
-    @IBOutlet weak var turnArrowView: TurnArrowView!
-    @IBOutlet weak var destinationLabel: DestinationLabel!
     
+    //MARK: Outlets
+    
+    @IBOutlet var maneuverView: ManeuverView!
+    
+    
+    //MARK: Formatters
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
     let visualInstructionFormatter = VisualInstructionFormatter()
+    
     
     var step: RouteStep? {
         didSet {
@@ -33,13 +36,13 @@ class RouteManeuverViewController: UIViewController {
     var distance: CLLocationDistance? {
         didSet {
             if let distance = distance {
-                distanceLabel.isHidden = false
-                distanceLabel.text = distanceFormatter.string(from: distance)
-                destinationLabel.numberOfLines = numberOfDestinationLines
+                maneuverView.distance.isHidden = false
+                maneuverView.distance.text = distanceFormatter.string(from: distance)
+                maneuverView.destination.numberOfLines = numberOfDestinationLines
             } else {
-                distanceLabel.isHidden = true
-                distanceLabel.text = nil
-                destinationLabel.numberOfLines = numberOfDestinationLines
+                maneuverView.distance.isHidden = true
+                maneuverView.distance.text = nil
+                maneuverView.destination.numberOfLines = numberOfDestinationLines
             }
         }
     }
@@ -69,7 +72,7 @@ class RouteManeuverViewController: UIViewController {
     }
     var shieldImage: UIImage? {
         didSet {
-            shieldImageView.image = shieldImage
+            maneuverView.shield.image = shieldImage
             updateStreetNameForStep()
         }
     }
@@ -89,17 +92,17 @@ class RouteManeuverViewController: UIViewController {
      */
     var maximumAvailableStreetLabelSize: CGSize {
         get {
-            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: destinationLabel.font]).height
+            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: maneuverView.destination.font]).height
             let lines = CGFloat(numberOfDestinationLines)
             let padding: CGFloat = 8*4
-            return CGSize(width: view.bounds.width-padding-shieldImageView.bounds.size.width-turnArrowView.bounds.width, height: height*lines)
+            return CGSize(width: view.bounds.width-padding-maneuverView.shield.bounds.size.width-maneuverView.turnArrow.bounds.width, height: height*lines)
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        turnArrowView.backgroundColor = .clear
-        destinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
+        maneuverView.turnArrow.backgroundColor = .clear
+        maneuverView.destination.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
     }
     
     deinit {
@@ -114,12 +117,12 @@ class RouteManeuverViewController: UIViewController {
         
         if routeProgress.currentLegProgress.alertUserLevel == .arrive {
             distance = nil
-            destinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
+            maneuverView.destination.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
         } else {
             updateStreetNameForStep()
         }
         
-        turnArrowView.step = routeProgress.currentLegProgress.upComingStep
+        maneuverView.turnArrow.step = routeProgress.currentLegProgress.upComingStep
     }
 
     func dataTaskForShieldImage(network: String, number: String, height: CGFloat, completion: @escaping (UIImage?) -> Void) -> URLSessionDataTask? {
@@ -162,6 +165,6 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func updateStreetNameForStep() {
-        destinationLabel.unabridgedText = visualInstructionFormatter.string(leg: leg, step: step)
+        maneuverView.destination.unabridgedText = visualInstructionFormatter.string(leg: leg, step: step)
     }
 }

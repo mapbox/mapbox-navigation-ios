@@ -1,6 +1,6 @@
 import UIKit
 
-@IBDesignable
+//@IBDesignable
 @objc(MBDashedLineView)
 public class DashedLineView: LineView {
 

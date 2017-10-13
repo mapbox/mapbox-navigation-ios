@@ -4,7 +4,7 @@ import MapboxCoreNavigation
 import SDWebImage
 import Turf
 
-@IBDesignable
+//@IBDesignable
 @objc(MBTurnArrowView)
 public class TurnArrowView: UIView {
     

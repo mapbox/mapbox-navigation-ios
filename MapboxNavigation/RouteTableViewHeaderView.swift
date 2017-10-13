@@ -5,7 +5,7 @@ protocol RouteTableViewHeaderViewDelegate: class {
     func didTapCancel()
 }
 
-@IBDesignable
+//@IBDesignable
 @objc(MBRouteTableViewHeaderView)
 open class RouteTableViewHeaderView: UIView {
     

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="17A405" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MBManeuverView">
+            <connections>
+                <outlet property="containerView" destination="mVf-Pr-B7o" id="Pet-53-nKW"/>
+                <outlet property="destination" destination="FMI-iV-WPd" id="gDW-QE-m89"/>
+                <outlet property="distance" destination="scT-ZC-pCu" id="e9G-5o-W1u"/>
+                <outlet property="shield" destination="dgg-nJ-a8w" id="EHJ-KQ-iPP"/>
+                <outlet property="turnArrow" destination="GOn-oh-8PG" id="7Kd-G6-8JZ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="mVf-Pr-B7o" userLabel="Maneuver Content View">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="115"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GOn-oh-8PG" customClass="MBTurnArrowView">
+                    <rect key="frame" x="8" y="33" width="50" height="50"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="R7B-Qo-cLF"/>
+                        <constraint firstAttribute="width" secondItem="GOn-oh-8PG" secondAttribute="height" multiplier="1:1" id="zB1-vL-pZP"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yMe-Uf-4ED">
+                    <rect key="frame" x="66" y="23" width="305" height="70"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="pXX-qP-2y0">
+                            <rect key="frame" x="0.0" y="0.0" width="265" height="70"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="1 km" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="scT-ZC-pCu" userLabel="Distance Label" customClass="MBDistanceLabel">
+                                    <rect key="frame" x="0.0" y="0.0" width="265" height="27"/>
+                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kPK-z8-a5p">
+                                    <rect key="frame" x="0.0" y="27" width="265" height="43"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter the roundabout and take the 4th exit onto New Hampshire Avenue Northwest" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FMI-iV-WPd" userLabel="Destination Label" customClass="MBDestinationLabel">
+                                            <rect key="frame" x="0.0" y="0.0" width="265" height="43"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="35"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="FMI-iV-WPd" firstAttribute="leading" secondItem="kPK-z8-a5p" secondAttribute="leading" id="AgH-1X-PoV"/>
+                                        <constraint firstAttribute="bottom" secondItem="FMI-iV-WPd" secondAttribute="bottom" id="DBX-dL-L1j"/>
+                                        <constraint firstItem="FMI-iV-WPd" firstAttribute="top" secondItem="kPK-z8-a5p" secondAttribute="top" id="btY-1o-XFF"/>
+                                        <constraint firstAttribute="trailing" secondItem="FMI-iV-WPd" secondAttribute="trailing" id="nNr-I8-5ra"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                        </stackView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dgg-nJ-a8w">
+                            <rect key="frame" x="273" y="19" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="dgg-nJ-a8w" secondAttribute="height" multiplier="1:1" id="8lJ-7X-nM2"/>
+                                <constraint firstAttribute="width" constant="32" id="m6l-xh-GwA"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="dgg-nJ-a8w" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="pXX-qP-2y0" secondAttribute="trailing" constant="8" id="IIB-v3-ae6"/>
+                        <constraint firstAttribute="bottom" secondItem="pXX-qP-2y0" secondAttribute="bottom" id="MYu-yK-4ie"/>
+                        <constraint firstItem="pXX-qP-2y0" firstAttribute="top" secondItem="yMe-Uf-4ED" secondAttribute="top" id="VTM-Xj-zbg"/>
+                        <constraint firstAttribute="height" constant="70" id="kMY-ft-Q9D"/>
+                        <constraint firstItem="pXX-qP-2y0" firstAttribute="leading" secondItem="yMe-Uf-4ED" secondAttribute="leading" id="kY2-h4-hwj"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="yMe-Uf-4ED" firstAttribute="centerY" secondItem="GOn-oh-8PG" secondAttribute="centerY" id="BHD-aN-Fau"/>
+                <constraint firstAttribute="trailing" secondItem="yMe-Uf-4ED" secondAttribute="trailing" constant="4" id="BqW-xi-XdT"/>
+                <constraint firstItem="GOn-oh-8PG" firstAttribute="centerY" secondItem="mVf-Pr-B7o" secondAttribute="centerY" id="JoJ-yC-9Qx"/>
+                <constraint firstItem="yMe-Uf-4ED" firstAttribute="leading" secondItem="GOn-oh-8PG" secondAttribute="trailing" constant="8" id="P8d-6B-luF"/>
+                <constraint firstItem="GOn-oh-8PG" firstAttribute="leading" secondItem="mVf-Pr-B7o" secondAttribute="leadingMargin" id="sdk-vs-wyS"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+            <point key="canvasLocation" x="48.5" y="90.5"/>
+        </view>
+    </objects>
+</document>

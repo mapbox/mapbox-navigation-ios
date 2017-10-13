@@ -88,7 +88,7 @@ public class CellTurnArrowView: TurnArrowView { }
 public class HighlightedButton: Button { }
 
 /// :nodoc:
-@IBDesignable
+//@IBDesignable
 @objc(MBResumeButton)
 public class ResumeButton: UIControl {
     public override dynamic var tintColor: UIColor! {
@@ -316,10 +316,6 @@ open class StylableButton: UIButton {
         }
     }
 }
-
-/// :nodoc:
-@objc(MBManeuverView)
-public class ManeuverView: UIView { }
 
 /// :nodoc:
 @objc(MBManeuverContainerView)

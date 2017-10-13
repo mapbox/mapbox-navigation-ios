@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13189.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="17A405" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13165.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -76,7 +76,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
-                                <rect key="frame" x="134" y="204.5" width="106.5" height="29"/>
+                                <rect key="frame" x="134.5" y="205" width="106.5" height="29"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
                                         <rect key="frame" x="14" y="6" width="78.5" height="17"/>
@@ -102,7 +102,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG">
-                                <rect key="frame" x="0.0" y="114.5" width="375" height="70"/>
+                                <rect key="frame" x="0.0" y="115" width="375" height="70"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="LanesContainerView" customModule="MapboxNavigation" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
@@ -128,7 +128,7 @@
                                         <rect key="frame" x="0.0" y="40" width="375" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpZ-gr-OKM">
-                                                <rect key="frame" x="141.5" y="5" width="92.5" height="20.5"/>
+                                                <rect key="frame" x="141.5" y="4.5" width="92.5" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                                 <color key="textColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -158,11 +158,11 @@
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="76S-HP-bfy" userLabel="Background View" customClass="MBManeuverView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="114.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="115"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" userLabel="Maneuver Container View" customClass="MBManeuverContainerView">
-                                <rect key="frame" x="0.0" y="-0.5" width="375" height="115"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="115"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="115" id="z8N-zg-uyY"/>
                                 </constraints>
@@ -172,7 +172,7 @@
                                 </connections>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SKK-r5-nj0" customClass="MBResumeButton">
-                                <rect key="frame" x="10" y="187.5" width="100" height="44"/>
+                                <rect key="frame" x="10" y="188" width="100" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" placeholder="YES" id="Bdu-r9-50x"/>
@@ -210,7 +210,7 @@
                                             <action selector="toggleMute:" destination="3z2-H5-unA" eventType="touchUpInside" id="2ZH-pI-vhy"/>
                                         </connections>
                                     </button>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBFloatingButton">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="108" width="50" height="0.0"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
@@ -295,119 +295,18 @@
             <objects>
                 <viewController storyboardIdentifier="RouteManeuverViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Cuq-Dg-ZIW" customClass="RouteManeuverViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="SNT-La-SlU"/>
-                        <viewControllerLayoutGuide type="bottom" id="aWU-Rn-uss"/>
+                        <viewControllerLayoutGuide type="top" id="Djz-iQ-fkc"/>
+                        <viewControllerLayoutGuide type="bottom" id="bML-oK-kHd"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="pTy-lh-WI1">
-                        <rect key="frame" x="0.0" y="0.0" width="343" height="185"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h67-zB-BKz" userLabel="instructionView" customClass="MBManeuverView">
-                                <rect key="frame" x="0.0" y="0.0" width="343" height="115"/>
-                                <subviews>
-                                    <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="dvV-hd-Sbg" customClass="MBTurnArrowView">
-                                        <rect key="frame" x="8" y="40" width="50" height="50"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="Eo0-KT-TR5"/>
-                                            <constraint firstAttribute="height" constant="50" id="Uvq-8G-qiG"/>
-                                        </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                <real key="value" value="1.1000000000000001"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="dhM-Ng-gx5">
-                                        <rect key="frame" x="66" y="30" width="273" height="70"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="c3B-6D-Ukh">
-                                                <rect key="frame" x="0.0" y="0.0" width="233" height="70"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="1 km" textAlignment="natural" lineBreakMode="wordWrap" minimumScaleFactor="0.40000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="MBDistanceLabel">
-                                                        <rect key="frame" x="0.0" y="0.0" width="233" height="21.5"/>
-                                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                        <attributedString key="userComments">
-                                                            <fragment content="DO NOT TRANSLATE">
-                                                                <attributes>
-                                                                    <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                                </attributes>
-                                                            </fragment>
-                                                        </attributedString>
-                                                    </label>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YWf-jk-QP6">
-                                                        <rect key="frame" x="0.0" y="21.5" width="233" height="48.5"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Enter the roundabout and take the 4th exit onto New Hampshire Avenue Northwest" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BR8-8N-Rhk" customClass="MBDestinationLabel">
-                                                                <rect key="frame" x="0.0" y="0.0" width="233" height="48.5"/>
-                                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="35"/>
-                                                                <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
-                                                                <nil key="highlightedColor"/>
-                                                                <attributedString key="userComments">
-                                                                    <fragment content="DO NOT TRANSLATE">
-                                                                        <attributes>
-                                                                            <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                                        </attributes>
-                                                                    </fragment>
-                                                                </attributedString>
-                                                            </label>
-                                                        </subviews>
-                                                        <constraints>
-                                                            <constraint firstItem="BR8-8N-Rhk" firstAttribute="leading" secondItem="YWf-jk-QP6" secondAttribute="leading" id="5r1-YN-VZn"/>
-                                                            <constraint firstItem="BR8-8N-Rhk" firstAttribute="top" secondItem="YWf-jk-QP6" secondAttribute="top" id="L9t-nN-h3S"/>
-                                                            <constraint firstAttribute="trailing" secondItem="BR8-8N-Rhk" secondAttribute="trailing" id="ZfG-Je-y0N"/>
-                                                            <constraint firstAttribute="bottom" secondItem="BR8-8N-Rhk" secondAttribute="bottom" id="bmi-U6-nDH"/>
-                                                        </constraints>
-                                                    </view>
-                                                </subviews>
-                                            </stackView>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gkj-hG-NxS">
-                                                <rect key="frame" x="241" y="19" width="32" height="32"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="32" id="0ei-is-yQS"/>
-                                                    <constraint firstAttribute="width" constant="32" id="4qd-KG-vi7"/>
-                                                </constraints>
-                                            </imageView>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstItem="gkj-hG-NxS" firstAttribute="top" secondItem="dhM-Ng-gx5" secondAttribute="top" constant="19" id="AOc-29-8va"/>
-                                            <constraint firstItem="c3B-6D-Ukh" firstAttribute="leading" secondItem="dhM-Ng-gx5" secondAttribute="leading" id="Dcy-eQ-VCk"/>
-                                            <constraint firstAttribute="bottom" secondItem="gkj-hG-NxS" secondAttribute="bottom" constant="19" id="EBu-yb-gc6"/>
-                                            <constraint firstItem="gkj-hG-NxS" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="c3B-6D-Ukh" secondAttribute="trailing" constant="8" id="O1s-6f-sPG"/>
-                                            <constraint firstAttribute="bottom" secondItem="c3B-6D-Ukh" secondAttribute="bottom" id="Ofy-g6-EBl"/>
-                                            <constraint firstAttribute="trailing" secondItem="gkj-hG-NxS" secondAttribute="trailing" id="oJb-qy-2NU"/>
-                                            <constraint firstItem="c3B-6D-Ukh" firstAttribute="top" secondItem="dhM-Ng-gx5" secondAttribute="top" id="r0L-mL-w9Y"/>
-                                        </constraints>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.99030783119999999" green="0.99866314420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="dhM-Ng-gx5" secondAttribute="trailing" constant="4" id="89n-ce-bNw"/>
-                                    <constraint firstItem="dhM-Ng-gx5" firstAttribute="top" secondItem="h67-zB-BKz" secondAttribute="top" constant="30" id="FaC-Sw-ePv"/>
-                                    <constraint firstItem="dhM-Ng-gx5" firstAttribute="leading" secondItem="dvV-hd-Sbg" secondAttribute="trailing" constant="8" id="Gou-LA-42q"/>
-                                    <constraint firstAttribute="height" constant="115" id="IsE-zQ-C8r"/>
-                                    <constraint firstItem="dvV-hd-Sbg" firstAttribute="centerY" secondItem="dhM-Ng-gx5" secondAttribute="centerY" id="Ydu-hA-caa"/>
-                                    <constraint firstItem="dvV-hd-Sbg" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="8" id="nf4-6t-r96"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="h67-zB-BKz" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" id="3RK-9O-WM7"/>
-                            <constraint firstItem="h67-zB-BKz" firstAttribute="centerX" secondItem="pTy-lh-WI1" secondAttribute="centerX" id="9s2-bF-m5E"/>
-                            <constraint firstItem="h67-zB-BKz" firstAttribute="width" secondItem="pTy-lh-WI1" secondAttribute="width" id="D5x-UI-oMM"/>
-                        </constraints>
+                    <view key="view" contentMode="scaleToFill" id="K23-ff-wgk" customClass="MBManeuverView">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="185"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="343" height="185"/>
+                    <size key="freeformSize" width="375" height="185"/>
                     <connections>
-                        <outlet property="destinationLabel" destination="BR8-8N-Rhk" id="ypb-Nm-TKX"/>
-                        <outlet property="distanceLabel" destination="u1L-N9-mMS" id="trZ-xg-0er"/>
-                        <outlet property="shieldImageView" destination="gkj-hG-NxS" id="Yff-xC-gBo"/>
-                        <outlet property="turnArrowView" destination="dvV-hd-Sbg" id="PDr-bK-tVy"/>
+                        <outlet property="maneuverView" destination="K23-ff-wgk" id="EKh-je-NCr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iiH-rk-KIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -430,7 +329,7 @@
                                 <rect key="frame" x="57" y="263" width="260" height="140"/>
                                 <subviews>
                                     <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9ao-4M-QVt">
-                                        <rect key="frame" x="30" y="36" width="200" height="68.5"/>
+                                        <rect key="frame" x="30" y="36.5" width="200" height="68.5"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="ioV-Hk-dG7">
                                                 <rect key="frame" x="79" y="0.0" width="42" height="28"/>
@@ -521,10 +420,10 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0k-uF-hfD" userLabel="CircleView">
-                                                            <rect key="frame" x="42.5" y="16" width="70" height="70"/>
+                                                            <rect key="frame" x="43" y="16" width="70" height="70"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="center" image="feedback_car_crash" translatesAutoresizingMaskIntoConstraints="NO" id="S05-Rj-CoM">
-                                                                    <rect key="frame" x="16" y="18.5" width="38" height="33"/>
+                                                                    <rect key="frame" x="16" y="19" width="38" height="33"/>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -536,7 +435,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                            <rect key="frame" x="54.5" y="96" width="47.5" height="23"/>
+                                                            <rect key="frame" x="54" y="96" width="48" height="22"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
                                                             <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -653,7 +552,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="80" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="meX-oz-5Hs">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="293.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="293"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="RouteTableViewCellId" rowHeight="118" id="6gn-fK-aZY" customClass="RouteTableViewCell" customModule="MapboxNavigation" customModuleProvider="target">
@@ -762,7 +661,7 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="22 min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" translatesAutoresizingMaskIntoConstraints="NO" id="82H-sg-SOL" userLabel="timeRemaining" customClass="MBTimeRemainingLabel">
-                            <rect key="frame" x="10" y="11" width="85" height="34"/>
+                            <rect key="frame" x="10" y="11" width="87" height="34"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="28"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -797,7 +696,7 @@
                             </attributedString>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10:09" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HRl-MT-kqB" userLabel="etaLabel" customClass="MBArrivalTimeLabel">
-                            <rect key="frame" x="238" y="32" width="48" height="22"/>
+                            <rect key="frame" x="232" y="32" width="48" height="22"/>
                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -811,7 +710,7 @@
                             </attributedString>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rwq-3y-Mg0" userLabel="Divider View" customClass="MBSeparatorView">
-                            <rect key="frame" x="296" y="23" width="1" height="40"/>
+                            <rect key="frame" x="290" y="23" width="1" height="40"/>
                             <color key="backgroundColor" red="1" green="0.32771947689999997" blue="0.3476559052" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="1" id="q7v-Jd-uwt"/>

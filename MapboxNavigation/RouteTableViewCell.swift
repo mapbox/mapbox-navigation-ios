@@ -3,7 +3,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 class RouteTableViewCell: UITableViewCell {
-
+    
     @IBOutlet weak var titleLabel: CellTitleLabel!
     @IBOutlet weak var subtitleLabel: CellSubtitleLabel!
     @IBOutlet weak var turnArrowView: TurnArrowView!
