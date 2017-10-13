@@ -599,9 +599,6 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
-        let routeProgress = routeController.routeProgress
-        scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: route.legs.count)
-        
         mapViewController?.notifyDidReroute(route: route)
         tableViewController?.tableView.reloadData()
         tableViewController?.updateETA(routeProgress: routeController.routeProgress)
