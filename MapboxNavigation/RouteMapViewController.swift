@@ -162,6 +162,11 @@ class RouteMapViewController: UIViewController {
         
         let controller = FeedbackViewController.loadFromStoryboard()
         controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
+        controller.sections = [
+            [.instructionIssue, .confusingInstruction, .notAllowed],
+            [.gpsInaccurate, .badRoute, .reportTraffic]
+        ]
+        
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
@@ -180,7 +185,10 @@ class RouteMapViewController: UIViewController {
             strongSelf.dismiss(animated: true, completion: nil)
         }
         
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
         parent.present(controller, animated: true, completion: nil)
+        
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
 

@@ -9,6 +9,12 @@ extension Bundle {
     func image(named: String) -> UIImage? {
         return UIImage(named: named, in: self, compatibleWith: nil)
     }
+    
+    var microphoneUsageDescription: String? {
+        get {
+            return object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String
+        }
+    }
 }
 
 var ShieldImageNamesByPrefix: [String: String] = {

@@ -35,6 +35,41 @@ public enum FeedbackType: Int, CustomStringConvertible {
      */
     case routingError
     
+    /**
+     Identifies the feedback as the location of an instruction with bad timing. For example after the maneuver should have occured.
+     */
+    case instructionTiming
+    
+    /**
+     Identifies the feedback as the location of a confusing instruction.
+     */
+    case confusingInstruction
+    
+    /**
+     Identifies the feedback as a place where the GPS quality was particularly poor.
+     */
+    case inaccurateGPS
+    
+    /**
+     Identifies the feedback where the route was inefficient.
+     */
+    case badRoute
+    
+    /**
+     Identifies the feedback as a place where traffic should have been reported.
+     */
+    case reportTraffic
+    
+    /**
+     Identifies the feedback as a place with general instruction issue.
+     */
+    case instructionIssue
+    
+    /**
+     Identifies the feedback as a place with heavy traffic could have been avoided by using a smarter route.
+     */
+    case heavyTraffic
+    
     public var description: String {
         switch self {
         case .accident:
@@ -49,6 +84,20 @@ public enum FeedbackType: Int, CustomStringConvertible {
             return "routing_error"
         case .general:
             return "general"
+        case .instructionTiming:
+            return "instruction_timing"
+        case .confusingInstruction:
+            return "confusing_instruction"
+        case .inaccurateGPS:
+            return "inaccurate_gps"
+        case .badRoute:
+            return "bad_route"
+        case .reportTraffic:
+            return "report_traffic"
+        case .instructionIssue:
+            return "instruction_issue"
+        case .heavyTraffic:
+            return "heavy_traffic"
         }
     }
 }

@@ -1,23 +1,29 @@
 ﻿/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
 
-/* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Accident";
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Bad \nRoute";
 
-/* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Closure";
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Confusing \nInstruction";
 
-/* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Confusing";
+/* Feedback type for inaccurate GPS */
+"FEEDBACK_GPS_INACCURATE" = "GPS \nInaccurate";
 
-/* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Hazard";
+/* Feedback type for Heavy Traffic */
+"FEEDBACK_HEAVY_TRAFFIC" = "Heavy \nTraffic";
 
-/* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Other Issue";
+/* Feedback type for Instruction Issue */
+"FEEDBACK_INSTRUCTION_ISSUE" = "Instruction \nIssue";
 
-/* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "Not Allowed";
+/* Feedback type for Instruction Timing */
+"FEEDBACK_INSTRUCTION_TIMING" = "Instruction \nTiming";
+
+/* Feedback type for turn not allowed */
+"FEEDBACK_NOT_ALLOWED" = "Not \nAllowed";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Report \nTraffic";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";

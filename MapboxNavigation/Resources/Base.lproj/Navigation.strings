@@ -1,13 +1,9 @@
 
-/* Class = "UILabel"; text = "Recording Audio"; ObjectID = "DXb-xn-Kgp"; */
-"DXb-xn-Kgp.text" = "Recording Audio";
-
-/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "JMs-xU-Gfd"; */
-"JMs-xU-Gfd.normalTitle" = "Cancel";
-
 /* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
 "UpZ-gr-OKM.text" = "Rerouting…";
 
 /* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
 "upm-fg-ffn.text" = "Thank you for your report!";
 
+/* Class = "UILabel"; text = "Recording Audio"; ObjectID = "xTH-eK-F5H"; */
+"xTH-eK-F5H.text" = "Recording Audio";
