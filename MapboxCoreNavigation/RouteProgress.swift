@@ -53,7 +53,13 @@ open class RouteProgress: NSObject {
     /**
      Returns the current `Route`.
      */
-    public let route: Route
+    public var route: Route {
+        return routes[activeRouteIndex]
+    }
+    
+    public var routes: [Route]
+    
+    public var activeRouteIndex: Int
 
     /**
      Index representing current `RouteLeg`.
@@ -141,9 +147,10 @@ open class RouteProgress: NSObject {
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      - parameter alertLevel: Optional `AlertLevel` to start the `RouteProgress` at.
      */
-    public init(route: Route, legIndex: Int = 0, alertLevel: AlertLevel = .none) {
-        self.route = route
+    public init(route: Route, legIndex: Int = 0, alertLevel: AlertLevel = .none, activeRouteIndex: Int = 0) {
+        self.routes = [route]
         self.legIndex = legIndex
+        self.activeRouteIndex = activeRouteIndex
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
         

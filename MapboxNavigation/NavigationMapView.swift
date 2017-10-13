@@ -333,7 +333,7 @@ open class NavigationMapView: MGLMapView {
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoute(_ routes: [Route], legIndex: Int? = nil, activeRouteIndex: Int = 0) {
+    public func showRoutes(_ routes: [Route], legIndex: Int? = nil, activeRouteIndex: Int = 0) {
         guard let style = style else {
             return
         }
@@ -400,7 +400,7 @@ open class NavigationMapView: MGLMapView {
         for feature in features {
             if let routeIndex = feature.attribute(forKey: routeIndexAttribute) as? Int,
                 let legIndex = feature.attribute(forKey: legIndexAttribute) as? Int, let routes = routes {
-                self.showRoute(routes, legIndex: legIndex, activeRouteIndex: routeIndex)
+                self.showRoutes(routes, legIndex: legIndex, activeRouteIndex: routeIndex)
                 return
             }
         }

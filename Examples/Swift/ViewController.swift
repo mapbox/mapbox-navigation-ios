@@ -17,9 +17,9 @@ enum ExampleMode {
 class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
     var waypoints: [Waypoint] = []
-    var currentRoute: Route? {
+    var currentRoutes: [Route]? = [] {
         didSet {
-            self.startButton.isEnabled = currentRoute != nil
+            self.startButton.isEnabled = currentRoutes != nil
         }
     }
     
@@ -115,7 +115,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
         
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager)
+        let navigationViewController = NavigationViewController(for: [route], locationManager: locationManager)
         
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -149,25 +149,24 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
                 print(error!.localizedDescription)
                 return
             }
-            guard let route = routes?.first else { return }
             guard let routes = routes else { return }
             
-            self?.currentRoute = route
+            self?.currentRoutes = routes
             
             // Open method for adding and updating the route line
-            self?.mapView.showRoute(routes)
-            self?.mapView.showWaypoints(route, legIndex: 0)
+            self?.mapView.showRoutes(routes)
+            self?.mapView.showWaypoints(routes.first!, legIndex: 0)
         }
     }
 
     // MARK: - Basic Navigation
 
     func startBasicNavigation() {
-        guard let route = currentRoute else { return }
+        guard let routes = currentRoutes else { return }
         
         exampleMode = .default
         
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: routes, locationManager: navigationLocationManager())
         navigationViewController.navigationDelegate = self
         
         present(navigationViewController, animated: true, completion: nil)
@@ -176,7 +175,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: - Custom Navigation UI
 
     func startCustomNavigation() {
-        guard let route = self.currentRoute else { return }
+        guard let route = self.currentRoutes?.first else { return }
 
         guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
         
@@ -195,32 +194,32 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: - Styling the default UI
     
     func startStyledNavigation() {
-        guard let route = self.currentRoute else { return }
+        guard let routes = self.currentRoutes else { return }
 
         exampleMode = .styled
         
         let styles = [DayStyle(), CustomNightStyle()]
 
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: routes, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)
     }
     
     func navigationLocationManager() -> NavigationLocationManager {
-        guard let route = currentRoute else { return NavigationLocationManager() }
+        guard let route = currentRoutes?.first else { return NavigationLocationManager() }
         return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
     
     // MARK: - Navigation with multiple waypoints
 
     func startMultipleWaypoints() {
-        guard let route = self.currentRoute else { return }
+        guard let routes = self.currentRoutes else { return }
 
         exampleMode = .multipleWaypoints
 
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: routes, locationManager: navigationLocationManager())
         navigationViewController.navigationDelegate = self
 
         present(navigationViewController, animated: true, completion: nil)

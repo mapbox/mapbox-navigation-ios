@@ -321,7 +321,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
     @objc(initWithRoute:directions:style:locationManager:)
-    required public init(for route: Route,
+    required public init(for routes: [Route],
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
@@ -334,7 +334,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions
-        self.route = route
+        self.route = routes.first
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
