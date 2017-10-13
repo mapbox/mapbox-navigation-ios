@@ -9,7 +9,7 @@ import UIKit
 #endif
 
 /**
- `NavigationViewController` is the base location manager which handles
+ `NavigationLocationManager` is the base location manager which handles
  permissions and background modes.
  */
 @objc(MBNavigationLocationManager)
