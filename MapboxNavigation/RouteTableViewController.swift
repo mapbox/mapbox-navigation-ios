@@ -85,7 +85,7 @@ class RouteTableViewController: UIViewController {
         }
     }
         
-    func shouldGiveVoiceInstruction() {
+    func reload() {
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
             tableView.reloadRows(at: visibleIndexPaths, with: .fade)
         }

@@ -43,7 +43,7 @@ public let RouteControllerDidFindFasterRouteKey = MBRouteControllerDidFindFaster
 public let RouteControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
 
 /**
- Emitted when the user passing an instruction location location.
+ Emitted when the user passes an ideal point for saying an instruction aloud.
  */
 public let RouteControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
 
