@@ -164,12 +164,12 @@ class RouteMapViewController: UIViewController {
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
-            guard let strongSelf = self else { return }
-            strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
-            strongSelf.dismiss(animated: true) {
-                DialogViewController.present(on: parent)
-            }
+//            guard let strongSelf = self else { return }
+//            strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
+//            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
+//            strongSelf.dismiss(animated: true) {
+//                DialogViewController.present(on: parent)
+//            }
         }
         
         controller.dismissFeedbackHandler = { [weak self] in
@@ -179,7 +179,10 @@ class RouteMapViewController: UIViewController {
             strongSelf.dismiss(animated: true, completion: nil)
         }
         
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
         parent.present(controller, animated: true, completion: nil)
+        
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
 

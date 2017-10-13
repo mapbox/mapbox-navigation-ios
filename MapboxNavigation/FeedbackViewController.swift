@@ -1,6 +1,20 @@
 import UIKit
 import MapboxCoreNavigation
 
+extension FeedbackViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return DismissAnimator()
+    }
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return PresentAnimator()
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactor.hasStarted ? interactor : nil
+    }
+}
+
 struct FeedbackItem {
     var title: String
     var image: UIImage
@@ -8,19 +22,17 @@ struct FeedbackItem {
     var backgroundColor: UIColor
 }
 
-class FeedbackViewController: UIViewController {
-    
+class FeedbackViewController: UIViewController, DismissDraggable {
+
     typealias FeedbackSection = [FeedbackItem]
-    
-    var sections = [FeedbackSection]()
-    let cellReuseIdentifier = "collectionViewCellId"
-    
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
     var sendFeedbackHandler: SendFeedbackHandler?
     var dismissFeedbackHandler: (() -> ())?
+    var sections = [FeedbackSection]()
+    let cellReuseIdentifier = "collectionViewCellId"
+    let interactor = Interactor()
     
-    @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     
     class func loadFromStoryboard() -> FeedbackViewController {
@@ -31,7 +43,11 @@ class FeedbackViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .clear
-        containerView.applyDefaultCornerRadiusShadow(cornerRadius: 16)
+        collectionView.isScrollEnabled = false
+        collectionView.isUserInteractionEnabled = false
+        transitioningDelegate = self
+        
+        enableDraggableDismiss()
         
         let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
         let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
@@ -63,7 +79,8 @@ class FeedbackViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
+        // TODO: Re-enable
+        //        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
     }
     
     @IBAction func cancel(_ sender: Any) {
