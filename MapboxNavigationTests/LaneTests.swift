@@ -25,7 +25,7 @@ class LaneTests: FBSnapshotTestCase {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         XCTAssert(controller.view != nil)
         
-        controller.updateLaneViews(step: step, alertLevel: .high)
+        controller.updateLaneViews(step: step, durationRemaining: 20)
         controller.showLaneViews(animated: false)
         
         FBSnapshotVerifyView(controller.laneViewsContainerView)

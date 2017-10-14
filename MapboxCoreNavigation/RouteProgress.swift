@@ -1,48 +1,6 @@
 import Foundation
 import MapboxDirections
-
-
-/**
- An `AlertLevel` indicates the user’s general progress toward a step’s maneuver point. A change to the current alert level is often an opportunity to present the user with a visual or voice notification about the upcoming maneuver.
- */
-@objc(MBAlertLevel)
-public enum AlertLevel: Int {
-    
-    /**
-     Default `AlertLevel`
-     */
-    case none
-    
-    
-    /**
-     The user has started the route.
-     */
-    case depart
-    
-    
-    /**
-     The user has recently completed a step.
-     */
-    case low
-    
-    
-    /**
-     The user is approaching the maneuver.
-     */
-    case medium
-    
-    
-    /**
-     The user is at or very close to the maneuver point
-     */
-    case high
-    
-    
-    /**
-     The user has completed the route.
-     */
-    case arrive
-}
+import AVFoundation
 
 
 /**
@@ -62,7 +20,6 @@ open class RouteProgress: NSObject {
         didSet {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
-            currentLegProgress.alertUserLevel = .none
             currentLegProgress = RouteLegProgress(leg: currentLeg)
         }
     }
@@ -139,13 +96,14 @@ open class RouteProgress: NSObject {
      
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
-     - parameter alertLevel: Optional `AlertLevel` to start the `RouteProgress` at.
      */
-    public init(route: Route, legIndex: Int = 0, alertLevel: AlertLevel = .none) {
+    public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
         super.init()
-        currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, alertLevel: alertLevel)
+        currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+        
+        
         
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
@@ -229,12 +187,8 @@ open class RouteLegProgress: NSObject {
     public var fractionTraveled: Double {
         return distanceTraveled / leg.distance
     }
-
-    /**
-     `AlertLevel` for the current step.
-     */
-    public var alertUserLevel: AlertLevel = .none
-
+    
+    public var userHasArrivedAtWaypoint = false
     
     /**
      Returns the `RouteStep` before a given step. Returns `nil` if there is no step prior.
@@ -326,13 +280,11 @@ open class RouteLegProgress: NSObject {
      
      - parameter leg: Leg on a `Route`.
      - parameter stepIndex: Current step the user is on.
-     - parameter alertLevel: Optional `AlertLevel` to start the `RouteProgress` at.
      */
-    public init(leg: RouteLeg, stepIndex: Int = 0, alertLevel: AlertLevel = .none) {
+    public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.leg = leg
         self.stepIndex = stepIndex
-        self.alertUserLevel = alertLevel
-        currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex])
+        currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
     
     
@@ -366,7 +318,6 @@ open class RouteStepProgress: NSObject {
      */
     public var distanceTraveled: CLLocationDistance = 0
     
-    
     /**
      Returns distance from user to end of step.
      */
@@ -399,9 +350,10 @@ open class RouteStepProgress: NSObject {
      
      - parameter step: Step on a `RouteLeg`.
      */
-    public init(step: RouteStep) {
+    public init(step: RouteStep, spokenInstructionIndex: Int = 0) {
         self.step = step
         self.intersectionIndex = 0
+        self.spokenInstructionIndex = spokenInstructionIndex
     }
     
     /**
@@ -434,4 +386,17 @@ open class RouteStepProgress: NSObject {
      The distance in meters the user is to the next intersection they will pass through.
      */
     public var userDistanceToUpcomingIntersection: CLLocationDistance?
+    
+    /**
+     Index into `step.instructionsSpokenAlongStep` representing the current instruction.
+     */
+    public var spokenInstructionIndex = 0
+    
+    /**
+     Current Instruction for the user's progress along a step.
+     */
+    public var currentSpokenInstruction: SpokenInstruction? {
+        guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep else { return nil }
+        return instructionsSpokenAlongStep[spokenInstructionIndex]
+    }
 }
