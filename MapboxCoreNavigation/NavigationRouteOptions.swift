@@ -3,15 +3,15 @@ import MapboxDirections
 
 /**
  A `NavigationRouteOptions` object specifies turn-by-turn-optimized criteria for results returned by the Mapbox Directions API.
- 
+
  `NavigationRouteOptions` is a subclass of `RouteOptions` that has been optimized for navigation. Pass an instance of this class into the `Directions.calculate(_:completionHandler:)` method.
  */
 @objc(MBNavigationRouteOptions)
 open class NavigationRouteOptions: RouteOptions {
-    
+
     /**
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
-     
+
      - SeeAlso:
      [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.10.1/Classes/RouteOptions.html)
      */
@@ -23,31 +23,32 @@ open class NavigationRouteOptions: RouteOptions {
         includesSteps = true
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]
-        includesExitRoundaboutManeuver = true
+        includesVoiceInstructions = true
+        distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
     }
-    
-    
+
+
     /**
      Initializes a navigation route options object for routes between the given locations and an optional profile identifier optimized for navigation.
-     
+
      - SeeAlso:
      [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.10.1/Classes/RouteOptions.html)
      */
     public convenience init(locations: [CLLocation], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
     }
-    
-    
+
+
     /**
      Initializes a route options object for routes between the given geographic coordinates and an optional profile identifier optimized for navigation.
-     
+
      - SeeAlso:
      [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.10.1/Classes/RouteOptions.html)
      */
     public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
-    
+
     public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
     }

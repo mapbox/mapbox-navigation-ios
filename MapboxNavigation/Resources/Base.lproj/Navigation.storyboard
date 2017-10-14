@@ -504,24 +504,24 @@
                                 <rect key="frame" x="24" y="100" width="327" height="542"/>
                                 <subviews>
                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Sne-Dn-jdt">
-                                        <rect key="frame" x="8" y="10" width="311" height="432"/>
+                                        <rect key="frame" x="8" y="10" width="311" height="472"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="16" minimumInteritemSpacing="0.0" id="unA-43-4hX">
-                                            <size key="itemSize" width="155" height="134"/>
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="unA-43-4hX">
+                                            <size key="itemSize" width="155" height="149"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="8" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionViewCellId" id="JPa-I2-DlD" customClass="FeedbackCollectionViewCell" customModule="MapboxNavigation" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="8" width="155" height="134"/>
+                                                <rect key="frame" x="0.0" y="8" width="155" height="149"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="155" height="134"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="155" height="149"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R0k-uF-hfD" userLabel="CircleView">
-                                                            <rect key="frame" x="42.5" y="16" width="70" height="70"/>
+                                                            <rect key="frame" x="42.5" y="0.0" width="70" height="70"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="center" image="feedback_car_crash" translatesAutoresizingMaskIntoConstraints="NO" id="S05-Rj-CoM">
                                                                     <rect key="frame" x="16" y="18.5" width="38" height="33"/>
@@ -535,8 +535,8 @@
                                                                 <constraint firstItem="S05-Rj-CoM" firstAttribute="centerY" secondItem="R0k-uF-hfD" secondAttribute="centerY" id="wIZ-ft-EBg"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                            <rect key="frame" x="54.5" y="96" width="47.5" height="23"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label test test test" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
+                                                            <rect key="frame" x="9.5" y="78" width="137.5" height="45.5"/>
                                                             <fontDescription key="fontDescription" type="system" weight="medium" pointSize="19"/>
                                                             <color key="textColor" red="0.066666666666666666" green="0.066666666666666666" blue="0.066666666666666666" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -555,8 +555,8 @@
                                                     <constraint firstItem="R0k-uF-hfD" firstAttribute="centerX" secondItem="JPa-I2-DlD" secondAttribute="centerX" id="6kW-3D-0zh"/>
                                                     <constraint firstItem="qH5-Og-q0a" firstAttribute="centerX" secondItem="JPa-I2-DlD" secondAttribute="centerX" id="Dh3-nc-uR6"/>
                                                     <constraint firstAttribute="bottomMargin" relation="greaterThanOrEqual" secondItem="qH5-Og-q0a" secondAttribute="bottom" constant="8" id="Eg1-We-Sw9"/>
-                                                    <constraint firstItem="R0k-uF-hfD" firstAttribute="top" secondItem="JPa-I2-DlD" secondAttribute="top" constant="16" id="PgW-ID-8cs"/>
-                                                    <constraint firstItem="qH5-Og-q0a" firstAttribute="top" secondItem="R0k-uF-hfD" secondAttribute="bottom" constant="10" id="aX8-Ys-txz"/>
+                                                    <constraint firstItem="R0k-uF-hfD" firstAttribute="top" secondItem="JPa-I2-DlD" secondAttribute="top" id="PgW-ID-8cs"/>
+                                                    <constraint firstItem="qH5-Og-q0a" firstAttribute="top" secondItem="R0k-uF-hfD" secondAttribute="bottom" constant="8" id="aX8-Ys-txz"/>
                                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="qH5-Og-q0a" secondAttribute="trailing" constant="8" id="d8H-By-dO8"/>
                                                     <constraint firstItem="qH5-Og-q0a" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="JPa-I2-DlD" secondAttribute="leading" constant="8" id="eF4-Fc-sW6"/>
                                                 </constraints>
@@ -567,18 +567,18 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="dummy1" id="fmA-np-oH5">
-                                                <rect key="frame" x="156" y="8" width="155" height="134"/>
+                                                <rect key="frame" x="156" y="8" width="155" height="149"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="155" height="134"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="155" height="149"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </view>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="dummy2" id="VMc-md-STI">
-                                                <rect key="frame" x="0.0" y="158" width="155" height="134"/>
+                                                <rect key="frame" x="0.0" y="157" width="155" height="149"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="155" height="134"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="155" height="149"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                 </view>
                                             </collectionViewCell>
@@ -612,9 +612,9 @@
                                     <constraint firstAttribute="trailing" secondItem="Sne-Dn-jdt" secondAttribute="trailing" constant="8" id="C1C-ZC-h73"/>
                                     <constraint firstAttribute="trailing" secondItem="JMs-xU-Gfd" secondAttribute="trailing" constant="20" id="YfG-cd-ah9"/>
                                     <constraint firstItem="JMs-xU-Gfd" firstAttribute="leading" secondItem="ecu-yz-M5j" secondAttribute="leading" constant="20" id="fu1-c0-rmd"/>
-                                    <constraint firstItem="JMs-xU-Gfd" firstAttribute="top" secondItem="Sne-Dn-jdt" secondAttribute="bottom" constant="20" id="gKb-94-wHP"/>
+                                    <constraint firstItem="JMs-xU-Gfd" firstAttribute="top" secondItem="Sne-Dn-jdt" secondAttribute="bottom" id="gKb-94-wHP"/>
                                     <constraint firstItem="Sne-Dn-jdt" firstAttribute="leading" secondItem="ecu-yz-M5j" secondAttribute="leading" constant="8" id="kod-zh-bcJ"/>
-                                    <constraint firstAttribute="bottom" secondItem="JMs-xU-Gfd" secondAttribute="bottom" constant="20" id="qtY-Kk-tsV"/>
+                                    <constraint firstAttribute="bottom" secondItem="JMs-xU-Gfd" secondAttribute="bottom" id="qtY-Kk-tsV"/>
                                     <constraint firstItem="Sne-Dn-jdt" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="top" constant="10" id="vcz-gb-KKN"/>
                                 </constraints>
                             </view>
