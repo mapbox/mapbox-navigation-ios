@@ -51,36 +51,20 @@
 }
 
 - (void)resumeNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerAlertLevelDidChange object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerDidPassSpokenInstructionPoint object:_navigation];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerNotificationProgressDidChange object:_navigation];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillReroute object:_navigation];
 }
 
 - (void)suspendNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerAlertLevelDidChange object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerDidPassSpokenInstructionPoint object:_navigation];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerNotificationProgressDidChange object:_navigation];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillReroute object:_navigation];
 }
 
 - (void)alertLevelDidChange:(NSNotification *)notification {
     MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerProgressDidChangeNotificationProgressKey];
-    MBRouteStep *upcomingStep = routeProgress.currentLegProgress.upComingStep;
-    
-    NSString *text = nil;
-    if (upcomingStep) {
-        MBAlertLevel alertLevel = routeProgress.currentLegProgress.alertUserLevel;
-        if (alertLevel == MBAlertLevelHigh) {
-            text = upcomingStep.instructions;
-        } else {
-            text = [NSString stringWithFormat:@"In %@ %@",
-                    [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
-                    upcomingStep.instructions];
-        }
-    } else {
-        text = [NSString stringWithFormat:@"In %@ %@",
-                [self.lengthFormatter stringFromMeters:routeProgress.currentLegProgress.currentStepProgress.distanceRemaining],
-                routeProgress.currentLegProgress.currentStep.instructions];
-    }
+    NSString *text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction.text;
     
     [self.speechSynth speakUtterance:[AVSpeechUtterance speechUtteranceWithString:text]];
 }
