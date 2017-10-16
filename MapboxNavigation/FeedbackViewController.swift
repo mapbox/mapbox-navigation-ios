@@ -36,8 +36,8 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     var pulsingAnimation:CABasicAnimation {
         let pulseAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
         pulseAnimation.duration = 1
-        pulseAnimation.fromValue = 0.9
-        pulseAnimation.toValue = 1.1
+        pulseAnimation.fromValue = 1
+        pulseAnimation.toValue = 1.2
         pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         pulseAnimation.autoreverses = true
         pulseAnimation.repeatCount = .greatestFiniteMagnitude
@@ -117,11 +117,13 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     }
     
     func didTapCell(_ sender: UIGestureRecognizer) {
+        guard sender.state == .began || sender.state == .ended else { return }
+        
         abortAutodismiss()
         
-        let p = sender.location(in: self.collectionView)
+        let touchLocation = sender.location(in: self.collectionView)
         
-        if let indexPath = self.collectionView.indexPathForItem(at: p) {
+        if let indexPath = self.collectionView.indexPathForItem(at: touchLocation) {
             // get the cell at indexPath (the one you long pressed)
             let cell = self.collectionView.cellForItem(at: indexPath) as! FeedbackCollectionViewCell
             cell.layer.add(pulsingAnimation, forKey: "animateOpacity")
