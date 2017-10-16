@@ -161,6 +161,7 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
         
         let controller = FeedbackViewController.loadFromStoryboard()
+        controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in

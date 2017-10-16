@@ -125,6 +125,13 @@ open class RouteController: NSObject {
      */
     public var checkForFasterRouteInBackground = false
     
+    
+    /**
+     If true, users can long press a feedback item and allow for recorded audio to be included in the feedback
+     */
+    public var allowRecordedAudioFeedback = false
+    
+    
     var didFindFasterRoute = false
     
     /**

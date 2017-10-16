@@ -17,6 +17,8 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     var sections = [FeedbackSection]()
     let cellReuseIdentifier = "collectionViewCellId"
     
+    var allowRecordedAudioFeedback = false
+    
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
     var sendFeedbackHandler: SendFeedbackHandler?
@@ -56,18 +58,6 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         self.view.backgroundColor = .clear
         containerView.applyDefaultCornerRadiusShadow(cornerRadius: 16)
         
-        recordingSession = AVAudioSession.sharedInstance()
-        
-        recordingSession?.requestRecordPermission() { [unowned self] allowed in
-            if allowed {
-                let lpgr : UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
-                lpgr.minimumPressDuration = 0.5
-                lpgr.delegate = self
-                lpgr.delaysTouchesBegan = true
-                self.collectionView?.addGestureRecognizer(lpgr)
-            }
-        }
-        
         let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
         let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
         let roadClosedImage     = Bundle.mapboxNavigation.image(named: "feedback_road_closed")!.withRenderingMode(.alwaysTemplate)
@@ -94,6 +84,19 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
             [roadClosed, unallowedTurn],
             [routingError, other]
         ]
+        
+        guard allowRecordedAudioFeedback else { return }
+        
+        recordingSession = AVAudioSession.sharedInstance()
+        recordingSession?.requestRecordPermission() { [unowned self] allowed in
+            if allowed {
+                let lpgr : UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
+                lpgr.minimumPressDuration = 0.5
+                lpgr.delegate = self
+                lpgr.delaysTouchesBegan = true
+                self.collectionView?.addGestureRecognizer(lpgr)
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
