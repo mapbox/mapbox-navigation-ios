@@ -345,7 +345,7 @@ class CoreFeedbackEvent: Hashable {
 }
 
 class FeedbackEvent: CoreFeedbackEvent {
-    func update(type: FeedbackType, description: String?, audio: Data? = nil) {
+    func update(type: FeedbackType, description: String?, audio: Data?) {
         eventDictionary["feedbackType"] = type.description
         eventDictionary["description"] = description        
         if let audio = audio {
