@@ -24,9 +24,14 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var recordingAudioLabel: UILabel!
     
     var recordingSession: AVAudioSession?
-    var audioRecorder: AVAudioRecorder?
+    var audioRecorder: AVAudioRecorder? {
+        didSet {
+            recordingAudioLabel.isHidden = !recordingAudioLabel.isHidden
+        }
+    }
     
     var pulsingAnimation:CABasicAnimation {
         let pulseAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
@@ -93,7 +98,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
+        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
     }
     
     @IBAction func cancel(_ sender: Any) {
@@ -112,6 +117,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     }
     
     func didTapCell(_ sender: UIGestureRecognizer) {
+        abortAutodismiss()
         
         let p = sender.location(in: self.collectionView)
         

@@ -643,7 +643,7 @@
                     <connections>
                         <outlet property="collectionView" destination="Sne-Dn-jdt" id="7pC-Id-XnH"/>
                         <outlet property="containerView" destination="ecu-yz-M5j" id="LQd-96-Rhr"/>
-                        <outlet property="recordingAudioLabel" destination="DXb-xn-Kgp" id="KxQ-Fd-CTa"/>
+                        <outlet property="recordingAudioLabel" destination="DXb-xn-Kgp" id="dJi-0e-TI2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w0B-4a-jYs" userLabel="First Responder" sceneMemberID="firstResponder"/>
