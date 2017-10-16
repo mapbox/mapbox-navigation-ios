@@ -7,6 +7,7 @@ struct FeedbackItem {
     var image: UIImage
     var feedbackType: FeedbackType
     var backgroundColor: UIColor
+    var audio: Data?
 }
 
 class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVAudioRecorderDelegate {
@@ -76,12 +77,12 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         let confusingTitle      = NSLocalizedString("FEEDBACK_CONFUSING", bundle: .mapboxNavigation, value: "Confusing", comment: "Feedback type for Confusing")
         let otherIssueTitle     = NSLocalizedString("FEEDBACK_OTHER", bundle: .mapboxNavigation, value: "Other Issue", comment: "Feedback type for Other Issue")
         
-        let accident        = FeedbackItem(title: accidentTitle,        image: accidentImage,       feedbackType: .accident,        backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let hazard          = FeedbackItem(title: hazardTitle,          image: hazardImage,         feedbackType: .hazard,          backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let roadClosed      = FeedbackItem(title: closureTitle,         image: roadClosedImage,     feedbackType: .roadClosed,      backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let unallowedTurn   = FeedbackItem(title: unallowedTurnTitle,   image: unallowedTurnImage,  feedbackType: .unallowedTurn,   backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let routingError    = FeedbackItem(title: confusingTitle,       image: routingImage,        feedbackType: .routingError,    backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let other           = FeedbackItem(title: otherIssueTitle,      image: otherImage,          feedbackType: .general,         backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
+        let accident        = FeedbackItem(title: accidentTitle,        image: accidentImage,       feedbackType: .accident,        backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), audio:  nil)
+        let hazard          = FeedbackItem(title: hazardTitle,          image: hazardImage,         feedbackType: .hazard,          backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), audio:  nil)
+        let roadClosed      = FeedbackItem(title: closureTitle,         image: roadClosedImage,     feedbackType: .roadClosed,      backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
+        let unallowedTurn   = FeedbackItem(title: unallowedTurnTitle,   image: unallowedTurnImage,  feedbackType: .unallowedTurn,   backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
+        let routingError    = FeedbackItem(title: confusingTitle,       image: routingImage,        feedbackType: .routingError,    backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
+        let other           = FeedbackItem(title: otherIssueTitle,      image: otherImage,          feedbackType: .general,         backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
         
         sections = [
             [accident, hazard],
@@ -119,22 +120,16 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
             let cell = self.collectionView.cellForItem(at: indexPath) as! FeedbackCollectionViewCell
             cell.layer.add(pulsingAnimation, forKey: "animateOpacity")
             
-            let item = sections[indexPath.section][indexPath.row]
+            var item = sections[indexPath.section][indexPath.row]
             
             if audioRecorder == nil {
-                startRecording()
+                startRecording(type: item.feedbackType)
             }
             
             guard sender.state != .ended else {
                 finishRecording()
-                if let path = currentAudioFile?.path {
-                    do {
-                        let fileData = try NSData(contentsOfFile: path, options: NSData.ReadingOptions.mappedIfSafe)
-                        let data = fileData.base64EncodedString()
-                        // Do something with the data
-                    } catch {
-                        print(error.localizedDescription)
-                    }
+                if let path = currentAudioFile, let fileData = NSData(contentsOfFile: path.path) as Data? {
+                    item.audio = fileData
                 }
                 stopAnimations(feedbackItem: item)
                 return
@@ -142,11 +137,12 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         }
     }
     
-    func startRecording() {
-        currentAudioFile = getDocumentsDirectory().appendingPathComponent("recording.m4a")
+    
+    func startRecording(type: FeedbackType) {
+        currentAudioFile = getDocumentsDirectory().appendingPathComponent("recording-\(type)-\(Date()).m4a")
         
         let settings = [
-            AVFormatIDKey: Int(kAudioFormatMPEGLayer3),
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 12000,
             AVNumberOfChannelsKey: 1,
             AVEncoderAudioQualityKey: AVAudioQuality.low.rawValue

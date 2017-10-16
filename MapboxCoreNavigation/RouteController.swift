@@ -360,9 +360,9 @@ open class RouteController: NSObject {
      
      Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
      */
-    public func updateFeedback(feedbackId: String, type: FeedbackType, description: String?) {
+    public func updateFeedback(feedbackId: String, type: FeedbackType, description: String?, audio: Data? = nil) {
         if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id.uuidString == feedbackId}) as? FeedbackEvent {
-            lastFeedback.update(type: type, description: description)
+            lastFeedback.update(type: type, description: description, audio: audio)
         }
     }
     
