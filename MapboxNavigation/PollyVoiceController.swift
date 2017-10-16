@@ -58,8 +58,14 @@ public class PollyVoiceController: RouteVoiceController {
         pollyTask?.cancel()
         audioPlayer?.stop()
         
-        speak(instruction, error: nil)
         startAnnouncementTimer()
+        
+        guard let dataInstruction = routeProgresss.spokenInstructionsForRoute[instruction] else {
+            speak(instruction, error: nil)
+            return
+        }
+
+        sayInStruction(data: dataInstruction)
     }
     
     override func speak(_ text: String, error: String?) {
@@ -172,29 +178,33 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             }
             
-            do {
-                strongSelf.audioPlayer = try AVAudioPlayer(data: data)
-                let prepared = strongSelf.audioPlayer?.prepareToPlay() ?? false
-                
-                guard prepared else {
-                    strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to prepare")
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    strongSelf.audioPlayer?.delegate = self
-                    let played = strongSelf.audioPlayer?.play() ?? false
-                    
-                    guard played else {
-                        strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "Audio player failed to play")
-                        return
-                    }
-                }
-            } catch  let error as NSError {
-                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
-            }
+            strongSelf.sayInStruction(data: data)
         }
         
         pollyTask?.resume()
+    }
+    
+    func sayInStruction(data: Data) {
+        do {
+            audioPlayer = try AVAudioPlayer(data: data)
+            let prepared = audioPlayer?.prepareToPlay() ?? false
+            
+            guard prepared else {
+                callSuperSpeak(fallbackText, error: "Audio player failed to prepare")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.audioPlayer?.delegate = self
+                let played = self.audioPlayer?.play() ?? false
+                
+                guard played else {
+                    self.callSuperSpeak(self.fallbackText, error: "Audio player failed to play")
+                    return
+                }
+            }
+        } catch  let error as NSError {
+            callSuperSpeak(fallbackText, error: error.localizedDescription)
+        }
     }
 }
