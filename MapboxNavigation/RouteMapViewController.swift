@@ -223,7 +223,7 @@ class RouteMapViewController: UIViewController {
         routePageViewController.updateManeuverViewForStep()
 
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex, activeRouteIndex: routeController.routeProgress.activeRouteIndex)
+        mapView.showRoutes(routeController.routeProgress.routes, legIndex: routeController.routeProgress.legIndex, activeRouteIndex: routeController.routeProgress.activeRouteIndex)
 
         if isInOverviewMode {
             updateVisibleBounds()
@@ -258,8 +258,7 @@ class RouteMapViewController: UIViewController {
         }
         
         if currentLegIndexMapped != routeProgress.legIndex {
-            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex, activeRouteIndex: routeProgress.activeRouteIndex)
+            mapView.showRoutes(routeProgress.routes, legIndex: routeProgress.legIndex, activeRouteIndex: routeProgress.activeRouteIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
         }
@@ -524,8 +523,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard isViewLoaded && view.window != nil else { return }
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
-        map.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex, activeRouteIndex: routeController.routeProgress.activeRouteIndex)
-        map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        map.showRoutes(routeController.routeProgress.routes, legIndex: routeController.routeProgress.legIndex, activeRouteIndex: routeController.routeProgress.activeRouteIndex)
     }
 }
 

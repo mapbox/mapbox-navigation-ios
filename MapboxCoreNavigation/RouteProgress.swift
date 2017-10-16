@@ -147,8 +147,8 @@ open class RouteProgress: NSObject {
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      - parameter alertLevel: Optional `AlertLevel` to start the `RouteProgress` at.
      */
-    public init(route: Route, legIndex: Int = 0, alertLevel: AlertLevel = .none, activeRouteIndex: Int = 0) {
-        self.routes = [route]
+    public init(routes: [Route], legIndex: Int = 0, alertLevel: AlertLevel = .none, activeRouteIndex: Int = 0) {
+        self.routes = routes
         self.legIndex = legIndex
         self.activeRouteIndex = activeRouteIndex
         super.init()

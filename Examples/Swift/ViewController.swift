@@ -155,7 +155,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             
             // Open method for adding and updating the route line
             self?.mapView.showRoutes(routes)
-            self?.mapView.showWaypoints(routes.first!, legIndex: 0)
         }
     }
 
@@ -257,7 +256,12 @@ extension ViewController: NavigationViewControllerDelegate {
         
         navigationViewController.present(confirmationController, animated: true, completion: nil)
     }
+    
+//    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, in routes: [Route], legIndex: Int) {
+//        print(routes)
+//    }
 }
+
 class CustomNightStyle: DayStyle {
     
     required init() {

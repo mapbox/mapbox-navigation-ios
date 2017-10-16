@@ -34,7 +34,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
         
-        routeController = RouteController(along: userRoute!, directions: directions, locationManager: locationManager)
+        routeController = RouteController(along: [userRoute!], directions: directions, locationManager: locationManager)
         
         mapView.userLocationVerticalAlignment = .center
         mapView.userTrackingMode = .followWithCourse
@@ -131,7 +131,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
              When rerouting, you need to give the RouteController a new route.
              Otherwise, it will continue to compare the user to the old route and continually reroute the user.
              */
-            let routeProgress = RouteProgress(route: self.userRoute!)
+            let routeProgress = RouteProgress(routes: [self.userRoute!])
             self.routeController.routeProgress = routeProgress
             self.updateRouteProgress(routeProgress: routeProgress)
         }

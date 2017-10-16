@@ -340,6 +340,8 @@ open class NavigationMapView: MGLMapView {
         
         let activeRoute = routes[activeRouteIndex]
         
+        showWaypoints(activeRoute, legIndex: legIndex ?? 0)
+        
         let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
         let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
         
@@ -401,6 +403,7 @@ open class NavigationMapView: MGLMapView {
             if let routeIndex = feature.attribute(forKey: routeIndexAttribute) as? Int,
                 let legIndex = feature.attribute(forKey: legIndexAttribute) as? Int, let routes = routes {
                 self.showRoutes(routes, legIndex: legIndex, activeRouteIndex: routeIndex)
+                navigationMapDelegate?.navigationMapView!(self, didTap: routeIndex, in: routes, legIndex: legIndex)
                 return
             }
         }
@@ -862,6 +865,9 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc(navigationMapViewUserAnchorPoint:)
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
+    
+//    @objc(navigationMapView:didTapRouteIndex:in:legIndex:)
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, in routes: [Route], legIndex: Int)
 }
 
 protocol NavigationMapViewCourseTrackingDelegate: class {

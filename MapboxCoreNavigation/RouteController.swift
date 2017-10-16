@@ -81,6 +81,8 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:didUpdateLocations:)
     optional func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation])
+    
+    @objc optional func routeController(_ routeController: RouteController, didTapRoute routeIndex: Int, in route: [Route], legIndex: Int)
 }
 
 /**
@@ -103,6 +105,8 @@ open class RouteController: NSObject {
      The Directions object used to create the route.
      */
     public var directions: Directions
+    
+    public var routes: [Route]
     
     /**
      The route controller’s associated location manager.
@@ -175,13 +179,14 @@ open class RouteController: NSObject {
      - parameter directions: The Directions object that created `route`.
      - parameter locationManager: The associated location manager.
      */
-    @objc(initWithRoute:directions:locationManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
-        self.sessionState = SessionState(currentRoute: route, originalRoute: route)
+    @objc(initWithRoutes:activeRouteIndex:directions:locationManager:)
+    public init(along routes: [Route], activeRouteIndex: Int = 0, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
+        self.sessionState = SessionState(currentRoute: routes[activeRouteIndex], originalRoute: routes[activeRouteIndex])
         self.directions = directions
-        self.routeProgress = RouteProgress(route: route)
+        self.routes = routes
+        self.routeProgress = RouteProgress(routes: routes)
         self.locationManager = locationManager
-        self.locationManager.activityType = route.routeOptions.activityType
+        self.locationManager.activityType = routes[activeRouteIndex].routeOptions.activityType
         UIDevice.current.isBatteryMonitoringEnabled = true
         super.init()
         
@@ -190,7 +195,7 @@ open class RouteController: NSObject {
         self.resetSession()
         
         DispatchQueue.main.async {
-            self.startEvents(route: route)
+            self.startEvents(route: routes[activeRouteIndex])
         }
     }
     
@@ -610,19 +615,19 @@ extension RouteController: CLLocationManagerDelegate {
         let durationRemaining = routeProgress.durationRemaining
         let currentAlertLevel = routeProgress.currentLegProgress.alertUserLevel
         
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location) { [weak self] (routes, error) in
             guard let strongSelf = self else { return }
-            guard let route = route else { return }
+            guard let routes = routes else { return }
             strongSelf.lastLocationDate = nil
             
-            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first,
+            if let firstLeg = routes.first?.legs.first, let firstStep = firstLeg.steps.first,
                 firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval,
                 currentUpcomingManeuver == firstLeg.steps[1],
-                route.expectedTravelTime <= 0.9 * durationRemaining {
+                routes.first!.expectedTravelTime <= 0.9 * durationRemaining {
                 strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
-                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: currentAlertLevel)
-                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                strongSelf.routeProgress = RouteProgress(routes: routes, legIndex: 0, alertLevel: currentAlertLevel)
+                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: routes.first!)
                 strongSelf.didFindFasterRoute = false
             }
         }
@@ -648,7 +653,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         self.lastRerouteLocation = location
         
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location) { [weak self] (routes, error) in
             guard let strongSelf = self else {
                 return
             }
@@ -660,20 +665,20 @@ extension RouteController: CLLocationManagerDelegate {
                     ])
             }
             
-            guard let route = route else { return }
+            guard let routes = routes else { return }
             
             // If the first step of the new route is greater than 0.5km, let user continue without announcement.
             var alertLevel: AlertLevel = .none
-            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 500 {
+            if let firstLeg = routes.first?.legs.first, let firstStep = firstLeg.steps.first, firstStep.distance > 500 {
                 alertLevel = .depart
             }
-            strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, alertLevel: alertLevel)
+            strongSelf.routeProgress = RouteProgress(routes: routes, legIndex: 0, alertLevel: alertLevel)
             strongSelf.routeProgress.currentLegProgress.stepIndex = 0
-            strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+            strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: routes.first!)
         }
     }
     
-    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->()) {
+    func getDirections(from location: CLLocation, completion: @escaping (_ route: [Route]?, _ error: Error?)->()) {
         routeTask?.cancel()
         
         let options = routeProgress.route.routeOptions
@@ -696,11 +701,11 @@ extension RouteController: CLLocationManagerDelegate {
             if let error = error {
                 return completion(nil, error)
             }
-            guard let route = routes?.first else {
+            guard let routes = routes else {
                 return completion(nil, nil)
             }
             
-            return completion(route, error)
+            return completion(routes, error)
         }
     }
     

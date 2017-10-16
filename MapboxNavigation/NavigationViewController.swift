@@ -157,6 +157,8 @@ public protocol NavigationViewControllerDelegate {
      Returns the center point of the user course view in screen coordinates relative to the map view.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
+    
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, in routes: [Route], legIndex: Int)
 }
 
 /**
@@ -175,16 +177,18 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     public var route: Route! {
         didSet {
             if routeController == nil {
-                routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
+                routeController = RouteController(along: routes, directions: directions, locationManager: NavigationLocationManager())
                 routeController.delegate = self
             } else {
-                routeController.routeProgress = RouteProgress(route: route)
+                routeController.routeProgress = RouteProgress(routes: routes)
             }
             mapViewController?.notifyDidReroute(route: route)
             tableViewController?.tableView.reloadData()
             tableViewController?.updateETA(routeProgress: routeController.routeProgress)
         }
     }
+    
+    public var routes: [Route]!
     
     /** 
      An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
@@ -320,8 +324,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:style:locationManager:)
+    @objc(initWithRoute:activeRouteIndex:directions:style:locationManager:)
     required public init(for routes: [Route],
+                         activeRouteIndex: Int = 0,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
@@ -334,9 +339,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions
-        self.route = routes.first
+        self.route = routes[activeRouteIndex]
+        self.routes = routes
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
+        self.routeController = RouteController(along: routes, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
@@ -583,6 +589,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint? {
         return navigationDelegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
     }
+    
+    func mapViewController(_ mapView: NavigationMapView, didTap routeIndex: Int, in routes: [Route], legIndex: Int) {
+        return navigationDelegate!.navigationMapView!(mapView, didTap: routeIndex, in: routes, legIndex: legIndex)
+    }
 }
 
 extension NavigationViewController: RouteControllerDelegate {
@@ -607,6 +617,11 @@ extension NavigationViewController: RouteControllerDelegate {
         tableViewController?.updateETA(routeProgress: routeController.routeProgress)
         
         navigationDelegate?.navigationViewController?(self, didRerouteAlong: route)
+    }
+    
+    public func routeController(_ routeController: RouteController, didTapRoute routeIndex: Int, in route: [Route], legIndex: Int) {
+        mapViewController?.routeController.routeProgress.activeRouteIndex = routeIndex
+        mapViewController?.showRouteIfNeeded()
     }
     
     public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
