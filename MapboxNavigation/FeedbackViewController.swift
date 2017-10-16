@@ -33,6 +33,8 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         }
     }
     
+    var activeFeedbackItem: FeedbackItem?
+    
     var pulsingAnimation:CABasicAnimation {
         let pulseAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
         pulseAnimation.duration = 1
@@ -43,8 +45,6 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         pulseAnimation.repeatCount = .greatestFiniteMagnitude
         return pulseAnimation
     }
-    
-    var currentAudioFile: URL?
     
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -105,17 +105,6 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         dismissFeedback()
     }
     
-    func stopAnimations(feedbackItem: FeedbackItem) {
-        
-        sendFeedbackHandler?(feedbackItem)
-        
-        for view in collectionView.visibleCells {
-            view.layer.removeAllAnimations()
-        }
-        
-        abortAutodismiss()
-    }
-    
     func didTapCell(_ sender: UIGestureRecognizer) {
         guard sender.state == .began || sender.state == .ended else { return }
         
@@ -126,28 +115,31 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         if let indexPath = self.collectionView.indexPathForItem(at: touchLocation) {
             // get the cell at indexPath (the one you long pressed)
             let cell = self.collectionView.cellForItem(at: indexPath) as! FeedbackCollectionViewCell
-            cell.layer.add(pulsingAnimation, forKey: "animateOpacity")
+            cell.layer.add(pulsingAnimation, forKey: "animateScale")
             
-            var item = sections[indexPath.section][indexPath.row]
+            activeFeedbackItem = sections[indexPath.section][indexPath.row]
+            
             
             if audioRecorder == nil {
-                startRecording(type: item.feedbackType)
+                startRecording()
             }
             
-            guard sender.state != .ended else {
+            if sender.state == .ended {
                 finishRecording()
-                if let path = currentAudioFile, let fileData = NSData(contentsOfFile: path.path) as Data? {
-                    item.audio = fileData
-                }
-                stopAnimations(feedbackItem: item)
-                return
             }
         }
     }
     
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        if let fileData = NSData(contentsOfFile: recorder.url.path) as Data? {
+            activeFeedbackItem!.audio = fileData
+            sendFeedbackHandler?(activeFeedbackItem!)
+        }
+    }
     
-    func startRecording(type: FeedbackType) {
-        currentAudioFile = getDocumentsDirectory().appendingPathComponent("recording-\(type)-\(Date()).m4a")
+    
+    func startRecording() {
+        let audioFile = getDocumentsDirectory().appendingPathComponent("recording-\(Date().timeIntervalSince1970).m4a")
         
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
@@ -157,7 +149,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         ]
         
         do {
-            audioRecorder = try AVAudioRecorder(url: currentAudioFile!, settings: settings)
+            audioRecorder = try AVAudioRecorder(url: audioFile, settings: settings)
             audioRecorder?.delegate = self
             audioRecorder?.record()
         } catch {
