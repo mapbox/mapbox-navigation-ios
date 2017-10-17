@@ -85,16 +85,23 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
             [routingError, other]
         ]
         
-        guard allowRecordedAudioFeedback else { return }
+//        guard allowRecordedAudioFeedback else { return }
+        
+        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+            let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
+            (dict["Privacy - Microphone Usage Description and value"] != nil || dict["NSMicrophoneUsageDescription"] != nil) else {
+                assert(false, "If `allowRecordedAudioFeedback` is enabled, `NSMicrophoneUsageDescription` must be added in app plist")
+                return
+        }
         
         recordingSession = AVAudioSession.sharedInstance()
         recordingSession?.requestRecordPermission() { [unowned self] allowed in
             if allowed {
-                let lpgr : UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
-                lpgr.minimumPressDuration = 0.5
-                lpgr.delegate = self
-                lpgr.delaysTouchesBegan = true
-                self.collectionView?.addGestureRecognizer(lpgr)
+                let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
+                longPress.minimumPressDuration = 0.5
+                longPress.delegate = self
+                longPress.delaysTouchesBegan = true
+                self.collectionView?.addGestureRecognizer(longPress)
             }
         }
     }
@@ -142,7 +149,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     
     
     func startRecording() {
-        let audioFile = getDocumentsDirectory().appendingPathComponent("recording-\(Date().timeIntervalSince1970).m4a")
+        guard let audioFile = FileManager().cacheAudioFileLocation else { return }
         
         let settings = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
@@ -165,12 +172,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         audioRecorder = nil
     }
     
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let documentsDirectory = paths[0]
-        return documentsDirectory
-    }
-    
+
     func presentError(_ message: String) {
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -188,6 +190,12 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
+    }
+}
+
+extension FileManager {
+    var cacheAudioFileLocation: URL? {
+        return self.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("recording-\(Date().timeIntervalSince1970).m4a")
     }
 }
 
