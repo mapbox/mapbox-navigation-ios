@@ -116,11 +116,7 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = voiceId
         }
         
-        let wrappedSSML = text
-            .replacingOccurrences(of: "^<speak\\s*(?:\\s+[^>]*)?>", with: "$0<amazon:effect name=\"drc\"><prosody volume='\(instructionVoiceVolume)' rate='\(instructionVoiceSpeedRate)'>", options: .regularExpression)
-            .replacingOccurrences(of: "</speak>$", with: "</prosody></amazon:effect></speak>",options: .regularExpression)
-        
-        input.text = wrappedSSML
+        input.text = text
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
