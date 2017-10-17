@@ -85,7 +85,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
             [routingError, other]
         ]
         
-//        guard allowRecordedAudioFeedback else { return }
+        guard allowRecordedAudioFeedback else { return }
         
         guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
             let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
