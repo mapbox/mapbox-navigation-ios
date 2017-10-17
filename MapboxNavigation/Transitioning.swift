@@ -9,12 +9,13 @@ class DismissAnimator : NSObject { }
 extension DismissAnimator : UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.4
+        return 0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
         guard let toVC = transitionContext.viewController(forKey: .to) else { return }
+        let containerView = transitionContext.containerView
         
         let point = CGPoint(x: 0, y: toVC.view.bounds.maxY)
         let height = fromVC.view.bounds.height-toVC.view.frame.minY
@@ -22,6 +23,7 @@ extension DismissAnimator : UIViewControllerAnimatedTransitioning {
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveLinear], animations: {
             fromVC.view.frame = finalFrame
+            containerView.backgroundColor = .clear
         }) { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
@@ -39,7 +41,7 @@ class PresentAnimator : NSObject {
 
 extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.6
+        return 0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -47,7 +49,7 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
         
-        containerView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        containerView.backgroundColor = .clear
         toView.frame = CGRect(x: 0, y: containerView.bounds.height,
                               width: containerView.bounds.width, height: height ?? containerView.bounds.midY)
         
@@ -60,6 +62,7 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             toView.frame = finalFrame
+            containerView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         }) { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
@@ -69,6 +72,10 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
 @objc protocol DismissDraggable: UIViewControllerTransitioningDelegate {
     var interactor: Interactor { get }
     @objc optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
+}
+
+fileprivate extension Selector {
+    static let handleDismissDrag = #selector(UIViewController.handleDismissPan(_:))
 }
 
 extension DismissDraggable where Self: UIViewController {
@@ -108,8 +115,4 @@ fileprivate extension UIViewController {
             break
         }
     }
-}
-
-fileprivate extension Selector {
-    static let handleDismissDrag = #selector(UIViewController.handleDismissPan(_:))
 }
