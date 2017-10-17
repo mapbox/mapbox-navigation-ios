@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MGLMapView Extension Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
+
+    <style type="text/css">
+      .nav-group-name[data-name="MGLMapView"] > .small-heading,
+      .nav-group-task[data-name="MGLMapView"] {
+        background-color: #f5f8fc;
+        font-family: "Open Sans Bold";
+        border-left: 3px solid #3a68d8;
+        padding-left: 5px
+      }
+    </style>
+    <script type="text/javascript">
+      !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="4.0.0";
+          analytics.load("fl0c8p240n");
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if(this.readyState == 4 && this.status == 200) {
+              var resp = JSON.parse(xhttp.responseText);
+              analytics.identify(resp.id, {email: resp.email}, {}, function() {
+                analytics.page();
+              });
+            } else {
+              analytics.page();
+            }
+          }
+          xhttp.open("GET", "https://www.mapbox.com/api/session", true);
+          xhttp.send();
+        }}();
+    </script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Extension/MGLMapView" class="dashAnchor"></a>
+
+    <a title="MGLMapView Extension Reference"></a>
+
+    <header class="header-container">
+      <div class="limiter">
+        <div class="header">
+        <p class="header-col header-col--primary">
+          <a class="header-link" href="../index.html">
+            <img style="height: 25px;"  class="header-icon" src="../img/mapbox.svg" alt="Mapbox Navigation SDK for iOS Docs"/>
+            <span class='header-tag'>Navigation SDK for iOS  Reference</span>
+          </a>
+          
+        </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link space-right2" href="https://github.com/mapbox/mapbox-navigation-ios">
+              <svg style="margin-bottom: 1px;" class="header-icon" viewBox="0 0 33 33" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      		      <path stroke="none" stroke-width="1" fill="white" fill-rule="evenodd" d="M16.6,0.4 C7.6,0.4 0.3,7.7 0.3,16.7 C0.3,23.9 5,30 11.4,32.2 C12.2,32.3 12.5,31.8 12.5,31.4 L12.5,28.6 C8,29.6 7,26.4 7,26.4 C6.3,24.5 5.2,24 5.2,24 C3.7,23 5.3,23 5.3,23 C6.9,23.1 7.8,24.7 7.8,24.7 C9.3,27.2 11.6,26.5 12.5,26.1 C12.6,25 13.1,24.3 13.5,23.9 C9.9,23.5 6.1,22.1 6.1,15.8 C6.1,14 6.7,12.6 7.8,11.4 C7.6,11 7.1,9.3 8,7.1 C8,7.1 9.4,6.7 12.5,8.8 C13.8,8.4 15.2,8.3 16.6,8.3 C18,8.3 19.4,8.5 20.7,8.8 C23.8,6.7 25.2,7.1 25.2,7.1 C26.1,9.3 25.5,11 25.4,11.4 C26.4,12.5 27.1,14 27.1,15.8 C27.1,22.1 23.3,23.4 19.7,23.8 C20.3,24.3 20.8,25.3 20.8,26.8 L20.8,31.3 C20.8,31.7 21.1,32.2 21.9,32.1 C28.4,29.9 33,23.8 33,16.6 C32.9,7.7 25.6,0.4 16.6,0.4 L16.6,0.4 Z"></path>
+              </svg>
+              View on GitHub
+            </a>
+          </p>
+    
+          <p class="header-col header-col--secondary">
+            <a class="header-link bold" href="dash-feed://https%3A%2F%2Fwww%2Emapbox%2Ecom%2Fmapbox%2Dnavigation%2Dios%2Fnavigation%2Fdocsets%2FMapboxNavigation%2Exml">
+              <img style="margin-bottom: 1px;" class="header-icon" src="../img/dash.png"/>
+              Install in Dash
+            </a>
+          </p>
+      </div>
+      </div>
+    </header>
+
+    <div class="breadcrumbs">
+      <div class="limiter">
+        <a class="breadcrumb" href="../index.html">Mapbox Navigation SDK for iOS Reference</a>
+        <img class="carat" src="../img/carat.png" />
+        MGLMapView Extension Reference
+      </div>
+    </div>
+
+    <div class="content-wrapper limiter">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name" data-name="Guides">
+            <a class="small-heading" href="../Guides.html">Guides<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Storyboards" data-url="storyboards.html">
+                <a title="Storyboards" class="nav-group-task-link" href="../storyboards.html">Storyboards</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Turn-by-turn UI">
+            <a class="small-heading" href="../Turn-by-turn UI.html">Turn-by-turn UI<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationViewController" data-url="Classes/NavigationViewController.html">
+                <a title="NavigationViewController" class="nav-group-task-link" href="../Classes/NavigationViewController.html">NavigationViewController</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationViewControllerDelegate" data-url="Protocols/NavigationViewControllerDelegate.html">
+                <a title="NavigationViewControllerDelegate" class="nav-group-task-link" href="../Protocols/NavigationViewControllerDelegate.html">NavigationViewControllerDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteVoiceController" data-url="Classes/RouteVoiceController.html">
+                <a title="RouteVoiceController" class="nav-group-task-link" href="../Classes/RouteVoiceController.html">RouteVoiceController</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Core Navigation Logic">
+            <a class="small-heading" href="../Core Navigation Logic.html">Core Navigation Logic<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="RouteController" data-url="Classes/RouteController.html">
+                <a title="RouteController" class="nav-group-task-link" href="../Classes/RouteController.html">RouteController</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerDelegate" data-url="Protocols/RouteControllerDelegate.html">
+                <a title="RouteControllerDelegate" class="nav-group-task-link" href="../Protocols/RouteControllerDelegate.html">RouteControllerDelegate</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteProgress" data-url="Classes/RouteProgress.html">
+                <a title="RouteProgress" class="nav-group-task-link" href="../Classes/RouteProgress.html">RouteProgress</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteLegProgress" data-url="Classes/RouteLegProgress.html">
+                <a title="RouteLegProgress" class="nav-group-task-link" href="../Classes/RouteLegProgress.html">RouteLegProgress</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteStepProgress" data-url="Classes/RouteStepProgress.html">
+                <a title="RouteStepProgress" class="nav-group-task-link" href="../Classes/RouteStepProgress.html">RouteStepProgress</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Maps">
+            <a class="small-heading" href="../Maps.html">Maps<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationMapView" data-url="Classes/NavigationMapView.html">
+                <a title="NavigationMapView" class="nav-group-task-link" href="../Classes/NavigationMapView.html">NavigationMapView</a>
+              </li>
+              <li class="nav-group-task" data-name="MGLMapView" data-url="Extensions/MGLMapView.html">
+                <a title="MGLMapView" class="nav-group-task-link" href="../Extensions/MGLMapView.html">MGLMapView</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Styling">
+            <a class="small-heading" href="../Styling.html">Styling<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Style" data-url="Classes/Style.html">
+                <a title="Style" class="nav-group-task-link" href="../Classes/Style.html">Style</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Formatters">
+            <a class="small-heading" href="../Formatters.html">Formatters<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="DistanceFormatter" data-url="Classes/DistanceFormatter.html">
+                <a title="DistanceFormatter" class="nav-group-task-link" href="../Classes/DistanceFormatter.html">DistanceFormatter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Notifications">
+            <a class="small-heading" href="../Notifications.html">Notifications<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="AlertLevel" data-url="Enums/AlertLevel.html">
+                <a title="AlertLevel" class="nav-group-task-link" href="../Enums/AlertLevel.html">AlertLevel</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerAlertLevelDidChange" data-url="Notifications.html#/s:v16MapboxNavigation34RouteControllerAlertLevelDidChangeVCSo14NSNotification4Name">
+                <a title="RouteControllerAlertLevelDidChange" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation34RouteControllerAlertLevelDidChangeVCSo14NSNotification4Name">RouteControllerAlertLevelDidChange</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey" data-url="Notifications.html#/s:v16MapboxNavigation72RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKeySS">
+                <a title="RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation72RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKeySS">RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerAlertLevelDidChangeNotificationRouteProgressKey" data-url="Notifications.html#/s:v16MapboxNavigation62RouteControllerAlertLevelDidChangeNotificationRouteProgressKeySS">
+                <a title="RouteControllerAlertLevelDidChangeNotificationRouteProgressKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation62RouteControllerAlertLevelDidChangeNotificationRouteProgressKeySS">RouteControllerAlertLevelDidChangeNotificationRouteProgressKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerDidFailToReroute" data-url="Notifications.html#/s:v16MapboxNavigation31RouteControllerDidFailToRerouteVCSo14NSNotification4Name">
+                <a title="RouteControllerDidFailToReroute" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation31RouteControllerDidFailToRerouteVCSo14NSNotification4Name">RouteControllerDidFailToReroute</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerDidReroute" data-url="Notifications.html#/s:v16MapboxNavigation25RouteControllerDidRerouteVCSo14NSNotification4Name">
+                <a title="RouteControllerDidReroute" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation25RouteControllerDidRerouteVCSo14NSNotification4Name">RouteControllerDidReroute</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerNotificationErrorKey" data-url="Notifications.html#/s:v16MapboxNavigation35RouteControllerNotificationErrorKeySS">
+                <a title="RouteControllerNotificationErrorKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation35RouteControllerNotificationErrorKeySS">RouteControllerNotificationErrorKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerNotificationLocationKey" data-url="Notifications.html#/s:v16MapboxNavigation38RouteControllerNotificationLocationKeySS">
+                <a title="RouteControllerNotificationLocationKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation38RouteControllerNotificationLocationKeySS">RouteControllerNotificationLocationKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerNotificationRouteKey" data-url="Notifications.html#/s:v16MapboxNavigation35RouteControllerNotificationRouteKeySS">
+                <a title="RouteControllerNotificationRouteKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation35RouteControllerNotificationRouteKeySS">RouteControllerNotificationRouteKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerProgressDidChange" data-url="Notifications.html#/s:v16MapboxNavigation32RouteControllerProgressDidChangeVCSo14NSNotification4Name">
+                <a title="RouteControllerProgressDidChange" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation32RouteControllerProgressDidChangeVCSo14NSNotification4Name">RouteControllerProgressDidChange</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerProgressDidChangeNotificationLocationKey" data-url="Notifications.html#/s:v16MapboxNavigation55RouteControllerProgressDidChangeNotificationLocationKeySS">
+                <a title="RouteControllerProgressDidChangeNotificationLocationKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation55RouteControllerProgressDidChangeNotificationLocationKeySS">RouteControllerProgressDidChangeNotificationLocationKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerProgressDidChangeNotificationProgressKey" data-url="Notifications.html#/s:v16MapboxNavigation55RouteControllerProgressDidChangeNotificationProgressKeySS">
+                <a title="RouteControllerProgressDidChangeNotificationProgressKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation55RouteControllerProgressDidChangeNotificationProgressKeySS">RouteControllerProgressDidChangeNotificationProgressKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey" data-url="Notifications.html#/s:v16MapboxNavigation69RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKeySS">
+                <a title="RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation69RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKeySS">RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerWillReroute" data-url="Notifications.html#/s:v16MapboxNavigation26RouteControllerWillRerouteVCSo14NSNotification4Name">
+                <a title="RouteControllerWillReroute" class="nav-group-task-link" href="../Notifications.html#/s:v16MapboxNavigation26RouteControllerWillRerouteVCSo14NSNotification4Name">RouteControllerWillReroute</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Configuration">
+            <a class="small-heading" href="../Configuration.html">Configuration<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="RouteControllerDeadReckoningTimeInterval" data-url="Configuration.html#/s:v16MapboxNavigation40RouteControllerDeadReckoningTimeIntervalSd">
+                <a title="RouteControllerDeadReckoningTimeInterval" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation40RouteControllerDeadReckoningTimeIntervalSd">RouteControllerDeadReckoningTimeInterval</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerHighAlertInterval" data-url="Configuration.html#/s:v16MapboxNavigation32RouteControllerHighAlertIntervalSd">
+                <a title="RouteControllerHighAlertInterval" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation32RouteControllerHighAlertIntervalSd">RouteControllerHighAlertInterval</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerManeuverZoneRadius" data-url="Configuration.html#/s:v16MapboxNavigation33RouteControllerManeuverZoneRadiusSd">
+                <a title="RouteControllerManeuverZoneRadius" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation33RouteControllerManeuverZoneRadiusSd">RouteControllerManeuverZoneRadius</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMaxManipulatedCourseAngle" data-url="Configuration.html#/s:v16MapboxNavigation40RouteControllerMaxManipulatedCourseAngleSd">
+                <a title="RouteControllerMaxManipulatedCourseAngle" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation40RouteControllerMaxManipulatedCourseAngleSd">RouteControllerMaxManipulatedCourseAngle</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion" data-url="Configuration.html#/s:v16MapboxNavigation58RouteControllerMaximumAllowedDegreeOffsetForTurnCompletionSd">
+                <a title="RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation58RouteControllerMaximumAllowedDegreeOffsetForTurnCompletionSd">RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMaximumDistanceBeforeRecalculating" data-url="Configuration.html#/s:v16MapboxNavigation49RouteControllerMaximumDistanceBeforeRecalculatingSd">
+                <a title="RouteControllerMaximumDistanceBeforeRecalculating" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation49RouteControllerMaximumDistanceBeforeRecalculatingSd">RouteControllerMaximumDistanceBeforeRecalculating</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMediumAlertInterval" data-url="Configuration.html#/s:v16MapboxNavigation34RouteControllerMediumAlertIntervalSd">
+                <a title="RouteControllerMediumAlertInterval" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation34RouteControllerMediumAlertIntervalSd">RouteControllerMediumAlertInterval</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerUserLocationSnappingDistance" data-url="Configuration.html#/s:v16MapboxNavigation43RouteControllerUserLocationSnappingDistanceSd">
+                <a title="RouteControllerUserLocationSnappingDistance" class="nav-group-task-link" href="../Configuration.html#/s:v16MapboxNavigation43RouteControllerUserLocationSnappingDistanceSd">RouteControllerUserLocationSnappingDistance</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Classes">
+            <a class="small-heading" href="../Other Classes.html">Other Classes<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="DayStyle" data-url="Classes/DayStyle.html">
+                <a title="DayStyle" class="nav-group-task-link" href="../Classes/DayStyle.html">DayStyle</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationLocationManager" data-url="Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">
+                <a title="NavigationLocationManager" class="nav-group-task-link" href="../Other Classes.html#/s:C16MapboxNavigation25NavigationLocationManager">NavigationLocationManager</a>
+              </li>
+              <li class="nav-group-task" data-name="NavigationRouteOptions" data-url="Classes/NavigationRouteOptions.html">
+                <a title="NavigationRouteOptions" class="nav-group-task-link" href="../Classes/NavigationRouteOptions.html">NavigationRouteOptions</a>
+              </li>
+              <li class="nav-group-task" data-name="NightStyle" data-url="Classes/NightStyle.html">
+                <a title="NightStyle" class="nav-group-task-link" href="../Classes/NightStyle.html">NightStyle</a>
+              </li>
+              <li class="nav-group-task" data-name="PollyVoiceController" data-url="Classes/PollyVoiceController.html">
+                <a title="PollyVoiceController" class="nav-group-task-link" href="../Classes/PollyVoiceController.html">PollyVoiceController</a>
+              </li>
+              <li class="nav-group-task" data-name="ReplayLocationManager" data-url="Classes/ReplayLocationManager.html">
+                <a title="ReplayLocationManager" class="nav-group-task-link" href="../Classes/ReplayLocationManager.html">ReplayLocationManager</a>
+              </li>
+              <li class="nav-group-task" data-name="SimulatedLocationManager" data-url="Classes/SimulatedLocationManager.html">
+                <a title="SimulatedLocationManager" class="nav-group-task-link" href="../Classes/SimulatedLocationManager.html">SimulatedLocationManager</a>
+              </li>
+              <li class="nav-group-task" data-name="SpokenDistanceFormatter" data-url="Classes/SpokenDistanceFormatter.html">
+                <a title="SpokenDistanceFormatter" class="nav-group-task-link" href="../Classes/SpokenDistanceFormatter.html">SpokenDistanceFormatter</a>
+              </li>
+              <li class="nav-group-task" data-name="SpokenInstructionFormatter" data-url="Classes/SpokenInstructionFormatter.html">
+                <a title="SpokenInstructionFormatter" class="nav-group-task-link" href="../Classes/SpokenInstructionFormatter.html">SpokenInstructionFormatter</a>
+              </li>
+              <li class="nav-group-task" data-name="UserPuckCourseView" data-url="Classes/UserPuckCourseView.html">
+                <a title="UserPuckCourseView" class="nav-group-task-link" href="../Classes/UserPuckCourseView.html">UserPuckCourseView</a>
+              </li>
+              <li class="nav-group-task" data-name="VisualInstructionFormatter" data-url="Classes/VisualInstructionFormatter.html">
+                <a title="VisualInstructionFormatter" class="nav-group-task-link" href="../Classes/VisualInstructionFormatter.html">VisualInstructionFormatter</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Global Variables">
+            <a class="small-heading" href="../Other Global Variables.html">Other Global Variables<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="NavigationMetricsDebugLoggingEnabled" data-url="Other Global Variables.html#/s:v16MapboxNavigation36NavigationMetricsDebugLoggingEnabledSS">
+                <a title="NavigationMetricsDebugLoggingEnabled" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation36NavigationMetricsDebugLoggingEnabledSS">NavigationMetricsDebugLoggingEnabled</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerDidFindFasterRouteKey" data-url="Other Global Variables.html#/s:v16MapboxNavigation36RouteControllerDidFindFasterRouteKeySS">
+                <a title="RouteControllerDidFindFasterRouteKey" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation36RouteControllerDidFindFasterRouteKeySS">RouteControllerDidFindFasterRouteKey</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumBacktrackingDistanceForRerouting" data-url="Other Global Variables.html#/s:v16MapboxNavigation54RouteControllerMinimumBacktrackingDistanceForReroutingSd">
+                <a title="RouteControllerMinimumBacktrackingDistanceForRerouting" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation54RouteControllerMinimumBacktrackingDistanceForReroutingSd">RouteControllerMinimumBacktrackingDistanceForRerouting</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumDistanceForContinueInstruction" data-url="Other Global Variables.html#/s:v16MapboxNavigation52RouteControllerMinimumDistanceForContinueInstructionSd">
+                <a title="RouteControllerMinimumDistanceForContinueInstruction" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation52RouteControllerMinimumDistanceForContinueInstructionSd">RouteControllerMinimumDistanceForContinueInstruction</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumNumberLocationUpdatesBackwards" data-url="Other Global Variables.html#/s:v16MapboxNavigation52RouteControllerMinimumNumberLocationUpdatesBackwardsSi">
+                <a title="RouteControllerMinimumNumberLocationUpdatesBackwards" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation52RouteControllerMinimumNumberLocationUpdatesBackwardsSi">RouteControllerMinimumNumberLocationUpdatesBackwards</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMinimumSpeedForLocationSnapping" data-url="Other Global Variables.html#/s:v16MapboxNavigation46RouteControllerMinimumSpeedForLocationSnappingSd">
+                <a title="RouteControllerMinimumSpeedForLocationSnapping" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation46RouteControllerMinimumSpeedForLocationSnappingSd">RouteControllerMinimumSpeedForLocationSnapping</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMotorwayHighAlertDistance" data-url="Other Global Variables.html#/s:v16MapboxNavigation40RouteControllerMotorwayHighAlertDistanceSd">
+                <a title="RouteControllerMotorwayHighAlertDistance" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation40RouteControllerMotorwayHighAlertDistanceSd">RouteControllerMotorwayHighAlertDistance</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteControllerMotorwayMediumAlertDistance" data-url="Other Global Variables.html#/s:v16MapboxNavigation42RouteControllerMotorwayMediumAlertDistanceSd">
+                <a title="RouteControllerMotorwayMediumAlertDistance" class="nav-group-task-link" href="../Other Global Variables.html#/s:v16MapboxNavigation42RouteControllerMotorwayMediumAlertDistanceSd">RouteControllerMotorwayMediumAlertDistance</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Enumerations">
+            <a class="small-heading" href="../Other Enumerations.html">Other Enumerations<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="FeedbackType" data-url="Enums/FeedbackType.html">
+                <a title="FeedbackType" class="nav-group-task-link" href="../Enums/FeedbackType.html">FeedbackType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Extensions">
+            <a class="small-heading" href="../Other Extensions.html">Other Extensions<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="Array" data-url="Extensions/Array.html">
+                <a title="Array" class="nav-group-task-link" href="../Extensions/Array.html">Array</a>
+              </li>
+              <li class="nav-group-task" data-name="Bundle" data-url="Extensions/Bundle.html">
+                <a title="Bundle" class="nav-group-task-link" href="../Extensions/Bundle.html">Bundle</a>
+              </li>
+              <li class="nav-group-task" data-name="CLLocation" data-url="Extensions/CLLocation.html">
+                <a title="CLLocation" class="nav-group-task-link" href="../Extensions/CLLocation.html">CLLocation</a>
+              </li>
+              <li class="nav-group-task" data-name="Locale" data-url="Extensions/Locale.html">
+                <a title="Locale" class="nav-group-task-link" href="../Extensions/Locale.html">Locale</a>
+              </li>
+              <li class="nav-group-task" data-name="RouteStep" data-url="Extensions/RouteStep.html">
+                <a title="RouteStep" class="nav-group-task-link" href="../Extensions/RouteStep.html">RouteStep</a>
+              </li>
+              <li class="nav-group-task" data-name="String" data-url="Extensions/String.html">
+                <a title="String" class="nav-group-task-link" href="../Extensions/String.html">String</a>
+              </li>
+              <li class="nav-group-task" data-name="UIFont" data-url="Extensions/UIFont.html">
+                <a title="UIFont" class="nav-group-task-link" href="../Extensions/UIFont.html">UIFont</a>
+              </li>
+              <li class="nav-group-task" data-name="UIWindow" data-url="Extensions/UIWindow.html">
+                <a title="UIWindow" class="nav-group-task-link" href="../Extensions/UIWindow.html">UIWindow</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name" data-name="Other Protocols">
+            <a class="small-heading" href="../Other Protocols.html">Other Protocols<span class="anchor-icon" /></a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task" data-name="UserCourseView" data-url="Protocols/UserCourseView.html">
+                <a title="UserCourseView" class="nav-group-task-link" href="../Protocols/UserCourseView.html">UserCourseView</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <a href="#/MGLMapView"><h1 id="MGLMapView">MGLMapView<span class="anchor-icon" /></h1></a>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">class</span> <span class="kt">MGLMapView</span> <span class="p">:</span> <span class="kt">UIView</span></code></pre>
+
+                </div>
+              </div>
+            <p>An extension on <code>MGLMapView</code> that allows for toggling traffic on a map style that contains a <a href="https://www.mapbox.com/vector-tiles/mapbox-traffic-v1/">Mapbox Traffic source</a>.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vE16MapboxNavigationCSo10MGLMapView12showsTrafficSb"></a>
+                    <a name="//apple_ref/swift/Property/showsTraffic" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vE16MapboxNavigationCSo10MGLMapView12showsTrafficSb"><span class="token-name">showsTraffic</span><span class="token-icon" /></a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <section class="section">
+                      <div class="abstract">
+                        <p>Toggle traffic on a map style that contains a Mapbox Traffic source.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language keyline-blue">
+                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">showsTraffic</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="show-on-github">
+                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.9.0/MapboxNavigation/MGLMapView.swift#L14-L38">
+                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="../img/github.svg"/>
+                          View Source on GitHub
+                        </a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer limiter">
+      <p>© 2014–2017 <a class="link" href="https://www.mapbox.com/" target="_blank" rel="external">Mapbox</a>. See <a class="link" href="https://github.com/mapbox/mapbox-navigation-ios/blob/master/LICENSE.md" target="_blank" rel="external">license</a> for more details.</p> Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.8.4</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.
+    </section>
+  </body>
+</div>
+</html>
