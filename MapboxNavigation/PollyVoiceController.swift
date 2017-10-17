@@ -48,7 +48,7 @@ public class PollyVoiceController: RouteVoiceController {
         
         sessionConfiguration.timeoutIntervalForRequest = timeoutIntervalForRequest;
         urlSession = URLSession(configuration: sessionConfiguration)
-        cacheURLSession = URLSession(configuration: sessionConfiguration)
+        cacheURLSession = URLSession(configuration: URLSessionConfiguration.default)
         
         super.init()
     }
