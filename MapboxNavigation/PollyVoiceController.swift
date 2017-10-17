@@ -32,10 +32,12 @@ public class PollyVoiceController: RouteVoiceController {
     public var timeoutIntervalForRequest:TimeInterval = 2
     
     var pollyTask: URLSessionDataTask?
-    var downloadFutureInstructionsTask: URLSessionDataTask?
     
     let sessionConfiguration = URLSessionConfiguration.default
     var urlSession: URLSession
+    
+    var cacheURLSession: URLSession
+    var cachePollyTask: URLSessionDataTask?
     
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
@@ -46,6 +48,7 @@ public class PollyVoiceController: RouteVoiceController {
         
         sessionConfiguration.timeoutIntervalForRequest = timeoutIntervalForRequest;
         urlSession = URLSession(configuration: sessionConfiguration)
+        cacheURLSession = URLSession(configuration: sessionConfiguration)
         
         super.init()
     }
@@ -60,42 +63,18 @@ public class PollyVoiceController: RouteVoiceController {
         audioPlayer?.stop()
         startAnnouncementTimer()
         
-        let urlForPollyRequst = pollyURL(for: instruction).description
+        guard routeProgresss.spokenInstructionsForRoute[instruction] == nil else {
+            sayInStruction(for: routeProgresss.spokenInstructionsForRoute[instruction]!)
+            return
+        }
         
-        if let data = routeProgresss.spokenInstructionsForRoute[urlForPollyRequst] {
-            sayInStruction(data: data)
-        } else {
-            speak(instruction, error: nil)
+        speak(instruction, error: nil)
         
-            if let upcomingStep = routeProgresss.currentLegProgress.upComingStep, let instructions = upcomingStep.instructionsSpokenAlongStep {
-                for instruction in instructions {
-                    let urlForPollyRequst = pollyURL(for: instruction.ssmlText)
-                    
-                    guard routeProgresss.spokenInstructionsForRoute[urlForPollyRequst.description] == nil else { continue }
-                    
-                    let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(urlForPollyRequst)
-                    builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
-                        guard let strongSelf = self, let url = awsTask.result else {
-                            return nil
-                        }
-                        
-                        let group = DispatchGroup()
-                        group.enter()
-                        
-                        DispatchQueue.global(qos: .background).async {
-                            strongSelf.downloadFutureInstructionsTask = strongSelf.urlSession.dataTask(with: url as URL) { (data, response, error) in
-                                guard error == nil else { return }
-                                guard let data = data else { return }
-                                routeProgresss.spokenInstructionsForRoute[urlForPollyRequst.description] = data
-                                group.leave()
-                            }
-                        }
-                        
-                        group.wait()
-                        
-                        return nil
-                    }
-                }
+        if let upcomingStep = routeProgresss.currentLegProgress.upComingStep, let instructions = upcomingStep.instructionsSpokenAlongStep {
+            for instruction in instructions {
+                guard routeProgresss.spokenInstructionsForRoute[instruction.ssmlText] == nil else { continue }
+                
+                cacheSpokenInstruction(routeProgress: routeProgresss, instruction: instruction.ssmlText)
             }
         }
     }
@@ -215,13 +194,42 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             }
             
-            strongSelf.sayInStruction(data: data)
+            strongSelf.sayInStruction(for: data)
         }
         
         pollyTask?.resume()
     }
     
-    func sayInStruction(data: Data) {
+    func cacheSpokenInstruction(routeProgress: RouteProgress, instruction: String) {
+        
+        let pollyRequestURL = pollyURL(for: instruction)
+
+        let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(pollyRequestURL)
+        builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
+            guard let strongSelf = self else {
+                return nil
+            }
+            
+            guard let url = awsTask.result else { return nil }
+            
+            strongSelf.cachePollyTask = strongSelf.cacheURLSession.dataTask(with: url as URL) { (data, response, error) in
+                
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                if let data = data {
+                    routeProgress.spokenInstructionsForRoute[instruction] = data
+                }
+            }
+            
+            strongSelf.cachePollyTask?.resume()
+            
+            return nil
+        }
+    }
+    
+    func sayInStruction(for data: Data) {
         do {
             audioPlayer = try AVAudioPlayer(data: data)
             let prepared = audioPlayer?.prepareToPlay() ?? false
