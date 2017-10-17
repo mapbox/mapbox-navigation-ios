@@ -35,6 +35,12 @@ public enum FeedbackType: Int, CustomStringConvertible {
      */
     case routingError
     
+    case instructionTiming
+    case confusingInstruction
+    case inaccurateGPS
+    case badRoute
+    case reportTraffic
+    
     public var description: String {
         switch self {
         case .accident:
@@ -49,6 +55,16 @@ public enum FeedbackType: Int, CustomStringConvertible {
             return "routing_error"
         case .general:
             return "general"
+        case .instructionTiming:
+            return "instruction_timing"
+        case .confusingInstruction:
+            return "confusing_instruction"
+        case .inaccurateGPS:
+            return "inaccurate_gps"
+        case .badRoute:
+            return "bad_route"
+        case .reportTraffic:
+            return "report_traffic"
         }
     }
 }

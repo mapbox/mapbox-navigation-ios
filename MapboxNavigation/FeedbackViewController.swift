@@ -30,10 +30,13 @@ class FeedbackViewController: UIViewController, DismissDraggable {
     var sendFeedbackHandler: SendFeedbackHandler?
     var dismissFeedbackHandler: (() -> ())?
     var sections = [FeedbackSection]()
+    
     let cellReuseIdentifier = "collectionViewCellId"
     let interactor = Interactor()
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var progressBar: ProgressBar!
     
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -42,49 +45,50 @@ class FeedbackViewController: UIViewController, DismissDraggable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .clear
-        collectionView.isScrollEnabled = false
-        collectionView.isUserInteractionEnabled = false
         transitioningDelegate = self
-        
+        progressBar.progress = 1
         enableDraggableDismiss()
         
-        let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
-        let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
-        let roadClosedImage     = Bundle.mapboxNavigation.image(named: "feedback_road_closed")!.withRenderingMode(.alwaysTemplate)
-        let unallowedTurnImage  = Bundle.mapboxNavigation.image(named: "feedback_turn_not_allowed")!.withRenderingMode(.alwaysTemplate)
-        let routingImage        = Bundle.mapboxNavigation.image(named: "feedback_routing")!.withRenderingMode(.alwaysTemplate)
-        let otherImage          = Bundle.mapboxNavigation.image(named: "feedback_other")!.withRenderingMode(.alwaysTemplate)
+        let instructionTimingImage      = Bundle.mapboxNavigation.image(named: "feedback_routing")!.withRenderingMode(.alwaysTemplate)
+        let confusingInstructionImage   = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
+        let notAllowedImage             = Bundle.mapboxNavigation.image(named: "feedback_turn_not_allowed")!.withRenderingMode(.alwaysTemplate)
+        let gpsInaccurateImage          = Bundle.mapboxNavigation.image(named: "feedback_other")!.withRenderingMode(.alwaysTemplate)
+        let badRouteImage               = Bundle.mapboxNavigation.image(named: "feedback_road_closed")!.withRenderingMode(.alwaysTemplate)
+        let reportTrafficImage          = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
         
-        let accidentTitle       = NSLocalizedString("FEEDBACK_ACCIDENT", bundle: .mapboxNavigation, value: "Accident", comment: "Feedback type for Accident")
-        let hazardTitle         = NSLocalizedString("FEEDBACK_HAZARD", bundle: .mapboxNavigation, value: "Hazard", comment: "Feedback type for Hazard")
-        let closureTitle        = NSLocalizedString("FEEDBACK_CLOSURE", bundle: .mapboxNavigation, value: "Closure", comment: "Feedback type for Closure")
-        let unallowedTurnTitle  = NSLocalizedString("FEEDBACK_UNALLOWED_TURN", bundle: .mapboxNavigation, value: "Not Allowed", comment: "Feedback type for Unallowed Turn")
-        let confusingTitle      = NSLocalizedString("FEEDBACK_CONFUSING", bundle: .mapboxNavigation, value: "Confusing", comment: "Feedback type for Confusing")
-        let otherIssueTitle     = NSLocalizedString("FEEDBACK_OTHER", bundle: .mapboxNavigation, value: "Other Issue", comment: "Feedback type for Other Issue")
+        let instructionTimingTitle      = NSLocalizedString("FEEDBACK_INSTRUCTION_TIMING", bundle: .mapboxNavigation, value: "Instruction \nTiming", comment: "Feedback type for Instruction Timing")
+        let confusingInstructionTitle   = NSLocalizedString("FEEDBACK_CONFUSING_INSTRUCTION", bundle: .mapboxNavigation, value: "Confusing \nInstruction", comment: "Feedback type for Confusing Instruction")
+        let notAllowedTitle             = NSLocalizedString("FEEDBACK_NOT_ALLOWED", bundle: .mapboxNavigation, value: "Not \nAllowed", comment: "Feedback type for turn not allowed")
+        let gpsInaccurateTitle          = NSLocalizedString("FEEDBACK_GPS_INACCURATE", bundle: .mapboxNavigation, value: "GPS \nInaccurate", comment: "Feedback type for inaccurate GPS")
+        let badRouteTitle               = NSLocalizedString("FEEDBACK_BAD_ROUTE", bundle: .mapboxNavigation, value: "Bad \nRoute", comment: "Feedback type for Bad Route")
+        let reportTrafficTitle          = NSLocalizedString("FEEDBACK_REPORT_TRAFFIC", bundle: .mapboxNavigation, value: "Report \nTraffic", comment: "Feedback type for Report Traffic")
         
-        let accident        = FeedbackItem(title: accidentTitle,        image: accidentImage,       feedbackType: .accident,        backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let hazard          = FeedbackItem(title: hazardTitle,          image: hazardImage,         feedbackType: .hazard,          backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let roadClosed      = FeedbackItem(title: closureTitle,         image: roadClosedImage,     feedbackType: .roadClosed,      backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let unallowedTurn   = FeedbackItem(title: unallowedTurnTitle,   image: unallowedTurnImage,  feedbackType: .unallowedTurn,   backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let routingError    = FeedbackItem(title: confusingTitle,       image: routingImage,        feedbackType: .routingError,    backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let other           = FeedbackItem(title: otherIssueTitle,      image: otherImage,          feedbackType: .general,         backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
+        let instructionTiming       = FeedbackItem(title: instructionTimingTitle,       image: instructionTimingImage,      feedbackType: .instructionTiming,       backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
+        let confusingInstruction    = FeedbackItem(title: confusingInstructionTitle,    image: confusingInstructionImage,   feedbackType: .confusingInstruction,    backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
+        let notAllowed              = FeedbackItem(title: notAllowedTitle,              image: notAllowedImage,             feedbackType: .unallowedTurn,           backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
+        let gpsInaccurate           = FeedbackItem(title: gpsInaccurateTitle,           image: gpsInaccurateImage,          feedbackType: .inaccurateGPS,           backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
+        let badRoute                = FeedbackItem(title: badRouteTitle,                image: badRouteImage,               feedbackType: .badRoute,                backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
+        let reportTraffic           = FeedbackItem(title: reportTrafficTitle,           image: reportTrafficImage,          feedbackType: .reportTraffic,           backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
+        
+        progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         
         sections = [
-            [accident, hazard],
-            [roadClosed, unallowedTurn],
-            [routingError, other]
+            [instructionTiming, confusingInstruction, notAllowed],
+            [gpsInaccurate, badRoute, reportTraffic]
         ]
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        progressBar.progress = 1
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // TODO: Re-enable
-        //        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
-    }
-    
-    @IBAction func cancel(_ sender: Any) {
-        dismissFeedback()
+        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
+        UIView.animate(withDuration: 5) {
+            self.progressBar.progress = 0
+        }
     }
     
     func presentError(_ message: String) {
@@ -144,8 +148,8 @@ extension FeedbackViewController: UICollectionViewDelegate {
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.midX
-        return CGSize(width: width, height: 134)
+        let width = floor(collectionView.bounds.width / 3)
+        return CGSize(width: width, height: width+5)
     }
 }
 
