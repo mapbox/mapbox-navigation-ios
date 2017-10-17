@@ -32,6 +32,7 @@ public class PollyVoiceController: RouteVoiceController {
     public var timeoutIntervalForRequest:TimeInterval = 2
     
     var pollyTask: URLSessionDataTask?
+    var downloadFutureInstructionsTask: URLSessionDataTask?
     
     let sessionConfiguration = URLSessionConfiguration.default
     var urlSession: URLSession
@@ -57,20 +58,49 @@ public class PollyVoiceController: RouteVoiceController {
         
         pollyTask?.cancel()
         audioPlayer?.stop()
-        
         startAnnouncementTimer()
         
-        guard let dataInstruction = routeProgresss.spokenInstructionsForRoute[instruction] else {
+        let urlForPollyRequst = pollyURL(for: instruction).description
+        
+        if let data = routeProgresss.spokenInstructionsForRoute[urlForPollyRequst] {
+            sayInStruction(data: data)
+        } else {
             speak(instruction, error: nil)
-            return
+        
+            if let upcomingStep = routeProgresss.currentLegProgress.upComingStep, let instructions = upcomingStep.instructionsSpokenAlongStep {
+                for instruction in instructions {
+                    let urlForPollyRequst = pollyURL(for: instruction.ssmlText)
+                    
+                    guard routeProgresss.spokenInstructionsForRoute[urlForPollyRequst.description] == nil else { continue }
+                    
+                    let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(urlForPollyRequst)
+                    builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
+                        guard let strongSelf = self, let url = awsTask.result else {
+                            return nil
+                        }
+                        
+                        let group = DispatchGroup()
+                        group.enter()
+                        
+                        DispatchQueue.global(qos: .background).async {
+                            strongSelf.downloadFutureInstructionsTask = strongSelf.urlSession.dataTask(with: url as URL) { (data, response, error) in
+                                guard error == nil else { return }
+                                guard let data = data else { return }
+                                routeProgresss.spokenInstructionsForRoute[urlForPollyRequst.description] = data
+                                group.leave()
+                            }
+                        }
+                        
+                        group.wait()
+                        
+                        return nil
+                    }
+                }
+            }
         }
-
-        sayInStruction(data: dataInstruction)
     }
     
-    override func speak(_ text: String, error: String?) {
-        assert(!text.isEmpty)
-        
+    func pollyURL(for instruction: String) ->  AWSPollySynthesizeSpeechURLBuilderRequest {
         let input = AWSPollySynthesizeSpeechURLBuilderRequest()
         input.textType = .ssml
         input.outputFormat = .mp3
@@ -114,15 +144,22 @@ public class PollyVoiceController: RouteVoiceController {
         case ("tr", _):
             input.voiceId = .filiz
         default:
-            callSuperSpeak(fallbackText, error: "Voice \(langCode)-\(countryCode) not found")
-            return
+            input.voiceId = .joanna
         }
         
         if let voiceId = globalVoiceId {
             input.voiceId = voiceId
         }
         
-        input.text = text
+        input.text = instruction
+        
+        return input
+    }
+    
+    override func speak(_ text: String, error: String?) {
+        assert(!text.isEmpty)
+        
+        let input = pollyURL(for: text)
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
