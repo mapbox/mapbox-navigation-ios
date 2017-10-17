@@ -1,11 +1,3 @@
-//
-//  RatingControl.swift
-//  MapboxNavigation
-//
-//  Created by Jerrad Thramer on 10/16/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 import UIKit
 import CoreGraphics
 
@@ -15,11 +7,12 @@ enum RatingControlError: String, Error {
 
 typealias RatingClosure = (Int, UIButton) -> Void //rating, sender
 
-@IBDesignable class RatingControl: UIStackView {
+/*@IBDesignable*/
+class RatingControl: UIStackView {
     
     //MARK: Constants
     static let defaultSize = CGSize(width: 32.0, height: 32.0)
-    private let starTemplate = #imageLiteral(resourceName: "star").withRenderingMode(.alwaysTemplate)
+    private let starTemplate = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
     
     
     //MARK: Properties

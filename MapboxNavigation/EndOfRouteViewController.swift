@@ -22,13 +22,27 @@ class EndOfRouteViewController: UIViewController, DismissDraggable {
         enableDraggableDismiss()
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let path = UIBezierPath(roundedRect:view.bounds,
+                                byRoundingCorners:[.topLeft, .topRight],
+                                cornerRadii: CGSize(width: 5, height: 5))
+        
+        let maskLayer = CAShapeLayer()
+        
+        maskLayer.path = path.cgPath
+        view.layer.mask = maskLayer
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
+    @IBAction func endNavigationPressed(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil) //TODO: Add Dismissal Closure
+    }
+    
     /*
     // MARK: - Navigation
 

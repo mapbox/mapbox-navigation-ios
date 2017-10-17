@@ -9,6 +9,11 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Navigation View Controller-->
         <scene sceneID="Cs3-hm-Rck">
@@ -504,17 +509,59 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello, World!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ftN-m8-vzT">
-                                <rect key="frame" x="138.5" y="120" width="98" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have arrived" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vw8-af-pfq">
+                                <rect key="frame" x="136" y="16" width="104" height="16.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" red="0.25098039215686274" green="0.36078431372549019" blue="0.47843137254901957" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1773 Scott St" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vZ1-Ta-Eya">
+                                <rect key="frame" x="83.5" y="40.5" width="209" height="43"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="San Francisco, CA" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GXk-Kq-HYJ">
+                                <rect key="frame" x="97.5" y="83.5" width="180.5" height="27.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate your drive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7M0-dY-b9J">
+                                <rect key="frame" x="139.5" y="131" width="97.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.25098039220000001" green="0.36078431370000003" blue="0.47843137250000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pNV-Fb-i9Q" customClass="RatingControl" customModule="MapboxNavigation" customModuleProvider="target">
+                                <rect key="frame" x="107.5" y="153.5" width="160" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" placeholder="YES" id="Ymp-Lu-co2"/>
+                                    <constraint firstAttribute="width" constant="160" placeholder="YES" id="mBJ-Jw-rwT"/>
+                                </constraints>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XEG-Ym-DNe">
+                                <rect key="frame" x="136" y="210" width="103" height="30"/>
+                                <state key="normal" title="End Navigation"/>
+                                <connections>
+                                    <action selector="endNavigationPressed:" destination="o9f-NL-20X" eventType="touchUpInside" id="xcW-vu-MWk"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.89889865451388884" blue="0.9999977549792346" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="ftN-m8-vzT" firstAttribute="centerY" secondItem="SGO-dX-RVl" secondAttribute="centerY" id="28e-m1-dYl"/>
-                            <constraint firstItem="ftN-m8-vzT" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="Jrx-Ak-5HJ"/>
+                            <constraint firstItem="GXk-Kq-HYJ" firstAttribute="top" secondItem="vZ1-Ta-Eya" secondAttribute="bottom" id="2CL-A8-Wnv"/>
+                            <constraint firstItem="pNV-Fb-i9Q" firstAttribute="top" secondItem="7M0-dY-b9J" secondAttribute="bottom" constant="5" id="70y-th-zhU"/>
+                            <constraint firstItem="GXk-Kq-HYJ" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="9Gf-wv-aVr"/>
+                            <constraint firstItem="7M0-dY-b9J" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="PCN-fB-jNb"/>
+                            <constraint firstItem="vZ1-Ta-Eya" firstAttribute="top" secondItem="vw8-af-pfq" secondAttribute="bottom" constant="8" id="Pc4-Co-4MY"/>
+                            <constraint firstItem="7M0-dY-b9J" firstAttribute="top" secondItem="GXk-Kq-HYJ" secondAttribute="bottom" constant="20" id="YZG-w4-aCv"/>
+                            <constraint firstItem="vw8-af-pfq" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="aut-RH-4Oo"/>
+                            <constraint firstItem="vZ1-Ta-Eya" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="j8U-Cp-iiI"/>
+                            <constraint firstItem="Ak9-fB-DVW" firstAttribute="top" secondItem="XEG-Ym-DNe" secondAttribute="bottom" constant="20" id="scg-x5-9Uo"/>
+                            <constraint firstItem="vw8-af-pfq" firstAttribute="top" secondItem="xMY-bx-O2q" secondAttribute="bottom" constant="16" id="vXz-lk-4EV"/>
+                            <constraint firstItem="pNV-Fb-i9Q" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="xx0-lR-LpB"/>
+                            <constraint firstItem="XEG-Ym-DNe" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="yxE-vJ-n7v"/>
                         </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -522,7 +569,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uPc-XI-2MO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4188" y="1072"/>
+            <point key="canvasLocation" x="4188" y="1071.3643178410796"/>
         </scene>
         <!--Feedback View Controller-->
         <scene sceneID="Mi0-Bs-po8">
