@@ -3,11 +3,12 @@ import MapboxCoreNavigation
 
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        abortAutodismiss()
         return DismissAnimator()
     }
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PresentAnimator()
+        return PresentAnimator(height: 310)
     }
     
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
@@ -33,6 +34,8 @@ class FeedbackViewController: UIViewController, DismissDraggable {
     
     let cellReuseIdentifier = "collectionViewCellId"
     let interactor = Interactor()
+    
+    let autodismissInterval: TimeInterval = 5
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
@@ -85,10 +88,10 @@ class FeedbackViewController: UIViewController, DismissDraggable {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
-        UIView.animate(withDuration: 5) {
+        perform(#selector(dismissFeedback), with: nil, afterDelay: autodismissInterval)
+        UIView.animate(withDuration: autodismissInterval, delay: 0, options: [.curveLinear], animations: {
             self.progressBar.progress = 0
-        }
+        }, completion: nil)
     }
     
     func presentError(_ message: String) {
@@ -102,6 +105,7 @@ class FeedbackViewController: UIViewController, DismissDraggable {
     }
     
     func abortAutodismiss() {
+        progressBar.progress = 0
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissFeedback), object: nil)
     }
     

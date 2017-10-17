@@ -21,7 +21,7 @@ extension DismissAnimator : UIViewControllerAnimatedTransitioning {
         let height = fromVC.view.bounds.height-toVC.view.frame.minY
         let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width, height: height))
         
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveLinear], animations: {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             fromVC.view.frame = finalFrame
             containerView.backgroundColor = .clear
         }) { _ in
