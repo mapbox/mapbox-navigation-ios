@@ -87,6 +87,7 @@ class RouteMapViewController: UIViewController {
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
         
+        
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
         laneViewsContainerView.isHidden = true
@@ -186,6 +187,16 @@ class RouteMapViewController: UIViewController {
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
 
+    @IBAction func onStarSelected(_ sender: Any) {
+        guard let parent = parent else { return }
+        
+        let controller = EndOfRouteViewController.loadFromStoryboard()
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
+        parent.present(controller, animated: true, completion: nil)
+        
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier ?? "" {
         case "RoutePageViewController":
@@ -193,6 +204,13 @@ class RouteMapViewController: UIViewController {
                 routePageViewController = controller
                 controller.maneuverDelegate = self
             }
+        case String(describing: EndOfRouteViewController.self):
+            if let navCon = segue.destination as? UINavigationController, let /*destination*/ _ = navCon.viewControllers.first as? EndOfRouteViewController {
+                //TODO: PAYLOAD
+//                destination.route = route
+//                destination.feedbacks = routeController.feedbackEvents
+            }
+
         default:
             break
         }

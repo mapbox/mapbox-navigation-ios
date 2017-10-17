@@ -28,7 +28,14 @@ extension DismissAnimator : UIViewControllerAnimatedTransitioning {
     }
 }
 
-class PresentAnimator : NSObject { }
+class PresentAnimator : NSObject {
+    var height: CGFloat?
+    
+    convenience init(height: CGFloat) {
+        self.init()
+        self.height = height
+    }
+}
 
 extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -42,13 +49,14 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         
         containerView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         toView.frame = CGRect(x: 0, y: containerView.bounds.height,
-                              width: containerView.bounds.width, height: containerView.bounds.midY)
+                              width: containerView.bounds.width, height: height ?? containerView.bounds.midY)
         
         containerView.addSubview(toView)
-        
-        let point = CGPoint(x: 0, y: fromVC.view.bounds.midY)
+
+        let yPoint = CGFloat(height != nil ? fromVC.view.bounds.height - height! : fromVC.view.bounds.midY)
+        let point = CGPoint(x: 0, y: yPoint)
         let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width,
-                                                            height: fromVC.view.bounds.midY))
+                                                            height: height ?? fromVC.view.bounds.midY))
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             toView.frame = finalFrame
