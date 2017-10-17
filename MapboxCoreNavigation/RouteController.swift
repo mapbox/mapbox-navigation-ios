@@ -325,7 +325,7 @@ open class RouteController: NSObject {
         var userCourse = calculatedCourseForLocationOnStep
         var userCoordinate = snappedCoordinate.coordinate
         
-        if location.course >= 0 || location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
+        if location.course >= 0 && location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
             if calculatedCourseForLocationOnStep.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle && location.horizontalAccuracy < 20 {
                 userCourse = location.course
                 
