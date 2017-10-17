@@ -210,7 +210,7 @@
                                             <action selector="toggleMute:" destination="3z2-H5-unA" eventType="touchUpInside" id="2ZH-pI-vhy"/>
                                         </connections>
                                     </button>
-                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBFloatingButton">
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="108" width="50" height="0.0"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
