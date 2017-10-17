@@ -27,7 +27,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.8.3'
+   pod 'MapboxNavigation', '~> 0.9'
    ```
 1. Run `pod install` and open the resulting Xcode workspace.
 
@@ -37,7 +37,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.8.2
+   github "mapbox/mapbox-navigation-ios" ~> 0.9
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
