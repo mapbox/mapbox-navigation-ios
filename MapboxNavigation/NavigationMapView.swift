@@ -117,7 +117,7 @@ open class NavigationMapView: MGLMapView {
         if !isPluggedIn,
             durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver,
             durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            frameInterval = FrameIntervalOptions.decreasedFrameInterval
+            frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
         } else {
             frameInterval = FrameIntervalOptions.defaultFrameInterval
         }
@@ -188,7 +188,13 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    var shouldPositionCourseViewFrameByFrame = false
+    var shouldPositionCourseViewFrameByFrame = false {
+        didSet {
+            if shouldPositionCourseViewFrameByFrame {
+                frameInterval = FrameIntervalOptions.defaultFrameInterval
+            }
+        }
+    }
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
     func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
