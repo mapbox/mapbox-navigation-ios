@@ -93,7 +93,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     @objc func settingsDidChange(_ notification: Notification) {
-        let muteChanged = notification.userInfo?[#keyPath(NavigationSettings.voiceMuted)] != nil
+        let muteKey = #keyPath(NavigationSettings.voiceMuted)
+        let muteChanged = notification.userInfo?[muteKey] != nil
+        
         guard muteChanged else { return }
         
         if NavigationSettings.shared.voiceMuted {
