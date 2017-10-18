@@ -31,6 +31,11 @@ public class PollyVoiceController: RouteVoiceController {
      */
     public var timeoutIntervalForRequest:TimeInterval = 2
     
+    /**
+     Number of steps ahead of the current step to cache spoken instructions.
+     */
+    public var stepsAheadToCache: Int = 3
+    
     var pollyTask: URLSessionDataTask?
     
     let sessionConfiguration = URLSessionConfiguration.default
@@ -65,13 +70,19 @@ public class PollyVoiceController: RouteVoiceController {
         audioPlayer?.stop()
         startAnnouncementTimer()
         
-        if let upcomingStep = routeProgresss.currentLegProgress.upComingStep, let instructions = upcomingStep.instructionsSpokenAlongStep {
+        for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
+            let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
+            
+            guard adjustedStepIndex < routeProgresss.currentLegProgress.stepIndex + 3 else { continue }
+            guard let instructions = step.instructionsSpokenAlongStep else { continue }
+            
             for instruction in instructions {
                 guard spokenInstructionsForRoute[instruction.ssmlText] == nil else { continue }
                 
                 cacheSpokenInstruction(instruction: instruction.ssmlText)
             }
         }
+        
         
         guard spokenInstructionsForRoute[instruction] == nil else {
             sayInStruction(for: spokenInstructionsForRoute[instruction]!)
