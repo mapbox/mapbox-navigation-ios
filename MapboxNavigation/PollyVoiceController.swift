@@ -39,6 +39,8 @@ public class PollyVoiceController: RouteVoiceController {
     var cacheURLSession: URLSession
     var cachePollyTask: URLSessionDataTask?
     
+    var spokenInstructionsForRoute: [String: Data] = [:]
+    
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
         
@@ -63,8 +65,8 @@ public class PollyVoiceController: RouteVoiceController {
         audioPlayer?.stop()
         startAnnouncementTimer()
         
-        guard routeProgresss.spokenInstructionsForRoute[instruction] == nil else {
-            sayInStruction(for: routeProgresss.spokenInstructionsForRoute[instruction]!)
+        guard spokenInstructionsForRoute[instruction] == nil else {
+            sayInStruction(for: spokenInstructionsForRoute[instruction]!)
             return
         }
         
@@ -72,9 +74,9 @@ public class PollyVoiceController: RouteVoiceController {
         
         if let upcomingStep = routeProgresss.currentLegProgress.upComingStep, let instructions = upcomingStep.instructionsSpokenAlongStep {
             for instruction in instructions {
-                guard routeProgresss.spokenInstructionsForRoute[instruction.ssmlText] == nil else { continue }
+                guard spokenInstructionsForRoute[instruction.ssmlText] == nil else { continue }
                 
-                cacheSpokenInstruction(routeProgress: routeProgresss, instruction: instruction.ssmlText)
+                cacheSpokenInstruction(instruction: instruction.ssmlText)
             }
         }
     }
@@ -200,7 +202,7 @@ public class PollyVoiceController: RouteVoiceController {
         pollyTask?.resume()
     }
     
-    func cacheSpokenInstruction(routeProgress: RouteProgress, instruction: String) {
+    func cacheSpokenInstruction(instruction: String) {
         
         let pollyRequestURL = pollyURL(for: instruction)
 
@@ -219,7 +221,7 @@ public class PollyVoiceController: RouteVoiceController {
                 }
                 
                 if let data = data {
-                    routeProgress.spokenInstructionsForRoute[instruction] = data
+                    strongSelf.spokenInstructionsForRoute[instruction] = data
                 }
             }
             

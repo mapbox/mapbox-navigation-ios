@@ -140,8 +140,6 @@ open class RouteProgress: NSObject {
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
     }
-    
-    public var spokenInstructionsForRoute: [String: Data] = [:]
 }
 
 /**
