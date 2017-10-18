@@ -1,19 +1,23 @@
 import UIKit
 import MapboxCoreNavigation
+import AVFoundation
 
 struct FeedbackItem {
     var title: String
     var image: UIImage
     var feedbackType: FeedbackType
     var backgroundColor: UIColor
+    var audio: Data?
 }
 
-class FeedbackViewController: UIViewController {
+class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate {
     
     typealias FeedbackSection = [FeedbackItem]
     
     var sections = [FeedbackSection]()
     let cellReuseIdentifier = "collectionViewCellId"
+    
+    var allowRecordedAudioFeedback = false
     
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
@@ -22,6 +26,27 @@ class FeedbackViewController: UIViewController {
     
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var recordingAudioLabel: UILabel!
+    
+    var recordingSession: AVAudioSession?
+    var audioRecorder: AVAudioRecorder? {
+        didSet {
+            recordingAudioLabel.isHidden = !recordingAudioLabel.isHidden
+        }
+    }
+    
+    var activeFeedbackItem: FeedbackItem?
+    
+    var pulsingAnimation:CABasicAnimation {
+        let pulseAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
+        pulseAnimation.duration = 1
+        pulseAnimation.fromValue = 1
+        pulseAnimation.toValue = 1.2
+        pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        pulseAnimation.autoreverses = true
+        pulseAnimation.repeatCount = .greatestFiniteMagnitude
+        return pulseAnimation
+    }
     
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -47,18 +72,38 @@ class FeedbackViewController: UIViewController {
         let confusingTitle      = NSLocalizedString("FEEDBACK_CONFUSING", bundle: .mapboxNavigation, value: "Confusing", comment: "Feedback type for Confusing")
         let otherIssueTitle     = NSLocalizedString("FEEDBACK_OTHER", bundle: .mapboxNavigation, value: "Other Issue", comment: "Feedback type for Other Issue")
         
-        let accident        = FeedbackItem(title: accidentTitle,        image: accidentImage,       feedbackType: .accident,        backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let hazard          = FeedbackItem(title: hazardTitle,          image: hazardImage,         feedbackType: .hazard,          backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let roadClosed      = FeedbackItem(title: closureTitle,         image: roadClosedImage,     feedbackType: .roadClosed,      backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let unallowedTurn   = FeedbackItem(title: unallowedTurnTitle,   image: unallowedTurnImage,  feedbackType: .unallowedTurn,   backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let routingError    = FeedbackItem(title: confusingTitle,       image: routingImage,        feedbackType: .routingError,    backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let other           = FeedbackItem(title: otherIssueTitle,      image: otherImage,          feedbackType: .general,         backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
+        let accident        = FeedbackItem(title: accidentTitle,        image: accidentImage,       feedbackType: .accident,        backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), audio:  nil)
+        let hazard          = FeedbackItem(title: hazardTitle,          image: hazardImage,         feedbackType: .hazard,          backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), audio:  nil)
+        let roadClosed      = FeedbackItem(title: closureTitle,         image: roadClosedImage,     feedbackType: .roadClosed,      backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
+        let unallowedTurn   = FeedbackItem(title: unallowedTurnTitle,   image: unallowedTurnImage,  feedbackType: .unallowedTurn,   backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
+        let routingError    = FeedbackItem(title: confusingTitle,       image: routingImage,        feedbackType: .routingError,    backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
+        let other           = FeedbackItem(title: otherIssueTitle,      image: otherImage,          feedbackType: .general,         backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
         
         sections = [
             [accident, hazard],
             [roadClosed, unallowedTurn],
             [routingError, other]
         ]
+        
+        guard allowRecordedAudioFeedback else { return }
+        
+        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+            let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
+            (dict["Privacy - Microphone Usage Description and value"] != nil || dict["NSMicrophoneUsageDescription"] != nil) else {
+                assert(false, "If `allowRecordedAudioFeedback` is enabled, `NSMicrophoneUsageDescription` must be added in app plist")
+                return
+        }
+        
+        recordingSession = AVAudioSession.sharedInstance()
+        recordingSession?.requestRecordPermission() { [unowned self] allowed in
+            if allowed {
+                let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
+                longPress.minimumPressDuration = 0.5
+                longPress.delegate = self
+                longPress.delaysTouchesBegan = true
+                self.collectionView?.addGestureRecognizer(longPress)
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -70,6 +115,63 @@ class FeedbackViewController: UIViewController {
         dismissFeedback()
     }
     
+    func didTapCell(_ sender: UIGestureRecognizer) {
+        guard sender.state == .began || sender.state == .ended else { return }
+        
+        abortAutodismiss()
+        
+        let touchLocation = sender.location(in: self.collectionView)
+        
+        if let indexPath = self.collectionView.indexPathForItem(at: touchLocation) {
+            // get the cell at indexPath (the one you long pressed)
+            let cell = self.collectionView.cellForItem(at: indexPath) as! FeedbackCollectionViewCell
+            cell.layer.add(pulsingAnimation, forKey: "animateScale")
+            
+            activeFeedbackItem = sections[indexPath.section][indexPath.row]
+            
+            
+            if audioRecorder == nil {
+                startRecording()
+            }
+            
+            if sender.state == .ended {
+                finishRecording()
+            }
+        }
+    }
+    
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        if let fileData = NSData(contentsOfFile: recorder.url.path) as Data? {
+            activeFeedbackItem!.audio = fileData
+            sendFeedbackHandler?(activeFeedbackItem!)
+        }
+    }
+    
+    
+    func startRecording() {
+        guard let audioFile = FileManager().cacheAudioFileLocation else { return }
+        
+        let settings = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 12000,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderAudioQualityKey: AVAudioQuality.low.rawValue
+        ]
+        
+        do {
+            audioRecorder = try AVAudioRecorder(url: audioFile, settings: settings)
+            audioRecorder?.record()
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    
+    func finishRecording() {
+        audioRecorder?.stop()
+        audioRecorder = nil
+    }
+    
+
     func presentError(_ message: String) {
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -87,6 +189,12 @@ class FeedbackViewController: UIViewController {
     func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
+    }
+}
+
+extension FileManager {
+    var cacheAudioFileLocation: URL? {
+        return self.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("recording-\(Date().timeIntervalSince1970).m4a")
     }
 }
 

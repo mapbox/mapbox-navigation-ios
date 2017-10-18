@@ -500,6 +500,12 @@
                                 </view>
                                 <blurEffect style="extraLight"/>
                             </visualEffectView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recording Audio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DXb-xn-Kgp" userLabel="Recording Label">
+                                <rect key="frame" x="103.5" y="37" width="169" height="28"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <color key="textColor" red="0.85018620466321249" green="0.22456708649282012" blue="0.29962165998963192" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecu-yz-M5j" userLabel="ContainerView">
                                 <rect key="frame" x="24" y="100" width="327" height="542"/>
                                 <subviews>
@@ -622,9 +628,12 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="EC5-ge-nz1" secondAttribute="bottom" id="1ZL-GP-zto"/>
+                            <constraint firstItem="DXb-xn-Kgp" firstAttribute="centerX" secondItem="ecu-yz-M5j" secondAttribute="centerX" id="5Tn-By-kpf"/>
                             <constraint firstItem="EC5-ge-nz1" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leading" id="9Wv-Am-mxS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ecu-yz-M5j" secondAttribute="trailing" constant="8" id="Cyb-Eg-iSY"/>
+                            <constraint firstItem="DXb-xn-Kgp" firstAttribute="centerX" secondItem="I7t-WT-lto" secondAttribute="centerX" id="RUU-Mu-f2X"/>
                             <constraint firstItem="EC5-ge-nz1" firstAttribute="top" secondItem="I7t-WT-lto" secondAttribute="top" id="VgD-ac-RQ2"/>
+                            <constraint firstItem="ecu-yz-M5j" firstAttribute="top" secondItem="DXb-xn-Kgp" secondAttribute="bottom" constant="35" id="aS3-oU-Xg7"/>
                             <constraint firstItem="ecu-yz-M5j" firstAttribute="top" secondItem="pGP-EB-Pif" secondAttribute="bottom" constant="80" id="cDD-7Q-8vJ"/>
                             <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="ecu-yz-M5j" secondAttribute="bottom" constant="25" id="rzg-dk-UOe"/>
                             <constraint firstAttribute="trailing" secondItem="EC5-ge-nz1" secondAttribute="trailing" id="wa9-2E-HRi"/>
@@ -634,6 +643,7 @@
                     <connections>
                         <outlet property="collectionView" destination="Sne-Dn-jdt" id="7pC-Id-XnH"/>
                         <outlet property="containerView" destination="ecu-yz-M5j" id="LQd-96-Rhr"/>
+                        <outlet property="recordingAudioLabel" destination="DXb-xn-Kgp" id="dJi-0e-TI2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w0B-4a-jYs" userLabel="First Responder" sceneMemberID="firstResponder"/>
