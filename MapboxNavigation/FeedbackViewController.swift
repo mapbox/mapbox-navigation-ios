@@ -10,7 +10,7 @@ struct FeedbackItem {
     var audio: Data?
 }
 
-class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate {
+class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVAudioRecorderDelegate {
     
     typealias FeedbackSection = [FeedbackItem]
     
@@ -160,6 +160,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate {
         
         do {
             audioRecorder = try AVAudioRecorder(url: audioFile, settings: settings)
+            audioRecorder?.delegate = self
             audioRecorder?.record()
         } catch {
             print(error.localizedDescription)
