@@ -48,13 +48,17 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
+        let toVC = transitionContext.viewController(forKey: .to)!
+        
         
         containerView.backgroundColor = .clear
         toView.frame = CGRect(x: 0, y: containerView.bounds.height,
                               width: containerView.bounds.width, height: height ?? containerView.bounds.midY)
         
         containerView.addSubview(toView)
-
+        let tap = UITapGestureRecognizer(target: toVC, action: #selector(FeedbackViewController.handleDismissTap(sender:)))
+        containerView.addGestureRecognizer(tap)
+        
         let yPoint = CGFloat(height != nil ? fromVC.view.bounds.height - height! : fromVC.view.bounds.midY)
         let point = CGPoint(x: 0, y: yPoint)
         let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width,

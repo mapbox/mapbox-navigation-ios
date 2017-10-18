@@ -81,6 +81,10 @@ class FeedbackViewController: UIViewController, DismissDraggable {
         abortAutodismiss()
         dismissFeedbackHandler?()
     }
+    
+    func handleDismissTap(sender: UITapGestureRecognizer) {
+        dismissFeedback()
+    }
 }
 
 extension FeedbackViewController: UICollectionViewDataSource {
