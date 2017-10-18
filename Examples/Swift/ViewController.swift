@@ -37,6 +37,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     var alertController: UIAlertController!
     
+    lazy var multipleStopsAction: UIAlertAction = {
+        return UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
+            self.startMultipleWaypoints()
+        })
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -91,6 +97,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         if waypoints.count > 1 {
             waypoints = Array(waypoints.suffix(1))
+            multipleStopsAction.isEnabled = true
+        } else { //single waypoint
+            multipleStopsAction.isEnabled = false
         }
         
         let coordinates = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
@@ -98,10 +107,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         waypoint.coordinateAccuracy = -1
         waypoints.append(waypoint)
         
-        if waypoints.count >= 2 {
-            alertController.addAction(UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-                self.startMultipleWaypoints()
-            }))
+        if waypoints.count >= 2, !alertController.actions.contains(multipleStopsAction) {
+            alertController.addAction(multipleStopsAction)
         }
         
         requestRoute()
@@ -129,6 +136,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         mapView.removeRoute()
         mapView.removeWaypoints()
         waypoints.removeAll()
+        multipleStopsAction.isEnabled = false
     }
     
     @IBAction func startButtonPressed(_ sender: Any) {
