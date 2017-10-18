@@ -65,13 +65,6 @@ public class PollyVoiceController: RouteVoiceController {
         audioPlayer?.stop()
         startAnnouncementTimer()
         
-        guard spokenInstructionsForRoute[instruction] == nil else {
-            sayInStruction(for: spokenInstructionsForRoute[instruction]!)
-            return
-        }
-        
-        speak(instruction, error: nil)
-        
         if let upcomingStep = routeProgresss.currentLegProgress.upComingStep, let instructions = upcomingStep.instructionsSpokenAlongStep {
             for instruction in instructions {
                 guard spokenInstructionsForRoute[instruction.ssmlText] == nil else { continue }
@@ -79,6 +72,13 @@ public class PollyVoiceController: RouteVoiceController {
                 cacheSpokenInstruction(instruction: instruction.ssmlText)
             }
         }
+        
+        guard spokenInstructionsForRoute[instruction] == nil else {
+            sayInStruction(for: spokenInstructionsForRoute[instruction]!)
+            return
+        }
+        
+        speak(instruction, error: nil)
     }
     
     func pollyURL(for instruction: String) ->  AWSPollySynthesizeSpeechURLBuilderRequest {
