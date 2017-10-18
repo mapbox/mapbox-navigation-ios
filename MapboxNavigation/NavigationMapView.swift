@@ -14,6 +14,8 @@ let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
     22: MGLStyleValue(rawValue: 28)
 ]
 
+let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
+
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
@@ -347,8 +349,8 @@ open class NavigationMapView: MGLMapView {
             source.shape = polyline
             sourceSimplified.shape = polylineSimplified
         } else {
-            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
-            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: polylineSimplified, options: nil)
+            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: sourceOptions)
+            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: polylineSimplified, options: sourceOptions)
             style.addSource(lineSource)
             style.addSource(lineCasingSource)
             
@@ -406,7 +408,7 @@ open class NavigationMapView: MGLMapView {
         if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
             waypointSource.shape = source
         } else {
-            let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: nil)
+            let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: sourceOptions)
             style.addSource(sourceShape)
             
             let circles = navigationMapDelegate?.navigationMapView?(self, waypointStyleLayerWithIdentifier: waypointCircleIdentifier, source: sourceShape) ?? routeWaypointCircleStyleLayer(identifier: waypointCircleIdentifier, source: sourceShape)
@@ -644,9 +646,9 @@ open class NavigationMapView: MGLMapView {
             let cap = NSValue(mglLineCap: .butt)
             let join = NSValue(mglLineJoin: .round)
             
-            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: nil)
+            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: sourceOptions)
             let arrowStroke = MGLLineStyleLayer(identifier: arrowLayerStrokeIdentifier, source: arrowSourceStroke)
-            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: nil)
+            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: sourceOptions)
             let arrow = MGLLineStyleLayer(identifier: arrowLayerIdentifier, source: arrowSource)
             
             if let source = style.source(withIdentifier: arrowSourceIdentifier) as? MGLShapeSource {
@@ -683,7 +685,7 @@ open class NavigationMapView: MGLMapView {
             // Arrow symbol
             let point = MGLPointFeature()
             point.coordinate = shaftStrokeCoordinates.last!
-            let arrowSymbolSource = MGLShapeSource(identifier: arrowSymbolSourceIdentifier, features: [point], options: nil)
+            let arrowSymbolSource = MGLShapeSource(identifier: arrowSymbolSourceIdentifier, features: [point], options: sourceOptions)
             
             if let source = style.source(withIdentifier: arrowSymbolSourceIdentifier) as? MGLShapeSource {
                 source.shape = arrowSymbolSource.shape
