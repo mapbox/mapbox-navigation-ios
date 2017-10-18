@@ -48,11 +48,6 @@ public let RouteControllerNotificationErrorKey = MBRouteControllerNotificationEr
 public let RouteControllerDidFindFasterRouteKey = MBRouteControllerDidFindFasterRouteKey
 
 /**
- Key used for accessing the volume from a `RouteVoiceControllerVoiceVolumeDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerDidChangeVoiceVolumeKey = MBRouteControllerDidChangeVoiceVolumeKey
-
-/**
  Emitted when the user moves along the route.
  */
 public let RouteControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
@@ -76,11 +71,6 @@ public let RouteControllerDidReroute = Notification.Name(MBRouteControllerDidRer
  Emitted after the user has gone off-route but the `RouteController` failed to reroute.
  */
 public let RouteControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
-
-/**
- Emitted after the user changes the volume.
- */
-public let RouteVoiceControllerVoiceVolumeDidChange = Notification.Name(MBRouteVoiceControllerVoiceVolumeDidChange)
 
 /**
  Maximum number of meters the user can travel away from step before `RouteControllerShouldReroute` is emitted.
