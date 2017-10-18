@@ -103,7 +103,7 @@ class RouteMapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        muteButton.isSelected = NavigationSettings.shared.voiceVolume == 0
+        muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
 
         if let camera = pendingCamera {
@@ -153,8 +153,7 @@ class RouteMapViewController: UIViewController {
     @IBAction func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         
-        let muted = sender.isSelected
-        NavigationSettings.shared.voiceVolume = muted ? 0 : 1
+        NavigationSettings.shared.voiceMuted = sender.isSelected
     }
     
     @IBAction func report(_ sender: Any) {
