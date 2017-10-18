@@ -190,6 +190,12 @@ class RouteMapViewController: UIViewController {
                 routePageViewController = controller
                 controller.maneuverDelegate = self
             }
+        case String(describing: FeedbackOverviewTableViewController.self):
+            if let navigationController = segue.destination as? UINavigationController,
+                let destination = navigationController.viewControllers.first as? FeedbackOverviewTableViewController {
+                destination.route = route
+                destination.feedbacks = routeController.feedbackEvents
+            }
         default:
             break
         }
