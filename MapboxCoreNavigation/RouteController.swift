@@ -734,6 +734,10 @@ extension RouteController: CLLocationManagerDelegate {
 
         for (voiceInstructionIndex, voiceInstruction) in spokenInstructions.enumerated() {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex {
+                
+                if voiceInstructionIndex == spokenInstructions.count - 1 && routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
+                    routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
+                }
 
                 NotificationCenter.default.post(name: RouteControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress

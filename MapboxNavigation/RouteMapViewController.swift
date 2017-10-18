@@ -258,13 +258,6 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.removeArrow()
         }
-        
-        if currentLegIndexMapped != routeProgress.legIndex {
-            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
-            
-            currentLegIndexMapped = routeProgress.legIndex
-        }
     }
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
@@ -302,6 +295,13 @@ class RouteMapViewController: UIViewController {
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         controller.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
+        
+        if currentLegIndexMapped != routeProgress.legIndex {
+            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
+            mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
+            
+            currentLegIndexMapped = routeProgress.legIndex
+        }
 
         guard isInOverviewMode else {
             return
