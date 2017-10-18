@@ -162,6 +162,11 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
         
         let controller = FeedbackViewController.loadFromStoryboard()
+        controller.sections = [
+            [.instructionIssue, .confusingInstruction, .notAllowed],
+            [.gpsInaccurate, .badRoute, .reportTraffic]
+        ]
+        
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in

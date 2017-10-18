@@ -10,6 +10,12 @@
 /* Feedback type for inaccurate GPS */
 "FEEDBACK_GPS_INACCURATE" = "GPS \nInaccurate";
 
+/* Feedback type for Heavy Traffic */
+"FEEDBACK_HEAVY_TRAFFIC" = "Heavy \nTraffic";
+
+/* Feedback type for Instruction Issue */
+"FEEDBACK_INSTRUCTION_ISSUE" = "Instruction \nIssue";
+
 /* Feedback type for Instruction Timing */
 "FEEDBACK_INSTRUCTION_TIMING" = "Instruction \nTiming";
 

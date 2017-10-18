@@ -112,6 +112,7 @@
 		35BF8CA41F28EBD8003F6125 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA31F28EBD8003F6125 /* String.swift */; };
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */; };
+		35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CB1E121F97DD740011CC44 /* FeedbackItem.swift */; };
 		35CC14151F7994B0009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
 		35CC14161F7994B1009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
 		35CC14171F79A434009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
@@ -413,6 +414,7 @@
 		35C6EDB21EBB286500A27EF8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteVoiceController.swift; sourceTree = "<group>"; };
 		35C997401E732C5400544D1C /* RouteStepFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStepFormatter.swift; sourceTree = "<group>"; };
+		35CB1E121F97DD740011CC44 /* FeedbackItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackItem.swift; sourceTree = "<group>"; };
 		35CC14141F799496009E872A /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Turf.framework; path = Carthage/Build/iOS/Turf.framework; sourceTree = "<group>"; };
 		35CF34B01F0A733200C2692E /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
@@ -662,6 +664,7 @@
 				35375EC01F31FA86004CE727 /* Settings.swift */,
 				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
 				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
+				35CB1E121F97DD740011CC44 /* FeedbackItem.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1412,6 +1415,7 @@
 				8DEF7A0D1F95934D00F0546E /* RatingControl.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				C51DF8671F38C337006C6A15 /* Date.swift in Sources */,
+				35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */,
 				35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */,
 				C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,

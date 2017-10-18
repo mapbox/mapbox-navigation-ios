@@ -16,16 +16,11 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
-struct FeedbackItem {
-    var title: String
-    var image: UIImage
-    var feedbackType: FeedbackType
-    var backgroundColor: UIColor
-}
+typealias FeedbackSection = [FeedbackItem]
 
 class FeedbackViewController: UIViewController, DismissDraggable {
 
-    typealias FeedbackSection = [FeedbackItem]
+    
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
     var sendFeedbackHandler: SendFeedbackHandler?
@@ -51,34 +46,7 @@ class FeedbackViewController: UIViewController, DismissDraggable {
         transitioningDelegate = self
         progressBar.progress = 1
         enableDraggableDismiss()
-        
-        let instructionTimingImage      = Bundle.mapboxNavigation.image(named: "feedback_routing")!.withRenderingMode(.alwaysTemplate)
-        let confusingInstructionImage   = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
-        let notAllowedImage             = Bundle.mapboxNavigation.image(named: "feedback_turn_not_allowed")!.withRenderingMode(.alwaysTemplate)
-        let gpsInaccurateImage          = Bundle.mapboxNavigation.image(named: "feedback_other")!.withRenderingMode(.alwaysTemplate)
-        let badRouteImage               = Bundle.mapboxNavigation.image(named: "feedback_road_closed")!.withRenderingMode(.alwaysTemplate)
-        let reportTrafficImage          = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
-        
-        let instructionTimingTitle      = NSLocalizedString("FEEDBACK_INSTRUCTION_TIMING", bundle: .mapboxNavigation, value: "Instruction \nTiming", comment: "Feedback type for Instruction Timing")
-        let confusingInstructionTitle   = NSLocalizedString("FEEDBACK_CONFUSING_INSTRUCTION", bundle: .mapboxNavigation, value: "Confusing \nInstruction", comment: "Feedback type for Confusing Instruction")
-        let notAllowedTitle             = NSLocalizedString("FEEDBACK_NOT_ALLOWED", bundle: .mapboxNavigation, value: "Not \nAllowed", comment: "Feedback type for turn not allowed")
-        let gpsInaccurateTitle          = NSLocalizedString("FEEDBACK_GPS_INACCURATE", bundle: .mapboxNavigation, value: "GPS \nInaccurate", comment: "Feedback type for inaccurate GPS")
-        let badRouteTitle               = NSLocalizedString("FEEDBACK_BAD_ROUTE", bundle: .mapboxNavigation, value: "Bad \nRoute", comment: "Feedback type for Bad Route")
-        let reportTrafficTitle          = NSLocalizedString("FEEDBACK_REPORT_TRAFFIC", bundle: .mapboxNavigation, value: "Report \nTraffic", comment: "Feedback type for Report Traffic")
-        
-        let instructionTiming       = FeedbackItem(title: instructionTimingTitle,       image: instructionTimingImage,      feedbackType: .instructionTiming,       backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let confusingInstruction    = FeedbackItem(title: confusingInstructionTitle,    image: confusingInstructionImage,   feedbackType: .confusingInstruction,    backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let notAllowed              = FeedbackItem(title: notAllowedTitle,              image: notAllowedImage,             feedbackType: .unallowedTurn,           backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1))
-        let gpsInaccurate           = FeedbackItem(title: gpsInaccurateTitle,           image: gpsInaccurateImage,          feedbackType: .inaccurateGPS,           backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let badRoute                = FeedbackItem(title: badRouteTitle,                image: badRouteImage,               feedbackType: .badRoute,                backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        let reportTraffic           = FeedbackItem(title: reportTrafficTitle,           image: reportTrafficImage,          feedbackType: .reportTraffic,           backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1))
-        
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
-        
-        sections = [
-            [instructionTiming, confusingInstruction, notAllowed],
-            [gpsInaccurate, badRoute, reportTraffic]
-        ]
     }
     
     override func viewWillAppear(_ animated: Bool) {
