@@ -22,6 +22,7 @@ let NavigationSettingsDidChange = Notification.Name("MBNavigationSettingsDidChan
             
             let val = defaults.object(forKey: key) ?? value(forKey: key)
             setValue(val, forKey: key)
+            
             addObserver(self, forKeyPath: key, options: .new, context: nil)
         }
     }

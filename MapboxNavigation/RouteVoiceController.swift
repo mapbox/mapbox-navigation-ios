@@ -74,7 +74,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     deinit {
         suspendNotifications()
-        speechSynth.stopSpeaking(at: .word)
+        speechSynth.stopSpeaking(at: .immediate)
         resetAnnouncementTimer()
     }
     
@@ -82,13 +82,24 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(settingsDidChange(_:)), name: NavigationSettingsDidChange, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UserDefaults.didChangeNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NavigationSettingsDidChange, object: nil)
+    }
+    
+    @objc func settingsDidChange(_ notification: Notification) {
+        let muteChanged = notification.userInfo?[#keyPath(NavigationSettings.voiceMuted)] != nil
+        guard muteChanged else { return }
+        
+        if NavigationSettings.shared.voiceMuted {
+            audioPlayer?.stop()
+            speechSynth.stopSpeaking(at: .immediate)
+        }
     }
     
     func didReroute(notification: NSNotification) {
