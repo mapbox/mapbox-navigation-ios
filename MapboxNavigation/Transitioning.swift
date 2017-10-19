@@ -49,6 +49,9 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         
         containerView.addSubview(toView)
         let tap = UITapGestureRecognizer(target: toVC, action: #selector(FeedbackViewController.handleDismissTap(sender:)))
+        if let responder = toVC as? UIGestureRecognizerDelegate {
+            tap.delegate = responder
+        }
         containerView.addGestureRecognizer(tap)
         
         let finalFrame = CGRect(origin: CGPoint(x: 0, y: fromVC.view.bounds.height - toVC.view.bounds.height),
