@@ -35,6 +35,8 @@ struct EventDetails {
     var batteryPluggedIn: Bool
     var batteryLevel: Float
     var applicationState: UIApplicationState
+    var userAbsoluteDistanceToDestination: CLLocationDistance?
+    var locationEngine: CLLocationManager
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -54,6 +56,10 @@ struct EventDetails {
         
         if let location = routeController.locationManager.location {
             coordinate = location.coordinate
+            
+            if let coordinates = routeController.routeProgress.route.coordinates, let lastCoord = coordinates.last {
+                userAbsoluteDistanceToDestination = location.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
+            }
         }
         
         if let geometry = session.originalRoute.coordinates {
@@ -82,6 +88,7 @@ struct EventDetails {
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
         batteryLevel = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
         applicationState = UIApplication.shared.applicationState
+        locationEngine = routeController.locationManager
     }
     
     var eventDictionary: [String: Any] {
@@ -135,6 +142,8 @@ struct EventDetails {
         modifiedEventDictionary["batteryPluggedIn"] = batteryPluggedIn
         modifiedEventDictionary["batteryLevel"] = batteryLevel
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
+        modifiedEventDictionary["userAbsoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
+        modifiedEventDictionary["locationEngine"] = locationEngine is SimulatedLocationManager ? "SimulatedLocationManager" : locationEngine is NavigationLocationManager ? "NavigationLocationManager" : locationEngine.description
 
         return modifiedEventDictionary
     }
