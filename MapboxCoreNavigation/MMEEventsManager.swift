@@ -93,8 +93,8 @@ struct EventDetails {
         locationEngine = routeController.locationManager
         
         if let departureDate = session.departureTimestamp {
-            percentTimeInPortrait = session.timeInPortrait / departureDate.timeIntervalSinceNow
-            percentTimeInForeground = session.timeInForeground / departureDate.timeIntervalSinceNow
+            percentTimeInPortrait = 1 - abs(session.timeInPortrait / departureDate.timeIntervalSinceNow)
+            percentTimeInForeground = 1 - abs(session.timeInForeground / departureDate.timeIntervalSinceNow)
         }
     }
     
@@ -152,6 +152,7 @@ struct EventDetails {
         modifiedEventDictionary["userAbsoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
         modifiedEventDictionary["locationEngine"] = locationEngine is SimulatedLocationManager ? "SimulatedLocationManager" : locationEngine is NavigationLocationManager ? "NavigationLocationManager" : locationEngine.description
         modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait
+        modifiedEventDictionary["percentTimeInForeground"] = percentTimeInForeground
 
         return modifiedEventDictionary
     }

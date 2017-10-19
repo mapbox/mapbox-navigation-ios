@@ -234,6 +234,8 @@ open class RouteController: NSObject {
             events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
             events.disableLocationMetrics()
             events.sendTurnstileEvent()
+            didChangeOrientation()
+            didChangeApplicationState()
         } else {
             assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
         }
@@ -244,7 +246,9 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
     }
 
     func suspendNotifications() {
@@ -269,13 +273,23 @@ open class RouteController: NSObject {
         locationManager.stopUpdatingHeading()
     }
     
-    func rotated() {
-        if UIDevice.current.orientation == .portrait {
-            sessionState.timeInPortrait += sessionState.previousOrientationChangeToPortrait.timeIntervalSinceNow
-            sessionState.previousOrientationChangeToPortrait = Date()
+    func didChangeOrientation() {
+        if let previousOrientationChangeToPortrait = sessionState.previousOrientationChangeToPortrait, UIDevice.current.orientation == .portrait {
+            sessionState.timeInPortrait += previousOrientationChangeToPortrait.timeIntervalSinceNow
         }
+        
+        sessionState.previousOrientationChangeToPortrait = Date()
     }
 
+    
+    func didChangeApplicationState() {
+        if let previousForegroundChange = sessionState.previousForegroundChange, UIApplication.shared.applicationState == .active {
+            sessionState.timeInForeground += previousForegroundChange.timeIntervalSinceNow
+        }
+        
+        sessionState.previousOrientationChangeToPortrait = Date()
+    }
+    
     /**
      The most recently received user location.
      
@@ -791,16 +805,14 @@ struct SessionState {
     
     var timeInForeground: TimeInterval
     var timeInPortrait: TimeInterval
-    var previousForegroundChange: Date
-    var previousOrientationChangeToPortrait: Date
+    var previousForegroundChange: Date?
+    var previousOrientationChangeToPortrait: Date?
 
     init(currentRoute: Route, originalRoute: Route) {
         self.currentRoute = currentRoute
         self.originalRoute = originalRoute
         self.timeInForeground = 0
         self.timeInPortrait = 0
-        self.previousForegroundChange = Date()
-        self.previousOrientationChangeToPortrait = Date()
     }
 }
 
