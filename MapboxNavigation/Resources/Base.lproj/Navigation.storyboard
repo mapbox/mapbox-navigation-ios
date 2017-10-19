@@ -529,7 +529,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -573,10 +573,11 @@ Label  </string>
                                     <constraint firstAttribute="height" constant="6" id="MFA-O5-Ufd"/>
                                 </constraints>
                             </view>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recording Audio" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTH-eK-F5H">
-                                <rect key="frame" x="124" y="342" width="126" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recording Audio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTH-eK-F5H">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="21"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
@@ -584,11 +585,12 @@ Label  </string>
                         <constraints>
                             <constraint firstItem="kGL-xc-d1v" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leading" id="2eq-xm-qre"/>
                             <constraint firstItem="hWX-uw-jMV" firstAttribute="top" secondItem="kGL-xc-d1v" secondAttribute="bottom" id="4jn-Cn-J4k"/>
+                            <constraint firstItem="xTH-eK-F5H" firstAttribute="top" secondItem="I7t-WT-lto" secondAttribute="top" id="7yr-ZC-xIl"/>
                             <constraint firstItem="Sne-Dn-jdt" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leading" id="JoG-Gw-cRC"/>
+                            <constraint firstItem="xTH-eK-F5H" firstAttribute="leading" secondItem="I7t-WT-lto" secondAttribute="leading" id="LQw-yz-NLC"/>
+                            <constraint firstAttribute="trailing" secondItem="xTH-eK-F5H" secondAttribute="trailing" id="Tbc-56-rL7"/>
                             <constraint firstAttribute="trailing" secondItem="kGL-xc-d1v" secondAttribute="trailing" id="f83-Zx-0oE"/>
                             <constraint firstItem="kGL-xc-d1v" firstAttribute="top" secondItem="Sne-Dn-jdt" secondAttribute="bottom" constant="20" id="fDG-CN-MJT"/>
-                            <constraint firstItem="Sne-Dn-jdt" firstAttribute="top" secondItem="xTH-eK-F5H" secondAttribute="bottom" constant="8" id="fN4-aS-N9p"/>
-                            <constraint firstItem="xTH-eK-F5H" firstAttribute="centerX" secondItem="I7t-WT-lto" secondAttribute="centerX" id="haT-qK-a0b"/>
                             <constraint firstAttribute="trailing" secondItem="Sne-Dn-jdt" secondAttribute="trailing" id="txs-Qu-kBn"/>
                         </constraints>
                     </view>

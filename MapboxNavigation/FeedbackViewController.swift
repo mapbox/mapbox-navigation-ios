@@ -33,7 +33,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     let cellReuseIdentifier = "collectionViewCellId"
     let interactor = Interactor()
     
-    let autodismissInterval: TimeInterval = 5
+    let autoDismissInterval: TimeInterval = 5
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var recordingAudioLabel: UILabel!
@@ -41,24 +41,9 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     @IBOutlet weak var progressBar: ProgressBar!
     
     var recordingSession: AVAudioSession?
-    var audioRecorder: AVAudioRecorder? {
-        didSet {
-            recordingAudioLabel.isHidden = !recordingAudioLabel.isHidden
-        }
-    }
+    var audioRecorder: AVAudioRecorder?
     
     var activeFeedbackItem: FeedbackItem?
-    
-    var pulsingAnimation:CABasicAnimation {
-        let pulseAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
-        pulseAnimation.duration = 1
-        pulseAnimation.fromValue = 1
-        pulseAnimation.toValue = 1.2
-        pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        pulseAnimation.autoreverses = true
-        pulseAnimation.repeatCount = .greatestFiniteMagnitude
-        return pulseAnimation
-    }
     
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -76,11 +61,11 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: autodismissInterval) {
+        UIView.animate(withDuration: autoDismissInterval) {
             self.progressBar.progress = 0
         }
         
-        perform(#selector(dismissFeedback), with: nil, afterDelay: autodismissInterval)
+        enableAutoDismiss()
         
         if allowRecordedAudioFeedback {
             validateAudio()
@@ -96,10 +81,12 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     }
     
     func enableAudioRecording() {
+        abortAutodismiss()
         recordingSession = AVAudioSession.sharedInstance()
         recordingSession?.requestRecordPermission() { [unowned self] allowed in
+            self.enableAutoDismiss()
             guard allowed else { return }
-            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongPress(_:)))
             longPress.minimumPressDuration = 0.5
             longPress.delegate = self
             longPress.delaysTouchesBegan = true
@@ -107,27 +94,32 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         }
     }
     
-    func didTapCell(_ sender: UIGestureRecognizer) {
+    func enableAutoDismiss() {
+        abortAutodismiss()
+        perform(#selector(dismissFeedback), with: nil, afterDelay: autoDismissInterval)
+    }
+    
+    func didLongPress(_ sender: UIGestureRecognizer) {
         guard sender.state == .began || sender.state == .ended else { return }
         
         abortAutodismiss()
         
         let touchLocation = sender.location(in: self.collectionView)
+        guard let indexPath = self.collectionView.indexPathForItem(at: touchLocation) else { return }
         
-        if let indexPath = self.collectionView.indexPathForItem(at: touchLocation) {
-            // get the cell at indexPath (the one you long pressed)
-            let cell = self.collectionView.cellForItem(at: indexPath) as! FeedbackCollectionViewCell
-            cell.layer.add(pulsingAnimation, forKey: "animateScale")
-
-            activeFeedbackItem = sections[indexPath.section][indexPath.row]
-
+        activeFeedbackItem = sections[indexPath.section][indexPath.row]
+        
+        if sender.state == .began {
+            recordingAudioLabel.isHidden = false
+            recordingAudioLabel.startRippleAnimation()
+            
             if audioRecorder == nil {
                 startRecording()
             }
-
-            if sender.state == .ended {
-                finishRecording()
-            }
+        }
+        
+        if sender.state == .ended {
+            finishRecording()
         }
     }
     

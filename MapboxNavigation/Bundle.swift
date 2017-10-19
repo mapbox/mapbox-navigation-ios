@@ -12,7 +12,9 @@ extension Bundle {
     
     var microphoneUsageDescription: String? {
         get {
-            return object(forInfoDictionaryKey: "NSMicrophoneUsageDescription") as? String
+            let para = "NSMicrophoneUsageDescription"
+            let key = "Privacy - Microphone Usage Description"
+            return object(forInfoDictionaryKey: para) as? String ?? object(forInfoDictionaryKey: key) as? String
         }
     }
 }
