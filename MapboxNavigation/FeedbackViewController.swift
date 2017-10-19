@@ -102,15 +102,21 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     func didLongPress(_ sender: UIGestureRecognizer) {
         guard sender.state == .began || sender.state == .ended else { return }
         
-        abortAutodismiss()
-        
         let touchLocation = sender.location(in: self.collectionView)
         guard let indexPath = self.collectionView.indexPathForItem(at: touchLocation) else { return }
         
+        abortAutodismiss()
         activeFeedbackItem = sections[indexPath.section][indexPath.row]
         
         if sender.state == .began {
+            
+            recordingAudioLabel.alpha = 0
             recordingAudioLabel.isHidden = false
+            UIView.animate(withDuration: 0.5, animations: {
+                self.progressBar.alpha = 0
+                self.recordingAudioLabel.alpha = 1
+            })
+            
             recordingAudioLabel.startRippleAnimation()
             
             if audioRecorder == nil {
@@ -173,6 +179,16 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if gestureRecognizer is UILongPressGestureRecognizer {
+            return true
+        }
+        
+        // Only respond to touches outside/behind the view
+        let isDecendant = touch.view?.isDescendant(of: view) ?? true
+        return !isDecendant
     }
     
     func handleDismissTap(sender: UITapGestureRecognizer) {
