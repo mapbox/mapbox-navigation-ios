@@ -184,7 +184,7 @@ extension MMEEventsManager {
     
     func navigationFoundFasterRoute(routeController: RouteController) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
-        eventDictionary["event"] = MMEEventTypeNavigationArrive
+        eventDictionary["event"] = FasterRouteFoundEvent
         return eventDictionary
     }
     

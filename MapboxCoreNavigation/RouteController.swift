@@ -5,6 +5,8 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
+let FasterRouteFoundEvent = "fasterRouteFound"
+
 
 /**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
@@ -843,7 +845,7 @@ extension RouteController {
     }
     
     func sendFasterRouteEvent() {
-        events.enqueueEvent(withName: "fasterRouteFound", attributes: events.navigationCancelEvent(routeController: self))
+        events.enqueueEvent(withName: FasterRouteFoundEvent, attributes: events.navigationCancelEvent(routeController: self))
         events.flush()
     }
 
@@ -887,7 +889,7 @@ extension RouteController {
     }
     
     func enqueueFoundFasterRouteEvent() -> String {
-        let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
+        let eventDictionary = events.navigationFoundFasterRoute(routeController: self)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
         
         outstandingFeedbackEvents.append(event)
