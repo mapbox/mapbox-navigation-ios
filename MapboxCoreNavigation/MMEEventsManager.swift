@@ -93,8 +93,8 @@ struct EventDetails {
         locationEngine = routeController.locationManager
         
         if let departureDate = session.departureTimestamp {
-            percentTimeInPortrait = 1 - abs(session.timeInPortrait / departureDate.timeIntervalSinceNow)
-            percentTimeInForeground = 1 - abs(session.timeInForeground / departureDate.timeIntervalSinceNow)
+            percentTimeInPortrait = (1 - abs(session.timeInPortrait / departureDate.timeIntervalSinceNow)) * 100
+            percentTimeInForeground = (1 - abs(session.timeInForeground / departureDate.timeIntervalSinceNow)) * 100
         }
     }
     
