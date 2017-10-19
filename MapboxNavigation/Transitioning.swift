@@ -30,15 +30,7 @@ extension DismissAnimator : UIViewControllerAnimatedTransitioning {
     }
 }
 
-class PresentAnimator : NSObject {
-    var height: CGFloat?
-    
-    convenience init(height: CGFloat) {
-        self.init()
-        self.height = height
-    }
-}
-
+class PresentAnimator : NSObject { }
 
 extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -51,7 +43,6 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         let toView = transitionContext.view(forKey: .to)!
         let toVC = transitionContext.viewController(forKey: .to)!
         
-        
         containerView.backgroundColor = .clear
         toView.frame = CGRect(x: 0, y: containerView.bounds.height,
                               width: containerView.bounds.width, height: containerView.bounds.midY)
@@ -60,10 +51,8 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         let tap = UITapGestureRecognizer(target: toVC, action: #selector(FeedbackViewController.handleDismissTap(sender:)))
         containerView.addGestureRecognizer(tap)
         
-        let yPoint = CGFloat(height != nil ? fromVC.view.bounds.height - height! : fromVC.view.bounds.midY)
-        let point = CGPoint(x: 0, y: yPoint)
-        let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width,
-                                                            height: fromVC.view.bounds.midY))
+        let finalFrame = CGRect(origin: CGPoint(x: 0, y: fromVC.view.bounds.height - toVC.view.bounds.height),
+                                size: CGSize(width: fromVC.view.bounds.width, height: toVC.view.bounds.height))
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             toView.frame = finalFrame
