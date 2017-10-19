@@ -243,16 +243,16 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     func play(_ data: Data) {
-        do {
-            audioPlayer = try AVAudioPlayer(data: data)
-            let prepared = audioPlayer?.prepareToPlay() ?? false
-            
-            guard prepared else {
-                callSuperSpeak(fallbackText, error: "Audio player failed to prepare")
-                return
-            }
-            
-            DispatchQueue.main.async {
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                self.audioPlayer = try AVAudioPlayer(data: data)
+                let prepared = self.audioPlayer?.prepareToPlay() ?? false
+                
+                guard prepared else {
+                    self.callSuperSpeak(self.fallbackText, error: "Audio player failed to prepare")
+                    return
+                }
+                
                 self.audioPlayer?.delegate = self
                 let played = self.audioPlayer?.play() ?? false
                 
@@ -260,9 +260,10 @@ public class PollyVoiceController: RouteVoiceController {
                     self.callSuperSpeak(self.fallbackText, error: "Audio player failed to play")
                     return
                 }
+                
+            } catch  let error as NSError {
+                self.callSuperSpeak(self.fallbackText, error: error.localizedDescription)
             }
-        } catch  let error as NSError {
-            callSuperSpeak(fallbackText, error: error.localizedDescription)
         }
     }
 }
