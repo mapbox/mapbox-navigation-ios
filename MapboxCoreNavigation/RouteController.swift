@@ -244,6 +244,7 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(rotated), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
     }
 
     func suspendNotifications() {
@@ -266,6 +267,13 @@ open class RouteController: NSObject {
     public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+    }
+    
+    func rotated() {
+        if UIDevice.current.orientation == .portrait {
+            sessionState.timeInPortrait += sessionState.previousOrientationChangeToPortrait.timeIntervalSinceNow
+            sessionState.previousOrientationChangeToPortrait = Date()
+        }
     }
 
     /**
@@ -780,10 +788,19 @@ struct SessionState {
     var originalRoute: Route
 
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
+    
+    var timeInForeground: TimeInterval
+    var timeInPortrait: TimeInterval
+    var previousForegroundChange: Date
+    var previousOrientationChangeToPortrait: Date
 
     init(currentRoute: Route, originalRoute: Route) {
         self.currentRoute = currentRoute
         self.originalRoute = originalRoute
+        self.timeInForeground = 0
+        self.timeInPortrait = 0
+        self.previousForegroundChange = Date()
+        self.previousOrientationChangeToPortrait = Date()
     }
 }
 

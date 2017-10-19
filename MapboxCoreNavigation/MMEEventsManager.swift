@@ -37,6 +37,8 @@ struct EventDetails {
     var applicationState: UIApplicationState
     var userAbsoluteDistanceToDestination: CLLocationDistance?
     var locationEngine: CLLocationManager
+    var percentTimeInPortrait: Double?
+    var percentTimeInForeground: Double?
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -89,6 +91,11 @@ struct EventDetails {
         batteryLevel = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
         applicationState = UIApplication.shared.applicationState
         locationEngine = routeController.locationManager
+        
+        if let departureDate = session.departureTimestamp {
+            percentTimeInPortrait = session.timeInPortrait / departureDate.timeIntervalSinceNow
+            percentTimeInForeground = session.timeInForeground / departureDate.timeIntervalSinceNow
+        }
     }
     
     var eventDictionary: [String: Any] {
@@ -144,6 +151,7 @@ struct EventDetails {
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
         modifiedEventDictionary["userAbsoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
         modifiedEventDictionary["locationEngine"] = locationEngine is SimulatedLocationManager ? "SimulatedLocationManager" : locationEngine is NavigationLocationManager ? "NavigationLocationManager" : locationEngine.description
+        modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait
 
         return modifiedEventDictionary
     }
