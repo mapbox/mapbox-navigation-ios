@@ -430,6 +430,10 @@ extension RouteController {
     func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
     }
+    
+    func foundFasterRoute() {
+        print("cool")
+    }
 
     func didReroute(notification: NSNotification) {
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
@@ -622,10 +626,14 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
-                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                strongSelf.foundFasterRoute(route)
                 strongSelf.didFindFasterRoute = false
             }
         }
+    }
+    
+    func foundFasterRoute(_ route: Route) {
+        delegate?.routeController?(self, didRerouteAlong: route)
     }
 
     func reroute(from location: CLLocation) {
@@ -833,6 +841,11 @@ extension RouteController {
         events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: events.navigationCancelEvent(routeController: self))
         events.flush()
     }
+    
+    func sendFasterRouteEvent() {
+        events.enqueueEvent(withName: "fasterRouteFound", attributes: events.navigationCancelEvent(routeController: self))
+        events.flush()
+    }
 
     func sendFeedbackEvent(event: CoreFeedbackEvent) {
         // remove from outstanding event queue
@@ -870,6 +883,15 @@ extension RouteController {
 
         outstandingFeedbackEvents.append(event)
 
+        return event.id.uuidString
+    }
+    
+    func enqueueFoundFasterRouteEvent() -> String {
+        let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
+        let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
+        
+        outstandingFeedbackEvents.append(event)
+        
         return event.id.uuidString
     }
 
