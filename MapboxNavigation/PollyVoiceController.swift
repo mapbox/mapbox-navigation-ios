@@ -73,7 +73,7 @@ public class PollyVoiceController: RouteVoiceController {
         for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
             let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
             
-            guard adjustedStepIndex < routeProgresss.currentLegProgress.stepIndex + 3 else { continue }
+            guard adjustedStepIndex < routeProgresss.currentLegProgress.stepIndex + stepsAheadToCache else { continue }
             guard let instructions = step.instructionsSpokenAlongStep else { continue }
             
             for instruction in instructions {
@@ -85,7 +85,7 @@ public class PollyVoiceController: RouteVoiceController {
         
         
         guard spokenInstructionsForRoute[instruction] == nil else {
-            sayInStruction(for: spokenInstructionsForRoute[instruction]!)
+            sayInstruction(for: spokenInstructionsForRoute[instruction]!)
             return
         }
         
@@ -207,7 +207,7 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             }
             
-            strongSelf.sayInStruction(for: data)
+            strongSelf.sayInstruction(for: data)
         }
         
         pollyTask?.resume()
@@ -242,7 +242,7 @@ public class PollyVoiceController: RouteVoiceController {
         }
     }
     
-    func sayInStruction(for data: Data) {
+    func sayInstruction(for data: Data) {
         do {
             audioPlayer = try AVAudioPlayer(data: data)
             let prepared = audioPlayer?.prepareToPlay() ?? false
