@@ -85,7 +85,7 @@ public class PollyVoiceController: RouteVoiceController {
         
         
         guard spokenInstructionsForRoute[instruction] == nil else {
-            sayInstruction(for: spokenInstructionsForRoute[instruction]!)
+            play(spokenInstructionsForRoute[instruction]!)
             return
         }
         
@@ -207,7 +207,7 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             }
             
-            strongSelf.sayInstruction(for: data)
+            strongSelf.play(data)
         }
         
         pollyTask?.resume()
@@ -242,7 +242,7 @@ public class PollyVoiceController: RouteVoiceController {
         }
     }
     
-    func sayInstruction(for data: Data) {
+    func play(_ data: Data) {
         do {
             audioPlayer = try AVAudioPlayer(data: data)
             let prepared = audioPlayer?.prepareToPlay() ?? false
