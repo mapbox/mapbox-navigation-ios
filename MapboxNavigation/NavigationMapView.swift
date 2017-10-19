@@ -37,6 +37,9 @@ open class NavigationMapView: MGLMapView {
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
     let currentLegAttribute = "isCurrentLeg"
+    let instructionSource = "instructionSource"
+    let instructionLabel = "instructionLabel"
+    let instructionCircle = "instructionCircle"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -762,6 +765,49 @@ open class NavigationMapView: MGLMapView {
         
         if let arrowSymboleSource = style.source(withIdentifier: arrowSymbolSourceIdentifier) {
             style.removeSource(arrowSymboleSource)
+        }
+    }
+    
+    public func showVoiceInstructionsOnMap(route: Route) {
+        guard let style = style else {
+            return
+        }
+        
+        var features = [MGLPointFeature]()
+        for (legIndex, leg) in route.legs.enumerated() {
+            for (stepIndex, step) in leg.steps.enumerated() {
+                for instruction in step.instructionsSpokenAlongStep! {
+                    let feature = MGLPointFeature()
+                    feature.coordinate = Polyline(route.legs[legIndex].steps[stepIndex].coordinates!.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
+                    feature.attributes = [ "instruction": instruction.text ]
+                    features.append(feature)
+                }
+            }
+        }
+        
+        let instructionPointSource = MGLShapeCollectionFeature(shapes: features)
+        
+        if let instructionSource = style.source(withIdentifier: instructionSource) as? MGLShapeSource {
+            instructionSource.shape = instructionPointSource
+        } else {
+            let sourceShape = MGLShapeSource(identifier: instructionSource, shape: instructionPointSource, options: nil)
+            style.addSource(sourceShape)
+            
+            let symbol = MGLSymbolStyleLayer(identifier: instructionLabel, source: sourceShape)
+            symbol.text = MGLStyleValue(rawValue: "{instruction}")
+            symbol.textFontSize = MGLStyleValue(rawValue: 14)
+            symbol.textHaloWidth = MGLStyleValue(rawValue: 1)
+            symbol.textHaloColor = MGLStyleValue(rawValue: .white)
+            symbol.textOpacity = MGLStyleValue(rawValue: 0.75)
+            symbol.textAnchor = MGLStyleValue(rawValue: NSValue(mglTextAnchor: .left))
+            
+            let circle = MGLCircleStyleLayer(identifier: instructionCircle, source: sourceShape)
+            circle.circleRadius = MGLStyleValue(rawValue: 5)
+            circle.circleOpacity = MGLStyleValue(rawValue: 0.75)
+            circle.circleColor = MGLStyleValue(rawValue: .white)
+            
+            style.addLayer(circle)
+            style.addLayer(symbol)
         }
     }
 }

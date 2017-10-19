@@ -130,6 +130,12 @@ open class RouteController: NSObject {
      */
     public var allowRecordedAudioFeedback = false
     
+    
+    /**
+     If true, spoken instructions for the route will be displayed on the map.
+     */
+    public var showDebugSpokenInstructionsOnMap = false
+    
 
     var didFindFasterRoute = false
 

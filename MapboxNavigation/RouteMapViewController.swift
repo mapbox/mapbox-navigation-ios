@@ -225,6 +225,10 @@ class RouteMapViewController: UIViewController {
 
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        
+        if routeController.showDebugSpokenInstructionsOnMap {
+            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
 
         if isInOverviewMode {
             updateVisibleBounds()
@@ -301,6 +305,10 @@ class RouteMapViewController: UIViewController {
             mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
+        }
+        
+        if routeController.showDebugSpokenInstructionsOnMap {
+            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
 
         guard isInOverviewMode else {
@@ -528,6 +536,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard !map.showsRoute else { return }
         map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        
+        if routeController.showDebugSpokenInstructionsOnMap {
+            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
     }
 }
 
