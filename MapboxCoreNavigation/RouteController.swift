@@ -5,8 +5,6 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
-let FasterRouteFoundEvent = "fasterRouteFound"
-
 
 /**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
@@ -433,11 +431,11 @@ extension RouteController {
         _ = enqueueRerouteEvent()
     }
     
-    func foundFasterRoute() {
-        print("cool")
-    }
-
     func didReroute(notification: NSNotification) {
+        if let _ = notification.userInfo?[FasterRouteFoundEvent] as? Bool {
+            _ = enqueueFoundFasterRouteEvent()
+        }
+        
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
@@ -628,16 +626,12 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
-                strongSelf.foundFasterRoute(route)
+                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
                 strongSelf.didFindFasterRoute = false
             }
         }
     }
     
-    func foundFasterRoute(_ route: Route) {
-        delegate?.routeController?(self, didRerouteAlong: route)
-    }
-
     func reroute(from location: CLLocation) {
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
