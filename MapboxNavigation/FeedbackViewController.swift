@@ -174,6 +174,10 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         abortAutodismiss()
         dismissFeedbackHandler?()
     }
+    
+    func handleDismissTap(sender: UITapGestureRecognizer) {
+        dismissFeedback()
+    }
 }
 
 extension FileManager {
