@@ -2,20 +2,25 @@ import UIKit
 import MapboxCoreNavigation
 import AVFoundation
 
-struct FeedbackItem {
-    var title: String
-    var image: UIImage
-    var feedbackType: FeedbackType
-    var backgroundColor: UIColor
-    var audio: Data?
+
+extension FeedbackViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        abortAutodismiss()
+        return DismissAnimator()
+    }
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return PresentAnimator()
+    }
+    
+    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return interactor.hasStarted ? interactor : nil
+    }
 }
 
-class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVAudioRecorderDelegate {
-    
-    typealias FeedbackSection = [FeedbackItem]
-    
-    var sections = [FeedbackSection]()
-    let cellReuseIdentifier = "collectionViewCellId"
+typealias FeedbackSection = [FeedbackItem]
+
+class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate, AVAudioRecorderDelegate {
     
     var allowRecordedAudioFeedback = false
     
@@ -23,30 +28,22 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     
     var sendFeedbackHandler: SendFeedbackHandler?
     var dismissFeedbackHandler: (() -> ())?
+    var sections = [FeedbackSection]()
     
-    @IBOutlet weak var containerView: UIView!
+    let cellReuseIdentifier = "collectionViewCellId"
+    let interactor = Interactor()
+    
+    let autoDismissInterval: TimeInterval = 5
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var recordingAudioLabel: UILabel!
+    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var progressBar: ProgressBar!
     
     var recordingSession: AVAudioSession?
-    var audioRecorder: AVAudioRecorder? {
-        didSet {
-            recordingAudioLabel.isHidden = !recordingAudioLabel.isHidden
-        }
-    }
+    var audioRecorder: AVAudioRecorder?
     
     var activeFeedbackItem: FeedbackItem?
-    
-    var pulsingAnimation:CABasicAnimation {
-        let pulseAnimation:CABasicAnimation = CABasicAnimation(keyPath: "transform.scale")
-        pulseAnimation.duration = 1
-        pulseAnimation.fromValue = 1
-        pulseAnimation.toValue = 1.2
-        pulseAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        pulseAnimation.autoreverses = true
-        pulseAnimation.repeatCount = .greatestFiniteMagnitude
-        return pulseAnimation
-    }
     
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -55,88 +52,74 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = .clear
-        containerView.applyDefaultCornerRadiusShadow(cornerRadius: 16)
-        
-        let accidentImage       = Bundle.mapboxNavigation.image(named: "feedback_car_crash")!.withRenderingMode(.alwaysTemplate)
-        let hazardImage         = Bundle.mapboxNavigation.image(named: "feedback_hazard")!.withRenderingMode(.alwaysTemplate)
-        let roadClosedImage     = Bundle.mapboxNavigation.image(named: "feedback_road_closed")!.withRenderingMode(.alwaysTemplate)
-        let unallowedTurnImage  = Bundle.mapboxNavigation.image(named: "feedback_turn_not_allowed")!.withRenderingMode(.alwaysTemplate)
-        let routingImage        = Bundle.mapboxNavigation.image(named: "feedback_routing")!.withRenderingMode(.alwaysTemplate)
-        let otherImage          = Bundle.mapboxNavigation.image(named: "feedback_other")!.withRenderingMode(.alwaysTemplate)
-        
-        let accidentTitle       = NSLocalizedString("FEEDBACK_ACCIDENT", bundle: .mapboxNavigation, value: "Accident", comment: "Feedback type for Accident")
-        let hazardTitle         = NSLocalizedString("FEEDBACK_HAZARD", bundle: .mapboxNavigation, value: "Hazard", comment: "Feedback type for Hazard")
-        let closureTitle        = NSLocalizedString("FEEDBACK_CLOSURE", bundle: .mapboxNavigation, value: "Closure", comment: "Feedback type for Closure")
-        let unallowedTurnTitle  = NSLocalizedString("FEEDBACK_UNALLOWED_TURN", bundle: .mapboxNavigation, value: "Not Allowed", comment: "Feedback type for Unallowed Turn")
-        let confusingTitle      = NSLocalizedString("FEEDBACK_CONFUSING", bundle: .mapboxNavigation, value: "Confusing", comment: "Feedback type for Confusing")
-        let otherIssueTitle     = NSLocalizedString("FEEDBACK_OTHER", bundle: .mapboxNavigation, value: "Other Issue", comment: "Feedback type for Other Issue")
-        
-        let accident        = FeedbackItem(title: accidentTitle,        image: accidentImage,       feedbackType: .accident,        backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), audio:  nil)
-        let hazard          = FeedbackItem(title: hazardTitle,          image: hazardImage,         feedbackType: .hazard,          backgroundColor: #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1), audio:  nil)
-        let roadClosed      = FeedbackItem(title: closureTitle,         image: roadClosedImage,     feedbackType: .roadClosed,      backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
-        let unallowedTurn   = FeedbackItem(title: unallowedTurnTitle,   image: unallowedTurnImage,  feedbackType: .unallowedTurn,   backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
-        let routingError    = FeedbackItem(title: confusingTitle,       image: routingImage,        feedbackType: .routingError,    backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
-        let other           = FeedbackItem(title: otherIssueTitle,      image: otherImage,          feedbackType: .general,         backgroundColor: #colorLiteral(red: 0.9823123813, green: 0.6965931058, blue: 0.1658670604, alpha: 1), audio:  nil)
-        
-        sections = [
-            [accident, hazard],
-            [roadClosed, unallowedTurn],
-            [routingError, other]
-        ]
-        
-        guard allowRecordedAudioFeedback else { return }
-        
-        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
-            let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-            (dict["Privacy - Microphone Usage Description and value"] != nil || dict["NSMicrophoneUsageDescription"] != nil) else {
-                assert(false, "If `allowRecordedAudioFeedback` is enabled, `NSMicrophoneUsageDescription` must be added in app plist")
-                return
-        }
-        
-        recordingSession = AVAudioSession.sharedInstance()
-        recordingSession?.requestRecordPermission() { [unowned self] allowed in
-            if allowed {
-                let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didTapCell(_:)))
-                longPress.minimumPressDuration = 0.5
-                longPress.delegate = self
-                longPress.delaysTouchesBegan = true
-                self.collectionView?.addGestureRecognizer(longPress)
-            }
-        }
+        transitioningDelegate = self
+        progressBar.progress = 1
+        progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
+        enableDraggableDismiss()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        perform(#selector(dismissFeedback), with: nil, afterDelay: 5)
+        
+        UIView.animate(withDuration: autoDismissInterval) {
+            self.progressBar.progress = 0
+        }
+        
+        enableAutoDismiss()
+        
+        if allowRecordedAudioFeedback {
+            validateAudio()
+            enableAudioRecording()
+        }
     }
     
-    @IBAction func cancel(_ sender: Any) {
-        dismissFeedback()
+    func validateAudio() {
+        guard Bundle.main.microphoneUsageDescription != nil else {
+            assert(false, "If `allowRecordedAudioFeedback` is enabled, `NSMicrophoneUsageDescription` must be added in app plist")
+            return
+        }
     }
     
-    func didTapCell(_ sender: UIGestureRecognizer) {
+    func enableAudioRecording() {
+        abortAutodismiss()
+        recordingSession = AVAudioSession.sharedInstance()
+        recordingSession?.requestRecordPermission() { [unowned self] allowed in
+            self.enableAutoDismiss()
+            guard allowed else { return }
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongPress(_:)))
+            longPress.minimumPressDuration = 0.5
+            longPress.delegate = self
+            longPress.delaysTouchesBegan = true
+            self.collectionView?.addGestureRecognizer(longPress)
+        }
+    }
+    
+    func enableAutoDismiss() {
+        abortAutodismiss()
+        perform(#selector(dismissFeedback), with: nil, afterDelay: autoDismissInterval)
+    }
+    
+    func didLongPress(_ sender: UIGestureRecognizer) {
         guard sender.state == .began || sender.state == .ended else { return }
         
         abortAutodismiss()
         
         let touchLocation = sender.location(in: self.collectionView)
+        guard let indexPath = self.collectionView.indexPathForItem(at: touchLocation) else { return }
         
-        if let indexPath = self.collectionView.indexPathForItem(at: touchLocation) {
-            // get the cell at indexPath (the one you long pressed)
-            let cell = self.collectionView.cellForItem(at: indexPath) as! FeedbackCollectionViewCell
-            cell.layer.add(pulsingAnimation, forKey: "animateScale")
-            
-            activeFeedbackItem = sections[indexPath.section][indexPath.row]
-            
+        activeFeedbackItem = sections[indexPath.section][indexPath.row]
+        
+        if sender.state == .began {
+            recordingAudioLabel.isHidden = false
+            recordingAudioLabel.startRippleAnimation()
             
             if audioRecorder == nil {
                 startRecording()
             }
-            
-            if sender.state == .ended {
-                finishRecording()
-            }
+        }
+        
+        if sender.state == .ended {
+            finishRecording()
         }
     }
     
@@ -146,7 +129,6 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
             sendFeedbackHandler?(activeFeedbackItem!)
         }
     }
-    
     
     func startRecording() {
         guard let audioFile = FileManager().cacheAudioFileLocation else { return }
@@ -172,7 +154,7 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
         audioRecorder = nil
     }
     
-
+    
     func presentError(_ message: String) {
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -184,12 +166,17 @@ class FeedbackViewController: UIViewController, UIGestureRecognizerDelegate, AVA
     }
     
     func abortAutodismiss() {
+        progressBar.progress = 0
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissFeedback), object: nil)
     }
     
     func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
+    }
+    
+    func handleDismissTap(sender: UITapGestureRecognizer) {
+        dismissFeedback()
     }
 }
 
@@ -236,8 +223,8 @@ extension FeedbackViewController: UICollectionViewDelegate {
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.bounds.midX
-        return CGSize(width: width, height: 134)
+        let width = floor(collectionView.bounds.width / 3)
+        return CGSize(width: width, height: width+5)
     }
 }
 

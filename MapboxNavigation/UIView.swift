@@ -17,4 +17,101 @@ extension UIView {
         layer.shadowRadius = 4
         layer.shadowOpacity = Float(shadowOpacity!)
     }
+    
+    func startRippleAnimation() {
+        layer.masksToBounds = true
+        let rippleLayer = RippleLayer()
+        rippleLayer.rippleRadius = bounds.midX
+        rippleLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+        layer.addSublayer(rippleLayer)
+        rippleLayer.startAnimation()
+    }
+}
+
+class RippleLayer: CAReplicatorLayer {
+    var animationGroup: CAAnimationGroup? {
+        didSet {
+            animationGroup?.delegate = self
+        }
+    }
+    var rippleRadius: CGFloat = 100
+    var rippleColor: UIColor = UIColor.white
+    var rippleRepeatCount: Float = .greatestFiniteMagnitude
+    var rippleWidth: CGFloat = 10
+    
+    fileprivate var rippleEffect: CALayer?
+    
+    override init() {
+        super.init()
+        commonInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    func commonInit() {
+        setupRippleEffect()
+        repeatCount = Float(rippleRepeatCount)
+    }
+    
+    override func layoutSublayers() {
+        super.layoutSublayers()
+        
+        rippleEffect?.bounds = CGRect(x: 0, y: 0, width: rippleRadius*2, height: rippleRadius*2)
+        rippleEffect?.cornerRadius = rippleRadius
+        instanceCount = 3
+        instanceDelay = 0.4
+    }
+    
+    func setupRippleEffect() {
+        rippleEffect = CALayer()
+        rippleEffect?.borderWidth = CGFloat(rippleWidth)
+        rippleEffect?.borderColor = rippleColor.cgColor
+        rippleEffect?.opacity = 0
+        
+        addSublayer(rippleEffect!)
+    }
+    
+    func startAnimation() {
+        animationGroup = rippleAnimationGroup()
+        rippleEffect?.add(animationGroup!, forKey: "ripple")
+    }
+    
+    func stopAnimation() {
+        rippleEffect?.removeAnimation(forKey: "ripple")
+    }
+    
+    func rippleAnimationGroup() -> CAAnimationGroup {
+        let duration: CFTimeInterval = 3
+        
+        let group = CAAnimationGroup()
+        group.duration = duration
+        group.repeatCount = self.repeatCount
+        group.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
+        
+        let scaleAnimation = CABasicAnimation(keyPath: "transform.scale.xy")
+        scaleAnimation.fromValue = 0.0;
+        scaleAnimation.toValue = 1.0;
+        scaleAnimation.duration = duration
+        
+        let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
+        opacityAnimation.duration = duration
+        let fromAlpha = 1.0
+        opacityAnimation.values = [fromAlpha, (fromAlpha * 0.5), 0];
+        opacityAnimation.keyTimes = [0, 0.2, 1];
+        
+        group.animations = [scaleAnimation, opacityAnimation]
+        
+        return group
+    }
+}
+
+extension RippleLayer: CAAnimationDelegate {
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        if let count = rippleEffect?.animationKeys()?.count , count > 0 {
+            rippleEffect?.removeAllAnimations()
+        }
+    }
 }
