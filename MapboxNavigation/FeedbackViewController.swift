@@ -208,9 +208,8 @@ extension FeedbackViewController: UICollectionViewDataSource {
         let item = sections[indexPath.section][indexPath.row]
         
         cell.titleLabel.text = item.title
-        cell.imageView.tintColor = .white
+        cell.imageView.tintColor = .clear
         cell.imageView.image = item.image
-        cell.circleView.backgroundColor = item.backgroundColor
         
         return cell
     }
