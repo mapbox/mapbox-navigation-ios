@@ -268,7 +268,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
      */
-    public var showsReportFeedback: Bool = true
+    public var showsReportFeedback: Bool = true {
+        didSet {
+            mapViewController?.reportButton.isHidden = !showsReportFeedback
+        }
+    }
+    
     
     /**
      If true, the map style and UI will automatically be updated given the time of day.
