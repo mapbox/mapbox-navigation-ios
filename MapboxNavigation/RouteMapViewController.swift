@@ -163,8 +163,8 @@ class RouteMapViewController: UIViewController {
         let controller = FeedbackViewController.loadFromStoryboard()
         controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
         controller.sections = [
-            [.instructionIssue, .confusingInstruction, .notAllowed],
-            [.gpsInaccurate, .badRoute, .reportTraffic]
+            [.closure, .turnNotAllowed, .reportTraffic],
+            [.confusingInstructions, .GPSInaccurate, .badRoute]
         ]
         
         let feedbackId = routeController.recordFeedback()

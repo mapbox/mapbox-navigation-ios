@@ -25,6 +25,9 @@
 /* Feedback type for Report Traffic */
 "FEEDBACK_REPORT_TRAFFIC" = "Report \nTraffic";
 
+/* Feedback type for Closure */
+"FEEDBACK_ROAD_CLOSURE" = "Road \nClosed";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";
 
