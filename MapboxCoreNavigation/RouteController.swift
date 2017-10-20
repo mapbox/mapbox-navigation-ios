@@ -234,8 +234,6 @@ open class RouteController: NSObject {
             events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
             events.disableLocationMetrics()
             events.sendTurnstileEvent()
-            didChangeOrientation()
-            didChangeApplicationState()
         } else {
             assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
         }
@@ -246,9 +244,6 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
     }
 
     func suspendNotifications() {
@@ -271,23 +266,6 @@ open class RouteController: NSObject {
     public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
-    }
-    
-    func didChangeOrientation() {
-        if let previousOrientationChangeToPortrait = sessionState.previousOrientationChangeToPortrait, UIDevice.current.orientation == .portrait {
-            sessionState.timeInPortrait += previousOrientationChangeToPortrait.timeIntervalSinceNow
-        }
-        
-        sessionState.previousOrientationChangeToPortrait = Date()
-    }
-
-    
-    func didChangeApplicationState() {
-        if let previousForegroundChange = sessionState.previousForegroundChange, UIApplication.shared.applicationState == .active {
-            sessionState.timeInForeground += previousForegroundChange.timeIntervalSinceNow
-        }
-        
-        sessionState.previousOrientationChangeToPortrait = Date()
     }
     
     /**
@@ -430,6 +408,7 @@ extension RouteController {
     func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
     }
+    
     
     func didReroute(notification: NSNotification) {
         if let _ = notification.userInfo?[FasterRouteFoundEvent] as? Bool {
@@ -806,17 +785,10 @@ struct SessionState {
     var originalRoute: Route
 
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
-    
-    var timeInForeground: TimeInterval
-    var timeInPortrait: TimeInterval
-    var previousForegroundChange: Date?
-    var previousOrientationChangeToPortrait: Date?
 
     init(currentRoute: Route, originalRoute: Route) {
         self.currentRoute = currentRoute
         self.originalRoute = originalRoute
-        self.timeInForeground = 0
-        self.timeInPortrait = 0
     }
 }
 
@@ -839,7 +811,7 @@ extension RouteController {
     }
     
     func sendFasterRouteEvent() {
-        events.enqueueEvent(withName: FasterRouteFoundEvent, attributes: events.navigationCancelEvent(routeController: self))
+        events.enqueueEvent(withName: FasterRouteFoundEvent, attributes: events.navigationFoundFasterRoute(routeController: self))
         events.flush()
     }
 
@@ -884,7 +856,7 @@ extension RouteController {
     
     func enqueueFoundFasterRouteEvent() -> String {
         let eventDictionary = events.navigationFoundFasterRoute(routeController: self)
-        let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
+        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
         
         outstandingFeedbackEvents.append(event)
         
