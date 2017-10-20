@@ -811,7 +811,7 @@ extension RouteController {
     }
     
     func sendFasterRouteEvent() {
-        events.enqueueEvent(withName: FasterRouteFoundEvent, attributes: events.navigationFoundFasterRoute(routeController: self))
+        events.enqueueEvent(withName: FasterRouteFoundEvent, attributes: events.navigationFoundFasterRouteEvent(routeController: self))
         events.flush()
     }
 
@@ -855,7 +855,7 @@ extension RouteController {
     }
     
     func enqueueFoundFasterRouteEvent() -> String {
-        let eventDictionary = events.navigationFoundFasterRoute(routeController: self)
+        let eventDictionary = events.navigationFoundFasterRouteEvent(routeController: self)
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
         
         outstandingFeedbackEvents.append(event)
