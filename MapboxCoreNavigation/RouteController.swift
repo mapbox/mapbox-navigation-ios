@@ -407,6 +407,7 @@ extension RouteController {
 
     func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
+        sendFasterRouteEvent()
     }
     
     
@@ -606,6 +607,9 @@ extension RouteController: CLLocationManagerDelegate {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                strongSelf.didReroute(notification: NSNotification(name: RouteControllerDidReroute, object: nil, userInfo: [
+                    RouteControllerDidFindFasterRouteKey: true
+                    ]))
                 strongSelf.didFindFasterRoute = false
             }
         }
