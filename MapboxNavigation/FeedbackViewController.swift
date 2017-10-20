@@ -134,6 +134,11 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
             activeFeedbackItem!.audio = fileData
             sendFeedbackHandler?(activeFeedbackItem!)
         }
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
+        } catch {
+            print(error.localizedDescription)
+        }
     }
     
     func startRecording() {
