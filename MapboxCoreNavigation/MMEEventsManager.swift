@@ -36,7 +36,7 @@ struct EventDetails {
     var batteryLevel: Float
     var applicationState: UIApplicationState
     var userAbsoluteDistanceToDestination: CLLocationDistance?
-    var locationEngine: CLLocationManager
+    var locationEngine: CLLocationManager.Type?
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -88,7 +88,9 @@ struct EventDetails {
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
         batteryLevel = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
         applicationState = UIApplication.shared.applicationState
-        locationEngine = routeController.locationManager
+        if let manager = routeController.locationManager {
+            locationEngine = type(of: manager)
+        }
     }
     
     var eventDictionary: [String: Any] {
@@ -143,7 +145,7 @@ struct EventDetails {
         modifiedEventDictionary["batteryLevel"] = batteryLevel
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
         modifiedEventDictionary["userAbsoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
-        modifiedEventDictionary["locationEngine"] = String(describing: type(of: locationEngine))
+        modifiedEventDictionary["locationEngine"] = String(describing: locationEngine)
 
         return modifiedEventDictionary
     }
