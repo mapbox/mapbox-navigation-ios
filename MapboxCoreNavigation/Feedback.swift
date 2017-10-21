@@ -26,19 +26,24 @@ public enum FeedbackType: Int, CustomStringConvertible {
     case roadClosed
     
     /**
-     Identifies the feedback as a turn that isn't allowed. For example, if a user is instructed to make a left turn, but the turn isn't allowed.
+     Identifies the feedback as a maneuver that isn't allowed. For example, if a user is instructed to make a left turn, but the turn isn't allowed.
      */
-    case unallowedTurn
+    case notAllowed
+    
+    /**
+     Identifies the feedback as the location of a road that should exist along the route.
+     */
+    case missingRoad
+    
+    /**
+     Identifies the feedback as a maneuver with missing exit information such as an exit number or destination sign.
+     */
+    case missingExit
     
     /**
      Identifies the feedback as the location of a poor instruction or route choice. This could be used to indicate an ambiguous or poorly-timed turn announcement, or a set of confusing turns.
      */
     case routingError
-    
-    /**
-     Identifies the feedback as the location of an instruction with bad timing. For example after the maneuver should have occured.
-     */
-    case instructionTiming
     
     /**
      Identifies the feedback as the location of a confusing instruction.
@@ -51,53 +56,34 @@ public enum FeedbackType: Int, CustomStringConvertible {
     case inaccurateGPS
     
     /**
-     Identifies the feedback where the route was inefficient.
-     */
-    case badRoute
-    
-    /**
      Identifies the feedback as a place where traffic should have been reported.
      */
     case reportTraffic
     
-    /**
-     Identifies the feedback as a place with general instruction issue.
-     */
-    case instructionIssue
-    
-    /**
-     Identifies the feedback as a place with heavy traffic could have been avoided by using a smarter route.
-     */
-    case heavyTraffic
-    
     public var description: String {
         switch self {
+        case .general:
+            return "general"
         case .accident:
             return "accident"
         case .hazard:
             return "hazard"
         case .roadClosed:
             return "road_closed"
-        case .unallowedTurn:
-            return "unallowed_turn"
+        case .notAllowed:
+            return "not_allowed"
+        case .missingRoad:
+            return "missing_road"
+        case .missingExit:
+            return "missing_exit"
         case .routingError:
             return "routing_error"
-        case .general:
-            return "general"
-        case .instructionTiming:
-            return "instruction_timing"
         case .confusingInstruction:
             return "confusing_instruction"
         case .inaccurateGPS:
             return "inaccurate_gps"
-        case .badRoute:
-            return "bad_route"
         case .reportTraffic:
             return "report_traffic"
-        case .instructionIssue:
-            return "instruction_issue"
-        case .heavyTraffic:
-            return "heavy_traffic"
         }
     }
 }
