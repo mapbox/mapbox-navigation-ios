@@ -16,11 +16,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     var fallbackText: String!
     var announcementTimer: Timer?
     
-    /**
-     A boolean value indicating whether instructions should be announced by voice or not.
-     */
-    public var isEnabled: Bool = true
-    
     
     /**
      Volume of announcements.
@@ -75,7 +70,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     deinit {
         suspendNotifications()
-        speechSynth.stopSpeaking(at: .word)
+        speechSynth.stopSpeaking(at: .immediate)
         resetAnnouncementTimer()
     }
     
@@ -83,12 +78,26 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(settingsDidChange(_:)), name: NavigationSettingsDidChange, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NavigationSettingsDidChange, object: nil)
+    }
+    
+    @objc func settingsDidChange(_ notification: Notification) {
+        let muteKey = #keyPath(NavigationSettings.voiceMuted)
+        let muteChanged = notification.userInfo?[muteKey] != nil
+        
+        guard muteChanged else { return }
+        
+        if NavigationSettings.shared.voiceMuted {
+            audioPlayer?.stop()
+            speechSynth.stopSpeaking(at: .immediate)
+        }
     }
     
     func didReroute(notification: NSNotification) {
@@ -102,7 +111,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)
         
-        guard playRerouteSound && !NavigationSettings.shared.muted else {
+        guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
             return
         }
         
@@ -124,6 +133,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         } catch {
             print(error)
         }
+    }
+    
+    func voiceVolumeDidChange(notification: Notification) {
+        audioPlayer?.volume = volume
     }
     
     func validateDuckingOptions() throws {
@@ -162,7 +175,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func shouldSpeak(for notification: NSNotification) -> Bool {
-        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return false }
+        guard !NavigationSettings.shared.voiceMuted else { return false }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
