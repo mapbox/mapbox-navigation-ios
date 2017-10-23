@@ -94,8 +94,23 @@ struct EventDetails {
             locationEngine = type(of: manager)
         }
         
-        percentTimeInPortrait = session.timeSpentInPortrait / (session.timeSpentInPortrait + session.timeSpentInLandscape)
-        percentTimeInForeground = session.timeSpentInForeground / (session.timeSpentInForeground + session.timeSpentInBackground)
+        var totalTimeInPortrait = session.timeSpentInPortrait
+        var totalTimeInLandscape = session.timeSpentInLandscape
+        if UIDevice.current.orientation == .portrait {
+            totalTimeInPortrait += abs(session.lastTimeInPortrait.timeIntervalSinceNow)
+        } else if UIDevice.current.orientation == .landscapeRight || UIDevice.current.orientation == .landscapeLeft {
+            totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
+        }
+        percentTimeInPortrait = totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
+        
+        var totalTimeInForeground = session.timeSpentInForeground
+        var totalTimeInBackground = session.timeSpentInBackground
+        if UIApplication.shared.applicationState == .active {
+            totalTimeInForeground += abs(session.lastTimeInForeground.timeIntervalSinceNow)
+        } else {
+            totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
+        }
+        percentTimeInForeground = totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
     }
     
     var eventDictionary: [String: Any] {
@@ -151,6 +166,9 @@ struct EventDetails {
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
         modifiedEventDictionary["userAbsoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
         modifiedEventDictionary["locationEngine"] = String(describing: locationEngine)
+        
+        modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait
+        modifiedEventDictionary["percentTimeInForeground"] = percentTimeInForeground
 
         return modifiedEventDictionary
     }
