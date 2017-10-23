@@ -157,10 +157,12 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationCancelEvent(routeController: RouteController) -> [String: Any] {
+    func navigationCancelEvent(routeController: RouteController, rating potentialRating: Int? = nil, comment potentialComment:String? = nil) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationCancel
         eventDictionary["arrivalTimestamp"] = routeController.sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
+        if let rating = potentialRating { eventDictionary["rating"] = rating } //NB: Up to the implementer to pass "unrated" (-1) attribute.
+        if let comment = potentialComment { eventDictionary["comment"] = comment }
         return eventDictionary
     }
     
