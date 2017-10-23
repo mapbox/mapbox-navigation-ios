@@ -33,7 +33,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     let cellReuseIdentifier = "collectionViewCellId"
     let interactor = Interactor()
     
-    let autoDismissInterval: TimeInterval = 5
+    let autoDismissInterval: TimeInterval = 10
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var recordingAudioLabel: UILabel!
