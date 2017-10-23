@@ -30,6 +30,11 @@ extension UIView {
         layer.addSublayer(rippleLayer)
         rippleLayer.startAnimation()
     }
+    
+    class func fromNib<T : UIView>() -> T? {
+        let nibName = String(describing: T.self)
+        return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? T
+    }
 }
 
 class RippleLayer: CAReplicatorLayer {
