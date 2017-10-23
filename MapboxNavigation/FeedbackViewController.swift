@@ -39,7 +39,16 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var recordingAudioLabel: UILabel!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var progressBar: ProgressBar!
+    
+    var draggableHeight: CGFloat {
+        // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
+        let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(collectionView.numberOfRows)
+        let collectionViewHeight = flowLayout.itemSize.height * CGFloat(collectionView.numberOfRows) + padding
+        let fullHeight = recordingAudioLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
+        return fullHeight
+    }
     
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)

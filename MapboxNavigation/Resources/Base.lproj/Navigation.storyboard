@@ -221,7 +221,7 @@
                                         <inset key="imageEdgeInsets" minX="3" minY="2" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" image="feedback"/>
                                         <connections>
-                                            <action selector="report:" destination="3z2-H5-unA" eventType="touchUpInside" id="2mO-AS-TQL"/>
+                                            <action selector="feedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="2mO-AS-TQL"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -493,9 +493,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="347"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recording Audio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTH-eK-F5H">
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Recording Audio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTH-eK-F5H">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20.5"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20.5" id="nnt-IW-lbJ"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -503,6 +506,9 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="always" delaysContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Sne-Dn-jdt">
                                 <rect key="frame" x="0.0" y="20.5" width="375" height="320.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="320.5" id="c4r-nT-SlB"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="unA-43-4hX">
                                     <size key="itemSize" width="125" height="130"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -866,6 +872,7 @@ Label  </string>
                     <size key="freeformSize" width="375" height="347"/>
                     <connections>
                         <outlet property="collectionView" destination="Sne-Dn-jdt" id="WOk-me-goX"/>
+                        <outlet property="collectionViewHeightConstraint" destination="c4r-nT-SlB" id="Umz-lJ-Qum"/>
                         <outlet property="flowLayout" destination="unA-43-4hX" id="Mcf-1x-Dzk"/>
                         <outlet property="progressBar" destination="kGL-xc-d1v" id="CBv-LG-JPx"/>
                         <outlet property="recordingAudioLabel" destination="xTH-eK-F5H" id="Lej-Fv-FC4"/>

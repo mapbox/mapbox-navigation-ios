@@ -30,7 +30,7 @@ struct FeedbackItem {
     static let GPSInaccurate = FeedbackItem(title: gpsInaccurateTitle, image: .feedbackImage(named:"feedback-gps"), feedbackType: .inaccurateGPS)
     static let badRoute = FeedbackItem(title: badRouteTitle, image: .feedbackImage(named:"feedback-wrong-directions"), feedbackType: .routingError)
     
-    // Not currently used
+    // Reroute row 1
     static let missingRoad = FeedbackItem(title: missingExitTitle, image: .feedbackImage(named:"feedback-missing-road"), feedbackType: .missingRoad)
     static let missingExit = FeedbackItem(title: missingRoadTitle, image: .feedbackImage(named:"feedback-exit"), feedbackType: .missingExit)
     static let generalMapError = FeedbackItem(title: generalIssueTitle, image: .feedbackImage(named:"feedback-map-error"), feedbackType: .general)

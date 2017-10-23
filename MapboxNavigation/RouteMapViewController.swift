@@ -152,21 +152,26 @@ class RouteMapViewController: UIViewController {
     
     @IBAction func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
-        
+
         let muted = sender.isSelected
         NavigationSettings.shared.muted = muted
     }
     
-    @IBAction func report(_ sender: Any) {
+    @IBAction func rerouteFeedback() {
+        showFeedback([[.missingRoad, .missingExit, .generalMapError]])
+    }
+    
+    @IBAction func feedback(_ sender: Any) {
+        showFeedback([[.closure, .turnNotAllowed, .reportTraffic], [.confusingInstructions, .GPSInaccurate, .badRoute] ])
+        delegate?.mapViewControllerDidOpenFeedback(self)
+    }
+    
+    func showFeedback(_ sections: [FeedbackSection]) {
         guard let parent = parent else { return }
         
         let controller = FeedbackViewController.loadFromStoryboard()
         controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
-        controller.sections = [
-            [.closure, .turnNotAllowed, .reportTraffic],
-            [.confusingInstructions, .GPSInaccurate, .badRoute]
-        ]
-        
+        controller.sections = sections
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
@@ -188,8 +193,6 @@ class RouteMapViewController: UIViewController {
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = controller
         parent.present(controller, animated: true, completion: nil)
-        
-        delegate?.mapViewControllerDidOpenFeedback(self)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -244,6 +247,8 @@ class RouteMapViewController: UIViewController {
             mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
+        
+        rerouteFeedback()
     }
     
     func willReroute(notification: NSNotification) {
