@@ -20,30 +20,35 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 
 typealias FeedbackSection = [FeedbackItem]
 
-class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate, AVAudioRecorderDelegate {
-    
-    var allowRecordedAudioFeedback = false
+class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollectionViewCellDelegate, AVAudioRecorderDelegate {
     
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
+    var allowRecordedAudioFeedback = false
     var sendFeedbackHandler: SendFeedbackHandler?
     var dismissFeedbackHandler: (() -> ())?
     var sections = [FeedbackSection]()
+    var recordingSession: AVAudioSession?
+    var audioRecorder: AVAudioRecorder?
+    var activeFeedbackItem: FeedbackItem?
     
     let cellReuseIdentifier = "collectionViewCellId"
     let interactor = Interactor()
-    
-    let autoDismissInterval: TimeInterval = 5
+    let autoDismissInterval: TimeInterval = 10
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var recordingAudioLabel: UILabel!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var progressBar: ProgressBar!
     
-    var recordingSession: AVAudioSession?
-    var audioRecorder: AVAudioRecorder?
-    
-    var activeFeedbackItem: FeedbackItem?
+    var draggableHeight: CGFloat {
+        // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
+        let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(collectionView.numberOfRows)
+        let collectionViewHeight = flowLayout.itemSize.height * CGFloat(collectionView.numberOfRows) + padding
+        let fullHeight = recordingAudioLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
+        return fullHeight
+    }
     
     class func loadFromStoryboard() -> FeedbackViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
@@ -85,12 +90,6 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         recordingSession = AVAudioSession.sharedInstance()
         recordingSession?.requestRecordPermission() { [unowned self] allowed in
             self.enableAutoDismiss()
-            guard allowed else { return }
-            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongPress(_:)))
-            longPress.minimumPressDuration = 0.5
-            longPress.delegate = self
-            longPress.delaysTouchesBegan = true
-            self.collectionView?.addGestureRecognizer(longPress)
         }
     }
     
@@ -99,9 +98,8 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         perform(#selector(dismissFeedback), with: nil, afterDelay: autoDismissInterval)
     }
     
-    func didLongPress(_ sender: UIGestureRecognizer) {
+    func didLongPress(on cell: FeedbackCollectionViewCell, sender: UILongPressGestureRecognizer) {
         guard sender.state == .began || sender.state == .ended else { return }
-        
         let touchLocation = sender.location(in: self.collectionView)
         guard let indexPath = self.collectionView.indexPathForItem(at: touchLocation) else { return }
         
@@ -165,7 +163,6 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         audioRecorder = nil
     }
     
-    
     func presentError(_ message: String) {
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let action = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -187,13 +184,9 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if gestureRecognizer is UILongPressGestureRecognizer {
-            return true
-        }
-        
         // Only respond to touches outside/behind the view
-        let isDecendant = touch.view?.isDescendant(of: view) ?? true
-        return !isDecendant
+        let isDescendant = touch.view?.isDescendant(of: view) ?? true
+        return !isDescendant
     }
     
     func handleDismissTap(sender: UITapGestureRecognizer) {
@@ -215,6 +208,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
         cell.titleLabel.text = item.title
         cell.imageView.tintColor = .clear
         cell.imageView.image = item.image
+        cell.delegate = self
         
         return cell
     }
@@ -248,10 +242,28 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+protocol FeedbackCollectionViewCellDelegate: class {
+    func didLongPress(on cell: FeedbackCollectionViewCell, sender: UILongPressGestureRecognizer)
+}
+
 class FeedbackCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var circleView: UIView!
+    
+    weak var delegate: FeedbackCollectionViewCellDelegate?
+    var longPress: UILongPressGestureRecognizer?
+    var originalTransform: CGAffineTransform?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        if longPress == nil {
+            longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongPress(_:)))
+            longPress?.minimumPressDuration = 0.5
+            addGestureRecognizer(longPress!)
+        }
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -260,9 +272,23 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     
     override var isHighlighted: Bool {
         didSet {
-            backgroundColor = isHighlighted ? #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.6015074824) : .clear
-            imageView.tintColor = isHighlighted ? .lightGray : .white
+            if originalTransform == nil {
+                originalTransform = self.imageView.transform
+            }
+            
+            UIView.defaultSpringAnimation(0.3, animations: {
+                if self.isHighlighted {
+                    self.imageView.transform = self.imageView.transform.scaledBy(x: 0.85, y: 0.85)
+                } else {
+                    guard let t = self.originalTransform else { return }
+                    self.imageView.transform = t
+                }
+            }, completion: nil)
         }
+    }
+    
+    func didLongPress(_ sender: UILongPressGestureRecognizer) {
+        delegate?.didLongPress(on: self, sender: sender)
     }
 }
 

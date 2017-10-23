@@ -54,8 +54,13 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
         }
         containerView.addGestureRecognizer(tap)
         
-        let finalFrame = CGRect(origin: CGPoint(x: 0, y: fromVC.view.bounds.height - toVC.view.bounds.height),
-                                size: CGSize(width: fromVC.view.bounds.width, height: toVC.view.bounds.height))
+        var height = toVC.view.bounds.height
+        if let draggable = toVC as? DismissDraggable {
+            height = draggable.draggableHeight
+        }
+        
+        let finalFrame = CGRect(origin: CGPoint(x: 0, y: fromVC.view.bounds.height - height),
+                                size: CGSize(width: fromVC.view.bounds.width, height: height))
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             toView.frame = finalFrame
@@ -68,6 +73,7 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
 
 @objc protocol DismissDraggable: UIViewControllerTransitioningDelegate {
     var interactor: Interactor { get }
+    var draggableHeight: CGFloat { get }
     @objc optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
 }
 
