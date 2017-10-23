@@ -1,3 +1,6 @@
+﻿
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "JMs-xU-Gfd"; */
+"JMs-xU-Gfd.normalTitle" = "Avbryt";
 
 /* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
 "UpZ-gr-OKM.text" = "Uppdaterar rutt…";
@@ -5,5 +8,3 @@
 /* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
 "upm-fg-ffn.text" = "Tack för din feedback!";
 
-/* Class = "UILabel"; text = "Recording Audio"; ObjectID = "xTH-eK-F5H"; */
-"xTH-eK-F5H.text" = "Inspelning";
