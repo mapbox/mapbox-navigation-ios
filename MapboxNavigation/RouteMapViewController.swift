@@ -604,7 +604,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.turnArrowView.step = step
         maneuverViewController.distance = step.distance > 0 ? step.distance : nil
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
-        maneuverViewController.updateStreetNameForStep()
+//        maneuverViewController.updateStreetNameForStep()
         
         updateLaneViews(step: step, durationRemaining: 0)
 
