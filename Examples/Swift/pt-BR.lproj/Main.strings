@@ -1,30 +1,15 @@
 
 /* Class = "UIButton"; normalTitle = "Continue to next destination"; ObjectID = "1vl-kS-fBt"; */
-"1vl-kS-fBt.normalTitle" = "Continue to next destination";
-
-/* Class = "UIButton"; normalTitle = "×"; ObjectID = "68P-Cf-VxO"; Note = "DO NOT TRANSLATE"; */
-"68P-Cf-VxO.normalTitle" = "×";
-
-/* Class = "UIButton"; normalTitle = "Clear map"; ObjectID = "6ux-mK-LQF"; */
-"6ux-mK-LQF.normalTitle" = "Clear map";
-
-/* Class = "UILabel"; text = "Label"; ObjectID = "7g2-Jm-pgj"; Note = "DO NOT TRANSLATE"; */
-"7g2-Jm-pgj.text" = "Label";
-
-/* Class = "UILabel"; text = "200m"; ObjectID = "Lhw-bj-ZZ7"; Note = "DO NOT TRANSLATE"; */
-"Lhw-bj-ZZ7.text" = "200m";
+"1vl-kS-fBt.normalTitle" = "Continue para o próximo destino";
 
 /* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "dEY-t6-Ect"; */
-"dEY-t6-Ect.text" = "Long press to select a destination";
+"dEY-t6-Ect.text" = "Toque e segure para selecionar um destino";
 
 /* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
-"iiq-Gf-SKY.normalTitle" = "Simulate Locations";
+"iiq-Gf-SKY.normalTitle" = "Simular Locais";
 
 /* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
-"nMe-Tl-a1N.normalTitle" = "Start Navigation";
-
-/* Class = "UILabel"; text = "⬆️"; ObjectID = "qyT-xF-RHp"; Note = "DO NOT TRANSLATE"; */
-"qyT-xF-RHp.text" = "⬆️";
+"nMe-Tl-a1N.normalTitle" = "Começar Navegação";
 
 /* Class = "UINavigationItem"; title = "Mapbox Navigation"; ObjectID = "zxr-0T-HBr"; */
-"zxr-0T-HBr.title" = "Mapbox Navigation";
+"zxr-0T-HBr.title" = "Navegação Mapbox";
