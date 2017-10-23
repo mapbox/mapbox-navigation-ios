@@ -199,7 +199,7 @@ This library relies heavily on `NSNotification`s for letting the developer know 
 
 #### `RouteControllerAlertLevelDidChange`
 
-* Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver. See [Alerts](#Alert levels). Notification contains 3 keys:
+* Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver. See [Alerts](#alerts). Notification contains 3 keys:
   * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
   * `RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey` - `CLLocationDistance` - The users snapped distance to the end of the route.
 
@@ -208,6 +208,7 @@ This library relies heavily on `NSNotification`s for letting the developer know 
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
 
+<a name="alerts"></a>
 ### Alert levels
 
 Alert levels indicate the type of announcement that should be given. The enum types available are:
