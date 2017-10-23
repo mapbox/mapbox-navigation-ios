@@ -84,6 +84,7 @@ open class DayStyle: Style {
         
         // Maneuver view (Page view)
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         DistanceLabel.appearance().font = UIFont.systemFont(ofSize: 26).adjustedFont
         DistanceLabel.appearance().textColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
@@ -152,6 +153,7 @@ open class NightStyle: DayStyle {
         
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         ManeuverView.appearance().backgroundColor = backgroundColor
+        InstructionsBannerView.appearance().backgroundColor = backgroundColor
         
         DistanceLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         DestinationLabel.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
