@@ -244,10 +244,37 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
     }
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func didChangeOrientation() {
+        if UIDevice.current.orientation == .portrait {
+            sessionState.timeSpentInPortrait += abs(sessionState.lastTimeInLandscape.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInPortrait = Date()
+        } else if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
+            sessionState.timeSpentInLandscape += abs(sessionState.lastTimeInPortrait.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInLandscape = Date()
+        }
+    }
+    
+    func didChangeApplicationState() {
+        if UIApplication.shared.applicationState == .active {
+            sessionState.timeSpentInForeground += abs(sessionState.lastTimeInBackground.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInForeground = Date()
+        } else if UIApplication.shared.applicationState == .background {
+            sessionState.timeSpentInBackground += abs(sessionState.lastTimeInForeground.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInBackground = Date()
+        }
     }
 
     /**
@@ -787,6 +814,18 @@ struct SessionState {
 
     var currentRoute: Route
     var originalRoute: Route
+    
+    var timeSpentInPortrait: TimeInterval = 0
+    var timeSpentInLandscape: TimeInterval = 0
+    
+    var lastTimeInLandscape = Date()
+    var lastTimeInPortrait = Date()
+    
+    var timeSpentInForeground: TimeInterval = 0
+    var timeSpentInBackground: TimeInterval = 0
+    
+    var lastTimeInForeground = Date()
+    var lastTimeInBackground = Date()
 
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
 
@@ -800,16 +839,22 @@ struct SessionState {
 extension RouteController {
     // MARK: Sending events
     func sendDepartEvent() {
+        didChangeOrientation()
+        didChangeApplicationState()
         events.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: events.navigationDepartEvent(routeController: self))
         events.flush()
     }
 
     func sendArriveEvent() {
+        didChangeOrientation()
+        didChangeApplicationState()
         events.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: events.navigationArriveEvent(routeController: self))
         events.flush()
     }
 
     func sendCancelEvent() {
+        didChangeOrientation()
+        didChangeApplicationState()
         events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: events.navigationCancelEvent(routeController: self))
         events.flush()
     }
@@ -835,6 +880,8 @@ extension RouteController {
     // MARK: Enqueue feedback
 
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
+        didChangeOrientation()
+        didChangeApplicationState()
         let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
@@ -844,6 +891,8 @@ extension RouteController {
     }
 
     func enqueueRerouteEvent() -> String {
+        didChangeOrientation()
+        didChangeApplicationState()
         let timestamp = Date()
 
         let eventDictionary = events.navigationRerouteEvent(routeController: self)
@@ -859,6 +908,8 @@ extension RouteController {
     }
     
     func enqueueFoundFasterRouteEvent() -> String {
+        didChangeOrientation()
+        didChangeApplicationState()
         let eventDictionary = events.navigationFoundFasterRouteEvent(routeController: self)
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
         

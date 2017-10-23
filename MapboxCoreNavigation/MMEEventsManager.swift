@@ -37,6 +37,8 @@ struct EventDetails {
     var applicationState: UIApplicationState
     var userAbsoluteDistanceToDestination: CLLocationDistance?
     var locationEngine: CLLocationManager.Type?
+    var percentTimeInPortrait: Double
+    var percentTimeInForeground: Double
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -91,6 +93,9 @@ struct EventDetails {
         if let manager = routeController.locationManager {
             locationEngine = type(of: manager)
         }
+        
+        percentTimeInPortrait = session.timeSpentInPortrait / (session.timeSpentInPortrait + session.timeSpentInLandscape)
+        percentTimeInForeground = session.timeSpentInForeground / (session.timeSpentInForeground + session.timeSpentInBackground)
     }
     
     var eventDictionary: [String: Any] {
