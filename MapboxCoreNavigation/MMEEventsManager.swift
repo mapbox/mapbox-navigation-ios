@@ -198,12 +198,6 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationFoundFasterRouteEvent(routeController: RouteController) -> [String: Any] {
-        var eventDictionary = self.addDefaultEvents(routeController: routeController)
-        eventDictionary["event"] = FasterRouteFoundEvent
-        return eventDictionary
-    }
-    
     func navigationFeedbackEvent(routeController: RouteController, type: FeedbackType, description: String?) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationFeedback
@@ -218,11 +212,11 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationRerouteEvent(routeController: RouteController) -> [String: Any] {
+    func navigationRerouteEvent(routeController: RouteController, MMEEventType: String = MMEEventTypeNavigationReroute) -> [String: Any] {
         let timestamp = Date()
         
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
-        eventDictionary["event"] = MMEEventTypeNavigationReroute
+        eventDictionary["event"] = MMEEventType
         
         eventDictionary["secondsSinceLastReroute"] = routeController.sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(routeController.sessionState.lastRerouteDate!)) : -1
         eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary

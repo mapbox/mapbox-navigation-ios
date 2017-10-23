@@ -434,7 +434,7 @@ extension RouteController {
 
     func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
-        sendFasterRouteEvent()
+        
     }
     
     
@@ -852,11 +852,6 @@ extension RouteController {
         events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: events.navigationCancelEvent(routeController: self))
         events.flush()
     }
-    
-    func sendFasterRouteEvent() {
-        events.enqueueEvent(withName: FasterRouteFoundEvent, attributes: events.navigationFoundFasterRouteEvent(routeController: self))
-        events.flush()
-    }
 
     func sendFeedbackEvent(event: CoreFeedbackEvent) {
         // remove from outstanding event queue
@@ -884,7 +879,6 @@ extension RouteController {
 
     func enqueueRerouteEvent() -> String {
         let timestamp = Date()
-
         let eventDictionary = events.navigationRerouteEvent(routeController: self)
 
         sessionState.lastRerouteDate = timestamp
@@ -898,7 +892,12 @@ extension RouteController {
     }
     
     func enqueueFoundFasterRouteEvent() -> String {
-        let eventDictionary = events.navigationFoundFasterRouteEvent(routeController: self)
+        let timestamp = Date()
+        let eventDictionary = events.navigationRerouteEvent(routeController: self, MMEEventType: FasterRouteFoundEvent)
+        
+        sessionState.lastRerouteDate = timestamp
+        sessionState.numberOfReroutes += 1
+        
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
         
         outstandingFeedbackEvents.append(event)
