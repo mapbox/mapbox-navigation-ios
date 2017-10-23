@@ -147,11 +147,27 @@ open class DistanceLabel: StylableLabel { }
 /// :nodoc:
 @objc(MBDestinationLabel)
 open class DestinationLabel: StylableLabel {
-    typealias AvailableBoundsHandler = () -> (CGRect)
-    var availableBounds: AvailableBoundsHandler!
+//    typealias AvailableBoundsHandler = () -> (CGRect)
+//    var availableBounds: AvailableBoundsHandler!
+//    var unabridgedText: String? {
+//        didSet {
+//            super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
+//        }
+//    }
+    
     var unabridgedText: String? {
         didSet {
-            super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
+            //super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
+            super.text = unabridgedText
+            sizeToFit()
+        }
+    }
+    
+    var smartText: String? {
+        didSet {
+            guard let text = smartText?.split(separator: "/") else { return }
+            
+            
         }
     }
 }
