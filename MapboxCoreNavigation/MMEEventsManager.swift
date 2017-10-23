@@ -101,7 +101,7 @@ struct EventDetails {
         } else if UIDevice.current.orientation == .landscapeRight || UIDevice.current.orientation == .landscapeLeft {
             totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
         }
-        percentTimeInPortrait = totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
+        percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 1 : totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
         
         var totalTimeInForeground = session.timeSpentInForeground
         var totalTimeInBackground = session.timeSpentInBackground
@@ -110,7 +110,7 @@ struct EventDetails {
         } else {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
-        percentTimeInForeground = totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
+        percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 1 : totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
     }
     
     var eventDictionary: [String: Any] {
