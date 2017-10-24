@@ -561,6 +561,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
         map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         
+        if routeController.routeProgress.currentLegProgress.stepIndex + 1 <= routeController.routeProgress.currentLegProgress.leg.steps.count {
+            map.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        }
+        
         if routeController.showDebugSpokenInstructionsOnMap {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
