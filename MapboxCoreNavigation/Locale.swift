@@ -24,4 +24,12 @@ extension Locale {
      Returns a `Locale` from `preferredLocalLanguageCountryCode`.
      */
     public static var nationalizedCurrent = Locale(identifier: preferredLocalLanguageCountryCode)
+    
+    public static var usesMetric: Bool {
+        let locale = self.current as NSLocale
+        guard let measurementSystem = locale.object(forKey: .measurementSystem) as? String else {
+            return false
+        }
+        return measurementSystem == "Metric"
+    }
 }

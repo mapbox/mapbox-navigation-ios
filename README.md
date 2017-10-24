@@ -27,7 +27,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.8.3'
+   pod 'MapboxNavigation', '~> 0.9'
    ```
 1. Run `pod install` and open the resulting Xcode workspace.
 
@@ -37,7 +37,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.8.2
+   github "mapbox/mapbox-navigation-ios" ~> 0.9
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
@@ -197,27 +197,16 @@ This library relies heavily on `NSNotification`s for letting the developer know 
   * `RouteControllerProgressDidChangeNotificationLocationKey` - `CLLocation` - Current location
   * `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey` - `Double` - Given users speed and location, this is the number of seconds left to the end of the step
 
-#### `RouteControllerAlertLevelDidChange`
+#### `RouteControllerDidPassSpokenInstructionPoint`
 
-* Emitted when the alert level changes. This indicates the user should be notified about the upcoming maneuver. See [Alerts](#Alert levels). Notification contains 3 keys:
-  * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
-  * `RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey` - `CLLocationDistance` - The users snapped distance to the end of the route.
+* Emitted when user passes a point where instructions should be spoken. This indicates the user should be notified about the upcoming maneuver. You can find the instruction narrative in the `RouteProgress` object. Notification contains 1 key:
+  * `MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey` - `RouteProgress` - Current progress along route
 
 #### `RouteControllerShouldReroute`
 
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
 
-### Alert levels
-
-Alert levels indicate the type of announcement that should be given. The enum types available are:
-
-* `none`
-* `depart` - Emitted while departing origin
-* `low` - Emitted directly after completing the maneuver
-* `medium` - Emitted when the user has [70 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L15) remaining on the route.
-* `high` - Emitted when the user has [15 seconds](https://github.com/mapbox/mapbox-navigation-ios/blob/19365cdad5f18641579a560dfc7113057b3053ad/MapboxNavigation/Constants.swift#L16) remaining on the route.
-* `arrive` - Emitted when the user arrives at destination
 
 ### Rerouting
 

@@ -26,29 +26,64 @@ public enum FeedbackType: Int, CustomStringConvertible {
     case roadClosed
     
     /**
-     Identifies the feedback as a turn that isn't allowed. For example, if a user is instructed to make a left turn, but the turn isn't allowed.
+     Identifies the feedback as a maneuver that isn't allowed. For example, if a user is instructed to make a left turn, but the turn isn't allowed.
      */
-    case unallowedTurn
+    case notAllowed
+    
+    /**
+     Identifies the feedback as the location of a road that should exist along the route.
+     */
+    case missingRoad
+    
+    /**
+     Identifies the feedback as a maneuver with missing exit information such as an exit number or destination sign.
+     */
+    case missingExit
     
     /**
      Identifies the feedback as the location of a poor instruction or route choice. This could be used to indicate an ambiguous or poorly-timed turn announcement, or a set of confusing turns.
      */
     case routingError
     
+    /**
+     Identifies the feedback as the location of a confusing instruction.
+     */
+    case confusingInstruction
+    
+    /**
+     Identifies the feedback as a place where the GPS quality was particularly poor.
+     */
+    case inaccurateGPS
+    
+    /**
+     Identifies the feedback as a place where traffic should have been reported.
+     */
+    case reportTraffic
+    
     public var description: String {
         switch self {
+        case .general:
+            return "general"
         case .accident:
             return "accident"
         case .hazard:
             return "hazard"
         case .roadClosed:
             return "road_closed"
-        case .unallowedTurn:
-            return "unallowed_turn"
+        case .notAllowed:
+            return "not_allowed"
+        case .missingRoad:
+            return "missing_road"
+        case .missingExit:
+            return "missing_exit"
         case .routingError:
             return "routing_error"
-        case .general:
-            return "general"
+        case .confusingInstruction:
+            return "confusing_instruction"
+        case .inaccurateGPS:
+            return "inaccurate_gps"
+        case .reportTraffic:
+            return "report_traffic"
         }
     }
 }

@@ -268,7 +268,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
      */
-    public var showsReportFeedback: Bool = true
+    public var showsReportFeedback: Bool = true {
+        didSet {
+            mapViewController?.reportButton.isHidden = !showsReportFeedback
+        }
+    }
+    
     
     /**
      If true, the map style and UI will automatically be updated given the time of day.
@@ -418,42 +423,40 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(alertLevelDidChange(notification:)), name: RouteControllerAlertLevelDidChange, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerAlertLevelDidChange, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
     func progressDidChange(notification: NSNotification) {
         resetETATimer()
         
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
         let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.updateETA(routeProgress: routeProgress)
-        progressBar.progress = routeProgress.currentLegProgress.alertUserLevel == .arrive ? 1 : CGFloat(routeProgress.fractionTraveled)
+        
+        progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }
     
-    func alertLevelDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
-        let alertLevel = routeProgress.currentLegProgress.alertUserLevel
+    func didPassInstructionPoint(notification: NSNotification) {
+        let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
-        mapViewController?.notifyAlertLevelDidChange(routeProgress: routeProgress)
-        tableViewController?.notifyAlertLevelDidChange()
+        mapViewController?.updateMapOverlays(for: routeProgress)
+        tableViewController?.reload()
         
-        // Any time the alert level changes, clear out previous notifications.
-        // When we give a high alert notification, we want to clear out this notification when completing that step.
         clearStaleNotifications()
         
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep, alertLevel == .high {
+        if let upComingStep = routeProgress.currentLegProgress.upComingStep, routeProgress.currentLegProgress.currentStepProgress.durationRemaining < RouteControllerHighAlertInterval {
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
         
-        if routeProgress.currentLegProgress.alertUserLevel == .arrive {
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
         

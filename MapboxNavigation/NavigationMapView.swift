@@ -14,6 +14,8 @@ let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
     22: MGLStyleValue(rawValue: 28)
 ]
 
+let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
+
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
@@ -35,6 +37,9 @@ open class NavigationMapView: MGLMapView {
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
     let currentLegAttribute = "isCurrentLeg"
+    let instructionSource = "instructionSource"
+    let instructionLabel = "instructionLabel"
+    let instructionCircle = "instructionCircle"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -51,13 +56,37 @@ open class NavigationMapView: MGLMapView {
     dynamic public var trafficSevereColor: UIColor = .trafficSevere
     dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     
+    var userLocationForCourseTracking: CLLocation?
+    var animatesUserLocation: Bool = false
+    var isPluggedIn: Bool = false
+    var altitude: CLLocationDistance = 1000
+    let defaultAltitude: CLLocationDistance = 1000
+    
+    struct FrameIntervalOptions {
+        fileprivate static let durationUntilNextManeuver: TimeInterval = 30
+        fileprivate static let durationSincePreviousManeuver: TimeInterval = 10
+        fileprivate static let decreasedFrameInterval: Int = 12
+        fileprivate static let defaultFrameInterval: Int = 1
+    }
+    
+    fileprivate var frameInterval: Int {
+        get {
+            return displayLink?.frameInterval ?? FrameIntervalOptions.defaultFrameInterval
+        }
+        set {
+            if displayLink?.frameInterval != newValue {
+                displayLink?.frameInterval = newValue
+            }
+        }
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
-        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
+        resumeNotifications()
     }
     
     public required init?(coder decoder: NSCoder) {
@@ -66,7 +95,37 @@ open class NavigationMapView: MGLMapView {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
+        resumeNotifications()
+    }
+    
+    func resumeNotifications() {
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
+        
+    }
+    
+    func suspendNotifications() {
+        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
+        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
+    }
+    
+    func progressDidChange(_ notification: Notification) {
+        guard tracksUserCourse else { return }
+        
+        let routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as! RouteProgress
+        
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let expectedTravelTime = stepProgress.step.expectedTravelTime
+        let durationUntilNextManeuver = stepProgress.durationRemaining
+        let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
+        
+        if !isPluggedIn,
+            durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver,
+            durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
+            frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
+        } else {
+            frameInterval = FrameIntervalOptions.defaultFrameInterval
+        }
     }
     
     /** Modifies the gesture recognizers to also disable course tracking. */
@@ -74,12 +133,6 @@ open class NavigationMapView: MGLMapView {
         for gestureRecognizer in gestureRecognizers ?? []
             where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
                 gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
-        }
-    }
-    
-    func makeGestureRecognizersResetInactivityTimer() {
-        for gestureRecognizer in gestureRecognizers ?? [] {
-            gestureRecognizer.addTarget(self, action: #selector(resetInactivityTimer(_:)))
         }
     }
     
@@ -98,7 +151,7 @@ open class NavigationMapView: MGLMapView {
     }
     
     deinit {
-        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
+        suspendNotifications()
     }
     
     open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -109,6 +162,7 @@ open class NavigationMapView: MGLMapView {
     }
     
     func updateCourseView(_ sender: UIGestureRecognizer) {
+        frameInterval = FrameIntervalOptions.defaultFrameInterval
         
         if sender.state == .ended {
             altitude = self.camera.altitude
@@ -139,7 +193,13 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    var shouldPositionCourseViewFrameByFrame = false
+    var shouldPositionCourseViewFrameByFrame = false {
+        didSet {
+            if shouldPositionCourseViewFrameByFrame {
+                frameInterval = FrameIntervalOptions.defaultFrameInterval
+            }
+        }
+    }
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
     func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
@@ -150,15 +210,6 @@ open class NavigationMapView: MGLMapView {
     
     @objc fileprivate func disableFrameByFramePositioning() {
         shouldPositionCourseViewFrameByFrame = false
-    }
-    
-    func resetInactivityTimer(_ sender: UIGestureRecognizer) {
-        if sender.state == .began {
-            isInactive = false
-        }
-        else if sender.state == .ended || sender.state == .failed {
-            resetInactivityTimer()
-        }
     }
     
     var showsRoute: Bool {
@@ -192,39 +243,9 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    var userLocationForCourseTracking: CLLocation?
-    var animatesUserLocation: Bool = false
-    
-    fileprivate let inactivityInterval: TimeInterval = 10
-    fileprivate let decreasedFrameInterval: Int = 12
-    
-    func resetInactivityTimer() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(inactivityTimerFinished), object: nil)
-        self.perform(#selector(inactivityTimerFinished), with: nil, afterDelay: inactivityInterval)
-    }
-    
-    func inactivityTimerFinished() {
-        isInactive = true
-    }
-    
-    fileprivate var isInactive: Bool = false {
-        didSet {
-            if isInactive {
-                displayLink?.frameInterval = isPluggedIn ? 1 : decreasedFrameInterval
-            } else {
-                displayLink?.frameInterval = 1
-            }
-        }
-    }
-    
-    var isPluggedIn: Bool = false
-    
     @objc func disableUserCourseTracking() {
         tracksUserCourse = false
     }
-    
-    var altitude: CLLocationDistance = 1000
-    let defaultAltitude: CLLocationDistance = 1000
     
     public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         animatesUserLocation = animated
@@ -331,8 +352,8 @@ open class NavigationMapView: MGLMapView {
             source.shape = polyline
             sourceSimplified.shape = polylineSimplified
         } else {
-            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: nil)
-            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: polylineSimplified, options: nil)
+            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: sourceOptions)
+            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: polylineSimplified, options: sourceOptions)
             style.addSource(lineSource)
             style.addSource(lineCasingSource)
             
@@ -390,7 +411,7 @@ open class NavigationMapView: MGLMapView {
         if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
             waypointSource.shape = source
         } else {
-            let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: nil)
+            let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: sourceOptions)
             style.addSource(sourceShape)
             
             let circles = navigationMapDelegate?.navigationMapView?(self, waypointStyleLayerWithIdentifier: waypointCircleIdentifier, source: sourceShape) ?? routeWaypointCircleStyleLayer(identifier: waypointCircleIdentifier, source: sourceShape)
@@ -628,9 +649,9 @@ open class NavigationMapView: MGLMapView {
             let cap = NSValue(mglLineCap: .butt)
             let join = NSValue(mglLineJoin: .round)
             
-            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: nil)
+            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: sourceOptions)
             let arrowStroke = MGLLineStyleLayer(identifier: arrowLayerStrokeIdentifier, source: arrowSourceStroke)
-            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: nil)
+            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: sourceOptions)
             let arrow = MGLLineStyleLayer(identifier: arrowLayerIdentifier, source: arrowSource)
             
             if let source = style.source(withIdentifier: arrowSourceIdentifier) as? MGLShapeSource {
@@ -667,7 +688,7 @@ open class NavigationMapView: MGLMapView {
             // Arrow symbol
             let point = MGLPointFeature()
             point.coordinate = shaftStrokeCoordinates.last!
-            let arrowSymbolSource = MGLShapeSource(identifier: arrowSymbolSourceIdentifier, features: [point], options: nil)
+            let arrowSymbolSource = MGLShapeSource(identifier: arrowSymbolSourceIdentifier, features: [point], options: sourceOptions)
             
             if let source = style.source(withIdentifier: arrowSymbolSourceIdentifier) as? MGLShapeSource {
                 source.shape = arrowSymbolSource.shape
@@ -744,6 +765,49 @@ open class NavigationMapView: MGLMapView {
         
         if let arrowSymboleSource = style.source(withIdentifier: arrowSymbolSourceIdentifier) {
             style.removeSource(arrowSymboleSource)
+        }
+    }
+    
+    public func showVoiceInstructionsOnMap(route: Route) {
+        guard let style = style else {
+            return
+        }
+        
+        var features = [MGLPointFeature]()
+        for (legIndex, leg) in route.legs.enumerated() {
+            for (stepIndex, step) in leg.steps.enumerated() {
+                for instruction in step.instructionsSpokenAlongStep! {
+                    let feature = MGLPointFeature()
+                    feature.coordinate = Polyline(route.legs[legIndex].steps[stepIndex].coordinates!.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
+                    feature.attributes = [ "instruction": instruction.text ]
+                    features.append(feature)
+                }
+            }
+        }
+        
+        let instructionPointSource = MGLShapeCollectionFeature(shapes: features)
+        
+        if let instructionSource = style.source(withIdentifier: instructionSource) as? MGLShapeSource {
+            instructionSource.shape = instructionPointSource
+        } else {
+            let sourceShape = MGLShapeSource(identifier: instructionSource, shape: instructionPointSource, options: nil)
+            style.addSource(sourceShape)
+            
+            let symbol = MGLSymbolStyleLayer(identifier: instructionLabel, source: sourceShape)
+            symbol.text = MGLStyleValue(rawValue: "{instruction}")
+            symbol.textFontSize = MGLStyleValue(rawValue: 14)
+            symbol.textHaloWidth = MGLStyleValue(rawValue: 1)
+            symbol.textHaloColor = MGLStyleValue(rawValue: .white)
+            symbol.textOpacity = MGLStyleValue(rawValue: 0.75)
+            symbol.textAnchor = MGLStyleValue(rawValue: NSValue(mglTextAnchor: .left))
+            
+            let circle = MGLCircleStyleLayer(identifier: instructionCircle, source: sourceShape)
+            circle.circleRadius = MGLStyleValue(rawValue: 5)
+            circle.circleOpacity = MGLStyleValue(rawValue: 0.75)
+            circle.circleColor = MGLStyleValue(rawValue: .white)
+            
+            style.addLayer(circle)
+            style.addLayer(symbol)
         }
     }
 }

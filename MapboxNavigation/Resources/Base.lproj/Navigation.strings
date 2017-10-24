@@ -17,3 +17,5 @@
 /* Class = "UILabel"; text = "You have arrived"; ObjectID = "vw8-af-pfq"; */
 "vw8-af-pfq.text" = "You have arrived";
 
+/* Class = "UILabel"; text = "Recording Audio"; ObjectID = "xTH-eK-F5H"; */
+"xTH-eK-F5H.text" = "Recording Audio";

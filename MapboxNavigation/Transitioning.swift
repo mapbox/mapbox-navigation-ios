@@ -9,57 +9,62 @@ class DismissAnimator : NSObject { }
 extension DismissAnimator : UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.4
+        return 0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
         guard let toVC = transitionContext.viewController(forKey: .to) else { return }
+        let containerView = transitionContext.containerView
         
         let point = CGPoint(x: 0, y: toVC.view.bounds.maxY)
         let height = fromVC.view.bounds.height-toVC.view.frame.minY
         let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width, height: height))
         
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveLinear], animations: {
+        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             fromVC.view.frame = finalFrame
+            containerView.backgroundColor = .clear
         }) { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
 }
 
-class PresentAnimator : NSObject {
-    var height: CGFloat?
-    
-    convenience init(height: CGFloat) {
-        self.init()
-        self.height = height
-    }
-}
+class PresentAnimator : NSObject { }
 
 extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.6
+        return 0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
+        let toVC = transitionContext.viewController(forKey: .to)!
         
-        containerView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        containerView.backgroundColor = .clear
         toView.frame = CGRect(x: 0, y: containerView.bounds.height,
-                              width: containerView.bounds.width, height: height ?? containerView.bounds.midY)
+                              width: containerView.bounds.width, height: containerView.bounds.midY)
         
         containerView.addSubview(toView)
-
-        let yPoint = CGFloat(height != nil ? fromVC.view.bounds.height - height! : fromVC.view.bounds.midY)
-        let point = CGPoint(x: 0, y: yPoint)
-        let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width,
-                                                            height: height ?? fromVC.view.bounds.midY))
+        let tap = UITapGestureRecognizer(target: toVC, action: #selector(FeedbackViewController.handleDismissTap(sender:)))
+        if let responder = toVC as? UIGestureRecognizerDelegate {
+            tap.delegate = responder
+        }
+        containerView.addGestureRecognizer(tap)
+        
+        var height = toVC.view.bounds.height
+        if let draggable = toVC as? DismissDraggable {
+            height = draggable.draggableHeight
+        }
+        
+        let finalFrame = CGRect(origin: CGPoint(x: 0, y: fromVC.view.bounds.height - height),
+                                size: CGSize(width: fromVC.view.bounds.width, height: height))
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             toView.frame = finalFrame
+            containerView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         }) { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
@@ -68,7 +73,12 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
 
 @objc protocol DismissDraggable: UIViewControllerTransitioningDelegate {
     var interactor: Interactor { get }
+    var draggableHeight: CGFloat { get }
     @objc optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
+}
+
+fileprivate extension Selector {
+    static let handleDismissDrag = #selector(UIViewController.handleDismissPan(_:))
 }
 
 extension DismissDraggable where Self: UIViewController {
@@ -108,8 +118,4 @@ fileprivate extension UIViewController {
             break
         }
     }
-}
-
-fileprivate extension Selector {
-    static let handleDismissDrag = #selector(UIViewController.handleDismissPan(_:))
 }

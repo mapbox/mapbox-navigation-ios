@@ -153,24 +153,35 @@ class RouteMapViewController: UIViewController {
     
     @IBAction func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
-        
+
         let muted = sender.isSelected
         NavigationSettings.shared.muted = muted
     }
     
-    @IBAction func report(_ sender: Any) {
+    @IBAction func rerouteFeedback() {
+        showFeedback([[.missingRoad, .missingExit, .generalMapError]])
+    }
+    
+    @IBAction func feedback(_ sender: Any) {
+        showFeedback([[.closure, .turnNotAllowed, .reportTraffic], [.confusingInstructions, .GPSInaccurate, .badRoute] ])
+        delegate?.mapViewControllerDidOpenFeedback(self)
+    }
+    
+    func showFeedback(_ sections: [FeedbackSection]) {
         guard let parent = parent else { return }
         
         let controller = FeedbackViewController.loadFromStoryboard()
+        controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
+        controller.sections = sections
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
-//            guard let strongSelf = self else { return }
-//            strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
-//            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil)
-//            strongSelf.dismiss(animated: true) {
-//                DialogViewController.present(on: parent)
-//            }
+            guard let strongSelf = self else { return }
+            strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
+            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil, audio: item.audio)
+            strongSelf.dismiss(animated: true) {
+                DialogViewController.present(on: parent)
+            }
         }
         
         controller.dismissFeedbackHandler = { [weak self] in
@@ -245,6 +256,10 @@ class RouteMapViewController: UIViewController {
 
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        
+        if routeController.showDebugSpokenInstructionsOnMap {
+            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
 
         if isInOverviewMode {
             updateVisibleBounds()
@@ -252,6 +267,8 @@ class RouteMapViewController: UIViewController {
             mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
+        
+        rerouteFeedback()
     }
     
     func willReroute(notification: NSNotification) {
@@ -272,18 +289,11 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    func notifyAlertLevelDidChange(routeProgress: RouteProgress) {
+    func updateMapOverlays(for routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
             mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         } else {
             mapView.removeArrow()
-        }
-        
-        if currentLegIndexMapped != routeProgress.legIndex {
-            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
-            
-            currentLegIndexMapped = routeProgress.legIndex
         }
     }
     
@@ -309,9 +319,9 @@ class RouteMapViewController: UIViewController {
             routePageViewController(routePageViewController, willTransitionTo: controller, didSwipe: false)
         }
         
-        if let upComingStep = routeProgress.currentLegProgress?.upComingStep, routeProgress.currentLegProgress.alertUserLevel != .arrive {
+        if let upComingStep = routeProgress.currentLegProgress?.upComingStep, !routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             if routePageViewController.currentManeuverPage.step == upComingStep {
-                updateLaneViews(step: upComingStep, alertLevel: routeProgress.currentLegProgress.alertUserLevel)
+                updateLaneViews(step: upComingStep, durationRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
             }
         }
         
@@ -322,6 +332,17 @@ class RouteMapViewController: UIViewController {
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
         controller.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
+        
+        if currentLegIndexMapped != routeProgress.legIndex {
+            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
+            mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
+            
+            currentLegIndexMapped = routeProgress.legIndex
+        }
+        
+        if routeController.showDebugSpokenInstructionsOnMap {
+            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
 
         guard isInOverviewMode else {
             return
@@ -340,8 +361,8 @@ class RouteMapViewController: UIViewController {
                             right: 0)
     }
     
-    func updateLaneViews(step: RouteStep, alertLevel: AlertLevel) {
-        laneViewsContainerView.updateLaneViews(step: step, alertLevel: alertLevel)
+    func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
+        laneViewsContainerView.updateLaneViews(step: step, durationRemaining: durationRemaining)
         
         if laneViewsContainerView.stackView.arrangedSubviews.count > 0 {
             showLaneViews()
@@ -548,6 +569,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard !map.showsRoute else { return }
         map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        
+        if routeController.showDebugSpokenInstructionsOnMap {
+            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
     }
 }
 
@@ -562,7 +587,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         maneuverViewController.updateStreetNameForStep()
         
-        updateLaneViews(step: step, alertLevel: .high)
+        updateLaneViews(step: step, durationRemaining: 0)
 
         if !isInOverviewMode {
             if didSwipe, step != routeController.routeProgress.currentLegProgress.upComingStep {
