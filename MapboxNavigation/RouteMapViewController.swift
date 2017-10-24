@@ -28,6 +28,10 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
+    
+    var lastTimeUserRerouted: Date?
+    let rerouteSections: [FeedbackSection] = [[.missingRoad, .missingExit, .generalMapError]]
+    let generalFeedbackSections: [FeedbackSection] = [[.closure, .turnNotAllowed, .reportTraffic], [.confusingInstructions, .GPSInaccurate, .badRoute] ]
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -158,16 +162,23 @@ class RouteMapViewController: UIViewController {
     }
     
     @IBAction func rerouteFeedback() {
-        showFeedback([[.missingRoad, .missingExit, .generalMapError]])
+        lastTimeUserRerouted = Date()
     }
     
     @IBAction func feedback(_ sender: Any) {
-        showFeedback([[.closure, .turnNotAllowed, .reportTraffic], [.confusingInstructions, .GPSInaccurate, .badRoute] ])
+        showFeedback()
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
-    func showFeedback(_ sections: [FeedbackSection]) {
+    func showFeedback() {
+        
+        var sections = generalFeedbackSections
+        if let lastTime = lastTimeUserRerouted, abs(lastTime.timeIntervalSinceNow) < RouteControllerNumberOfSecondsForRerouteFeedback {
+            sections = rerouteSections
+        }
+        
         guard let parent = parent else { return }
+    
         
         let controller = FeedbackViewController.loadFromStoryboard()
         controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
