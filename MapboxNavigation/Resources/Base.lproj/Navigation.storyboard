@@ -304,111 +304,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="343" height="185"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h67-zB-BKz" userLabel="instructionView" customClass="MBManeuverView">
-                                <rect key="frame" x="0.0" y="0.0" width="343" height="115"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="BM1-Vn-PJV">
-                                        <rect key="frame" x="8" y="13" width="50" height="90.5"/>
-                                        <subviews>
-                                            <view contentMode="center" translatesAutoresizingMaskIntoConstraints="NO" id="dvV-hd-Sbg" customClass="MBTurnArrowView">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="50" id="Eo0-KT-TR5"/>
-                                                    <constraint firstAttribute="height" constant="50" id="Uvq-8G-qiG"/>
-                                                </constraints>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="number" keyPath="scale">
-                                                        <real key="value" value="1.1000000000000001"/>
-                                                    </userDefinedRuntimeAttribute>
-                                                </userDefinedRuntimeAttributes>
-                                            </view>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="u1L-N9-mMS" customClass="MBDistanceLabel">
-                                                <rect key="frame" x="0.0" y="60" width="50" height="30.5"/>
-                                                <attributedString key="attributedText">
-                                                    <fragment content="25">
-                                                        <attributes>
-                                                            <font key="NSFont" metaFont="system" size="26"/>
-                                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                    <fragment content="km">
-                                                        <attributes>
-                                                            <font key="NSFont" size="16" name=".SFNSDisplay"/>
-                                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                </attributedString>
-                                                <nil key="highlightedColor"/>
-                                                <attributedString key="userComments">
-                                                    <fragment content="DO NOT TRANSLATE">
-                                                        <attributes>
-                                                            <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                </attributedString>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="I-80" lineBreakMode="tailTruncation" numberOfLines="2" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nJS-lt-LOA" customClass="MBDestinationLabel">
-                                        <rect key="frame" x="66" y="23.5" width="51.5" height="31.5"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="26"/>
-                                        <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                        <attributedString key="userComments">
-                                            <fragment content="DO NOT TRANSLATE">
-                                                <attributes>
-                                                    <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                        </attributedString>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Dtwn Oakland / Hayward / Hayward / Hayward / Hayward / Hayward / Hayward" lineBreakMode="tailTruncation" numberOfLines="2" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x8y-MW-tAW" customClass="MBDestinationLabel">
-                                        <rect key="frame" x="66" y="55" width="269" height="48"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
-                                        <color key="textColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                        <attributedString key="userComments">
-                                            <fragment content="DO NOT TRANSLATE">
-                                                <attributes>
-                                                    <font key="NSFont" size="11" name="HelveticaNeue"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO"/>
-                                                </attributes>
-                                            </fragment>
-                                        </attributedString>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.99030783119999999" green="0.99866314420000002" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="BM1-Vn-PJV" secondAttribute="bottom" constant="8" id="1Kq-BO-v9f"/>
-                                    <constraint firstItem="x8y-MW-tAW" firstAttribute="top" secondItem="nJS-lt-LOA" secondAttribute="bottom" id="D3Z-dH-tX4"/>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="nJS-lt-LOA" secondAttribute="trailing" constant="8" id="Eoi-7Q-X6e"/>
-                                    <constraint firstAttribute="height" constant="115" id="IsE-zQ-C8r"/>
-                                    <constraint firstItem="x8y-MW-tAW" firstAttribute="leading" secondItem="u1L-N9-mMS" secondAttribute="trailing" constant="8" id="JhX-g4-c2v"/>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="x8y-MW-tAW" secondAttribute="trailing" constant="8" id="PkJ-rB-lW3"/>
-                                    <constraint firstItem="nJS-lt-LOA" firstAttribute="top" relation="greaterThanOrEqual" secondItem="h67-zB-BKz" secondAttribute="top" constant="8" id="W0B-tI-B3Q"/>
-                                    <constraint firstItem="nJS-lt-LOA" firstAttribute="leading" secondItem="x8y-MW-tAW" secondAttribute="leading" id="cgQ-7S-ZcH"/>
-                                    <constraint firstItem="BM1-Vn-PJV" firstAttribute="leading" secondItem="h67-zB-BKz" secondAttribute="leading" constant="8" id="kWo-DV-n3U"/>
-                                    <constraint firstItem="BM1-Vn-PJV" firstAttribute="top" relation="greaterThanOrEqual" secondItem="h67-zB-BKz" secondAttribute="top" constant="8" id="wZv-8H-Qvy"/>
-                                    <constraint firstItem="BM1-Vn-PJV" firstAttribute="centerY" secondItem="h67-zB-BKz" secondAttribute="centerY" id="x9a-qn-TL8"/>
-                                    <constraint firstItem="x8y-MW-tAW" firstAttribute="baseline" secondItem="u1L-N9-mMS" secondAttribute="firstBaseline" id="xl5-0h-ZI6"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UnK-tl-lPe" customClass="MBInstructionsBannerView">
-                                <rect key="frame" x="0.0" y="0.0" width="343" height="115"/>
+                                <rect key="frame" x="0.0" y="20" width="343" height="95"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="115" id="A6r-6l-CbG"/>
+                                    <constraint firstAttribute="height" constant="95" id="A6r-6l-CbG"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="h67-zB-BKz" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" id="3RK-9O-WM7"/>
-                            <constraint firstItem="h67-zB-BKz" firstAttribute="centerX" secondItem="pTy-lh-WI1" secondAttribute="centerX" id="9s2-bF-m5E"/>
-                            <constraint firstItem="h67-zB-BKz" firstAttribute="width" secondItem="pTy-lh-WI1" secondAttribute="width" id="D5x-UI-oMM"/>
-                            <constraint firstItem="UnK-tl-lPe" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" id="OJP-Y5-SxP"/>
+                            <constraint firstItem="UnK-tl-lPe" firstAttribute="top" secondItem="pTy-lh-WI1" secondAttribute="top" constant="20" id="OJP-Y5-SxP"/>
                             <constraint firstAttribute="trailing" secondItem="UnK-tl-lPe" secondAttribute="trailing" id="Ytm-yb-fQ1"/>
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="leading" secondItem="pTy-lh-WI1" secondAttribute="leading" id="gnK-JI-GmY"/>
                         </constraints>
@@ -416,10 +321,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="343" height="185"/>
                     <connections>
-                        <outlet property="distanceLabel" destination="u1L-N9-mMS" id="trZ-xg-0er"/>
-                        <outlet property="primaryDestinationLabel" destination="nJS-lt-LOA" id="3J5-es-kcE"/>
-                        <outlet property="secondaryDestinationLabel" destination="x8y-MW-tAW" id="QcC-yF-fPb"/>
-                        <outlet property="turnArrowView" destination="dvV-hd-Sbg" id="PDr-bK-tVy"/>
+                        <outlet property="instructionsBannerView" destination="UnK-tl-lPe" id="KCn-c5-BYu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iiH-rk-KIp" userLabel="First Responder" sceneMemberID="firstResponder"/>
