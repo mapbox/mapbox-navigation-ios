@@ -173,7 +173,7 @@ class RouteMapViewController: UIViewController {
     func showFeedback() {
         
         var sections = generalFeedbackSections
-        if let lastTime = lastTimeUserRerouted, abs(Int(lastTime.timeIntervalSinceNow)) < RouteControllerNumberOfSecondsForRerouteFeedback {
+        if let lastTime = lastTimeUserRerouted, abs(lastTime.timeIntervalSinceNow) < RouteControllerNumberOfSecondsForRerouteFeedback {
             sections = rerouteSections
         }
         
