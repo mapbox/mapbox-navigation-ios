@@ -91,7 +91,7 @@ class InstructionsBannerView: UIView {
         addConstraint(NSLayoutConstraint(item: secondaryLabel, attribute: .lastBaseline, relatedBy: .equal, toItem: distanceLabel, attribute: .lastBaseline, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: secondaryLabel, attribute: .leading, relatedBy: .equal, toItem: gravityView, attribute: .trailing, multiplier: 1, constant: 8))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[secondaryLabel]-(>=8)-|", options: [], metrics: nil, views: views))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[secondaryLabel]-(>=8)-|", options: [], metrics: nil, views: views))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[secondaryLabel]-(>=8@249)-|", options: [], metrics: nil, views: views))
         
         // Constrain primary label bottom to the top of the secondary label
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=8)-[primaryLabel]", options: [], metrics: nil, views: views))
