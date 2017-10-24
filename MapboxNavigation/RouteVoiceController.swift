@@ -23,21 +23,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     
     /**
-     Volume of announcements.
+     Volume of spoken instructions. By default, this will be set to the system volume.
      */
-    public var volume: Float = 1.0
-    
-    
-    /**
-     SSML option which controls at which speed Polly instructions are read.
-     */
-    public var instructionVoiceSpeedRate = 1.08
-    
-    
-    /**
-     SSML option that specifies the voice loudness.
-     */
-    public var instructionVoiceVolume = "default"
+    public var volume: Float?
     
     
     /**
@@ -106,7 +94,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             return
         }
         
-        rerouteSoundPlayer.volume = volume
+        if let volume = volume {
+            rerouteSoundPlayer.volume = volume
+        }
         rerouteSoundPlayer.play()
     }
     
@@ -131,6 +121,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
         try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
+        if volume == nil {
+            volume = AVAudioSession.sharedInstance().outputVolume
+        }
     }
 
     func duckAudio() throws {
@@ -162,7 +155,11 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func shouldSpeak(for notification: NSNotification) -> Bool {
-        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return false }
+        guard isEnabled, !NavigationSettings.shared.muted else { return false }
+        
+        if let volume = volume {
+            guard volume > 0 else { return false }
+        }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
@@ -203,7 +200,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         if utterance.voice == nil {
             utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
         }
-        utterance.volume = volume
+        if let volume = volume {
+            utterance.volume = volume
+        }
         
         speechSynth.speak(utterance)
     }
