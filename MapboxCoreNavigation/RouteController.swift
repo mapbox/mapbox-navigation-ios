@@ -439,7 +439,7 @@ extension RouteController {
     
     
     func didReroute(notification: NSNotification) {
-        if let _ = notification.userInfo?[FasterRouteFoundEvent] as? Bool {
+        if let _ = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool {
             _ = enqueueFoundFasterRouteEvent()
         }
         
