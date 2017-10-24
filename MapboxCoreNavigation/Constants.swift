@@ -145,3 +145,8 @@ public var RouteControllerMinimumBacktrackingDistanceForRerouting: CLLocationDis
  Minimum number of consecutive location updates moving backwards before the user is rerouted.
  */
 public var RouteControllerMinimumNumberLocationUpdatesBackwards = 3
+
+/**
+ Number of seconds reroute feedback sections are shown in the feedback view after the user is rerouted.
+ */
+public var RouteControllerNumberOfSecondsForRerouteFeedback: TimeInterval = 10
