@@ -4,10 +4,8 @@ import MapboxCoreNavigation
 import SDWebImage
 
 class RouteManeuverViewController: UIViewController {
-    @IBOutlet fileprivate weak var distanceLabel: DistanceLabel!
-    @IBOutlet weak var turnArrowView: TurnArrowView!
-    @IBOutlet weak var primaryDestinationLabel: DestinationLabel!
-    @IBOutlet weak var secondaryDestinationLabel: DestinationLabel!
+    
+    @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
@@ -17,7 +15,8 @@ class RouteManeuverViewController: UIViewController {
         didSet {
             if isViewLoaded {
                 roadCode = step?.codes?.first ?? step?.destinationCodes?.first ?? step?.destinations?.first
-//                updateStreetNameForStep()
+                instructionsBannerView.turnArrowView.step = step
+                updateStreetNameForStep()
             }
         }
     }
@@ -25,7 +24,7 @@ class RouteManeuverViewController: UIViewController {
     var leg: RouteLeg? {
         didSet {
             if isViewLoaded {
-//                updateStreetNameForStep()
+                updateStreetNameForStep()
             }
         }
     }
@@ -33,22 +32,20 @@ class RouteManeuverViewController: UIViewController {
     var distance: CLLocationDistance? {
         didSet {
             if let distance = distance {
-                distanceLabel.text = distanceFormatter.string(from: distance)
+                instructionsBannerView.distanceLabel.text = distanceFormatter.string(from: distance)
             } else {
-                distanceLabel.text = nil
+                instructionsBannerView.distanceLabel.text = " "
             }
         }
     }
-    
-//    var numberOfDestinationLines: Int {
-//        return distance != nil ? 2 : 3
-//    }
     
     var roadCode: String? {
         didSet {
             guard roadCode != oldValue, let components = roadCode?.components(separatedBy: " ") else {
                 return
             }
+            
+            instructionsBannerView.primaryLabel.text = roadCode
             
             if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
                 // TODO: Set shield image
@@ -91,29 +88,29 @@ class RouteManeuverViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        turnArrowView.backgroundColor = .clear
 //        primaryDestinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
 //        secondaryDestinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
-//
     }
     
     func notifyDidChange(routeProgress: RouteProgress, secondsRemaining: TimeInterval) {
-//        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-//        let distanceRemaining = stepProgress.distanceRemaining
-//
-//        distance = distanceRemaining > 5 ? distanceRemaining : 0
-//
-//        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-//            distance = nil
-//            secondaryDestinationLabel.unabridgedText = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
-//        } else {
-//            updateStreetNameForStep()
-//        }
-//
-//        turnArrowView.step = routeProgress.currentLegProgress.upComingStep
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let distanceRemaining = stepProgress.distanceRemaining
+
+        distance = distanceRemaining > 5 ? distanceRemaining : 0
+
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
+            distance = nil
+            
+            let text = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
+            instructionsBannerView.secondaryLabel.text = text
+        } else {
+            updateStreetNameForStep()
+        }
+
+        instructionsBannerView.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
     }
     
-//    func updateStreetNameForStep() {
-//        secondaryDestinationLabel.unabridgedText = visualInstructionFormatter.string(leg: leg, step: step)
-//    }
+    func updateStreetNameForStep() {
+        instructionsBannerView.secondaryLabel.text = visualInstructionFormatter.string(leg: leg, step: step)
+    }
 }
