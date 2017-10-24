@@ -27,6 +27,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      */
     public var volume: Float?
     
+    var spokenInstructionVolume = AVAudioSession.sharedInstance().outputVolume
+    
     
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
@@ -94,9 +96,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             return
         }
         
-        if let volume = volume {
-            rerouteSoundPlayer.volume = volume
-        }
+        rerouteSoundPlayer.volume = spokenInstructionVolume
         rerouteSoundPlayer.play()
     }
     
@@ -121,8 +121,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
         try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
-        if volume == nil {
-            volume = AVAudioSession.sharedInstance().outputVolume
+        if let volume = volume {
+            spokenInstructionVolume = volume
+        } else {
+            spokenInstructionVolume = AVAudioSession.sharedInstance().outputVolume
         }
     }
 
@@ -155,11 +157,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func shouldSpeak(for notification: NSNotification) -> Bool {
-        guard isEnabled, !NavigationSettings.shared.muted else { return false }
-        
-        if let volume = volume {
-            guard volume > 0 else { return false }
-        }
+        guard isEnabled, spokenInstructionVolume > 0, !NavigationSettings.shared.muted else { return false }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
@@ -200,9 +198,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         if utterance.voice == nil {
             utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
         }
-        if let volume = volume {
-            utterance.volume = volume
-        }
+        
+        utterance.volume = spokenInstructionVolume
         
         speechSynth.speak(utterance)
     }
