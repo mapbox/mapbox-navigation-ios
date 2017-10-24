@@ -165,7 +165,9 @@ struct EventDetails {
         modifiedEventDictionary["batteryLevel"] = batteryLevel
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
         modifiedEventDictionary["userAbsoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
-        modifiedEventDictionary["locationEngine"] = String(describing: locationEngine)
+        if let locationEngine = locationEngine {
+            modifiedEventDictionary["locationEngine"] = String(describing: locationEngine)
+        }
         
         modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait
         modifiedEventDictionary["percentTimeInForeground"] = percentTimeInForeground
