@@ -151,4 +151,4 @@ public var RouteControllerMinimumNumberLocationUpdatesBackwards = 3
  */
 public var RouteControllerNumberOfSecondsForRerouteFeedback: TimeInterval = 10
 
-let FasterRouteFoundEvent = "fasterRouteFound"
+let FasterRouteFoundEvent = "navigation.fasterRouteFound"
