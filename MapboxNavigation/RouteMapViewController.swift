@@ -601,7 +601,7 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController, didSwipe: Bool) {
         let step = maneuverViewController.step!
 
-        maneuverViewController.turnArrowView.step = step
+        maneuverViewController.step = step
         maneuverViewController.distance = step.distance > 0 ? step.distance : nil
         maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
 //        maneuverViewController.updateStreetNameForStep()
