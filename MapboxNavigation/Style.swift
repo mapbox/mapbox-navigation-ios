@@ -172,6 +172,14 @@ open class DestinationLabel: StylableLabel {
     }
 }
 
+/// :nodoc
+@objc(MBPrimaryLabel)
+open class PrimaryLabel: StylableLabel { }
+
+/// :nodoc
+@objc(MBSecondaryLabel)
+open class SecondaryLabel: StylableLabel { }
+
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
 open class TimeRemainingLabel: StylableLabel {
