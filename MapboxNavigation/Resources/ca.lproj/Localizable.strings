@@ -1,23 +1,32 @@
-﻿/* Indicates a faster route was found */
+/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "S’ha trobat una ruta més ràpida";
 
-/* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Accident";
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Ruta\ndolenta";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Instruccions\nimprecises";
+
+/* Feedback type for inaccurate GPS */
+"FEEDBACK_GPS_INACCURATE" = "GPS\nerroni";
+
+/* Feedback type for Heavy Traffic */
+"FEEDBACK_HEAVY_TRAFFIC" = "Tràfic\nespès";
+
+/* Feedback type for Instruction Issue */
+"FEEDBACK_INSTRUCTION_ISSUE" = "Problema amb \nles instruccions";
+
+/* Feedback type for Instruction Timing */
+"FEEDBACK_INSTRUCTION_TIMING" = "Cronometratge\ninstruccions";
+
+/* Feedback type for turn not allowed */
+"FEEDBACK_NOT_ALLOWED" = "No\npermès";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Informe \ntràfic";
 
 /* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Tancament";
-
-/* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Confús";
-
-/* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Perill";
-
-/* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Altres problemes";
-
-/* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "No permès";
+"FEEDBACK_ROAD_CLOSURE" = "Carretera\ntancada";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ i %2$@";
