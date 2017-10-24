@@ -9,7 +9,8 @@
 import UIKit
 
 class EndOfRouteViewController: UIViewController, DismissDraggable {
-    static var presentationHeight: CGFloat = 260.0
+    var draggableHeight: CGFloat = 260.0
+    
     var interactor = Interactor()
 
     class func loadFromStoryboard() -> EndOfRouteViewController {
@@ -63,7 +64,7 @@ extension EndOfRouteViewController: UIViewControllerTransitioningDelegate {
     }
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PresentAnimator(height: EndOfRouteViewController.presentationHeight)
+        return PresentAnimator()
     }
     
     func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {

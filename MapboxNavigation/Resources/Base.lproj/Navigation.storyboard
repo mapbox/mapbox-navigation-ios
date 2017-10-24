@@ -241,11 +241,6 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <variation key="default">
-                                    <mask key="subviews">
-                                        <exclude reference="7av-mF-znt"/>
-                                    </mask>
-                                </variation>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C23-DT-v2t" customClass="MBSeparatorView">
                                 <rect key="frame" x="0.0" y="115" width="375" height="2"/>
