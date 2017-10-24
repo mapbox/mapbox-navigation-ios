@@ -254,11 +254,11 @@ open class RouteController: NSObject {
     }
     
     func didChangeOrientation() {
-        if UIDevice.current.orientation == .portrait {
+        if UIDevice.current.orientation.isPortrait {
             sessionState.timeSpentInLandscape += abs(sessionState.lastTimeInPortrait.timeIntervalSinceNow)
             
             sessionState.lastTimeInPortrait = Date()
-        } else if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
+        } else if UIDevice.current.orientation.isLandscape {
             sessionState.timeSpentInPortrait += abs(sessionState.lastTimeInLandscape.timeIntervalSinceNow)
             
             sessionState.lastTimeInLandscape = Date()
@@ -893,10 +893,9 @@ extension RouteController {
     
     func enqueueFoundFasterRouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = events.navigationRerouteEvent(routeController: self, MMEEventType: FasterRouteFoundEvent)
+        let eventDictionary = events.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
         
         sessionState.lastRerouteDate = timestamp
-        sessionState.numberOfReroutes += 1
         
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
         

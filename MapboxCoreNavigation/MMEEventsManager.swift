@@ -4,7 +4,7 @@ import AVFoundation
 import MapboxMobileEvents
 
 let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
-let EventVersion = 5
+let EventVersion = 6
 
 struct EventDetails {
     var originalRequestIdentifier: String?
@@ -96,9 +96,9 @@ struct EventDetails {
         
         var totalTimeInPortrait = session.timeSpentInPortrait
         var totalTimeInLandscape = session.timeSpentInLandscape
-        if UIDevice.current.orientation == .portrait {
+        if UIDevice.current.orientation.isPortrait {
             totalTimeInPortrait += abs(session.lastTimeInPortrait.timeIntervalSinceNow)
-        } else if UIDevice.current.orientation == .landscapeRight || UIDevice.current.orientation == .landscapeLeft {
+        } else if UIDevice.current.orientation.isLandscape {
             totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
         }
         percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 1 : totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
@@ -212,11 +212,11 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationRerouteEvent(routeController: RouteController, MMEEventType: String = MMEEventTypeNavigationReroute) -> [String: Any] {
+    func navigationRerouteEvent(routeController: RouteController, eventType: String = MMEEventTypeNavigationReroute) -> [String: Any] {
         let timestamp = Date()
         
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
-        eventDictionary["event"] = MMEEventType
+        eventDictionary["event"] = eventType
         
         eventDictionary["secondsSinceLastReroute"] = routeController.sessionState.lastRerouteDate != nil ? round(timestamp.timeIntervalSince(routeController.sessionState.lastRerouteDate!)) : -1
         eventDictionary["step"] = routeController.routeProgress.currentLegProgress.stepDictionary
