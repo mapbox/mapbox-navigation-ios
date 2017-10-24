@@ -163,13 +163,7 @@ open class DestinationLabel: StylableLabel {
         }
     }
     
-    var smartText: String? {
-        didSet {
-            guard let text = smartText?.split(separator: "/") else { return }
-            
-            
-        }
-    }
+    var smartText: String?
 }
 
 /// :nodoc
