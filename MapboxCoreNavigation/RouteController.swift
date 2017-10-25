@@ -244,10 +244,37 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
     }
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func didChangeOrientation() {
+        if UIDevice.current.orientation.isPortrait {
+            sessionState.timeSpentInLandscape += abs(sessionState.lastTimeInPortrait.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInPortrait = Date()
+        } else if UIDevice.current.orientation.isLandscape {
+            sessionState.timeSpentInPortrait += abs(sessionState.lastTimeInLandscape.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInLandscape = Date()
+        }
+    }
+    
+    func didChangeApplicationState() {
+        if UIApplication.shared.applicationState == .active {
+            sessionState.timeSpentInForeground += abs(sessionState.lastTimeInBackground.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInForeground = Date()
+        } else if UIApplication.shared.applicationState == .background {
+            sessionState.timeSpentInBackground += abs(sessionState.lastTimeInForeground.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInBackground = Date()
+        }
     }
 
     /**
@@ -267,7 +294,7 @@ open class RouteController: NSObject {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
     }
-
+    
     /**
      The most recently received user location.
      
@@ -407,9 +434,15 @@ extension RouteController {
 
     func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
+        
     }
-
+    
+    
     func didReroute(notification: NSNotification) {
+        if let _ = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool {
+            _ = enqueueFoundFasterRouteEvent()
+        }
+        
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
@@ -601,11 +634,14 @@ extension RouteController: CLLocationManagerDelegate {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                strongSelf.didReroute(notification: NSNotification(name: RouteControllerDidReroute, object: nil, userInfo: [
+                    RouteControllerDidFindFasterRouteKey: true
+                    ]))
                 strongSelf.didFindFasterRoute = false
             }
         }
     }
-
+    
     func reroute(from location: CLLocation) {
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
@@ -778,6 +814,18 @@ struct SessionState {
 
     var currentRoute: Route
     var originalRoute: Route
+    
+    var timeSpentInPortrait: TimeInterval = 0
+    var timeSpentInLandscape: TimeInterval = 0
+    
+    var lastTimeInLandscape = Date()
+    var lastTimeInPortrait = Date()
+    
+    var timeSpentInForeground: TimeInterval = 0
+    var timeSpentInBackground: TimeInterval = 0
+    
+    var lastTimeInForeground = Date()
+    var lastTimeInBackground = Date()
 
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
 
@@ -831,7 +879,6 @@ extension RouteController {
 
     func enqueueRerouteEvent() -> String {
         let timestamp = Date()
-
         let eventDictionary = events.navigationRerouteEvent(routeController: self)
 
         sessionState.lastRerouteDate = timestamp
@@ -841,6 +888,19 @@ extension RouteController {
 
         outstandingFeedbackEvents.append(event)
 
+        return event.id.uuidString
+    }
+    
+    func enqueueFoundFasterRouteEvent() -> String {
+        let timestamp = Date()
+        let eventDictionary = events.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
+        
+        sessionState.lastRerouteDate = timestamp
+        
+        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
+        
+        outstandingFeedbackEvents.append(event)
+        
         return event.id.uuidString
     }
 
