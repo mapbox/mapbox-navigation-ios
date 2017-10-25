@@ -54,8 +54,28 @@ extension InstructionsBannerView {
         
         // Primary Label
         addConstraint(NSLayoutConstraint(item: primaryLabel, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .top, multiplier: 1, constant: 8))
-        addConstraint(NSLayoutConstraint(item: primaryLabel, attribute: .bottom, relatedBy: .equal, toItem: secondaryLabel, attribute: .top, multiplier: 1, constant: 0))
+        primaryToSecondaryConstraint = NSLayoutConstraint(item: primaryLabel, attribute: .bottom, relatedBy: .equal, toItem: secondaryLabel, attribute: .top, multiplier: 1, constant: 0)
+        primaryToSecondaryConstraint.priority = 1000
+        addConstraint(primaryToSecondaryConstraint)
         addConstraint(NSLayoutConstraint(item: primaryLabel, attribute: .leading, relatedBy: .equal, toItem: secondaryLabel, attribute: .leading, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: self, attribute: .right, relatedBy: .greaterThanOrEqual, toItem: primaryLabel, attribute: .right, multiplier: 1, constant: 8))
+        
+        primaryToDistanceConstraint = NSLayoutConstraint(item: primaryLabel, attribute: .lastBaseline, relatedBy: .equal, toItem: distanceLabel, attribute: .lastBaseline, multiplier: 1, constant: 0)
+        primaryToDistanceConstraint.priority = 1
+        addConstraint(primaryToDistanceConstraint)
+    }
+    
+    func pinPrimaryToDistance() {
+        primaryToDistanceConstraint.priority = 1000
+        primaryToSecondaryConstraint.priority = 1
+        
+        setNeedsUpdateConstraints()
+    }
+    
+    func unpinPrimaryFromDistance() {
+        primaryToDistanceConstraint.priority = 1
+        primaryToSecondaryConstraint.priority = 1000
+        
+        setNeedsUpdateConstraints()
     }
 }
