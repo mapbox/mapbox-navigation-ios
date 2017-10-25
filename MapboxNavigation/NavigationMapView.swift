@@ -63,8 +63,8 @@ open class NavigationMapView: MGLMapView {
     let defaultAltitude: CLLocationDistance = 1000
     
     struct FrameIntervalOptions {
-        fileprivate static let durationUntilNextManeuver: TimeInterval = 30
-        fileprivate static let durationSincePreviousManeuver: TimeInterval = 10
+        fileprivate static let durationUntilNextManeuver: TimeInterval = 10
+        fileprivate static let durationSincePreviousManeuver: TimeInterval = 5
         fileprivate static let decreasedFrameInterval: Int = 12
         fileprivate static let defaultFrameInterval: Int = 1
     }
