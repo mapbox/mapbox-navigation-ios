@@ -7,7 +7,6 @@ class RouteManeuverViewController: UIViewController {
     
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     
-    let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
     let visualInstructionFormatter = VisualInstructionFormatter()
     
@@ -31,11 +30,7 @@ class RouteManeuverViewController: UIViewController {
     
     var distance: CLLocationDistance? {
         didSet {
-            if let distance = distance {
-                instructionsBannerView.distanceLabel.text = distanceFormatter.string(from: distance)
-            } else {
-                instructionsBannerView.distanceLabel.text = " "
-            }
+            instructionsBannerView.distance = distance
         }
     }
     

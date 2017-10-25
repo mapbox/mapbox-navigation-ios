@@ -142,7 +142,73 @@ open class StylableLabel : UILabel { }
 
 /// :nodoc:
 @objc(MBDistanceLabel)
-open class DistanceLabel: StylableLabel { }
+open class DistanceLabel: StylableLabel {
+    dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+    {
+        didSet { update() }
+    }
+    dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
+    {
+        didSet { update() }
+    }
+    dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium) {
+        didSet { update() }
+    }
+    dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: UIFontWeightMedium) {
+        didSet { update() }
+    }
+    
+    var valueRange: Range<String.Index>? {
+        didSet {
+            update()
+        }
+    }
+    
+    var unitRange: Range<String.Index>? {
+        didSet {
+            update()
+        }
+    }
+    
+    var distanceString: String? {
+        didSet {
+            update()
+        }
+    }
+    
+    fileprivate func update() {
+        guard let valueRange = valueRange, let unitRange = unitRange, let distanceString = distanceString else {
+            return
+        }
+
+        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor,
+                                              NSFontAttributeName: valueFont]
+
+        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor,
+                                             NSFontAttributeName: unitFont]
+
+        let valueSubstring = distanceString.substring(with: valueRange)
+        let unitSubstring = distanceString.substring(with: unitRange)
+        let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
+        let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
+
+        let startsWithUnit = unitRange.lowerBound == distanceString.wholeRange.lowerBound
+        let attributedString = NSMutableAttributedString()
+
+        attributedString.append(startsWithUnit ? unitAttributedString : valueAttributedString)
+        attributedString.append(startsWithUnit ? valueAttributedString : unitAttributedString)
+
+        attributedText = attributedString
+    }
+    
+    open override var text: String? {
+        didSet {
+            if text == nil {
+                attributedText = NSAttributedString(string: " ", attributes: [NSForegroundColorAttributeName: valueTextColor, NSFontAttributeName: valueFont])
+            }
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBDestinationLabel)

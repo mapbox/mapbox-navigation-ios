@@ -28,6 +28,9 @@ public class DistanceFormatter: LengthFormatter {
     
     let nonFractionalLengthFormatter = LengthFormatter()
     
+    /// Indicates the most recently used unit
+    public private(set) var unit: LengthFormatter.Unit = .millimeter
+    
     /**
      Intializes a new `DistanceFormatter`.
      
@@ -98,7 +101,6 @@ public class DistanceFormatter: LengthFormatter {
         numberFormatter.usesSignificantDigits = false
         numberFormatter.maximumFractionDigits = maximumFractionDigits(for: distance)
         
-        var unit: LengthFormatter.Unit = .millimeter
         unitString(fromMeters: distance, usedUnit: &unit)
         
         numberFormatter.roundingIncrement = roundingIncrement(for: distance, unit: unit) as NSNumber
