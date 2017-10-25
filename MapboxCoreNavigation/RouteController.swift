@@ -331,10 +331,10 @@ open class RouteController: NSObject {
         let wrappedCourse = location.course.wrap(min: -180, max: 180)
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
-        let averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
+        let averageRelativeAngle = pointBehindClosest.distance > 0 ? (relativeAnglepointBehind + relativeAnglepointAhead) / 2 : relativeAnglepointAhead
         let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
         
-        var userCourse = pointBehindClosest.distance == 0 ? location.course : calculatedCourseForLocationOnStep
+        var userCourse = calculatedCourseForLocationOnStep
         var userCoordinate = snappedCoordinate.coordinate
         
         if location.course >= 0 && location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
