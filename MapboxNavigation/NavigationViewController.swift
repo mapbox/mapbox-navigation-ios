@@ -456,7 +456,9 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
         
+        
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
+            mapViewController?.userDidArrive { self.dismiss(animated: true, completion: nil) }
             navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
         

@@ -7,24 +7,46 @@
 //
 
 import UIKit
+import MapboxDirections
 
-class EndOfRouteViewController: UIViewController, DismissDraggable {
+open class EndOfRouteViewController: UIViewController, DismissDraggable {
+    
+    //MARK: Outlets
+    @IBOutlet weak var primary: UILabel!
+    @IBOutlet weak var secondary: UILabel!
+    
+    @IBOutlet weak var stars: RatingControl!
+    @IBOutlet weak var endNavigation: UIButton!
+    
+    
+    //MARK: Properties
     var draggableHeight: CGFloat = 260.0
     
     var interactor = Interactor()
+    var dismissal: (() -> Void)?
+    
+    open var destination: Waypoint? {
+        didSet {
+//            if (isViewLoaded) {
+//                updateInterface()
+//            }
+        }
+    }
 
-    class func loadFromStoryboard() -> EndOfRouteViewController {
+    public static func loadFromStoryboard() -> EndOfRouteViewController {
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         return storyboard.instantiateViewController(withIdentifier: String(describing: EndOfRouteViewController.self)) as! EndOfRouteViewController
     }
     
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
+//        clearInterface()
         enableDraggableDismiss()
+//        updateInterface()
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         let path = UIBezierPath(roundedRect:view.bounds,
                                 byRoundingCorners:[.topLeft, .topRight],
                                 cornerRadii: CGSize(width: 5, height: 5))
@@ -35,13 +57,32 @@ class EndOfRouteViewController: UIViewController, DismissDraggable {
         view.layer.mask = maskLayer
     }
 
-    override func didReceiveMemoryWarning() {
+    override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     @IBAction func endNavigationPressed(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil) //TODO: Add Dismissal Closure
+        self.dismiss(animated: true, completion: dismi ssal) 
+    }
+    
+    //Mark: Interface
+    private func updateInterface() {
+        primary.text = destination?.name
+        secondary.text = destination?.description
+    }
+    
+    private func clearInterface() {
+        [primary, secondary].forEach { $0.text = nil }
+        stars.rating = 0
+    }
+    
+    private func showTextField(animated: Bool = true) {
+        
+    }
+    
+    private func hideTextField(animated: Bool = true) {
+        
     }
     
     /*
@@ -59,15 +100,15 @@ class EndOfRouteViewController: UIViewController, DismissDraggable {
 //MARK: - UIViewControllerTransitioning
 
 extension EndOfRouteViewController: UIViewControllerTransitioningDelegate {
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DismissAnimator()
     }
     
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return PresentAnimator()
     }
     
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+    public func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
         return interactor.hasStarted ? interactor : nil
     }
 }

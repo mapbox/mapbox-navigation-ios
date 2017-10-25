@@ -255,6 +255,8 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
 
 extension ViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
+        if waypoint == currentRoute?.legs.last?.destination { showEndOfRouteFeedback(for: waypoint)}
+        
         // Multiple waypoint demo
         guard exampleMode == .multipleWaypoints else { return }
 
@@ -265,6 +267,14 @@ extension ViewController: NavigationViewControllerDelegate {
         confirmationController.delegate = self
         
         navigationViewController.present(confirmationController, animated: true, completion: nil)
+    }
+    
+    private func showEndOfRouteFeedback(for waypoint: Waypoint) {
+        let controller = EndOfRouteViewController.loadFromStoryboard()
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
+        controller.destination = waypoint
+        present(controller, animated: true, completion: nil)
     }
 }
 class CustomNightStyle: DayStyle {

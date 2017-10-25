@@ -25,6 +25,8 @@ class RouteMapViewController: UIViewController {
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
+    
+    var presentingArrival = false
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -48,6 +50,14 @@ class RouteMapViewController: UIViewController {
             mapView.delegate = mapView.delegate
         }
     }
+    
+    lazy var endOfRouteController: EndOfRouteViewController = {
+        let controller = EndOfRouteViewController.loadFromStoryboard()
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
+        return controller
+    }()
+    
     weak var routeController: RouteController!
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
@@ -199,12 +209,7 @@ class RouteMapViewController: UIViewController {
     }
 
     @IBAction func onStarSelected(_ sender: Any) {
-        guard let parent = parent else { return }
-        
-        let controller = EndOfRouteViewController.loadFromStoryboard()
-        controller.modalPresentationStyle = .custom
-        controller.transitioningDelegate = controller
-        parent.present(controller, animated: true, completion: nil)
+        showArrivalModal(completion: nil)
         
     }
     
@@ -304,7 +309,7 @@ class RouteMapViewController: UIViewController {
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return navigationMapView(mapView, viewFor: annotation)
     }
-
+    
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         guard var controller = routePageViewController.currentManeuverPage else { return }
         
@@ -387,6 +392,22 @@ class RouteMapViewController: UIViewController {
         UIView.defaultAnimation(0.3, animations: {
             self.laneViewsContainerView.isHidden = true
         }, completion: nil)
+    }
+    typealias VoidClosure = () -> Void
+    func userDidArrive(completion: VoidClosure?) {
+        showArrivalModal(completion: completion)
+    }
+    
+    private func showArrivalModal(completion: VoidClosure?) {
+        guard let parent = parent else { return }
+        let waypoint = route.legs.last?.destination
+        let controller = endOfRouteController
+
+        controller.destination = waypoint
+        controller.dismissal = completion
+        guard !presentingArrival else { return } //presenting multiple times will crash app
+        presentingArrival = true
+        parent.present(controller, animated: true, completion: nil)
     }
 }
 
