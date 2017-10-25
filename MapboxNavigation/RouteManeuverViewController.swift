@@ -45,7 +45,7 @@ class RouteManeuverViewController: UIViewController {
                 return
             }
             
-            instructionsBannerView.primaryLabel.text = roadCode
+            instructionsBannerView.set(primary: roadCode, secondary: nil)
             
             if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
                 // TODO: Set shield image
@@ -66,32 +66,6 @@ class RouteManeuverViewController: UIViewController {
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     let webImageManager = SDWebImageManager.shared()
     
-    
-//    var availableStreetLabelBounds: CGRect {
-//        return CGRect(origin: .zero, size: maximumAvailableStreetLabelSize)
-//    }
-    
-    /** 
-     Returns maximum available size for street label with padding, turnArrowView and shieldImage taken into account. Multiple lines will be used if distance is nil.
-     
-     width = | -8- TurnArrowView -8- availableWidth -8- |
-     */
-    
-//    var maximumAvailableStreetLabelSize: CGSize {
-//        get {
-//            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: secondaryDestinationLabel.font]).height
-//            let lines = CGFloat(numberOfDestinationLines)
-//            let padding: CGFloat = 8*4
-//            return CGSize(width: view.bounds.width-padding-turnArrowView.bounds.width, height: height*lines)
-//        }
-//    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//        primaryDestinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
-//        secondaryDestinationLabel.availableBounds = {[weak self] in CGRect(origin: .zero, size: self != nil ? self!.maximumAvailableStreetLabelSize : .zero) }
-    }
-    
     func notifyDidChange(routeProgress: RouteProgress, secondsRemaining: TimeInterval) {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
@@ -102,7 +76,8 @@ class RouteManeuverViewController: UIViewController {
             distance = nil
             
             let text = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
-            instructionsBannerView.secondaryLabel.text = text
+            instructionsBannerView.set(primary: text, secondary: nil)
+            
         } else {
             updateStreetNameForStep()
         }
@@ -111,6 +86,7 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func updateStreetNameForStep() {
-        instructionsBannerView.secondaryLabel.text = visualInstructionFormatter.string(leg: leg, step: step)
+        let text = visualInstructionFormatter.strings(leg: leg, step: step)
+        instructionsBannerView.set(primary: text.0, secondary: text.1)
     }
 }
