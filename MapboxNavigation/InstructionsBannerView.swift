@@ -12,6 +12,9 @@ class InstructionsBannerView: UIView {
     
     fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
     
+    var primaryToDistanceConstraint: NSLayoutConstraint!
+    var primaryToSecondaryConstraint: NSLayoutConstraint!
+    
     var distance: CLLocationDistance? {
         didSet {
             distanceLabel.unitRange = nil
@@ -47,6 +50,13 @@ class InstructionsBannerView: UIView {
     func set(primary: String?, secondary: String?) {
         primaryLabel.text = primary
         secondaryLabel.text = secondary
+        
+        // Pin primary baseline to distance baseline if secondary text is nil
+        if secondary == nil {
+            pinPrimaryToDistance()
+        } else {
+            unpinPrimaryFromDistance()
+        }
     }
     
     override func prepareForInterfaceBuilder() {
