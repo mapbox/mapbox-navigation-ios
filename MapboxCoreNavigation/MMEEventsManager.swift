@@ -164,7 +164,7 @@ struct EventDetails {
         modifiedEventDictionary["batteryPluggedIn"] = batteryPluggedIn
         modifiedEventDictionary["batteryLevel"] = batteryLevel
         modifiedEventDictionary["applicationState"] = applicationState.telemetryString
-        modifiedEventDictionary["userAbsoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
+        modifiedEventDictionary["absoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
         if let locationEngine = locationEngine {
             modifiedEventDictionary["locationEngine"] = String(describing: locationEngine)
         }
