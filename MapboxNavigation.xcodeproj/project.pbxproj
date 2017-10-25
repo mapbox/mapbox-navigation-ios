@@ -120,6 +120,7 @@
 		35CC141A1F79A43B009E872A /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
 		35D428291FA0B61F00176028 /* InstructionsBannerView_layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D428281FA0B61F00176028 /* InstructionsBannerView_layout.swift */; };
+		35D4282B1FA0DF1D00176028 /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -273,6 +274,7 @@
 				354A01C81E66265800D765C2 /* Pulley.framework in Embed Frameworks */,
 				354A01C61E66265600D765C2 /* SDWebImage.framework in Embed Frameworks */,
 				354A01D01E66266100D765C2 /* MapboxDirections.framework in Embed Frameworks */,
+				35D4282B1FA0DF1D00176028 /* MapboxNavigation.framework in Embed Frameworks */,
 				354A01CC1E66265D00D765C2 /* OSRMTextInstructions.framework in Embed Frameworks */,
 				354A01CA1E66265B00D765C2 /* Polyline.framework in Embed Frameworks */,
 				354A01C31E66265100D765C2 /* Mapbox.framework in Embed Frameworks */,
