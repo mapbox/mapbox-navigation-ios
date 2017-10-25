@@ -296,21 +296,34 @@ open class RouteController: NSObject {
      */
     public var location: CLLocation? {
         guard let location = rawLocation else { return nil }
-        guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
-        guard let snappedCoordinate = Polyline(stepCoordinates).closestCoordinate(to: location.coordinate) else { return location }
 
         var nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        let nearByPolyline = Polyline(nearByCoordinates)
 
         // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
         // Otherwise, we may get false positives from nearby step coordinates
         if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
             let initialHeading = upcomingStep.initialHeading,
             let finalHeading = upcomingStep.finalHeading,
-            initialHeading.differenceBetween(finalHeading) < RouteControllerMaxManipulatedCourseAngle,
             let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
-           nearByCoordinates = coordinates
+            
+            // Calculate if angle is sharp
+            let inAngle = initialHeading * .pi / 180.0
+            let outAngle = finalHeading * .pi / 180.0
+            
+            let inX = sin(inAngle)
+            let inY = cos(inAngle)
+            let outX = sin(outAngle)
+            let outY = cos(outAngle)
+            
+            let turnAngle = acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
+            
+            // The max here is 180. The closer it is to 180, the sharper the turn.
+            if turnAngle > 180 - RouteControllerMaxManipulatedCourseAngle {
+                nearByCoordinates = coordinates
+            }
         }
+        
+        let nearByPolyline = Polyline(nearByCoordinates)
 
         guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: location.coordinate) else { return nil }
 
@@ -335,13 +348,13 @@ open class RouteController: NSObject {
         let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
         
         var userCourse = calculatedCourseForLocationOnStep
-        var userCoordinate = snappedCoordinate.coordinate
+        var userCoordinate = closest.coordinate
         
         if location.course >= 0 && location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
             if calculatedCourseForLocationOnStep.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle && location.horizontalAccuracy < 20 {
                 userCourse = location.course
                 
-                if snappedCoordinate.distance > RouteControllerUserLocationSnappingDistance && location.horizontalAccuracy < 20 {
+                if closest.distance > RouteControllerUserLocationSnappingDistance && location.horizontalAccuracy < 20 {
                     userCoordinate =  location.coordinate
                 }
             }
