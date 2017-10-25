@@ -119,6 +119,7 @@
 		35CC14191F79A43B009E872A /* Turf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; };
 		35CC141A1F79A43B009E872A /* Turf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35CC14141F799496009E872A /* Turf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35CF34B11F0A733200C2692E /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CF34B01F0A733200C2692E /* UIFont.swift */; };
+		35D428291FA0B61F00176028 /* InstructionsBannerView_layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D428281FA0B61F00176028 /* InstructionsBannerView_layout.swift */; };
 		35D457A71E2D253100A89946 /* MBRouteController.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D457A61E2D253100A89946 /* MBRouteController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -353,13 +354,13 @@
 		352BBC551E5E78EA00703DF1 /* Example-Objective-CTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Example-Objective-CTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Example_Objective_CTests.m; sourceTree = "<group>"; };
 		352BBC591E5E78EA00703DF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerView.swift; sourceTree = "<group>"; };
 		3531C2671F9DDC6E00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
 		3531C2681F9DDC6E00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Main.strings"; sourceTree = "<group>"; };
 		3531C2691F9DDC6F00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Navigation.strings"; sourceTree = "<group>"; };
 		3531C26A1F9DDC6F00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3531C26B1F9DDC6F00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3531C26C1F9DDC6F00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "pt-BR"; path = "pt-BR.lproj/Abbreviations.plist"; sourceTree = "<group>"; };
+		3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerView.swift; sourceTree = "<group>"; };
 		35375EC01F31FA86004CE727 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManager.swift; sourceTree = "<group>"; };
 		353E68FD1EF0B985007B2AE5 /* BundleAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleAdditions.swift; sourceTree = "<group>"; };
@@ -421,6 +422,7 @@
 		35CB1E121F97DD740011CC44 /* FeedbackItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackItem.swift; sourceTree = "<group>"; };
 		35CC14141F799496009E872A /* Turf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Turf.framework; path = Carthage/Build/iOS/Turf.framework; sourceTree = "<group>"; };
 		35CF34B01F0A733200C2692E /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
+		35D428281FA0B61F00176028 /* InstructionsBannerView_layout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerView_layout.swift; sourceTree = "<group>"; };
 		35D457A61E2D253100A89946 /* MBRouteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBRouteController.h; sourceTree = "<group>"; };
 		35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+MGLNavigationAdditions.h"; sourceTree = "<group>"; };
 		35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+MGLNavigationAdditions.m"; sourceTree = "<group>"; };
@@ -837,6 +839,7 @@
 				35DC9D901F4323AA001ECD64 /* LanesContainerView.swift */,
 				35E407671F5625FF00EFC814 /* StyleKitMarker.swift */,
 				3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */,
+				35D428281FA0B61F00176028 /* InstructionsBannerView_layout.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1455,6 +1458,7 @@
 				351BEC061E5BCC6C006FE110 /* ManeuverDirection.swift in Sources */,
 				35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */,
 				351BEBFF1E5BCC63006FE110 /* StyleKitArrows.swift in Sources */,
+				35D428291FA0B61F00176028 /* InstructionsBannerView_layout.swift in Sources */,
 				351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */,
 				351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */,
 				C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */,
