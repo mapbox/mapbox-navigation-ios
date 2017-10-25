@@ -23,11 +23,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     
     /**
-     Volume of spoken instructions. By default, this will be set to the system volume.
+     Volume of spoken instructions.
      */
-    public var volume: Float?
-    
-    var spokenInstructionVolume = AVAudioSession.sharedInstance().outputVolume
+    public var volume: Float = 1
     
     
     /**
@@ -96,7 +94,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             return
         }
         
-        rerouteSoundPlayer.volume = spokenInstructionVolume
+        rerouteSoundPlayer.volume = volume
         rerouteSoundPlayer.play()
     }
     
@@ -121,11 +119,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
         try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
-        if let volume = volume {
-            spokenInstructionVolume = volume
-        } else {
-            spokenInstructionVolume = AVAudioSession.sharedInstance().outputVolume
-        }
     }
 
     func duckAudio() throws {
@@ -157,7 +150,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func shouldSpeak(for notification: NSNotification) -> Bool {
-        guard isEnabled, spokenInstructionVolume > 0, !NavigationSettings.shared.muted else { return false }
+        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return false }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
@@ -199,7 +192,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
         }
         
-        utterance.volume = spokenInstructionVolume
+        utterance.volume = volume
         
         speechSynth.speak(utterance)
     }
