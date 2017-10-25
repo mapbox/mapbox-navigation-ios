@@ -39,8 +39,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.distance = 1608
         controller.instructionsBannerView.turnArrowView.isEnd = true
-        controller.instructionsBannerView.primaryLabel.text = "This should be multiple lines"
-        controller.instructionsBannerView.secondaryLabel.text = "This should be multiple lines"
+        controller.instructionsBannerView.set(primary: "This should be multiple lines", secondary: "This should be multiple lines")
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -52,7 +51,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.distance = 804
         controller.instructionsBannerView.turnArrowView.isEnd = true
-        controller.instructionsBannerView.primaryLabel.text = "Primary label only"
+        controller.instructionsBannerView.set(primary: "Primary label only", secondary: nil)
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -64,7 +63,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.distance = 804
         controller.instructionsBannerView.turnArrowView.isEnd = true
-        controller.instructionsBannerView.primaryLabel.text = "Spell out Avenue multiple lines"
+        controller.instructionsBannerView.set(primary: "Spell out Avenue multiple lines", secondary: nil)
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -76,7 +75,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 100
-        controller.instructionsBannerView.secondaryLabel.text = "This Drive Avenue should be abbreviated."
+        controller.instructionsBannerView.set(primary: "This Drive Avenue should be abbreviated.", secondary: nil)
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -88,8 +87,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 804
-        controller.instructionsBannerView.primaryLabel.text = "I-80 / South"
-        controller.instructionsBannerView.secondaryLabel.text = "Drive Avenue should be abbreviated on multiple lines."
+        controller.instructionsBannerView.set(primary: "I-80 / South", secondary: "Drive Avenue should be abbreviated on multiple lines.")
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -101,8 +99,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 100
-        controller.instructionsBannerView.primaryLabel.text = "I-80"
-        controller.instructionsBannerView.secondaryLabel.text = "HMM Long destination / US-45 / Chicago"
+        controller.instructionsBannerView.set(primary: "I-80", secondary: "HMM Long destination / US-45 / Chicago")
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -114,8 +111,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 482
-        controller.instructionsBannerView.primaryLabel.text = "I-80"
-        controller.instructionsBannerView.secondaryLabel.text = "East Market Street"
+        controller.instructionsBannerView.set(primary: "I-80", secondary: "East Market Street")
         
         FBSnapshotVerifyView(controller.view)
     }
