@@ -200,14 +200,6 @@ open class DistanceLabel: StylableLabel {
 
         attributedText = attributedString
     }
-    
-    open override var text: String? {
-        didSet {
-            if text == nil {
-                attributedText = NSAttributedString(string: " ", attributes: [NSForegroundColorAttributeName: valueTextColor, NSFontAttributeName: valueFont])
-            }
-        }
-    }
 }
 
 /// :nodoc:

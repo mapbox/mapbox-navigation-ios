@@ -9,11 +9,9 @@ class InstructionsBannerView: UIView {
     weak var primaryLabel: PrimaryLabel!
     weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
+    weak var stackView: UIStackView!
     
     fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
-    
-    var primaryToDistanceConstraint: NSLayoutConstraint!
-    var primaryToSecondaryConstraint: NSLayoutConstraint!
     
     var distance: CLLocationDistance? {
         didSet {
@@ -50,13 +48,6 @@ class InstructionsBannerView: UIView {
     func set(primary: String?, secondary: String?) {
         primaryLabel.text = primary
         secondaryLabel.text = secondary
-        
-        // Pin primary baseline to distance baseline if secondary text is nil
-        if secondary == nil {
-            pinPrimaryToDistance()
-        } else {
-            unpinPrimaryFromDistance()
-        }
     }
     
     override func prepareForInterfaceBuilder() {
