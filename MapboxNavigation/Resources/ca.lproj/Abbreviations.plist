@@ -32,14 +32,14 @@
 		<string>equip.</string>
 		<key>Indret</key>
 		<string>indr.</string>
-		<key>Massís</key>
-		<string>Serra</string>
 		<key>Municipi</key>
 		<string>mun.</string>
 		<key>Orografia</key>
 		<string>orogr.</string>
 		<key>Relleu del Litoral</key>
 		<string>lit.</string>
+		<key>Serra</key>
+		<string>serra</string>
 		<key>Xarxa Hidrogràfica</key>
 		<string>curs fluv.</string>
 	</dict>
