@@ -220,14 +220,12 @@ open class InstructionLabel: StylableLabel {
         }
     }
     
-    var imageSizeMultiplier: CGFloat = 1.5
-    
     var shieldImage: UIImage? {
         didSet {
             guard let image = shieldImage else { return }
             guard let text = self.text else { return }
             
-            let attributes: [String: Any] = [NSFontAttributeName: font.withSize(font.pointSize*imageSizeMultiplier),
+            let attributes: [String: Any] = [NSFontAttributeName: font,
                                              NSForegroundColorAttributeName: textColor]
             
             let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: text, attributes: attributes))
