@@ -97,6 +97,7 @@
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
 		358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14651E5E3B7700ADE590 /* AppDelegate.swift */; };
 		358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
+		359095E31FA21FAE00EFD5DD /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359095E21FA21FAE00EFD5DD /* URL.swift */; };
 		359574A81F28CC5A00838209 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A71F28CC3800838209 /* CLLocation.swift */; };
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
 		359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
@@ -391,6 +392,7 @@
 		358D14651E5E3B7700ADE590 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		358D14671E5E3B7700ADE590 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		358D14A61E5E3FDC00ADE590 /* Example-Objective-C.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example-Objective-C.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		359095E21FA21FAE00EFD5DD /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		359574A71F28CC3800838209 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CLLocation.swift; path = MapboxCoreNavigation/CLLocation.swift; sourceTree = SOURCE_ROOT; };
 		359574A91F28CCBB00838209 /* LocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
@@ -827,6 +829,7 @@
 				35B7837D1F9547B300291F9A /* Transitioning.swift */,
 				35FF4B121F9A7463009A71C4 /* UIImage.swift */,
 				359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */,
+				359095E21FA21FAE00EFD5DD /* URL.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1471,6 +1474,7 @@
 				351BEBFB1E5BCC63006FE110 /* RouteTableViewHeaderView.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
+				359095E31FA21FAE00EFD5DD /* URL.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesContainerView.swift in Sources */,
 				C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */,

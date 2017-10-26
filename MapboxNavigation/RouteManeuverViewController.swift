@@ -40,22 +40,25 @@ class RouteManeuverViewController: UIViewController {
                 return
             }
             
-            instructionsBannerView.set(primary: roadCode, secondary: nil)
-            
             if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
-                // TODO: Set shield image
+                
+                guard let shieldURL = URL.shieldURL(network: components[0], number: components[1], height: 32 * UIScreen.main.scale) else {
+                    return
+                }
+                
+                URL.shieldImageURL(shieldURL: shieldURL, completion: { (imageURL) in
+                    // TODO: Cache imageURL
+                    SDWebImageDownloader.shared().downloadImage(with: imageURL, options: [], progress: nil, completed: { (image, data, error, successful) in
+                        // TODO: Cache image
+                        
+                    })
+                })
+                
             } else {
                 //shieldImage = nil
             }
         }
     }
-    
-//    var shieldImage: UIImage? {
-//        didSet {
-//            //shieldImageView.image = shieldImage
-//            updateStreetNameForStep()
-//        }
-//    }
     
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
