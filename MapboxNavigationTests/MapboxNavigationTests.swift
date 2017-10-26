@@ -40,6 +40,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.distance = 1608
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.instructionsBannerView.set(primary: "This should be multiple lines", secondary: "This should be multiple lines")
+        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -64,6 +65,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.distance = 804
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.instructionsBannerView.set(primary: "Spell out Avenue multiple lines", secondary: nil)
+        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -76,6 +78,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 100
         controller.instructionsBannerView.set(primary: "This Drive Avenue should be abbreviated.", secondary: nil)
+        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
         
         FBSnapshotVerifyView(controller.view)
     }
