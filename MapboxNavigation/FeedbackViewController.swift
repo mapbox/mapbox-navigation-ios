@@ -189,7 +189,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         return !isDescendant
     }
     
-    func handleDismissTap(sender: UITapGestureRecognizer) {
+    func handleDismissTap(_ sender: UITapGestureRecognizer) {
         dismissFeedback()
     }
 }

@@ -458,7 +458,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         
         
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            mapViewController?.userDidArrive(completion: nil) //{ self.dismiss(animated: true, completion: nil) }
+            mapViewController?.userDidArrive { self.dismiss(animated: true, completion: nil) }
             navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
         

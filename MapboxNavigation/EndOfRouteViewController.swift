@@ -25,6 +25,8 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
     var interactor = Interactor()
     var dismissal: (() -> Void)?
     
+    lazy var geocoder: CLGeocoder = CLGeocoder()
+    
     open var destination: Waypoint? {
         didSet {
             if (isViewLoaded) {
@@ -63,13 +65,18 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
     }
     
     @IBAction func endNavigationPressed(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: dismissal)
     }
     
     //Mark: Interface
     private func updateInterface() {
         primary.text = destination?.name
-        secondary.text = destination?.description
+        guard let coordinate = destination?.coordinate else { return }
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        geocoder.reverseGeocodeLocation(location) { (places, error) in
+            guard let city = places?.first?.locality, error == nil else { return self.secondary.text = "" }
+            self.secondary.text = city
+        }
     }
     
     private func clearInterface() {
