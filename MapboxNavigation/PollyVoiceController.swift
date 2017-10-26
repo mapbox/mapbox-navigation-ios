@@ -44,10 +44,12 @@ public class PollyVoiceController: RouteVoiceController {
     var cacheURLSession: URLSession
     var cachePollyTask: URLSessionDataTask?
     
-    var spokenInstructionsForRoute: [String: Data] = [:]
+    var spokenInstructionsForRoute = NSCache<AnyObject, AnyObject>()
     
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
+        
+        spokenInstructionsForRoute.countLimit = 200
         
         let credentialsProvider = AWSCognitoCredentialsProvider(regionType: regionType, identityPoolId: identityPoolId)
         let configuration = AWSServiceConfiguration(region: regionType, credentialsProvider: credentialsProvider)
@@ -77,15 +79,14 @@ public class PollyVoiceController: RouteVoiceController {
             guard let instructions = step.instructionsSpokenAlongStep else { continue }
             
             for instruction in instructions {
-                guard spokenInstructionsForRoute[instruction.ssmlText] == nil else { continue }
+                guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as AnyObject) == nil else { continue }
                 
                 cacheSpokenInstruction(instruction: instruction.ssmlText)
             }
         }
         
-        
-        guard spokenInstructionsForRoute[instruction] == nil else {
-            play(spokenInstructionsForRoute[instruction]!)
+        guard spokenInstructionsForRoute.object(forKey: instruction as AnyObject) == nil else {
+            play(spokenInstructionsForRoute.object(forKey: instruction as AnyObject)! as! Data)
             return
         }
         
@@ -232,7 +233,7 @@ public class PollyVoiceController: RouteVoiceController {
                 }
                 
                 if let data = data {
-                    strongSelf.spokenInstructionsForRoute[instruction] = data
+                    strongSelf.spokenInstructionsForRoute.setObject(data as AnyObject, forKey: instruction as AnyObject)
                 }
             }
             
