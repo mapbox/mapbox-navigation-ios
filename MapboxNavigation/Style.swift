@@ -205,32 +205,28 @@ open class DistanceLabel: StylableLabel {
 /// :nodoc:
 @objc(MBDestinationLabel)
 open class DestinationLabel: StylableLabel {
-//    typealias AvailableBoundsHandler = () -> (CGRect)
-//    var availableBounds: AvailableBoundsHandler!
-//    var unabridgedText: String? {
-//        didSet {
-//            super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
-//        }
-//    }
+
+}
+
+@objc(MBInstructionLabel)
+open class InstructionLabel: StylableLabel {
+    typealias AvailableBoundsHandler = () -> (CGRect)
+    var availableBounds: AvailableBoundsHandler!
     
     var unabridgedText: String? {
         didSet {
-            //super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
-            super.text = unabridgedText
-            sizeToFit()
+            super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
         }
     }
-    
-    var smartText: String?
 }
 
 /// :nodoc
 @objc(MBPrimaryLabel)
-open class PrimaryLabel: StylableLabel { }
+open class PrimaryLabel: InstructionLabel { }
 
 /// :nodoc
 @objc(MBSecondaryLabel)
-open class SecondaryLabel: StylableLabel { }
+open class SecondaryLabel: InstructionLabel { }
 
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
