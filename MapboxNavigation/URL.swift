@@ -20,6 +20,7 @@ extension URL {
             }
             
             guard data != nil && error == nil else {
+                completion(nil)
                 return
             }
             
