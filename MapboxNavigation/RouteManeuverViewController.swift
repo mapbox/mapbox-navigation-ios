@@ -46,19 +46,11 @@ class RouteManeuverViewController: UIViewController {
                 
                 let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.instructionsBannerView.primaryLabel.font]).height*UIScreen.main.scale*imageSizeMultiplier
                 
-                guard let shieldURL = URL.shieldURL(network: components[0], number: components[1], height: height) else {
-                    return
-                }
-                
-                URL.shieldImageURL(shieldURL: shieldURL, completion: { (imageURL) in
-                    // TODO: Cache imageURL
-                    SDWebImageDownloader.shared().downloadImage(with: imageURL, options: [], progress: nil, completed: { (image, data, error, successful) in
-                        // TODO: Cache image
-                        guard let imageData = data else { return }
-                        let downscaledImage = UIImage(data: imageData, scale: UIScreen.main.scale)
-                        self.instructionsBannerView.primaryLabel.imageSizeMultiplier = imageSizeMultiplier
-                        self.instructionsBannerView.primaryLabel.shieldImage = downscaledImage
-                    })
+                let network = components[0]
+                let number = components[1]
+
+                UIImage.shieldImage(network, number: number, height: height, completion: { (shieldImage) in
+                    self.instructionsBannerView.primaryLabel.shieldImage = shieldImage
                 })
                 
             } else {
