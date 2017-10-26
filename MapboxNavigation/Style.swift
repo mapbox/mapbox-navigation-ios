@@ -220,24 +220,37 @@ open class InstructionLabel: StylableLabel {
         }
     }
     
+    var imageSizeMultiplier: CGFloat = 1.5
+    
     var shieldImage: UIImage? {
         didSet {
             guard let image = shieldImage else { return }
             guard let text = self.text else { return }
             
-            let attributes: [String: Any] = [NSFontAttributeName: font,
+            let attributes: [String: Any] = [NSFontAttributeName: font.withSize(font.pointSize*imageSizeMultiplier),
                                              NSForegroundColorAttributeName: textColor]
             
             let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: text, attributes: attributes))
             
-            let attachment = NSTextAttachment()
+            let attachment = ShieldAttachment()
+            attachment.font = font
             attachment.image = image
             let attributedAttachment = NSAttributedString(attachment: attachment)
-            
             attributedString.insert(attributedAttachment, at: 0)
             
             attributedText = attributedString
         }
+    }
+}
+
+class ShieldAttachment: NSTextAttachment {
+    
+    var font: UIFont = UIFont.systemFont(ofSize: 17)
+    
+    override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+        guard let image = image else { return super.attachmentBounds(for: textContainer, proposedLineFragment: lineFrag, glyphPosition: position, characterIndex: charIndex)}
+        let mid = font.descender + font.capHeight
+        return CGRect(x: 0, y: font.descender - image.size.height / 2 + mid + 2, width: image.size.width, height: image.size.height).integral
     }
 }
 
