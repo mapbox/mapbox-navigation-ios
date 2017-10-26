@@ -42,7 +42,9 @@ class RouteManeuverViewController: UIViewController {
             
             if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
                 
-                let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.instructionsBannerView.primaryLabel.font]).height
+                let imageSizeMultiplier: CGFloat = 1.2
+                
+                let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.instructionsBannerView.primaryLabel.font]).height*UIScreen.main.scale*imageSizeMultiplier
                 
                 guard let shieldURL = URL.shieldURL(network: components[0], number: components[1], height: height) else {
                     return
@@ -52,8 +54,10 @@ class RouteManeuverViewController: UIViewController {
                     // TODO: Cache imageURL
                     SDWebImageDownloader.shared().downloadImage(with: imageURL, options: [], progress: nil, completed: { (image, data, error, successful) in
                         // TODO: Cache image
-                        guard let shieldImage = image else { return }
-                        self.instructionsBannerView.primaryLabel.shieldImage = shieldImage
+                        guard let imageData = data else { return }
+                        let downscaledImage = UIImage(data: imageData, scale: UIScreen.main.scale)
+                        self.instructionsBannerView.primaryLabel.imageSizeMultiplier = imageSizeMultiplier
+                        self.instructionsBannerView.primaryLabel.shieldImage = downscaledImage
                     })
                 })
                 
