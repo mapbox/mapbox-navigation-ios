@@ -24,8 +24,6 @@ extension InstructionsBannerView {
         primaryLabel.numberOfLines = 1
         primaryLabel.minimumScaleFactor = 0.5
         primaryLabel.lineBreakMode = .byTruncatingTail
-        addSubview(primaryLabel)
-        self.primaryLabel = primaryLabel
         
         let secondaryLabel = SecondaryLabel()
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -33,7 +31,16 @@ extension InstructionsBannerView {
         secondaryLabel.numberOfLines = 3
         secondaryLabel.minimumScaleFactor = 0.2
         secondaryLabel.lineBreakMode = .byTruncatingTail
-        addSubview(secondaryLabel)
+        
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.addArrangedSubview(primaryLabel)
+        stackView.addArrangedSubview(secondaryLabel)
+        addSubview(stackView)
+        
+        self.stackView = stackView
+        self.primaryLabel = primaryLabel
         self.secondaryLabel = secondaryLabel
         
         let views = ["turnArrowView": turnArrowView, "distanceLabel": distanceLabel, "primaryLabel": primaryLabel, "secondaryLabel": secondaryLabel]
@@ -47,35 +54,10 @@ extension InstructionsBannerView {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[turnArrowView(50)]", options: [], metrics: nil, views: views))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[turnArrowView(50)][distanceLabel]", options: [], metrics: nil, views: views))
         
-        // Secondary Label
-        addConstraint(NSLayoutConstraint(item: distanceLabel, attribute: .lastBaseline, relatedBy: .equal, toItem: secondaryLabel, attribute: .lastBaseline, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: secondaryLabel, attribute: .leading, relatedBy: .equal, toItem: turnArrowView, attribute: .trailing, multiplier: 1, constant: 8))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[secondaryLabel]-(>=8)-|", options: [], metrics: nil, views: views))
-        
-        // Primary Label
-        addConstraint(NSLayoutConstraint(item: primaryLabel, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .top, multiplier: 1, constant: 8))
-        primaryToSecondaryConstraint = NSLayoutConstraint(item: primaryLabel, attribute: .bottom, relatedBy: .equal, toItem: secondaryLabel, attribute: .top, multiplier: 1, constant: 0)
-        primaryToSecondaryConstraint.priority = 1000
-        addConstraint(primaryToSecondaryConstraint)
-        addConstraint(NSLayoutConstraint(item: primaryLabel, attribute: .leading, relatedBy: .equal, toItem: secondaryLabel, attribute: .leading, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: self, attribute: .right, relatedBy: .greaterThanOrEqual, toItem: primaryLabel, attribute: .right, multiplier: 1, constant: 8))
-        
-        primaryToDistanceConstraint = NSLayoutConstraint(item: primaryLabel, attribute: .lastBaseline, relatedBy: .equal, toItem: distanceLabel, attribute: .lastBaseline, multiplier: 1, constant: 0)
-        primaryToDistanceConstraint.priority = 1
-        addConstraint(primaryToDistanceConstraint)
-    }
-    
-    func pinPrimaryToDistance() {
-        primaryToDistanceConstraint.priority = 1000
-        primaryToSecondaryConstraint.priority = 1
-        
-        setNeedsUpdateConstraints()
-    }
-    
-    func unpinPrimaryFromDistance() {
-        primaryToDistanceConstraint.priority = 1
-        primaryToSecondaryConstraint.priority = 1000
-        
-        setNeedsUpdateConstraints()
+        stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8).isActive = true
+        stackView.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: 8).isActive = true
+        stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -8).isActive = true
+        stackView.leftAnchor.constraint(equalTo: turnArrowView.rightAnchor, constant: 8).isActive = true
+        stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
 }
