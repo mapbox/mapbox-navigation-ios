@@ -71,7 +71,7 @@ extension InstructionsBannerView {
     }
     
     func setupAvailableBounds() {
-        // Abbreviate if instructions doesn't fit on one line
+        // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = {
             let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.primaryLabel.font]).height
             let availableWidth = self.bounds.width-self.turnArrowView.frame.maxX-8
