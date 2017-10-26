@@ -1,4 +1,4 @@
-﻿/* Indicates a faster route was found */
+/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
 
 /* Feedback type for Bad Route */
@@ -7,14 +7,17 @@
 /* Feedback type for Confusing Instruction */
 "FEEDBACK_CONFUSING_INSTRUCTION" = "Confusing\nInstruction";
 
+/* Feedback type for General Issue */
+"FEEDBACK_GENERAL_ISSUE" = "General \nIssue";
+
 /* Feedback type for Other Map Issue Issue */
 "FEEDBACK_GENERAL_ISSUE" = "Other\nMap Issue";
 
 /* Feedback type for Missing Exit */
-"FEEDBACK_MISSING_EXIT" = "Missing\nExit";
+"FEEDBACK_MISSING_EXIT" = "Missing \nExit";
 
 /* Feedback type for Missing Road */
-"FEEDBACK_MISSING_ROAD" = "Missing\nRoad";
+"FEEDBACK_MISSING_ROAD" = "Missing \nRoad";
 
 /* Feedback type for a maneuver that is Not Allowed */
 "FEEDBACK_NOT_ALLOWED" = "Not\nAllowed";
