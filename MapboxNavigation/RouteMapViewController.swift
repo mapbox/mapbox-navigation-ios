@@ -26,8 +26,6 @@ class RouteMapViewController: UIViewController {
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
     
-    var presentingArrival = false
-
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
 
@@ -399,15 +397,15 @@ class RouteMapViewController: UIViewController {
     }
     
     private func showArrivalModal(completion: VoidClosure?) {
-        guard let parent = parent else { return }
+    
+        
         let waypoint = route.legs.last?.destination
         let controller = endOfRouteController
 
         controller.destination = waypoint
         controller.dismissal = completion
-        guard !presentingArrival else { return } //presenting multiple times will crash app
-        presentingArrival = true
-        parent.present(controller, animated: true, completion: nil)
+        guard presentedViewController == nil else { return } //presenting multiple times will crash app
+        present(controller, animated: true, completion: nil)
     }
 }
 

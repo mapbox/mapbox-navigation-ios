@@ -27,9 +27,9 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
     
     open var destination: Waypoint? {
         didSet {
-//            if (isViewLoaded) {
-//                updateInterface()
-//            }
+            if (isViewLoaded) {
+                updateInterface()
+            }
         }
     }
 
@@ -40,9 +40,9 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-//        clearInterface()
+        clearInterface()
         enableDraggableDismiss()
-//        updateInterface()
+        updateInterface()
         // Do any additional setup after loading the view.
     }
     
@@ -63,7 +63,7 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
     }
     
     @IBAction func endNavigationPressed(_ sender: Any) {
-        self.dismiss(animated: true, completion: dismi ssal) 
+        self.dismiss(animated: true, completion: nil)
     }
     
     //Mark: Interface

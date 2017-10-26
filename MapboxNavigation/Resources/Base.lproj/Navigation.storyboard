@@ -561,7 +561,7 @@
                                 <rect key="frame" x="136" y="210" width="103" height="30"/>
                                 <state key="normal" title="End Navigation"/>
                                 <connections>
-                                    <action selector="endNavigationPressed:" destination="o9f-NL-20X" eventType="touchUpInside" id="xcW-vu-MWk"/>
+                                    <action selector="endNavigationPressed:" destination="o9f-NL-20X" eventType="touchUpInside" id="Yie-eb-ki4"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -580,16 +580,14 @@
                             <constraint firstItem="pNV-Fb-i9Q" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="xx0-lR-LpB"/>
                             <constraint firstItem="XEG-Ym-DNe" firstAttribute="centerX" secondItem="SGO-dX-RVl" secondAttribute="centerX" id="yxE-vJ-n7v"/>
                         </constraints>
-                        <connections>
-                            <outlet property="endNavigation" destination="XEG-Ym-DNe" id="Z1H-Gr-i6n"/>
-                            <outlet property="secondary" destination="GXk-Kq-HYJ" id="i4J-nn-XMV"/>
-                            <outlet property="stars" destination="pNV-Fb-i9Q" id="iqs-wb-8fW"/>
-                        </connections>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="375" height="260"/>
                     <connections>
-                        <outlet property="primary" destination="vZ1-Ta-Eya" id="72J-9m-CJr"/>
+                        <outlet property="endNavigation" destination="XEG-Ym-DNe" id="dmn-By-j6e"/>
+                        <outlet property="primary" destination="vZ1-Ta-Eya" id="aiY-y7-c00"/>
+                        <outlet property="secondary" destination="GXk-Kq-HYJ" id="uzf-Pi-FP2"/>
+                        <outlet property="stars" destination="pNV-Fb-i9Q" id="fMF-qd-hJB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uPc-XI-2MO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -654,7 +652,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="38" y="78" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="78" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -708,7 +706,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E8e-VY-Wnj">
-                                                    <rect key="frame" x="38" y="78" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="78" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -762,7 +760,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tgj-dm-1KN">
-                                                    <rect key="frame" x="37" y="78" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="78" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
