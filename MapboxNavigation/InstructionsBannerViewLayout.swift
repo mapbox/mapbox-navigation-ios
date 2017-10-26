@@ -74,13 +74,13 @@ extension InstructionsBannerView {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = {
             let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.primaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.turnArrowView.frame.maxX-8
+            let availableWidth = self.bounds.width-self.turnArrowView.frame.maxX-(8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
         
         secondaryLabel.availableBounds = {
             let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.secondaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.turnArrowView.frame.maxX-8
+            let availableWidth = self.bounds.width-self.turnArrowView.frame.maxX-(8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
     }
