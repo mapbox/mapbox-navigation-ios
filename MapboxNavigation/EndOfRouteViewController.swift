@@ -1,11 +1,3 @@
-//
-//  EndOfRouteViewController.swift
-//  MapboxNavigation
-//
-//  Created by Jerrad Thramer on 10/17/17.
-//  Copyright © 2017 Mapbox. All rights reserved.
-//
-
 import UIKit
 import MapboxDirections
 
@@ -45,7 +37,6 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
         clearInterface()
         enableDraggableDismiss()
         updateInterface()
-        // Do any additional setup after loading the view.
     }
     
     override open func viewWillAppear(_ animated: Bool) {
@@ -61,7 +52,6 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
 
     override open func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func endNavigationPressed(_ sender: Any) {
@@ -91,17 +81,6 @@ open class EndOfRouteViewController: UIViewController, DismissDraggable {
     private func hideTextField(animated: Bool = true) {
         
     }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 //MARK: - UIViewControllerTransitioning
