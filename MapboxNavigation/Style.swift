@@ -208,6 +208,7 @@ open class DestinationLabel: StylableLabel {
 
 }
 
+/// :nodoc:
 @objc(MBInstructionLabel)
 open class InstructionLabel: StylableLabel {
     typealias AvailableBoundsHandler = () -> (CGRect)
@@ -216,6 +217,26 @@ open class InstructionLabel: StylableLabel {
     var unabridgedText: String? {
         didSet {
             super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
+        }
+    }
+    
+    var shieldImage: UIImage? {
+        didSet {
+            guard let image = shieldImage else { return }
+            guard let text = self.text else { return }
+            
+            let attributes: [String: Any] = [NSFontAttributeName: font,
+                                             NSForegroundColorAttributeName: textColor]
+            
+            let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: text, attributes: attributes))
+            
+            let attachment = NSTextAttachment()
+            attachment.image = image
+            let attributedAttachment = NSAttributedString(attachment: attachment)
+            
+            attributedString.insert(attributedAttachment, at: 0)
+            
+            attributedText = attributedString
         }
     }
 }
