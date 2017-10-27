@@ -296,7 +296,7 @@ class RouteMapViewController: UIViewController {
         let zoomInAltitude = 1000.0
         
         let isZoomedOut = abs(mapView.camera.altitude - 2000) <= 25
-        let upcomingMotorway = routeController.routeProgress.currentLegProgress.upComingStep?.intersections?.first?.outletRoadClasses?.contains(.motorway) ?? false
+        let upcomingMotorway = routeProgress.currentLegProgress.upComingStep?.intersections?.first?.outletRoadClasses?.contains(.motorway) ?? false
         
         if isZoomedOut {
             if !upcomingMotorway, routeProgress.distanceRemaining <= threshold {
