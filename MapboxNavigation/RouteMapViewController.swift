@@ -31,7 +31,7 @@ class RouteMapViewController: UIViewController {
     
     var lastTimeUserRerouted: Date?
     let rerouteSections: [FeedbackSection] = [[.confusingInstructions, .turnNotAllowed, .reportTraffic]]
-    let generalFeedbackSections: [FeedbackSection] = [[.confusingInstructions, .badRoute, .generalMapError], [.closure, .turnNotAllowed, .reportTraffic]]
+    let generalFeedbackSections: [FeedbackSection] = [[.closure, .turnNotAllowed, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
