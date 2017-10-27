@@ -35,12 +35,12 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testManeuverViewMultipleLines() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
         
-        controller.distance = nil
-        controller.turnArrowView.isEnd = true
-        controller.shieldImage = shieldImage
-        controller.destinationLabel.unabridgedText = "This should be multiple lines"
-        controller.destinationLabel.backgroundColor = .red
+        controller.distance = 1608
+        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.set(primary: "This should be multiple lines", secondary: "This should be multiple lines")
+        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -48,12 +48,11 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testManeuverViewSingleLine() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
         
         controller.distance = 804
-        controller.turnArrowView.isEnd = true
-        controller.shieldImage = shieldImage
-        controller.destinationLabel.unabridgedText = "Single line"
-        controller.destinationLabel.backgroundColor = .red
+        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.set(primary: "Primary label only", secondary: nil)
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -61,12 +60,12 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testManeuverViewNotAbbreviated() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
         
-        controller.turnArrowView.isEnd = true
-        controller.distance = nil
-        controller.shieldImage = shieldImage
-        controller.destinationLabel.unabridgedText = "Spell out Avenue multiple lines"
-        controller.destinationLabel.backgroundColor = .red
+        controller.distance = 804
+        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.set(primary: "Spell out Avenue multiple lines", secondary: nil)
+        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -74,12 +73,12 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testManeuverViewAbbreviated() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
         
-        controller.turnArrowView.isEnd = true
-        controller.shieldImage = shieldImage
+        controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 100
-        controller.destinationLabel.unabridgedText = "This Drive Avenue should be abbreviated."
-        controller.destinationLabel.backgroundColor = .red
+        controller.instructionsBannerView.set(primary: "This Drive Avenue should be abbreviated.", secondary: nil)
+        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -87,12 +86,11 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testManeuverViewNotAbbreviatedMultipleLines() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
         
-        controller.turnArrowView.isEnd = true
-        controller.shieldImage = shieldImage
-        controller.distance = nil
-        controller.destinationLabel.unabridgedText = "Drive Avenue should be abbreviated on multiple lines. Drive Avenue should be abbreviated on multiple lines."
-        controller.destinationLabel.backgroundColor = .red
+        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.distance = 804
+        controller.instructionsBannerView.set(primary: "I-80 / South", secondary: "Drive Avenue should be abbreviated on multiple lines.")
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -100,12 +98,11 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testManeuverViewLongDestinationWithDistance() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
         
-        controller.turnArrowView.isEnd = true
-        controller.shieldImage = shieldImage
+        controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 100
-        controller.destinationLabel.unabridgedText = "Long destination / US-45 / Chicago / Indiana / Exit 204B / Long destination / US-45 / Chicago / Indiana / Exit 204B"
-        controller.destinationLabel.backgroundColor = .red
+        controller.instructionsBannerView.set(primary: "I-80", secondary: "HMM Long destination / US-45 / Chicago")
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -113,11 +110,11 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     func testPartiallyAbbreviated() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
         
-        controller.turnArrowView.isEnd = true
+        controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 482
-        controller.destinationLabel.unabridgedText = "East Market Street"
-        controller.destinationLabel.backgroundColor = .red
+        controller.instructionsBannerView.set(primary: "I-80", secondary: "East Market Street")
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -156,6 +153,20 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.showLaneViews(animated: false)
         
         FBSnapshotVerifyView(controller.laneViewsContainerView)
+    }
+}
+
+extension MapboxNavigationTests {
+    // UIAppearance proxy do not work in unit test environment so we have to style manually
+    func styleInstructionsView(_ view: InstructionsBannerView) {
+        view.backgroundColor = .white
+        view.turnArrowView.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.primaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.secondaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.distanceLabel.font = UIFont.systemFont(ofSize: 16)
+        view.primaryLabel.font = UIFont.systemFont(ofSize: 32, weight: UIFontWeightMedium)
+        view.secondaryLabel.font = UIFont.systemFont(ofSize: 24, weight: UIFontWeightMedium)
     }
 }
 

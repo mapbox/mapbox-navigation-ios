@@ -142,19 +142,123 @@ open class StylableLabel : UILabel { }
 
 /// :nodoc:
 @objc(MBDistanceLabel)
-open class DistanceLabel: StylableLabel { }
+open class DistanceLabel: StylableLabel {
+    dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+    {
+        didSet { update() }
+    }
+    dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
+    {
+        didSet { update() }
+    }
+    dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium) {
+        didSet { update() }
+    }
+    dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: UIFontWeightMedium) {
+        didSet { update() }
+    }
+    
+    var valueRange: Range<String.Index>? {
+        didSet {
+            update()
+        }
+    }
+    
+    var unitRange: Range<String.Index>? {
+        didSet {
+            update()
+        }
+    }
+    
+    var distanceString: String? {
+        didSet {
+            update()
+        }
+    }
+    
+    fileprivate func update() {
+        guard let valueRange = valueRange, let unitRange = unitRange, let distanceString = distanceString else {
+            return
+        }
+
+        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor,
+                                              NSFontAttributeName: valueFont]
+
+        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor,
+                                             NSFontAttributeName: unitFont]
+
+        let valueSubstring = distanceString.substring(with: valueRange)
+        let unitSubstring = distanceString.substring(with: unitRange)
+        let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
+        let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
+
+        let startsWithUnit = unitRange.lowerBound == distanceString.wholeRange.lowerBound
+        let attributedString = NSMutableAttributedString()
+
+        attributedString.append(startsWithUnit ? unitAttributedString : valueAttributedString)
+        attributedString.append(startsWithUnit ? valueAttributedString : unitAttributedString)
+
+        attributedText = attributedString
+    }
+}
 
 /// :nodoc:
 @objc(MBDestinationLabel)
 open class DestinationLabel: StylableLabel {
+
+}
+
+/// :nodoc:
+@objc(MBInstructionLabel)
+open class InstructionLabel: StylableLabel {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
+    
     var unabridgedText: String? {
         didSet {
             super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
         }
     }
+    
+    var shieldImage: UIImage? {
+        didSet {
+            guard let image = shieldImage else { return }
+            guard let text = self.text else { return }
+            
+            let attributes: [String: Any] = [NSFontAttributeName: font,
+                                             NSForegroundColorAttributeName: textColor]
+            
+            let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: text, attributes: attributes))
+            
+            let attachment = ShieldAttachment()
+            attachment.font = font
+            attachment.image = image
+            let attributedAttachment = NSAttributedString(attachment: attachment)
+            attributedString.insert(attributedAttachment, at: 0)
+            
+            attributedText = attributedString
+        }
+    }
 }
+
+class ShieldAttachment: NSTextAttachment {
+    
+    var font: UIFont = UIFont.systemFont(ofSize: 17)
+    
+    override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+        guard let image = image else { return super.attachmentBounds(for: textContainer, proposedLineFragment: lineFrag, glyphPosition: position, characterIndex: charIndex)}
+        let mid = font.descender + font.capHeight
+        return CGRect(x: 0, y: font.descender - image.size.height / 2 + mid + 2, width: image.size.width, height: image.size.height).integral
+    }
+}
+
+/// :nodoc
+@objc(MBPrimaryLabel)
+open class PrimaryLabel: InstructionLabel { }
+
+/// :nodoc
+@objc(MBSecondaryLabel)
+open class SecondaryLabel: InstructionLabel { }
 
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
