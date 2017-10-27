@@ -287,6 +287,30 @@ class RouteMapViewController: UIViewController {
             mapView.removeArrow()
         }
     }
+
+    func updateCameraAltitude(for routeProgress: RouteProgress) {
+        let threshold = 1000.0 //meters
+        let zoomOutAltitude = 2000.0
+        let zoomInAltitude = 1000.0
+        
+        let isZoomedOut = abs(mapView.camera.altitude - 2000) <= 25
+        let upcomingMotorway = routeController.routeProgress.currentLegProgress.upComingStep?.intersections?.first?.outletRoadClasses?.contains(.motorway) ?? false
+        
+        if isZoomedOut {
+            if !upcomingMotorway, routeProgress.distanceRemaining <= threshold {
+                setCamera(altitude: zoomInAltitude)
+            } else if upcomingMotorway, routeProgress.distanceRemaining >= threshold {
+                setCamera(altitude: zoomOutAltitude)
+            }
+        } else if upcomingMotorway, routeProgress.distanceRemaining >= threshold { // we are zoomed in
+           setCamera(altitude: zoomOutAltitude)
+        }
+    }
+    
+    private func setCamera(altitude: Double) {
+        guard mapView.altitude != altitude else { return }
+        mapView.altitude = altitude
+    }
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationMapView(mapView, imageFor: annotation)

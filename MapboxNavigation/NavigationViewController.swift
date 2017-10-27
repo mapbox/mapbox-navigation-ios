@@ -448,6 +448,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
         mapViewController?.updateMapOverlays(for: routeProgress)
+        mapViewController?.updateCameraAltitude(for: routeProgress)
         tableViewController?.reload()
         
         clearStaleNotifications()
