@@ -4,93 +4,87 @@
 <dict>
 	<key>abbreviations</key>
 	<dict>
-		<key>Vilius</key>
-		<string>Vilius</string>
 		<key>apartamentai</key>
-		<string>apt</string>
+		<string>Apt</string>
 		<key>aukštumos</key>
-		<string>aukš</string>
+		<string>Aukš</string>
 		<key>centras</key>
-		<string>ctr</string>
+		<string>Ctr</string>
 		<key>ežeras</key>
-		<string>ež</string>
+		<string>Ež</string>
 		<key>fortas</key>
-		<string>ft</string>
-		<key>jaun.</key>
-		<string>jaun.</string>
+		<string>Ft</string>
 		<key>kaimas</key>
-		<string>km</string>
+		<string>Km</string>
 		<key>kalnas</key>
-		<string>kln</string>
+		<string>Kln</string>
 		<key>kelias</key>
-		<string>kl</string>
+		<string>Kl</string>
 		<key>miestelis</key>
-		<string>mstl</string>
+		<string>Mstl</string>
 		<key>miesto centras</key>
-		<string>m.ctr</string>
+		<string>M.Ctr</string>
 		<key>mokykla</key>
-		<string>mok</string>
+		<string>Mok</string>
 		<key>nacionalinis</key>
-		<string>nac</string>
+		<string>Nac</string>
 		<key>paminklas</key>
-		<string>pmkl</string>
+		<string>Pmkl</string>
 		<key>parkas</key>
-		<string>pk</string>
+		<string>Pk</string>
 		<key>sankryža</key>
-		<string>skrž</string>
+		<string>Skrž</string>
 		<key>sesė</key>
-		<string>sesė</string>
+		<string>Sesė</string>
 		<key>skveras</key>
-		<string>skv</string>
+		<string>Skv</string>
 		<key>stotis</key>
-		<string>st</string>
+		<string>St</string>
 		<key>tarptautinis</key>
-		<string>trptaut</string>
+		<string>Trptaut</string>
 		<key>taškas</key>
-		<string>tšk</string>
+		<string>Tšk</string>
 		<key>turgus</key>
-		<string>tgs</string>
+		<string>Tgs</string>
 		<key>tėvas</key>
-		<string>tėv</string>
+		<string>Tėv</string>
 		<key>universitetas</key>
-		<string>univ</string>
+		<string>Univ</string>
 		<key>upelis</key>
-		<string>up</string>
+		<string>Up</string>
 		<key>upė</key>
-		<string>up</string>
-		<key>vyr.</key>
-		<string>vyr.</string>
-		<key>Šv</key>
+		<string>Up</string>
+		<key>šv</key>
 		<string>Šv</string>
 	</dict>
 	<key>classifications</key>
 	<dict>
 		<key>aikštė</key>
-		<string>a.</string>
+		<string>A.</string>
 		<key>aplinkkelis</key>
-		<string>aplnk</string>
+		<string>Aplnk</string>
 		<key>autostrada</key>
-		<string>auto.</string>
+		<string>Auto.</string>
 		<key>bulvaras</key>
-		<string>blvr</string>
+		<string>Blvr</string>
 		<key>greitkelis</key>
-		<string>grtkl</string>
+		<string>Grtkl</string>
 		<key>juosta</key>
-		<string>jst</string>
+		<string>Jst</string>
 		<key>kelias</key>
-		<string>kl</string>
+		<string>Kl</string>
 		<key>kiemelis</key>
-		<string>kml</string>
+		<string>Kml</string>
 		<key>prospektas</key>
-		<string>pspkt</string>
+		<string>Pspkt</string>
 		<key>pusratis</key>
-		<string>psrt</string>
+		<string>Psrt</string>
 		<key>takas</key>
-		<string>tak.</string>
+		<string>Tak.</string>
 		<key>tiltas</key>
-		<string>tlt</string>
+		<string>Tlt</string>
 		<key>vieta</key>
-		<string>vt</string>
+		<string>Vt</string>
 	</dict>
 	<key>directions</key>
 	<dict>
