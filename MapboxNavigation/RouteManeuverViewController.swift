@@ -34,30 +34,7 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    var roadCode: String? {
-        didSet {
-            guard roadCode != oldValue, let components = roadCode?.components(separatedBy: " ") else {
-                return
-            }
-            
-            if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
-                
-                let imageSizeMultiplier: CGFloat = 1.2
-                
-                let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.instructionsBannerView.primaryLabel.font]).height*UIScreen.main.scale*imageSizeMultiplier
-                
-                let network = components[0]
-                let number = components[1]
-
-                UIImage.shieldImage(network, number: number, height: height, completion: { (shieldImage) in
-                    self.instructionsBannerView.primaryLabel.shieldImage = shieldImage
-                })
-                
-            } else {
-                //shieldImage = nil
-            }
-        }
-    }
+    var roadCode: String?
     
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
