@@ -289,6 +289,8 @@ class RouteMapViewController: UIViewController {
     }
 
     func updateCameraAltitude(for routeProgress: RouteProgress) {
+        guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
+        
         let threshold = 1000.0 //meters
         let zoomOutAltitude = 2000.0
         let zoomInAltitude = 1000.0
