@@ -146,6 +146,7 @@ class RouteMapViewController: UIViewController {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
+        updateCameraAltitude(for: routeController.routeProgress)
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
