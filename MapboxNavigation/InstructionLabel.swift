@@ -26,16 +26,16 @@ open class InstructionLabel: StylableLabel {
         // Add text or image
         for component in instruction.components {
             if let roadCode = component.roadCode, let network = component.network, let number = component.number {
-                // Check if shield image is cached, otherwise display road code in text.
+                // Check if shield image is cached, otherwise display road code in text
                 if let cachedImage = component.cachedShield {
                     string.append(attributedString(with: cachedImage))
                 } else {
-                    // Download shield and use text in the meantime
+                    // Download shield and display road code in the meantime
                     string.append(NSAttributedString(string: roadCode, attributes: attributes))
-                    let height = ("|" as NSString).size(attributes: [NSFontAttributeName: font]).height*UIScreen.main.scale*shieldSizeMultiplier
+                    let height = ("|" as NSString).size(attributes: [NSFontAttributeName: font]).height * UIScreen.main.scale * shieldSizeMultiplier
                     UIImage.shieldImage(network, number: number, height: height, completion: { [unowned self] (image) in
                         // Reconstruct instructions if we did get a shield image
-                        guard image != nil else { return }
+                        guard image != nil, component.cachedShield != nil else { return }
                         self.constructInstructions()
                     })
                 }
