@@ -13,7 +13,6 @@ class RouteManeuverViewController: UIViewController {
     var step: RouteStep? {
         didSet {
             if isViewLoaded {
-                roadCode = step?.codes?.first ?? step?.destinationCodes?.first ?? step?.destinations?.first
                 instructionsBannerView.turnArrowView.step = step
                 updateStreetNameForStep()
             }
@@ -34,31 +33,6 @@ class RouteManeuverViewController: UIViewController {
         }
     }
     
-    var roadCode: String? {
-        didSet {
-            guard roadCode != oldValue, let components = roadCode?.components(separatedBy: " ") else {
-                return
-            }
-            
-            if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
-                
-                let imageSizeMultiplier: CGFloat = 1.2
-                
-                let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.instructionsBannerView.primaryLabel.font]).height*UIScreen.main.scale*imageSizeMultiplier
-                
-                let network = components[0]
-                let number = components[1]
-
-                UIImage.shieldImage(network, number: number, height: height, completion: { (shieldImage) in
-                    self.instructionsBannerView.primaryLabel.shieldImage = shieldImage
-                })
-                
-            } else {
-                //shieldImage = nil
-            }
-        }
-    }
-    
     var shieldAPIDataTask: URLSessionDataTask?
     var shieldImageDownloadToken: SDWebImageDownloadToken?
     let webImageManager = SDWebImageManager.shared()
@@ -73,7 +47,8 @@ class RouteManeuverViewController: UIViewController {
             distance = nil
             
             let text = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
-            instructionsBannerView.set(primary: text, secondary: nil)
+            // TODO: Move this logic to VisualInstructionFormatter if neccessary
+            // instructionsBannerView.set(primary: text, secondary: nil)
             
         } else {
             updateStreetNameForStep()
@@ -83,7 +58,7 @@ class RouteManeuverViewController: UIViewController {
     }
     
     func updateStreetNameForStep() {
-        let text = visualInstructionFormatter.strings(leg: leg, step: step)
-        instructionsBannerView.set(primary: text.0, secondary: text.1)
+        let instructions = visualInstructionFormatter.instructions(leg: leg, step: step)
+        instructionsBannerView.set(instructions.0, secondaryInstruction: instructions.1)
     }
 }
