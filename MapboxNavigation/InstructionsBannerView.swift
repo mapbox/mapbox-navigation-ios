@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 
 @IBDesignable
 @objc(MBInstructionsBannerView)
-class InstructionsBannerView: UIView {
+open class InstructionsBannerView: UIView {
     
     weak var turnArrowView: TurnArrowView!
     weak var primaryLabel: PrimaryLabel!
@@ -40,7 +40,7 @@ class InstructionsBannerView: UIView {
         commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -50,7 +50,7 @@ class InstructionsBannerView: UIView {
         secondaryLabel.instruction = secondaryInstruction
     }
     
-    override func prepareForInterfaceBuilder() {
+    override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         turnArrowView.isStart = true
         primaryLabel.text = "Primary Label"
