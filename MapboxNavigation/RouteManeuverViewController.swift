@@ -13,7 +13,7 @@ class RouteManeuverViewController: UIViewController {
     var step: RouteStep? {
         didSet {
             if isViewLoaded {
-                instructionsBannerView.turnArrowView.step = step
+                instructionsBannerView.maneuverView.step = step
                 updateStreetNameForStep()
             }
         }
@@ -54,7 +54,7 @@ class RouteManeuverViewController: UIViewController {
             updateStreetNameForStep()
         }
 
-        instructionsBannerView.turnArrowView.step = routeProgress.currentLegProgress.upComingStep
+        instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
     
     func updateStreetNameForStep() {

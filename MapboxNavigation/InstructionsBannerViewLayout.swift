@@ -11,11 +11,11 @@ extension InstructionsBannerView {
     func setupViews() {
         backgroundColor = .clear
         
-        let turnArrowView = TurnArrowView()
-        turnArrowView.backgroundColor = .clear
-        turnArrowView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(turnArrowView)
-        self.turnArrowView = turnArrowView
+        let maneuverView = ManeuverView()
+        maneuverView.backgroundColor = .clear
+        maneuverView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(maneuverView)
+        self.maneuverView = maneuverView
         
         let distanceLabel = DistanceLabel()
         distanceLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -51,22 +51,22 @@ extension InstructionsBannerView {
     }
     
     func setupLayout() {
-        let views: [String: Any] = ["turnArrowView": self.turnArrowView, "distanceLabel": self.distanceLabel, "primaryLabel": self.primaryLabel, "secondaryLabel": self.secondaryLabel]
+        let views: [String: Any] = ["maneuverView": self.maneuverView, "distanceLabel": self.distanceLabel, "primaryLabel": self.primaryLabel, "secondaryLabel": self.secondaryLabel]
         
         // Distance label
-        addConstraint(NSLayoutConstraint(item: distanceLabel, attribute: .top, relatedBy: .equal, toItem: turnArrowView, attribute: .bottom, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: distanceLabel, attribute: .top, relatedBy: .equal, toItem: maneuverView, attribute: .bottom, multiplier: 1, constant: 0))
         addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: distanceLabel, attribute: .bottom, multiplier: 1, constant: 8))
-        addConstraint(NSLayoutConstraint(item: distanceLabel, attribute: .centerX, relatedBy: .equal, toItem: turnArrowView, attribute: .centerX, multiplier: 1, constant: 0))
+        addConstraint(NSLayoutConstraint(item: distanceLabel, attribute: .centerX, relatedBy: .equal, toItem: maneuverView, attribute: .centerX, multiplier: 1, constant: 0))
         
         // Turn arrow view
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[turnArrowView(50)]", options: [], metrics: nil, views: views))
-        turnArrowView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[maneuverView(50)]", options: [], metrics: nil, views: views))
+        maneuverView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
         
         // Stack view
         stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8).isActive = true
         stackView.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: 8).isActive = true
         stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -8).isActive = true
-        stackView.leftAnchor.constraint(equalTo: turnArrowView.rightAnchor, constant: 8).isActive = true
+        stackView.leftAnchor.constraint(equalTo: maneuverView.rightAnchor, constant: 8).isActive = true
         stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
     
@@ -74,14 +74,22 @@ extension InstructionsBannerView {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = {
             let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.primaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.turnArrowView.frame.maxX-(8*2)
+            let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
         
         secondaryLabel.availableBounds = {
             let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.secondaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.turnArrowView.frame.maxX-(8*2)
+            let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
+    }
+    
+    func centerAlignPrimaryInstruction() {
+        
+    }
+    
+    func baselineAlignInstructionLabels() {
+        
     }
 }
