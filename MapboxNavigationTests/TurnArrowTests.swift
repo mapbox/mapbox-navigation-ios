@@ -22,11 +22,11 @@ class TurnArrowTests: FBSnapshotTestCase {
     }
     
     func testStraightRoundabout() {
-        let turnArrowView = TurnArrowView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
-        turnArrowView.backgroundColor = .white
+        let maneuverView = ManeuverView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
+        maneuverView.backgroundColor = .white
         let stepWithStraightRoundabout = steps[1]
-        turnArrowView.step = stepWithStraightRoundabout
-        FBSnapshotVerifyView(turnArrowView)
+        maneuverView.step = stepWithStraightRoundabout
+        FBSnapshotVerifyView(maneuverView)
     }
 }
 
