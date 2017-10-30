@@ -27,7 +27,7 @@ extension InstructionsBannerView {
         let primaryLabel = PrimaryLabel()
         primaryLabel.translatesAutoresizingMaskIntoConstraints = false
         primaryLabel.adjustsFontSizeToFitWidth = true
-        primaryLabel.numberOfLines = 1
+        primaryLabel.numberOfLines = 3
         primaryLabel.minimumScaleFactor = 0.5
         primaryLabel.lineBreakMode = .byTruncatingTail
         
