@@ -60,7 +60,7 @@ extension InstructionsBannerView {
         
         // Turn arrow view
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[turnArrowView(50)]", options: [], metrics: nil, views: views))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[turnArrowView(50)][distanceLabel]", options: [], metrics: nil, views: views))
+        turnArrowView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
         
         // Stack view
         stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8).isActive = true
