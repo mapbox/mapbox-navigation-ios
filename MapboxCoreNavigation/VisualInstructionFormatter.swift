@@ -54,6 +54,9 @@ public class VisualInstructionFormatter: NSObject {
         }
     }
     
+    /**
+     Creates the optimal instructions to be displayed given a `RouteLeg` and `RouteStep` divided into primary and secondary `.
+     */
     public func instructions(leg: RouteLeg?, step: RouteStep?) -> (Instruction?, Instruction?) {
         if let currentLeg = leg, let destinationName = currentLeg.destination.name, let step = step, step.maneuverType == .arrive {
             return (Instruction([.init(NSLocalizedString("ARRIVED_AT_DESTINATION", bundle: .mapboxCoreNavigation, value: "You have arrived", comment: "Instruction when arrived at a destination"))]),
