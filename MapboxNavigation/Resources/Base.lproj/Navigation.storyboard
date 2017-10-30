@@ -971,7 +971,7 @@ Label  </string>
                         <constraints>
                             <constraint firstItem="meX-oz-5Hs" firstAttribute="leading" secondItem="NN7-VA-s0v" secondAttribute="leading" id="QoL-Xd-w61"/>
                             <constraint firstAttribute="top" secondItem="meX-oz-5Hs" secondAttribute="top" id="UN6-wb-j0d"/>
-                            <constraint firstAttribute="bottom" secondItem="meX-oz-5Hs" secondAttribute="bottom" constant="30" id="jUJ-wH-I9N"/>
+                            <constraint firstAttribute="bottom" secondItem="meX-oz-5Hs" secondAttribute="bottom" id="jUJ-wH-I9N"/>
                             <constraint firstItem="NN7-VA-s0v" firstAttribute="trailing" secondItem="meX-oz-5Hs" secondAttribute="trailing" id="oAt-Nm-aYN"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="NN7-VA-s0v"/>

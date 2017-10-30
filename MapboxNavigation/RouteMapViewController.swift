@@ -345,10 +345,15 @@ class RouteMapViewController: UIViewController {
     var contentInsets: UIEdgeInsets {
         guard let tableViewController = routeTableViewController else { return .zero }
         guard let drawer = parent as? NavigationViewController else { return .zero }
+        var adjustedHeight: CGFloat = 0
+        
+        if #available(iOS 11.0, *) {
+            adjustedHeight = 30
+        }
         
         return UIEdgeInsets(top: routePageViewController.view.bounds.height,
                             left: 0,
-                            bottom: drawer.drawerPosition == .partiallyRevealed ? tableViewController.partialRevealDrawerHeight() : tableViewController.collapsedDrawerHeight(),
+                            bottom: drawer.drawerPosition == .partiallyRevealed ? tableViewController.partialRevealDrawerHeight() - adjustedHeight : tableViewController.collapsedDrawerHeight() - adjustedHeight,
                             right: 0)
     }
     
