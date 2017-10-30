@@ -22,6 +22,12 @@ let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 @objc(MBNavigationMapView)
 open class NavigationMapView: MGLMapView {
     
+    //MARK: Class Constants
+    public static let defaultAltitude = 1000.0
+    public static let zoomedOutManeuverAltitude = 2000.0
+    public static let longManeuverDistance: CLLocationDistance = 1000.0 //meters
+    
+    //MARK: Instance Properties
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
     let routeLayerIdentifier = "routeLayer"
@@ -59,7 +65,7 @@ open class NavigationMapView: MGLMapView {
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var isPluggedIn: Bool = false
-    var altitude: CLLocationDistance = MapConstants.defaultAltitude
+    var altitude: CLLocationDistance = defaultAltitude
     
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 10
@@ -301,7 +307,7 @@ open class NavigationMapView: MGLMapView {
         didSet {
             if tracksUserCourse {
                 enableFrameByFrameCourseViewTracking(for: 3)
-                altitude = MapConstants.defaultAltitude
+                altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
             } else {

@@ -292,15 +292,15 @@ class RouteMapViewController: UIViewController {
     func updateCameraAltitude(for routeProgress: RouteProgress) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
         
-        let zoomOutAltitude = MapConstants.zoomedOutManeuverAltitude
-        let defaultAltitude = MapConstants.defaultAltitude
-        let isLongRoad = routeProgress.distanceRemaining >= MapConstants.longManeuverDistance
+        let zoomOutAltitude = NavigationMapView.zoomedOutManeuverAltitude
+        let defaultAltitude = NavigationMapView.defaultAltitude
+        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
         
         
         let currentStepIsMotorway = currentStep.isMotorway
         let nextStepIsMotorway = upComingStep?.isMotorway ?? false
-        let isExiting = (currentStepIsMotorway && !nextStepIsMotorway) //are we exiting a motorway?
-        let notOnMotorway = (!currentStepIsMotorway && !nextStepIsMotorway) //are we not on a motorway?
+        let isExiting = currentStepIsMotorway && !nextStepIsMotorway //are we exiting a motorway?
+        let notOnMotorway = !currentStepIsMotorway && !nextStepIsMotorway //are we not on a motorway?
         
         if (notOnMotorway || isExiting) { //if we're exiting or not on a motorway, we should be zoomed in.
             return setCamera(altitude: defaultAltitude)
