@@ -42,4 +42,8 @@ public struct Instruction {
     public init(_ components: [Component]) {
         self.components = components
     }
+    
+    public init(_ text: String) {
+        self.init([Instruction.Component(text)])
+    }
 }
