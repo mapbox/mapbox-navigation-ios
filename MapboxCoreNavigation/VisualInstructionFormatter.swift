@@ -55,7 +55,7 @@ public class VisualInstructionFormatter: NSObject {
     }
     
     /**
-     Creates the optimal instructions to be displayed given a `RouteLeg` and `RouteStep` divided into primary and secondary `.
+     Creates the optimal instructions to be displayed given a `RouteLeg` and `RouteStep` divided into primary and secondary `Instruction`.
      */
     public func instructions(leg: RouteLeg?, step: RouteStep?) -> (Instruction?, Instruction?) {
         if let currentLeg = leg, let destinationName = currentLeg.destination.name, let step = step, step.maneuverType == .arrive {
