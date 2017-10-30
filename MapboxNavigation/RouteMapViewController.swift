@@ -33,6 +33,9 @@ class RouteMapViewController: UIViewController {
     let rerouteSections: [FeedbackSection] = [[.confusingInstructions, .turnNotAllowed, .reportTraffic]]
     let generalFeedbackSections: [FeedbackSection] = [[.confusingInstructions, .badRoute, .generalMapError], [.closure, .turnNotAllowed, .reportTraffic]]
 
+    static let zoomedOutManeuverAltitude: CLLocationDistance = 2000.0 //meters
+    static let longManeuverDistance: CLLocationDistance = 1000.0 //meters
+    
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
             return nil
@@ -292,21 +295,21 @@ class RouteMapViewController: UIViewController {
     func updateCameraAltitude(for routeProgress: RouteProgress) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
         
-        let threshold = 1000.0 //meters
-        let zoomOutAltitude = 2000.0
-        let zoomInAltitude = 1000.0
+        let zoomOutAltitude = RouteMapViewController.zoomedOutManeuverAltitude
+        let defaultAltitude = mapView.defaultAltitude
+        let isLongRoad = routeProgress.distanceRemaining >= RouteMapViewController.longManeuverDistance
         
-        let isZoomedOut = abs(mapView.camera.altitude - 2000) <= 25
-        let upcomingMotorway = routeProgress.currentLegProgress.upComingStep?.intersections?.first?.outletRoadClasses?.contains(.motorway) ?? false
+        let isMotorway : (RouteStep?) -> Bool? = { $0?.intersections?.first?.outletRoadClasses?.contains(.motorway) }
+        let currentStepIsMotorway = isMotorway(currentStep) ?? false
+        let nextStepIsMotorway = isMotorway(upComingStep) ?? false
+        let isExiting = (currentStepIsMotorway && !nextStepIsMotorway) //are we exiting a motorway?
+        let notOnMotorway = (!currentStepIsMotorway && !nextStepIsMotorway) //are we not on a motorway?
         
-        if isZoomedOut {
-            if !upcomingMotorway, routeProgress.distanceRemaining <= threshold {
-                setCamera(altitude: zoomInAltitude)
-            } else if upcomingMotorway, routeProgress.distanceRemaining >= threshold {
-                setCamera(altitude: zoomOutAltitude)
-            }
-        } else if upcomingMotorway, routeProgress.distanceRemaining >= threshold { // we are zoomed in
-           setCamera(altitude: zoomOutAltitude)
+        if (notOnMotorway || isExiting) { //if we're exiting or not on a motorway, we should be zoomed in.
+            return setCamera(altitude: defaultAltitude)
+        }
+        if currentStepIsMotorway, isLongRoad { //otherwise, we should be zoomed out if we're on motorway and step distance is long enough
+            return setCamera(altitude: zoomOutAltitude)
         }
     }
     
