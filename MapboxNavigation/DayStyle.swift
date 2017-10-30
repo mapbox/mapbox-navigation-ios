@@ -68,14 +68,14 @@ open class DayStyle: Style {
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         
-        TurnArrowView.appearance().primaryColor = .defaultTurnArrowPrimary
-        TurnArrowView.appearance().secondaryColor = .defaultTurnArrowSecondary
+        ManeuverView.appearance().primaryColor = .defaultTurnArrowPrimary
+        ManeuverView.appearance().secondaryColor = .defaultTurnArrowSecondary
         CellTurnArrowView.appearance().primaryColor = .defaultTurnArrowPrimary
         CellTurnArrowView.appearance().secondaryColor = .defaultTurnArrowSecondary
         
         LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
-        LaneArrowView.appearance().primaryColor = .defaultLaneArrowPrimary
-        LaneArrowView.appearance().secondaryColor = .defaultLaneArrowSecondary
+        LaneView.appearance().primaryColor = .defaultLaneArrowPrimary
+        LaneView.appearance().secondaryColor = .defaultLaneArrowSecondary
         
         FloatingButton.appearance().tintColor = tintColor
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -89,15 +89,15 @@ open class DayStyle: Style {
         DistanceLabel.appearance().valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         DistanceLabel.appearance().valueFont = UIFont.systemFont(ofSize: 24, weight: UIFontWeightMedium).adjustedFont
         DistanceLabel.appearance().unitTextColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
-        DistanceLabel.appearance().unitFont = UIFont.systemFont(ofSize: 12, weight: UIFontWeightMedium).adjustedFont
+        DistanceLabel.appearance().unitFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium).adjustedFont
         
         DestinationLabel.appearance().font = UIFont.systemFont(ofSize: 32, weight: UIFontWeightMedium).adjustedFont
         DestinationLabel.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        PrimaryLabel.appearance().font = UIFont.systemFont(ofSize: 32, weight: UIFontWeightMedium).adjustedFont
+        PrimaryLabel.appearance().font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium).adjustedFont
         PrimaryLabel.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        SecondaryLabel.appearance().font = UIFont.systemFont(ofSize: 24, weight: UIFontWeightMedium).adjustedFont
+        SecondaryLabel.appearance().font = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium).adjustedFont
         SecondaryLabel.appearance().textColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
         
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
@@ -186,11 +186,11 @@ open class NightStyle: DayStyle {
         WayNameLabel.appearance().backgroundColor = .clear
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         
-        TurnArrowView.appearance().primaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        TurnArrowView.appearance().secondaryColor = #colorLiteral(red: 0.8, green: 0.8235294118, blue: 0.8481693864, alpha: 0.5)
+        ManeuverView.appearance().primaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        ManeuverView.appearance().secondaryColor = #colorLiteral(red: 0.8, green: 0.8235294118, blue: 0.8481693864, alpha: 0.5)
         
         LanesView.appearance().backgroundColor = backgroundColor
-        LaneArrowView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        LaneView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         ResumeButton.appearance().backgroundColor = backgroundColor
         ResumeButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
