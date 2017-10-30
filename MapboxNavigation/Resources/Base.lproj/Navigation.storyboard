@@ -231,7 +231,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
-                            <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="FDb-Au-sgm" secondAttribute="leading" id="4Si-h7-lL5"/>
+                            <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FDb-Au-sgm" secondAttribute="leading" constant="20" id="4oP-yz-9W5"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="81D-S0-3wU"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="FDb-Au-sgm" secondAttribute="leading" id="DvR-Su-3GN"/>
@@ -242,13 +242,13 @@
                             <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="FDb-Au-sgm" secondAttribute="centerX" id="O0m-0k-ilC"/>
                             <constraint firstAttribute="bottom" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
                             <constraint firstItem="FDb-Au-sgm" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
-                            <constraint firstItem="FDb-Au-sgm" firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
+                            <constraint firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
                             <constraint firstItem="FDb-Au-sgm" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="azG-Bi-6NR"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="bottom" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="djD-Ab-lfr"/>
-                            <constraint firstItem="FDb-Au-sgm" firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
-                            <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="FDb-Au-sgm" secondAttribute="leading" id="gfU-Wb-qye"/>
+                            <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
+                            <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gfU-Wb-qye"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="leading" secondItem="FDb-Au-sgm" secondAttribute="leading" constant="10" id="kcQ-AN-lKG"/>
                             <constraint firstItem="SKK-r5-nj0" firstAttribute="leading" secondItem="FDb-Au-sgm" secondAttribute="leading" constant="10" id="pN3-Uj-cPZ"/>
