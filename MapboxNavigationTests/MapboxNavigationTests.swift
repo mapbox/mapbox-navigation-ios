@@ -26,6 +26,8 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         recordMode = false
         isDeviceAgnostic = true
+        
+        UIImage.shieldImageCache.setObject(shieldImage, forKey: "I280")
     }
     
     func storyboard() -> UIStoryboard {
@@ -39,8 +41,9 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.distance = 1608
         controller.instructionsBannerView.turnArrowView.isEnd = true
-        controller.instructionsBannerView.set(primary: "This should be multiple lines", secondary: "This should be multiple lines")
-        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
+        
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280")]),
+                                                           secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -52,7 +55,9 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.distance = 804
         controller.instructionsBannerView.turnArrowView.isEnd = true
-        controller.instructionsBannerView.set(primary: "Primary label only", secondary: nil)
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280"),
+                                                           Instruction.Component("replaced")]),
+                                              secondaryInstruction: nil)
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -64,8 +69,9 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.distance = 804
         controller.instructionsBannerView.turnArrowView.isEnd = true
-        controller.instructionsBannerView.set(primary: "Spell out Avenue multiple lines", secondary: nil)
-        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
+        
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 Drive Avenue", roadCode: "I 280")]),
+                                              secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -77,8 +83,11 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 100
-        controller.instructionsBannerView.set(primary: "This Drive Avenue should be abbreviated.", secondary: nil)
-        controller.instructionsBannerView.primaryLabel.shieldImage = shieldImage
+        
+        
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280", roadCode: "I 280"),
+                                                          Instruction.Component("This Drive Avenue Road should be abbreviated")]),
+                                              secondaryInstruction: nil)
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -90,7 +99,9 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 804
-        controller.instructionsBannerView.set(primary: "I-80 / South", secondary: "Drive Avenue should be abbreviated on multiple lines.")
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
+                                                           Instruction.Component("South")]),
+                                              secondaryInstruction: Instruction([Instruction.Component("Drive Avenue should be abbreviated on multiple lines.")]))
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -102,7 +113,10 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 100
-        controller.instructionsBannerView.set(primary: "I-80", secondary: "HMM Long destination / US-45 / Chicago")
+
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
+                                                           Instruction.Component("South")]),
+                                              secondaryInstruction: Instruction([Instruction.Component("Long destination / US-45 / Chicago")]))
         
         FBSnapshotVerifyView(controller.view)
     }
@@ -114,7 +128,9 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         controller.instructionsBannerView.turnArrowView.isEnd = true
         controller.distance = 482
-        controller.instructionsBannerView.set(primary: "I-80", secondary: "East Market Street")
+        
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("East Market Street")]),
+                                              secondaryInstruction: nil)
         
         FBSnapshotVerifyView(controller.view)
     }
