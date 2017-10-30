@@ -303,10 +303,9 @@ class RouteMapViewController: UIViewController {
         let notOnMotorway = !currentStepIsMotorway && !nextStepIsMotorway //are we not on a motorway?
         
         if (notOnMotorway || isExiting) { //if we're exiting or not on a motorway, we should be zoomed in.
-            return setCamera(altitude: defaultAltitude)
-        }
-        if currentStepIsMotorway, isLongRoad { //otherwise, we should be zoomed out if we're on motorway and step distance is long enough
-            return setCamera(altitude: zoomOutAltitude)
+            setCamera(altitude: defaultAltitude)
+        } else if currentStepIsMotorway, isLongRoad { //otherwise, we should be zoomed out if we're on motorway and step distance is long enough
+            setCamera(altitude: zoomOutAltitude)
         }
     }
     
