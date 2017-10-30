@@ -1,23 +1,32 @@
-﻿/* Indicates a faster route was found */
+/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Đã Tìm thấy Đường Nhanh Hơn";
 
-/* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Tai nạn";
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Đường\nSai";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Hướng dẫn\nKhó hiểu";
+
+/* Feedback type for inaccurate GPS */
+"FEEDBACK_GPS_INACCURATE" = "GPS\nSai";
+
+/* Feedback type for Heavy Traffic */
+"FEEDBACK_HEAVY_TRAFFIC" = "Tắc\nđường";
+
+/* Feedback type for Instruction Issue */
+"FEEDBACK_INSTRUCTION_ISSUE" = "Hướng dẫn\ncó Vấn đề";
+
+/* Feedback type for Instruction Timing */
+"FEEDBACK_INSTRUCTION_TIMING" = "Hướng dẫn\nKhông Đúng Lúc";
+
+/* Feedback type for turn not allowed */
+"FEEDBACK_NOT_ALLOWED" = "Cấm";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Tắc\nđường";
 
 /* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Chặn đường";
-
-/* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Khó hiểu";
-
-/* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Nguy hiểm";
-
-/* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Vấn đề Khác";
-
-/* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "Cấm";
+"FEEDBACK_ROAD_CLOSURE" = "Đường\nĐóng cửa";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ và %2$@";

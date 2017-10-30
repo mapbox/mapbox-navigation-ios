@@ -4,125 +4,191 @@
 <dict>
 	<key>abbreviations</key>
 	<dict>
-		<key>Barri</key>
-		<string>barri</string>
-		<key>Cap de municipi</key>
-		<string>cap</string>
-		<key>Cim</key>
-		<string>cim</string>
-		<key>Coll</key>
-		<string>coll</string>
-		<key>Comarca</key>
-		<string>cca.</string>
-		<key>Comunicacions</key>
-		<string>com.</string>
-		<key>Disseminat</key>
-		<string>diss.</string>
-		<key>Edificació</key>
-		<string>edif.</string>
-		<key>Edificació Històrica</key>
-		<string>edif. hist.</string>
-		<key>Element Hidrogràfic</key>
-		<string>hidr.</string>
-		<key>Entitat de població</key>
-		<string>nucli</string>
-		<key>Entitat descentralitzada</key>
-		<string>e.m.d.</string>
-		<key>Equipament</key>
-		<string>equip.</string>
-		<key>Indret</key>
-		<string>indr.</string>
-		<key>Massís</key>
-		<string>Serra</string>
-		<key>Municipi</key>
-		<string>mun.</string>
-		<key>Orografia</key>
-		<string>orogr.</string>
-		<key>Relleu del Litoral</key>
-		<string>lit.</string>
-		<key>Xarxa Hidrogràfica</key>
-		<string>curs fluv.</string>
+		<key>barri</key>
+		<string>Barri</string>
+		<key>cap de municipi</key>
+		<string>Cap</string>
+		<key>comarca</key>
+		<string>Cca.</string>
+		<key>comunicacions</key>
+		<string>Com.</string>
+		<key>disseminat</key>
+		<string>Diss.</string>
+		<key>edificació</key>
+		<string>Edif.</string>
+		<key>edificació històrica</key>
+		<string>Edif. Hist.</string>
+		<key>element hidrogràfic</key>
+		<string>Hidr.</string>
+		<key>entitat de població</key>
+		<string>Nucli</string>
+		<key>entitat descentralitzada</key>
+		<string>E.M.D.</string>
+		<key>equipament</key>
+		<string>Equip.</string>
+		<key>indret</key>
+		<string>Indr.</string>
+		<key>municipi</key>
+		<string>Mun.</string>
+		<key>orografia</key>
+		<string>Orogr.</string>
+		<key>relleu del litoral</key>
+		<string>Lit.</string>
+		<key>xarxa hidrogràfica</key>
+		<string>Curs Fluv.</string>
 	</dict>
 	<key>classifications</key>
 	<dict>
-		<key>Accés</key>
-		<string>acc.</string>
-		<key>Antic</key>
-		<string>antic</string>
-		<key>Antiga carretera</key>
-		<string>actra</string>
-		<key>Apartaments</key>
-		<string>apmt.</string>
-		<key>Autopista</key>
-		<string>autp.</string>
-		<key>Autovia</key>
-		<string>autv.</string>
-		<key>Avinguda</key>
-		<string>av.</string>
-		<key>Baixada</key>
-		<string>bda.</string>
-		<key>Barranc</key>
-		<string>bnc.</string>
-		<key>Barri</key>
-		<string>b.</string>
-		<key>Bloc, blocs</key>
-		<string>bloc</string>
-		<key>Calçada</key>
-		<string>cda.</string>
-		<key>Camí</key>
-		<string>camí</string>
-		<key>Cantonada</key>
-		<string>cant.</string>
-		<key>Carrer</key>
-		<string>c.</string>
-		<key>Carrerada</key>
-		<string>ca.</string>
-		<key>Carreró</key>
-		<string>cró.</string>
-		<key>Carretera</key>
-		<string>ctra.</string>
-		<key>Cases</key>
-		<string>cses.</string>
-		<key>Cinturó</key>
-		<string>cinto</string>
-		<key>Circumval·lació</key>
-		<string>cval.</string>
-		<key>Colònia</key>
-		<string>col.</string>
-		<key>Complex</key>
-		<string>comp.</string>
-		<key>Conjunt</key>
-		<string>conj.</string>
-		<key>Corraló</key>
-		<string>crral</string>
-		<key>Corredor</key>
-		<string>cdor.</string>
-		<key>Corriol</key>
-		<string>crol.</string>
-		<key>Costa (via amb pendent)</key>
-		<string>cos.</string>
-		<key>Disseminat</key>
-		<string>disse</string>
-		<key>Drecera</key>
-		<string>drec.</string>
-		<key>Eix</key>
-		<string>eix</string>
-		<key>Enllaç</key>
-		<string>ellaç</string>
-		<key>Escala (via amb escales)</key>
-		<string>esc.</string>
-		<key>Esplanada</key>
-		<string>esp.</string>
-		<key>Finca</key>
-		<string>fin.</string>
-		<key>Glorieta</key>
-		<string>glor.</string>
-		<key>Gran Via</key>
-		<string>gv</string>
-		<key>Grup</key>
-		<string>gr.</string>
-		<key>Illa</key>
-		<string>illa</string>
+		<key>accés</key>
+		<string>Acc.</string>
+		<key>antic</key>
+		<string>Antic</string>
+		<key>antiga carretera</key>
+		<string>Actra</string>
+		<key>apartaments</key>
+		<string>Apmt.</string>
+		<key>autopista</key>
+		<string>Autp.</string>
+		<key>autovia</key>
+		<string>Autv.</string>
+		<key>avinguda</key>
+		<string>Av.</string>
+		<key>baixada</key>
+		<string>Bda.</string>
+		<key>barranc</key>
+		<string>Bnc.</string>
+		<key>barri</key>
+		<string>B.</string>
+		<key>blocs</key>
+		<string>Bloc</string>
+		<key>calçada</key>
+		<string>Cda.</string>
+		<key>cantonada</key>
+		<string>Cant.</string>
+		<key>carrer</key>
+		<string>C.</string>
+		<key>carrerada</key>
+		<string>Ca.</string>
+		<key>carreró</key>
+		<string>Cró.</string>
+		<key>carretera</key>
+		<string>Ctra.</string>
+		<key>cases</key>
+		<string>Cses.</string>
+		<key>cinturó</key>
+		<string>Cinto</string>
+		<key>circumval·lació</key>
+		<string>Cval.</string>
+		<key>colònia</key>
+		<string>Col.</string>
+		<key>complex</key>
+		<string>Comp.</string>
+		<key>conjunt</key>
+		<string>Conj.</string>
+		<key>corraló</key>
+		<string>Crral</string>
+		<key>corredor</key>
+		<string>Cdor.</string>
+		<key>corriol</key>
+		<string>Crol.</string>
+		<key>costa</key>
+		<string>Cos.</string>
+		<key>disseminat</key>
+		<string>Disse</string>
+		<key>drecera</key>
+		<string>Drec.</string>
+		<key>enllaç</key>
+		<string>Ellaç</string>
+		<key>escala</key>
+		<string>Esc.</string>
+		<key>esplanada</key>
+		<string>Esp.</string>
+		<key>finca</key>
+		<string>Fin.</string>
+		<key>glorieta</key>
+		<string>Glor.</string>
+		<key>gran via</key>
+		<string>GV</string>
+		<key>grup</key>
+		<string>Gr.</string>
+		<key>jardins</key>
+		<string>J.</string>
+		<key>jardí</key>
+		<string>J.</string>
+		<key>lloc</key>
+		<string>Lloc</string>
+		<key>mirador</key>
+		<string>Mira.</string>
+		<key>muralla</key>
+		<string>Mur.</string>
+		<key>paratge</key>
+		<string>Pge.</string>
+		<key>partida</key>
+		<string>Par.</string>
+		<key>passadís</key>
+		<string>Pdís.</string>
+		<key>passatge</key>
+		<string>Ptge.</string>
+		<key>passeig</key>
+		<string>Pg.</string>
+		<key>passera</key>
+		<string>Psera</string>
+		<key>placeta</key>
+		<string>Plta.</string>
+		<key>plana</key>
+		<string>Plana</string>
+		<key>platja</key>
+		<string>Pja.</string>
+		<key>plaça</key>
+		<string>Pl.</string>
+		<key>polígon</key>
+		<string>Pol.</string>
+		<key>polígon industrial</key>
+		<string>PI.</string>
+		<key>pont</key>
+		<string>Pont</string>
+		<key>port</key>
+		<string>Port</string>
+		<key>porta</key>
+		<string>Pta.</string>
+		<key>portal</key>
+		<string>Ptal.</string>
+		<key>portals</key>
+		<string>Ptals</string>
+		<key>prolongació</key>
+		<string>Prol.</string>
+		<key>pujada</key>
+		<string>Pda.</string>
+		<key>rambla</key>
+		<string>Rbla.</string>
+		<key>rambleta</key>
+		<string>Rblt.</string>
+		<key>rial</key>
+		<string>Rial</string>
+		<key>riera</key>
+		<string>Ra.</string>
+		<key>ronda</key>
+		<string>Rda.</string>
+		<key>rotonda</key>
+		<string>Rot.</string>
+		<key>sector</key>
+		<string>Sec.</string>
+		<key>sender</key>
+		<string>Send.</string>
+		<key>sèquia</key>
+		<string>Sèq.</string>
+		<key>torrent</key>
+		<string>T.</string>
+		<key>travessera</key>
+		<string>Trav.</string>
+		<key>travessia</key>
+		<string>Trv.</string>
+		<key>urbanització</key>
+		<string>Urb.</string>
+		<key>veïnat</key>
+		<string>Veï.</string>
+		<key>viaducte</key>
+		<string>Vdct.</string>
 	</dict>
 	<key>directions</key>
 	<dict>
