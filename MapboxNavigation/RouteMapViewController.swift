@@ -346,7 +346,6 @@ class RouteMapViewController: UIViewController {
         guard step == controller.step else { return }
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
-        controller.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -603,8 +602,6 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
 
         maneuverViewController.step = step
         maneuverViewController.distance = step.distance > 0 ? step.distance : nil
-        maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
-//        maneuverViewController.updateStreetNameForStep()
         
         updateLaneViews(step: step, durationRemaining: 0)
 

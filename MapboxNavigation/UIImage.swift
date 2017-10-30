@@ -51,6 +51,4 @@ extension UIImage {
             })
         }
     }
-    
-    
 }

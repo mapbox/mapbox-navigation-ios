@@ -45,9 +45,9 @@ class InstructionsBannerView: UIView {
         commonInit()
     }
     
-    func set(primary: String?, secondary: String?) {
-        primaryLabel.unabridgedText = primary
-        secondaryLabel.unabridgedText = secondary
+    func set(_ primaryInstruction: Instruction?, secondaryInstruction: Instruction?) {
+        primaryLabel.instruction = primaryInstruction
+        secondaryLabel.instruction = secondaryInstruction
     }
     
     override func prepareForInterfaceBuilder() {
