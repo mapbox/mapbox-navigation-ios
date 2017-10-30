@@ -493,9 +493,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="347"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Recording Audio" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTH-eK-F5H">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Report Issue" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xTH-eK-F5H" userLabel="Report Issue Label">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20.5"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.63531655073165894" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20.5" id="nnt-IW-lbJ"/>
                                 </constraints>
@@ -503,7 +503,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="always" delaysContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Sne-Dn-jdt">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Sne-Dn-jdt">
                                 <rect key="frame" x="0.0" y="20.5" width="375" height="320.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -875,7 +875,7 @@ Label  </string>
                         <outlet property="collectionViewHeightConstraint" destination="c4r-nT-SlB" id="Umz-lJ-Qum"/>
                         <outlet property="flowLayout" destination="unA-43-4hX" id="Mcf-1x-Dzk"/>
                         <outlet property="progressBar" destination="kGL-xc-d1v" id="CBv-LG-JPx"/>
-                        <outlet property="recordingAudioLabel" destination="xTH-eK-F5H" id="Lej-Fv-FC4"/>
+                        <outlet property="reportIssueLabel" destination="xTH-eK-F5H" id="0bG-0r-h4s"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w0B-4a-jYs" userLabel="First Responder" sceneMemberID="firstResponder"/>

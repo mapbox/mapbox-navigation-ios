@@ -7,17 +7,17 @@
 /* Feedback type for Confusing Instruction */
 "FEEDBACK_CONFUSING_INSTRUCTION" = "Confusing \nInstruction";
 
+/* Feedback type for General Issue */
+"FEEDBACK_GENERAL_ISSUE" = "General \nIssue";
+
 /* Feedback type for inaccurate GPS */
 "FEEDBACK_GPS_INACCURATE" = "GPS \nInaccurate";
 
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Heavy \nTraffic";
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Missing \nExit";
 
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Instruction \nIssue";
-
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Instruction \nTiming";
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Missing \nRoad";
 
 /* Feedback type for turn not allowed */
 "FEEDBACK_NOT_ALLOWED" = "Not \nAllowed";
@@ -33,6 +33,9 @@
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
+
+/* Recording audio for feedback */
+"RECORDING_AUDIO" = "Recording Audio";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Rerouting…";
