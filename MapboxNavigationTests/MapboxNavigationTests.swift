@@ -40,7 +40,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         styleInstructionsView(controller.instructionsBannerView)
         
         controller.distance = 1608
-        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isEnd = true
         
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280")]),
                                                            secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
@@ -54,7 +54,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         styleInstructionsView(controller.instructionsBannerView)
         
         controller.distance = 804
-        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isEnd = true
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280"),
                                                            Instruction.Component("replaced")]),
                                               secondaryInstruction: nil)
@@ -68,7 +68,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         styleInstructionsView(controller.instructionsBannerView)
         
         controller.distance = 804
-        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isEnd = true
         
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 Drive Avenue", roadCode: "I 280")]),
                                               secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
@@ -81,7 +81,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         XCTAssert(controller.view != nil)
         styleInstructionsView(controller.instructionsBannerView)
         
-        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isEnd = true
         controller.distance = 100
         
         
@@ -97,7 +97,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         XCTAssert(controller.view != nil)
         styleInstructionsView(controller.instructionsBannerView)
         
-        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isEnd = true
         controller.distance = 804
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
                                                            Instruction.Component("South")]),
@@ -111,7 +111,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         XCTAssert(controller.view != nil)
         styleInstructionsView(controller.instructionsBannerView)
         
-        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isEnd = true
         controller.distance = 100
 
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
@@ -126,7 +126,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         XCTAssert(controller.view != nil)
         styleInstructionsView(controller.instructionsBannerView)
         
-        controller.instructionsBannerView.turnArrowView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isEnd = true
         controller.distance = 482
         
         controller.instructionsBannerView.set(Instruction([Instruction.Component("East Market Street")]),
@@ -176,13 +176,15 @@ extension MapboxNavigationTests {
     // UIAppearance proxy do not work in unit test environment so we have to style manually
     func styleInstructionsView(_ view: InstructionsBannerView) {
         view.backgroundColor = .white
-        view.turnArrowView.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.maneuverView.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         view.primaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         view.secondaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        view.distanceLabel.font = UIFont.systemFont(ofSize: 16)
-        view.primaryLabel.font = UIFont.systemFont(ofSize: 32, weight: UIFontWeightMedium)
-        view.secondaryLabel.font = UIFont.systemFont(ofSize: 24, weight: UIFontWeightMedium)
+        
+        view.distanceLabel.valueFont = UIFont.systemFont(ofSize: 24)
+        view.distanceLabel.unitFont = UIFont.systemFont(ofSize: 14)
+        view.primaryLabel.font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)
+        view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium)
     }
 }
 

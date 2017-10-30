@@ -6,7 +6,7 @@ class RouteTableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: CellTitleLabel!
     @IBOutlet weak var subtitleLabel: CellSubtitleLabel!
-    @IBOutlet weak var turnArrowView: TurnArrowView!
+    @IBOutlet weak var turnArrowView: ManeuverView!
     
     let distanceFormatter = DistanceFormatter(approximate: true)
     let routeStepFormatter = RouteStepFormatter()
