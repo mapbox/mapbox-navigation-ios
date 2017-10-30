@@ -59,8 +59,7 @@ open class NavigationMapView: MGLMapView {
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var isPluggedIn: Bool = false
-    var altitude: CLLocationDistance = 1000
-    let defaultAltitude: CLLocationDistance = 1000
+    var altitude: CLLocationDistance = MapConstants.defaultAltitude
     
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 10
@@ -302,7 +301,7 @@ open class NavigationMapView: MGLMapView {
         didSet {
             if tracksUserCourse {
                 enableFrameByFrameCourseViewTracking(for: 3)
-                altitude = defaultAltitude
+                altitude = MapConstants.defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
             } else {

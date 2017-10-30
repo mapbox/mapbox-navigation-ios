@@ -32,9 +32,6 @@ class RouteMapViewController: UIViewController {
     var lastTimeUserRerouted: Date?
     let rerouteSections: [FeedbackSection] = [[.confusingInstructions, .turnNotAllowed, .reportTraffic]]
     let generalFeedbackSections: [FeedbackSection] = [[.confusingInstructions, .badRoute, .generalMapError], [.closure, .turnNotAllowed, .reportTraffic]]
-
-    static let zoomedOutManeuverAltitude: CLLocationDistance = 2000.0 //meters
-    static let longManeuverDistance: CLLocationDistance = 1000.0 //meters
     
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -295,13 +292,13 @@ class RouteMapViewController: UIViewController {
     func updateCameraAltitude(for routeProgress: RouteProgress) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
         
-        let zoomOutAltitude = RouteMapViewController.zoomedOutManeuverAltitude
-        let defaultAltitude = mapView.defaultAltitude
-        let isLongRoad = routeProgress.distanceRemaining >= RouteMapViewController.longManeuverDistance
+        let zoomOutAltitude = MapConstants.zoomedOutManeuverAltitude
+        let defaultAltitude = MapConstants.defaultAltitude
+        let isLongRoad = routeProgress.distanceRemaining >= MapConstants.longManeuverDistance
         
-        let isMotorway : (RouteStep?) -> Bool? = { $0?.intersections?.first?.outletRoadClasses?.contains(.motorway) }
-        let currentStepIsMotorway = isMotorway(currentStep) ?? false
-        let nextStepIsMotorway = isMotorway(upComingStep) ?? false
+        
+        let currentStepIsMotorway = currentStep.isMotorway
+        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
         let isExiting = (currentStepIsMotorway && !nextStepIsMotorway) //are we exiting a motorway?
         let notOnMotorway = (!currentStepIsMotorway && !nextStepIsMotorway) //are we not on a motorway?
         
