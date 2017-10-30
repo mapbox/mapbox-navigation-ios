@@ -46,9 +46,9 @@ class RouteManeuverViewController: UIViewController {
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             distance = nil
             
-            let text = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false))
-            // TODO: Move this logic to VisualInstructionFormatter if neccessary
-            // instructionsBannerView.set(primary: text, secondary: nil)
+            if let text = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false)) {
+                instructionsBannerView.set(Instruction(text), secondaryInstruction: nil)
+            }
             
         } else {
             updateStreetNameForStep()
