@@ -307,8 +307,8 @@ open class RouteController: NSObject {
             let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             
             // Calculate if angle is sharp
-            let inAngle = initialHeading * .pi / 180.0
-            let outAngle = finalHeading * .pi / 180.0
+            let inAngle: CLLocationDegrees = initialHeading.toRadians()
+            let outAngle: CLLocationDegrees = finalHeading.toRadians()
             
             let inX = sin(inAngle)
             let inY = cos(inAngle)
