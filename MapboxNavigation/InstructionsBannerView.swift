@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 @objc(MBInstructionsBannerView)
 open class InstructionsBannerView: UIView {
     
-    weak var turnArrowView: TurnArrowView!
+    weak var maneuverView: ManeuverView!
     weak var primaryLabel: PrimaryLabel!
     weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
@@ -52,7 +52,7 @@ open class InstructionsBannerView: UIView {
     
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        turnArrowView.isStart = true
+        maneuverView.isStart = true
         primaryLabel.text = "Primary Label"
         secondaryLabel.text = "Secondary Label"
         distanceLabel.text = "100m"

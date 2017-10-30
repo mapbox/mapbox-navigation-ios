@@ -77,7 +77,7 @@ public class LanesView: UIView { }
 
 /// :nodoc:
 @objc(MBCellTurnArrowView)
-public class CellTurnArrowView: TurnArrowView { }
+public class CellTurnArrowView: ManeuverView { }
 
 /**
  :nodoc:
@@ -382,10 +382,6 @@ open class StylableButton: UIButton {
         }
     }
 }
-
-/// :nodoc:
-@objc(MBManeuverView)
-public class ManeuverView: UIView { }
 
 /// :nodoc:
 @objc(MBManeuverContainerView)

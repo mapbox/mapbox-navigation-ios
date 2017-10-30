@@ -15,8 +15,8 @@ class LanesContainerView: LanesView {
         commonInit()
     }
     
-    func laneArrowView() -> LaneArrowView {
-        let view = LaneArrowView(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
+    func laneArrowView() -> LaneView {
+        let view = LaneView(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
         view.backgroundColor = .clear
         return view
     }
