@@ -51,23 +51,24 @@ extension InstructionsBannerView {
     }
     
     func setupLayout() {
-        let views: [String: Any] = ["maneuverView": self.maneuverView, "distanceLabel": self.distanceLabel, "primaryLabel": self.primaryLabel, "secondaryLabel": self.secondaryLabel]
-        
         // Distance label
-        addConstraint(NSLayoutConstraint(item: distanceLabel, attribute: .top, relatedBy: .equal, toItem: maneuverView, attribute: .bottom, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: self, attribute: .bottom, relatedBy: .equal, toItem: distanceLabel, attribute: .bottom, multiplier: 1, constant: 8))
-        addConstraint(NSLayoutConstraint(item: distanceLabel, attribute: .centerX, relatedBy: .equal, toItem: maneuverView, attribute: .centerX, multiplier: 1, constant: 0))
+        distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
+        distanceLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
         
         // Turn arrow view
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[maneuverView(50)]", options: [], metrics: nil, views: views))
+        maneuverView.widthAnchor.constraint(equalToConstant: 54).isActive = true
+        maneuverView.heightAnchor.constraint(equalToConstant: 54).isActive = true
         maneuverView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
+        maneuverView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
+        maneuverView.bottomAnchor.constraint(equalTo: distanceLabel.topAnchor, constant: -8).isActive = true
         
         // Stack view
+        stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -16).isActive = true
+        stackView.leftAnchor.constraint(greaterThanOrEqualTo: maneuverView.rightAnchor, constant: 16).isActive = true
+        stackView.leftAnchor.constraint(greaterThanOrEqualTo: distanceLabel.rightAnchor, constant: 16).isActive = true
         stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8).isActive = true
-        stackView.bottomAnchor.constraint(greaterThanOrEqualTo: bottomAnchor, constant: 8).isActive = true
-        stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -8).isActive = true
-        stackView.leftAnchor.constraint(equalTo: maneuverView.rightAnchor, constant: 8).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8).isActive = true
+        stackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
     
     func setupAvailableBounds() {
@@ -83,13 +84,5 @@ extension InstructionsBannerView {
             let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
-    }
-    
-    func centerAlignPrimaryInstruction() {
-        
-    }
-    
-    func baselineAlignInstructionLabels() {
-        
     }
 }
