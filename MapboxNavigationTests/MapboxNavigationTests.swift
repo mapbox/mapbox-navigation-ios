@@ -135,6 +135,21 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.view)
     }
     
+    func testSinglePrimaryAndSecondary() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
+        XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
+        
+        controller.instructionsBannerView.maneuverView.isEnd = true
+        controller.distance = 482
+        
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
+                                                           Instruction.Component("South")]),
+                                              secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
+        
+        FBSnapshotVerifyView(controller.view)
+    }
+    
     func testRouteSwitching() {
         let bundle = Bundle(for: MapboxNavigationTests.self)
         var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
