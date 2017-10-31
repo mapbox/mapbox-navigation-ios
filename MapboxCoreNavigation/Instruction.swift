@@ -1,10 +1,23 @@
 import Foundation
 
-public struct Instruction {
+public struct Instruction: Equatable {
+    
+    public static func ==(lhs: Instruction, rhs: Instruction) -> Bool {
+        return lhs.components == rhs.components
+    }
     
     public let components: [Instruction.Component]
     
-    public struct Component {
+    public struct Component: Equatable {
+        
+        public static func ==(lhs: Instruction.Component, rhs: Instruction.Component) -> Bool {
+            return lhs.text == rhs.text
+                    && lhs.png == rhs.png
+                    && lhs.roadCode == rhs.roadCode
+                    && lhs.network == rhs.network
+                    && lhs.number == rhs.number
+        }
+        
         public let text: String?
         public let png: String?
         public let roadCode: String?
