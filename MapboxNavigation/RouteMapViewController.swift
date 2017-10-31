@@ -146,6 +146,7 @@ class RouteMapViewController: UIViewController {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
+        updateCameraAltitude(for: routeController.routeProgress)
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
@@ -286,6 +287,29 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.removeArrow()
         }
+    }
+
+    func updateCameraAltitude(for routeProgress: RouteProgress) {
+        guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
+        
+        let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
+        let defaultAltitude = NavigationMapView.defaultAltitude
+        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
+        
+        
+        let currentStepIsMotorway = currentStep.isMotorway
+        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
+        
+        if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
+            setCamera(altitude: zoomOutAltitude)
+        } else {
+            setCamera(altitude: defaultAltitude)
+        }
+    }
+    
+    private func setCamera(altitude: Double) {
+        guard mapView.altitude != altitude else { return }
+        mapView.altitude = altitude
     }
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
