@@ -25,17 +25,17 @@ open class NavigationMapView: MGLMapView {
     //MARK: Class Constants
     
     /**
-     `defaultAltitude` is the altitude that the map camera initally defaults to.
+     Returns the altitude that the map camera initally defaults to.
      */
     public static let defaultAltitude: CLLocationDistance = 1000.0
     
     /**
-     `zoomedOutMotorwayAltitude` is the altitude we conditionally zoom out to when we are on a motorway, and the maneuver length is sufficently long.
+     Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
     */
     public static let zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
     
     /**
-     `longManeuverDistance` is our threshold for what we consider a "long-enough" maneuver distance to trigger a zoom-out when you enter a motorway.
+     Returns the threshold for what the map considers a "long-enough" maneuver distance to trigger a zoom-out when the user enters a motorway.
      */
     public static let longManeuverDistance: CLLocationDistance = 1000.0
     
