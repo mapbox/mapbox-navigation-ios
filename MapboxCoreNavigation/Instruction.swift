@@ -56,7 +56,8 @@ public struct Instruction: Equatable {
         self.components = components
     }
     
-    public init(_ text: String) {
+    public init?(_ text: String?) {
+        guard let text = text, !text.isEmpty else { return nil }
         self.init([Instruction.Component(text)])
     }
 }
