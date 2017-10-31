@@ -9,7 +9,11 @@ open class InstructionsBannerView: UIView {
     weak var primaryLabel: PrimaryLabel!
     weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
-    weak var stackView: UIStackView!
+    weak var dividerView: UIView!
+    weak var separatorView: UIView!
+    
+    var centerYConstraints = [NSLayoutConstraint]()
+    var baselineConstraints = [NSLayoutConstraint]()
     
     fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
     
@@ -48,6 +52,12 @@ open class InstructionsBannerView: UIView {
     func set(_ primaryInstruction: Instruction?, secondaryInstruction: Instruction?) {
         primaryLabel.instruction = primaryInstruction
         secondaryLabel.instruction = secondaryInstruction
+        
+        if secondaryInstruction == nil {
+            centerYAlignInstructions()
+        } else {
+            baselineAlignInstructions()
+        }
     }
     
     override open func prepareForInterfaceBuilder() {

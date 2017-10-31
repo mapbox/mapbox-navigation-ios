@@ -30,6 +30,8 @@ extension InstructionsBannerView {
         primaryLabel.numberOfLines = 3
         primaryLabel.minimumScaleFactor = 0.5
         primaryLabel.lineBreakMode = .byTruncatingTail
+        addSubview(primaryLabel)
+        self.primaryLabel = primaryLabel
         
         let secondaryLabel = SecondaryLabel()
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -37,38 +39,69 @@ extension InstructionsBannerView {
         secondaryLabel.numberOfLines = 3
         secondaryLabel.minimumScaleFactor = 0.2
         secondaryLabel.lineBreakMode = .byTruncatingTail
-        
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.addArrangedSubview(primaryLabel)
-        stackView.addArrangedSubview(secondaryLabel)
-        addSubview(stackView)
-        
-        self.stackView = stackView
-        self.primaryLabel = primaryLabel
+        addSubview(secondaryLabel)
         self.secondaryLabel = secondaryLabel
+        
+        let dividerView = UIView()
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(dividerView)
+        self.dividerView = dividerView
+        
+        let separatorView = UIView()
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(separatorView)
+        self.separatorView = separatorView
     }
     
     func setupLayout() {
         // Distance label
         distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
-        distanceLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -8).isActive = true
+        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
         
         // Turn arrow view
         maneuverView.widthAnchor.constraint(equalToConstant: 54).isActive = true
         maneuverView.heightAnchor.constraint(equalToConstant: 54).isActive = true
-        maneuverView.topAnchor.constraint(equalTo: self.topAnchor, constant: 8).isActive = true
-        maneuverView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
-        maneuverView.bottomAnchor.constraint(equalTo: distanceLabel.topAnchor, constant: -8).isActive = true
+        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+        maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
         
-        // Stack view
-        stackView.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -16).isActive = true
-        stackView.leftAnchor.constraint(greaterThanOrEqualTo: maneuverView.rightAnchor, constant: 16).isActive = true
-        stackView.leftAnchor.constraint(greaterThanOrEqualTo: distanceLabel.rightAnchor, constant: 16).isActive = true
-        stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 8).isActive = true
-        stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8).isActive = true
-        stackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        // Primary Label
+        primaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
+        primaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
+        baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor))
+        centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
+        
+        // Secondary Label
+        secondaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
+        secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
+        secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0).isActive = true
+        baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor))
+        
+        // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
+        dividerView.leftAnchor.constraint(greaterThanOrEqualTo: maneuverView.rightAnchor, constant: 16).isActive = true
+        dividerView.leftAnchor.constraint(greaterThanOrEqualTo: distanceLabel.rightAnchor, constant: 16).isActive = true
+        dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        // Separator view (invisible helper view for visualizing the result of the constraints)
+        separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+    }
+    
+    // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)
+    func centerYAlignInstructions() {
+        separatorView.isHidden = false
+        baselineConstraints.forEach { $0.isActive = false }
+        centerYConstraints.forEach { $0.isActive = true }
+    }
+    
+    // Aligns primary top to the top of the maneuver view and the secondary baseline to the distance baseline (used for multiline)
+    func baselineAlignInstructions() {
+        separatorView.isHidden = true
+        centerYConstraints.forEach { $0.isActive = false }
+        baselineConstraints.forEach { $0.isActive = true }
     }
     
     func setupAvailableBounds() {
