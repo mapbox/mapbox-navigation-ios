@@ -25,9 +25,8 @@ open class InstructionLabel: StylableLabel {
         
         // Add text or image
         for component in instruction.components {
-            let isLast = component == instruction.components.last
             let isFirst = component == instruction.components.first
-            let joinChar = !isFirst && !isLast ? " " : ""
+            let joinChar = !isFirst ? " " : ""
             
             if let roadCode = component.roadCode, let network = component.network, let number = component.number {
                 // Check if shield image is cached, otherwise display road code in text
@@ -45,7 +44,7 @@ open class InstructionLabel: StylableLabel {
                 }
                 
             } else if let text = component.text {
-                string.append(NSAttributedString(string: joinChar+text.abbreviated(toFit: availableBounds(), font: font), attributes: attributes))
+                string.append(NSAttributedString(string: (joinChar+text).abbreviated(toFit: availableBounds(), font: font), attributes: attributes))
             }
         }
         
