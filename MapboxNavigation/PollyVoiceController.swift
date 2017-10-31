@@ -44,10 +44,12 @@ public class PollyVoiceController: RouteVoiceController {
     var cacheURLSession: URLSession
     var cachePollyTask: URLSessionDataTask?
     
-    var spokenInstructionsForRoute: [String: Data] = [:]
+    var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
+        
+        spokenInstructionsForRoute.countLimit = 200
         
         let credentialsProvider = AWSCognitoCredentialsProvider(regionType: regionType, identityPoolId: identityPoolId)
         let configuration = AWSServiceConfiguration(region: regionType, credentialsProvider: credentialsProvider)
@@ -77,15 +79,14 @@ public class PollyVoiceController: RouteVoiceController {
             guard let instructions = step.instructionsSpokenAlongStep else { continue }
             
             for instruction in instructions {
-                guard spokenInstructionsForRoute[instruction.ssmlText] == nil else { continue }
+                guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else { continue }
                 
                 cacheSpokenInstruction(instruction: instruction.ssmlText)
             }
         }
         
-        
-        guard spokenInstructionsForRoute[instruction] == nil else {
-            play(spokenInstructionsForRoute[instruction]!)
+        guard spokenInstructionsForRoute.object(forKey: instruction as NSString) == nil else {
+            play(spokenInstructionsForRoute.object(forKey: instruction as NSString)! as Data)
             return
         }
         
@@ -232,7 +233,7 @@ public class PollyVoiceController: RouteVoiceController {
                 }
                 
                 if let data = data {
-                    strongSelf.spokenInstructionsForRoute[instruction] = data
+                    strongSelf.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction as NSString)
                 }
             }
             
