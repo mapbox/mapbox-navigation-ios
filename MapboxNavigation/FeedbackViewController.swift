@@ -109,7 +109,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         if sender.state == .began {
             
             reportIssueLabel.text = NSLocalizedString("RECORDING_AUDIO", bundle: .mapboxNavigation, value: "Recording Audio", comment: "Recording audio for feedback")
-            reportIssueLabel.backgroundColor = .red
+            reportIssueLabel.textColor = .red
             
             reportIssueLabel.startRippleAnimation()
             
