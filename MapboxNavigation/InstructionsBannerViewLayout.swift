@@ -26,6 +26,7 @@ extension InstructionsBannerView {
         
         let primaryLabel = PrimaryLabel()
         primaryLabel.translatesAutoresizingMaskIntoConstraints = false
+        primaryLabel.allowsDefaultTighteningForTruncation = true
         primaryLabel.adjustsFontSizeToFitWidth = true
         primaryLabel.numberOfLines = 1
         primaryLabel.minimumScaleFactor = 26.0 / 30.0
@@ -36,10 +37,10 @@ extension InstructionsBannerView {
         let secondaryLabel = SecondaryLabel()
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
         secondaryLabel.adjustsFontSizeToFitWidth = true
+        secondaryLabel.allowsDefaultTighteningForTruncation = true
         secondaryLabel.numberOfLines = 2
         secondaryLabel.minimumScaleFactor = 20.0 / 26.0
         secondaryLabel.lineBreakMode = .byTruncatingTail
-        secondaryLabel.baselineAdjustment = .alignCenters
         addSubview(secondaryLabel)
         self.secondaryLabel = secondaryLabel
         
@@ -57,11 +58,11 @@ extension InstructionsBannerView {
     func setupLayout() {
         // Distance label
         distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
-        distanceLabel.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
         
         // Turn arrow view
         maneuverView.widthAnchor.constraint(equalToConstant: 54).isActive = true
-        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: 16).isActive = true
         maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor).isActive = true
         maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
         
@@ -74,7 +75,7 @@ extension InstructionsBannerView {
         // Secondary Label
         secondaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
         secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
-        baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.firstBaselineAnchor))
+        baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor))
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
