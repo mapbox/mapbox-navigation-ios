@@ -29,30 +29,6 @@ public class VisualInstructionFormatter: NSObject {
     }
     
     /**
-     Creates the optimal text to be displayed given a `RouteLeg` and `RouteStep` divided into primary and secondary string.
-     */
-    public func strings(leg: RouteLeg?, step: RouteStep?) -> (String?, String?) {
-        if let currentLeg = leg, let destinationName = currentLeg.destination.name, let step = step, step.maneuverType == .arrive {
-            let primary = NSLocalizedString("ARRIVED_AT_DESTINATION", bundle: .mapboxCoreNavigation, value: "You have arrived", comment: "Instruction when arrived at a destination")
-            return(primary, destinationName)
-        } else if let step = step, let codes = step.destinationCodes {
-            let primary = codes.joined(separator: NSLocalizedString("REF_DELIMITER", bundle: .mapboxCoreNavigation, value: " / ", comment: "Delimiter between route numbers in a road concurrency"))
-            let secondary = step.destinations?.joined(separator: NSLocalizedString("DESTINATION_DELIMITER", bundle: .mapboxCoreNavigation, value: " / ", comment: "Delimiter between multiple destinations"))
-            return (primary, secondary)
-        } else if let step = step, step.isNumberedMotorway, let codes = step.codes {
-            let primary = codes.joined(separator: NSLocalizedString("REF_DELIMITER", bundle: .mapboxCoreNavigation, value: " / ", comment: "Delimiter between route numbers in a road concurrency"))
-            let secondary = step.destinations?.joined(separator: NSLocalizedString("DESTINATION_DELIMITER", bundle: .mapboxCoreNavigation, value: " / ", comment: "Delimiter between multiple destinations"))
-            return (primary, secondary)
-        } else if let destinations = step?.destinations ?? step?.names {
-            let primary = destinations.first
-            let secondary = destinations.suffix(from: 1).joined(separator: NSLocalizedString("DESTINATION_DELIMITER", bundle: .mapboxCoreNavigation, value: " / ", comment: "Delimiter between multiple destinations"))
-            return (primary, secondary)
-        } else {
-            return (step?.instructions, nil)
-        }
-    }
-    
-    /**
      Creates the optimal instructions to be displayed given a `RouteLeg` and `RouteStep` divided into primary and secondary `Instruction`.
      */
     public func instructions(leg: RouteLeg?, step: RouteStep?) -> (Instruction?, Instruction?) {
