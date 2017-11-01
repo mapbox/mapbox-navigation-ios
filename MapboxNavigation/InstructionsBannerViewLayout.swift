@@ -61,7 +61,8 @@ extension InstructionsBannerView {
         distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
         
         // Turn arrow view
-        maneuverView.widthAnchor.constraint(equalToConstant: 54).isActive = true
+        maneuverView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        maneuverView.widthAnchor.constraint(equalToConstant: 40).isActive = true
         maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: 16).isActive = true
         maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor).isActive = true
         maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: 8).isActive = true
