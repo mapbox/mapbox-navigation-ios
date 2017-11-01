@@ -50,14 +50,16 @@ open class InstructionsBannerView: UIView {
     }
     
     func set(_ primaryInstruction: Instruction?, secondaryInstruction: Instruction?) {
-        primaryLabel.instruction = primaryInstruction
-        secondaryLabel.instruction = secondaryInstruction
+        primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
             centerYAlignInstructions()
         } else {
             baselineAlignInstructions()
         }
+        
+        primaryLabel.instruction = primaryInstruction
+        secondaryLabel.instruction = secondaryInstruction
     }
     
     override open func prepareForInterfaceBuilder() {
