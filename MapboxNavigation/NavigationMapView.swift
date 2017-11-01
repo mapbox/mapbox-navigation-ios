@@ -22,6 +22,24 @@ let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 @objc(MBNavigationMapView)
 open class NavigationMapView: MGLMapView {
     
+    //MARK: Class Constants
+    
+    /**
+     Returns the altitude that the map camera initally defaults to.
+     */
+    public static let defaultAltitude: CLLocationDistance = 1000.0
+    
+    /**
+     Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
+    */
+    public static let zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
+    
+    /**
+     Returns the threshold for what the map considers a "long-enough" maneuver distance to trigger a zoom-out when the user enters a motorway.
+     */
+    public static let longManeuverDistance: CLLocationDistance = 1000.0
+    
+    //MARK: Instance Properties
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
     let routeLayerIdentifier = "routeLayer"
@@ -59,8 +77,7 @@ open class NavigationMapView: MGLMapView {
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var isPluggedIn: Bool = false
-    var altitude: CLLocationDistance = 1000
-    let defaultAltitude: CLLocationDistance = 1000
+    var altitude: CLLocationDistance = defaultAltitude
     
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 10
@@ -302,7 +319,7 @@ open class NavigationMapView: MGLMapView {
         didSet {
             if tracksUserCourse {
                 enableFrameByFrameCourseViewTracking(for: 3)
-                altitude = defaultAltitude
+                altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
             } else {

@@ -51,5 +51,6 @@ Pod::Spec.new do |s|
   s.dependency "AWSPolly", "~> 2.6"
   s.dependency "MapboxMobileEvents", "~> 0.2"
   s.dependency "Solar", "~> 2.0"
+  s.dependency "Turf", "~> 0.0.4"
 
 end

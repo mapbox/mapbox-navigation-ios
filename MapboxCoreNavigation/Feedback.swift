@@ -51,11 +51,6 @@ public enum FeedbackType: Int, CustomStringConvertible {
     case confusingInstruction
     
     /**
-     Identifies the feedback as a place where the GPS quality was particularly poor.
-     */
-    case inaccurateGPS
-    
-    /**
      Identifies the feedback as a place where traffic should have been reported.
      */
     case reportTraffic
@@ -80,8 +75,6 @@ public enum FeedbackType: Int, CustomStringConvertible {
             return "routing_error"
         case .confusingInstruction:
             return "confusing_instruction"
-        case .inaccurateGPS:
-            return "inaccurate_gps"
         case .reportTraffic:
             return "report_traffic"
         }

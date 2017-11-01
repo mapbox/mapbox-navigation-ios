@@ -22,12 +22,17 @@ extension RouteStep {
     }
     
     /**
+     Returns true if the route step is on a motorway.
+     */
+    open var isMotorway: Bool {
+        return intersections?.first?.outletRoadClasses?.contains(.motorway) ?? false
+    }
+    
+    /**
      Returns true if the route travels on a motorway primarily identified by a route number rather than a road name.
      */
     var isNumberedMotorway: Bool {
-        guard intersections?.first?.outletRoadClasses?.contains(.motorway) == true else {
-            return false
-        }
+        guard isMotorway else { return false }
         guard let codes = codes, let digitRange = codes.first?.rangeOfCharacter(from: .decimalDigits) else {
             return false
         }

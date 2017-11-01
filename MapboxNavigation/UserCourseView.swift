@@ -5,13 +5,6 @@ import Mapbox
 let PuckSize: CGFloat = 45
 let ArrowSize = PuckSize * 0.6
 
-// TODO: Remove when toRadians() is exposed in Turf
-extension CLLocationDegrees {
-    func toRadians() -> LocationRadians {
-        return self * .pi / 180.0
-    }
-}
-
 /**
  A view that represents the user’s location and course on a `NavigationMapView`.
  */
