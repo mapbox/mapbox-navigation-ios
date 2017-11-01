@@ -140,7 +140,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         XCTAssert(controller.view != nil)
         styleInstructionsView(controller.instructionsBannerView)
         
-        controller.instructionsBannerView.maneuverView.isEnd = true
+        controller.instructionsBannerView.maneuverView.isStart = true
         controller.distance = 482
         
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
@@ -191,8 +191,8 @@ extension MapboxNavigationTests {
     // UIAppearance proxy do not work in unit test environment so we have to style manually
     func styleInstructionsView(_ view: InstructionsBannerView) {
         view.backgroundColor = .white
-        view.maneuverView.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        view.maneuverView.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)
+        view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
         view.primaryLabel.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)
         view.secondaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
         view.dividerView.backgroundColor = .red
