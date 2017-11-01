@@ -37,7 +37,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
     let autoDismissInterval: TimeInterval = 10
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var recordingAudioLabel: UILabel!
+    @IBOutlet weak var reportIssueLabel: UILabel!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var progressBar: ProgressBar!
@@ -46,7 +46,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
         let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(collectionView.numberOfRows)
         let collectionViewHeight = flowLayout.itemSize.height * CGFloat(collectionView.numberOfRows) + padding
-        let fullHeight = recordingAudioLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
+        let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
         return fullHeight
     }
     
@@ -108,14 +108,10 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         
         if sender.state == .began {
             
-            recordingAudioLabel.alpha = 0
-            recordingAudioLabel.isHidden = false
-            UIView.animate(withDuration: 0.5, animations: {
-                self.progressBar.alpha = 0
-                self.recordingAudioLabel.alpha = 1
-            })
+            reportIssueLabel.text = NSLocalizedString("RECORDING_AUDIO", bundle: .mapboxNavigation, value: "Recording Audio", comment: "Recording audio for feedback")
+            reportIssueLabel.textColor = .red
             
-            recordingAudioLabel.startRippleAnimation()
+            reportIssueLabel.startRippleAnimation()
             
             if audioRecorder == nil {
                 startRecording()

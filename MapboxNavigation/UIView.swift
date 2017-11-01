@@ -44,7 +44,7 @@ class RippleLayer: CAReplicatorLayer {
         }
     }
     var rippleRadius: CGFloat = 100
-    var rippleColor: UIColor = UIColor.white
+    var rippleColor: UIColor = .red
     var rippleRepeatCount: Float = .greatestFiniteMagnitude
     var rippleWidth: CGFloat = 10
     
