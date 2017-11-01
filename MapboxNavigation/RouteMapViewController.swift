@@ -25,7 +25,7 @@ class RouteMapViewController: UIViewController {
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
     let routeStepFormatter = RouteStepFormatter()
-
+    
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
     
@@ -52,6 +52,14 @@ class RouteMapViewController: UIViewController {
             mapView.delegate = mapView.delegate
         }
     }
+    
+    lazy var endOfRouteController: EndOfRouteViewController = {
+        let controller = EndOfRouteViewController.loadFromStoryboard()
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
+        return controller
+    }()
+    
     weak var routeController: RouteController!
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
@@ -90,6 +98,7 @@ class RouteMapViewController: UIViewController {
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
+        
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
@@ -205,8 +214,15 @@ class RouteMapViewController: UIViewController {
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = controller
         parent.present(controller, animated: true, completion: nil)
+        
+        delegate?.mapViewControllerDidOpenFeedback(self)
     }
 
+    @IBAction func onStarSelected(_ sender: Any) {
+        showArrivalModal(completion: nil)
+        
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier ?? "" {
         case "RoutePageViewController":
@@ -214,6 +230,13 @@ class RouteMapViewController: UIViewController {
                 routePageViewController = controller
                 controller.maneuverDelegate = self
             }
+        case String(describing: EndOfRouteViewController.self):
+            if let navCon = segue.destination as? UINavigationController, let /*destination*/ _ = navCon.viewControllers.first as? EndOfRouteViewController {
+                //TODO: PAYLOAD
+//                destination.route = route
+//                destination.feedbacks = routeController.feedbackEvents
+            }
+
         default:
             break
         }
@@ -319,7 +342,7 @@ class RouteMapViewController: UIViewController {
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return navigationMapView(mapView, viewFor: annotation)
     }
-
+    
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         guard var controller = routePageViewController.currentManeuverPage else { return }
         
@@ -402,6 +425,22 @@ class RouteMapViewController: UIViewController {
         UIView.defaultAnimation(0.3, animations: {
             self.laneViewsContainerView.isHidden = true
         }, completion: nil)
+    }
+    typealias VoidClosure = () -> Void
+    func userDidArrive(completion: VoidClosure?) {
+        showArrivalModal(completion: completion)
+    }
+    
+    private func showArrivalModal(completion: VoidClosure?) {
+    
+        
+        let waypoint = route.legs.last?.destination
+        let controller = endOfRouteController
+
+        controller.destination = waypoint
+        controller.dismissal = completion
+        guard presentedViewController == nil else { return } //presenting multiple times will crash app
+        present(controller, animated: true, completion: nil)
     }
 }
 

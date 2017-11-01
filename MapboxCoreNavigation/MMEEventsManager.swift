@@ -187,7 +187,7 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationArriveEvent(routeController: RouteController) -> [String: Any] {
+    func navigationArriveEvent(routeController: RouteController, rating: Int = -1, comment: String? = nil) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationArrive
         return eventDictionary

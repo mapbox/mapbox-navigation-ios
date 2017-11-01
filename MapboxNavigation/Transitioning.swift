@@ -48,11 +48,14 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
                               width: containerView.bounds.width, height: containerView.bounds.midY)
         
         containerView.addSubview(toView)
-        let tap = UITapGestureRecognizer(target: toVC, action: #selector(FeedbackViewController.handleDismissTap(sender:)))
-        if let responder = toVC as? UIGestureRecognizerDelegate {
-            tap.delegate = responder
+        if toVC.responds(to: .handleDismissTap) {
+            let tap = UITapGestureRecognizer(target: toVC, action: .handleDismissTap)
+            if let responder = toVC as? UIGestureRecognizerDelegate {
+                tap.delegate = responder
+            }
+            containerView.addGestureRecognizer(tap)
         }
-        containerView.addGestureRecognizer(tap)
+
         
         var height = toVC.view.bounds.height
         if let draggable = toVC as? DismissDraggable {
@@ -75,10 +78,12 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     var interactor: Interactor { get }
     var draggableHeight: CGFloat { get }
     @objc optional func handleDismissPan(_ sender: UIPanGestureRecognizer)
+    @objc optional func handleDismissTap(_ sender: UITapGestureRecognizer)
 }
 
 fileprivate extension Selector {
     static let handleDismissDrag = #selector(UIViewController.handleDismissPan(_:))
+    static let handleDismissTap = #selector(FeedbackViewController.handleDismissTap(_:)) //only feedback has this
 }
 
 extension DismissDraggable where Self: UIViewController {
@@ -89,7 +94,6 @@ extension DismissDraggable where Self: UIViewController {
 }
 
 fileprivate extension UIViewController {
-    
     @objc func handleDismissPan(_ sender: UIPanGestureRecognizer) {
         self.handlePan(sender)
     }

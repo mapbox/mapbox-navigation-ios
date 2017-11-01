@@ -1,9 +1,21 @@
 
+/* Class = "UILabel"; text = "Rate your drive"; ObjectID = "7M0-dY-b9J"; */
+"7M0-dY-b9J.text" = "Rate your drive";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "JMs-xU-Gfd"; */
+"JMs-xU-Gfd.normalTitle" = "Cancel";
+
 /* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
 "UpZ-gr-OKM.text" = "Rerouting…";
 
+/* Class = "UIButton"; normalTitle = "End Navigation"; ObjectID = "XEG-Ym-DNe"; */
+"XEG-Ym-DNe.normalTitle" = "End Navigation";
+
 /* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
 "upm-fg-ffn.text" = "Thank you for your report!";
+
+/* Class = "UILabel"; text = "You have arrived"; ObjectID = "vw8-af-pfq"; */
+"vw8-af-pfq.text" = "You have arrived";
 
 /* Class = "UILabel"; text = "Recording Audio"; ObjectID = "xTH-eK-F5H"; */
 "xTH-eK-F5H.text" = "Recording Audio";

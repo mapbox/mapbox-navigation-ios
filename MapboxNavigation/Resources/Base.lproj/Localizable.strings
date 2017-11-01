@@ -37,6 +37,12 @@
 /* Button title for resume tracking */
 "RESUME" = "Resume";
 
+/* Accessibility Star Label */
+"Set \(index + 1) star rating" = "Set \(index + 1) star rating";
+
+/* Rating Reset To Zero Accessability Hint */
+"Tap to reset the rating to zero." = "Tap to reset the rating to zero.";
+
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulating Navigation";
 
