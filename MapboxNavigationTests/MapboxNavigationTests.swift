@@ -45,7 +45,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280")]),
                                                            secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testManeuverViewSingleLine() {
@@ -56,10 +56,10 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.distance = 804
         controller.instructionsBannerView.maneuverView.isEnd = true
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280"),
-                                                           Instruction.Component("replaced")]),
+                                                           Instruction.Component("Single Instruction")]),
                                               secondaryInstruction: nil)
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testManeuverViewNotAbbreviated() {
@@ -73,7 +73,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 Drive Avenue", roadCode: "I 280")]),
                                               secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testManeuverViewAbbreviated() {
@@ -89,7 +89,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
                                                           Instruction.Component("This Drive Avenue Road should be abbreviated")]),
                                               secondaryInstruction: nil)
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testManeuverViewNotAbbreviatedMultipleLines() {
@@ -103,7 +103,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
                                                            Instruction.Component("South")]),
                                               secondaryInstruction: Instruction([Instruction.Component("Drive Avenue should be abbreviated on multiple lines.")]))
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testManeuverViewLongDestinationWithDistance() {
@@ -118,7 +118,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
                                                            Instruction.Component("South")]),
                                               secondaryInstruction: Instruction([Instruction.Component("Long destination / US-45 / Chicago")]))
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testPartiallyAbbreviated() {
@@ -132,7 +132,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.instructionsBannerView.set(Instruction([Instruction.Component("East Market Street")]),
                                               secondaryInstruction: nil)
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testSinglePrimaryAndSecondary() {
@@ -147,7 +147,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
                                                            Instruction.Component("South")]),
                                               secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
         
-        FBSnapshotVerifyView(controller.view)
+        FBSnapshotVerifyView(controller.instructionsBannerView)
     }
     
     func testRouteSwitching() {
