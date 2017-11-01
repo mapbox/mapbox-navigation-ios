@@ -129,6 +129,7 @@
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
+		8D8B16471FAA8498002E8546 /* RouteLeg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8B16461FAA8498002E8546 /* RouteLeg.swift */; };
 		C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5000A921EC25C6E00563EA9 /* Abbreviations.swift */; };
 		C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C51245F31F19471C00E33B52 /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -429,6 +430,7 @@
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
+		8D8B16461FAA8498002E8546 /* RouteLeg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLeg.swift; sourceTree = "<group>"; };
 		C5000A921EC25C6E00563EA9 /* Abbreviations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Abbreviations.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		C520EE911EBB84F9008805BC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Navigation.storyboard; sourceTree = "<group>"; };
@@ -873,6 +875,7 @@
 				C51DF8651F38C31C006C6A15 /* Locale.swift */,
 				C578DA071EFD0FFF0052079F /* ProcessInfo.swift */,
 				C561735A1F182113005954F6 /* RouteStep.swift */,
+				8D8B16461FAA8498002E8546 /* RouteLeg.swift */,
 				351927351F0FA072003A702D /* ScreenCapture.swift */,
 				35BF8CA31F28EBD8003F6125 /* String.swift */,
 				35A5413A1EFC052700E49846 /* RouteOptions.swift */,
@@ -1482,6 +1485,7 @@
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */,
+				8D8B16471FAA8498002E8546 /* RouteLeg.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,

@@ -297,13 +297,16 @@ class RouteMapViewController: UIViewController {
         let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
         
         
+        //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
+        let lastTurn = routeProgress.currentLeg.lastTurn
+        guard currentStep != lastTurn else { return setCamera(altitude: defaultAltitude) }
+        
+        
+        //If the user is on a motorway & their segment is sufficently long, the map should zoom out to the motorway altitude.
         let currentStepIsMotorway = currentStep.isMotorway
         let nextStepIsMotorway = upComingStep?.isMotorway ?? false
-        
         if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
             setCamera(altitude: zoomOutAltitude)
-        } else {
-            setCamera(altitude: defaultAltitude)
         }
     }
     
