@@ -498,7 +498,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="nnt-IW-lbJ"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
