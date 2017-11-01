@@ -45,8 +45,8 @@ public class VisualInstructionFormatter: NSObject {
             let secondary = step.destinations?.joined(separator: NSLocalizedString("DESTINATION_DELIMITER", bundle: .mapboxCoreNavigation, value: " / ", comment: "Delimiter between multiple destinations"))
             let roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
             return (Instruction([.init(primary, png: nil, roadCode: roadCode)]), Instruction(secondary))
-        } else if let destinations = step?.destinations, let names = step?.names {
-            let primary = names.first
+        } else if let destinations = step?.destinations ?? step?.names {
+            let primary = destinations.first
             let secondary = destinations.suffix(from: 1).joined(separator: NSLocalizedString("DESTINATION_DELIMITER", bundle: .mapboxCoreNavigation, value: " / ", comment: "Delimiter between multiple destinations"))
             return (Instruction([.init(primary)]), Instruction(secondary))
         } else if let name = step?.names?.first {
