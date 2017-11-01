@@ -87,7 +87,7 @@ open class DayStyle: Style {
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         DistanceLabel.appearance().valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
-        DistanceLabel.appearance().valueFont = UIFont.systemFont(ofSize: 24, weight: UIFontWeightMedium).adjustedFont
+        DistanceLabel.appearance().valueFont = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium).adjustedFont
         DistanceLabel.appearance().unitTextColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
         DistanceLabel.appearance().unitFont = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium).adjustedFont
         
