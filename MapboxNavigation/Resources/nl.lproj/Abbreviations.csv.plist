@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;meer&quot;,&quot;Mr&quot;
+&quot;centrum&quot;,&quot;Cntrm&quot;
+&quot;nationaal&quot;,&quot;Nat’l&quot;
+&quot;toetreden&quot;,&quot;Ttrdn&quot;
+&quot;berg&quot;,&quot;Brg&quot;
+&quot;kruising&quot;,&quot;Krsng&quot;
+&quot;downtown&quot;,&apos;&apos;Dtwn&quot;
+&quot;internationaal&quot;,&quot;Int’l&quot;
+&quot;park&quot;,&quot;Pk&quot;
+&quot;plein&quot;,&quot;Pln&quot;
+&quot;heiligen&quot;,&quot;Hlgn&quot;
+&quot;hoogtes&quot;,&quot;Hgts&quot;
+&quot;route&quot;,&quot;Rte&quot;
+&quot;heilige&quot;,&quot;Hlg&quot;
+&quot;markt&quot;,&quot;Mrkt&quot;
+&quot;centrum&quot;,&quot;Cntrm&quot;
+&quot;william&quot;, &quot;Wm&quot;
+&quot;school&quot;,&quot;Sch&quot;
+&quot;senior&quot;,&quot;Snr&quot;
+&quot;rivier&quot;,&quot;Rvr&quot;
+&quot;zus&quot;,&quot;Zus&quot;
+&quot;drop&quot;,&quot;Drp&quot;
+&quot;station&quot;,&quot;Sttn&quot;
+&quot;appartementen&quot;,&quot;Apptn&quot;
+&quot;universiteit&quot;,&quot;Uni&quot;
+&quot;gehucht&quot;,&quot;Hucht&quot;
+&quot;meer&quot;,&quot;Mr&quot;
+&quot;junior&quot;,&quot;Jnr&quot;
+&quot;vader&quot;,&quot;Vdr&quot;
+&quot;punt&quot;,&quot;Punt&quot;
+&quot;gedenkteken&quot;,&quot;Teken&quot;
+&quot;knooppunt&quot;,&quot;Kpunt&quot;
+</string>
+    <key>classifications</key>
+    <string>&quot;rechtbank&quot;,&quot;Rbank&quot;
+&quot;bypass&quot;,&quot;Pass&quot;
+&quot;rijden&quot;,&quot;Rijd&quot;
+&quot;snelweg&quot;,&quot;Weg&quot;
+&quot;brug&quot;,&quot;Br&quot;
+&quot;plaats&quot;,&quot;Plts&quot;
+&quot;halve maan&quot;,&quot;Maan&quot;
+&quot;parkway&quot;,&quot;Pky&quot;
+&quot;rijbaan&quot;,&quot;Strook&quot;
+&quot;laan&quot;,&quot;Ln&quot;
+&quot;autoweg&quot;,&quot;Weg&quot;
+&quot;voetpad&quot;,&quot;Stoep&quot;
+&quot;snoek&quot;,&quot;Snk&quot;
+&quot;snelweg&quot;,&quot;Weg&quot;
+&quot;straat&quot;,&quot;Str&quot;
+&quot;terras&quot;,&quot;Trrs&quot;
+&quot;boulevard&quot;,&quot;Blvd&quot;
+&quot;inham&quot;,&quot;Nham&quot;
+&quot;autobaan&quot;,&quot;Baan&quot;
+&quot;weg&quot;,&quot;Weg&quot;
+&quot;lopen&quot;,&quot;Lpn&quot;
+&quot;plaza&quot;,&quot;Plz&quot;
+&quot;cirkel&quot;,&quot;Crkl&quot;
+&quot;steeg&quot;,&quot;Stg&quot;
+&quot;punt&quot;,&quot;Pt&quot;
+</string>
+    <key>directions</key>
+    <string>&quot;oost&quot;,&quot;O&quot;
+&quot;noordoost&quot;,&quot;NO&quot;
+&quot;zuiden&quot;,&quot;Z&quot;
+&quot;noordwest&quot;,&quot;NW&quot;
+&quot;noorden&quot;,&quot;N&quot;
+&quot;zuidoost&quot;,&quot;ZO&quot;
+&quot;zuidwest&quot;,&quot;ZW&quot;
+&quot;westen&quot;,&quot;W&quot;
+</string>
+  </dict>
+</plist>
