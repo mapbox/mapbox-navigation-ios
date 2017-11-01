@@ -5,28 +5,25 @@
 "FEEDBACK_BAD_ROUTE" = "Bad \nRoute";
 
 /* Feedback type for Confusing Instruction */
-"FEEDBACK_CONFUSING_INSTRUCTION" = "Confusing \nInstruction";
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Confusing\nInstruction";
 
-/* Feedback type for inaccurate GPS */
-"FEEDBACK_GPS_INACCURATE" = "GPS \nInaccurate";
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Other\nMap Issue";
 
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Heavy \nTraffic";
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Missing\nExit";
 
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Instruction \nIssue";
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Missing\nRoad";
 
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Instruction \nTiming";
-
-/* Feedback type for turn not allowed */
-"FEEDBACK_NOT_ALLOWED" = "Not \nAllowed";
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Not\nAllowed";
 
 /* Feedback type for Report Traffic */
-"FEEDBACK_REPORT_TRAFFIC" = "Report \nTraffic";
+"FEEDBACK_REPORT_TRAFFIC" = "Report\nTraffic";
 
-/* Feedback type for Closure */
-"FEEDBACK_ROAD_CLOSURE" = "Road \nClosed";
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "Road\nClosed";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ and %2$@";
