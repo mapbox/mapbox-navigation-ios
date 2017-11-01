@@ -186,8 +186,8 @@ open class NightStyle: DayStyle {
         WayNameLabel.appearance().backgroundColor = .clear
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         
-        ManeuverView.appearance().primaryColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        ManeuverView.appearance().secondaryColor = #colorLiteral(red: 0.8, green: 0.8235294118, blue: 0.8481693864, alpha: 0.5)
+        ManeuverView.appearance().primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        ManeuverView.appearance().secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
         
         LanesView.appearance().backgroundColor = backgroundColor
         LaneView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
