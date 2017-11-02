@@ -63,8 +63,6 @@
 		354A01C31E66265100D765C2 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354A01C51E66265600D765C2 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BE1E6625A900D765C2 /* SDWebImage.framework */; };
 		354A01C61E66265600D765C2 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BE1E6625A900D765C2 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		354A01C71E66265800D765C2 /* Pulley.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BD1E66259E00D765C2 /* Pulley.framework */; };
-		354A01C81E66265800D765C2 /* Pulley.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BD1E66259E00D765C2 /* Pulley.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354A01C91E66265B00D765C2 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
 		354A01CA1E66265B00D765C2 /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354A01CB1E66265D00D765C2 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BB1E66258A00D765C2 /* OSRMTextInstructions.framework */; };
@@ -78,8 +76,6 @@
 		354A01DE1E6626EA00D765C2 /* MapboxNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354A01E01E6626EF00D765C2 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BE1E6625A900D765C2 /* SDWebImage.framework */; };
 		354A01E11E6626EF00D765C2 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BE1E6625A900D765C2 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		354A01E21E6626EF00D765C2 /* Pulley.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BD1E66259E00D765C2 /* Pulley.framework */; };
-		354A01E31E6626EF00D765C2 /* Pulley.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BD1E66259E00D765C2 /* Pulley.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354A01E41E6626EF00D765C2 /* Polyline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; };
 		354A01E51E6626EF00D765C2 /* Polyline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BC1E66259600D765C2 /* Polyline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354A01E61E6626EF00D765C2 /* OSRMTextInstructions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01BB1E66258A00D765C2 /* OSRMTextInstructions.framework */; };
@@ -278,7 +274,6 @@
 				35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
-				354A01C81E66265800D765C2 /* Pulley.framework in Embed Frameworks */,
 				354A01C61E66265600D765C2 /* SDWebImage.framework in Embed Frameworks */,
 				354A01D01E66266100D765C2 /* MapboxDirections.framework in Embed Frameworks */,
 				35D4282B1FA0DF1D00176028 /* MapboxNavigation.framework in Embed Frameworks */,
@@ -305,7 +300,6 @@
 				354A01E51E6626EF00D765C2 /* Polyline.framework in Embed Frameworks */,
 				354A01E11E6626EF00D765C2 /* SDWebImage.framework in Embed Frameworks */,
 				354A01DE1E6626EA00D765C2 /* MapboxNavigation.framework in Embed Frameworks */,
-				354A01E31E6626EF00D765C2 /* Pulley.framework in Embed Frameworks */,
 				354A01E71E6626EF00D765C2 /* OSRMTextInstructions.framework in Embed Frameworks */,
 				354A01ED1E6626EF00D765C2 /* Mapbox.framework in Embed Frameworks */,
 			);
@@ -381,7 +375,6 @@
 		354A01B81E66256600D765C2 /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
 		354A01BB1E66258A00D765C2 /* OSRMTextInstructions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSRMTextInstructions.framework; path = Carthage/Build/iOS/OSRMTextInstructions.framework; sourceTree = "<group>"; };
 		354A01BC1E66259600D765C2 /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
-		354A01BD1E66259E00D765C2 /* Pulley.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pulley.framework; path = Carthage/Build/iOS/Pulley.framework; sourceTree = "<group>"; };
 		354A01BE1E6625A900D765C2 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		354BD4F11E6634C500AE1344 /* AWSPolly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSPolly.framework; path = Carthage/Build/iOS/AWSPolly.framework; sourceTree = "<group>"; };
 		354BD4F61E6638E800AE1344 /* AWSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSCore.framework; path = Carthage/Build/iOS/AWSCore.framework; sourceTree = "<group>"; };
@@ -575,7 +568,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				354A01C71E66265800D765C2 /* Pulley.framework in Frameworks */,
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
 				354A01C51E66265600D765C2 /* SDWebImage.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
@@ -602,7 +594,6 @@
 				354A01E01E6626EF00D765C2 /* SDWebImage.framework in Frameworks */,
 				354A01DD1E6626EA00D765C2 /* MapboxNavigation.framework in Frameworks */,
 				C5EA98711F19414200C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
-				354A01E21E6626EF00D765C2 /* Pulley.framework in Frameworks */,
 				354A01E61E6626EF00D765C2 /* OSRMTextInstructions.framework in Frameworks */,
 				354A01EC1E6626EF00D765C2 /* Mapbox.framework in Frameworks */,
 			);
@@ -818,7 +809,6 @@
 				354BD4F61E6638E800AE1344 /* AWSCore.framework */,
 				354BD4F11E6634C500AE1344 /* AWSPolly.framework */,
 				354A01BE1E6625A900D765C2 /* SDWebImage.framework */,
-				354A01BD1E66259E00D765C2 /* Pulley.framework */,
 				354A01BC1E66259600D765C2 /* Polyline.framework */,
 				354A01BB1E66258A00D765C2 /* OSRMTextInstructions.framework */,
 				354A01B81E66256600D765C2 /* MapboxDirections.framework */,
@@ -1409,7 +1399,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/OSRMTextInstructions.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Pulley.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AWSPolly.framework",
@@ -1422,7 +1411,6 @@
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Mapbox.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/MapboxDirections.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/OSRMTextInstructions.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Pulley.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Polyline.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AWSPolly.framework",
@@ -1444,7 +1432,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/OSRMTextInstructions.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Pulley.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AWSPolly.framework",
@@ -1457,7 +1444,6 @@
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Mapbox.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/MapboxDirections.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/OSRMTextInstructions.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Pulley.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Polyline.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AWSPolly.framework",

@@ -2,11 +2,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
-import Pulley
 import Solar
-
-@objc(MBNavigationPulleyViewController)
-public class NavigationPulleyViewController: PulleyViewController {}
 
 /**
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -167,7 +163,7 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: NavigationPulleyViewController, RouteMapViewControllerDelegate {
+public class NavigationViewController: UIViewController, RouteMapViewControllerDelegate {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -316,12 +312,6 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     
     var updateETATimer: Timer?
     
-    required public init(contentViewController: UIViewController, drawerViewController: UIViewController) {
-        fatalError("init(contentViewController:drawerViewController:) has not been implemented. " +
-                   "Use init(for:directions:) if you are instantiating programmatically " +
-                   "or a storyboard reference to Navigation if you are using storyboards.")
-    }
-    
     /**
      Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
 
@@ -337,7 +327,30 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         let tableViewController = storyboard.instantiateViewController(withIdentifier: "RouteTableViewController") as! RouteTableViewController
         
-        super.init(contentViewController: mapViewController, drawerViewController: tableViewController)
+        self.mapViewController = mapViewController
+        self.tableViewController = tableViewController
+        
+        super.init(nibName: nil, bundle: nil)
+        
+        addChildViewController(mapViewController)
+        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mapViewController.view)
+        
+        let v = mapViewController.view!
+        v.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        v.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        v.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        v.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
+        addChildViewController(tableViewController)
+        tableViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableViewController.view)
+        
+        let bottomView = tableViewController.view!
+        bottomView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        bottomView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        bottomView.heightAnchor.constraint(equalToConstant: 80).isActive = true
         
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.directions = directions
@@ -346,15 +359,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
-        
-        self.mapViewController = mapViewController
-        self.tableViewController = tableViewController
-        
+
         mapViewController.delegate = self
         mapViewController.routeController = routeController
         mapViewController.routeTableViewController = tableViewController
         mapViewController.reportButton.isHidden = !showsReportFeedback
-        
+
         tableViewController.routeController = routeController
         tableViewController.headerView.delegate = self
 
@@ -392,9 +402,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     override public func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
-        drawerCornerRadius = 0
         progressBar.dock(on: view)
-        self.delegate = self
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -651,20 +659,3 @@ extension NavigationViewController: RouteTableViewHeaderViewDelegate {
     }
 }
 
-extension NavigationViewController: PulleyDelegate {
-    public func drawerPositionDidChange(drawer: PulleyViewController) {
-        switch drawer.drawerPosition {
-        case .open:
-            tableViewController?.tableView.isScrollEnabled = true
-            break
-        case .partiallyRevealed:
-            tableViewController?.tableView.isScrollEnabled = true
-            break
-        case .collapsed:
-            tableViewController?.tableView.isScrollEnabled = false
-            break
-        case .closed:
-            break
-        }
-    }
-}
