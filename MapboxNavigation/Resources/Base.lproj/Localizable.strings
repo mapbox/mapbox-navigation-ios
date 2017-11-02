@@ -19,8 +19,7 @@
 /* Feedback type for a maneuver that is Not Allowed */
 "FEEDBACK_NOT_ALLOWED" = "Not\nAllowed";
 
-/* Feedback type for 
-Traffic */
+/* Feedback type for Report Traffic */
 "FEEDBACK_REPORT_TRAFFIC" = "Report\nTraffic";
 
 /* Feedback type for Road Closed */
