@@ -5,6 +5,7 @@ extension InstructionsBannerView {
     func commonInit() {
         setupViews()
         setupLayout()
+        centerYAlignInstructions()
         setupAvailableBounds()
     }
     
