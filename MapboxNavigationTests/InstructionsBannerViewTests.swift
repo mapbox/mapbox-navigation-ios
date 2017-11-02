@@ -30,6 +30,20 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
     
+    func testSinglelinePrimary() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
+        XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
+        
+        controller.instructionsBannerView.maneuverView.isStart = true
+        controller.distance = 482
+        
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("US-45 / Chicago")]),
+                                              secondaryInstruction: nil)
+        
+        verifyView(controller.instructionsBannerView, size: .iPhone5)
+    }
+    
     func testMultilinePrimary() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
@@ -45,7 +59,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         verifyView(controller.instructionsBannerView, size: .iPhone5)
     }
     
-    func testSinglePrimaryAndSecondary() {
+    func testSinglelinePrimaryAndSecondary() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
         XCTAssert(controller.view != nil)
         styleInstructionsView(controller.instructionsBannerView)
