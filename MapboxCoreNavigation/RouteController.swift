@@ -520,8 +520,6 @@ extension RouteController: CLLocationManagerDelegate {
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
         let userSnapToStepDistanceFromManeuver = polyline.distance(from: location.coordinate)
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-        
-        print("userHasArrivedAtWaypoint", routeProgress.currentLegProgress.userHasArrivedAtWaypoint, "remainingWaypoints", routeProgress.remainingWaypoints.count)
 
         guard routeProgress.remainingWaypoints.count > 0 else {
             NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
