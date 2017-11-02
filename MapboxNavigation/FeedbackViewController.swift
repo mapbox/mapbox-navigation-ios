@@ -20,7 +20,7 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 
 typealias FeedbackSection = [FeedbackItem]
 
-class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollectionViewCellDelegate, AVAudioRecorderDelegate {
+class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollectionViewCellDelegate, AVAudioRecorderDelegate, UIGestureRecognizerDelegate {
     
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
