@@ -81,8 +81,7 @@ extension InstructionsBannerView {
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
         // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
-        dividerView.leftAnchor.constraint(greaterThanOrEqualTo: maneuverView.rightAnchor, constant: 16).isActive = true
-        dividerView.leftAnchor.constraint(greaterThanOrEqualTo: distanceLabel.rightAnchor, constant: 16).isActive = true
+        dividerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 70).isActive = true
         dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
         dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true

@@ -34,122 +34,6 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
     
-    func testManeuverViewMultipleLines() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.distance = 1608
-        controller.instructionsBannerView.maneuverView.isEnd = true
-        
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280")]),
-                                                           secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
-    func testManeuverViewSingleLine() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.distance = 804
-        controller.instructionsBannerView.maneuverView.isEnd = true
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 should be replaced", roadCode: "I 280"),
-                                                           Instruction.Component("Single Instruction")]),
-                                              secondaryInstruction: nil)
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
-    func testManeuverViewNotAbbreviated() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.distance = 804
-        controller.instructionsBannerView.maneuverView.isEnd = true
-        
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 Drive Avenue", roadCode: "I 280")]),
-                                              secondaryInstruction: Instruction("This Drive Avenue Road should be abbreviated"))
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
-    func testManeuverViewAbbreviated() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.instructionsBannerView.maneuverView.isEnd = true
-        controller.distance = 100
-        
-        
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280", roadCode: "I 280"),
-                                                          Instruction.Component("This Drive Avenue Road should be abbreviated")]),
-                                              secondaryInstruction: nil)
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
-    func testManeuverViewNotAbbreviatedMultipleLines() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.instructionsBannerView.maneuverView.isEnd = true
-        controller.distance = 804
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                                                           Instruction.Component("South")]),
-                                              secondaryInstruction: Instruction([Instruction.Component("Drive Avenue should be abbreviated on multiple lines.")]))
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
-    func testManeuverViewLongDestinationWithDistance() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.instructionsBannerView.maneuverView.isEnd = true
-        controller.distance = 100
-
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                                                           Instruction.Component("South")]),
-                                              secondaryInstruction: Instruction([Instruction.Component("Long destination / US-45 / Chicago")]))
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
-    func testPartiallyAbbreviated() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.instructionsBannerView.maneuverView.isEnd = true
-        controller.distance = 482
-        
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("East Market Street")]),
-                                              secondaryInstruction: nil)
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
-    func testSinglePrimaryAndSecondary() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
-        
-        controller.instructionsBannerView.maneuverView.isStart = true
-        controller.distance = 482
-        
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                                                           Instruction.Component("South")]),
-                                              secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
-        
-        FBSnapshotVerifyView(controller.instructionsBannerView)
-    }
-    
     func testRouteSwitching() {
         let bundle = Bundle(for: MapboxNavigationTests.self)
         var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
@@ -187,23 +71,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     }
 }
 
-extension MapboxNavigationTests {
-    // UIAppearance proxy do not work in unit test environment so we have to style manually
-    func styleInstructionsView(_ view: InstructionsBannerView) {
-        view.backgroundColor = .white
-        view.maneuverView.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)
-        view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
-        view.primaryLabel.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)
-        view.secondaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
-        view.dividerView.backgroundColor = .red
-        view.separatorView.backgroundColor = .red
-        
-        view.distanceLabel.valueFont = UIFont.systemFont(ofSize: 24)
-        view.distanceLabel.unitFont = UIFont.systemFont(ofSize: 14)
-        view.primaryLabel.font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)
-        view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium)
-    }
-}
+
 
 extension CLLocationCoordinate2D {
     static var unionSquare: CLLocationCoordinate2D {
