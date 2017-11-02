@@ -133,7 +133,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     @IBAction func clearMapPressed(_ sender: Any) {
         clearMap.isHidden = true
-        mapView.removeRoute()
+        mapView.removeRoutes()
         mapView.removeWaypoints()
         waypoints.removeAll()
         multipleStopsAction.isEnabled = false
@@ -157,13 +157,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
                 print(error!.localizedDescription)
                 return
             }
-            guard let route = routes?.first else { return }
+            guard let routes = routes else { return }
             
-            self?.currentRoute = route
+            self?.currentRoute = routes.first
             
             // Open method for adding and updating the route line
-            self?.mapView.showRoute(route)
-            self?.mapView.showWaypoints(route, legIndex: 0)
+            self?.mapView.showRoutes(routes)
         }
     }
 
@@ -239,6 +238,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // This does however require you to increment the leg count on your own. See the example below in `confirmationControllerDidConfirm()`.
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
         return false
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route]) {
+        print(routeIndex)
     }
 }
 

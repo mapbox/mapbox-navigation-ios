@@ -242,7 +242,7 @@ class RouteMapViewController: UIViewController {
         routePageViewController.updateManeuverViewForStep()
 
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        mapView.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
         
         if routeController.showDebugSpokenInstructionsOnMap {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
@@ -351,7 +351,7 @@ class RouteMapViewController: UIViewController {
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoute(routeProgress.route, legIndex: routeProgress.legIndex)
+            mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
         }
@@ -454,6 +454,10 @@ extension RouteMapViewController: NavigationMapViewDelegate {
 
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView(mapView, shapeDescribing: route)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route]) {
+        return (delegate?.navigationMapView(mapView, didTap: routeIndex, routes: routes))!
     }
 
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
@@ -583,7 +587,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         guard isViewLoaded && view.window != nil else { return }
         let map = mapView as NavigationMapView
         guard !map.showsRoute else { return }
-        map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        map.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
         map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         
         if routeController.routeProgress.currentLegProgress.stepIndex + 1 <= routeController.routeProgress.currentLegProgress.leg.steps.count {
@@ -663,6 +667,7 @@ protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route])
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?

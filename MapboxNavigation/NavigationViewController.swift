@@ -120,6 +120,8 @@ public protocol NavigationViewControllerDelegate {
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route])
+    
     /**
      Return an `MGLAnnotationImage` that represents the destination marker.
      
@@ -545,6 +547,10 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
         return navigationDelegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
     
+    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route]) {
+        return (navigationDelegate?.navigationMapView!(mapView, didTap: routeIndex, routes: routes))!
+    }
+    
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
@@ -560,6 +566,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return navigationDelegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
+    
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
         return navigationDelegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }

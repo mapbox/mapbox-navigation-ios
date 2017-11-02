@@ -58,6 +58,9 @@ open class NavigationMapView: MGLMapView {
     let instructionSource = "instructionSource"
     let instructionLabel = "instructionLabel"
     let instructionCircle = "instructionCircle"
+    let alternateSourceIdentifier = "alternateSource"
+    let alternateLayerIdentifier = "alternateLayer"
+    let routeIndexAttribute = "routeIndex"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -119,6 +122,12 @@ open class NavigationMapView: MGLMapView {
     func resumeNotifications() {
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
+        
+        let singleTapForAlternateRoute = UITapGestureRecognizer(target: self, action: #selector(didTapRoute(tap:)))
+        for recognizer in self.gestureRecognizers! where recognizer is UITapGestureRecognizer {
+            singleTapForAlternateRoute.require(toFail: recognizer)
+        }
+        self.addGestureRecognizer(singleTapForAlternateRoute)
         
     }
     
@@ -354,24 +363,32 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
+    var activeRouteIndex = 0
+    
+    var routes: [Route]?
+    
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoute(_ route: Route, legIndex: Int? = nil) {
+    public func showRoutes(_ routes: [Route], activeRouteIndex: Int = 0, legIndex: Int = 0) {
         guard let style = style else {
             return
         }
         
-        let polyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: route) ?? shape(describing: route, legIndex: legIndex)
-        let polylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: route) ?? shape(describingCasing: route, legIndex: legIndex)
+        let activeRoute = routes[activeRouteIndex]
+        
+        showWaypoints(activeRoute, legIndex: legIndex)
+        
+        let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
+        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
-            source.shape = polyline
-            sourceSimplified.shape = polylineSimplified
+            source.shape = mainPolyline
+            sourceSimplified.shape = mainPolylineSimplified
         } else {
-            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polyline, options: sourceOptions)
-            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: polylineSimplified, options: sourceOptions)
+            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: mainPolyline, options: nil)
+            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: mainPolylineSimplified, options: nil)
             style.addSource(lineSource)
             style.addSource(lineCasingSource)
             
@@ -383,8 +400,45 @@ open class NavigationMapView: MGLMapView {
                     layer.identifier != arrowLayerIdentifier && layer.identifier != arrowSymbolLayerIdentifier && layer.identifier != arrowCasingSymbolLayerIdentifier && layer.identifier != arrowLayerStrokeIdentifier && layer.identifier != waypointCircleIdentifier {
                     style.insertLayer(line, below: layer)
                     style.insertLayer(lineCasing, below: line)
-                    return
+                    break
                 }
+            }
+        }
+        guard routes.count > 1 else { return }
+        var tmpRoutes = routes
+        tmpRoutes.remove(at: activeRouteIndex)
+        guard let alternateRoute = tmpRoutes.first else { return }
+        
+        self.routes = routes
+        
+        let polyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
+        polyline.attributes[routeIndexAttribute] = routes.index(of: alternateRoute)
+        let alternatePolyline = MGLShapeCollectionFeature(shapes: [polyline])
+        
+        if let source = style.source(withIdentifier: alternateSourceIdentifier) as? MGLShapeSource {
+            source.shape = alternatePolyline
+        } else {
+            let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
+            style.addSource(alternateSource)
+            
+            let alternateLayer = routeAlternateStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
+            
+            if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
+                style.insertLayer(alternateLayer, below: layer)
+            }
+        }
+    }
+    
+    /**
+     Fired when the user taps a route. If there is an alternate route, and an alternate route is tapped, it is selected.
+     */
+    public func didTapRoute(tap: UITapGestureRecognizer) {
+        let features = self.visibleFeatures(at: tap.location(in: self), styleLayerIdentifiers: Set([alternateLayerIdentifier]))
+        for feature in features {
+            if let routeIndex = feature.attribute(forKey: routeIndexAttribute) as? Int, let routes = routes {
+                self.showRoutes(routes, activeRouteIndex: routeIndex)
+                navigationMapDelegate?.navigationMapView?(self, didTap: routeIndex, routes: routes)
+                return
             }
         }
     }
@@ -392,7 +446,7 @@ open class NavigationMapView: MGLMapView {
     /**
      Removes route line and route line casing from map
      */
-    public func removeRoute() {
+    public func removeRoutes() {
         guard let style = style else {
             return
         }
@@ -411,6 +465,14 @@ open class NavigationMapView: MGLMapView {
         
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
+        }
+        
+        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
+            style.removeSource(altSource)
+        }
+        
+        if let altLayer = style.layer(withIdentifier: alternateLayerIdentifier) {
+            style.removeLayer(altLayer)
         }
     }
     
@@ -559,6 +621,23 @@ open class NavigationMapView: MGLMapView {
         }
         
         return MGLShapeCollectionFeature(shapes: features)
+    }
+    
+    func routeAlternateStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+        
+        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
+        
+        // Take the default line width and make it wider for the casing
+        lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
+                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.7),
+                                             options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
+        
+        lineCasing.lineColor = MGLStyleValue(rawValue: .gray)
+        lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
+        lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
+        lineCasing.lineOpacity = MGLStyleValue(rawValue: 0.85)
+        
+        return lineCasing
     }
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
@@ -851,6 +930,8 @@ public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+    
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route])
     
     @objc(navigationMapView:shapeDescribingRoute:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
