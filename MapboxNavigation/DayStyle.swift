@@ -81,6 +81,8 @@ open class DayStyle: Style {
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         UserPuckCourseView.appearance().puckColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1)
+        ReportButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        ReportButton.appearance().textColor = tintColor!
         
         // Maneuver view (Page view)
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -162,6 +164,8 @@ open class NightStyle: DayStyle {
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         ManeuverView.appearance().backgroundColor = backgroundColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
+        ReportButton.appearance().backgroundColor = backgroundColor
+        ReportButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         DistanceLabel.appearance().valueTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DistanceLabel.appearance().unitTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)

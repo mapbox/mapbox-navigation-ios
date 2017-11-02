@@ -14,6 +14,7 @@ class RouteMapViewController: UIViewController {
 
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
+    @IBOutlet weak var rerouteReportButton: ReportButton!
     @IBOutlet weak var recenterButton: ResumeButton!
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
@@ -28,10 +29,6 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
-    
-    var lastTimeUserRerouted: Date?
-    let rerouteSections: [FeedbackSection] = [[.confusingInstructions, .turnNotAllowed, .reportTraffic]]
-    let generalFeedbackSections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -87,6 +84,7 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.courseTrackingDelegate = self
         
+        rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
@@ -162,8 +160,9 @@ class RouteMapViewController: UIViewController {
         NavigationSettings.shared.muted = muted
     }
     
-    @IBAction func rerouteFeedback() {
-        lastTimeUserRerouted = Date()
+    @IBAction func rerouteFeedback(_ sender: Any) {
+        showFeedback()
+        delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
     @IBAction func feedback(_ sender: Any) {
@@ -172,17 +171,11 @@ class RouteMapViewController: UIViewController {
     }
     
     func showFeedback() {
-        
-        var sections = generalFeedbackSections
-        if let lastTime = lastTimeUserRerouted, abs(lastTime.timeIntervalSinceNow) < RouteControllerNumberOfSecondsForRerouteFeedback {
-            sections = rerouteSections
-        }
-        
         guard let parent = parent else { return }
     
-        
         let controller = FeedbackViewController.loadFromStoryboard()
         controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
+        let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
         controller.sections = sections
         let feedbackId = routeController.recordFeedback()
         
@@ -259,8 +252,6 @@ class RouteMapViewController: UIViewController {
             mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
-        
-        rerouteFeedback()
     }
     
     func willReroute(notification: NSNotification) {
@@ -279,6 +270,8 @@ class RouteMapViewController: UIViewController {
             statusView.show(title, showSpinner: true)
             statusView.hide(delay: 5, animated: true)
         }
+        
+        rerouteReportButton.show(for: 10)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {

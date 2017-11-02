@@ -79,6 +79,43 @@ public class LanesView: UIView { }
 @objc(MBCellTurnArrowView)
 public class CellTurnArrowView: ManeuverView { }
 
+/// :nodoc:
+@objc(MBReportButton)
+public class ReportButton: Button {
+    
+    @IBOutlet weak var topContraint: NSLayoutConstraint!
+    
+    let padding: CGFloat = 10
+    
+    func show(for interval: TimeInterval) {
+        guard isHidden == true else { return }
+        
+        isHidden = false
+        
+        topContraint.constant = padding
+        setNeedsUpdateConstraints()
+        
+        UIView.defaultAnimation(0.4, animations: {
+            self.superview?.layoutIfNeeded()
+        }) { (completed) in
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(ReportButton.hide), object: nil)
+            self.perform(#selector(ReportButton.hide), with: nil, afterDelay: interval)
+        }
+    }
+    
+    @objc func hide() {
+        guard isHidden == false else { return }
+        
+        topContraint.constant = -bounds.height - (padding * 2)
+        setNeedsUpdateConstraints()
+        UIView.defaultSpringAnimation(0.4, animations: {
+            self.superview?.layoutIfNeeded()
+        }) { (completed) in
+            self.isHidden = true
+        }
+    }
+}
+
 /**
  :nodoc:
  `HighlightedButton` sets the button’s titleColor for normal control state according to the style in addition to the styling behavior inherited from
