@@ -629,13 +629,13 @@ open class NavigationMapView: MGLMapView {
         
         // Take the default line width and make it wider for the casing
         lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.7),
+                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.85),
                                              options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
         lineCasing.lineColor = MGLStyleValue(rawValue: .gray)
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
-        lineCasing.lineOpacity = MGLStyleValue(rawValue: 0.85)
+        lineCasing.lineOpacity = MGLStyleValue(rawValue: 0.9)
         
         return lineCasing
     }
