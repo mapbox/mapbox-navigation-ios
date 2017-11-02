@@ -21,7 +21,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
-        recordMode = true
+        recordMode = false
         
         UIImage.shieldImageCache.setObject(shieldImage, forKey: "I280")
     }
