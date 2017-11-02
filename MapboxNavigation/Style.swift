@@ -77,7 +77,7 @@ public class LanesView: UIView { }
 
 /// :nodoc:
 @objc(MBCellTurnArrowView)
-public class CellTurnArrowView: TurnArrowView { }
+public class CellTurnArrowView: ManeuverView { }
 
 /**
  :nodoc:
@@ -142,19 +142,79 @@ open class StylableLabel : UILabel { }
 
 /// :nodoc:
 @objc(MBDistanceLabel)
-open class DistanceLabel: StylableLabel { }
+open class DistanceLabel: StylableLabel {
+    dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+    {
+        didSet { update() }
+    }
+    dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
+    {
+        didSet { update() }
+    }
+    dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium) {
+        didSet { update() }
+    }
+    dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: UIFontWeightMedium) {
+        didSet { update() }
+    }
+    
+    var valueRange: Range<String.Index>? {
+        didSet {
+            update()
+        }
+    }
+    
+    var unitRange: Range<String.Index>? {
+        didSet {
+            update()
+        }
+    }
+    
+    var distanceString: String? {
+        didSet {
+            update()
+        }
+    }
+    
+    fileprivate func update() {
+        guard let valueRange = valueRange, let unitRange = unitRange, let distanceString = distanceString else {
+            return
+        }
+
+        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor,
+                                              NSFontAttributeName: valueFont]
+
+        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor,
+                                             NSFontAttributeName: unitFont]
+
+        let valueSubstring = distanceString.substring(with: valueRange)
+        let unitSubstring = distanceString.substring(with: unitRange)
+        let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
+        let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
+
+        let startsWithUnit = unitRange.lowerBound == distanceString.wholeRange.lowerBound
+        let attributedString = NSMutableAttributedString()
+
+        attributedString.append(startsWithUnit ? unitAttributedString : valueAttributedString)
+        attributedString.append(startsWithUnit ? valueAttributedString : unitAttributedString)
+
+        attributedText = attributedString
+    }
+}
 
 /// :nodoc:
 @objc(MBDestinationLabel)
 open class DestinationLabel: StylableLabel {
-    typealias AvailableBoundsHandler = () -> (CGRect)
-    var availableBounds: AvailableBoundsHandler!
-    var unabridgedText: String? {
-        didSet {
-            super.text = unabridgedText?.abbreviated(toFit: availableBounds(), font: font)
-        }
-    }
+
 }
+
+/// :nodoc
+@objc(MBPrimaryLabel)
+open class PrimaryLabel: InstructionLabel { }
+
+/// :nodoc
+@objc(MBSecondaryLabel)
+open class SecondaryLabel: InstructionLabel { }
 
 /// :nodoc:
 @objc(MBTimeRemainingLabel)
@@ -226,6 +286,8 @@ public class ProgressBar: UIView {
     
     let bar = UIView()
     
+    var barHeight: CGFloat = 3
+    
     // Sets the color of the progress bar.
     dynamic public var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
         didSet {
@@ -236,18 +298,22 @@ public class ProgressBar: UIView {
     // Set the progress between 0.0-1.0
     var progress: CGFloat = 0 {
         didSet {
-            UIView.defaultAnimation(0.5, animations: { 
-                self.updateProgressBar()
-                self.layoutIfNeeded()
-            }, completion: nil)
+            self.updateProgressBar()
+            self.layoutIfNeeded()
         }
+    }
+    
+    func setProgress(_ progress: CGFloat, animated: Bool) {
+        UIView.defaultAnimation(0.5, animations: {
+            self.progress = progress
+        }, completion: nil)
     }
     
     func dock(on view: UIView) {
         translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(self)
         view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bar]-0-|", options: [], metrics: nil, views: ["bar": self]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bar(3)]-0-|", options: [], metrics: nil, views: ["bar": self]))
+        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bar(\(bounds.height))]-0-|", options: [], metrics: nil, views: ["bar": self]))
     }
     
     public override func layoutSubviews() {
@@ -262,7 +328,7 @@ public class ProgressBar: UIView {
     
     func updateProgressBar() {
         if let superview = superview {
-            bar.frame = CGRect(origin: .zero, size: CGSize(width: superview.bounds.width*progress, height: 3))
+            bar.frame = CGRect(origin: .zero, size: CGSize(width: superview.bounds.width*progress, height: bounds.height))
         }
     }
 }
@@ -316,10 +382,6 @@ open class StylableButton: UIButton {
         }
     }
 }
-
-/// :nodoc:
-@objc(MBManeuverView)
-public class ManeuverView: UIView { }
 
 /// :nodoc:
 @objc(MBManeuverContainerView)

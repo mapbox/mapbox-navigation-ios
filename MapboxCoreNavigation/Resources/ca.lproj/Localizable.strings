@@ -1,4 +1,4 @@
-﻿/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
+/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
 "CONTINUE" = "Continueu per %@";
 
 /* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */

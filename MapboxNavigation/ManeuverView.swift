@@ -5,8 +5,8 @@ import SDWebImage
 import Turf
 
 @IBDesignable
-@objc(MBTurnArrowView)
-public class TurnArrowView: UIView {
+@objc(MBManeuverView)
+public class ManeuverView: UIView {
     
     public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
@@ -49,11 +49,13 @@ public class TurnArrowView: UIView {
         super.draw(rect)
         
         transform = CGAffineTransform.identity
+        let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
+        
         guard let step = step else {
             if isStart {
-                StyleKitArrows.drawStarting(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawStarting(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             } else if isEnd {
-                StyleKitArrows.drawDestination(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawDestination(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }
             return
         }
@@ -65,58 +67,58 @@ public class TurnArrowView: UIView {
 
         switch type {
         case .merge:
-            StyleKitArrows.drawMerge(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+            ManeuversStyleKit.drawMerge(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             flip = [.right, .slightRight, .sharpRight].contains(direction)
         case .takeOffRamp:
-            StyleKitArrows.drawOfframp(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+            ManeuversStyleKit.drawOfframp(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             flip = [.right, .slightRight, .sharpRight].contains(direction)
         case .reachFork:
-            StyleKitArrows.drawFork(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+            ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             flip = [.right, .slightRight, .sharpRight].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
             switch direction {
             case .straightAhead:
-                StyleKitArrows.drawRoundabout_180(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 180)
             case .left, .slightLeft, .sharpLeft:
-                StyleKitArrows.drawRoundabout_275(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 275)
             default:
-                StyleKitArrows.drawRoundabout(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 90)
             }
         case .arrive:
             switch direction {
             case .right:
-                StyleKitArrows.drawArriveright(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             case .left:
-                StyleKitArrows.drawArriveright(primaryColor: primaryColor, secondaryColor: secondaryColor, scale: scale)
+                ManeuversStyleKit.drawArriveright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = true
             default:
-                StyleKitArrows.drawArrive(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrive(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }
         default:
             switch direction {
             case .right:
-                StyleKitArrows.drawArrow45(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = false
             case .slightRight:
-                StyleKitArrows.drawArrow30(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowslightright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = false
             case .sharpRight:
-                StyleKitArrows.drawArrow75(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowsharpright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = false
             case .left:
-                StyleKitArrows.drawArrow45(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = true
             case .slightLeft:
-                StyleKitArrows.drawArrow30(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowslightright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = true
             case .sharpLeft:
-                StyleKitArrows.drawArrow75(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowsharpright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = true
             case .uTurn:
-                StyleKitArrows.drawArrow180(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrow180right(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = angle < 0
             default:
-                StyleKitArrows.drawArrow0(primaryColor: primaryColor, scale: scale)
+                ManeuversStyleKit.drawArrowstraight(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }
         }
         

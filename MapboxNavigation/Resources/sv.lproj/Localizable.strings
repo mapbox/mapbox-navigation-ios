@@ -1,23 +1,32 @@
-﻿/* Indicates a faster route was found */
+/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Hittade snabbare rutt";
 
-/* Feedback type for Accident */
-"FEEDBACK_ACCIDENT" = "Olycka";
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Dålig\nRutt";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Förvirrande\nRutt";
+
+/* Feedback type for inaccurate GPS */
+"FEEDBACK_GPS_INACCURATE" = "Felaktig\nPosition";
+
+/* Feedback type for Heavy Traffic */
+"FEEDBACK_HEAVY_TRAFFIC" = "Tung\nTrafik";
+
+/* Feedback type for Instruction Issue */
+"FEEDBACK_INSTRUCTION_ISSUE" = "Fel\nInstruktioner";
+
+/* Feedback type for Instruction Timing */
+"FEEDBACK_INSTRUCTION_TIMING" = "Dålig\nTiming";
+
+/* Feedback type for turn not allowed */
+"FEEDBACK_NOT_ALLOWED" = "Inte\nTillåtet";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Rapportera\nTrafik";
 
 /* Feedback type for Closure */
-"FEEDBACK_CLOSURE" = "Avstängd";
-
-/* Feedback type for Confusing */
-"FEEDBACK_CONFUSING" = "Förvirrande";
-
-/* Feedback type for Hazard */
-"FEEDBACK_HAZARD" = "Fara";
-
-/* Feedback type for Other Issue */
-"FEEDBACK_OTHER" = "Annat";
-
-/* Feedback type for Unallowed Turn */
-"FEEDBACK_UNALLOWED_TURN" = "Ej Tillåtet";
+"FEEDBACK_ROAD_CLOSURE" = "Väg\nAvstängd";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ och %2$@";

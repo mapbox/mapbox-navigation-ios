@@ -268,7 +268,12 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     /**
      Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
      */
-    public var showsReportFeedback: Bool = true
+    public var showsReportFeedback: Bool = true {
+        didSet {
+            mapViewController?.reportButton.isHidden = !showsReportFeedback
+        }
+    }
+    
     
     /**
      If true, the map style and UI will automatically be updated given the time of day.
@@ -435,13 +440,15 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         tableViewController?.updateETA(routeProgress: routeProgress)
-        progressBar.progress = routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled)
+        
+        progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }
     
     func didPassInstructionPoint(notification: NSNotification) {
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
         mapViewController?.updateMapOverlays(for: routeProgress)
+        mapViewController?.updateCameraAltitude(for: routeProgress)
         tableViewController?.reload()
         
         clearStaleNotifications()

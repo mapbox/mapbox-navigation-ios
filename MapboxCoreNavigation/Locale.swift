@@ -32,4 +32,12 @@ extension Locale {
         }
         return measurementSystem == "Metric"
     }
+    
+    public var usesMetric: Bool {
+        let locale = self as NSLocale
+        guard let measurementSystem = locale.object(forKey: .measurementSystem) as? String else {
+            return false
+        }
+        return measurementSystem == "Metric"
+    }
 }

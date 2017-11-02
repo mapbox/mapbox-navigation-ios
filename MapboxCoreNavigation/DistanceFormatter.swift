@@ -28,6 +28,9 @@ public class DistanceFormatter: LengthFormatter {
     
     let nonFractionalLengthFormatter = LengthFormatter()
     
+    /// Indicates the most recently used unit
+    public private(set) var unit: LengthFormatter.Unit = .millimeter
+    
     /**
      Intializes a new `DistanceFormatter`.
      
@@ -49,7 +52,7 @@ public class DistanceFormatter: LengthFormatter {
     }
     
     func maximumFractionDigits(for distance: CLLocationDistance) -> Int {
-        if Locale.usesMetric {
+        if numberFormatter.locale.usesMetric {
             return distance < 3_000 ? 1 : 0
         } else {
             return distance.miles < 3 ? 1 : 0
@@ -57,7 +60,7 @@ public class DistanceFormatter: LengthFormatter {
     }
     
     func roundingIncrement(for distance: CLLocationDistance, unit: LengthFormatter.Unit) -> Double {
-        if Locale.usesMetric {
+        if numberFormatter.locale.usesMetric {
             if distance < 25 {
                 return 5
             } else if distance < 100 {
@@ -68,7 +71,7 @@ public class DistanceFormatter: LengthFormatter {
             return distance < 3_000 ? 0 : 0.5
         } else {
             if unit == .yard {
-                if distance.miles > 0.2 {
+                if distance.miles >= 0.1 {
                     return 0
                 } else {
                     return 50
@@ -98,7 +101,6 @@ public class DistanceFormatter: LengthFormatter {
         numberFormatter.usesSignificantDigits = false
         numberFormatter.maximumFractionDigits = maximumFractionDigits(for: distance)
         
-        var unit: LengthFormatter.Unit = .millimeter
         unitString(fromMeters: distance, usedUnit: &unit)
         
         numberFormatter.roundingIncrement = roundingIncrement(for: distance, unit: unit) as NSNumber
@@ -112,7 +114,7 @@ public class DistanceFormatter: LengthFormatter {
     
     func formattedDistance(_ distance: CLLocationDistance, modify unit: inout LengthFormatter.Unit) -> String {
         var formattedDistance: String
-        if Locale.usesMetric {
+        if numberFormatter.locale.usesMetric {
             let roundedDistance: CLLocationDistance = numberFormatter.number(from: numberFormatter.string(from: distance as NSNumber)!)?.doubleValue ?? distance
             numberFormatter.roundingIncrement = roundingIncrement(for: roundedDistance, unit: unit) as NSNumber
             
@@ -125,7 +127,7 @@ public class DistanceFormatter: LengthFormatter {
             }
         } else {
             if unit == .yard {
-                if distance.miles > 0.2 {
+                if distance.miles >= 0.1 {
                     unit = .mile
                     formattedDistance = string(fromValue: distance.miles, unit: unit)
                 } else {

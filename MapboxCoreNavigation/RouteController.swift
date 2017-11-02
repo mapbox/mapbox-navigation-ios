@@ -244,10 +244,37 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
     }
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func didChangeOrientation() {
+        if UIDevice.current.orientation.isPortrait {
+            sessionState.timeSpentInLandscape += abs(sessionState.lastTimeInPortrait.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInPortrait = Date()
+        } else if UIDevice.current.orientation.isLandscape {
+            sessionState.timeSpentInPortrait += abs(sessionState.lastTimeInLandscape.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInLandscape = Date()
+        }
+    }
+    
+    func didChangeApplicationState() {
+        if UIApplication.shared.applicationState == .active {
+            sessionState.timeSpentInForeground += abs(sessionState.lastTimeInBackground.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInForeground = Date()
+        } else if UIApplication.shared.applicationState == .background {
+            sessionState.timeSpentInBackground += abs(sessionState.lastTimeInForeground.timeIntervalSinceNow)
+            
+            sessionState.lastTimeInBackground = Date()
+        }
     }
 
     /**
@@ -267,7 +294,7 @@ open class RouteController: NSObject {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
     }
-
+    
     /**
      The most recently received user location.
      
@@ -296,21 +323,34 @@ open class RouteController: NSObject {
      */
     public var location: CLLocation? {
         guard let location = rawLocation else { return nil }
-        guard let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
-        guard let snappedCoordinate = Polyline(stepCoordinates).closestCoordinate(to: location.coordinate) else { return location }
 
         var nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        let nearByPolyline = Polyline(nearByCoordinates)
 
         // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
         // Otherwise, we may get false positives from nearby step coordinates
         if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
             let initialHeading = upcomingStep.initialHeading,
             let finalHeading = upcomingStep.finalHeading,
-            initialHeading.differenceBetween(finalHeading) < RouteControllerMaxManipulatedCourseAngle,
             let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
-           nearByCoordinates = coordinates
+            
+            // Calculate if angle is sharp
+            let inAngle: CLLocationDegrees = initialHeading.toRadians()
+            let outAngle: CLLocationDegrees = finalHeading.toRadians()
+            
+            let inX = sin(inAngle)
+            let inY = cos(inAngle)
+            let outX = sin(outAngle)
+            let outY = cos(outAngle)
+            
+            let turnAngle = acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
+            
+            // The max here is 180. The closer it is to 180, the sharper the turn.
+            if turnAngle > 180 - RouteControllerMaxManipulatedCourseAngle {
+                nearByCoordinates = coordinates
+            }
         }
+        
+        let nearByPolyline = Polyline(nearByCoordinates)
 
         guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: location.coordinate) else { return nil }
 
@@ -331,17 +371,17 @@ open class RouteController: NSObject {
         let wrappedCourse = location.course.wrap(min: -180, max: 180)
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
-        let averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
+        let averageRelativeAngle = pointBehindClosest.distance > 0 ? (relativeAnglepointBehind + relativeAnglepointAhead) / 2 : relativeAnglepointAhead
         let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
         
         var userCourse = calculatedCourseForLocationOnStep
-        var userCoordinate = snappedCoordinate.coordinate
+        var userCoordinate = closest.coordinate
         
         if location.course >= 0 && location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
             if calculatedCourseForLocationOnStep.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle && location.horizontalAccuracy < 20 {
                 userCourse = location.course
                 
-                if snappedCoordinate.distance > RouteControllerUserLocationSnappingDistance && location.horizontalAccuracy < 20 {
+                if closest.distance > RouteControllerUserLocationSnappingDistance && location.horizontalAccuracy < 20 {
                     userCoordinate =  location.coordinate
                 }
             }
@@ -407,9 +447,15 @@ extension RouteController {
 
     func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
+        
     }
-
+    
+    
     func didReroute(notification: NSNotification) {
+        if let _ = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool {
+            _ = enqueueFoundFasterRouteEvent()
+        }
+        
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
@@ -475,8 +521,7 @@ extension RouteController: CLLocationManagerDelegate {
         let userSnapToStepDistanceFromManeuver = polyline.distance(from: location.coordinate)
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
 
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint,
-            routeProgress.remainingWaypoints.count > 0 else {
+        guard routeProgress.remainingWaypoints.count > 0 else {
             NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
                 RouteControllerProgressDidChangeNotificationLocationKey: location,
@@ -601,11 +646,14 @@ extension RouteController: CLLocationManagerDelegate {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                strongSelf.didReroute(notification: NSNotification(name: RouteControllerDidReroute, object: nil, userInfo: [
+                    RouteControllerDidFindFasterRouteKey: true
+                    ]))
                 strongSelf.didFindFasterRoute = false
             }
         }
     }
-
+    
     func reroute(from location: CLLocation) {
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
@@ -759,7 +807,6 @@ extension RouteController: CLLocationManagerDelegate {
         routeProgress.currentLegProgress.stepIndex += 1
 
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint,
-            routeProgress.remainingWaypoints.count > 1,
             (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
             routeProgress.legIndex += 1
         }
@@ -778,6 +825,18 @@ struct SessionState {
 
     var currentRoute: Route
     var originalRoute: Route
+    
+    var timeSpentInPortrait: TimeInterval = 0
+    var timeSpentInLandscape: TimeInterval = 0
+    
+    var lastTimeInLandscape = Date()
+    var lastTimeInPortrait = Date()
+    
+    var timeSpentInForeground: TimeInterval = 0
+    var timeSpentInBackground: TimeInterval = 0
+    
+    var lastTimeInForeground = Date()
+    var lastTimeInBackground = Date()
 
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
 
@@ -831,7 +890,6 @@ extension RouteController {
 
     func enqueueRerouteEvent() -> String {
         let timestamp = Date()
-
         let eventDictionary = events.navigationRerouteEvent(routeController: self)
 
         sessionState.lastRerouteDate = timestamp
@@ -841,6 +899,19 @@ extension RouteController {
 
         outstandingFeedbackEvents.append(event)
 
+        return event.id.uuidString
+    }
+    
+    func enqueueFoundFasterRouteEvent() -> String {
+        let timestamp = Date()
+        let eventDictionary = events.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
+        
+        sessionState.lastRerouteDate = timestamp
+        
+        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
+        
+        outstandingFeedbackEvents.append(event)
+        
         return event.id.uuidString
     }
 

@@ -175,6 +175,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         exampleMode = .default
         
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        navigationViewController.routeController.allowRecordedAudioFeedback = true
         navigationViewController.navigationDelegate = self
         
         present(navigationViewController, animated: true, completion: nil)

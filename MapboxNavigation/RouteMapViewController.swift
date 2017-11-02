@@ -28,6 +28,10 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
+    
+    var lastTimeUserRerouted: Date?
+    let rerouteSections: [FeedbackSection] = [[.confusingInstructions, .turnNotAllowed, .reportTraffic]]
+    let generalFeedbackSections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -142,6 +146,7 @@ class RouteMapViewController: UIViewController {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
+        updateCameraAltitude(for: routeController.routeProgress)
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
@@ -152,16 +157,33 @@ class RouteMapViewController: UIViewController {
     
     @IBAction func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
-        
+
         let muted = sender.isSelected
         NavigationSettings.shared.muted = muted
     }
     
-    @IBAction func report(_ sender: Any) {
+    @IBAction func rerouteFeedback() {
+        lastTimeUserRerouted = Date()
+    }
+    
+    @IBAction func feedback(_ sender: Any) {
+        showFeedback()
+        delegate?.mapViewControllerDidOpenFeedback(self)
+    }
+    
+    func showFeedback() {
+        
+        var sections = generalFeedbackSections
+        if let lastTime = lastTimeUserRerouted, abs(lastTime.timeIntervalSinceNow) < RouteControllerNumberOfSecondsForRerouteFeedback {
+            sections = rerouteSections
+        }
+        
         guard let parent = parent else { return }
+    
         
         let controller = FeedbackViewController.loadFromStoryboard()
         controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
+        controller.sections = sections
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
@@ -180,8 +202,9 @@ class RouteMapViewController: UIViewController {
             strongSelf.dismiss(animated: true, completion: nil)
         }
         
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
         parent.present(controller, animated: true, completion: nil)
-        delegate?.mapViewControllerDidOpenFeedback(self)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -236,6 +259,8 @@ class RouteMapViewController: UIViewController {
             mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
+        
+        rerouteFeedback()
     }
     
     func willReroute(notification: NSNotification) {
@@ -262,6 +287,29 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.removeArrow()
         }
+    }
+
+    func updateCameraAltitude(for routeProgress: RouteProgress) {
+        guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
+        
+        let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
+        let defaultAltitude = NavigationMapView.defaultAltitude
+        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
+        
+        
+        let currentStepIsMotorway = currentStep.isMotorway
+        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
+        
+        if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
+            setCamera(altitude: zoomOutAltitude)
+        } else {
+            setCamera(altitude: defaultAltitude)
+        }
+    }
+    
+    private func setCamera(altitude: Double) {
+        guard mapView.altitude != altitude else { return }
+        mapView.altitude = altitude
     }
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
@@ -298,7 +346,6 @@ class RouteMapViewController: UIViewController {
         guard step == controller.step else { return }
         
         controller.notifyDidChange(routeProgress: routeProgress, secondsRemaining: secondsRemaining)
-        controller.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -537,6 +584,10 @@ extension RouteMapViewController: MGLMapViewDelegate {
         map.showRoute(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         
+        if routeController.routeProgress.currentLegProgress.stepIndex + 1 <= routeController.routeProgress.currentLegProgress.leg.steps.count {
+            map.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        }
+        
         if routeController.showDebugSpokenInstructionsOnMap {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
@@ -549,10 +600,8 @@ extension RouteMapViewController: RoutePageViewControllerDelegate {
     internal func routePageViewController(_ controller: RoutePageViewController, willTransitionTo maneuverViewController: RouteManeuverViewController, didSwipe: Bool) {
         let step = maneuverViewController.step!
 
-        maneuverViewController.turnArrowView.step = step
+        maneuverViewController.step = step
         maneuverViewController.distance = step.distance > 0 ? step.distance : nil
-        maneuverViewController.roadCode = step.codes?.first ?? step.destinationCodes?.first ?? step.destinations?.first
-        maneuverViewController.updateStreetNameForStep()
         
         updateLaneViews(step: step, durationRemaining: 0)
 
