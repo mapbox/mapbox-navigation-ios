@@ -1,5 +1,4 @@
 import UIKit
-import Pulley
 import MapboxCoreNavigation
 import MapboxDirections
 
@@ -135,28 +134,5 @@ extension RouteTableViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         return cell
-    }
-}
-
-extension RouteTableViewController: PulleyDrawerViewControllerDelegate {
-    
-    /**
-     Returns an array of `PulleyPosition`. The array contains the view positions the bottom bar supports.
-     */
-    public func supportedDrawerPositions() -> [PulleyPosition] {
-        return [
-            .collapsed,
-            .partiallyRevealed,
-            .open,
-            .closed
-        ]
-    }
-    
-    func collapsedDrawerHeight() -> CGFloat {
-        return headerView.intrinsicContentSize.height
-    }
-    
-    func partialRevealDrawerHeight() -> CGFloat {
-        return UIScreen.main.bounds.height * 0.60
     }
 }

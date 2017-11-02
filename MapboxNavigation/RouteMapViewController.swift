@@ -1,5 +1,4 @@
 import UIKit
-import Pulley
 import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
@@ -373,13 +372,7 @@ class RouteMapViewController: UIViewController {
     }
     
     var contentInsets: UIEdgeInsets {
-        guard let tableViewController = routeTableViewController else { return .zero }
-        guard let drawer = parent as? NavigationViewController else { return .zero }
-        
-        return UIEdgeInsets(top: routePageViewController.view.bounds.height,
-                            left: 0,
-                            bottom: drawer.drawerPosition == .partiallyRevealed ? tableViewController.partialRevealDrawerHeight() : tableViewController.collapsedDrawerHeight(),
-                            right: 0)
+        return UIEdgeInsets(top: routePageViewController.view.bounds.height, left: 0, bottom: 80, right: 0)
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
@@ -408,14 +401,6 @@ class RouteMapViewController: UIViewController {
         UIView.defaultAnimation(0.3, animations: {
             self.laneViewsContainerView.isHidden = true
         }, completion: nil)
-    }
-}
-
-// MARK: PulleyPrimaryContentControllerDelegate
-
-extension RouteMapViewController: PulleyPrimaryContentControllerDelegate {
-    func drawerPositionDidChange(drawer: PulleyViewController) {
-        mapView.setContentInset(contentInsets, animated: true)
     }
 }
 
