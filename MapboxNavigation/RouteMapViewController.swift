@@ -22,6 +22,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
+    @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
@@ -84,6 +85,7 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.courseTrackingDelegate = self
         
+        rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
         rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
@@ -263,6 +265,10 @@ class RouteMapViewController: UIViewController {
     func didReroute(notification: NSNotification) {
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
+                self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 10)
+            })
         }
         
         if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
@@ -270,8 +276,6 @@ class RouteMapViewController: UIViewController {
             statusView.show(title, showSpinner: true)
             statusView.hide(delay: 5, animated: true)
         }
-        
-        rerouteReportButton.show(for: 10)
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
