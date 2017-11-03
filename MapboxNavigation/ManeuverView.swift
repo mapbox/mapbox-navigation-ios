@@ -68,13 +68,13 @@ public class ManeuverView: UIView {
         switch type {
         case .merge:
             ManeuversStyleKit.drawMerge(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
-            flip = ![.right, .slightRight, .sharpRight].contains(direction)
+            flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeOffRamp:
             ManeuversStyleKit.drawOfframp(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
-            flip = ![.right, .slightRight, .sharpRight].contains(direction)
+            flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .reachFork:
             ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
-            flip = ![.right, .slightRight, .sharpRight].contains(direction)
+            flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
             switch direction {
             case .straightAhead:
