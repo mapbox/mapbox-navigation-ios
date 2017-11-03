@@ -181,14 +181,11 @@ open class DistanceLabel: StylableLabel {
             return
         }
 
-        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor,
-                                              NSFontAttributeName: valueFont]
+        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor, NSFontAttributeName: valueFont]
+        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor, NSFontAttributeName: unitFont]
 
-        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor,
-                                             NSFontAttributeName: unitFont]
-
-        let valueSubstring = distanceString.substring(with: valueRange)
-        let unitSubstring = distanceString.substring(with: unitRange)
+        let valueSubstring = distanceString.substring(with: valueRange).trimmingCharacters(in: .whitespaces)
+        let unitSubstring = distanceString.substring(with: unitRange).trimmingCharacters(in: .whitespaces)
         let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
         let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
 
@@ -196,6 +193,7 @@ open class DistanceLabel: StylableLabel {
         let attributedString = NSMutableAttributedString()
 
         attributedString.append(startsWithUnit ? unitAttributedString : valueAttributedString)
+        attributedString.append(NSAttributedString(string: "\u{200A}", attributes: unitAttributes))
         attributedString.append(startsWithUnit ? valueAttributedString : unitAttributedString)
 
         attributedText = attributedString
