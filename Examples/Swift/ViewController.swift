@@ -14,7 +14,7 @@ enum ExampleMode {
     case multipleWaypoints
 }
 
-class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, NavigationMapViewDelegate {
     
     var waypoints: [Waypoint] = []
     var currentRoute: Route? {
@@ -52,6 +52,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         automaticallyAdjustsScrollViewInsets = false
         mapView.delegate = self
+        mapView.navigationMapDelegate = self
 
         mapView.userTrackingMode = .follow
 
@@ -240,8 +241,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         return false
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route]) {
-        print(routeIndex)
+    func navigationMapView(_ mapView: NavigationMapView, didTap route: Route) {
+        currentRoute = route
     }
 }
 

@@ -446,6 +446,7 @@ open class NavigationMapView: MGLMapView {
             let closestPoint = self.convert(closestCoordinate.coordinate, toPointTo: self)
             let tapDistanceFromClosestRoute = closestPoint.distance(to: tapPoint)
             if tapDistanceFromClosestRoute <= 50 {
+                navigationMapDelegate?.navigationMapView?(self, didTap: closestRoute)
                 self.showRoutes(routes, activeRouteIndex: routeIndex)
             }
         }
@@ -939,7 +940,7 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route])
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap route: Route)
     
     @objc(navigationMapView:shapeDescribingRoute:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?

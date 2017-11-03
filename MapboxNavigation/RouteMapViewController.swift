@@ -456,8 +456,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         return delegate?.navigationMapView(mapView, shapeDescribing: route)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route]) {
-        return (delegate?.navigationMapView(mapView, didTap: routeIndex, routes: routes))!
+    func navigationMapView(_ mapView: NavigationMapView, didTap: Route) {
+        return (delegate?.navigationMapView(mapView, didTap: route))!
     }
 
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
@@ -667,7 +667,7 @@ protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, didTap routeIndex: Int, routes: [Route])
+    func navigationMapView(_ mapView: NavigationMapView, didTap route: Route)
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
