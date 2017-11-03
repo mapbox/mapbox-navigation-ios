@@ -77,6 +77,18 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/navigation-guidance-day-v2"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-iR-MZm" customClass="MBReportButton">
+                                <rect key="frame" x="115" y="194.5" width="145" height="38"/>
+                                <color key="backgroundColor" red="0.14901960784313725" green="0.23921568627450979" blue="0.3411764705882353" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                <state key="normal" title="Report Problem">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="rerouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="yRc-0Z-7Pz"/>
+                                </connections>
+                            </button>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
                                 <rect key="frame" x="134" y="204.5" width="106.5" height="29"/>
                                 <subviews>
@@ -184,8 +196,8 @@
                                     <action selector="recenter:" destination="3z2-H5-unA" eventType="touchUpInside" id="nKF-cz-PBl"/>
                                 </connections>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq">
-                                <rect key="frame" x="10" y="195" width="50" height="108"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
+                                <rect key="frame" x="315" y="195" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -240,8 +252,10 @@
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="20" id="4oP-yz-9W5"/>
+                            <constraint firstItem="I8f-iR-MZm" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="7KD-9u-9mi" userLabel="Reroute Slide Constraint"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="81D-S0-3wU"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
+                            <constraint firstItem="I8f-iR-MZm" firstAttribute="centerX" secondItem="Gvo-VD-DXF" secondAttribute="centerX" id="Eov-eD-C9L"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="HsP-If-DXW"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
                             <constraint firstItem="fVn-1d-beh" firstAttribute="top" secondItem="SKK-r5-nj0" secondAttribute="bottom" constant="92" id="KT2-TO-Mr4"/>
@@ -254,10 +268,10 @@
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="azG-Bi-6NR"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="bottom" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="djD-Ab-lfr"/>
+                            <constraint firstAttribute="trailing" secondItem="8P3-NB-IRq" secondAttribute="trailing" constant="10" id="fmF-D9-ZJO"/>
                             <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gfU-Wb-qye"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
-                            <constraint firstItem="8P3-NB-IRq" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="kcQ-AN-lKG"/>
                             <constraint firstItem="SKK-r5-nj0" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" constant="10" id="pN3-Uj-cPZ"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="pfx-SS-Xux"/>
                             <constraint firstItem="76S-HP-bfy" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="top" id="uLe-Ov-1yA"/>
@@ -272,6 +286,8 @@
                         <outlet property="overviewButton" destination="Dry-gO-T7u" id="8s7-hO-rHP"/>
                         <outlet property="recenterButton" destination="SKK-r5-nj0" id="HRr-Uz-7Hk"/>
                         <outlet property="reportButton" destination="EeE-dV-610" id="C8S-JP-WAr"/>
+                        <outlet property="rerouteFeedbackTopConstraint" destination="7KD-9u-9mi" id="RTw-6U-QuS"/>
+                        <outlet property="rerouteReportButton" destination="I8f-iR-MZm" id="pZV-kq-FBI"/>
                         <outlet property="statusView" destination="Jym-DH-tdD" id="9Hw-jY-J4n"/>
                         <outlet property="wayNameLabel" destination="bcm-ca-nGv" id="8Sy-Pk-fQZ"/>
                         <outlet property="wayNameView" destination="drb-do-FoT" id="oby-w9-mC3"/>

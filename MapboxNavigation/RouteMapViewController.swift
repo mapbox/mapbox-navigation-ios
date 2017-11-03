@@ -14,6 +14,7 @@ class RouteMapViewController: UIViewController {
 
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
+    @IBOutlet weak var rerouteReportButton: ReportButton!
     @IBOutlet weak var recenterButton: ResumeButton!
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
@@ -21,6 +22,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
+    @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     
     var routePageViewController: RoutePageViewController!
     var routeTableViewController: RouteTableViewController?
@@ -28,10 +30,6 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
-    
-    var lastTimeUserRerouted: Date?
-    let rerouteSections: [FeedbackSection] = [[.confusingInstructions, .turnNotAllowed, .reportTraffic]]
-    let generalFeedbackSections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -87,6 +85,8 @@ class RouteMapViewController: UIViewController {
         mapView.navigationMapDelegate = self
         mapView.courseTrackingDelegate = self
         
+        rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
+        rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
@@ -162,8 +162,9 @@ class RouteMapViewController: UIViewController {
         NavigationSettings.shared.muted = muted
     }
     
-    @IBAction func rerouteFeedback() {
-        lastTimeUserRerouted = Date()
+    @IBAction func rerouteFeedback(_ sender: Any) {
+        showFeedback(source: .reroute)
+        delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
     @IBAction func feedback(_ sender: Any) {
@@ -171,25 +172,19 @@ class RouteMapViewController: UIViewController {
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
-    func showFeedback() {
-        
-        var sections = generalFeedbackSections
-        if let lastTime = lastTimeUserRerouted, abs(lastTime.timeIntervalSinceNow) < RouteControllerNumberOfSecondsForRerouteFeedback {
-            sections = rerouteSections
-        }
-        
+    func showFeedback(source: FeedbackSource = .user) {
         guard let parent = parent else { return }
     
-        
         let controller = FeedbackViewController.loadFromStoryboard()
         controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
+        let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
         controller.sections = sections
         let feedbackId = routeController.recordFeedback()
         
         controller.sendFeedbackHandler = { [weak self] (item) in
             guard let strongSelf = self else { return }
             strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, description: nil, audio: item.audio)
+            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, source: source, description: nil, audio: item.audio)
             strongSelf.dismiss(animated: true) {
                 DialogViewController.present(on: parent)
             }
@@ -259,8 +254,6 @@ class RouteMapViewController: UIViewController {
             mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
-        
-        rerouteFeedback()
     }
     
     func willReroute(notification: NSNotification) {
@@ -272,6 +265,10 @@ class RouteMapViewController: UIViewController {
     func didReroute(notification: NSNotification) {
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
+                self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 10)
+            })
         }
         
         if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {

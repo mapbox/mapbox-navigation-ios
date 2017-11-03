@@ -381,9 +381,10 @@ class CoreFeedbackEvent: Hashable {
 }
 
 class FeedbackEvent: CoreFeedbackEvent {
-    func update(type: FeedbackType, description: String?, audio: Data?) {
+    func update(type: FeedbackType, source: FeedbackSource, description: String?, audio: Data?) {
         eventDictionary["feedbackType"] = type.description
-        eventDictionary["description"] = description        
+        eventDictionary["source"] = source.description
+        eventDictionary["description"] = description
         if let audio = audio {
             eventDictionary["audio"] = audio.base64EncodedString()
         }
