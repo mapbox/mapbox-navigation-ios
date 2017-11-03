@@ -179,7 +179,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
                 routeController.routeProgress = RouteProgress(route: route)
             }
             mapViewController?.notifyDidReroute(route: route)
-            bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
         }
     }
     
@@ -271,7 +270,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         }
     }
     
-    
     /**
      If true, the map style and UI will automatically be updated given the time of day.
      */
@@ -281,13 +279,13 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     var styleTypeForTimeOfDay: StyleType {
         guard automaticallyAdjustsStyleForTimeOfDay else { return .dayStyle }
-        
+
         guard let location = routeController.location,
             let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
             let sunrise = solar.sunrise, let sunset = solar.sunset else {
                 return .dayStyle
         }
-        
+
         return isNighttime(date: solar.date, sunrise: sunrise, sunset: sunset) ? .nightStyle : .dayStyle
     }
     
@@ -299,10 +297,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
     }
     
-    //var tableViewController: RouteTableViewController?
     var mapViewController: RouteMapViewController?
-    
-    weak var bottomBannerView: BottomBannerView!
     
     let progressBar = ProgressBar()
     let routeStepFormatter = RouteStepFormatter()
@@ -310,8 +305,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    var updateETATimer: Timer?
     
     /**
      Initializes a `NavigationViewController` that provides turn by turn navigation for the given route. A optional `direction` object is needed for  potential rerouting.
@@ -326,10 +319,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
         let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
-//        let tableViewController = storyboard.instantiateViewController(withIdentifier: "RouteTableViewController") as! RouteTableViewController
         
         self.mapViewController = mapViewController
-//        self.tableViewController = tableViewController
         
         super.init(nibName: nil, bundle: nil)
         
@@ -344,16 +335,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         v.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         v.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         v.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        
-        let bottomBannerView = BottomBannerView()
-        view.addSubview(bottomBannerView)
-        bottomBannerView.translatesAutoresizingMaskIntoConstraints = false
-        bottomBannerView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        bottomBannerView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        bottomBannerView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        bottomBannerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
-        bottomBannerView.delegate = self
-        self.bottomBannerView = bottomBannerView
         
         self.directions = directions
         self.route = route
@@ -379,25 +360,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         voiceController?.announcementTimer?.invalidate()
     }
     
-//    override public func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        switch segue.identifier ?? "" {
-//        case "MapViewControllerSegueIdentifier":
-//            if let controller = segue.destination as? RouteMapViewController {
-//                controller.routeController = routeController
-//                mapViewController = controller
-//                controller.delegate = self
-//            }
-//        case "TableViewControllerSegueIdentifier":
-//            if let controller = segue.destination as? RouteTableViewController {
-//                controller.headerView.delegate = self
-//                controller.routeController = routeController
-//                tableViewController = controller
-//            }
-//        default:
-//            break
-//        }
-//    }
-    
     override public func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
@@ -409,7 +371,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
-        resetETATimer()
         
         applyStyle()
         
@@ -423,8 +384,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
-        updateETATimer?.invalidate()
-        updateETATimer = nil
+        
         routeController.suspendLocationUpdates()
     }
     
@@ -441,14 +401,11 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func progressDidChange(notification: NSNotification) {
-        resetETATimer()
-        
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
         let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        bottomBannerView.updateETA(routeProgress: routeProgress)
         
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }
@@ -485,15 +442,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
                 }
             }
         }
-    }
-    
-    func updateETA() {
-        bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
-    }
-    
-    func resetETATimer() {
-        updateETATimer?.invalidate()
-        updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
     
     func forceRefreshAppearanceIfNeeded() {
@@ -617,9 +565,6 @@ extension NavigationViewController: RouteControllerDelegate {
     
     public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
         mapViewController?.notifyDidReroute(route: route)
-        
-        updateETA()
-        
         navigationDelegate?.navigationViewController?(self, didRerouteAlong: route)
     }
     
@@ -656,14 +601,3 @@ extension NavigationViewController: RouteTableViewHeaderViewDelegate {
         }
     }
 }
-
-extension NavigationViewController: BottomBannerViewDelegate {
-    func didCancel() {
-        if navigationDelegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
-            // The receiver should handle dismissal of the NavigationViewController
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
-    }
-}
-

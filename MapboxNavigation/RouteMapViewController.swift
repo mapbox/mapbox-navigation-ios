@@ -20,6 +20,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
+    @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
@@ -29,6 +30,9 @@ class RouteMapViewController: UIViewController {
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
+    var updateETATimer: Timer?
+    
+    var lastTimeUserRerouted: Date?
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -110,6 +114,8 @@ class RouteMapViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        resetETATimer()
+        
         muteButton.isSelected = NavigationSettings.shared.muted
         mapView.compassView.isHidden = true
 
@@ -133,6 +139,12 @@ class RouteMapViewController: UIViewController {
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        updateETATimer?.invalidate()
+        updateETATimer = nil
     }
     
     func resumeNotifications() {
@@ -231,6 +243,8 @@ class RouteMapViewController: UIViewController {
     }
 
     func notifyDidReroute(route: Route) {
+        updateETA()
+        
         if let location = routeController.location { // TODO: Verify this
             updateInstructions(routeProgress: routeController.routeProgress, location: location, secondsRemaining: 0)
         }
@@ -320,6 +334,10 @@ class RouteMapViewController: UIViewController {
     }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
+        resetETATimer()
+        
+        updateETA()
+        
         let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
         
         if let upComingStep = routeProgress.currentLegProgress?.upComingStep, !routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
@@ -548,6 +566,15 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         } else {
             wayNameView.isHidden = true
         }
+    }
+    
+    func updateETA() {
+        bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
+    }
+    
+    func resetETATimer() {
+        updateETATimer?.invalidate()
+        updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
 }
 
