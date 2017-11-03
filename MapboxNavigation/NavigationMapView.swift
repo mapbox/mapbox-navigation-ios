@@ -399,12 +399,15 @@ open class NavigationMapView: MGLMapView {
                 }
             }
         }
-        guard routes.count > 1 else { return }
+        guard routes.count > 1 else {
+            removeAlternates()
+            return
+        }
+        
+        self.routes = routes
         var tmpRoutes = routes
         tmpRoutes.remove(at: activeRouteIndex)
         guard let alternateRoute = tmpRoutes.first else { return }
-        
-        self.routes = routes
         
         let alternatePolyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
         
@@ -472,6 +475,13 @@ open class NavigationMapView: MGLMapView {
         
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
+        }
+        removeAlternates()
+    }
+    
+    func removeAlternates() {
+        guard let style = style else {
+            return
         }
         
         if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
