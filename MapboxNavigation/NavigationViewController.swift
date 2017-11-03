@@ -548,7 +548,7 @@ public class NavigationViewController: NavigationPulleyViewController, RouteMapV
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didTap route: Route) {
-        return (navigationDelegate?.navigationMapView!(mapView, didTap: route))!
+        navigationDelegate?.navigationMapView?(mapView, didTap: route)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {

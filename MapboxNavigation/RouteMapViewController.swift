@@ -457,7 +457,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didTap: Route) {
-        return (delegate?.navigationMapView(mapView, didTap: route))!
+        delegate?.navigationMapView(mapView, didTap: route)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
