@@ -60,7 +60,6 @@ open class NavigationMapView: MGLMapView {
     let instructionCircle = "instructionCircle"
     let alternateSourceIdentifier = "alternateSource"
     let alternateLayerIdentifier = "alternateLayer"
-    let routeIndexAttribute = "routeIndex"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -363,8 +362,6 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
-    var activeRouteIndex = 0
-    
     var routes: [Route]?
     
     /**
@@ -411,9 +408,7 @@ open class NavigationMapView: MGLMapView {
         
         self.routes = routes
         
-        let polyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
-        polyline.attributes[routeIndexAttribute] = routes.index(of: alternateRoute)
-        let alternatePolyline = MGLShapeCollectionFeature(shapes: [polyline])
+        let alternatePolyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
         
         if let source = style.source(withIdentifier: alternateSourceIdentifier) as? MGLShapeSource {
             source.shape = alternatePolyline
@@ -432,13 +427,26 @@ open class NavigationMapView: MGLMapView {
     /**
      Fired when the user taps a route. If there is an alternate route, and an alternate route is tapped, it is selected.
      */
-    public func didTapRoute(tap: UITapGestureRecognizer) {
-        let features = self.visibleFeatures(at: tap.location(in: self), styleLayerIdentifiers: Set([alternateLayerIdentifier]))
-        for feature in features {
-            if let routeIndex = feature.attribute(forKey: routeIndexAttribute) as? Int, let routes = routes {
+    func didTapRoute(tap: UITapGestureRecognizer) {
+        guard let routes = routes else { return }
+        
+        let tapPoint = tap.location(in: self)
+        let tapCoordinate = self.convert(tapPoint, toCoordinateFrom: tap.view)
+        
+        let closestRoute = routes.filter {
+            guard let coords = $0.coordinates else { return false }
+            return coords.count > 1
+        }.min { (left, right) -> Bool in
+            let leftDistance = Polyline(left.coordinates!).closestCoordinate(to: tapCoordinate)!.distance
+            let rightDistance = Polyline(right.coordinates!).closestCoordinate(to: tapCoordinate)!.distance
+            return leftDistance < rightDistance
+        }
+        
+        if let closestRoute = closestRoute, let closestCoordinate = Polyline(closestRoute.coordinates!).closestCoordinate(to: tapCoordinate), let routeIndex = routes.index(where: { $0 ==  closestRoute}) {
+            let closestPoint = self.convert(closestCoordinate.coordinate, toPointTo: self)
+            let tapDistanceFromClosestRoute = closestPoint.distance(to: tapPoint)
+            if tapDistanceFromClosestRoute <= 50 {
                 self.showRoutes(routes, activeRouteIndex: routeIndex)
-                navigationMapDelegate?.navigationMapView?(self, didTap: routeIndex, routes: routes)
-                return
             }
         }
     }
