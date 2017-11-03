@@ -80,3 +80,21 @@ public enum FeedbackType: Int, CustomStringConvertible {
         }
     }
 }
+
+@objc(MBFeedbackSource)
+public enum FeedbackSource: Int, CustomStringConvertible {
+    case user
+    case reroute
+    case unknown
+    
+    public var description: String {
+        switch self {
+        case .user:
+            return "user"
+        case .reroute:
+            return "reroute"
+        case .unknown:
+            return "unknown"
+        }
+    }
+}
