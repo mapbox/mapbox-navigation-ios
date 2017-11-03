@@ -374,8 +374,6 @@ open class NavigationMapView: MGLMapView {
         
         let activeRoute = routes[activeRouteIndex]
         
-        showWaypoints(activeRoute, legIndex: legIndex)
-        
         let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
         let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
         

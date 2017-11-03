@@ -20,6 +20,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     var currentRoute: Route? {
         didSet {
             self.startButton.isEnabled = currentRoute != nil
+            mapView.showWaypoints(currentRoute!)
         }
     }
     
@@ -159,7 +160,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
                 return
             }
             guard let routes = routes else { return }
-            
             self?.currentRoute = routes.first
             
             // Open method for adding and updating the route line
