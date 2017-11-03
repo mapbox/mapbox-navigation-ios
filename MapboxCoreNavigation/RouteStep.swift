@@ -40,6 +40,13 @@ extension RouteStep {
     }
     
     /**
+     Returns the last instruction for a given step.
+     */
+    open var lastInstruction: SpokenInstruction? {
+        return instructionsSpokenAlongStep?.last
+    }
+    
+    /**
      Returns a string describing the step’s road by its name, route number, or both, depending on the kind of road.
      
      - parameter markedUpWithSSML: True to wrap the name and route number in SSML tags that cause them to be read as addresses.
