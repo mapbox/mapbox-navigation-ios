@@ -75,6 +75,7 @@ open class NavigationMapView: MGLMapView {
     dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
     dynamic public var trafficSevereColor: UIColor = .trafficSevere
     dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
+    dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
@@ -649,7 +650,7 @@ open class NavigationMapView: MGLMapView {
                                              cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.85),
                                              options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
-        lineCasing.lineColor = MGLStyleValue(rawValue: .gray)
+        lineCasing.lineColor = MGLStyleValue(rawValue: routeAlternateColor)
         lineCasing.lineCap = MGLStyleValue(rawValue: NSValue(mglLineCap: .round))
         lineCasing.lineJoin = MGLStyleValue(rawValue: NSValue(mglLineJoin: .round))
         lineCasing.lineOpacity = MGLStyleValue(rawValue: 0.9)

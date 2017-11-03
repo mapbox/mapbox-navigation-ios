@@ -4,6 +4,7 @@ import Mapbox
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
     class var defaultRouteLayer: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
+    class var defaultAlternateLine: UIColor { get { return .gray } }
     class var defaultArrowStroke: UIColor { get { return .defaultTint } }
     
     class var defaultTurnArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
@@ -134,6 +135,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficModerateColor     = .trafficModerate
         NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy
         NavigationMapView.appearance().trafficSevereColor       = .trafficSevere
+        NavigationMapView.appearance().routeAlternateColor      = .defaultAlternateLine
         
         ResumeButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         ResumeButton.appearance().tintColor = .defaultPrimaryText
@@ -200,5 +202,7 @@ open class NightStyle: DayStyle {
         ResumeButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
         CancelButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+        
+        NavigationMapView.appearance().routeAlternateColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
     }
 }
