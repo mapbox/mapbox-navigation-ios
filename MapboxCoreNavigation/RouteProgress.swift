@@ -397,6 +397,7 @@ open class RouteStepProgress: NSObject {
      */
     public var currentSpokenInstruction: SpokenInstruction? {
         guard let instructionsSpokenAlongStep = step.instructionsSpokenAlongStep else { return nil }
+        guard spokenInstructionIndex < instructionsSpokenAlongStep else { return nil }
         return instructionsSpokenAlongStep[spokenInstructionIndex]
     }
 }
