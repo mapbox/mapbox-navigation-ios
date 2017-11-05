@@ -88,8 +88,8 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
     func enableAudioRecording() {
         abortAutodismiss()
         recordingSession = AVAudioSession.sharedInstance()
-        recordingSession?.requestRecordPermission() { [unowned self] allowed in
-            self.enableAutoDismiss()
+        recordingSession?.requestRecordPermission() { [weak self] allowed in
+            self?.enableAutoDismiss()
         }
     }
     
