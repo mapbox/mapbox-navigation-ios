@@ -21,6 +21,10 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 - Automatic rerouting
 - Snap to route
 
+## Requirements:
+* >= Xcode 9
+* Swift 3 or 4
+
 ## Installation
 
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
