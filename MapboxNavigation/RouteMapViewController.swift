@@ -103,6 +103,7 @@ class RouteMapViewController: UIViewController {
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
         isInOverviewMode = false
+        bottomBannerView.delegate = self
         
         resumeNotifications()
     }
@@ -614,6 +615,14 @@ extension RouteMapViewController: MGLMapViewDelegate {
     }
 }
 
+// MARK: BottomBannerViewDelegate
+
+extension RouteMapViewController: BottomBannerViewDelegate {
+    func didCancel() {
+        delegate?.mapViewControllerDidCancelNavigation(self)
+    }
+}
+
 protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
@@ -628,6 +637,7 @@ protocol RouteMapViewControllerDelegate: class {
     
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
+    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?

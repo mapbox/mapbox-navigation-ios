@@ -8,7 +8,7 @@ protocol BottomBannerViewDelegate: class {
 
 @IBDesignable
 @objc(MBBottomBannerView)
-class BottomBannerView: UIView {
+open class BottomBannerView: UIView {
     
     weak var timeRemainingLabel: TimeRemainingLabel!
     weak var distanceRemainingLabel: DistanceRemainingLabel!
@@ -46,7 +46,7 @@ class BottomBannerView: UIView {
         commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -67,7 +67,7 @@ class BottomBannerView: UIView {
         delegate?.didCancel()
     }
     
-    override func prepareForInterfaceBuilder() {
+    override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         separatorView.backgroundColor = .red
         timeRemainingLabel.text = "22 min"
