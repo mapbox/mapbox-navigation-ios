@@ -167,6 +167,7 @@ open class NightStyle: DayStyle {
         ManeuverView.appearance().backgroundColor = backgroundColor
         InstructionsBannerContainerView.appearance().backgroundColor = backgroundColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
+        StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.05205290616, green: 0.07546465523, blue: 0.1024953017, alpha: 1)
         ReportButton.appearance().backgroundColor = backgroundColor
         ReportButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         

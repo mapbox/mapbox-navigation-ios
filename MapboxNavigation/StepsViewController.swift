@@ -2,9 +2,13 @@ import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 
+@objc(MBStepsBackgroundView)
+open class StepsBackgroundView: UIView { }
+
 class StepsViewController: UIViewController {
     
     weak var tableView: UITableView!
+    weak var backgroundView: UIView!
     
     let cellId = "StepTableViewCellId"
     var steps: [RouteStep]!
@@ -21,8 +25,17 @@ class StepsViewController: UIViewController {
     }
     
     func setupViews() {
-        view.backgroundColor = #colorLiteral(red: 0.05205290616, green: 0.07546465523, blue: 0.1024953017, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let backgroundView = StepsBackgroundView()
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backgroundView)
+        self.backgroundView = backgroundView
+        
+        backgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        backgroundView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        backgroundView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.separatorColor = .clear
