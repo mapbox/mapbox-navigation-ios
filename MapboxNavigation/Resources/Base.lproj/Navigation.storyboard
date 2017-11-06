@@ -20,12 +20,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="leading" secondItem="Iky-lQ-CjC" secondAttribute="leading" id="5VD-kA-GJ7"/>
-                            <constraint firstAttribute="height" secondAttribute="height" id="CxQ-dO-pwW"/>
-                            <constraint firstAttribute="top" secondItem="Iky-lQ-CjC" secondAttribute="top" id="kpz-ob-zyg"/>
-                            <constraint firstAttribute="leading" secondItem="Iky-lQ-CjC" secondAttribute="leading" id="lva-Nu-RGk"/>
+                            <constraint firstAttribute="leading" secondItem="p8Y-fK-F6C" secondAttribute="leading" id="5VD-kA-GJ7"/>
+                            <constraint firstAttribute="top" secondItem="p8Y-fK-F6C" secondAttribute="top" id="kpz-ob-zyg"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="Iky-lQ-CjC"/>
+                        <viewLayoutGuide key="safeArea" id="ufK-cZ-zaZ"/>
                     </view>
                     <size key="freeformSize" width="375" height="500"/>
                 </viewController>
@@ -502,7 +500,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tgj-dm-1KN">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -610,7 +608,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pt1-9i-cSt">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
