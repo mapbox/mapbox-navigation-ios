@@ -22,7 +22,7 @@ class StepsViewController: UIViewController {
     }
     
     func setupViews() {
-        view.backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0.05205290616, green: 0.07546465523, blue: 0.1024953017, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
