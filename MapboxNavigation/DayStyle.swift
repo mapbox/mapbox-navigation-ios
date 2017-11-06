@@ -89,6 +89,8 @@ open class DayStyle: Style {
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerContainerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
+        StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         
         DistanceLabel.appearance().valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         DistanceLabel.appearance().valueFont = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium).adjustedFont
@@ -106,8 +108,6 @@ open class DayStyle: Style {
         
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
         ArrivalTimeLabel.appearance().textColor = .defaultPrimaryText
-        
-        StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         
         // Table view (Drawer)
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -181,6 +181,7 @@ open class NightStyle: DayStyle {
         TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         
         CellTurnArrowView.appearance().primaryColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
