@@ -74,6 +74,20 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         verifyView(controller.instructionsBannerView, size: .iPhone5)
     }
     
+    func testPrimaryShieldAndSecondary() {
+        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
+        XCTAssert(controller.view != nil)
+        styleInstructionsView(controller.instructionsBannerView)
+        
+        controller.instructionsBannerView.maneuverView.isStart = true
+        controller.distance = 482
+        
+        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280")]),
+                                              secondaryInstruction: Instruction([Instruction.Component("Mountain View Test")]))
+        
+        verifyView(controller.instructionsBannerView, size: .iPhone5)
+    }
+    
 }
 
 extension InstructionsBannerViewTests {

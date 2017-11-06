@@ -36,9 +36,8 @@ extension InstructionsBannerView {
         
         let secondaryLabel = SecondaryLabel()
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
-        secondaryLabel.adjustsFontSizeToFitWidth = true
         secondaryLabel.allowsDefaultTighteningForTruncation = true
-        secondaryLabel.numberOfLines = 2
+        secondaryLabel.numberOfLines = 1
         secondaryLabel.minimumScaleFactor = 20.0 / 26.0
         secondaryLabel.lineBreakMode = .byTruncatingTail
         addSubview(secondaryLabel)
