@@ -418,7 +418,7 @@ open class NavigationMapView: MGLMapView {
             let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
             style.addSource(alternateSource)
             
-            let alternateLayer = routeAlternateStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
+            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
             
             if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
                 style.insertLayer(alternateLayer, below: layer)
@@ -641,7 +641,7 @@ open class NavigationMapView: MGLMapView {
         return MGLShapeCollectionFeature(shapes: features)
     }
     
-    func routeAlternateStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+    func alternateRouteStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
