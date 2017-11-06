@@ -24,8 +24,6 @@
 		351BEBF21E5BCC63006FE110 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* Style.swift */; };
 		351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */; };
 		351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */; };
-		351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */; };
-		351BEBFB1E5BCC63006FE110 /* RouteTableViewHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */; };
 		351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */; };
 		351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBED1E5BCC63006FE110 /* ManeuversStyleKit.swift */; };
 		351BEC011E5BCC63006FE110 /* ManeuverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEF1E5BCC63006FE110 /* ManeuverView.swift */; };
@@ -334,8 +332,6 @@
 		351BEBE01E5BCC63006FE110 /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteMapViewController.swift; sourceTree = "<group>"; };
 		351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
-		351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewController.swift; sourceTree = "<group>"; };
-		351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewHeaderView.swift; sourceTree = "<group>"; };
 		351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		351BEBED1E5BCC63006FE110 /* ManeuversStyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManeuversStyleKit.swift; sourceTree = "<group>"; };
 		351BEBEF1E5BCC63006FE110 /* ManeuverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManeuverView.swift; sourceTree = "<group>"; };
@@ -858,8 +854,6 @@
 			isa = PBXGroup;
 			children = (
 				351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */,
-				351BEBE81E5BCC63006FE110 /* RouteTableViewController.swift */,
-				351BEBE91E5BCC63006FE110 /* RouteTableViewHeaderView.swift */,
 			);
 			name = RouteTableView;
 			sourceTree = "<group>";
@@ -1477,7 +1471,6 @@
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
 				35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */,
 				C588C3C21F33882100520EF2 /* String.swift in Sources */,
-				351BEBFB1E5BCC63006FE110 /* RouteTableViewHeaderView.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
 				359095E31FA21FAE00EFD5DD /* URL.swift in Sources */,
@@ -1487,7 +1480,6 @@
 				C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* ManeuverView.swift in Sources */,
 				35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */,
-				351BEBFA1E5BCC63006FE110 /* RouteTableViewController.swift in Sources */,
 				3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
 				359A8AEF1FA7B25B00BDB486 /* LanesStyleKit.swift in Sources */,
