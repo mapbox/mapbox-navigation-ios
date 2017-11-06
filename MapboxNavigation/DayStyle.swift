@@ -97,10 +97,10 @@ open class DayStyle: Style {
         DestinationLabel.appearance().font = UIFont.systemFont(ofSize: 32, weight: UIFontWeightMedium).adjustedFont
         DestinationLabel.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        PrimaryLabel.appearance().font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium).adjustedFont
+        PrimaryLabel.appearance().normalFont = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium).adjustedFont
         PrimaryLabel.appearance().normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        SecondaryLabel.appearance().font = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium).adjustedFont
+        SecondaryLabel.appearance().normalFont = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium).adjustedFont
         SecondaryLabel.appearance().normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
         
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont

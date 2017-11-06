@@ -175,9 +175,16 @@ public class ResumeButton: UIControl {
 /// :nodoc:
 @objc(MBStylableLabel)
 open class StylableLabel : UILabel {
+    // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
     dynamic open var normalTextColor: UIColor = .black {
         didSet {
             textColor = normalTextColor
+        }
+    }
+    
+    dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
+        didSet {
+            font = normalFont
         }
     }
 }
