@@ -1373,7 +1373,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/OSRMTextInstructions.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Pulley.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/AWSPolly.framework",
