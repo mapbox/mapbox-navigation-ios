@@ -6,14 +6,13 @@ import MapboxCoreNavigation
 open class InstructionLabel: StylableLabel {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
+    var shieldHeight: CGFloat = 30
     
     var instruction: Instruction? {
         didSet {
             constructInstructions()
         }
     }
-    
-    var shieldSizeMultiplier: CGFloat = 1.0
     
     func constructInstructions() {
         guard let instruction = instruction else {
@@ -35,7 +34,7 @@ open class InstructionLabel: StylableLabel {
                 } else {
                     // Download shield and display road code in the meantime
                     string.append(NSAttributedString(string: joinChar+roadCode, attributes: attributes))
-                    let height = PrimaryLabel.appearance().font.pointSize * UIScreen.main.scale * shieldSizeMultiplier
+                    let height = shieldHeight * UIScreen.main.scale
                     UIImage.shieldImage(network, number: number, height: height, completion: { [unowned self] (image) in
                         // Reconstruct instructions if we did get a shield image
                         guard image != nil, component.cachedShield != nil else { return }
