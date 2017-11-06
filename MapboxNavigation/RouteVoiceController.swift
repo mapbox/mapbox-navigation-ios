@@ -57,14 +57,19 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
+     Delegate used for getting metadata information about a particular spoken instruction.
+     */
+    public weak var voiceControllerDelegate: VoiceControllerDelegate?
+    
+    /**
      Default initializer for `RouteVoiceController`.
      */
     override public init() {
         super.init()
         
         if !Bundle.main.backgroundModes.contains("audio") {
-            print("Voice guidance may not work properly. " +
-                  "Add audio to the UIBackgroundModes key to your app’s Info.plist file")
+            let errorMessage = "Voice guidance may not work properly. Add audio to the UIBackgroundModes key to your app’s Info.plist file"
+            voiceControllerDelegate?.spokenInstructionsDidFail?(self, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: errorMessage, code: .audioBackgroundModeMissing)) ?? print(errorMessage)
         }
         
         speechSynth.delegate = self
@@ -113,7 +118,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         do {
             try unDuckAudio()
         } catch {
-            print(error)
+            voiceControllerDelegate?.spokenInstructionsDidFail?(self, error: error)
         }
     }
     
@@ -121,7 +126,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         do {
             try unDuckAudio()
         } catch {
-            print(error)
+            voiceControllerDelegate?.spokenInstructionsDidFail?(self, error: error)
         }
     }
     
@@ -181,16 +186,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         return true
     }
     
-    func speak(_ text: String, error: String? = nil) {
+    func speak(_ text: String, error: Error?) {
         // Note why it failed
         if let error = error {
-            print(error)
+            voiceControllerDelegate?.spokenInstructionsDidFail?(self, error: error)
         }
         
         do {
             try duckAudio()
         } catch {
-            print(error)
+            voiceControllerDelegate?.spokenInstructionsDidFail?(self, error: error)
         }
         
         let utterance = AVSpeechUtterance(string: text)
@@ -206,4 +211,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         speechSynth.speak(utterance)
     }
+}
+
+@objc public protocol VoiceControllerDelegate {
+    @objc optional func spokenInstructionsDidFail(_ voiceController: RouteVoiceController, error: Error)
 }

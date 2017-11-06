@@ -29,7 +29,7 @@ public class PollyVoiceController: RouteVoiceController {
     /**
      Number of seconds a Polly request can wait before it is canceled and the default speech synthesizer speaks the instruction.
      */
-    public var timeoutIntervalForRequest:TimeInterval = 2
+    public var timeoutIntervalForRequest:TimeInterval = 5
     
     /**
      Number of steps ahead of the current step to cache spoken instructions.
@@ -69,6 +69,9 @@ public class PollyVoiceController: RouteVoiceController {
         guard let instruction = routeProgresss.currentLegProgress.currentStepProgress.currentSpokenInstruction?.ssmlText else { return }
         
         pollyTask?.cancel()
+        if let audioPlayer = audioPlayer, audioPlayer.isPlaying {
+            voiceControllerDelegate?.spokenInstructionsDidFail?(self, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "Spoken instructions overlapping", code: .overlappingInstruction))
+        }
         audioPlayer?.stop()
         startAnnouncementTimer()
         
@@ -149,7 +152,7 @@ public class PollyVoiceController: RouteVoiceController {
         return input
     }
     
-    override func speak(_ text: String, error: String?) {
+    override func speak(_ text: String, error: Error?) {
         assert(!text.isEmpty)
         
         let input = pollyURL(for: text)
@@ -166,7 +169,7 @@ public class PollyVoiceController: RouteVoiceController {
         }
     }
     
-    func callSuperSpeak(_ text: String, error: String) {
+    func callSuperSpeak(_ text: String, error: Error) {
         pollyTask?.cancel()
         
         guard let audioPlayer = audioPlayer else {
@@ -181,12 +184,12 @@ public class PollyVoiceController: RouteVoiceController {
     
     func handle(_ awsTask: AWSTask<NSURL>) {
         guard awsTask.error == nil else {
-            callSuperSpeak(fallbackText, error: awsTask.error!.localizedDescription)
+            callSuperSpeak(fallbackText, error: awsTask.error!)
             return
         }
         
         guard let url = awsTask.result else {
-            callSuperSpeak(fallbackText, error: "No polly response")
+            callSuperSpeak(fallbackText, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "No AWS Task"))
             return
         }
         
@@ -199,12 +202,12 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             } else if let error = error {
                 // Cannot call super in a closure
-                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
+                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error)
                 return
             }
             
             guard let data = data else {
-                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "No data")
+                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "No data in response", code: .noDataInSpokenInstructionResponse))
                 return
             }
             
@@ -250,7 +253,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let prepared = self.audioPlayer?.prepareToPlay() ?? false
                 
                 guard prepared else {
-                    self.callSuperSpeak(self.fallbackText, error: "Audio player failed to prepare")
+                    self.callSuperSpeak(self.fallbackText, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "Audio player failed to prepare", code: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 
@@ -259,12 +262,12 @@ public class PollyVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    self.callSuperSpeak(self.fallbackText, error: "Audio player failed to play")
+                    self.callSuperSpeak(self.fallbackText, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "Audio player failed to play", code: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 
             } catch  let error as NSError {
-                self.callSuperSpeak(self.fallbackText, error: error.localizedDescription)
+                self.callSuperSpeak(self.fallbackText, error: error)
             }
         }
     }
