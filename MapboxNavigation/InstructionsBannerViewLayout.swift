@@ -42,7 +42,12 @@ extension BaseInstructionsBannerView {
         addSubview(dividerView)
         self.dividerView = dividerView
         
-        let separatorView = UIView()
+        let _separatorView = UIView()
+        _separatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(_separatorView)
+        self._separatorView = _separatorView
+        
+        let separatorView = SeparatorView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(separatorView)
         self.separatorView = separatorView
@@ -82,22 +87,28 @@ extension BaseInstructionsBannerView {
         dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         // Separator view (invisible helper view for visualizing the result of the constraints)
-        separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        _separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        _separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        _separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        _separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        
+        // Visible separator docked to the bottom
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)
     func centerYAlignInstructions() {
-        separatorView.isHidden = false
+        _separatorView.isHidden = false
         baselineConstraints.forEach { $0.isActive = false }
         centerYConstraints.forEach { $0.isActive = true }
     }
     
     // Aligns primary top to the top of the maneuver view and the secondary baseline to the distance baseline (used for multiline)
     func baselineAlignInstructions() {
-        separatorView.isHidden = true
+        _separatorView.isHidden = true
         centerYConstraints.forEach { $0.isActive = false }
         baselineConstraints.forEach { $0.isActive = true }
     }
