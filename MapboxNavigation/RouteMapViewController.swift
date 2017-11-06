@@ -103,6 +103,7 @@ class RouteMapViewController: UIViewController {
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
         isInOverviewMode = false
+        instructionsBannerView.delegate = self
         bottomBannerView.delegate = self
         
         resumeNotifications()
@@ -613,6 +614,23 @@ extension RouteMapViewController: MGLMapViewDelegate {
         if routeController.showDebugSpokenInstructionsOnMap {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
+    }
+}
+
+// MARK: InstructionsBannerViewDelegate
+
+extension RouteMapViewController: InstructionsBannerViewDelegate {
+    func didTapInstructionsBanner(_ sender: InstructionsBannerView) {
+        let controller = StepsViewController(steps: routeController.routeProgress.currentLeg.steps)
+        addChildViewController(controller)
+        view.insertSubview(controller.view, belowSubview: instructionsBannerView)
+        
+        controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+        controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
+        controller.didMove(toParentViewController: self)
     }
 }
 

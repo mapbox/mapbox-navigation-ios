@@ -18,6 +18,7 @@
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
 		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
 		351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351174F31EF1C0530065E248 /* ReplayLocationManager.swift */; };
+		3512C7C81FB0A0C100CDD2A3 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */; };
 		351927361F0FA072003A702D /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351927351F0FA072003A702D /* ScreenCapture.swift */; };
 		351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351A40151F0291D100E6D378 /* PollyVoiceController.swift */; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
@@ -52,6 +53,7 @@
 		353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */; };
 		353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E68FD1EF0B985007B2AE5 /* BundleAdditions.swift */; };
 		353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */; };
+		353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353EC9D61FB09708002EB0AB /* StepsViewController.swift */; };
 		3540514D1F73F3BB00ED572D /* route-with-straight-roundabout.json in Resources */ = {isa = PBXBuildFile; fileRef = 3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */; };
 		3540514F1F73F3F300ED572D /* TurnArrowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3540514E1F73F3F300ED572D /* TurnArrowTests.swift */; };
 		354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
@@ -321,6 +323,7 @@
 		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
 		351030101F54B72000E3B7E7 /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
 		351174F31EF1C0530065E248 /* ReplayLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayLocationManager.swift; sourceTree = "<group>"; };
+		3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		35190E911F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		35190E921F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		35190E931F461A32007C1393 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -365,6 +368,7 @@
 		353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManager.swift; sourceTree = "<group>"; };
 		353E68FD1EF0B985007B2AE5 /* BundleAdditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleAdditions.swift; sourceTree = "<group>"; };
 		353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedLocationManager.swift; sourceTree = "<group>"; };
+		353EC9D61FB09708002EB0AB /* StepsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewController.swift; sourceTree = "<group>"; };
 		3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-straight-roundabout.json"; sourceTree = "<group>"; };
 		3540514E1F73F3F300ED572D /* TurnArrowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurnArrowTests.swift; sourceTree = "<group>"; };
 		354A01B81E66256600D765C2 /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
@@ -682,6 +686,7 @@
 				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
 				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
 				35CB1E121F97DD740011CC44 /* FeedbackItem.swift */,
+				353EC9D61FB09708002EB0AB /* StepsViewController.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -827,6 +832,7 @@
 				35FF4B121F9A7463009A71C4 /* UIImage.swift */,
 				359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */,
 				359095E21FA21FAE00EFD5DD /* URL.swift */,
+				3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1471,8 +1477,10 @@
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
 				35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */,
 				C588C3C21F33882100520EF2 /* String.swift in Sources */,
+				3512C7C81FB0A0C100CDD2A3 /* UIViewController.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
+				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				359095E31FA21FAE00EFD5DD /* URL.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesContainerView.swift in Sources */,

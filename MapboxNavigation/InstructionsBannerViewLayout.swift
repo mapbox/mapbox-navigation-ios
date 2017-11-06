@@ -2,13 +2,6 @@ import UIKit
 
 extension InstructionsBannerView {
     
-    func commonInit() {
-        setupViews()
-        setupLayout()
-        centerYAlignInstructions()
-        setupAvailableBounds()
-    }
-    
     func setupViews() {
         backgroundColor = .clear
         
@@ -53,6 +46,8 @@ extension InstructionsBannerView {
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(separatorView)
         self.separatorView = separatorView
+        
+        addTarget(self, action: #selector(InstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
     }
     
     func setupLayout() {
