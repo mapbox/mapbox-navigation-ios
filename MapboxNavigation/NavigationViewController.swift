@@ -342,7 +342,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         mapViewController.delegate = self
         mapViewController.routeController = routeController
         mapViewController.reportButton.isHidden = !showsReportFeedback
-        // TODO: set delegate on bottom banner to receive cancel events
 
         self.currentStyleType = styleTypeForTimeOfDay
         
