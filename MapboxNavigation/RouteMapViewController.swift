@@ -19,7 +19,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
-    @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
+    @IBOutlet weak var instructionsBannerView: BaseInstructionsBannerView!
     @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
@@ -620,7 +620,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
 // MARK: InstructionsBannerViewDelegate
 
 extension RouteMapViewController: InstructionsBannerViewDelegate {
-    func didTapInstructionsBanner(_ sender: InstructionsBannerView) {
+    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         let controller = StepsViewController(steps: routeController.routeProgress.currentLeg.steps)
         addChildViewController(controller)
         view.insertSubview(controller.view, belowSubview: instructionsBannerView)
