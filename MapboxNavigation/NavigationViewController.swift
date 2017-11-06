@@ -541,6 +541,14 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         navigationDelegate?.navigationViewControllerDidCancelFeedback?(self)
     }
     
+    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController) {
+        if navigationDelegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
+            // The receiver should handle dismissal of the NavigationViewController
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType) {
         navigationDelegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
     }
@@ -589,15 +597,5 @@ extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
         let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
         mapViewController?.statusView.show(title, showSpinner: false)
-    }
-}
-
-extension NavigationViewController: RouteTableViewHeaderViewDelegate {
-    func didTapCancel() {
-        if navigationDelegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
-            // The receiver should handle dismissal of the NavigationViewController
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
     }
 }
