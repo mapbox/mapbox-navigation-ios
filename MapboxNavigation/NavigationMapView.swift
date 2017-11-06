@@ -368,12 +368,9 @@ open class NavigationMapView: MGLMapView {
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoutes(_ routes: [Route], activeRouteIndex: Int = 0, legIndex: Int = 0) {
-        guard let style = style else {
-            return
-        }
-        
-        let activeRoute = routes[activeRouteIndex]
+    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
+        guard let style = style else { return }
+        guard let activeRoute = routes.first else { return }
         
         let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
         let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
@@ -407,7 +404,7 @@ open class NavigationMapView: MGLMapView {
         
         self.routes = routes
         var tmpRoutes = routes
-        tmpRoutes.remove(at: activeRouteIndex)
+        tmpRoutes.removeFirst()
         guard let alternateRoute = tmpRoutes.first else { return }
         
         let alternatePolyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
@@ -448,8 +445,11 @@ open class NavigationMapView: MGLMapView {
             let closestPoint = self.convert(closestCoordinate.coordinate, toPointTo: self)
             let tapDistanceFromClosestRoute = closestPoint.distance(to: tapPoint)
             if tapDistanceFromClosestRoute <= 50 {
-                navigationMapDelegate?.navigationMapView?(self, didTap: closestRoute)
-                self.showRoutes(routes, activeRouteIndex: routeIndex)
+                let selectedRoute = routes[routeIndex]
+                self.routes?.remove(at: routeIndex)
+                self.routes?.insert(selectedRoute, at: 0)
+                self.showRoutes(self.routes!)
+                navigationMapDelegate?.navigationMapView?(self, didTap: selectedRoute)
             }
         }
     }
