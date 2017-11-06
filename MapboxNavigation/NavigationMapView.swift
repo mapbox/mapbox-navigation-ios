@@ -106,6 +106,17 @@ open class NavigationMapView: MGLMapView {
         }
     }
     
+    open override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        
+        let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .center
+        imageView.backgroundColor = .gray
+        imageView.frame = bounds
+        addSubview(imageView)
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
