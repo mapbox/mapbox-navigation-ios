@@ -87,6 +87,7 @@ open class DayStyle: Style {
         
         // Maneuver view
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        InstructionsBannerContainerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         DistanceLabel.appearance().valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
@@ -164,6 +165,7 @@ open class NightStyle: DayStyle {
         
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         ManeuverView.appearance().backgroundColor = backgroundColor
+        InstructionsBannerContainerView.appearance().backgroundColor = backgroundColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
         ReportButton.appearance().backgroundColor = backgroundColor
         ReportButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
