@@ -33,13 +33,16 @@ class RoutePageViewController: UIPageViewController {
         updateManeuverViewForStep()
     }
     
-    func updateManeuverViewForStep() {
+    typealias UpdateManeuverViewCompletion = (RouteManeuverViewController) -> Void
+    func updateManeuverViewForStep(completion complete: UpdateManeuverViewCompletion? = nil) {
+        
+        let completion = complete ?? { self.maneuverDelegate.routePageViewController(self, willTransitionTo: $0, didSwipe: false) }
         let step = maneuverDelegate.upComingStep ?? maneuverDelegate.currentStep
         let leg = maneuverDelegate.currentLeg
         let controller = routeManeuverViewController(with: step, leg: leg)!
         setViewControllers([controller], direction: .forward, animated: false, completion: nil)
         currentManeuverPage = controller
-        maneuverDelegate.routePageViewController(self, willTransitionTo: controller, didSwipe: false)
+        completion(controller)
     }
     
     func routeManeuverViewController(with step: RouteStep?, leg: RouteLeg?) -> RouteManeuverViewController? {
