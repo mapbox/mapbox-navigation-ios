@@ -137,7 +137,6 @@ open class StepTableViewCell: UITableViewCell {
     }
     
     func commonInit() {
-        backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         let instructionsView = StepInstructionsView()
         instructionsView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(instructionsView)
