@@ -22,10 +22,13 @@ class StepsViewController: UIViewController {
     }
     
     func setupViews() {
+        view.backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.separatorColor = .clear
+        tableView.backgroundColor = .clear
+        tableView.backgroundView = nil
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
         tableView.dataSource = self
@@ -94,7 +97,8 @@ extension StepsViewController: UITableViewDataSource {
 
 open class StepInstructionsView: BaseInstructionsBannerView { }
 
-class StepTableViewCell: UITableViewCell {
+/// :nodoc:
+open class StepTableViewCell: UITableViewCell {
     
     weak var instructionsView: StepInstructionsView!
     weak var separatorView: SeparatorView!
@@ -115,7 +119,7 @@ class StepTableViewCell: UITableViewCell {
         commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }

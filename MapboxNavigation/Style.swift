@@ -174,7 +174,13 @@ public class ResumeButton: UIControl {
 
 /// :nodoc:
 @objc(MBStylableLabel)
-open class StylableLabel : UILabel { }
+open class StylableLabel : UILabel {
+    dynamic open var normalTextColor: UIColor = .black {
+        didSet {
+            textColor = normalTextColor
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBDistanceLabel)
@@ -238,9 +244,7 @@ open class DistanceLabel: StylableLabel {
 
 /// :nodoc:
 @objc(MBDestinationLabel)
-open class DestinationLabel: StylableLabel {
-
-}
+open class DestinationLabel: StylableLabel { }
 
 /// :nodoc
 @objc(MBPrimaryLabel)

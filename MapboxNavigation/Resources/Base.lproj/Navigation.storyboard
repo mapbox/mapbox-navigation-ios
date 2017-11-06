@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13528" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2bw-kK-8r6">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13526"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,14 +20,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Iky-lQ-CjC" firstAttribute="trailing" secondItem="B8F-ce-HhC" secondAttribute="trailing" id="1I3-wZ-P3A"/>
-                            <constraint firstItem="Iky-lQ-CjC" firstAttribute="bottom" secondItem="XRq-fK-Z45" secondAttribute="bottom" id="1sS-ov-QfF"/>
-                            <constraint firstItem="Iky-lQ-CjC" firstAttribute="trailing" secondItem="XRq-fK-Z45" secondAttribute="trailing" id="4o1-pQ-mlS"/>
-                            <constraint firstItem="B8F-ce-HhC" firstAttribute="leading" secondItem="Iky-lQ-CjC" secondAttribute="leading" id="5VD-kA-GJ7"/>
-                            <constraint firstItem="B8F-ce-HhC" firstAttribute="height" secondItem="XRq-fK-Z45" secondAttribute="height" id="CxQ-dO-pwW"/>
-                            <constraint firstItem="XRq-fK-Z45" firstAttribute="top" secondItem="B8F-ce-HhC" secondAttribute="bottom" id="WK7-IC-dNV"/>
-                            <constraint firstItem="B8F-ce-HhC" firstAttribute="top" secondItem="Iky-lQ-CjC" secondAttribute="top" id="kpz-ob-zyg"/>
-                            <constraint firstItem="XRq-fK-Z45" firstAttribute="leading" secondItem="Iky-lQ-CjC" secondAttribute="leading" id="lva-Nu-RGk"/>
+                            <constraint firstAttribute="leading" secondItem="Iky-lQ-CjC" secondAttribute="leading" id="5VD-kA-GJ7"/>
+                            <constraint firstAttribute="height" secondAttribute="height" id="CxQ-dO-pwW"/>
+                            <constraint firstAttribute="top" secondItem="Iky-lQ-CjC" secondAttribute="top" id="kpz-ob-zyg"/>
+                            <constraint firstAttribute="leading" secondItem="Iky-lQ-CjC" secondAttribute="leading" id="lva-Nu-RGk"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Iky-lQ-CjC"/>
                     </view>
@@ -53,7 +49,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/navigation-guidance-day-v2"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-iR-MZm" customClass="MBReportButton">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-iR-MZm" customClass="MBReportButton">
                                 <rect key="frame" x="115" y="194.5" width="145" height="38"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.23921568627450979" blue="0.3411764705882353" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
@@ -179,7 +175,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
-                                <rect key="frame" x="315" y="195" width="50" height="108"/>
+                                <rect key="frame" x="10" y="195" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -407,7 +403,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -569,7 +565,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lll-SJ-8q4">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
