@@ -25,7 +25,10 @@ class StepsViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
+        tableView.separatorColor = .clear
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.delegate = self
+        tableView.dataSource = self
         view.addSubview(tableView)
         self.tableView = tableView
         
@@ -78,18 +81,65 @@ extension StepsViewController: UITableViewDataSource {
         return steps.count
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 96
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
-        let step = steps[indexPath.row]
-        cell.textLabel?.text = step.instructions
+        cell.step = steps[indexPath.row]
         return cell
     }
 }
 
+open class StepInstructionsView: BaseInstructionsBannerView { }
+
 class StepTableViewCell: UITableViewCell {
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    
+    weak var instructionsView: StepInstructionsView!
+    weak var separatorView: SeparatorView!
+    static let formatter = VisualInstructionFormatter()
+    
+    var step: RouteStep? {
+        didSet {
+            guard let step = step else { return }
+            let instructions = StepTableViewCell.formatter.instructions(leg: nil, step: step)
+            instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+            instructionsView.maneuverView.step = step
+            instructionsView.distance = step.distance
+        }
+    }
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        commonInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    func commonInit() {
+        backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+        let instructionsView = StepInstructionsView()
+        instructionsView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(instructionsView)
+        self.instructionsView = instructionsView
         
+        instructionsView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        instructionsView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        instructionsView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        instructionsView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
+        let separatorView = SeparatorView()
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(separatorView)
+        self.separatorView = separatorView
+        
+        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.leftAnchor.constraint(equalTo: instructionsView.primaryLabel.leftAnchor).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: instructionsView.bottomAnchor).isActive = true
+        separatorView.rightAnchor.constraint(equalTo: rightAnchor, constant: -18).isActive = true
     }
 }

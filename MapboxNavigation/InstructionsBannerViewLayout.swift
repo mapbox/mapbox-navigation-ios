@@ -1,6 +1,6 @@
 import UIKit
 
-extension InstructionsBannerView {
+extension BaseInstructionsBannerView {
     
     func setupViews() {
         backgroundColor = .clear
@@ -47,7 +47,7 @@ extension InstructionsBannerView {
         addSubview(separatorView)
         self.separatorView = separatorView
         
-        addTarget(self, action: #selector(InstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
+        addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
     }
     
     func setupLayout() {

@@ -2,12 +2,14 @@ import UIKit
 import MapboxCoreNavigation
 
 protocol InstructionsBannerViewDelegate: class {
-    func didTapInstructionsBanner(_ sender: InstructionsBannerView)
+    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 @IBDesignable
 @objc(MBInstructionsBannerView)
-open class InstructionsBannerView: UIControl {
+open class InstructionsBannerView: BaseInstructionsBannerView { }
+
+open class BaseInstructionsBannerView: UIControl {
     
     weak var maneuverView: ManeuverView!
     weak var primaryLabel: PrimaryLabel!
