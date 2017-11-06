@@ -12,6 +12,8 @@ extension CGSize {
 
 class InstructionsBannerViewTests: FBSnapshotTestCase {
     
+    let bannerHeight: CGFloat = 96
+    
     var shieldImage: UIImage {
         get {
             let bundle = Bundle(for: MapboxNavigationTests.self)
@@ -26,66 +28,62 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         UIImage.shieldImageCache.setObject(shieldImage, forKey: "I280")
     }
     
-    func storyboard() -> UIStoryboard {
-        return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
+    func instructionsView() -> InstructionsBannerView {
+        return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
     }
     
     func testSinglelinePrimary() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
+        let view = instructionsView()
+        styleInstructionsView(view)
         
-        controller.instructionsBannerView.maneuverView.isStart = true
-        controller.distance = 482
+        view.maneuverView.isStart = true
+        view.distance = 482
         
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("US-45 / Chicago")]),
+        view.set(Instruction([Instruction.Component("US-45 / Chicago")]),
                                               secondaryInstruction: nil)
         
-        verifyView(controller.instructionsBannerView, size: .iPhone5)
+        verifyView(view, size: view.bounds.size)
     }
     
     func testMultilinePrimary() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
+        let view = instructionsView()
+        styleInstructionsView(view)
         
-        controller.instructionsBannerView.maneuverView.isStart = true
-        controller.distance = 482
+        view.maneuverView.isStart = true
+        view.distance = 482
         
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
+        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
                                                            Instruction.Component("US-45 / Chicago / US-45 / Chicago")]),
                                               secondaryInstruction: nil)
         
-        verifyView(controller.instructionsBannerView, size: .iPhone5)
+        verifyView(view, size: view.bounds.size)
     }
     
     func testSinglelinePrimaryAndSecondary() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
+        let view = instructionsView()
+        styleInstructionsView(view)
         
-        controller.instructionsBannerView.maneuverView.isStart = true
-        controller.distance = 482
+        view.maneuverView.isStart = true
+        view.distance = 482
         
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
+        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
                                                            Instruction.Component("South")]),
                                               secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
         
-        verifyView(controller.instructionsBannerView, size: .iPhone5)
+        verifyView(view, size: view.bounds.size)
     }
     
     func testPrimaryShieldAndSecondary() {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteManeuverViewController") as! RouteManeuverViewController
-        XCTAssert(controller.view != nil)
-        styleInstructionsView(controller.instructionsBannerView)
+        let view = instructionsView()
+        styleInstructionsView(view)
         
-        controller.instructionsBannerView.maneuverView.isStart = true
-        controller.distance = 482
+        view.maneuverView.isStart = true
+        view.distance = 482
         
-        controller.instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280")]),
+        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280")]),
                                               secondaryInstruction: Instruction([Instruction.Component("Mountain View Test")]))
         
-        verifyView(controller.instructionsBannerView, size: .iPhone5)
+        verifyView(view, size: view.bounds.size)
     }
     
 }
