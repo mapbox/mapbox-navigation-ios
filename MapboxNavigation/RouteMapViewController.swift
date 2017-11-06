@@ -249,7 +249,7 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         updateETA()
         
-        if let location = routeController.location { // TODO: Verify this
+        if let location = routeController.location {
             updateInstructions(routeProgress: routeController.routeProgress, location: location, secondsRemaining: 0)
         }
         
