@@ -207,11 +207,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     /**
      The receiver’s delegate.
      */
-    public weak var delegate: NavigationViewControllerDelegate? {
-        didSet {
-            mapViewController?.delegate = mapViewController?.delegate
-        }
-    }
+    public weak var delegate: NavigationViewControllerDelegate?
     
     /**
      Provides access to various speech synthesizer options.

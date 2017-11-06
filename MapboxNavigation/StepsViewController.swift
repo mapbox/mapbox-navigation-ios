@@ -5,7 +5,6 @@ import MapboxCoreNavigation
 class StepsViewController: UIViewController {
     
     weak var tableView: UITableView!
-    weak var closeButton: UIButton!
     
     let cellId = "StepTableViewCellId"
     var steps: [RouteStep]!
@@ -35,38 +34,38 @@ class StepsViewController: UIViewController {
         view.addSubview(tableView)
         self.tableView = tableView
         
-        let closeButton = UIButton(type: .custom)
-        closeButton.backgroundColor = .black
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.setTitle("Close", for: .normal)
-        closeButton.addTarget(self, action: #selector(StepsViewController.close(_:)), for: .touchUpInside)
-        view.addSubview(closeButton)
-        self.closeButton = closeButton
-        
-        closeButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        closeButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        closeButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        closeButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: closeButton.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: cellId)
     }
     
-    func present() {
-        // TODO
+    func dropDownAnimation() {
+        var frame = view.frame
+        frame.origin.y -= frame.height
+        view.frame = frame
+        
+        UIView.animate(withDuration: 0.4, delay: 0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
+            var frame = self.view.frame
+            frame.origin.y += frame.height
+            self.view.frame = frame
+        }, completion: nil)
+    }
+    
+    func slideUpAnimation(completion: @escaping () -> ()) {
+        UIView.animate(withDuration: 0.4, delay: 0, options: [.beginFromCurrentState, .curveEaseIn], animations: {
+            var frame = self.view.frame
+            frame.origin.y -= frame.height
+            self.view.frame = frame
+        }) { (completed) in
+            completion()
+        }
     }
     
     func dismiss() {
-        // TODO
-    }
-    
-    @IBAction func close(_ sender: Any) {
         willMove(toParentViewController: nil)
-        // TODO: Dismiss animation
         view.removeFromSuperview()
         removeFromParentViewController()
     }

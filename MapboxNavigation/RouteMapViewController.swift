@@ -18,8 +18,8 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
-    @IBOutlet weak var maneuverContainerView: ManeuverContainerView!
-    @IBOutlet weak var instructionsBannerView: BaseInstructionsBannerView!
+    @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContainerView!
+    @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
@@ -33,6 +33,7 @@ class RouteMapViewController: UIViewController {
     var updateETATimer: Timer?
     
     var lastTimeUserRerouted: Date?
+    var stepsViewController: StepsViewController?
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -91,6 +92,7 @@ class RouteMapViewController: UIViewController {
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         mapView.courseTrackingDelegate = self
+        mapView.contentInset = contentInsets
         
         rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
         rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
@@ -228,7 +230,7 @@ class RouteMapViewController: UIViewController {
     func updateVisibleBounds() {
         guard let userLocation = routeController.locationManager.location?.coordinate else { return }
         
-        let overviewContentInset = UIEdgeInsets(top: 65, left: 20, bottom: 55, right: 20)
+        let overviewContentInset = UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
         let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
@@ -388,7 +390,7 @@ class RouteMapViewController: UIViewController {
     }
     
     var contentInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: maneuverContainerView.bounds.height, left: 0, bottom: 80, right: 0)
+        return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottomBannerView.bounds.height, right: 0)
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
@@ -619,16 +621,30 @@ extension RouteMapViewController: MGLMapViewDelegate {
 
 extension RouteMapViewController: InstructionsBannerViewDelegate {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        let controller = StepsViewController(steps: routeController.routeProgress.currentLeg.steps)
-        addChildViewController(controller)
-        view.insertSubview(controller.view, belowSubview: instructionsBannerView)
         
-        controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
-        controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        guard let controller = stepsViewController else {
+            // Present
+            let controller = StepsViewController(steps: routeController.routeProgress.currentLeg.steps)
+            
+            addChildViewController(controller)
+            view.insertSubview(controller.view, belowSubview: instructionsBannerContainerView)
+            
+            controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+            controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+            controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            
+            controller.didMove(toParentViewController: self)
+            controller.dropDownAnimation()
+            
+            stepsViewController = controller
+            return
+        }
         
-        controller.didMove(toParentViewController: self)
+        stepsViewController = nil
+        controller.slideUpAnimation {
+            controller.dismiss()
+        }
     }
 }
 

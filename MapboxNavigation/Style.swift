@@ -441,6 +441,9 @@ class ManeuverContainerView: UIView {
     }
 }
 
+@objc(MBInstructionsBannerContainerView)
+class InstructionsBannerContainerView: UIView { }
+
 /// :nodoc:
 @objc(MBStatusView)
 public class StatusView: UIView {
