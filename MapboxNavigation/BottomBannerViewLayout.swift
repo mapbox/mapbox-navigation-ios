@@ -3,6 +3,8 @@ import UIKit
 extension BottomBannerView {
     
     func setupViews() {
+        applyDefaultShadow()
+        
         let timeRemainingLabel = TimeRemainingLabel()
         timeRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
         timeRemainingLabel.font = .systemFont(ofSize: 28, weight: UIFontWeightMedium)
@@ -26,10 +28,10 @@ extension BottomBannerView {
         addSubview(cancelButton)
         self.cancelButton = cancelButton
         
-        let separatorView = SeparatorView()
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(separatorView)
-        self.separatorView = separatorView
+        let dividerView = SeparatorView()
+        dividerView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(dividerView)
+        self.dividerView = dividerView
     }
     
     func setupLayout() {
@@ -44,13 +46,13 @@ extension BottomBannerView {
         cancelButton.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         cancelButton.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
-        separatorView.widthAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        separatorView.rightAnchor.constraint(equalTo: cancelButton.leftAnchor).isActive = true
+        dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        dividerView.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        dividerView.rightAnchor.constraint(equalTo: cancelButton.leftAnchor).isActive = true
         
         arrivalTimeLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        arrivalTimeLabel.rightAnchor.constraint(equalTo: separatorView.leftAnchor, constant: -10).isActive = true
+        arrivalTimeLabel.rightAnchor.constraint(equalTo: dividerView.leftAnchor, constant: -10).isActive = true
     }
 }
 

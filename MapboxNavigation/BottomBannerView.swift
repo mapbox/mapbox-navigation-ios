@@ -14,7 +14,7 @@ open class BottomBannerView: UIView {
     weak var distanceRemainingLabel: DistanceRemainingLabel!
     weak var arrivalTimeLabel: ArrivalTimeLabel!
     weak var cancelButton: CancelButton!
-    weak var separatorView: SeparatorView!
+    weak var dividerView: SeparatorView!
     
     let dateFormatter = DateFormatter()
     let dateComponentsFormatter = DateComponentsFormatter()
@@ -69,7 +69,7 @@ open class BottomBannerView: UIView {
     
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        separatorView.backgroundColor = .red
+        dividerView.backgroundColor = .red
         timeRemainingLabel.text = "22 min"
         distanceRemainingLabel.text = "4 mi"
         arrivalTimeLabel.text = "10:09"

@@ -16,7 +16,8 @@ open class BaseInstructionsBannerView: UIControl {
     weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
     weak var dividerView: UIView!
-    weak var separatorView: UIView!
+    weak var _separatorView: UIView!
+    weak var separatorView: SeparatorView!
     weak var delegate: InstructionsBannerViewDelegate?
     
     var centerYConstraints = [NSLayoutConstraint]()

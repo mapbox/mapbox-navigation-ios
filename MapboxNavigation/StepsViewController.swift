@@ -139,6 +139,7 @@ open class StepTableViewCell: UITableViewCell {
     func commonInit() {
         let instructionsView = StepInstructionsView()
         instructionsView.translatesAutoresizingMaskIntoConstraints = false
+        instructionsView.separatorView.isHidden = true
         addSubview(instructionsView)
         self.instructionsView = instructionsView
         
