@@ -73,9 +73,6 @@ class RouteMapViewController: UIViewController {
                     let remaining = self.routeController.routeProgress.currentLegProgress.currentStepProgress.durationRemaining
                     shown.notifyDidChange(routeProgress: progress, secondsRemaining: remaining)
                 }
-                
-               
-
             }
         }
     }
