@@ -207,7 +207,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     /**
      The receiver’s delegate.
      */
-    public weak var navigationDelegate: NavigationViewControllerDelegate? {
+    public weak var delegate: NavigationViewControllerDelegate? {
         didSet {
             mapViewController?.delegate = mapViewController?.delegate
         }
@@ -423,7 +423,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         }
         
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            navigationDelegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
+            delegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
         
         forceRefreshAppearanceIfNeeded()
@@ -494,11 +494,11 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return navigationDelegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return navigationDelegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didTap route: Route) {
@@ -506,43 +506,43 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
-        return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
+        return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
-        return navigationDelegate?.navigationMapView?(mapView, shapeDescribing: route)
+        return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return navigationDelegate?.navigationMapView?(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return navigationDelegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
-        return navigationDelegate?.navigationMapView?(mapView, shapeFor: waypoints)
+        return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return navigationDelegate?.navigationMapView?(mapView, imageFor: annotation)
+        return delegate?.navigationMapView?(mapView, imageFor: annotation)
     }
     
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return navigationDelegate?.navigationMapView?(mapView, viewFor: annotation)
+        return delegate?.navigationMapView?(mapView, viewFor: annotation)
     }
     
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController) {
-        navigationDelegate?.navigationViewControllerDidOpenFeedback?(self)
+        delegate?.navigationViewControllerDidOpenFeedback?(self)
     }
     
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController) {
-        navigationDelegate?.navigationViewControllerDidCancelFeedback?(self)
+        delegate?.navigationViewControllerDidCancelFeedback?(self)
     }
     
     func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController) {
-        if navigationDelegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
+        if delegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)
@@ -550,34 +550,34 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType) {
-        navigationDelegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
+        delegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
     }
     
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint? {
-        return navigationDelegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
+        return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
     }
 }
 
 extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
-        return navigationDelegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
+        return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
     }
     
     public func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
-        return navigationDelegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint) ?? true
+        return delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint) ?? true
     }
     
     public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
-        navigationDelegate?.navigationViewController?(self, willRerouteFrom: location)
+        delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
     public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
         mapViewController?.notifyDidReroute(route: route)
-        navigationDelegate?.navigationViewController?(self, didRerouteAlong: route)
+        delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
     
     public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
-        navigationDelegate?.navigationViewController?(self, didFailToRerouteWith: error)
+        delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
     public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
