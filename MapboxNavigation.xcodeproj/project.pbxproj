@@ -24,7 +24,6 @@
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* Style.swift */; };
 		351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */; };
-		351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */; };
 		351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */; };
 		351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBED1E5BCC63006FE110 /* ManeuversStyleKit.swift */; };
 		351BEC011E5BCC63006FE110 /* ManeuverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBEF1E5BCC63006FE110 /* ManeuverView.swift */; };
@@ -334,7 +333,6 @@
 		351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MGLMapView.swift; sourceTree = "<group>"; };
 		351BEBE01E5BCC63006FE110 /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RouteMapViewController.swift; sourceTree = "<group>"; };
-		351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteTableViewCell.swift; sourceTree = "<group>"; };
 		351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationViewController.swift; sourceTree = "<group>"; };
 		351BEBED1E5BCC63006FE110 /* ManeuversStyleKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManeuversStyleKit.swift; sourceTree = "<group>"; };
 		351BEBEF1E5BCC63006FE110 /* ManeuverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManeuverView.swift; sourceTree = "<group>"; };
@@ -669,7 +667,6 @@
 			children = (
 				356B7D8A1EE166E100FE5B89 /* scripts */,
 				C51923B41EA55C5E002AF9E1 /* Extensions */,
-				C51923B71EA58D28002AF9E1 /* RouteTableView */,
 				351BEC201E5BD4DC006FE110 /* Supporting files */,
 				C51923B51EA55CD4002AF9E1 /* Views */,
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
@@ -854,14 +851,6 @@
 				355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */,
 			);
 			name = Views;
-			sourceTree = "<group>";
-		};
-		C51923B71EA58D28002AF9E1 /* RouteTableView */ = {
-			isa = PBXGroup;
-			children = (
-				351BEBE71E5BCC63006FE110 /* RouteTableViewCell.swift */,
-			);
-			name = RouteTableView;
 			sourceTree = "<group>";
 		};
 		C51DF8681F38C57A006C6A15 /* Instructions */ = {
@@ -1468,7 +1457,6 @@
 				353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
 				35D428291FA0B61F00176028 /* InstructionsBannerViewLayout.swift in Sources */,
-				351BEBF91E5BCC63006FE110 /* RouteTableViewCell.swift in Sources */,
 				351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */,
 				353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */,
 				C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */,
