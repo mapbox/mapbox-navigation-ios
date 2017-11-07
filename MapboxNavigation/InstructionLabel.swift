@@ -31,6 +31,9 @@ open class InstructionLabel: StylableLabel {
                 // Check if shield image is cached, otherwise display road code in text
                 if let cachedImage = component.cachedShield {
                     string.append(attributedString(with: cachedImage))
+                    if let direction = component.direction {
+                        string.append(NSAttributedString(string: " "+direction, attributes: attributes))
+                    }
                 } else {
                     // Download shield and display road code in the meantime
                     string.append(NSAttributedString(string: joinChar+roadCode, attributes: attributes))
