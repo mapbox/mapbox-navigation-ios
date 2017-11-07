@@ -7,13 +7,17 @@ open class StepsBackgroundView: UIView { }
 
 protocol StepsViewControllerDelegate: class {
     func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep)
+    func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
 class StepsViewController: UIViewController {
     
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
+    weak var dismissButton: DismissButton!
     weak var delegate: StepsViewControllerDelegate?
+    
+    typealias CompletionHandler = () -> ()
     
     let cellId = "StepTableViewCellId"
     var routeProgress: RouteProgress!
@@ -59,9 +63,22 @@ class StepsViewController: UIViewController {
         view.addSubview(tableView)
         self.tableView = tableView
         
+        let dismissButton = DismissButton(type: .custom)
+        dismissButton.translatesAutoresizingMaskIntoConstraints = false
+        let title = NSLocalizedString("DISMISS_STEPS_TITLE", bundle: .mapboxNavigation, value: "Close", comment: "Dismiss button title on the steps view")
+        dismissButton.setTitle(title, for: .normal)
+        dismissButton.addTarget(self, action: #selector(StepsViewController.tappedDismiss(_:)), for: .touchUpInside)
+        view.addSubview(dismissButton)
+        self.dismissButton = dismissButton
+
+        dismissButton.heightAnchor.constraint(equalToConstant: 54).isActive = true
+        dismissButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        dismissButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        dismissButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: dismissButton.topAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: cellId)
@@ -79,20 +96,27 @@ class StepsViewController: UIViewController {
         }, completion: nil)
     }
     
-    func slideUpAnimation(completion: @escaping () -> ()) {
+    func slideUpAnimation(completion: CompletionHandler? = nil) {
         UIView.animate(withDuration: 0.4, delay: 0, options: [.beginFromCurrentState, .curveEaseIn], animations: {
             var frame = self.view.frame
             frame.origin.y -= frame.height
             self.view.frame = frame
         }) { (completed) in
-            completion()
+            completion?()
         }
     }
     
-    func dismiss() {
-        willMove(toParentViewController: nil)
-        view.removeFromSuperview()
-        removeFromParentViewController()
+    @IBAction func tappedDismiss(_ sender: Any) {
+        delegate?.didDismissStepsViewController(self)
+    }
+    
+    func dismiss(completion: CompletionHandler? = nil) {
+        slideUpAnimation {
+            self.willMove(toParentViewController: nil)
+            self.view.removeFromSuperview()
+            self.removeFromParentViewController()
+            completion?()
+        }
     }
 }
 

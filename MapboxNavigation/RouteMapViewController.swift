@@ -632,9 +632,7 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
         }
         
         stepsViewController = nil
-        controller.slideUpAnimation {
-            controller.dismiss()
-        }
+        controller.dismiss {}
     }
 }
 
@@ -642,14 +640,19 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
 
 extension RouteMapViewController: StepsViewControllerDelegate {
     func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep) {
-        viewController.slideUpAnimation {
-            viewController.dismiss()
+        viewController.dismiss {
             self.stepsViewController = nil
         }
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
         mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+    }
+    
+    func didDismissStepsViewController(_ viewController: StepsViewController) {
+        viewController.dismiss {
+            self.stepsViewController = nil
+        }
     }
 }
 
