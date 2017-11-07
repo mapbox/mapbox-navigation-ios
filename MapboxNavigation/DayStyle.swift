@@ -141,7 +141,9 @@ open class DayStyle: Style {
         ResumeButton.appearance().tintColor = .defaultPrimaryText
         
         CancelButton.appearance().tintColor = .defaultPrimaryText
-        
+        DismissButton.appearance().backgroundColor = #colorLiteral(red: 0.214887619, green: 0.31585747, blue: 0.4359722733, alpha: 1)
+        DismissButton.appearance().textFont = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium).adjustedFont
+
         UIApplication.shared.statusBarStyle = statusBarStyle ?? .default
     }
 }
@@ -167,7 +169,7 @@ open class NightStyle: DayStyle {
         ManeuverView.appearance().backgroundColor = backgroundColor
         InstructionsBannerContainerView.appearance().backgroundColor = backgroundColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
-        StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.05205290616, green: 0.07546465523, blue: 0.1024953017, alpha: 1)
+        StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         ReportButton.appearance().backgroundColor = backgroundColor
         ReportButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         

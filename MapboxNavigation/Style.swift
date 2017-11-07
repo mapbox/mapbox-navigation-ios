@@ -64,8 +64,13 @@ open class Style: NSObject {
 @objc(MBButton)
 open class Button: StylableButton { }
 
+/// :nodoc:
 @objc(MBCancelButton)
 open class CancelButton: Button { }
+
+/// :nodoc:
+@objc(MBDismissButton)
+open class DismissButton: Button { }
 
 /// :nodoc:
 @objc(MBFloatingButton)
@@ -398,6 +403,13 @@ public class SeparatorView: UIView { }
 /// :nodoc:
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
+    
+    // Sets the font on the button’s titleLabel
+    dynamic open var textFont: UIFont = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium) {
+        didSet {
+            titleLabel?.font = textFont
+        }
+    }
     
     // Sets the text color for normal state
     dynamic open var textColor: UIColor = .black {
