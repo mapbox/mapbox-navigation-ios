@@ -23,6 +23,7 @@ public struct Instruction: Equatable {
         public let roadCode: String?
         public let network: String?
         public let number: String?
+        public let direction: String?
         
         public var shieldKey: String? {
             guard let roadCode = roadCode else { return nil }
@@ -38,6 +39,7 @@ public struct Instruction: Equatable {
             guard let roadCode = roadCode else {
                 self.network = nil
                 self.number = nil
+                self.direction = nil
                 return
             }
             
@@ -45,9 +47,12 @@ public struct Instruction: Equatable {
             if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
                 self.network = components[0]
                 self.number = components[1]
+                let containsDirection = components.count == 3
+                self.direction = containsDirection ? components[2] : nil
             } else {
                 self.network = nil
                 self.number = nil
+                self.direction = nil
             }
         }
     }
