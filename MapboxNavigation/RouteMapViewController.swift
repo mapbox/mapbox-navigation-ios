@@ -68,7 +68,11 @@ class RouteMapViewController: UIViewController {
             
             if let controller = routePageViewController.currentManeuverPage {
                 controller.step = currentStep
-                routePageViewController.updateManeuverViewForStep()
+                routePageViewController.updateManeuverViewForStep { (shown) in
+                    let progress = self.routeController.routeProgress
+                    let remaining = self.routeController.routeProgress.currentLegProgress.currentStepProgress.durationRemaining
+                    shown.notifyDidChange(routeProgress: progress, secondsRemaining: remaining)
+                }
             }
         }
     }

@@ -40,9 +40,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public static let longManeuverDistance: CLLocationDistance = 1000.0
     
     /**
-     Minimum distnace the user can tap for a selection to be valid when selecting an alternate route.
+     Maximum distnace the user can tap for a selection to be valid when selecting an alternate route.
      */
-    public var minimumTapDistanceToSelectAltRoute: CGFloat = 50
+    public var maximumTapDistanceToSelectAltRoute: CGFloat = 50
     
     //MARK: Instance Properties
     let sourceIdentifier = "routeSource"
@@ -514,7 +514,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if let closestRoute = closestRoute, let closestCoordinate = Polyline(closestRoute.coordinates!).closestCoordinate(to: tapCoordinate), let routeIndex = routes.index(where: { $0 ==  closestRoute}) {
             let closestPoint = self.convert(closestCoordinate.coordinate, toPointTo: self)
             let tapDistanceFromClosestRoute = closestPoint.distance(to: tapPoint)
-            if tapDistanceFromClosestRoute <= minimumTapDistanceToSelectAltRoute {
+            if tapDistanceFromClosestRoute <= maximumTapDistanceToSelectAltRoute {
                 let selectedRoute = routes[routeIndex]
                 self.routes?.remove(at: routeIndex)
                 self.routes?.insert(selectedRoute, at: 0)
