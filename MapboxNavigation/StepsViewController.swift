@@ -30,8 +30,22 @@ class StepsViewController: UIViewController {
         self.init()
         self.routeProgress = routeProgress
         
-        for leg in routeProgress.route.legs {
-            sections.append(leg.steps)
+        let legIndex = routeProgress.legIndex
+        let stepIndex = routeProgress.currentLegProgress.stepIndex
+        let legs = routeProgress.route.legs
+        
+        for (index, leg) in legs.enumerated() {
+            guard index >= legIndex else { continue }
+            
+            var section = [RouteStep]()
+            for (index, step) in leg.steps.enumerated() {
+                guard index > stepIndex else { continue }
+                section.append(step)
+            }
+            
+            if !section.isEmpty {
+                sections.append(section)
+            }
         }
     }
     
