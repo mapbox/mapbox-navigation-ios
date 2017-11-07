@@ -578,9 +578,14 @@ open class NavigationMapView: MGLMapView {
             
             // The last coord of the preceding step, is shared with the first coord of the next step.
             // We don't need both.
-            let legCoordinates = Array(leg.steps.flatMap {
+            var legCoordinates = Array(leg.steps.flatMap {
                 $0.coordinates?.suffix(from: 1)
             }.joined())
+            
+            // We need to add the first coord of the route in.
+            if let firstCoord = leg.steps.first?.coordinates?.first {
+                legCoordinates.insert(firstCoord, at: 0)
+            }
             
             let segments = zip(legCoordinates, legCoordinates).map { [$0.0, $0.1] }
             let congestionSegments = Array(zip(segments, legCongestion))
