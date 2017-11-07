@@ -5,10 +5,15 @@ import MapboxCoreNavigation
 @objc(MBStepsBackgroundView)
 open class StepsBackgroundView: UIView { }
 
+protocol StepsViewControllerDelegate: class {
+    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep)
+}
+
 class StepsViewController: UIViewController {
     
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
+    weak var delegate: StepsViewControllerDelegate?
     
     let cellId = "StepTableViewCellId"
     var steps: [RouteStep]!
@@ -85,6 +90,9 @@ class StepsViewController: UIViewController {
 }
 
 extension StepsViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.stepsViewController(self, didSelect: steps[indexPath.row])
+    }
 }
 
 extension StepsViewController: UITableViewDataSource {
@@ -140,6 +148,7 @@ open class StepTableViewCell: UITableViewCell {
         let instructionsView = StepInstructionsView()
         instructionsView.translatesAutoresizingMaskIntoConstraints = false
         instructionsView.separatorView.isHidden = true
+        instructionsView.isUserInteractionEnabled = false
         addSubview(instructionsView)
         self.instructionsView = instructionsView
         
