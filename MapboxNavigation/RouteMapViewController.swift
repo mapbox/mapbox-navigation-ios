@@ -69,15 +69,6 @@ class RouteMapViewController: UIViewController {
                 recenterButton.isHidden = true
                 mapView.logoView.isHidden = false
             }
-            
-            if let controller = routePageViewController.currentManeuverPage {
-                controller.step = currentStep
-                routePageViewController.updateManeuverViewForStep { (shown) in
-                    let progress = self.routeController.routeProgress
-                    let remaining = self.routeController.routeProgress.currentLegProgress.currentStepProgress.durationRemaining
-                    shown.notifyDidChange(routeProgress: progress, secondsRemaining: remaining)
-                }
-            }
         }
     }
     var currentLegIndexMapped = 0
