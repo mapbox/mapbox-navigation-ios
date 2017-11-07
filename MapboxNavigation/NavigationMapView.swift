@@ -20,7 +20,7 @@ let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
 @objc(MBNavigationMapView)
-open class NavigationMapView: MGLMapView {
+open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     //MARK: Class Constants
     
@@ -105,6 +105,7 @@ open class NavigationMapView: MGLMapView {
             }
         }
     }
+    private lazy var waypointGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapWaypoint(tap:)))
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -128,12 +129,23 @@ open class NavigationMapView: MGLMapView {
         UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
         
-        let singleTapForAlternateRoute = UITapGestureRecognizer(target: self, action: #selector(didTapRoute(tap:)))
-        for recognizer in self.gestureRecognizers! where recognizer is UITapGestureRecognizer {
-            singleTapForAlternateRoute.require(toFail: recognizer)
-        }
-        self.addGestureRecognizer(singleTapForAlternateRoute)
+        let gestures = gestureRecognizers ?? []
+        let waypointTapRecognizer = waypointGestureRecognizer
+        waypointTapRecognizer.delegate = self
+        requireFailure(of: gestures, on: waypointTapRecognizer)
+        addGestureRecognizer(waypointTapRecognizer)
         
+        let gesturesWithWaypoint = [waypointTapRecognizer] + gestures
+        let singleTapForAlternateRoute = UITapGestureRecognizer(target: self, action: #selector(didTapRoute(tap:)))
+        requireFailure(of: gesturesWithWaypoint, on: singleTapForAlternateRoute)
+        addGestureRecognizer(singleTapForAlternateRoute)
+        
+    }
+    
+    private func requireFailure(of gestures: [UIGestureRecognizer]?, on tap: UITapGestureRecognizer) {
+        if let taps = gestures?.flatMap ({ $0 as? UITapGestureRecognizer }) {
+            taps.forEach(tap.require(toFail:))
+        }
     }
     
     func suspendNotifications() {
@@ -427,7 +439,60 @@ open class NavigationMapView: MGLMapView {
             }
         }
     }
+    /**
+     Fired when the user taps a waypoint. This recognizer fires a delegate method
+     that prompts the user to remove the waypoint from the route.
+     */
+    func didTapWaypoint(tap: UITapGestureRecognizer) {
+        guard let routes: [Route] = routes else { return }
+        let tapPoint = tap.location(in: self)
+        let tapCoordinate = self.convert(tapPoint, toCoordinateFrom: tap.view)
+        guard let candidates = waypoints(on: routes, closeTo: tapCoordinate) else { return }
+
+        //take the best one, if existant, and prompt to delete
+        guard let best = candidates.1.first, let multipoint = candidates.0.first else { return }
+        requestNew(route: multipoint, without: best)
+    }
     
+    private func waypoints(on routes: [Route], closeTo coordinate: CLLocationCoordinate2D) -> ([Route], [Waypoint])? {
+        let waypointThreshold: CLLocationDistance = 100
+        let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
+        guard multipointRoutes.count > 0 else { return nil }
+        let waypoints = multipointRoutes.flatMap({$0.routeOptions.waypoints})
+        
+        let closest = waypoints.sorted { (left, right) -> Bool in
+            let leftDistance = left.coordinate.distance(to: coordinate)
+            let rightDistance = right.coordinate.distance(to: coordinate)
+            return leftDistance < rightDistance
+        }
+        let candidates = closest.filter({ $0.coordinate.distance(to: coordinate) < waypointThreshold})
+        return (multipointRoutes, candidates)
+    }
+    
+    open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == waypointGestureRecognizer {
+            let tapPoint = gestureRecognizer.location(in: self)
+            let tapCoordinate = self.convert(tapPoint, toCoordinateFrom: gestureRecognizer.view)
+            guard let candidates = waypoints(on: routes!, closeTo: tapCoordinate) else { return false }
+            return candidates.1.count > 0
+        }
+        return super.gestureRecognizerShouldBegin(gestureRecognizer)
+    }
+    
+    private func requestNew(route: Route, without waypoint: Waypoint) {
+        let options = route.routeOptions
+        guard let index = options.waypoints.index(of: waypoint) else { return }
+        options.waypoints.remove(at: index)
+        
+        removeRoutes()
+        removeWaypoints()
+        _ = Directions.shared.calculate(options) { (waypoints, routes, error) in
+            guard let routes = routes else { return }
+            self.routes = routes
+            self.showRoutes(routes)
+        }
+        
+    }
     /**
      Fired when the user taps a route. If there is an alternate route, and an alternate route is tapped, it is selected.
      */
@@ -506,6 +571,8 @@ open class NavigationMapView: MGLMapView {
         guard let style = style else {
             return
         }
+
+        routes = [route]
         
         let remainingWaypoints = Array(route.legs.suffix(from: legIndex).map { $0.destination }.dropLast())
         
