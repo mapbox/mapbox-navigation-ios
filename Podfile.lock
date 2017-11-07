@@ -1,0 +1,60 @@
+PODS:
+  - AWSCore (2.6.5)
+  - AWSPolly (2.6.5):
+    - AWSCore (= 2.6.5)
+  - Mapbox-iOS-SDK (3.6.4)
+  - MapboxCoreNavigation (0.9.0):
+    - MapboxDirections.swift (~> 0.11)
+    - MapboxMobileEvents (~> 0.2)
+    - OSRMTextInstructions (~> 0.4)
+    - Turf (~> 0.0.4)
+  - MapboxDirections.swift (0.11.2):
+    - Polyline (= 4.1.1)
+  - MapboxMobileEvents (0.2.10)
+  - MapboxNavigation (0.9.0):
+    - AWSPolly (~> 2.6)
+    - Mapbox-iOS-SDK (~> 3.6)
+    - MapboxCoreNavigation (= 0.9.0)
+    - Pulley (= 1.4)
+    - SDWebImage (~> 4.1)
+    - Solar (= 2.0.0)
+    - Turf (~> 0.0.4)
+  - OSRMTextInstructions (0.4.0):
+    - MapboxDirections.swift (~> 0.10)
+  - Polyline (4.1.1)
+  - Pulley (1.4)
+  - SDWebImage (4.2.1):
+    - SDWebImage/Core (= 4.2.1)
+  - SDWebImage/Core (4.2.1)
+  - Solar (2.0.0)
+  - Turf (0.0.4)
+
+DEPENDENCIES:
+  - Mapbox-iOS-SDK (~> 3.6)
+  - MapboxCoreNavigation (from `./`)
+  - MapboxNavigation (from `./`)
+
+EXTERNAL SOURCES:
+  MapboxCoreNavigation:
+    :path: ./
+  MapboxNavigation:
+    :path: ./
+
+SPEC CHECKSUMS:
+  AWSCore: b4895b4a5256d0040f8825ad31f3477d081f508f
+  AWSPolly: ede618a621f07e1ff3512f2396f2ca96b57d357e
+  Mapbox-iOS-SDK: 47847dd44285477e0dfffd0130f65c8a52823ada
+  MapboxCoreNavigation: 4bb8ead0eb32513323e57395b6b295d553e00aaa
+  MapboxDirections.swift: b957048cb12bf0bfddcad53ce706f1b9d25488dc
+  MapboxMobileEvents: 9e48b59d0eed04508595dcb04a77b7632e1c3054
+  MapboxNavigation: 1299c496965d667dd4083169f28c9a8411dd5976
+  OSRMTextInstructions: d8aa1d21310fd31bf256cf245b11b9a8e6413d63
+  Polyline: 381d1e699fd12508f97cfc468478dfbab67edf1f
+  Pulley: 3d47a5ca819b8f35a63e9a4811d35035d484d1d9
+  SDWebImage: 1fa4c9edf525b744f002db89f3f5a38b3cd4c541
+  Solar: ea092f7660c1b58d2b754227decb61a1c6710826
+  Turf: 6c169618fa671e3f8a7b764b5b3332053ad6110e
+
+PODFILE CHECKSUM: f6d6c5b4ca16922c17c2a217f65fa92025ccf840
+
+COCOAPODS: 1.3.1
