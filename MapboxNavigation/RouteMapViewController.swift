@@ -614,8 +614,7 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         
         guard let controller = stepsViewController else {
-            // Present
-            let controller = StepsViewController(steps: routeController.routeProgress.currentLeg.steps)
+            let controller = StepsViewController(routeProgress: routeController.routeProgress)
             controller.delegate = self
             addChildViewController(controller)
             view.insertSubview(controller.view, belowSubview: instructionsBannerContainerView)

@@ -16,12 +16,19 @@ class StepsViewController: UIViewController {
     weak var delegate: StepsViewControllerDelegate?
     
     let cellId = "StepTableViewCellId"
-    var steps: [RouteStep]!
+    var routeProgress: RouteProgress!
     let instructionFormatter = VisualInstructionFormatter()
     
-    convenience init(steps: [RouteStep]) {
+    typealias StepSection = [RouteStep]
+    var sections = [StepSection]()
+    
+    convenience init(routeProgress: RouteProgress) {
         self.init()
-        self.steps = steps
+        self.routeProgress = routeProgress
+        
+        for leg in routeProgress.route.legs {
+            sections.append(leg.steps)
+        }
     }
     
     override func viewDidLoad() {
@@ -91,16 +98,18 @@ class StepsViewController: UIViewController {
 
 extension StepsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.stepsViewController(self, didSelect: steps[indexPath.row])
+        let step = sections[indexPath.section][indexPath.row]
+        delegate?.stepsViewController(self, didSelect: step)
     }
 }
 
 extension StepsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let steps = sections[section]
         return steps.count
     }
     
@@ -110,8 +119,13 @@ extension StepsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
-        cell.step = steps[indexPath.row]
+        cell.step = sections[indexPath.section][indexPath.row]
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let leg = routeProgress.route.legs[section]
+        return sections.count <= 1 ? nil : leg.destination.name ?? "\(section)"
     }
 }
 
