@@ -35,6 +35,13 @@ extension UIView {
         let nibName = String(describing: T.self)
         return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? T
     }
+    
+    var safeBottomAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.bottomAnchor
+        }
+        return bottomAnchor
+    }
 }
 
 class RippleLayer: CAReplicatorLayer {

@@ -142,8 +142,8 @@ open class DayStyle: Style {
         ResumeButton.appearance().tintColor = .defaultPrimaryText
         
         CancelButton.appearance().tintColor = .defaultPrimaryText
-        DismissButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         DismissButton.appearance().textFont = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium).adjustedFont
+        DismissButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
 
         UIApplication.shared.statusBarStyle = statusBarStyle ?? .default
     }
@@ -186,6 +186,7 @@ open class NightStyle: DayStyle {
         ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+        DismissButton.appearance().backgroundColor = backgroundColor
         
         CellTurnArrowView.appearance().primaryColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         CellTurnArrowView.appearance().secondaryColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
