@@ -105,7 +105,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
         }
     }
-    private lazy var waypointGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapWaypoint(tap:)))
+    private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -130,22 +130,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
         
         let gestures = gestureRecognizers ?? []
-        let waypointTapRecognizer = waypointGestureRecognizer
-        waypointTapRecognizer.delegate = self
-        requireFailure(of: gestures, on: waypointTapRecognizer)
-        addGestureRecognizer(waypointTapRecognizer)
-        
-        let gesturesWithWaypoint = [waypointTapRecognizer] + gestures
-        let singleTapForAlternateRoute = UITapGestureRecognizer(target: self, action: #selector(didTapRoute(tap:)))
-        requireFailure(of: gesturesWithWaypoint, on: singleTapForAlternateRoute)
-        addGestureRecognizer(singleTapForAlternateRoute)
-        
-    }
-    
-    private func requireFailure(of gestures: [UIGestureRecognizer]?, on tap: UITapGestureRecognizer) {
-        if let taps = gestures?.flatMap ({ $0 as? UITapGestureRecognizer }) {
-            taps.forEach(tap.require(toFail:))
-        }
+        let mapTapGesture = self.mapTapGesture
+        mapTapGesture.requireFailure(of: gestures)
+        addGestureRecognizer(mapTapGesture)
     }
     
     func suspendNotifications() {
@@ -440,43 +427,82 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     /**
-     Fired when the user taps a waypoint. This recognizer fires a delegate method
-     that prompts the user to remove the waypoint from the route.
+     Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
-    func didTapWaypoint(tap: UITapGestureRecognizer) {
-        guard let routes: [Route] = routes else { return }
-        let tapPoint = tap.location(in: self)
-        let tapCoordinate = self.convert(tapPoint, toCoordinateFrom: tap.view)
-        guard let candidates = waypoints(on: routes, closeTo: tapCoordinate) else { return }
-
-        //take the best one, if existant, and prompt to delete
-        guard let best = candidates.1.first, let multipoint = candidates.0.first else { return }
-        requestNew(route: multipoint, without: best)
+    func didRecieveTap(sender: UITapGestureRecognizer) {
+        guard let routes = routes else { return }
+        
+        let waypointTest = waypoints(on: routes, closeTo: sender) //are there waypoints near the tapped location?
+        if let activeRoute = waypointTest?.multipointRoutes.first ,let waypointToRemove = waypointTest?.waypoints.first { //test passes
+            return requestNew(route: activeRoute, without: waypointToRemove)
+        } else if let routes = self.routes(closeTo: sender) {
+            guard let selectedRoute = routes.first else { return }
+            select(route: selectedRoute)
+        }
+        
     }
     
-    private func waypoints(on routes: [Route], closeTo coordinate: CLLocationCoordinate2D) -> ([Route], [Waypoint])? {
-        let waypointThreshold: CLLocationDistance = 100
+    //TODO: Change to point-based distance calculation
+    private func waypoints(on routes: [Route], closeTo tap: UITapGestureRecognizer) -> (multipointRoutes: [Route], waypoints: [Waypoint])? {
+        guard let tapCoordinate = tap.coordinate(in: self), let tapPoint = tap.point else { return nil }
+        let waypointThreshold: CGFloat = 100 //FIXME: Class Constant
         let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
         guard multipointRoutes.count > 0 else { return nil }
         let waypoints = multipointRoutes.flatMap({$0.routeOptions.waypoints})
         
+        //lets sort the array in order of closest to tap
         let closest = waypoints.sorted { (left, right) -> Bool in
-            let leftDistance = left.coordinate.distance(to: coordinate)
-            let rightDistance = right.coordinate.distance(to: coordinate)
+            let leftDistance = left.coordinate.distance(to: tapCoordinate)
+            let rightDistance = right.coordinate.distance(to: tapCoordinate)
             return leftDistance < rightDistance
         }
-        let candidates = closest.filter({ $0.coordinate.distance(to: coordinate) < waypointThreshold})
+        
+        //lets filter to see which ones are under threshold
+        let candidates = closest.filter({
+            let coordinatePoint = self.convert($0.coordinate, toPointTo: self)
+            return coordinatePoint.distance(to: tapPoint) < waypointThreshold
+        })
+        
         return (multipointRoutes, candidates)
     }
     
-    open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if gestureRecognizer == waypointGestureRecognizer {
-            let tapPoint = gestureRecognizer.location(in: self)
-            let tapCoordinate = self.convert(tapPoint, toCoordinateFrom: gestureRecognizer.view)
-            guard let candidates = waypoints(on: routes!, closeTo: tapCoordinate) else { return false }
-            return candidates.1.count > 0
+    private func routes(closeTo tap: UITapGestureRecognizer) -> [Route]? {
+        guard let tapCoordinate = tap.coordinate(in: self), let tapPoint = tap.point else { return nil }
+        
+        //do we have routes? If so, filter routes with at least 2 coordinates.
+        guard let routes = routes?.filter({ $0.coordinates?.count ?? 0 > 1 }) else { return nil }
+        
+        //Sort routes by closest distance to tap gesture.
+        let closest = routes.sorted { (left, right) -> Bool in
+            
+            //existance has been assured through use of filter.
+            let leftLine = Polyline(left.coordinates!)
+            let rightLine = Polyline(right.coordinates!)
+            let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.distance
+            let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.distance
+            
+            return leftDistance < rightDistance
         }
-        return super.gestureRecognizerShouldBegin(gestureRecognizer)
+        
+        //filter closest coordinates by which ones are under threshold.
+        let candidates = closest.filter {
+            let closestCoordinate = Polyline($0.coordinates!).closestCoordinate(to: tapCoordinate)!.coordinate
+            let closestPoint = self.convert(closestCoordinate, toPointTo: self)
+            
+            return closestPoint.distance(to: tapPoint) < maximumTapDistanceToSelectAltRoute
+        }
+        return candidates
+    }
+    
+    private func select(route: Route) {
+        guard var routes = routes, let routeIndex = routes.index(where: {$0 == route}) else { return }
+        routes.remove(at: routeIndex)
+        routes.insert(route, at: 0)
+        self.routes = routes //because self.routes is a value type
+        self.showRoutes(routes)
+        navigationMapDelegate?.navigationMapView?(self, didTap: route)
+        
+        
     }
     
     private func requestNew(route: Route, without waypoint: Waypoint) {
@@ -492,36 +518,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             self.showRoutes(routes)
         }
         
-    }
-    /**
-     Fired when the user taps a route. If there is an alternate route, and an alternate route is tapped, it is selected.
-     */
-    func didTapRoute(tap: UITapGestureRecognizer) {
-        guard let routes = routes else { return }
-        
-        let tapPoint = tap.location(in: self)
-        let tapCoordinate = self.convert(tapPoint, toCoordinateFrom: tap.view)
-        
-        let closestRoute = routes.filter {
-            guard let coords = $0.coordinates else { return false }
-            return coords.count > 1
-        }.min { (left, right) -> Bool in
-            let leftDistance = Polyline(left.coordinates!).closestCoordinate(to: tapCoordinate)!.distance
-            let rightDistance = Polyline(right.coordinates!).closestCoordinate(to: tapCoordinate)!.distance
-            return leftDistance < rightDistance
-        }
-        
-        if let closestRoute = closestRoute, let closestCoordinate = Polyline(closestRoute.coordinates!).closestCoordinate(to: tapCoordinate), let routeIndex = routes.index(where: { $0 ==  closestRoute}) {
-            let closestPoint = self.convert(closestCoordinate.coordinate, toPointTo: self)
-            let tapDistanceFromClosestRoute = closestPoint.distance(to: tapPoint)
-            if tapDistanceFromClosestRoute <= maximumTapDistanceToSelectAltRoute {
-                let selectedRoute = routes[routeIndex]
-                self.routes?.remove(at: routeIndex)
-                self.routes?.insert(selectedRoute, at: 0)
-                self.showRoutes(self.routes!)
-                navigationMapDelegate?.navigationMapView?(self, didTap: selectedRoute)
-            }
-        }
     }
     
     /**
