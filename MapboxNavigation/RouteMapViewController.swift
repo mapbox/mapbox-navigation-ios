@@ -168,6 +168,7 @@ class RouteMapViewController: UIViewController {
     
     @IBAction func rerouteFeedback(_ sender: Any) {
         showFeedback(source: .reroute)
+        rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
