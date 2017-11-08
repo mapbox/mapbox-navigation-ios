@@ -576,7 +576,6 @@ open class NavigationMapView: MGLMapView {
         guard let coordinates = route.coordinates else { return nil }
         
         var linesPerLeg: [[MGLPolylineFeature]] = []
-        var previousLegCongestionIndex = 0
         
         for (index, leg) in route.legs.enumerated() {
             // If there is no congestion, don't try and add it
@@ -588,12 +587,21 @@ open class NavigationMapView: MGLMapView {
                 return shape(describingCasing: route, legIndex: legIndex)
             }
             
-            let coordsForLeg = coordinates[previousLegCongestionIndex..<previousLegCongestionIndex + legCongestion.count + 1]
-            let destination = coordinates.suffix(from: previousLegCongestionIndex + 1)
-            let segment = zip(coordsForLeg, destination).map { [$0.0, $0.1] }
-            let congestionSegments = Array(zip(segment, legCongestion))
+            // The last coord of the preceding step, is shared with the first coord of the next step.
+            // We don't need both.
+            var legCoordinates = Array(leg.steps.flatMap {
+                $0.coordinates?.suffix(from: 1)
+            }.joined())
             
-            previousLegCongestionIndex = legCongestion.count
+            // We need to add the first coord of the route in.
+            if let firstCoord = leg.steps.first?.coordinates?.first {
+                legCoordinates.insert(firstCoord, at: 0)
+            }
+            
+            // We're trying to create a sequence that conforms to `((segmentStartCoordinate, segmentEndCoordinate), segmentCongestionLevel)`.
+            // This is represents a segment on the route and it's associated congestion level.
+            let segments = zip(legCoordinates, legCoordinates.suffix(from: 1)).map { [$0.0, $0.1] }
+            let congestionSegments = Array(zip(segments, legCongestion))
             
             // Merge adjacent segments with the same congestion level
             var mergedCongestionSegments = [CongestionSegment]()
