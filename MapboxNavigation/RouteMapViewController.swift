@@ -26,7 +26,6 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     
     let visualInstructionFormatter = VisualInstructionFormatter()
-    let routeStepFormatter = RouteStepFormatter()
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -381,22 +380,11 @@ class RouteMapViewController: UIViewController {
     func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
+        let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
+        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: step)
         
+        instructionsBannerView.set(instructions.0, secondaryInstruction: instructions.1)
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
-        
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            instructionsBannerView.distance = nil
-            
-            if let text = routeProgress.currentLeg.destination.name ?? routeStepFormatter.string(for: routeStepFormatter.string(for: routeProgress.currentLegProgress.upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count, markUpWithSSML: false)) {
-                instructionsBannerView.set(Instruction(text), secondaryInstruction: nil)
-            }
-            
-        } else {
-            let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
-            let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: step)
-            instructionsBannerView.set(instructions.0, secondaryInstruction: instructions.1)
-        }
-        
         instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
     
