@@ -504,9 +504,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     private func requestNew(route: Route, without waypoint: Waypoint) {
-        let options = route.routeOptions
-        guard let index = options.waypoints.index(of: waypoint) else { return }
-        options.waypoints.remove(at: index)
+        let options = route.routeOptions.without(waypoint: waypoint)
         
         removeRoutes()
         removeWaypoints()
