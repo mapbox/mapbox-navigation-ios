@@ -46,7 +46,6 @@ Pod::Spec.new do |s|
   s.dependency "MapboxDirections.swift", "~> 0.11"
   s.dependency "Mapbox-iOS-SDK", "~> 3.6"
   s.dependency "OSRMTextInstructions", "~> 0.4"
-  s.dependency "Pulley", "1.4"
   s.dependency "SDWebImage", "~> 4.1"
   s.dependency "AWSPolly", "~> 2.6"
   s.dependency "MapboxMobileEvents", "~> 0.2"

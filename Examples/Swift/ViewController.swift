@@ -176,7 +176,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.routeController.allowRecordedAudioFeedback = true
-        navigationViewController.navigationDelegate = self
+        navigationViewController.delegate = self
         
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -210,7 +210,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let styles = [DayStyle(), CustomNightStyle()]
 
         let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
-        navigationViewController.navigationDelegate = self
+        navigationViewController.delegate = self
 
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -229,7 +229,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
-        navigationViewController.navigationDelegate = self
+        navigationViewController.delegate = self
 
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -282,7 +282,7 @@ class CustomNightStyle: DayStyle {
     override func apply() {
         super.apply()
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
-        RouteTableViewHeaderView.appearance().backgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
+        BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 0.2974345386, green: 0.4338284135, blue: 0.9865127206, alpha: 1)
         
         DistanceLabel.appearance().textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         DestinationLabel.appearance().textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)

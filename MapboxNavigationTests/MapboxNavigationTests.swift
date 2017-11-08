@@ -34,28 +34,6 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
     
-    func testRouteSwitching() {
-        let bundle = Bundle(for: MapboxNavigationTests.self)
-        var filePath = bundle.path(forResource: "UnionSquare-to-GGPark", ofType: "route")!
-        let route = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
-        route.accessToken = "foo"
-        
-        let navigation = NavigationViewController(for: route, directions: directions)
-        navigation.loadViewIfNeeded()
-        
-        filePath = bundle.path(forResource: "GGPark-to-BernalHeights", ofType: "route")!
-        let newRoute = NSKeyedUnarchiver.unarchiveObject(withFile: filePath) as! Route
-        
-        navigation.route = newRoute
-        
-        XCTAssertTrue(navigation.routeController.routeProgress.route == newRoute, "Route should be equal the new route")
-        
-        let tableViewController = navigation.tableViewController!
-        let numberOfRows = tableViewController.tableView(tableViewController.tableView, numberOfRowsInSection: 0)
-        XCTAssertTrue(numberOfRows == newRoute.legs[0].steps.count,
-                      "It should be same amount of cells as steps in the new route")
-    }
-    
     func testLanes() {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         XCTAssert(controller.view != nil)

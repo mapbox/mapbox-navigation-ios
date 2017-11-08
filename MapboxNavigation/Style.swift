@@ -64,8 +64,13 @@ open class Style: NSObject {
 @objc(MBButton)
 open class Button: StylableButton { }
 
+/// :nodoc:
 @objc(MBCancelButton)
 open class CancelButton: Button { }
+
+/// :nodoc:
+@objc(MBDismissButton)
+open class DismissButton: Button { }
 
 /// :nodoc:
 @objc(MBFloatingButton)
@@ -174,7 +179,20 @@ public class ResumeButton: UIControl {
 
 /// :nodoc:
 @objc(MBStylableLabel)
-open class StylableLabel : UILabel { }
+open class StylableLabel : UILabel {
+    // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
+    dynamic open var normalTextColor: UIColor = .black {
+        didSet {
+            textColor = normalTextColor
+        }
+    }
+    
+    dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
+        didSet {
+            font = normalFont
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBDistanceLabel)
@@ -238,9 +256,7 @@ open class DistanceLabel: StylableLabel {
 
 /// :nodoc:
 @objc(MBDestinationLabel)
-open class DestinationLabel: StylableLabel {
-
-}
+open class DestinationLabel: StylableLabel { }
 
 /// :nodoc
 @objc(MBPrimaryLabel)
@@ -388,6 +404,13 @@ public class SeparatorView: UIView { }
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
     
+    // Sets the font on the button’s titleLabel
+    dynamic open var textFont: UIFont = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium) {
+        didSet {
+            titleLabel?.font = textFont
+        }
+    }
+    
     // Sets the text color for normal state
     dynamic open var textColor: UIColor = .black {
         didSet {
@@ -429,6 +452,9 @@ class ManeuverContainerView: UIView {
         }
     }
 }
+
+@objc(MBInstructionsBannerContainerView)
+class InstructionsBannerContainerView: UIView { }
 
 /// :nodoc:
 @objc(MBStatusView)

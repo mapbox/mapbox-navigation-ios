@@ -85,9 +85,13 @@ open class DayStyle: Style {
         ReportButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         ReportButton.appearance().textColor = tintColor!
         
-        // Maneuver view (Page view)
+        // Maneuver view
         ManeuverView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        InstructionsBannerContainerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
+        StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
+        StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         
         DistanceLabel.appearance().valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         DistanceLabel.appearance().valueFont = UIFont.systemFont(ofSize: 22, weight: UIFontWeightMedium).adjustedFont
@@ -97,17 +101,17 @@ open class DayStyle: Style {
         DestinationLabel.appearance().font = UIFont.systemFont(ofSize: 32, weight: UIFontWeightMedium).adjustedFont
         DestinationLabel.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        PrimaryLabel.appearance().font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium).adjustedFont
-        PrimaryLabel.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+        PrimaryLabel.appearance().normalFont = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium).adjustedFont
+        PrimaryLabel.appearance().normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         
-        SecondaryLabel.appearance().font = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium).adjustedFont
-        SecondaryLabel.appearance().textColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
+        SecondaryLabel.appearance().normalFont = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium).adjustedFont
+        SecondaryLabel.appearance().normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
         
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
         ArrivalTimeLabel.appearance().textColor = .defaultPrimaryText
         
         // Table view (Drawer)
-        RouteTableViewHeaderView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         TimeRemainingLabel.appearance().font = UIFont.systemFont(ofSize: 28, weight: UIFontWeightMedium).adjustedFont
         TimeRemainingLabel.appearance().textColor = .defaultPrimaryText
@@ -119,9 +123,6 @@ open class DayStyle: Style {
         
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         DistanceRemainingLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
-        
-        ArrivalTimeLabel.appearance().textColor = .defaultPrimaryText
-        ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
         
         CellTitleLabel.appearance().font = UIFont.systemFont(ofSize: 17).adjustedFont
         CellTitleLabel.appearance().textColor = .defaultPrimaryText
@@ -141,7 +142,9 @@ open class DayStyle: Style {
         ResumeButton.appearance().tintColor = .defaultPrimaryText
         
         CancelButton.appearance().tintColor = .defaultPrimaryText
-        
+        DismissButton.appearance().textFont = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium).adjustedFont
+        DismissButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+
         UIApplication.shared.statusBarStyle = statusBarStyle ?? .default
     }
 }
@@ -165,7 +168,9 @@ open class NightStyle: DayStyle {
         
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         ManeuverView.appearance().backgroundColor = backgroundColor
+        InstructionsBannerContainerView.appearance().backgroundColor = backgroundColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
+        StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         ReportButton.appearance().backgroundColor = backgroundColor
         ReportButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         
@@ -173,17 +178,20 @@ open class NightStyle: DayStyle {
         DistanceLabel.appearance().unitTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         
         DestinationLabel.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        PrimaryLabel.appearance().textColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
-        SecondaryLabel.appearance().textColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
+        PrimaryLabel.appearance().normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
+        SecondaryLabel.appearance().normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
         TimeRemainingLabel.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
+        StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+        StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+        DismissButton.appearance().backgroundColor = backgroundColor
         
         CellTurnArrowView.appearance().primaryColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         CellTurnArrowView.appearance().secondaryColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         
-        RouteTableViewHeaderView.appearance().backgroundColor = backgroundColor
+        BottomBannerView.appearance().backgroundColor = backgroundColor
         
         FloatingButton.appearance().backgroundColor = backgroundColor
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
