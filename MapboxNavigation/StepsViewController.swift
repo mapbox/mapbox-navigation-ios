@@ -7,7 +7,7 @@ import Turf
 open class StepsBackgroundView: UIView { }
 
 protocol StepsViewControllerDelegate: class {
-    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep)
+    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, at indexPath: IndexPath)
     func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
@@ -122,7 +122,7 @@ class StepsViewController: UIViewController {
         frame.origin.y -= frame.height
         view.frame = frame
         
-        UIView.animate(withDuration: 0.4, delay: 0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
+        UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseOut], animations: {
             var frame = self.view.frame
             frame.origin.y += frame.height
             self.view.frame = frame
@@ -130,7 +130,7 @@ class StepsViewController: UIViewController {
     }
     
     func slideUpAnimation(completion: CompletionHandler? = nil) {
-        UIView.animate(withDuration: 0.4, delay: 0, options: [.beginFromCurrentState, .curveEaseIn], animations: {
+        UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseIn], animations: {
             var frame = self.view.frame
             frame.origin.y -= frame.height
             self.view.frame = frame
@@ -155,8 +155,15 @@ class StepsViewController: UIViewController {
 
 extension StepsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let step = sections[indexPath.section][indexPath.row]
-        delegate?.stepsViewController(self, didSelect: step)
+        
+        tableView.beginUpdates()
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        sections[indexPath.section].remove(at: indexPath.row)
+        tableView.endUpdates()
+        
+        delegate?.stepsViewController(self, didSelect: step, at: indexPath)
     }
 }
 
@@ -229,6 +236,8 @@ open class StepTableViewCell: UITableViewCell {
     }
     
     func commonInit() {
+        selectionStyle = .none
+        
         let instructionsView = StepInstructionsView()
         instructionsView.translatesAutoresizingMaskIntoConstraints = false
         instructionsView.separatorView.isHidden = true

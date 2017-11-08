@@ -31,7 +31,7 @@ class RouteMapViewController: UIViewController {
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
     var updateETATimer: Timer?
-    
+    var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
 
@@ -157,6 +157,11 @@ class RouteMapViewController: UIViewController {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
         updateCameraAltitude(for: routeController.routeProgress)
+        
+        if let view = previewInstructionsView {
+            view.removeFromSuperview()
+            previewInstructionsView = nil
+        }
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
@@ -639,9 +644,33 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
 // MARK: StepsViewControllerDelegate
 
 extension RouteMapViewController: StepsViewControllerDelegate {
-    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep) {
-        viewController.dismiss {
-            self.stepsViewController = nil
+    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, at indexPath: IndexPath) {
+     
+        if let cell = viewController.tableView.cellForRow(at: indexPath) {
+            
+            let frame = cell.convert(cell.frame, to: view)
+            let instructionsView = StepInstructionsView(frame: frame)
+            instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
+            
+            let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
+            instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+            instructionsView.maneuverView.step = step
+            view.addSubview(instructionsView)
+            
+            previewInstructionsView = instructionsView
+            
+            UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
+                instructionsView.frame = self.instructionsBannerView.frame
+            }, completion: { (completed) in
+                viewController.dismiss {
+                    self.stepsViewController = nil
+                }
+            })
+            
+        } else {
+            viewController.dismiss {
+                self.stepsViewController = nil
+            }
         }
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
