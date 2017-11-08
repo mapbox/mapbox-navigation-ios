@@ -587,7 +587,7 @@ open class NavigationMapView: MGLMapView {
                 legCoordinates.insert(firstCoord, at: 0)
             }
             
-            let segments = zip(legCoordinates, legCoordinates).map { [$0.0, $0.1] }
+            let segments = zip(legCoordinates, legCoordinates.suffix(from: 1)).map { [$0.0, $0.1] }
             let congestionSegments = Array(zip(segments, legCongestion))
             
             // Merge adjacent segments with the same congestion level
