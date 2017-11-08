@@ -11,7 +11,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     lazy var speechSynth = AVSpeechSynthesizer()
     var audioPlayer: AVAudioPlayer?
-    let routeStepFormatter = RouteStepFormatter()
     var recentlyAnnouncedRouteStep: RouteStep?
     var fallbackText: String!
     var announcementTimer: Timer?

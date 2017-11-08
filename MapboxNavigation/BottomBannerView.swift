@@ -15,14 +15,12 @@ open class BottomBannerView: UIView {
     weak var arrivalTimeLabel: ArrivalTimeLabel!
     weak var cancelButton: CancelButton!
     weak var dividerView: SeparatorView!
+    weak var routeController: RouteController!
+    weak var delegate: BottomBannerViewDelegate?
     
     let dateFormatter = DateFormatter()
     let dateComponentsFormatter = DateComponentsFormatter()
     let distanceFormatter = DistanceFormatter(approximate: true)
-    let routeStepFormatter = RouteStepFormatter()
-    weak var routeController: RouteController!
-    
-    weak var delegate: BottomBannerViewDelegate?
     
     var congestionLevel: CongestionLevel = .unknown {
         didSet {
