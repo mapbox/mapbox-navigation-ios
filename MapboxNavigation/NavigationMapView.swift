@@ -587,6 +587,8 @@ open class NavigationMapView: MGLMapView {
                 legCoordinates.insert(firstCoord, at: 0)
             }
             
+            // We're trying to create a sequence that conforms to `((segmentStartCoordinate, segmentEndCoordinate), segmentCongestionLevel)`.
+            // This is represents a segment on the route and it's associated congestion level.
             let segments = zip(legCoordinates, legCoordinates.suffix(from: 1)).map { [$0.0, $0.1] }
             let congestionSegments = Array(zip(segments, legCongestion))
             
