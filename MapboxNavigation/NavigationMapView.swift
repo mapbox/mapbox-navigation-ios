@@ -501,8 +501,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.routes = routes //because self.routes is a value type
         self.showRoutes(routes)
         navigationMapDelegate?.navigationMapView?(self, didTap: route)
-        
-        
     }
     
     private func requestNew(route: Route, without waypoint: Waypoint) {
@@ -564,32 +562,33 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      */
     public func showWaypoints(_ route: Route, legIndex: Int = 0) {
-        guard let style = style, route.routeOptions.waypoints.count > 2 else {
+        guard let style = style else {
             return
         }
 
-        routes = [route]
-        
         let remainingWaypoints = Array(route.legs.suffix(from: legIndex).map { $0.destination }.dropLast())
         
         let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: remainingWaypoints) ?? shape(for: remainingWaypoints)
-        
-        if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
-            waypointSource.shape = source
-        } else {
-            let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: sourceOptions)
-            style.addSource(sourceShape)
+        if route.routeOptions.waypoints.count > 2 { //are we on a multipoint route?
             
-            let circles = navigationMapDelegate?.navigationMapView?(self, waypointStyleLayerWithIdentifier: waypointCircleIdentifier, source: sourceShape) ?? routeWaypointCircleStyleLayer(identifier: waypointCircleIdentifier, source: sourceShape)
-            let symbols = navigationMapDelegate?.navigationMapView?(self, waypointSymbolStyleLayerWithIdentifier: waypointSymbolIdentifier, source: sourceShape) ?? routeWaypointSymbolStyleLayer(identifier: waypointSymbolIdentifier, source: sourceShape)
-            
-            if let arrowLayer = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) {
-                style.insertLayer(circles, below: arrowLayer)
+            routes = [route] //update the model
+            if let waypointSource = style.source(withIdentifier: waypointSourceIdentifier) as? MGLShapeSource {
+                waypointSource.shape = source
             } else {
-                style.addLayer(circles)
+                let sourceShape = MGLShapeSource(identifier: waypointSourceIdentifier, shape: source, options: sourceOptions)
+                style.addSource(sourceShape)
+                
+                let circles = navigationMapDelegate?.navigationMapView?(self, waypointStyleLayerWithIdentifier: waypointCircleIdentifier, source: sourceShape) ?? routeWaypointCircleStyleLayer(identifier: waypointCircleIdentifier, source: sourceShape)
+                let symbols = navigationMapDelegate?.navigationMapView?(self, waypointSymbolStyleLayerWithIdentifier: waypointSymbolIdentifier, source: sourceShape) ?? routeWaypointSymbolStyleLayer(identifier: waypointSymbolIdentifier, source: sourceShape)
+                
+                if let arrowLayer = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) {
+                    style.insertLayer(circles, below: arrowLayer)
+                } else {
+                    style.addLayer(circles)
+                }
+                
+                style.insertLayer(symbols, above: circles)
             }
-            
-            style.insertLayer(symbols, above: circles)
         }
         
         if let lastLeg =  route.legs.last {
