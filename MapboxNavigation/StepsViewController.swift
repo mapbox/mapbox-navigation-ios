@@ -218,6 +218,10 @@ extension StepsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return nil
+        }
+        
         let leg = routeProgress.route.legs[section]
         let sourceName = leg.source.name
         let destinationName = leg.destination.name
