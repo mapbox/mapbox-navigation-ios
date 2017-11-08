@@ -1,6 +1,7 @@
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
+import Turf
 
 @objc(MBStepsBackgroundView)
 open class StepsBackgroundView: UIView { }
@@ -29,6 +30,10 @@ class StepsViewController: UIViewController {
     convenience init(routeProgress: RouteProgress) {
         self.init()
         self.routeProgress = routeProgress
+    }
+    
+    func rebuildDataSource() {
+        sections.removeAll()
         
         let legIndex = routeProgress.legIndex
         let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -52,6 +57,20 @@ class StepsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        rebuildDataSource()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
+    }
+    
+    func progressDidChange(_ notification: Notification) {
+        if sections.first?.first != routeProgress.currentLegProgress.upComingStep {
+            rebuildDataSource()
+            tableView.reloadData()
+        }
     }
     
     func setupViews() {
@@ -157,8 +176,31 @@ extension StepsViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
-        cell.step = sections[indexPath.section][indexPath.row]
+        updateCell(cell, at: indexPath)
         return cell
+    }
+    
+    func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
+        let step = sections[indexPath.section][indexPath.row]
+        
+        let instructions = instructionFormatter.instructions(leg: nil, step: step)
+        cell.instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+        cell.instructionsView.maneuverView.step = step
+       
+        let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
+        
+        if usePreviousLeg {
+            let leg = routeProgress.route.legs[indexPath.section-1]
+            let stepBefore = leg.steps[leg.steps.count-1]
+            cell.instructionsView.distance = stepBefore.distance
+        } else {
+            let leg = routeProgress.route.legs[indexPath.section]
+            if let stepBefore = leg.steps.stepBefore(step) {
+                cell.instructionsView.distance = stepBefore.distance
+            } else {
+                cell.instructionsView.distance = nil
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -167,6 +209,7 @@ extension StepsViewController: UITableViewDataSource {
     }
 }
 
+/// :nodoc:
 open class StepInstructionsView: BaseInstructionsBannerView { }
 
 /// :nodoc:
@@ -174,17 +217,6 @@ open class StepTableViewCell: UITableViewCell {
     
     weak var instructionsView: StepInstructionsView!
     weak var separatorView: SeparatorView!
-    static let formatter = VisualInstructionFormatter()
-    
-    var step: RouteStep? {
-        didSet {
-            guard let step = step else { return }
-            let instructions = StepTableViewCell.formatter.instructions(leg: nil, step: step)
-            instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
-            instructionsView.maneuverView.step = step
-            instructionsView.distance = step.distance
-        }
-    }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -218,5 +250,20 @@ open class StepTableViewCell: UITableViewCell {
         separatorView.leftAnchor.constraint(equalTo: instructionsView.primaryLabel.leftAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: instructionsView.bottomAnchor).isActive = true
         separatorView.rightAnchor.constraint(equalTo: rightAnchor, constant: -18).isActive = true
+    }
+}
+
+extension Array where Element == RouteStep {
+    
+    fileprivate func stepBefore(_ step: RouteStep) -> RouteStep? {
+        guard let index = self.index(of: step) else {
+            return nil
+        }
+        
+        if index > 0 {
+            return self[index-1]
+        }
+        
+        return nil
     }
 }
