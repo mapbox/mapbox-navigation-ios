@@ -158,9 +158,25 @@ class RouteMapViewController: UIViewController {
         isInOverviewMode = false
         updateCameraAltitude(for: routeController.routeProgress)
         
+        mapView.addArrow(route: routeController.routeProgress.route,
+                         legIndex: routeController.routeProgress.legIndex,
+                         stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        
+        removePreviewInstructions()
+    }
+    
+    func removePreviewInstructions() {
         if let view = previewInstructionsView {
-            view.removeFromSuperview()
-            previewInstructionsView = nil
+            UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
+                self.instructionsBannerContainerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+                var frame = view.frame
+                frame.origin.y -= view.bounds.height
+                view.frame = frame
+                view.alpha = 0
+            }, completion: { (completed) in
+                view.removeFromSuperview()
+                self.previewInstructionsView = nil
+            })
         }
     }
 
@@ -618,6 +634,8 @@ extension RouteMapViewController: MGLMapViewDelegate {
 extension RouteMapViewController: InstructionsBannerViewDelegate {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         
+        removePreviewInstructions()
+        
         guard let controller = stepsViewController else {
             let controller = StepsViewController(routeProgress: routeController.routeProgress)
             controller.delegate = self
@@ -644,38 +662,39 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
 // MARK: StepsViewControllerDelegate
 
 extension RouteMapViewController: StepsViewControllerDelegate {
-    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, at indexPath: IndexPath) {
-     
-        if let cell = viewController.tableView.cellForRow(at: indexPath) {
-            
-            let frame = cell.convert(cell.frame, to: view)
-            let instructionsView = StepInstructionsView(frame: frame)
-            instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
-            
-            let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
-            instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
-            instructionsView.maneuverView.step = step
-            view.addSubview(instructionsView)
-            
-            previewInstructionsView = instructionsView
-            
-            UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
-                instructionsView.frame = self.instructionsBannerView.frame
-            }, completion: { (completed) in
-                viewController.dismiss {
-                    self.stepsViewController = nil
-                }
-            })
-            
-        } else {
+    
+    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell, indexPath: IndexPath) {
+        let frame = cell.convert(cell.frame, to: view)
+        let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
+        
+        let instructionsView = StepInstructionsView(frame: frame)
+        instructionsView.delegate = self
+        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
+        instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+        instructionsView.maneuverView.step = step
+        view.addSubview(instructionsView)
+        
+        previewInstructionsView = instructionsView
+        
+        UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
+            instructionsView.frame = self.instructionsBannerView.frame
+            self.instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor
+        }, completion: { (completed) in
             viewController.dismiss {
                 self.stepsViewController = nil
             }
-        }
+        })
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
         mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+        
+        if let legIndex = routeController.routeProgress.route.legs.index(where: { !$0.steps.filter { $0 == step }.isEmpty }) {
+            let leg = routeController.routeProgress.route.legs[legIndex]
+            if let stepIndex = leg.steps.index(where: { $0 == step }), leg.steps.last != step {
+                mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
+            }
+        }
     }
     
     func didDismissStepsViewController(_ viewController: StepsViewController) {
