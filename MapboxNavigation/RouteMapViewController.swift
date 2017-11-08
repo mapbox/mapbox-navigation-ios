@@ -270,6 +270,11 @@ class RouteMapViewController: UIViewController {
             mapView.tracksUserCourse = true
             wayNameView.isHidden = true
         }
+        
+        stepsViewController?.dismiss {
+            self.removePreviewInstructions()
+            self.stepsViewController = nil
+        }
     }
     
     func willReroute(notification: NSNotification) {
