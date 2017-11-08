@@ -167,16 +167,9 @@ class RouteMapViewController: UIViewController {
     
     func removePreviewInstructions() {
         if let view = previewInstructionsView {
-            UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
-                self.instructionsBannerContainerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
-                var frame = view.frame
-                frame.origin.y -= view.bounds.height
-                view.frame = frame
-                view.alpha = 0
-            }, completion: { (completed) in
-                view.removeFromSuperview()
-                self.previewInstructionsView = nil
-            })
+            view.removeFromSuperview()
+            instructionsBannerContainerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+            previewInstructionsView = nil
         }
     }
 
@@ -663,27 +656,11 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
 
 extension RouteMapViewController: StepsViewControllerDelegate {
     
-    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell, indexPath: IndexPath) {
-        let frame = cell.convert(cell.frame, to: view)
-        let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
-        
-        let instructionsView = StepInstructionsView(frame: frame)
-        instructionsView.delegate = self
-        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
-        instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
-        instructionsView.maneuverView.step = step
-        view.addSubview(instructionsView)
-        
-        previewInstructionsView = instructionsView
-        
-        UIView.animate(withDuration: 0.35, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
-            instructionsView.frame = self.instructionsBannerView.frame
-            self.instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor
-        }, completion: { (completed) in
-            viewController.dismiss {
-                self.stepsViewController = nil
-            }
-        })
+    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell) {
+        viewController.dismiss {
+            self.addPreviewInstructions(step: step, distance: cell.instructionsView.distance)
+            self.stepsViewController = nil
+        }
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
@@ -695,6 +672,23 @@ extension RouteMapViewController: StepsViewControllerDelegate {
                 mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
             }
         }
+    }
+    
+    func addPreviewInstructions(step: RouteStep, distance: CLLocationDistance?) {
+        removePreviewInstructions()
+        
+        let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
+        let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
+        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
+        instructionsView.delegate = self
+        instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+        instructionsView.maneuverView.step = step
+        instructionsView.distance = distance
+        
+        instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor
+        
+        view.addSubview(instructionsView)
+        previewInstructionsView = instructionsView
     }
     
     func didDismissStepsViewController(_ viewController: StepsViewController) {
