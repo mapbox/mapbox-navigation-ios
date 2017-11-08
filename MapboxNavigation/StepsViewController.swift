@@ -7,7 +7,7 @@ import Turf
 open class StepsBackgroundView: UIView { }
 
 protocol StepsViewControllerDelegate: class {
-    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell, indexPath: IndexPath)
+    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell)
     func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
@@ -169,14 +169,8 @@ extension StepsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let step = sections[indexPath.section][indexPath.row]
-        
         let cell = tableView.cellForRow(at: indexPath) as! StepTableViewCell
-        delegate?.stepsViewController(self, didSelect: step, cell: cell, indexPath: indexPath)
-        
-        tableView.beginUpdates()
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        sections[indexPath.section].remove(at: indexPath.row)
-        tableView.endUpdates()
+        delegate?.stepsViewController(self, didSelect: step, cell: cell)
     }
 }
 
