@@ -1,4 +1,7 @@
-﻿/* Indicates a faster route was found */
+﻿/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Close";
+
+/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
 
 /* Feedback type for Bad Route */
