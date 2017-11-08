@@ -497,7 +497,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didTap route: Route) {
-        navigationDelegate?.navigationMapView?(mapView, didTap: route)
+        delegate?.navigationMapView?(mapView, didTap: route)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
