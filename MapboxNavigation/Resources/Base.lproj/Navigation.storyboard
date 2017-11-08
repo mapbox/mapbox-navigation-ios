@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Unknown constraint types" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -48,7 +49,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-iR-MZm" customClass="MBReportButton">
-                                <rect key="frame" x="121.5" y="195.5" width="132" height="38"/>
+                                <rect key="frame" x="121.5" y="196.5" width="132" height="38"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.23921568627450979" blue="0.3411764705882353" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
@@ -93,7 +94,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG">
-                                <rect key="frame" x="0.0" y="115.5" width="375" height="70"/>
+                                <rect key="frame" x="0.0" y="116.5" width="375" height="70"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="LanesContainerView" customModule="MapboxNavigation" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
@@ -160,7 +161,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
-                                <rect key="frame" x="315" y="196" width="50" height="108"/>
+                                <rect key="frame" x="315" y="197" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -210,15 +211,15 @@
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" customClass="MBInstructionsBannerContainerView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="115"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="116"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="115" id="z8N-zg-uyY"/>
-                                </constraints>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UnK-tl-lPe" customClass="MBInstructionsBannerView">
                                 <rect key="frame" x="0.0" y="20" width="375" height="96"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="96" id="T38-Uq-JYA"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -237,6 +238,7 @@
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="NZN-Hw-HBT"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="bUe-nv-g0F" secondAttribute="centerX" id="O0m-0k-ilC"/>
                             <constraint firstAttribute="bottom" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
+                            <constraint firstItem="p9E-v0-Rt6" firstAttribute="bottom" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="OJu-tK-ZSa"/>
                             <constraint firstItem="sDs-aU-EMQ" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="Rph-1f-p36"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
@@ -245,14 +247,13 @@
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
                             <constraint firstAttribute="trailing" secondItem="8P3-NB-IRq" secondAttribute="trailing" constant="10" id="aek-g0-Rdp"/>
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gAd-tT-w0a"/>
-                            <constraint firstItem="UnK-tl-lPe" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" constant="20" id="gER-Br-LqP"/>
+                            <constraint firstItem="UnK-tl-lPe" firstAttribute="top" secondItem="bUe-nv-g0F" secondAttribute="top" id="gER-Br-LqP"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="gfU-Wb-qye"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
                             <constraint firstAttribute="bottom" secondItem="sDs-aU-EMQ" secondAttribute="bottom" id="oTs-S0-zPa"/>
                             <constraint firstItem="SKK-r5-nj0" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" constant="10" id="pN3-Uj-cPZ"/>
                             <constraint firstItem="I8f-iR-MZm" firstAttribute="centerX" secondItem="Gvo-VD-DXF" secondAttribute="centerX" id="wAq-V2-Lx6"/>
-                            <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" constant="0.5" id="xsN-Bb-wmd"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bUe-nv-g0F"/>
                     </view>
@@ -392,7 +393,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>

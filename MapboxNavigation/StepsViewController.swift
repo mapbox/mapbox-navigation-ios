@@ -15,6 +15,7 @@ class StepsViewController: UIViewController {
     
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
+    weak var bottomView: UIView!
     weak var dismissButton: DismissButton!
     weak var delegate: StepsViewControllerDelegate?
     
@@ -103,11 +104,22 @@ class StepsViewController: UIViewController {
         dismissButton.addTarget(self, action: #selector(StepsViewController.tappedDismiss(_:)), for: .touchUpInside)
         view.addSubview(dismissButton)
         self.dismissButton = dismissButton
+        
+        let bottomView = UIView()
+        bottomView.translatesAutoresizingMaskIntoConstraints = false
+        bottomView.backgroundColor = DismissButton.appearance().backgroundColor
+        view.addSubview(bottomView)
+        self.bottomView = bottomView
 
         dismissButton.heightAnchor.constraint(equalToConstant: 54).isActive = true
         dismissButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        dismissButton.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        dismissButton.bottomAnchor.constraint(equalTo: view.safeBottomAnchor).isActive = true
         dismissButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        
+        bottomView.topAnchor.constraint(equalTo: dismissButton.bottomAnchor).isActive = true
+        bottomView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        bottomView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
