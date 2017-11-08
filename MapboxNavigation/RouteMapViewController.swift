@@ -392,7 +392,8 @@ class RouteMapViewController: UIViewController {
             }
             
         } else {
-            let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: routeProgress.currentLegProgress.currentStep)
+            let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
+            let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: step)
             instructionsBannerView.set(instructions.0, secondaryInstruction: instructions.1)
         }
         
