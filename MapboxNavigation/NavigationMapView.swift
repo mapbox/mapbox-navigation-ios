@@ -564,7 +564,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      */
     public func showWaypoints(_ route: Route, legIndex: Int = 0) {
-        guard let style = style else {
+        guard let style = style, route.routeOptions.waypoints.count > 2 else {
             return
         }
 
