@@ -62,6 +62,7 @@ open class DayStyle: Style {
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium).adjustedFont
         ArrivalTimeLabel.appearance().textColor = .defaultPrimaryText
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        BottomBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         Button.appearance().textColor = .defaultPrimaryText
         CancelButton.appearance().tintColor = .defaultPrimaryText
         CellSubtitleLabel.appearance().font = UIFont.systemFont(ofSize: 17).adjustedFont
@@ -82,7 +83,7 @@ open class DayStyle: Style {
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance().tintColor = tintColor
-        InstructionsBannerContainerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        InstructionsBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         LaneView.appearance().primaryColor = .defaultLaneArrowPrimary
@@ -146,6 +147,7 @@ open class NightStyle: DayStyle {
         
         ArrivalTimeLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         BottomBannerView.appearance().backgroundColor = backgroundColor
+        BottomBannerContentView.appearance().backgroundColor = backgroundColor
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CancelButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CellTurnArrowView.appearance().primaryColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -157,7 +159,7 @@ open class NightStyle: DayStyle {
         DistanceRemainingLabel.appearance().textColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         FloatingButton.appearance().backgroundColor = backgroundColor
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        InstructionsBannerContainerView.appearance().backgroundColor = backgroundColor
+        InstructionsBannerContentView.appearance().backgroundColor = backgroundColor
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
         LanesView.appearance().backgroundColor = backgroundColor
         LaneView.appearance().primaryColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)

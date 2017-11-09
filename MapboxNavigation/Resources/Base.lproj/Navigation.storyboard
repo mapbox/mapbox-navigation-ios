@@ -86,6 +86,10 @@
                                     <constraint firstItem="bcm-ca-nGv" firstAttribute="leading" secondItem="drb-do-FoT" secondAttribute="leading" constant="14" id="gei-Oh-7XJ"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-Bj-wuQ" userLabel="Bottom Banner Content View" customClass="MBBottomBannerContentView">
+                                <rect key="frame" x="0.0" y="420" width="375" height="80"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDs-aU-EMQ" customClass="MBBottomBannerView">
                                 <rect key="frame" x="0.0" y="420" width="375" height="80"/>
                                 <color key="backgroundColor" red="0.4858537946" green="0.87731584819999997" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -210,7 +214,7 @@
                                     <constraint firstAttribute="height" constant="2" id="Qlo-Iw-KAF"/>
                                 </constraints>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" customClass="MBInstructionsBannerContainerView">
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" customClass="MBInstructionsBannerContentView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="116"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </containerView>
@@ -225,35 +229,39 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
-                            <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="4Si-h7-lL5"/>
+                            <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bUe-nv-g0F" secondAttribute="leading" constant="20" id="4oP-yz-9W5"/>
                             <constraint firstItem="I8f-iR-MZm" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="7KD-9u-9mi" userLabel="Reroute Slide Constraint"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="81D-S0-3wU"/>
-                            <constraint firstAttribute="trailing" secondItem="UnK-tl-lPe" secondAttribute="trailing" id="8tv-TI-Nej"/>
-                            <constraint firstAttribute="trailing" secondItem="sDs-aU-EMQ" secondAttribute="trailing" id="Bez-gD-WlX"/>
+                            <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="UnK-tl-lPe" secondAttribute="trailing" id="8tv-TI-Nej"/>
+                            <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="top" secondItem="sDs-aU-EMQ" secondAttribute="top" id="AbH-gl-nG9"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="DvR-Su-3GN"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="HsP-If-DXW"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
-                            <constraint firstAttribute="bottom" secondItem="SKK-r5-nj0" secondAttribute="bottom" constant="92" id="KT2-TO-Mr4"/>
+                            <constraint firstItem="bUe-nv-g0F" firstAttribute="bottom" secondItem="SKK-r5-nj0" secondAttribute="bottom" constant="92" id="KT2-TO-Mr4"/>
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="NZN-Hw-HBT"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="bUe-nv-g0F" secondAttribute="centerX" id="O0m-0k-ilC"/>
-                            <constraint firstAttribute="bottom" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
+                            <constraint firstItem="bUe-nv-g0F" firstAttribute="bottom" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="bottom" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="OJu-tK-ZSa"/>
-                            <constraint firstItem="sDs-aU-EMQ" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="Rph-1f-p36"/>
-                            <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
-                            <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
+                            <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="QHw-st-QI3"/>
+                            <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
+                            <constraint firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="VK1-eQ-4VK"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
-                            <constraint firstAttribute="trailing" secondItem="8P3-NB-IRq" secondAttribute="trailing" constant="10" id="aek-g0-Rdp"/>
-                            <constraint firstItem="UnK-tl-lPe" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gAd-tT-w0a"/>
+                            <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="8P3-NB-IRq" secondAttribute="trailing" constant="10" id="aek-g0-Rdp"/>
+                            <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="bottom" secondItem="Gvo-VD-DXF" secondAttribute="bottom" id="doU-NT-mFp"/>
+                            <constraint firstItem="UnK-tl-lPe" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="gAd-tT-w0a"/>
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="top" secondItem="bUe-nv-g0F" secondAttribute="top" id="gER-Br-LqP"/>
-                            <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
-                            <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="gfU-Wb-qye"/>
+                            <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
+                            <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gfU-Wb-qye"/>
+                            <constraint firstItem="sDs-aU-EMQ" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="hUt-on-4Oa"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
-                            <constraint firstAttribute="bottom" secondItem="sDs-aU-EMQ" secondAttribute="bottom" id="oTs-S0-zPa"/>
+                            <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="trailing" secondItem="Gvo-VD-DXF" secondAttribute="trailing" id="k72-L2-45H"/>
+                            <constraint firstItem="bUe-nv-g0F" firstAttribute="bottom" secondItem="sDs-aU-EMQ" secondAttribute="bottom" id="oTs-S0-zPa"/>
                             <constraint firstItem="SKK-r5-nj0" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" constant="10" id="pN3-Uj-cPZ"/>
                             <constraint firstItem="I8f-iR-MZm" firstAttribute="centerX" secondItem="Gvo-VD-DXF" secondAttribute="centerX" id="wAq-V2-Lx6"/>
+                            <constraint firstItem="sDs-aU-EMQ" firstAttribute="trailing" secondItem="bUe-nv-g0F" secondAttribute="trailing" id="xVy-QY-PqF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bUe-nv-g0F"/>
                     </view>
@@ -393,7 +401,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -447,7 +455,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E8e-VY-Wnj">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -609,7 +617,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pt1-9i-cSt">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
