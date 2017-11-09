@@ -11,9 +11,4 @@ extension UIGestureRecognizer {
         guard let gestures = gestures else { return }
         gestures.forEach(self.require(toFail:))
     }
-    
-    func coordinate(in map: MGLMapView) -> CLLocationCoordinate2D? {
-        guard let point = self.point else { return nil }
-        return map.convert(point, toCoordinateFrom: self.view)
-    }
 }

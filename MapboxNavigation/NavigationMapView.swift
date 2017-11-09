@@ -430,12 +430,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
     func didRecieveTap(sender: UITapGestureRecognizer) {
-        guard let routes = routes else { return }
+        guard let routes = routes, let tapPoint = sender.point else { return }
         
-        let waypointTest = waypoints(on: routes, closeTo: sender) //are there waypoints near the tapped location?
+        let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?
         if let activeRoute = waypointTest?.multipointRoutes.first ,let waypointToRemove = waypointTest?.waypoints.first { //test passes
             return requestNew(route: activeRoute, without: waypointToRemove)
-        } else if let routes = self.routes(closeTo: sender) {
+        } else if let routes = self.routes(closeTo: tapPoint) {
             guard let selectedRoute = routes.first else { return }
             select(route: selectedRoute)
         }
@@ -443,8 +443,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     //TODO: Change to point-based distance calculation
-    private func waypoints(on routes: [Route], closeTo tap: UITapGestureRecognizer) -> (multipointRoutes: [Route], waypoints: [Waypoint])? {
-        guard let tapCoordinate = tap.coordinate(in: self), let tapPoint = tap.point else { return nil }
+    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> (multipointRoutes: [Route], waypoints: [Waypoint])? {
+        let tapCoordinate = convert(point, toCoordinateFrom: self)
         let waypointThreshold: CGFloat = 100 //FIXME: Class Constant
         let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
         guard multipointRoutes.count > 0 else { return nil }
@@ -460,14 +460,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         //lets filter to see which ones are under threshold
         let candidates = closest.filter({
             let coordinatePoint = self.convert($0.coordinate, toPointTo: self)
-            return coordinatePoint.distance(to: tapPoint) < waypointThreshold
+            return coordinatePoint.distance(to: point) < waypointThreshold
         })
         
         return (multipointRoutes, candidates)
     }
     
-    private func routes(closeTo tap: UITapGestureRecognizer) -> [Route]? {
-        guard let tapCoordinate = tap.coordinate(in: self), let tapPoint = tap.point else { return nil }
+    private func routes(closeTo point: CGPoint) -> [Route]? {
+        let tapCoordinate = convert(point, toCoordinateFrom: self)
         
         //do we have routes? If so, filter routes with at least 2 coordinates.
         guard let routes = routes?.filter({ $0.coordinates?.count ?? 0 > 1 }) else { return nil }
@@ -489,7 +489,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let closestCoordinate = Polyline($0.coordinates!).closestCoordinate(to: tapCoordinate)!.coordinate
             let closestPoint = self.convert(closestCoordinate, toPointTo: self)
             
-            return closestPoint.distance(to: tapPoint) < maximumTapDistanceToSelectAltRoute
+            return closestPoint.distance(to: point) < maximumTapDistanceToSelectAltRoute
         }
         return candidates
     }
