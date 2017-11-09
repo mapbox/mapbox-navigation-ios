@@ -390,9 +390,12 @@ class RouteMapViewController: UIViewController {
     
     func updateNextBanner(routeProgress: RouteProgress) {
         let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
-        let nextStep = routeProgress.currentLegProgress.stepAfter(step)
-        let shouldShowNextBanner = nextStep != nil ? nextStep!.distance < 1000 : false
-        
+        guard let nextStep = routeProgress.currentLegProgress.stepAfter(step) else {
+            hideNextBanner()
+            return
+        }
+    
+        let shouldShowNextBanner = nextStep.distance < RouteControllerMinimumDistanceForContinueInstruction
         if shouldShowNextBanner {
             showNextBanner()
             let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
