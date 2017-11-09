@@ -16,8 +16,18 @@ enum ExampleMode {
     case multipleWaypoints
 }
 
-class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, NavigationMapViewDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
+    //MARK: - IBOutlets
+    @IBOutlet weak var mapView: NavigationMapView!
+    @IBOutlet weak var longPressHintView: UIView!
+    
+    @IBOutlet weak var simulationButton: UIButton!
+    @IBOutlet weak var startButton: UIButton!
+    
+    @IBOutlet weak var clearMap: UIButton!
+    
+    //MARK: Properties
     var waypoints: [Waypoint] = []
     var currentRoute: Route? {
         get {
@@ -39,13 +49,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         }
     }
     
-    @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var longPressHintView: UIView!
-
-    @IBOutlet weak var simulationButton: UIButton!
-    @IBOutlet weak var startButton: UIButton!
+    // MARK: Directions Request Handlers
     
-    @IBOutlet weak var clearMap: UIButton!
+    fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
+        guard let current = routes.first else { return }
+        self?.routes = routes
+        self?.currentRoute = current
+        self?.waypoints = current.routeOptions.waypoints
+    }
+    
+    fileprivate lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
+        self?.routes = nil //clear routes from the map
+        print(error.localizedDescription)
+    }
+    
 
     var exampleMode: ExampleMode?
     
@@ -58,6 +75,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             self.startMultipleWaypoints()
         })
     }()
+    
+    //MARK: - Lifecycle Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,6 +119,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         DayStyle().apply()
     }
     
+    //MARK: Gesture Recognizer Handlers
+    
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
         guard sender.state == .began else {
             return
@@ -131,6 +152,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         requestRoute()
     }
     
+    //MARK: - IBActions
     @IBAction func replay(_ sender: Any) {
         let bundle = Bundle(for: ViewController.self)
         let filePath = bundle.path(forResource: "tunnel", ofType: "json")!
@@ -160,20 +182,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         present(alertController, animated: true, completion: nil)
     }
     
-    // MARK: Directions Requests
-    
-    private lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
-            guard let current = routes.first else { return }
-            self?.routes = routes
-            self?.currentRoute = current
-            self?.waypoints = current.routeOptions.waypoints
-    }
-    
-    private lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
-        self?.routes = nil //clear routes from the map
-        print(error.localizedDescription)
-    }
-    
+
+    //MARK: - Public Methods
+    //MARK: Route Requests
     func requestRoute() {
         guard waypoints.count > 0 else { return }
         
@@ -185,7 +196,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         requestRoute(with: options, success: defaultSuccess, failure: defaultFailure)
     }
     
-    private func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
+    fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
         
         let handler: Directions.CompletionHandler = {(waypoints, potentialRoutes, potentialError) in
             if let error = potentialError, let fail = failure { return fail(error) }
@@ -196,7 +207,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         _ = Directions.shared.calculate(options, completionHandler: handler)
     }
 
-    // MARK: - Basic Navigation
+    // MARK: Basic Navigation
 
     func startBasicNavigation() {
         guard let route = currentRoute else { return }
@@ -210,7 +221,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         present(navigationViewController, animated: true, completion: nil)
     }
 
-    // MARK: - Custom Navigation UI
+    // MARK: Custom Navigation UI
 
     func startCustomNavigation() {
         guard let route = self.currentRoute else { return }
@@ -229,7 +240,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         present(customViewController, animated: true, completion: nil)
     }
 
-    // MARK: - Styling the default UI
+    // MARK: Styling the default UI
     
     func startStyledNavigation() {
         guard let route = self.currentRoute else { return }
@@ -249,7 +260,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
     }
     
-    // MARK: - Navigation with multiple waypoints
+    // MARK: Navigation with multiple waypoints
 
     func startMultipleWaypoints() {
         guard let route = self.currentRoute else { return }
@@ -262,14 +273,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         present(navigationViewController, animated: true, completion: nil)
     }
-    
-    // By default, when the user arrives at a waypoint, the next leg starts immediately.
-    // If however you would like to pause and allow the user to provide input, set this delegate method to false.
-    // This does however require you to increment the leg count on your own. See the example below in `confirmationControllerDidConfirm()`.
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
-        return false
-    }
-    
+}
+
+//MARK: - NavigationMapViewDelegate
+extension ViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
         guard let routeOptions = currentRoute?.routeOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
@@ -282,6 +289,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
 }
 
+//MARK: WaypointConfirmationViewControllerDelegate
 extension ViewController: WaypointConfirmationViewControllerDelegate {
     func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
         confirmationController.dismiss(animated: true, completion: {
@@ -293,7 +301,15 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
     }
 }
 
+//MARK: NavigationViewControllerDelegate
 extension ViewController: NavigationViewControllerDelegate {
+    // By default, when the user arrives at a waypoint, the next leg starts immediately.
+    // If however you would like to pause and allow the user to provide input, set this delegate method to false.
+    // This does however require you to increment the leg count on your own. See the example below in `confirmationControllerDidConfirm()`.
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
+        return false
+    }
+    
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
         // Multiple waypoint demo
         guard exampleMode == .multipleWaypoints else { return }
@@ -307,6 +323,8 @@ extension ViewController: NavigationViewControllerDelegate {
         navigationViewController.present(confirmationController, animated: true, completion: nil)
     }
 }
+
+//MARK: CustomNightStyle
 class CustomNightStyle: DayStyle {
     
     required init() {
