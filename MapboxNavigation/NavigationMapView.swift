@@ -651,7 +651,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrow.lineCap = MGLStyleValue(rawValue: cap)
                 arrow.lineJoin = MGLStyleValue(rawValue: join)
                 arrow.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                                cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.70),
+                                                cameraStops: routeLineWidthAtZoomLevels.multiplied(by: 0.70),
                                                 options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
                 arrow.lineColor = MGLStyleValue(rawValue: .white)
                 
@@ -667,7 +667,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
                 arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
                 arrowStroke.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                                      cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.80),
+                                                      cameraStops: routeLineWidthAtZoomLevels.multiplied(by: 0.80),
                                                       options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
                 arrowStroke.lineColor = MGLStyleValue(rawValue: .defaultArrowStroke)
                 
@@ -696,7 +696,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrowSymbolLayer.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
                 arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
                 arrowSymbolLayer.iconScale = MGLStyleValue(interpolationMode: .exponential,
-                                                           cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.12),
+                                                           cameraStops: routeLineWidthAtZoomLevels.multiplied(by: 0.12),
                                                            options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
                 arrowSymbolLayer.iconAllowsOverlap = MGLStyleValue(rawValue: true)
                 
@@ -708,7 +708,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrowSymbolLayerCasing.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
                 arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
                 arrowSymbolLayerCasing.iconScale = MGLStyleValue(interpolationMode: .exponential,
-                                                                 cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.14),
+                                                                 cameraStops: routeLineWidthAtZoomLevels.multiplied(by: 0.14),
                                                                  options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
                 arrowSymbolLayerCasing.iconAllowsOverlap = MGLStyleValue(rawValue: true)
                 
@@ -851,7 +851,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         // Take the default line width and make it wider for the casing
         lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.85),
+                                             cameraStops: routeLineWidthAtZoomLevels.multiplied(by: 0.85),
                                              options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
         lineCasing.lineColor = MGLStyleValue(rawValue: routeAlternateColor)
@@ -918,7 +918,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         // Take the default line width and make it wider for the casing
         lineCasing.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                             cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 1.5),
+                                             cameraStops: routeLineWidthAtZoomLevels.multiplied(by: 1.5),
                                              options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
         
         lineCasing.lineColor = MGLStyleValue(rawValue: routeCasingColor)
@@ -980,7 +980,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 //MARK: Extensions
 
 extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
-    func muliplied(by factor: Double) -> Dictionary {
+    func multiplied(by factor: Double) -> Dictionary {
         var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
         for stop in routeLineWidthAtZoomLevels {
             let f = stop.value as! MGLConstantStyleValue
