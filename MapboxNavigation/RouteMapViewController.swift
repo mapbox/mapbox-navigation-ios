@@ -390,7 +390,7 @@ class RouteMapViewController: UIViewController {
     
     func updateNextBanner(routeProgress: RouteProgress) {
         guard let step = routeProgress.currentLegProgress.upComingStep,
-            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval,
+            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
             let nextStep = routeProgress.currentLegProgress.stepAfter(step)
             else {
                 hideNextBanner()
