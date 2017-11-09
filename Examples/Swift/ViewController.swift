@@ -53,6 +53,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
         guard let current = routes.first else { return }
+        self?.mapView.removeWaypoints()
         self?.routes = routes
         self?.currentRoute = current
         self?.waypoints = current.routeOptions.waypoints
