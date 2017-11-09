@@ -397,8 +397,11 @@ class RouteMapViewController: UIViewController {
                 return
         }
     
-        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
+        var instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
         nextBannerView.maneuverView.step = nextStep
+        if let _ = instructions.0?.components.first {
+            instructions.0?.components[0].includeThen = true
+        }
         nextBannerView.instructionLabel.instruction = instructions.0
         showNextBanner()
     }

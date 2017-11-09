@@ -43,6 +43,9 @@
 /* Button title for resume tracking */
 "RESUME" = "Resume";
 
+/* Then */
+"THEN" = "Then: ";
+
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulating Navigation";
 
