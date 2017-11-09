@@ -37,8 +37,8 @@ struct EventDetails {
     var applicationState: UIApplicationState
     var userAbsoluteDistanceToDestination: CLLocationDistance?
     var locationEngine: CLLocationManager.Type?
-    var percentTimeInPortrait: Double
-    var percentTimeInForeground: Double
+    var percentTimeInPortrait: Int
+    var percentTimeInForeground: Int
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -101,7 +101,7 @@ struct EventDetails {
         } else if UIDevice.current.orientation.isLandscape {
             totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
         }
-        percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 1 : totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
+        percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
         
         var totalTimeInForeground = session.timeSpentInForeground
         var totalTimeInBackground = session.timeSpentInBackground
@@ -110,7 +110,7 @@ struct EventDetails {
         } else {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
-        percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 1 : totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
+        percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
     }
     
     var eventDictionary: [String: Any] {
