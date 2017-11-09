@@ -389,21 +389,18 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
-        let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
-        guard let nextStep = routeProgress.currentLegProgress.stepAfter(step) else {
-            hideNextBanner()
-            return
+        guard let step = routeProgress.currentLegProgress.upComingStep,
+            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval,
+            let nextStep = routeProgress.currentLegProgress.stepAfter(step)
+            else {
+                hideNextBanner()
+                return
         }
     
-        let shouldShowNextBanner = nextStep.distance < RouteControllerMinimumDistanceForContinueInstruction
-        if shouldShowNextBanner {
-            showNextBanner()
-            let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
-            nextBannerView.maneuverView.step = nextStep
-            nextBannerView.instructionLabel.instruction = instructions.0
-        } else {
-            hideNextBanner()
-        }
+        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
+        nextBannerView.maneuverView.step = nextStep
+        nextBannerView.instructionLabel.instruction = instructions.0
+        showNextBanner()
     }
     
     func showNextBanner() {
