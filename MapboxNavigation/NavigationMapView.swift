@@ -438,7 +438,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         } else if let routes = self.routes(closeTo: tapPoint) {
             guard let selectedRoute = routes.first else { return }
-            select(route: selectedRoute)
+            navigationMapDelegate?.navigationMapView?(self, didSelect: selectedRoute)
         }
         
     }
@@ -494,16 +494,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         return candidates
     }
-    
-    private func select(route: Route) {
-        guard var routes = routes, let routeIndex = routes.index(where: {$0 == route}) else { return }
-        routes.remove(at: routeIndex)
-        routes.insert(route, at: 0)
-        self.routes = routes //because self.routes is a value type
-        self.showRoutes(routes)
-        navigationMapDelegate?.navigationMapView?(self, didSelect: route)
-    }
-    
     /**
      Removes route line and route line casing from map
      */

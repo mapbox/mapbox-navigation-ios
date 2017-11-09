@@ -21,8 +21,16 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     var waypoints: [Waypoint] = []
     var currentRoute: Route? {
         didSet {
-            self.startButton.isEnabled = currentRoute != nil
+            self.startButton.isEnabled = (currentRoute != nil)
+            select(route: currentRoute)
             mapView.showWaypoints(currentRoute!)
+        }
+    }
+    
+    var routes: [Route]? {
+        didSet {
+            guard let routes = routes else { mapView?.removeRoutes(); return }
+            mapView.showRoutes(routes)
         }
     }
     
@@ -151,12 +159,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     private lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
             guard let current = routes.first else { return }
+            self?.routes = routes
             self?.currentRoute = current
             self?.waypoints = current.routeOptions.waypoints
-            self?.mapView.showRoutes(routes)
     }
     
-    private lazy var defaultFailure: RouteRequestFailure = { (error) in
+    private lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
+        self?.routes = nil //clear routes from the map
         print(error.localizedDescription)
     }
     
@@ -179,8 +188,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             return success(routes)
         }
         
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
         _ = Directions.shared.calculate(options, completionHandler: handler)
     }
 
@@ -267,6 +274,16 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         currentRoute = route
+    }
+    
+    func select(route: Route?) {
+        guard let route = route else { return }
+        if let routes = self.routes {
+            let newRoutes = [route] + routes.filter({ $0 != route })
+            self.routes = newRoutes
+        } else {
+            routes = [route]
+        }
     }
 }
 
