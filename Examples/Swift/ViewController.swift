@@ -34,8 +34,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             return routes?.first
         }
         set {
-            self.startButton.isEnabled = (newValue != nil)
-            guard let selected = newValue else { self.routes?.remove(at: 0); return }
+            startButton.isEnabled = (newValue != nil)
+            guard let selected = newValue else { routes?.remove(at: 0); return }
             guard let routes = routes else { self.routes = [selected]; return }
             self.routes = [selected] + routes.filter { $0 != selected }
             mapView.showWaypoints(selected)
