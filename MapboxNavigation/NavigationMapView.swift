@@ -369,63 +369,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     var routes: [Route]?
     
-    /**
-     Adds or updates both the route line and the route line casing
-     */
-    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
-        guard let style = style else { return }
-        guard let activeRoute = routes.first else { return }
-        
-        let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
-        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
-        
-        if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
-            let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
-            source.shape = mainPolyline
-            sourceSimplified.shape = mainPolylineSimplified
-        } else {
-            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: mainPolyline, options: nil)
-            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: mainPolylineSimplified, options: nil)
-            style.addSource(lineSource)
-            style.addSource(lineCasingSource)
-            
-            let line = navigationMapDelegate?.navigationMapView?(self, routeStyleLayerWithIdentifier: routeLayerIdentifier, source: lineSource) ?? routeStyleLayer(identifier: routeLayerIdentifier, source: lineSource)
-            let lineCasing = navigationMapDelegate?.navigationMapView?(self, routeCasingStyleLayerWithIdentifier: routeLayerCasingIdentifier, source: lineCasingSource) ?? routeCasingStyleLayer(identifier: routeLayerCasingIdentifier, source: lineSource)
-            
-            for layer in style.layers.reversed() {
-                if !(layer is MGLSymbolStyleLayer) &&
-                    layer.identifier != arrowLayerIdentifier && layer.identifier != arrowSymbolLayerIdentifier && layer.identifier != arrowCasingSymbolLayerIdentifier && layer.identifier != arrowLayerStrokeIdentifier && layer.identifier != waypointCircleIdentifier {
-                    style.insertLayer(line, below: layer)
-                    style.insertLayer(lineCasing, below: line)
-                    break
-                }
-            }
-        }
-        guard routes.count > 1 else {
-            removeAlternates()
-            return
-        }
-        
-        self.routes = routes
-        var tmpRoutes = routes
-        tmpRoutes.removeFirst()
-        guard let alternateRoute = tmpRoutes.first else { return }
-        
-        let alternatePolyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
-        
-        if let source = style.source(withIdentifier: alternateSourceIdentifier) as? MGLShapeSource {
-            source.shape = alternatePolyline
-        } else {
-            let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
-            style.addSource(alternateSource)
-            
-            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
-            
-            if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
-                style.insertLayer(alternateLayer, below: layer)
-            }
-        }
-    }
+    //MARK: TapGestureRecognizer
+    
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
@@ -493,6 +438,67 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         return candidates
     }
+    
+    //MARK: Feature Addition/Removal
+    
+    /**
+     Adds or updates both the route line and the route line casing
+     */
+    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
+        guard let style = style else { return }
+        guard let activeRoute = routes.first else { return }
+        
+        let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
+        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
+        
+        if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
+            let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
+            source.shape = mainPolyline
+            sourceSimplified.shape = mainPolylineSimplified
+        } else {
+            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: mainPolyline, options: nil)
+            let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: mainPolylineSimplified, options: nil)
+            style.addSource(lineSource)
+            style.addSource(lineCasingSource)
+            
+            let line = navigationMapDelegate?.navigationMapView?(self, routeStyleLayerWithIdentifier: routeLayerIdentifier, source: lineSource) ?? routeStyleLayer(identifier: routeLayerIdentifier, source: lineSource)
+            let lineCasing = navigationMapDelegate?.navigationMapView?(self, routeCasingStyleLayerWithIdentifier: routeLayerCasingIdentifier, source: lineCasingSource) ?? routeCasingStyleLayer(identifier: routeLayerCasingIdentifier, source: lineSource)
+            
+            for layer in style.layers.reversed() {
+                if !(layer is MGLSymbolStyleLayer) &&
+                    layer.identifier != arrowLayerIdentifier && layer.identifier != arrowSymbolLayerIdentifier && layer.identifier != arrowCasingSymbolLayerIdentifier && layer.identifier != arrowLayerStrokeIdentifier && layer.identifier != waypointCircleIdentifier {
+                    style.insertLayer(line, below: layer)
+                    style.insertLayer(lineCasing, below: line)
+                    break
+                }
+            }
+        }
+        guard routes.count > 1 else {
+            removeAlternates()
+            return
+        }
+        
+        self.routes = routes
+        var tmpRoutes = routes
+        tmpRoutes.removeFirst()
+        guard let alternateRoute = tmpRoutes.first else { return }
+        
+        let alternatePolyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
+        
+        if let source = style.source(withIdentifier: alternateSourceIdentifier) as? MGLShapeSource {
+            source.shape = alternatePolyline
+        } else {
+            let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
+            style.addSource(alternateSource)
+            
+            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
+            
+            if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
+                style.insertLayer(alternateLayer, below: layer)
+            }
+        }
+    }
+    
     /**
      Removes route line and route line casing from map
      */
@@ -597,6 +603,162 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             style.removeSource(symbolSource)
         }
     }
+    
+    /**
+     Shows the step arrow given the current `RouteProgress`.
+     */
+    public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
+        guard route.legs.indices.contains(legIndex),
+            route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
+        
+        let step = route.legs[legIndex].steps[stepIndex]
+        let maneuverCoordinate = step.maneuverLocation
+        guard let routeCoordinates = route.coordinates else { return }
+        
+        guard let style = style else {
+            return
+        }
+        
+        let minimumZoomLevel: Float = 14.5
+        
+        let shaftLength = max(min(30 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 30), 10)
+        let polyline = Polyline(routeCoordinates)
+        let shaftCoordinates = Array(polyline.trimmed(from: maneuverCoordinate, distance: -shaftLength).coordinates.reversed()
+            + polyline.trimmed(from: maneuverCoordinate, distance: shaftLength).coordinates.suffix(from: 1))
+        
+        if shaftCoordinates.count > 1 {
+            var shaftStrokeCoordinates = shaftCoordinates
+            let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
+            let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
+            let maneuverArrowStrokePolylines = [shaftStrokePolyline]
+            let shaftPolyline = ArrowFillPolyline(coordinates: shaftCoordinates, count: UInt(shaftCoordinates.count))
+            
+            let arrowShape = MGLShapeCollection(shapes: [shaftPolyline])
+            let arrowStrokeShape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
+            
+            let cap = NSValue(mglLineCap: .butt)
+            let join = NSValue(mglLineJoin: .round)
+            
+            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: sourceOptions)
+            let arrowStroke = MGLLineStyleLayer(identifier: arrowLayerStrokeIdentifier, source: arrowSourceStroke)
+            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: sourceOptions)
+            let arrow = MGLLineStyleLayer(identifier: arrowLayerIdentifier, source: arrowSource)
+            
+            if let source = style.source(withIdentifier: arrowSourceIdentifier) as? MGLShapeSource {
+                source.shape = arrowShape
+            } else {
+                arrow.minimumZoomLevel = minimumZoomLevel
+                arrow.lineCap = MGLStyleValue(rawValue: cap)
+                arrow.lineJoin = MGLStyleValue(rawValue: join)
+                arrow.lineWidth = MGLStyleValue(interpolationMode: .exponential,
+                                                cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.70),
+                                                options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
+                arrow.lineColor = MGLStyleValue(rawValue: .white)
+                
+                style.addSource(arrowSource)
+                style.addLayer(arrow)
+            }
+            
+            if let source = style.source(withIdentifier: arrowSourceStrokeIdentifier) as? MGLShapeSource {
+                source.shape = arrowStrokeShape
+            } else {
+                
+                arrowStroke.minimumZoomLevel = minimumZoomLevel
+                arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
+                arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
+                arrowStroke.lineWidth = MGLStyleValue(interpolationMode: .exponential,
+                                                      cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.80),
+                                                      options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
+                arrowStroke.lineColor = MGLStyleValue(rawValue: .defaultArrowStroke)
+                
+                style.addSource(arrowSourceStroke)
+                style.insertLayer(arrowStroke, below: arrow)
+            }
+            
+            // Arrow symbol
+            let point = MGLPointFeature()
+            point.coordinate = shaftStrokeCoordinates.last!
+            let arrowSymbolSource = MGLShapeSource(identifier: arrowSymbolSourceIdentifier, features: [point], options: sourceOptions)
+            
+            if let source = style.source(withIdentifier: arrowSymbolSourceIdentifier) as? MGLShapeSource {
+                source.shape = arrowSymbolSource.shape
+                if let arrowSymbolLayer = style.layer(withIdentifier: arrowSymbolLayerIdentifier) as? MGLSymbolStyleLayer {
+                    arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                }
+                if let arrowSymbolLayerCasing = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) as? MGLSymbolStyleLayer {
+                    arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                }
+            } else {
+                let arrowSymbolLayer = MGLSymbolStyleLayer(identifier: arrowSymbolLayerIdentifier, source: arrowSymbolSource)
+                arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
+                arrowSymbolLayer.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
+                arrowSymbolLayer.iconColor = MGLStyleValue(rawValue: .white)
+                arrowSymbolLayer.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
+                arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                arrowSymbolLayer.iconScale = MGLStyleValue(interpolationMode: .exponential,
+                                                           cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.12),
+                                                           options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
+                arrowSymbolLayer.iconAllowsOverlap = MGLStyleValue(rawValue: true)
+                
+                
+                let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
+                arrowSymbolLayerCasing.minimumZoomLevel = minimumZoomLevel
+                arrowSymbolLayerCasing.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
+                arrowSymbolLayerCasing.iconColor = MGLStyleValue(rawValue: .defaultArrowStroke)
+                arrowSymbolLayerCasing.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
+                arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
+                arrowSymbolLayerCasing.iconScale = MGLStyleValue(interpolationMode: .exponential,
+                                                                 cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.14),
+                                                                 options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
+                arrowSymbolLayerCasing.iconAllowsOverlap = MGLStyleValue(rawValue: true)
+                
+                style.addSource(arrowSymbolSource)
+                style.insertLayer(arrowSymbolLayer, above: arrow)
+                style.insertLayer(arrowSymbolLayerCasing, below: arrow)
+            }
+            
+        }
+    }
+    
+    
+    /**
+     Removes the step arrow from the map.
+     */
+    public func removeArrow() {
+        guard let style = style else {
+            return
+        }
+        
+        if let arrowLayer = style.layer(withIdentifier: arrowLayerIdentifier) {
+            style.removeLayer(arrowLayer)
+        }
+        
+        if let arrowLayerStroke = style.layer(withIdentifier: arrowLayerStrokeIdentifier) {
+            style.removeLayer(arrowLayerStroke)
+        }
+        
+        if let arrowSymbolLayer = style.layer(withIdentifier: arrowSymbolLayerIdentifier) {
+            style.removeLayer(arrowSymbolLayer)
+        }
+        
+        if let arrowCasingSymbolLayer = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) {
+            style.removeLayer(arrowCasingSymbolLayer)
+        }
+        
+        if let arrowSource = style.source(withIdentifier: arrowSourceIdentifier) {
+            style.removeSource(arrowSource)
+        }
+        
+        if let arrowStrokeSource = style.source(withIdentifier: arrowSourceStrokeIdentifier) {
+            style.removeSource(arrowStrokeSource)
+        }
+        
+        if let arrowSymboleSource = style.source(withIdentifier: arrowSymbolSourceIdentifier) {
+            style.removeSource(arrowSymboleSource)
+        }
+    }
+    
+    //MARK: Utility Methods
     
     func shape(describing route: Route, legIndex: Int?) -> MGLShape? {
         guard let coordinates = route.coordinates else { return nil }
@@ -771,160 +933,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return lineCasing
     }
     
-    /**
-     Shows the step arrow given the current `RouteProgress`.
-     */
-    public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
-        guard route.legs.indices.contains(legIndex),
-            route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
-        
-        let step = route.legs[legIndex].steps[stepIndex]
-        let maneuverCoordinate = step.maneuverLocation
-        guard let routeCoordinates = route.coordinates else { return }
-        
-        guard let style = style else {
-            return
-        }
-        
-        let minimumZoomLevel: Float = 14.5
-        
-        let shaftLength = max(min(30 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 30), 10)
-        let polyline = Polyline(routeCoordinates)
-        let shaftCoordinates = Array(polyline.trimmed(from: maneuverCoordinate, distance: -shaftLength).coordinates.reversed()
-            + polyline.trimmed(from: maneuverCoordinate, distance: shaftLength).coordinates.suffix(from: 1))
-        
-        if shaftCoordinates.count > 1 {
-            var shaftStrokeCoordinates = shaftCoordinates
-            let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
-            let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
-            let maneuverArrowStrokePolylines = [shaftStrokePolyline]
-            let shaftPolyline = ArrowFillPolyline(coordinates: shaftCoordinates, count: UInt(shaftCoordinates.count))
-            
-            let arrowShape = MGLShapeCollection(shapes: [shaftPolyline])
-            let arrowStrokeShape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
-            
-            let cap = NSValue(mglLineCap: .butt)
-            let join = NSValue(mglLineJoin: .round)
-            
-            let arrowSourceStroke = MGLShapeSource(identifier: arrowSourceStrokeIdentifier, shape: arrowStrokeShape, options: sourceOptions)
-            let arrowStroke = MGLLineStyleLayer(identifier: arrowLayerStrokeIdentifier, source: arrowSourceStroke)
-            let arrowSource = MGLShapeSource(identifier: arrowSourceIdentifier, shape: arrowShape, options: sourceOptions)
-            let arrow = MGLLineStyleLayer(identifier: arrowLayerIdentifier, source: arrowSource)
-            
-            if let source = style.source(withIdentifier: arrowSourceIdentifier) as? MGLShapeSource {
-                source.shape = arrowShape
-            } else {
-                arrow.minimumZoomLevel = minimumZoomLevel
-                arrow.lineCap = MGLStyleValue(rawValue: cap)
-                arrow.lineJoin = MGLStyleValue(rawValue: join)
-                arrow.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                                     cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.70),
-                                                     options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
-                arrow.lineColor = MGLStyleValue(rawValue: .white)
-                
-                style.addSource(arrowSource)
-                style.addLayer(arrow)
-            }
-            
-            if let source = style.source(withIdentifier: arrowSourceStrokeIdentifier) as? MGLShapeSource {
-                source.shape = arrowStrokeShape
-            } else {
-                
-                arrowStroke.minimumZoomLevel = minimumZoomLevel
-                arrowStroke.lineCap = MGLStyleValue(rawValue: cap)
-                arrowStroke.lineJoin = MGLStyleValue(rawValue: join)
-                arrowStroke.lineWidth = MGLStyleValue(interpolationMode: .exponential,
-                                                cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.80),
-                                                options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 1.5)])
-                arrowStroke.lineColor = MGLStyleValue(rawValue: .defaultArrowStroke)
-                
-                style.addSource(arrowSourceStroke)
-                style.insertLayer(arrowStroke, below: arrow)
-            }
-            
-            // Arrow symbol
-            let point = MGLPointFeature()
-            point.coordinate = shaftStrokeCoordinates.last!
-            let arrowSymbolSource = MGLShapeSource(identifier: arrowSymbolSourceIdentifier, features: [point], options: sourceOptions)
-            
-            if let source = style.source(withIdentifier: arrowSymbolSourceIdentifier) as? MGLShapeSource {
-                source.shape = arrowSymbolSource.shape
-                if let arrowSymbolLayer = style.layer(withIdentifier: arrowSymbolLayerIdentifier) as? MGLSymbolStyleLayer {
-                    arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
-                }
-                if let arrowSymbolLayerCasing = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) as? MGLSymbolStyleLayer {
-                    arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
-                }
-            } else {
-                let arrowSymbolLayer = MGLSymbolStyleLayer(identifier: arrowSymbolLayerIdentifier, source: arrowSymbolSource)
-                arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
-                arrowSymbolLayer.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
-                arrowSymbolLayer.iconColor = MGLStyleValue(rawValue: .white)
-                arrowSymbolLayer.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
-                arrowSymbolLayer.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
-                arrowSymbolLayer.iconScale = MGLStyleValue(interpolationMode: .exponential,
-                                                     cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.12),
-                                                     options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
-                arrowSymbolLayer.iconAllowsOverlap = MGLStyleValue(rawValue: true)
-                
-                
-                let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
-                arrowSymbolLayerCasing.minimumZoomLevel = minimumZoomLevel
-                arrowSymbolLayerCasing.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
-                arrowSymbolLayerCasing.iconColor = MGLStyleValue(rawValue: .defaultArrowStroke)
-                arrowSymbolLayerCasing.iconRotationAlignment = MGLStyleValue(rawValue: NSValue(mglIconRotationAlignment: .map))
-                arrowSymbolLayerCasing.iconRotation = MGLStyleValue(rawValue: shaftDirection as NSNumber)
-                arrowSymbolLayerCasing.iconScale = MGLStyleValue(interpolationMode: .exponential,
-                                                           cameraStops: routeLineWidthAtZoomLevels.muliplied(by: 0.14),
-                                                           options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
-                arrowSymbolLayerCasing.iconAllowsOverlap = MGLStyleValue(rawValue: true)
-                
-                style.addSource(arrowSymbolSource)
-                style.insertLayer(arrowSymbolLayer, above: arrow)
-                style.insertLayer(arrowSymbolLayerCasing, below: arrow)
-            }
-            
-        }
-    }
-    
-    
-    /**
-     Removes the step arrow from the map.
-     */
-    public func removeArrow() {
-        guard let style = style else {
-            return
-        }
-        
-        if let arrowLayer = style.layer(withIdentifier: arrowLayerIdentifier) {
-            style.removeLayer(arrowLayer)
-        }
-        
-        if let arrowLayerStroke = style.layer(withIdentifier: arrowLayerStrokeIdentifier) {
-            style.removeLayer(arrowLayerStroke)
-        }
-        
-        if let arrowSymbolLayer = style.layer(withIdentifier: arrowSymbolLayerIdentifier) {
-            style.removeLayer(arrowSymbolLayer)
-        }
-        
-        if let arrowCasingSymbolLayer = style.layer(withIdentifier: arrowCasingSymbolLayerIdentifier) {
-            style.removeLayer(arrowCasingSymbolLayer)
-        }
-        
-        if let arrowSource = style.source(withIdentifier: arrowSourceIdentifier) {
-            style.removeSource(arrowSource)
-        }
-        
-        if let arrowStrokeSource = style.source(withIdentifier: arrowSourceStrokeIdentifier) {
-            style.removeSource(arrowStrokeSource)
-        }
-        
-        if let arrowSymboleSource = style.source(withIdentifier: arrowSymbolSourceIdentifier) {
-            style.removeSource(arrowSymboleSource)
-        }
-    }
-    
     public func showVoiceInstructionsOnMap(route: Route) {
         guard let style = style else {
             return
@@ -969,6 +977,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 }
 
+//MARK: Extensions
+
 extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
     func muliplied(by factor: Double) -> Dictionary {
         var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
@@ -980,6 +990,8 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
         return newCameraStop as! Dictionary<Key, Value>
     }
 }
+
+//MARK: NavigationMapViewDelegate
 
 @objc
 public protocol NavigationMapViewDelegate: class  {
@@ -1009,6 +1021,8 @@ public protocol NavigationMapViewDelegate: class  {
     @objc(navigationMapViewUserAnchorPoint:)
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
 }
+
+//MARK: NavigationMapViewCourseTrackingDelegate
 
 protocol NavigationMapViewCourseTrackingDelegate: class {
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
