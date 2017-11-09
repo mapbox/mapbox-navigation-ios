@@ -1,6 +1,6 @@
 import MapboxDirections
 
-public extension RouteOptions {
+extension RouteOptions {
     internal var activityType: CLActivityType {
         switch self.profileIdentifier {
         case MBDirectionsProfileIdentifier.cycling, MBDirectionsProfileIdentifier.walking:
