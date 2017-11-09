@@ -27,6 +27,11 @@ open class InstructionLabel: StylableLabel {
             let isFirst = component == instruction.components.first
             let joinChar = !isFirst ? " " : ""
             
+            if let _ = component.includeThen {
+                let thenString = NSAttributedString(string: NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then"), attributes: nil)
+                string.append(thenString)
+            }
+            
             if let roadCode = component.roadCode, let network = component.network, let number = component.number {
                 // Check if shield image is cached, otherwise display road code in text
                 let shieldKey = UIImage.shieldKey(network, number: number, height: shieldHeight)

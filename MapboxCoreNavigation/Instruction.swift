@@ -6,7 +6,7 @@ public struct Instruction: Equatable {
         return lhs.components == rhs.components
     }
     
-    public let components: [Instruction.Component]
+    public var components: [Instruction.Component]
     
     public struct Component: Equatable {
         
@@ -24,11 +24,13 @@ public struct Instruction: Equatable {
         public let network: String?
         public let number: String?
         public let direction: String?
+        public var includeThen: Bool?
         
-        public init(_ text: String?, png: String? = nil, roadCode: String? = nil) {
+        public init(_ text: String?, png: String? = nil, roadCode: String? = nil, includeThen: Bool? = false) {
             self.text = text
             self.png = png
             self.roadCode = roadCode
+            self.includeThen = false
             
             guard let roadCode = roadCode else {
                 self.network = nil
