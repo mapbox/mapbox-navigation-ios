@@ -660,6 +660,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         mapView.tracksUserCourse = false
         mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
         
+        guard isViewLoaded && view.window != nil else { return }
         if let legIndex = routeController.routeProgress.route.legs.index(where: { !$0.steps.filter { $0 == step }.isEmpty }) {
             let leg = routeController.routeProgress.route.legs[legIndex]
             if let stepIndex = leg.steps.index(where: { $0 == step }), leg.steps.last != step {
