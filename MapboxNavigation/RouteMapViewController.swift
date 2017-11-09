@@ -391,7 +391,8 @@ class RouteMapViewController: UIViewController {
     func updateNextBanner(routeProgress: RouteProgress) {
         guard let step = routeProgress.currentLegProgress.upComingStep,
             routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            let nextStep = routeProgress.currentLegProgress.stepAfter(step)
+            let nextStep = routeProgress.currentLegProgress.stepAfter(step),
+            laneViewsContainerView.isHidden
             else {
                 hideNextBanner()
                 return
@@ -437,6 +438,7 @@ class RouteMapViewController: UIViewController {
     }
     
     func showLaneViews(animated: Bool = true) {
+        hideNextBanner()
         guard laneViewsContainerView.isHidden == true else { return }
         if animated {
             UIView.defaultAnimation(0.3, animations: {
