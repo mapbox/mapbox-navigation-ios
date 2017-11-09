@@ -10,7 +10,6 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 
 class RouteMapViewController: UIViewController {
     @IBOutlet weak var mapView: NavigationMapView!
-
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
     @IBOutlet weak var rerouteReportButton: ReportButton!
@@ -20,6 +19,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
+    @IBOutlet weak var nextBannerView: NextBannerView!
     @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
@@ -357,7 +357,7 @@ class RouteMapViewController: UIViewController {
         
         previousStep = step
         updateInstructions(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        
+        updateNextBanner(routeProgress: routeProgress)
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -386,6 +386,35 @@ class RouteMapViewController: UIViewController {
         instructionsBannerView.set(instructions.0, secondaryInstruction: instructions.1)
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
         instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
+    }
+    
+    func updateNextBanner(routeProgress: RouteProgress) {
+        let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
+        let nextStep = routeProgress.currentLegProgress.stepAfter(step)
+        let shouldShowNextBanner = nextStep != nil ? nextStep!.distance < 1000 : false
+        
+        if shouldShowNextBanner {
+            showNextBanner()
+            let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
+            nextBannerView.maneuverView.step = nextStep
+            nextBannerView.instructionLabel.instruction = instructions.0
+        } else {
+            hideNextBanner()
+        }
+    }
+    
+    func showNextBanner() {
+        guard nextBannerView.isHidden else { return }
+        UIView.defaultAnimation(0.3, animations: {
+            self.nextBannerView.isHidden = false
+        }, completion: nil)
+    }
+    
+    func hideNextBanner() {
+        guard !nextBannerView.isHidden else { return }
+        UIView.defaultAnimation(0.3, animations: {
+            self.nextBannerView.isHidden = true
+        }, completion: nil)
     }
     
     var contentInsets: UIEdgeInsets {
