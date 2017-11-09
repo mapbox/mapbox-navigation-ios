@@ -25,7 +25,8 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        UIImage.shieldImageCache.setObject(shieldImage, forKey: "I280")
+        let height = Int(instructionsView().primaryLabel.shieldHeight)
+        UIImage.shieldImageCache.setObject(shieldImage, forKey: "I-280-\(height)" as NSString)
     }
     
     func instructionsView() -> InstructionsBannerView {
