@@ -282,11 +282,27 @@ extension ViewController: NavigationMapViewDelegate {
         guard let routeOptions = currentRoute?.routeOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
         
-        requestRoute(with:modifiedOptions, success: defaultSuccess, failure: defaultFailure)
+        let destroyWaypoint: (UIAlertAction) -> Void = {_ in self.requestRoute(with:modifiedOptions, success: self.defaultSuccess, failure: self.defaultFailure) }
+        
+        presentWaypointRemovalActionSheet(callback: destroyWaypoint)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         currentRoute = route
+    }
+    
+    private func presentWaypointRemovalActionSheet(callback approve: @escaping ((UIAlertAction) -> Void)) {
+        let title = NSLocalizedString("Remove Waypoint?", comment: "Waypoint Removal Action Sheet Title")
+        let message = NSLocalizedString("Would you like to remove this waypoint?", comment: "Waypoint Removal Action Sheet Message")
+        let removeTitle = NSLocalizedString("Remove Waypoint", comment: "Waypoint Removal Action Item Title")
+        let cancelTitle = NSLocalizedString("Cancel", comment: "Waypoint Removal Action Sheet Cancel Item Title")
+        
+        let actionSheet = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        let remove = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
+        let cancel = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+        [remove, cancel].forEach(actionSheet.addAction(_:))
+        
+        self.present(actionSheet, animated: true, completion: nil)
     }
 }
 
