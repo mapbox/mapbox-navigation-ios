@@ -119,7 +119,7 @@ public var NavigationMetricsDebugLoggingEnabled = "MBNavigationMetricsDebugLoggi
  
  A multiplier of `1.2` gives us a buffer of 3 seconds, enough time insert a new instruction.
  */
-let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
+public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 
 /**
  Approximately the number of meters in a mile.
