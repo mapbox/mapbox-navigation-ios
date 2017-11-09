@@ -46,6 +46,8 @@ public class PollyVoiceController: RouteVoiceController {
     
     var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
+    var previousInstruction: String?
+    
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
         
@@ -69,11 +71,12 @@ public class PollyVoiceController: RouteVoiceController {
         guard let instruction = routeProgresss.currentLegProgress.currentStepProgress.currentSpokenInstruction?.ssmlText else { return }
         
         pollyTask?.cancel()
-        if let audioPlayer = audioPlayer, audioPlayer.isPlaying {
-            voiceControllerDelegate?.spokenInstructionsDidFail?(self, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "Spoken instructions overlapping", code: .overlappingInstruction))
+        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let previousInstruction = previousInstruction {
+            voiceControllerDelegate?.voiceController?(self, didInterrupt: previousInstruction, with: instruction)
         }
         audioPlayer?.stop()
         startAnnouncementTimer()
+        previousInstruction = instruction
         
         for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
             let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex

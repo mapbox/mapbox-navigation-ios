@@ -10,11 +10,6 @@ public enum MapboxNavigationError: Int {
     case defaultError = -1
     
     /**
-     An intruction interrupted another instruction.
-     */
-    case overlappingInstruction
-    
-    /**
      The audio player failed to play audio data.
      */
     case spokenInstructionAudioPlayerFailedToPlay
@@ -23,9 +18,4 @@ public enum MapboxNavigationError: Int {
      The response did not include data
      */
     case noDataInSpokenInstructionResponse
-    
-    /**
-     `UIBackgroundModes` missing from the app's plist.info.
-     */
-    case audioBackgroundModeMissing
 }

@@ -305,6 +305,11 @@ extension ViewController: NavigationMapViewDelegate {
 
         self.present(actionSheet, animated: true, completion: nil)
     }
+
+    // Called when an instruction is interrupted by a new voice instruction.
+    func voiceController(_ voiceController: RouteVoiceController, didInterrupt: String, with instruction: String) {
+        print("\(didInterrupt) interrupted by \(instruction)")
+    }
 }
 
 //MARK: WaypointConfirmationViewControllerDelegate
