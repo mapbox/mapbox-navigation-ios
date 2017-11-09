@@ -266,10 +266,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
-        guard let opts = currentRoute?.routeOptions else { return }
-        let modifiedOpts = opts.without(waypoint: waypoint)
+        guard let routeOptions = currentRoute?.routeOptions else { return }
+        let modifiedOptions = routeOptions.without(waypoint: waypoint)
         
-        requestRoute(with:modifiedOpts, success: defaultSuccess, failure: defaultFailure)
+        requestRoute(with:modifiedOptions, success: defaultSuccess, failure: defaultFailure)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
