@@ -25,12 +25,6 @@ public struct Instruction: Equatable {
         public let number: String?
         public let direction: String?
         
-        public var shieldKey: String? {
-            guard let roadCode = roadCode else { return nil }
-            let components = roadCode.components(separatedBy: " ")
-            return "\(components[0])\(components[1])"
-        }
-        
         public init(_ text: String?, png: String? = nil, roadCode: String? = nil) {
             self.text = text
             self.png = png
