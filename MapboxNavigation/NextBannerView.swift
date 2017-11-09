@@ -34,7 +34,7 @@ class NextBannerView: UIView {
         self.maneuverView = maneuverView
         
         let instructionLabel = NextInstructionLabel()
-        instructionLabel.shieldHeight = NextInstructionLabel.appearance().font.pointSize
+        instructionLabel.shieldHeight = instructionLabel.font.pointSize
         instructionLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(instructionLabel)
         self.instructionLabel = instructionLabel
