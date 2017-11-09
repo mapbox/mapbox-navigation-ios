@@ -218,6 +218,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView.isTracking else { return }
         abortAutodismiss()
     }
 }
