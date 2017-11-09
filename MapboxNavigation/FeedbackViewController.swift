@@ -66,10 +66,8 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: autoDismissInterval, animations: {
+        UIView.animate(withDuration: autoDismissInterval) {
             self.progressBar.progress = 0
-        }) { (true) in
-            self.dismissFeedback()
         }
         
         enableAutoDismiss()
@@ -220,6 +218,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard scrollView.isTracking else { return }
         abortAutodismiss()
     }
 }
