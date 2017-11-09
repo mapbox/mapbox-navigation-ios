@@ -42,7 +42,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Maximum distnace the user can tap for a selection to be valid when selecting an alternate route.
      */
-    public var maximumTapDistanceToSelectAltRoute: CGFloat = 50
+    public var tapGestureDistanceThreshold: CGFloat = 50
     
     //MARK: Instance Properties
     let sourceIdentifier = "routeSource"
@@ -446,7 +446,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     //TODO: Change to point-based distance calculation
     private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
         let tapCoordinate = convert(point, toCoordinateFrom: self)
-        let waypointThreshold: CGFloat = 100 //FIXME: Class Constant
         let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
         guard multipointRoutes.count > 0 else { return nil }
         let waypoints = multipointRoutes.flatMap({$0.routeOptions.waypoints})
@@ -461,7 +460,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         //lets filter to see which ones are under threshold
         let candidates = closest.filter({
             let coordinatePoint = self.convert($0.coordinate, toPointTo: self)
-            return coordinatePoint.distance(to: point) < waypointThreshold
+            return coordinatePoint.distance(to: point) < tapGestureDistanceThreshold
         })
         
         return candidates
@@ -490,7 +489,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let closestCoordinate = Polyline($0.coordinates!).closestCoordinate(to: tapCoordinate)!.coordinate
             let closestPoint = self.convert(closestCoordinate, toPointTo: self)
             
-            return closestPoint.distance(to: point) < maximumTapDistanceToSelectAltRoute
+            return closestPoint.distance(to: point) < tapGestureDistanceThreshold
         }
         return candidates
     }
