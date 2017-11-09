@@ -434,7 +434,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?
         if let selected = waypointTest?.first { //test passes
-            navigationMapDelegate?.navigationMapView?(self, didSelectWaypoint: selected)
+            navigationMapDelegate?.navigationMapView?(self, didSelect: selected)
             return
         } else if let routes = self.routes(closeTo: tapPoint) {
             guard let selectedRoute = routes.first else { return }
@@ -501,7 +501,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         routes.insert(route, at: 0)
         self.routes = routes //because self.routes is a value type
         self.showRoutes(routes)
-        navigationMapDelegate?.navigationMapView?(self, didSelectRoute: route)
+        navigationMapDelegate?.navigationMapView?(self, didSelect: route)
     }
     
     /**
@@ -1002,9 +1002,11 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, didSelectRoute route: Route)
+    @objc(navigationMapView:didSelectRoute:)
+    optional func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route)
     
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, didSelectWaypoint waypoint: Waypoint)
+    @objc(navigationMapView:didSelectWaypoint:)
+    optional func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint)
     
     @objc(navigationMapView:shapeDescribingRoute:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
