@@ -397,13 +397,15 @@ class RouteMapViewController: UIViewController {
                 return
         }
     
-        var instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
-        nextBannerView.maneuverView.step = nextStep
-        if let _ = instructions.0?.components.first {
-            instructions.0?.components[0].includeThen = true
+        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
+        var instruction = instructions.0
+        
+        if let components = instruction?.components, components.count > 0 {
+            instruction?.components[0].prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
+            nextBannerView.maneuverView.step = nextStep
+            nextBannerView.instructionLabel.instruction = instruction
+            showNextBanner()
         }
-        nextBannerView.instructionLabel.instruction = instructions.0
-        showNextBanner()
     }
     
     func showNextBanner() {

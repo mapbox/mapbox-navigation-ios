@@ -24,13 +24,13 @@ public struct Instruction: Equatable {
         public let network: String?
         public let number: String?
         public let direction: String?
-        public var includeThen: Bool?
+        public var prefix: String?
         
-        public init(_ text: String?, png: String? = nil, roadCode: String? = nil, includeThen: Bool? = false) {
+        public init(_ text: String?, png: String? = nil, roadCode: String? = nil, prefix: String? = nil) {
             self.text = text
             self.png = png
             self.roadCode = roadCode
-            self.includeThen = false
+            self.prefix = prefix
             
             guard let roadCode = roadCode else {
                 self.network = nil
