@@ -241,8 +241,26 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         return false
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, didTap route: Route) {
+    func navigationMapView(_ mapView: NavigationMapView, didSelectWaypoint waypoint: Waypoint) {
+        requestNew(route: currentRoute, without: waypoint)
+    }
+    
+    func navigationMapView(_ mapView: NavigationMapView, didSelectRoute route: Route) {
         currentRoute = route
+    }
+    private func requestNew(route: Route?, without waypoint: Waypoint) {
+        guard let route = route else { return }
+        let options = route.routeOptions.without(waypoint: waypoint)
+        
+        mapView?.removeRoutes()
+        mapView?.removeWaypoints()
+        _ = Directions.shared.calculate(options) { (waypoints, routes, error) in
+            guard let routes = routes, let current = routes.first else { return }
+            self.currentRoute = current
+            self.waypoints = current.routeOptions.waypoints
+            self.mapView?.showRoutes([current])
+        }
+        
     }
 }
 

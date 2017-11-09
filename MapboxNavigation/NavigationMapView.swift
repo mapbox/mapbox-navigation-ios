@@ -433,8 +433,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let routes = routes, let tapPoint = sender.point else { return }
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?
-        if let activeRoute = waypointTest?.multipointRoutes.first ,let waypointToRemove = waypointTest?.waypoints.first { //test passes
-            return requestNew(route: activeRoute, without: waypointToRemove)
+        if let selected = waypointTest?.first { //test passes
+            navigationMapDelegate?.navigationMapView?(self, didSelectWaypoint: selected)
+            return
         } else if let routes = self.routes(closeTo: tapPoint) {
             guard let selectedRoute = routes.first else { return }
             select(route: selectedRoute)
@@ -443,7 +444,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     //TODO: Change to point-based distance calculation
-    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> (multipointRoutes: [Route], waypoints: [Waypoint])? {
+    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
         let tapCoordinate = convert(point, toCoordinateFrom: self)
         let waypointThreshold: CGFloat = 100 //FIXME: Class Constant
         let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
@@ -463,7 +464,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return coordinatePoint.distance(to: point) < waypointThreshold
         })
         
-        return (multipointRoutes, candidates)
+        return candidates
     }
     
     private func routes(closeTo point: CGPoint) -> [Route]? {
@@ -500,20 +501,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         routes.insert(route, at: 0)
         self.routes = routes //because self.routes is a value type
         self.showRoutes(routes)
-        navigationMapDelegate?.navigationMapView?(self, didTap: route)
-    }
-    
-    private func requestNew(route: Route, without waypoint: Waypoint) {
-        let options = route.routeOptions.without(waypoint: waypoint)
-        
-        removeRoutes()
-        removeWaypoints()
-        _ = Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let routes = routes else { return }
-            self.routes = routes
-            self.showRoutes(routes)
-        }
-        
+        navigationMapDelegate?.navigationMapView?(self, didSelectRoute: route)
     }
     
     /**
@@ -1014,7 +1002,9 @@ public protocol NavigationMapViewDelegate: class  {
     
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap route: Route)
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, didSelectRoute route: Route)
+    
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, didSelectWaypoint waypoint: Waypoint)
     
     @objc(navigationMapView:shapeDescribingRoute:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
