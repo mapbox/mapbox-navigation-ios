@@ -20,10 +20,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     var waypoints: [Waypoint] = []
     var currentRoute: Route? {
-        didSet {
-            self.startButton.isEnabled = (currentRoute != nil)
-            select(route: currentRoute)
-            mapView.showWaypoints(currentRoute!)
+        get {
+            return routes?.first
+        }
+        set {
+            self.startButton.isEnabled = (newValue != nil)
+            guard let selected = newValue else { self.routes?.remove(at: 0); return }
+            guard let routes = routes else { self.routes = [selected]; return }
+            self.routes = [selected] + routes.filter { $0 != selected }
+            mapView.showWaypoints(selected)
         }
     }
     
@@ -274,16 +279,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         currentRoute = route
-    }
-    
-    func select(route: Route?) {
-        guard let route = route else { return }
-        if let routes = self.routes {
-            let newRoutes = [route] + routes.filter({ $0 != route })
-            self.routes = newRoutes
-        } else {
-            routes = [route]
-        }
     }
 }
 
