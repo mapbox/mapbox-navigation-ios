@@ -3,7 +3,6 @@ import UIKit
 extension BottomBannerView {
     
     func setupViews() {
-        applyDefaultShadow()
         
         let timeRemainingLabel = TimeRemainingLabel()
         timeRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
