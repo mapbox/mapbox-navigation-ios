@@ -27,9 +27,8 @@ open class InstructionLabel: StylableLabel {
             let isFirst = component == instruction.components.first
             let joinChar = !isFirst ? " " : ""
             
-            if let _ = component.includeThen {
-                let thenString = NSAttributedString(string: NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then"), attributes: nil)
-                string.append(thenString)
+            if let prefix = component.prefix {
+                string.append(NSAttributedString(string: prefix, attributes: attributes))
             }
             
             if let roadCode = component.roadCode, let network = component.network, let number = component.number {
