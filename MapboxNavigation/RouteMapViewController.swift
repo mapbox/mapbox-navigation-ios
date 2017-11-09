@@ -18,7 +18,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var wayNameView: UIView!
-    @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContainerView!
+    @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
