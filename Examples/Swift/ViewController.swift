@@ -6,6 +6,8 @@ import Mapbox
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
+private typealias RouteRequestSuccess = (([Route]) -> Void)
+private typealias RouteRequestFailure = ((NSError) -> Void)
 
 enum ExampleMode {
     case `default`
@@ -145,7 +147,19 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         present(alertController, animated: true, completion: nil)
     }
     
-    // Helper for requesting a route
+    // MARK: Directions Requests
+    
+    private lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
+            guard let current = routes.first else { return }
+            self?.currentRoute = current
+            self?.waypoints = current.routeOptions.waypoints
+            self?.mapView.showRoutes(routes)
+    }
+    
+    private lazy var defaultFailure: RouteRequestFailure = { (error) in
+        print(error.localizedDescription)
+    }
+    
     func requestRoute() {
         guard waypoints.count > 0 else { return }
         
@@ -154,17 +168,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         let options = NavigationRouteOptions(waypoints: waypoints)
         
-        _ = Directions.shared.calculate(options) { [weak self] (waypoints, routes, error) in
-            guard error == nil else {
-                print(error!.localizedDescription)
-                return
-            }
-            guard let routes = routes else { return }
-            self?.currentRoute = routes.first
-            
-            // Open method for adding and updating the route line
-            self?.mapView.showRoutes(routes)
+        requestRoute(with: options, success: defaultSuccess, failure: defaultFailure)
+    }
+    
+    private func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
+        
+        let handler: Directions.CompletionHandler = {(waypoints, potentialRoutes, potentialError) in
+            if let error = potentialError, let fail = failure { return fail(error) }
+            guard let routes = potentialRoutes else { return }
+            return success(routes)
         }
+        
+        mapView.removeRoutes()
+        mapView.removeWaypoints()
+        _ = Directions.shared.calculate(options, completionHandler: handler)
     }
 
     // MARK: - Basic Navigation
@@ -242,25 +259,14 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelectWaypoint waypoint: Waypoint) {
-        requestNew(route: currentRoute, without: waypoint)
+        guard let opts = currentRoute?.routeOptions else { return }
+        let modifiedOpts = opts.without(waypoint: waypoint)
+        
+        requestRoute(with:modifiedOpts, success: defaultSuccess, failure: defaultFailure)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelectRoute route: Route) {
         currentRoute = route
-    }
-    private func requestNew(route: Route?, without waypoint: Waypoint) {
-        guard let route = route else { return }
-        let options = route.routeOptions.without(waypoint: waypoint)
-        
-        mapView?.removeRoutes()
-        mapView?.removeWaypoints()
-        _ = Directions.shared.calculate(options) { (waypoints, routes, error) in
-            guard let routes = routes, let current = routes.first else { return }
-            self.currentRoute = current
-            self.waypoints = current.routeOptions.waypoints
-            self.mapView?.showRoutes([current])
-        }
-        
     }
 }
 
