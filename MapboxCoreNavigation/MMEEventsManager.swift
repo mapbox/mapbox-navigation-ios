@@ -33,12 +33,12 @@ struct EventDetails {
     var audioType: String
     var screenBrightness: Int
     var batteryPluggedIn: Bool
-    var batteryLevel: Float
+    var batteryLevel: Int
     var applicationState: UIApplicationState
     var userAbsoluteDistanceToDestination: CLLocationDistance?
     var locationEngine: CLLocationManager.Type?
-    var percentTimeInPortrait: Double
-    var percentTimeInForeground: Double
+    var percentTimeInPortrait: Int
+    var percentTimeInForeground: Int
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -88,7 +88,7 @@ struct EventDetails {
         screenBrightness = Int(UIScreen.main.brightness * 100)
         
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
-        batteryLevel = UIDevice.current.batteryLevel >= 0 ? UIDevice.current.batteryLevel * 100 : -1
+        batteryLevel = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel) * 100 : -1
         applicationState = UIApplication.shared.applicationState
         if let manager = routeController.locationManager {
             locationEngine = type(of: manager)
@@ -101,7 +101,7 @@ struct EventDetails {
         } else if UIDevice.current.orientation.isLandscape {
             totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
         }
-        percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 1 : totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
+        percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
         
         var totalTimeInForeground = session.timeSpentInForeground
         var totalTimeInBackground = session.timeSpentInBackground
@@ -110,7 +110,7 @@ struct EventDetails {
         } else {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
-        percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 1 : totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)
+        percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
     }
     
     var eventDictionary: [String: Any] {
