@@ -71,6 +71,16 @@ class RouteMapViewController: UIViewController {
         }
     }
     var currentLegIndexMapped = 0
+    
+    /**
+     A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
+     */
+    var annotatesSpokenInstructions = false
+    
+    /**
+     A Boolean value that determines whether the user can long-press a feedback item to dictate feedback.
+     */
+    var recordsAudioFeedback = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -200,7 +210,7 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
     
         let controller = FeedbackViewController.loadFromStoryboard()
-        controller.allowRecordedAudioFeedback = routeController.allowRecordedAudioFeedback
+        controller.recordsAudioFeedback = recordsAudioFeedback
         let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
         controller.sections = sections
         let feedbackId = routeController.recordFeedback()
@@ -260,7 +270,7 @@ class RouteMapViewController: UIViewController {
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
         
-        if routeController.showDebugSpokenInstructionsOnMap {
+        if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
 
@@ -366,7 +376,7 @@ class RouteMapViewController: UIViewController {
             currentLegIndexMapped = routeProgress.legIndex
         }
         
-        if routeController.showDebugSpokenInstructionsOnMap {
+        if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
 
@@ -646,7 +656,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
             map.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         }
         
-        if routeController.showDebugSpokenInstructionsOnMap {
+        if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
     }
@@ -755,4 +765,7 @@ protocol RouteMapViewControllerDelegate: class {
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
+    
+    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+    func mapViewControllerShouldRecordAudioFeedback(_ routeMapViewController: RouteMapViewController) -> Bool
 }

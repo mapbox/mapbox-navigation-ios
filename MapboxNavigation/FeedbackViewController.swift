@@ -24,7 +24,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
     
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
-    var allowRecordedAudioFeedback = false
+    var recordsAudioFeedback = false
     var sendFeedbackHandler: SendFeedbackHandler?
     var dismissFeedbackHandler: (() -> ())?
     var sections = [FeedbackSection]()
@@ -72,7 +72,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         
         enableAutoDismiss()
         
-        if allowRecordedAudioFeedback {
+        if recordsAudioFeedback {
             validateAudio()
             enableAudioRecording()
         }
@@ -80,7 +80,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
     
     func validateAudio() {
         guard Bundle.main.microphoneUsageDescription != nil else {
-            assert(false, "If `allowRecordedAudioFeedback` is enabled, `NSMicrophoneUsageDescription` must be added in app plist")
+            assert(false, "If `recordsAudioFeedback` is enabled, `NSMicrophoneUsageDescription` must be added in app plist")
             return
         }
     }

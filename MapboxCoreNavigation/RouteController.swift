@@ -120,22 +120,9 @@ open class RouteController: NSObject {
 
 
     /**
-     If true, every 2 minutes the `RouteController` will check for a faster route for the user.
+     If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerOpportunisticReroutingInterval`.
      */
-    public var checkForFasterRouteInBackground = false
-    
-    
-    /**
-     If true, users can long press a feedback item and allow for recorded audio to be included in the feedback
-     */
-    public var allowRecordedAudioFeedback = false
-    
-    
-    /**
-     If true, spoken instructions for the route will be displayed on the map.
-     */
-    public var showDebugSpokenInstructionsOnMap = false
-    
+    public var reroutesOpportunistically = false
 
     var didFindFasterRoute = false
 
@@ -554,7 +541,7 @@ extension RouteController: CLLocationManagerDelegate {
         monitorStepProgress(location)
 
         // Check for faster route given users current location
-        guard checkForFasterRouteInBackground else { return }
+        guard reroutesOpportunistically else { return }
         // Only check for faster alternatives if the user has plenty of time left on the route.
         guard routeProgress.durationRemaining > 600 else { return }
         // If the user is approaching a maneuver, don't check for a faster alternatives
@@ -629,8 +616,8 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
 
-        // Only check ever 2 minutes for faster route
-        guard location.timestamp.timeIntervalSince(lastLocationDate) >= 120 else { return }
+        // Only check every so often for a faster route.
+        guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerOpportunisticReroutingInterval else { return }
         let durationRemaining = routeProgress.durationRemaining
 
         getDirections(from: location) { [weak self] (route, error) in
