@@ -5,10 +5,12 @@ protocol InstructionsBannerViewDelegate: class {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
+/// :nodoc:
 @IBDesignable
 @objc(MBInstructionsBannerView)
 open class InstructionsBannerView: BaseInstructionsBannerView { }
 
+/// :nodoc:
 open class BaseInstructionsBannerView: UIControl {
     
     weak var maneuverView: ManeuverView!

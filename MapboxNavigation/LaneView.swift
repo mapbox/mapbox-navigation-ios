@@ -1,6 +1,7 @@
 import UIKit
 import MapboxDirections
 
+/// :nodoc:
 @objc(MBLaneView)
 open class LaneView: UIView {
     @IBInspectable

@@ -6,6 +6,7 @@ protocol BottomBannerViewDelegate: class {
     func didCancel()
 }
 
+/// :nodoc:
 @IBDesignable
 @objc(MBBottomBannerView)
 open class BottomBannerView: UIView {
