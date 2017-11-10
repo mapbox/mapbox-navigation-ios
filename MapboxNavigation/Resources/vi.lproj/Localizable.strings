@@ -1,3 +1,6 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Đóng";
+
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Đã Tìm thấy Đường Nhanh Hơn";
 
@@ -7,25 +10,22 @@
 /* Feedback type for Confusing Instruction */
 "FEEDBACK_CONFUSING_INSTRUCTION" = "Hướng dẫn\nKhó hiểu";
 
-/* Feedback type for inaccurate GPS */
-"FEEDBACK_GPS_INACCURATE" = "GPS\nSai";
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Vấn đề\nBản đồ Khác";
 
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Tắc\nđường";
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Thiếu\nLối ra";
 
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Hướng dẫn\ncó Vấn đề";
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Thiếu\nCon đường";
 
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Hướng dẫn\nKhông Đúng Lúc";
-
-/* Feedback type for turn not allowed */
+/* Feedback type for a maneuver that is Not Allowed */
 "FEEDBACK_NOT_ALLOWED" = "Cấm";
 
 /* Feedback type for Report Traffic */
-"FEEDBACK_REPORT_TRAFFIC" = "Tắc\nđường";
+"FEEDBACK_REPORT_TRAFFIC" = "Báo cáo\nTắc đường";
 
-/* Feedback type for Closure */
+/* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Đường\nĐóng cửa";
 
 /* Format for displaying the first two major ways */
@@ -34,11 +34,17 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Recording audio for feedback */
+"RECORDING_AUDIO" = "Đang Ghi âm";
+
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Đang tính tuyến mới…";
 
 /* Button title for resume tracking */
 "RESUME" = "Tiếp tục";
+
+/* Then */
+"THEN" = "Rồi:";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Đang Mô phỏng Điều hướng";

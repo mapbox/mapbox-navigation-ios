@@ -1,3 +1,6 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Cerrar";
+
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Ruta más rápida encontrada";
 
@@ -7,25 +10,22 @@
 /* Feedback type for Confusing Instruction */
 "FEEDBACK_CONFUSING_INSTRUCTION" = "Instrucción\nengañosa";
 
-/* Feedback type for inaccurate GPS */
-"FEEDBACK_GPS_INACCURATE" = "GPS\ninexacto";
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Otra problema\nen la mapa";
 
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Mucha\ncongestión";
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Falta\nsalida";
 
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Problema de\ninstrucción";
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Falta\ncamino";
 
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Sincronización\nde instrucción";
-
-/* Feedback type for turn not allowed */
+/* Feedback type for a maneuver that is Not Allowed */
 "FEEDBACK_NOT_ALLOWED" = "Prohibido";
 
 /* Feedback type for Report Traffic */
 "FEEDBACK_REPORT_TRAFFIC" = "Reportar\ncongestión";
 
-/* Feedback type for Closure */
+/* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Camino\ncerrado";
 
 /* Format for displaying the first two major ways */
@@ -34,11 +34,17 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Recording audio for feedback */
+"RECORDING_AUDIO" = "Grabando audio";
+
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Reenrutando…";
 
 /* Button title for resume tracking */
 "RESUME" = "Continuar";
+
+/* Then */
+"THEN" = "Luego:";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulando navegación";
