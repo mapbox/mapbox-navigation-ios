@@ -293,23 +293,17 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
     }
     
-    var mapViewController: RouteMapViewController? {
-        didSet {
-            annotatesSpokenInstructions = oldValue?.annotatesSpokenInstructions ?? false
-        }
-    }
+    var mapViewController: RouteMapViewController?
     
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
-    public var annotatesSpokenInstructions: Bool {
-        get {
-            return mapViewController?.annotatesSpokenInstructions ?? false
-        }
-        set {
-            mapViewController?.annotatesSpokenInstructions = annotatesSpokenInstructions
-        }
-    }
+    public var annotatesSpokenInstructions = false
+    
+    /**
+     A Boolean value that determines whether the user can long-press a feedback item to dictate feedback.
+     */
+    public var recordsAudioFeedback = false
     
     let progressBar = ProgressBar()
     let routeStepFormatter = RouteStepFormatter()
@@ -566,6 +560,14 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint? {
         return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
+    }
+    
+    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
+        return annotatesSpokenInstructions
+    }
+    
+    func mapViewControllerShouldRecordAudioFeedback(_ routeMapViewController: RouteMapViewController) -> Bool {
+        return recordsAudioFeedback
     }
 }
 

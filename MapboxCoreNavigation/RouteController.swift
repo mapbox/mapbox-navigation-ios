@@ -123,13 +123,6 @@ open class RouteController: NSObject {
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerOpportunisticReroutingInterval`.
      */
     public var reroutesOpportunistically = false
-    
-    
-    /**
-     If true, users can long press a feedback item and allow for recorded audio to be included in the feedback
-     */
-    public var recordsAudioFeedback = false
-    
 
     var didFindFasterRoute = false
 

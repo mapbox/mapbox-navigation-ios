@@ -76,6 +76,11 @@ class RouteMapViewController: UIViewController {
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
     var annotatesSpokenInstructions = false
+    
+    /**
+     A Boolean value that determines whether the user can long-press a feedback item to dictate feedback.
+     */
+    var recordsAudioFeedback = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -205,7 +210,7 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
     
         let controller = FeedbackViewController.loadFromStoryboard()
-        controller.recordsAudioFeedback = routeController.recordsAudioFeedback
+        controller.recordsAudioFeedback = recordsAudioFeedback
         let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
         controller.sections = sections
         let feedbackId = routeController.recordFeedback()
@@ -760,4 +765,7 @@ protocol RouteMapViewControllerDelegate: class {
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
+    
+    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+    func mapViewControllerShouldRecordAudioFeedback(_ routeMapViewController: RouteMapViewController) -> Bool
 }
