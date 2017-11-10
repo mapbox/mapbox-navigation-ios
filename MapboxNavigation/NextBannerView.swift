@@ -2,12 +2,12 @@ import UIKit
 
 /// :nodoc:
 @objc(MBNextInstructionLabel)
-class NextInstructionLabel: InstructionLabel { }
+open class NextInstructionLabel: InstructionLabel { }
 
 /// :nodoc:
 @IBDesignable
 @objc(MBNextBannerView)
-class NextBannerView: UIView {
+open class NextBannerView: UIView {
     
     weak var maneuverView: ManeuverView!
     weak var instructionLabel: NextInstructionLabel!
@@ -17,7 +17,7 @@ class NextBannerView: UIView {
         commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -46,7 +46,7 @@ class NextBannerView: UIView {
         }
     }
     
-    override func prepareForInterfaceBuilder() {
+    override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
         instructionLabel.text = "San Jose"

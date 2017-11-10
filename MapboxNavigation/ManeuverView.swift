@@ -4,6 +4,7 @@ import MapboxCoreNavigation
 import SDWebImage
 import Turf
 
+/// :nodoc:
 @IBDesignable
 @objc(MBManeuverView)
 public class ManeuverView: UIView {

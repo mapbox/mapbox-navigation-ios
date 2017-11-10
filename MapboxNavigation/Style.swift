@@ -442,7 +442,7 @@ open class StylableButton: UIButton {
 
 /// :nodoc:
 @objc(MBManeuverContainerView)
-class ManeuverContainerView: UIView {
+open class ManeuverContainerView: UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     dynamic var height: CGFloat = 100 {
@@ -453,11 +453,13 @@ class ManeuverContainerView: UIView {
     }
 }
 
+/// :nodoc:
 @objc(MBInstructionsBannerContentView)
-class InstructionsBannerContentView: UIView { }
+open class InstructionsBannerContentView: UIView { }
 
+/// :nodoc:
 @objc(MBBottomBannerContentView)
-class BottomBannerContentView: UIView { }
+open class BottomBannerContentView: UIView { }
 
 /// :nodoc:
 @objc(MBStatusView)
