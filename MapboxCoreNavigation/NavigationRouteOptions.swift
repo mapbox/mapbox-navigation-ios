@@ -25,6 +25,7 @@ open class NavigationRouteOptions: RouteOptions {
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]
         includesSpokenInstructions = true
+        locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
     }
 
