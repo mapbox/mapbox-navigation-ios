@@ -22,8 +22,8 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 - Snap to route
 
 ## Requirements:
-* >= Xcode 9
-* Swift 3 or 4
+* \>= Xcode 9
+* Swift 3.2 or 4
 
 ## Installation
 
