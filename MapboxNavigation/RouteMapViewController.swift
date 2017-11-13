@@ -722,7 +722,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(Instruction.init(step.visualInstructionsAlongStep?.first?.primaryContent.text), secondaryInstruction: Instruction.init(step.visualInstructionsAlongStep?.first?.secondaryContent.text))
+        instructionsView.set(Instruction.init(step.visualInstructionsAlongStep?.first?.primaryContent.text), secondaryInstruction: Instruction.init(step.visualInstructionsAlongStep?.first?.secondaryContent?.text))
         instructionsView.maneuverView.step = step
         instructionsView.distance = distance
         
