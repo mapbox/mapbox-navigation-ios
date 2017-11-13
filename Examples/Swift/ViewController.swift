@@ -34,18 +34,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             return routes?.first
         }
         set {
-            startButton.isEnabled = (newValue != nil)
             guard let selected = newValue else { routes?.remove(at: 0); return }
             guard let routes = routes else { self.routes = [selected]; return }
             self.routes = [selected] + routes.filter { $0 != selected }
-            mapView.showWaypoints(selected)
         }
     }
     
     var routes: [Route]? {
         didSet {
-            guard let routes = routes else { mapView?.removeRoutes(); return }
+            startButton.isEnabled = (routes?.count ?? 0 > 0)
+            guard let routes = routes,
+                  let current = routes.first else { mapView?.removeRoutes(); return }
+            
             mapView.showRoutes(routes)
+            mapView.showWaypoints(current)
         }
     }
     
@@ -55,7 +57,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         guard let current = routes.first else { return }
         self?.mapView.removeWaypoints()
         self?.routes = routes
-        self?.currentRoute = current
         self?.waypoints = current.routeOptions.waypoints
     }
     
