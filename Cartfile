@@ -3,6 +3,6 @@ github "mapbox/MapboxDirections.swift" ~> 0.12
 github "mapbox/turf-swift" ~> 0.0.3
 github "rs/SDWebImage" ~> 4.1
 github "Project-OSRM/osrm-text-instructions.swift" ~> 0.5
-github "frederoni/aws-sdk-ios" ~> 2.6
+github "aws/aws-sdk-ios" ~> 2.6
 github "mapbox/mapbox-telemetry-ios" ~> 0.2
 github "1ec5/Solar" "scheme-test-only"
