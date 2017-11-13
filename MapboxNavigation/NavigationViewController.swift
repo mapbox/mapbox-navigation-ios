@@ -306,7 +306,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     public var recordsAudioFeedback = false
     
     let progressBar = ProgressBar()
-    let routeStepFormatter = RouteStepFormatter()
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -479,7 +478,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         guard UIApplication.shared.applicationState == .background else { return }
         
         let notification = UILocalNotification()
-        notification.alertBody = routeStepFormatter.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: false)
+        notification.alertBody = step.visualInstructionsAlongStep?.first?.primaryContent.text
         notification.fireDate = Date()
         
         clearStaleNotifications()

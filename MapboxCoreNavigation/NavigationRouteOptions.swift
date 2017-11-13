@@ -27,6 +27,7 @@ open class NavigationRouteOptions: RouteOptions {
         includesSpokenInstructions = true
         locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
+        includesVisualInstructions = true
     }
 
 

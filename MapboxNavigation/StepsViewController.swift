@@ -23,7 +23,6 @@ class StepsViewController: UIViewController {
     
     let cellId = "StepTableViewCellId"
     var routeProgress: RouteProgress!
-    let instructionFormatter = VisualInstructionFormatter()
     
     typealias StepSection = [RouteStep]
     var sections = [StepSection]()
@@ -197,8 +196,7 @@ extension StepsViewController: UITableViewDataSource {
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
         let step = sections[indexPath.section][indexPath.row]
         
-        let instructions = instructionFormatter.instructions(leg: nil, step: step)
-        cell.instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+        cell.instructionsView.set(Instruction.init(step.visualInstructionsAlongStep?.first?.primaryContent.text), secondaryInstruction: Instruction.init(step.visualInstructionsAlongStep?.first?.secondaryContent?.text))
         cell.instructionsView.maneuverView.step = step
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0

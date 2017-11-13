@@ -24,8 +24,6 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
-    
-    let visualInstructionFormatter = VisualInstructionFormatter()
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -398,9 +396,8 @@ class RouteMapViewController: UIViewController {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
-        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: step)
         
-        instructionsBannerView.set(instructions.0, secondaryInstruction: instructions.1)
+        instructionsBannerView.set(Instruction.init(step.visualInstructionsAlongStep?.first?.primaryContent.text), secondaryInstruction: Instruction.init(step.visualInstructionsAlongStep?.first?.secondaryContent?.text))
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
         instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
@@ -414,14 +411,11 @@ class RouteMapViewController: UIViewController {
                 hideNextBanner()
                 return
         }
-    
-        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
-        var instruction = instructions.0
         
-        if let components = instruction?.components, components.count > 0 {
-            instruction?.components[0].prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
+        if let instruction = nextStep.visualInstructionsAlongStep?.first?.primaryContent.text, var isntructionComponent = Instruction.init(instruction) {
+            isntructionComponent.components[0].prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
             nextBannerView.maneuverView.step = nextStep
-            nextBannerView.instructionLabel.instruction = instruction
+            nextBannerView.instructionLabel.instruction = isntructionComponent
             showNextBanner()
         }
     }
@@ -725,11 +719,10 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     func addPreviewInstructions(step: RouteStep, distance: CLLocationDistance?) {
         removePreviewInstructions()
         
-        let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+        instructionsView.set(Instruction.init(step.visualInstructionsAlongStep?.first?.primaryContent.text), secondaryInstruction: Instruction.init(step.visualInstructionsAlongStep?.first?.secondaryContent.text))
         instructionsView.maneuverView.step = step
         instructionsView.distance = distance
         
