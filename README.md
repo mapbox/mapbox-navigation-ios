@@ -4,7 +4,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](https://cocoapods.org/pods/MapboxNavigation/)
 
-![Mapbox Navigation SDK](https://github.com/mapbox/mapbox-navigation-ios/raw/master/docs/img/navigation.png)
+<img alt="Mapbox Navigation SDK" src="https://github.com/mapbox/mapbox-navigation-ios/raw/master/docs/img/navigation.png" width="50%" style="margin: auto;display: block;" />
 
 Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
 
@@ -31,7 +31,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.9'
+   pod 'MapboxNavigation', '~> 0.10'
    ```
 1. Run `pod install` and open the resulting Xcode workspace.
 
@@ -41,7 +41,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.9
+   github "mapbox/mapbox-navigation-ios" ~> 0.10
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
