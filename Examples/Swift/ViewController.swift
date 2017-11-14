@@ -306,6 +306,11 @@ extension ViewController: NavigationMapViewDelegate {
         self.present(actionSheet, animated: true, completion: nil)
     }
 
+    // Called when there is an error with speaking a voice instruction.
+    func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
+        print(error.localizedDescription)
+    }
+    
     // Called when an instruction is interrupted by a new voice instruction.
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt: String, with instruction: String) {
         print("\(didInterrupt) interrupted by \(instruction)")
