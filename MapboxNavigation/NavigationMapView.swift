@@ -161,7 +161,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         
-        guard isPluggedIn else {
+        guard !isPluggedIn else {
             frameInterval = FrameIntervalOptions.pluggedInFrameInterval
             return
         }
