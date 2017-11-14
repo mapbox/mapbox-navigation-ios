@@ -18,43 +18,43 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
      */
-    public var isEnabled: Bool = true
+    @objc public var isEnabled: Bool = true
     
     
     /**
      Volume of announcements.
      */
-    public var volume: Float = 1.0
+    @objc public var volume: Float = 1.0
     
     
     /**
      SSML option which controls at which speed Polly instructions are read.
      */
-    public var instructionVoiceSpeedRate = 1.08
+    @objc public var instructionVoiceSpeedRate = 1.08
     
     
     /**
      SSML option that specifies the voice loudness.
      */
-    public var instructionVoiceVolume = "default"
+    @objc public var instructionVoiceVolume = "default"
     
     
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
-    public var playRerouteSound = true
+    @objc public var playRerouteSound = true
 
     
     /**
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
-    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
+    @objc public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
     
     
     /**
      Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
     */
-    public var bufferBetweenAnnouncements: TimeInterval = 3
+    @objc public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
      Default initializer for `RouteVoiceController`.
@@ -109,7 +109,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         rerouteSoundPlayer.play()
     }
     
-    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    @objc public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         do {
             try unDuckAudio()
         } catch {
@@ -117,7 +117,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         }
     }
     
-    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+    @objc public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         do {
             try unDuckAudio()
         } catch {

@@ -27,22 +27,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Returns the altitude that the map camera initally defaults to.
      */
-    public static let defaultAltitude: CLLocationDistance = 1000.0
+    @objc public static let defaultAltitude: CLLocationDistance = 1000.0
     
     /**
      Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
     */
-    public static let zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
+    @objc public static let zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
     
     /**
      Returns the threshold for what the map considers a "long-enough" maneuver distance to trigger a zoom-out when the user enters a motorway.
      */
-    public static let longManeuverDistance: CLLocationDistance = 1000.0
+    @objc public static let longManeuverDistance: CLLocationDistance = 1000.0
     
     /**
      Maximum distnace the user can tap for a selection to be valid when selecting an alternate route.
      */
-    public var tapGestureDistanceThreshold: CGFloat = 50
+    @objc public var tapGestureDistanceThreshold: CGFloat = 50
     
     //MARK: Instance Properties
     let sourceIdentifier = "routeSource"
@@ -289,7 +289,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
     }
     
-    public func updateCourseTracking(location: CLLocation?, animated: Bool) {
+    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         animatesUserLocation = animated
         userLocationForCourseTracking = location
         guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
@@ -455,7 +455,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
+    @objc public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
         guard let style = style else { return }
         guard let activeRoute = routes.first else { return }
         
@@ -513,7 +513,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Removes route line and route line casing from map
      */
-    public func removeRoutes() {
+    @objc public func removeRoutes() {
         guard let style = style else {
             return
         }
@@ -553,7 +553,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      */
-    public func showWaypoints(_ route: Route, legIndex: Int = 0) {
+    @objc public func showWaypoints(_ route: Route, legIndex: Int = 0) {
         guard let style = style else {
             return
         }
@@ -593,7 +593,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Removes all waypoints from the map.
      */
-    public func removeWaypoints() {
+    @objc public func removeWaypoints() {
         guard let style = style else { return }
         
         removeAnnotations(annotations ?? [])
@@ -618,7 +618,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Shows the step arrow given the current `RouteProgress`.
      */
-    public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
+    @objc public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
         guard route.legs.indices.contains(legIndex),
             route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
         
@@ -735,7 +735,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Removes the step arrow from the map.
      */
-    public func removeArrow() {
+    @objc public func removeArrow() {
         guard let style = style else {
             return
         }
@@ -952,7 +952,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return lineCasing
     }
     
-    public func showVoiceInstructionsOnMap(route: Route) {
+    @objc public func showVoiceInstructionsOnMap(route: Route) {
         guard let style = style else {
             return
         }
