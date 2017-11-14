@@ -74,13 +74,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         22: MGLStyleValue(rawValue: 30)
     ]
     
-    dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
-    dynamic public var trafficLowColor: UIColor = .trafficLow
-    dynamic public var trafficModerateColor: UIColor = .trafficModerate
-    dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
-    dynamic public var trafficSevereColor: UIColor = .trafficSevere
-    dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
-    dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
+    @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
+    @objc dynamic public var trafficLowColor: UIColor = .trafficLow
+    @objc dynamic public var trafficModerateColor: UIColor = .trafficModerate
+    @objc dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
+    @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
+    @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
+    @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
@@ -151,7 +151,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
     }
     
-    func progressDidChange(_ notification: Notification) {
+    @objc func progressDidChange(_ notification: Notification) {
         guard tracksUserCourse else { return }
         
         let routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as! RouteProgress
@@ -203,7 +203,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    func updateCourseView(_ sender: UIGestureRecognizer) {
+    @objc func updateCourseView(_ sender: UIGestureRecognizer) {
         frameInterval = FrameIntervalOptions.defaultFrameInterval
         
         if sender.state == .ended {
@@ -385,7 +385,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
-    func didRecieveTap(sender: UITapGestureRecognizer) {
+    @objc func didRecieveTap(sender: UITapGestureRecognizer) {
         guard let routes = routes, let tapPoint = sender.point else { return }
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?

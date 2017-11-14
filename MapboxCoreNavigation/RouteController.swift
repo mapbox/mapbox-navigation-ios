@@ -240,7 +240,7 @@ open class RouteController: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func didChangeOrientation() {
+    @objc func didChangeOrientation() {
         if UIDevice.current.orientation.isPortrait {
             sessionState.timeSpentInLandscape += abs(sessionState.lastTimeInPortrait.timeIntervalSinceNow)
             
@@ -252,7 +252,7 @@ open class RouteController: NSObject {
         }
     }
     
-    func didChangeApplicationState() {
+    @objc func didChangeApplicationState() {
         if UIApplication.shared.applicationState == .active {
             sessionState.timeSpentInForeground += abs(sessionState.lastTimeInBackground.timeIntervalSinceNow)
             
@@ -416,7 +416,7 @@ open class RouteController: NSObject {
 }
 
 extension RouteController {
-    func progressDidChange(notification: NSNotification) {
+    @objc func progressDidChange(notification: NSNotification) {
         if sessionState.departureTimestamp == nil {
             sessionState.departureTimestamp = Date()
             sendDepartEvent()
@@ -424,7 +424,7 @@ extension RouteController {
         checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
 
-    func didPassSpokenInstructionPoint(notification: NSNotification) {
+    @objc func didPassSpokenInstructionPoint(notification: NSNotification) {
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
@@ -432,13 +432,13 @@ extension RouteController {
         recentDistancesFromManeuver.removeAll()
     }
 
-    func willReroute(notification: NSNotification) {
+    @objc func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
         
     }
     
     
-    func didReroute(notification: NSNotification) {
+    @objc func didReroute(notification: NSNotification) {
         if let _ = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool {
             _ = enqueueFoundFasterRouteEvent()
         }
@@ -452,7 +452,7 @@ extension RouteController {
 
 extension RouteController: CLLocationManagerDelegate {
 
-    func interpolateLocation() {
+    @objc func interpolateLocation() {
         guard let location = locationManager.lastKnownLocation else { return }
         guard let coordinates = routeProgress.route.coordinates else { return }
         let polyline = Polyline(coordinates)

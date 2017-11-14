@@ -37,14 +37,14 @@ extension UIFont {
     
     func with(fontFamily: String?) -> UIFont {
         guard let fontFamily = fontFamily else { return self }
-        let weight = (fontDescriptor.object(forKey: UIFontDescriptorTraitsAttribute) as! [String:Any])[UIFontWeightTrait]
-        let attributes = [UIFontDescriptorTraitsAttribute: [UIFontWeightTrait: weight]]
+        let weight = (fontDescriptor.object(forKey: UIFontDescriptor.AttributeName.traits) as! [String:Any])[UIFontDescriptor.TraitKey.weight.rawValue]
+        let attributes = [UIFontDescriptor.AttributeName.traits: [UIFontDescriptor.TraitKey.weight: weight]]
         let descriptor = UIFontDescriptor(name: fontName, size: pointSize).withFamily(fontFamily).addingAttributes(attributes)
         return UIFont(descriptor: descriptor, size: pointSize)
     }
     
     func with(weight: CGFloat) -> UIFont {
-        let font = UIFont(descriptor: fontDescriptor.addingAttributes([UIFontWeightTrait: weight]), size: pointSize)
+        let font = UIFont(descriptor: fontDescriptor.addingAttributes([UIFontDescriptor.AttributeName.traits: weight]), size: pointSize)
         return font
     }
 }

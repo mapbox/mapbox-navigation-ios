@@ -405,7 +405,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
-    func progressDidChange(notification: NSNotification) {
+    @objc func progressDidChange(notification: NSNotification) {
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
         let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
@@ -415,7 +415,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }
     
-    func didPassInstructionPoint(notification: NSNotification) {
+    @objc func didPassInstructionPoint(notification: NSNotification) {
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
         mapViewController?.updateMapOverlays(for: routeProgress)

@@ -174,7 +174,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissFeedback), object: nil)
     }
     
-    func dismissFeedback() {
+    @objc func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
     }
@@ -185,7 +185,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         return !isDescendant
     }
     
-    func handleDismissTap(sender: UITapGestureRecognizer) {
+    @objc func handleDismissTap(sender: UITapGestureRecognizer) {
         dismissFeedback()
     }
 }
@@ -283,7 +283,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func didLongPress(_ sender: UILongPressGestureRecognizer) {
+    @objc func didLongPress(_ sender: UILongPressGestureRecognizer) {
         delegate?.didLongPress(on: self, sender: sender)
     }
 }
