@@ -49,7 +49,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-iR-MZm" customClass="MBReportButton">
-                                <rect key="frame" x="121.5" y="240.5" width="132" height="38"/>
+                                <rect key="frame" x="121.5" y="196.5" width="132" height="38"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.23921568627450979" blue="0.3411764705882353" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
@@ -98,7 +98,7 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG">
-                                <rect key="frame" x="0.0" y="116.5" width="375" height="114"/>
+                                <rect key="frame" x="0.0" y="116.5" width="375" height="70"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="LanesContainerView" customModule="MapboxNavigation" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
@@ -128,7 +128,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
-                                        <rect key="frame" x="0.0" y="84" width="375" height="30"/>
+                                        <rect key="frame" x="0.0" y="40" width="375" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpZ-gr-OKM">
                                                 <rect key="frame" x="141.5" y="5" width="92.5" height="20.5"/>
@@ -172,7 +172,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
-                                <rect key="frame" x="315" y="241" width="50" height="108"/>
+                                <rect key="frame" x="315" y="197" width="50" height="166"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -200,7 +200,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBFloatingButton">
-                                        <rect key="frame" x="0.0" y="108" width="50" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="112" width="50" height="0.0"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" priority="999" constant="50" id="o37-gV-IxI"/>
@@ -210,6 +210,18 @@
                                         <state key="normal" image="feedback"/>
                                         <connections>
                                             <action selector="feedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="2mO-AS-TQL"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G8u-mb-57K">
+                                        <rect key="frame" x="0.0" y="116" width="50" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="L7T-zM-W3m"/>
+                                            <constraint firstAttribute="height" constant="50" id="YJx-ME-AgO"/>
+                                        </constraints>
+                                        <state key="normal" image="report_checkmark"/>
+                                        <connections>
+                                            <action selector="toggleEndOfRouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="afa-XO-prM"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -232,13 +244,24 @@
                                     <constraint firstAttribute="height" constant="96" id="T38-Uq-JYA"/>
                                 </constraints>
                             </view>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Kx-12-EOg">
+                                <rect key="frame" x="0.0" y="500" width="375" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="Idg-60-CZm"/>
+                                </constraints>
+                                <connections>
+                                    <segue destination="WD9-Na-hrx" kind="embed" id="h6e-Lg-8fk"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
+                            <constraint firstItem="1Kx-12-EOg" firstAttribute="bottom" secondItem="bUe-nv-g0F" secondAttribute="bottom" id="1kU-o5-DsQ"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bUe-nv-g0F" secondAttribute="leading" constant="20" id="4oP-yz-9W5"/>
                             <constraint firstItem="I8f-iR-MZm" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="7KD-9u-9mi" userLabel="Reroute Slide Constraint"/>
+                            <constraint firstItem="1Kx-12-EOg" firstAttribute="trailing" secondItem="bUe-nv-g0F" secondAttribute="trailing" id="7yd-r7-wXI"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="81D-S0-3wU"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="UnK-tl-lPe" secondAttribute="trailing" id="8tv-TI-Nej"/>
                             <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="top" secondItem="sDs-aU-EMQ" secondAttribute="top" id="AbH-gl-nG9"/>
@@ -251,11 +274,13 @@
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="bottom" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="bottom" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="OJu-tK-ZSa"/>
                             <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="QHw-st-QI3"/>
+                            <constraint firstItem="1Kx-12-EOg" firstAttribute="top" secondItem="bUe-nv-g0F" secondAttribute="bottom" id="TgB-K7-2M6"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
                             <constraint firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="VK1-eQ-4VK"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
+                            <constraint firstItem="1Kx-12-EOg" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="YfA-CW-bVf"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="8P3-NB-IRq" secondAttribute="trailing" constant="10" id="aek-g0-Rdp"/>
                             <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="bottom" secondItem="Gvo-VD-DXF" secondAttribute="bottom" id="doU-NT-mFp"/>
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="gAd-tT-w0a"/>
@@ -271,10 +296,18 @@
                             <constraint firstItem="sDs-aU-EMQ" firstAttribute="trailing" secondItem="bUe-nv-g0F" secondAttribute="trailing" id="xVy-QY-PqF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bUe-nv-g0F"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="1kU-o5-DsQ"/>
+                            </mask>
+                        </variation>
                     </view>
                     <size key="freeformSize" width="375" height="500"/>
                     <connections>
                         <outlet property="bottomBannerView" destination="sDs-aU-EMQ" id="SOJ-pC-0th"/>
+                        <outlet property="endOfRouteContainer" destination="1Kx-12-EOg" id="KJt-8r-bbQ"/>
+                        <outlet property="endOfRouteHide" destination="TgB-K7-2M6" id="CWj-ub-rPd"/>
+                        <outlet property="endOfRouteShow" destination="1kU-o5-DsQ" id="boW-aY-y45"/>
                         <outlet property="instructionsBannerContainerView" destination="p9E-v0-Rt6" id="TMF-0X-Ode"/>
                         <outlet property="instructionsBannerView" destination="UnK-tl-lPe" id="Qdh-aT-dPs"/>
                         <outlet property="laneViewsContainerView" destination="NE9-ru-uJw" id="Iy6-hg-9rK"/>
@@ -409,7 +442,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -517,7 +550,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tgj-dm-1KN">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -657,10 +690,10 @@ Label  </string>
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="dummy5" id="hhD-KK-MLb" customClass="FeedbackCollectionViewCell" customModule="MapboxNavigation" customModuleProvider="target">
-                                        <rect key="frame" x="250" y="150" width="125" height="150"/>
+                                        <rect key="frame" x="250" y="145" width="125" height="145"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="125" height="150"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="125" height="145"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jxP-xH-ANo" userLabel="CircleView">
@@ -679,7 +712,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yPS-fp-q2X">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -751,6 +784,21 @@ Label  </string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w0B-4a-jYs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5078" y="126"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="D7g-l8-Czc">
+            <objects>
+                <viewController id="WD9-Na-hrx" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="IDF-XF-2Ta">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.85089617969999998" green="0.0" blue="0.85087728500000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <viewLayoutGuide key="safeArea" id="P8U-kf-mkb"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A8g-0A-gn2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3833" y="666"/>
         </scene>
     </scenes>
     <resources>

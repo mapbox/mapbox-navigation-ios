@@ -24,6 +24,10 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var endOfRouteContainer: UIView!
+    @IBOutlet weak var endOfRouteShow: NSLayoutConstraint!
+    @IBOutlet weak var endOfRouteHide: NSLayoutConstraint!
+    
     
     let visualInstructionFormatter = VisualInstructionFormatter()
 
@@ -179,6 +183,15 @@ class RouteMapViewController: UIViewController {
             view.removeFromSuperview()
             instructionsBannerContainerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
             previewInstructionsView = nil
+        }
+    }
+    
+    @IBAction func toggleEndOfRouteFeedback(_ sender: Any) {
+        self.endOfRouteHide.isActive = false
+        self.endOfRouteShow.isActive = true
+        
+        UIView.animate(withDuration: 1) {
+            self.view.layoutIfNeeded()
         }
     }
 
