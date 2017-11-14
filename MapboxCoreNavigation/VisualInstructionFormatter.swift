@@ -12,7 +12,7 @@ public class VisualInstructionFormatter: NSObject {
     /**
      Creates the optimal text to be displayed given a `RouteLeg` and `RouteStep`.
      */
-    public func string(leg: RouteLeg?, step: RouteStep?) -> String? {
+    @objc public func string(leg: RouteLeg?, step: RouteStep?) -> String? {
         if let currentLeg = leg, let destinationName = currentLeg.destination.name, let step = step, step.maneuverType == .arrive {
             return destinationName
         } else if let destinations = step?.destinations {

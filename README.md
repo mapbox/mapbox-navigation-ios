@@ -23,7 +23,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Requirements:
 * \>= Xcode 9
-* Swift 3.2 or 4
+* Swift 4. If you'd like to use Swift 3.2, the last supported release is v0.10.1.
 
 Note: If you are using CocoaPods and Xcode 9, please install the [`swift4`] branch, which migrates to Swift 4.
 

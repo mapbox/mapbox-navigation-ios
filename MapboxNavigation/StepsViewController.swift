@@ -69,7 +69,7 @@ open class StepsViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
     }
     
-    func progressDidChange(_ notification: Notification) {
+    @objc func progressDidChange(_ notification: Notification) {
         if sections.first?.first != routeProgress.currentLegProgress.upComingStep {
             rebuildDataSource()
             tableView.reloadData()

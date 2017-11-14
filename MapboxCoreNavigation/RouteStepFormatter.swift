@@ -9,7 +9,7 @@ public class RouteStepFormatter: Formatter {
     /**
      Return an instruction as a `String`.
      */
-    public override func string(for obj: Any?) -> String? {
+    @objc public override func string(for obj: Any?) -> String? {
         return string(for: obj, legIndex: nil, numberOfLegs: nil, markUpWithSSML: false)
     }
     
@@ -49,7 +49,7 @@ public class RouteStepFormatter: Formatter {
         
     }
     
-    public override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
+    @objc public override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         return false
     }
 }

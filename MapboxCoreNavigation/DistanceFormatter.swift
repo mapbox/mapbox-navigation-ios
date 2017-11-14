@@ -108,7 +108,7 @@ public class DistanceFormatter: LengthFormatter {
         return formattedDistance(distance, modify: &unit)
     }
     
-    public override func string(fromMeters numberInMeters: Double) -> String {
+    @objc public override func string(fromMeters numberInMeters: Double) -> String {
         return self.string(from: numberInMeters)
     }
     

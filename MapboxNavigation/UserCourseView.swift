@@ -19,24 +19,24 @@ public protocol UserCourseView {
 /**
  A view representing the user’s location on screen.
  */
-public class UserPuckCourseView: UIView, UserCourseView {
+@objc public class UserPuckCourseView: UIView, UserCourseView {
     
     // Sets the color on the user puck
-    public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
+    @objc public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
         didSet {
             puckView.puckColor = puckColor
         }
     }
     
     // Sets the fill color on the circle around the user puck
-    public dynamic var fillColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
+    @objc public dynamic var fillColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) {
         didSet {
             puckView.fillColor = fillColor
         }
     }
     
     // Sets the shadow color around the user puck
-    public dynamic var shadowColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.16) {
+    @objc public dynamic var shadowColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.16) {
         didSet {
             puckView.shadowColor = shadowColor
         }
