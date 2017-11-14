@@ -37,6 +37,7 @@ class RouteMapViewController: UIViewController {
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
+    var endOfRouteViewController: EndOfRouteViewController?
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -111,7 +112,6 @@ class RouteMapViewController: UIViewController {
         isInOverviewMode = false
         instructionsBannerView.delegate = self
         bottomBannerView.delegate = self
-        
         resumeNotifications()
     }
     
@@ -187,12 +187,7 @@ class RouteMapViewController: UIViewController {
     }
     
     @IBAction func toggleEndOfRouteFeedback(_ sender: Any) {
-        self.endOfRouteHide.isActive = false
-        self.endOfRouteShow.isActive = true
-        
-        UIView.animate(withDuration: 1) {
-            self.view.layoutIfNeeded()
-        }
+        showEndOfRoute()
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
@@ -478,9 +473,39 @@ class RouteMapViewController: UIViewController {
             self.laneViewsContainerView.isHidden = true
         }, completion: nil)
     }
+    //MARK: - End Of Route
+    
+    func showEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
+        self.endOfRouteHide.isActive = false
+        self.endOfRouteShow.isActive = true
+        
+        let layout = self.view.layoutIfNeeded
+        let noAnimation = { layout(); completion?(true) }
+        
+        duration > 0.0 ? UIView.animate(withDuration: duration, animations: layout, completion: completion) : noAnimation()
+    }
+    
+    func hideEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
+        self.endOfRouteHide.isActive = true
+        self.endOfRouteShow.isActive = false
+        
+        let layout = self.view.layoutIfNeeded
+        let noAnimation = { layout(); completion?(true) }
+        
+        duration > 0.0 ? UIView.animate(withDuration: duration, animations: layout, completion: completion) : noAnimation()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let endOfRouteVC = segue.destination as? EndOfRouteViewController else { return }
+        let modalDismiss = { (bool: Bool) -> Void in
+            self.dismiss(animated: true, completion: nil)
+        }
+        endOfRouteVC.dismiss = { self.hideEndOfRoute(duration: 0.3, completion: modalDismiss) }
+    }
+
 }
 
-// MARK: NavigationMapViewCourseTrackingDelegate
+// - MARK: NavigationMapViewCourseTrackingDelegate
 
 extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {

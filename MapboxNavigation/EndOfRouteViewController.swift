@@ -2,6 +2,8 @@ import UIKit
 
 class EndOfRouteViewController: UIViewController {
 
+    @IBOutlet weak var endNavigationButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -16,4 +18,8 @@ class EndOfRouteViewController: UIViewController {
     }
 
     var dismiss: (() -> Void)?
+    
+    @IBAction func endNavigationPressed(_ sender: Any) {
+        dismiss?()
+    }
 }

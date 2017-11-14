@@ -221,7 +221,7 @@
                                         </constraints>
                                         <state key="normal" image="report_checkmark"/>
                                         <connections>
-                                            <action selector="toggleEndOfRouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="afa-XO-prM"/>
+                                            <action selector="toggleEndOfRouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="jAG-us-9bn"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -245,9 +245,9 @@
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Kx-12-EOg">
-                                <rect key="frame" x="0.0" y="500" width="375" height="150"/>
+                                <rect key="frame" x="0.0" y="500" width="375" height="260"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="150" id="Idg-60-CZm"/>
+                                    <constraint firstAttribute="height" constant="260" id="Idg-60-CZm"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="WD9-Na-hrx" kind="embed" id="h6e-Lg-8fk"/>
@@ -442,7 +442,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -712,7 +712,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yPS-fp-q2X">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -790,15 +790,31 @@ Label  </string>
             <objects>
                 <viewController id="WD9-Na-hrx" customClass="EndOfRouteViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="IDF-XF-2Ta">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="260"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.85089617969999998" green="0.0" blue="0.85087728500000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5f2-dT-la4">
+                                <rect key="frame" x="136" y="210" width="103" height="30"/>
+                                <state key="normal" title="End Navigation"/>
+                                <connections>
+                                    <action selector="endNavigationPressed:" destination="WD9-Na-hrx" eventType="touchUpInside" id="WD3-dO-JvE"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="P8U-kf-mkb" firstAttribute="bottom" secondItem="5f2-dT-la4" secondAttribute="bottom" constant="20" id="5hu-Fp-Bvh"/>
+                            <constraint firstItem="5f2-dT-la4" firstAttribute="centerX" secondItem="IDF-XF-2Ta" secondAttribute="centerX" id="bay-56-arG"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="P8U-kf-mkb"/>
                     </view>
+                    <connections>
+                        <outlet property="endNavigationButton" destination="5f2-dT-la4" id="4Tt-b1-Pch"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A8g-0A-gn2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3833" y="666"/>
+            <point key="canvasLocation" x="3833" y="876"/>
         </scene>
     </scenes>
     <resources>
