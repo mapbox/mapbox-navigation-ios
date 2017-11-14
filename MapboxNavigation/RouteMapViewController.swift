@@ -27,7 +27,9 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var endOfRouteContainer: UIView!
     @IBOutlet weak var endOfRouteShow: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteHide: NSLayoutConstraint!
-    
+    @IBOutlet weak var bannerHide: NSLayoutConstraint!
+    @IBOutlet weak var bannerShow: NSLayoutConstraint!
+    @IBOutlet weak var bannerContainerShow: NSLayoutConstraint!
     
     let visualInstructionFormatter = VisualInstructionFormatter()
 
@@ -478,18 +480,25 @@ class RouteMapViewController: UIViewController {
     func showEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
         self.endOfRouteHide.isActive = false
         self.endOfRouteShow.isActive = true
+        self.bannerHide.isActive = true
+        self.bannerShow.isActive = false
+        self.bannerContainerShow.isActive = false
         
-        let layout = self.view.layoutIfNeeded
+        let layout = view.layoutIfNeeded
         let noAnimation = { layout(); completion?(true) }
         
         duration > 0.0 ? UIView.animate(withDuration: duration, animations: layout, completion: completion) : noAnimation()
     }
     
     func hideEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
+        self.view.layoutIfNeeded()
+        
         self.endOfRouteHide.isActive = true
         self.endOfRouteShow.isActive = false
+        self.view.clipsToBounds = true
+
         
-        let layout = self.view.layoutIfNeeded
+        let layout = view.layoutIfNeeded
         let noAnimation = { layout(); completion?(true) }
         
         duration > 0.0 ? UIView.animate(withDuration: duration, animations: layout, completion: completion) : noAnimation()
