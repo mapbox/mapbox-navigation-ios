@@ -166,7 +166,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
     
-        if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver,
+        if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
             durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
             frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
         } else if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .straightAhead {
