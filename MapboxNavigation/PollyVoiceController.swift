@@ -171,13 +171,10 @@ public class PollyVoiceController: RouteVoiceController {
         }
     }
     
-    func speakWithoutPolly(_ instruction: SpokenInstruction, error: Error?) {
+    func speakWithoutPolly(_ instruction: SpokenInstruction, error: Error) {
         pollyTask?.cancel()
         
-        // Note why it failed
-        if let error = error {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
-        }
+        voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         
         guard let audioPlayer = audioPlayer else {
             super.speak(fallbackInstruction)
