@@ -397,7 +397,23 @@ class RouteMapViewController: UIViewController {
         let distanceRemaining = stepProgress.distanceRemaining
         let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
         
-        instructionsBannerView.set(Instruction.init(step.visualInstructionsAlongStep?.first?.primaryContent.text), secondaryInstruction: Instruction.init(step.visualInstructionsAlongStep?.first?.secondaryContent?.text))
+        guard let instructions = step.visualInstructionsAlongStep else { return }
+        
+        let scale = UITraitCollection(displayScale: UIScreen.main.scale)
+        
+        let primaryInstructions = Instruction(instructions.flatMap {
+            $0.primaryTextComponents.map {
+                Instruction.Component.init($0.text, png: nil, roadCode: nil, prefix: nil, componentImageURL: $0.imageURLS[scale])
+            }
+        })
+        
+        let secondaryInstructions = Instruction(Array(instructions.flatMap {
+            $0.secondaryTextComponents?.flatMap {
+                Instruction.Component.init($0.text, png: nil, roadCode: nil, prefix: nil, componentImageURL: $0.imageURLS[scale])
+            }
+        }.joined()))
+        
+        instructionsBannerView.set(primaryInstructions, secondaryInstruction: secondaryInstructions)
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
         instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
@@ -412,12 +428,18 @@ class RouteMapViewController: UIViewController {
                 return
         }
         
-        if let instruction = nextStep.visualInstructionsAlongStep?.first?.primaryContent.text, var isntructionComponent = Instruction.init(instruction) {
-            isntructionComponent.components[0].prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
-            nextBannerView.maneuverView.step = nextStep
-            nextBannerView.instructionLabel.instruction = isntructionComponent
-            showNextBanner()
-        }
+        guard let instructions = step.visualInstructionsAlongStep else { return }
+        
+        var thenInstruction = Instruction(instructions.flatMap {
+            $0.primaryTextComponents.map {
+                Instruction.Component.init($0.text, png: nil, roadCode: nil, prefix: nil, componentImageURL: $0.imageURLS[UITraitCollection(displayScale: UIScreen.main.scale)])
+            }
+        })
+        
+        thenInstruction.components[0].prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
+        nextBannerView.maneuverView.step = nextStep
+        nextBannerView.instructionLabel.instruction = thenInstruction
+        showNextBanner()
     }
     
     func showNextBanner() {
@@ -719,10 +741,26 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     func addPreviewInstructions(step: RouteStep, distance: CLLocationDistance?) {
         removePreviewInstructions()
         
+        let scale = UITraitCollection(displayScale: UIScreen.main.scale)
+        
+        guard let instructions = step.visualInstructionsAlongStep else { return }
+        
+        let primaryInstructions = Instruction(instructions.flatMap {
+            $0.primaryTextComponents.map {
+                Instruction.Component.init($0.text, png: nil, roadCode: nil, prefix: nil, componentImageURL: $0.imageURLS[scale])
+            }
+        })
+        
+        let secondaryInstructions = Instruction(Array(instructions.flatMap {
+            $0.secondaryTextComponents?.flatMap {
+                Instruction.Component.init($0.text, png: nil, roadCode: nil, prefix: nil, componentImageURL: $0.imageURLS[scale])
+            }
+        }.joined()))
+        
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(Instruction.init(step.visualInstructionsAlongStep?.first?.primaryContent.text), secondaryInstruction: Instruction.init(step.visualInstructionsAlongStep?.first?.secondaryContent?.text))
+        instructionsView.set(primaryInstructions, secondaryInstruction: secondaryInstructions)
         instructionsView.maneuverView.step = step
         instructionsView.distance = distance
         

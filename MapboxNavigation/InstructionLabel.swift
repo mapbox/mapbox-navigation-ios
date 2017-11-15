@@ -31,24 +31,19 @@ open class InstructionLabel: StylableLabel {
                 string.append(NSAttributedString(string: prefix, attributes: attributes))
             }
             
-            if let roadCode = component.roadCode, let network = component.network, let number = component.number {
-                // Check if shield image is cached, otherwise display road code in text
-                let shieldKey = UIImage.shieldKey(network, number: number, height: shieldHeight)
+            if let imageURL = component.componentImageURL {
+                let shieldKey = UIImage.shieldKey(imageURL, height: shieldHeight)
                 if let cachedImage = UIImage.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
                     if let direction = component.direction {
                         string.append(NSAttributedString(string: " "+direction, attributes: attributes))
                     }
                 } else {
-                    // Download shield and display road code in the meantime
-                    string.append(NSAttributedString(string: joinChar+roadCode, attributes: attributes))
-                    UIImage.shieldImage(network, number: number, height: shieldHeight, completion: { [unowned self] (image) in
-                        // Reconstruct instructions if we did get a shield image
+                    UIImage.shieldImage(imageURL, height: shieldHeight, completion: { [unowned self] (image) in
                         guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }
                         self.constructInstructions()
                     })
                 }
-                
             } else if let text = component.text {
                 string.append(NSAttributedString(string: (joinChar+text).abbreviated(toFit: availableBounds(), font: font), attributes: attributes))
             }

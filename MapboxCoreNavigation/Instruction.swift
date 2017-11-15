@@ -25,12 +25,14 @@ public struct Instruction: Equatable {
         public let number: String?
         public let direction: String?
         public var prefix: String?
+        public var componentImageURL: URL?
         
-        public init(_ text: String?, png: String? = nil, roadCode: String? = nil, prefix: String? = nil) {
+        public init(_ text: String?, png: String? = nil, roadCode: String? = nil, prefix: String? = nil, componentImageURL: URL? = nil) {
             self.text = text
             self.png = png
             self.roadCode = roadCode
             self.prefix = prefix
+            self.componentImageURL = componentImageURL
             
             guard let roadCode = roadCode else {
                 self.network = nil
