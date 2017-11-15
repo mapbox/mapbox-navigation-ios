@@ -362,7 +362,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     deinit {
         suspendNotifications()
-        voiceController?.announcementTimer?.invalidate()
     }
     
     override public func viewDidLoad() {
