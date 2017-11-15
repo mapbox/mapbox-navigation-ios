@@ -196,23 +196,9 @@ extension StepsViewController: UITableViewDataSource {
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
         let step = sections[indexPath.section][indexPath.row]
         
-        let scale = UITraitCollection(displayScale: UIScreen.main.scale)
+        guard let instructions = step.visualInstructionsAlongStep?.first else { return }
         
-        guard let instructions = step.visualInstructionsAlongStep else { return }
-        
-        let primaryInstructions = Instruction(instructions.flatMap {
-            $0.primaryTextComponents.map {
-                Instruction.Component.init($0.text, png: nil, roadCode: nil, prefix: nil, componentImageURL: $0.imageURLS[scale])
-            }
-        })
-        
-        let secondaryInstructions = Instruction(Array(instructions.flatMap {
-            $0.secondaryTextComponents?.flatMap {
-                Instruction.Component.init($0.text, png: nil, roadCode: nil, prefix: nil, componentImageURL: $0.imageURLS[scale])
-            }
-        }.joined()))
-        
-        cell.instructionsView.set(primaryInstructions, secondaryInstruction: secondaryInstructions)
+        cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
         cell.instructionsView.maneuverView.step = step
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0

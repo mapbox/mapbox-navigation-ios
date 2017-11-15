@@ -1,5 +1,6 @@
 import UIKit
 import MapboxCoreNavigation
+import MapboxDirections
 
 /// :nodoc:
 @objc(MBInstructionLabel)
@@ -8,11 +9,13 @@ open class InstructionLabel: StylableLabel {
     var availableBounds: AvailableBoundsHandler!
     var shieldHeight: CGFloat = 30
     
-    var instruction: Instruction? {
+    var instruction: [VisualInstructionComponent]? {
         didSet {
             constructInstructions()
         }
     }
+    
+    let scale = UITraitCollection(displayScale: UIScreen.main.scale)
     
     func constructInstructions() {
         guard let instruction = instruction else {
@@ -23,21 +26,14 @@ open class InstructionLabel: StylableLabel {
         let string = NSMutableAttributedString()
         
         // Add text or image
-        for component in instruction.components {
-            let isFirst = component == instruction.components.first
+        for component in instruction {
+            let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
             
-            if let prefix = component.prefix {
-                string.append(NSAttributedString(string: prefix, attributes: attributes))
-            }
-            
-            if let imageURL = component.componentImageURL {
+            if let imageURL = component.imageURLS[scale] {
                 let shieldKey = UIImage.shieldKey(imageURL, height: shieldHeight)
                 if let cachedImage = UIImage.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
-                    if let direction = component.direction {
-                        string.append(NSAttributedString(string: " "+direction, attributes: attributes))
-                    }
                 } else {
                     UIImage.shieldImage(imageURL, height: shieldHeight, completion: { [unowned self] (image) in
                         guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }

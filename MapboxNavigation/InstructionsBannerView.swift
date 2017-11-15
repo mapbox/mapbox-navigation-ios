@@ -1,5 +1,6 @@
 import UIKit
 import MapboxCoreNavigation
+import MapboxDirections
 
 protocol InstructionsBannerViewDelegate: class {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
@@ -70,7 +71,7 @@ open class BaseInstructionsBannerView: UIControl {
         delegate?.didTapInstructionsBanner(self)
     }
     
-    func set(_ primaryInstruction: Instruction?, secondaryInstruction: Instruction?) {
+    func set(_ primaryInstruction: [VisualInstructionComponent]?, secondaryInstruction: [VisualInstructionComponent]?) {
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
