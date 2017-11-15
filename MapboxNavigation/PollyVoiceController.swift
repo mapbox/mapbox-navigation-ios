@@ -196,7 +196,7 @@ public class PollyVoiceController: RouteVoiceController {
         }
         
         guard let url = awsTask.result else {
-            speakWithoutPolly(fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "No AWS Task"))
+            speakWithoutPolly(fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud"))
             return
         }
         
@@ -214,7 +214,7 @@ public class PollyVoiceController: RouteVoiceController {
             }
             
             guard let data = data else {
-                strongSelf.speakWithoutPolly(strongSelf.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "No data in response", code: .noDataInSpokenInstructionResponse))
+                strongSelf.speakWithoutPolly(strongSelf.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", code: .noDataInSpokenInstructionResponse))
                 return
             }
             
@@ -260,7 +260,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let prepared = self.audioPlayer?.prepareToPlay() ?? false
                 
                 guard prepared else {
-                    self.speakWithoutPolly(self.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "Audio player failed to prepare", code: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", code: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 
@@ -269,7 +269,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    self.speakWithoutPolly(self.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", detailedFailureReason: "Audio player failed to play", code: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", code: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 

@@ -158,8 +158,3 @@ public var RouteControllerOpportunisticReroutingInterval: TimeInterval = 120
 
 let FasterRouteFoundEvent = "navigation.fasterRoute"
 
-/**
- Domain which all errors from delegate methods live under.
- */
-public let MGLErrorDomain = "MGLErrorDomain"
-
