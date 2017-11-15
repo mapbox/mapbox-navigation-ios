@@ -277,20 +277,11 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         guard automaticallyAdjustsStyleForTimeOfDay else { return .dayStyle }
 
         guard let location = routeController.location,
-            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
-            let sunrise = solar.sunrise, let sunset = solar.sunset else {
+            let solar = Solar(coordinate: location.coordinate) else {
                 return .dayStyle
         }
 
-        return isNighttime(date: solar.date, sunrise: sunrise, sunset: sunset) ? .nightStyle : .dayStyle
-    }
-    
-    func isNighttime(date: Date, sunrise: Date, sunset: Date) -> Bool {
-        let calendar = Calendar.current
-        let currentMinutesFromMidnight = calendar.component(.hour, from: date) * 60 + calendar.component(.minute, from: date)
-        let sunriseMinutesFromMidnight = calendar.component(.hour, from: sunrise) * 60 + calendar.component(.minute, from: sunrise)
-        let sunsetMinutesFromMidnight = calendar.component(.hour, from: sunset) * 60 + calendar.component(.minute, from: sunset)
-        return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
+        return solar.isNighttime ? .nightStyle : .dayStyle
     }
     
     var mapViewController: RouteMapViewController?
