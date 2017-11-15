@@ -165,9 +165,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         
-        if !isPluggedIn,
-            durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver,
+        guard !isPluggedIn else {
+            frameInterval = FrameIntervalOptions.pluggedInFrameInterval
+            return
+        }
+    
+        if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
             durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
+            frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
+        } else if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .straightAhead {
             frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
         } else {
             frameInterval = FrameIntervalOptions.pluggedInFrameInterval
