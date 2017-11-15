@@ -35,6 +35,10 @@ open class InstructionLabel: StylableLabel {
                 if let cachedImage = UIImage.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
                 } else {
+                    // Download shield and display road code in the meantime
+                    if let text = component.text {
+                        string.append(NSAttributedString(string: joinChar + text, attributes: attributes))
+                    }
                     UIImage.shieldImage(imageURL, height: shieldHeight, completion: { [unowned self] (image) in
                         guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }
                         self.constructInstructions()
