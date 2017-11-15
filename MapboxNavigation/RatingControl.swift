@@ -66,7 +66,11 @@ class RatingControl: UIStackView {
             button.adjustsImageWhenHighlighted = false
             addButtonSizeConstraints(to: button)
             
-            button.accessibilityLabel = NSLocalizedString("Set \(index + 1) star rating", comment: "Accessibility Star Label")
+            let setRatingNumber = NSNumber(value: index + 1)
+            let setRatingString = NumberFormatter.localizedString(from: setRatingNumber, number: .none)
+            let localizedStarLabel = NSLocalizedString("Set %@ star rating", comment: "Accessibility Star Label")
+            button.accessibilityLabel = String.localizedStringWithFormat(localizedStarLabel, setRatingString)
+                
             
             button.addTarget(self, action: #selector(RatingControl.ratingButtonTapped(button:)), for: .touchUpInside)
             
