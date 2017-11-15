@@ -47,7 +47,9 @@ public class PollyVoiceController: RouteVoiceController {
     
     var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
-    var previousInstruction: SpokenInstruction?
+    var lastSpokenInstruction: SpokenInstruction?
+    
+    let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud", comment: "Unable to read instruction aloud")
     
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
@@ -66,17 +68,15 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     public override func didPassSpokenInstructionPoint(notification: NSNotification) {
-        guard shouldSpeak(for: notification) == true else { return }
-        
         let routeProgresss = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         guard let instruction = routeProgresss.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         
-        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let previousInstruction = previousInstruction {
+        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let previousInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: previousInstruction, with: instruction)
         }
         pollyTask?.cancel()
         audioPlayer?.stop()
-        previousInstruction = instruction
+        lastSpokenInstruction = instruction
         
         for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
             let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
@@ -95,6 +95,8 @@ public class PollyVoiceController: RouteVoiceController {
             play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
             return
         }
+        
+        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
         
         speak(instruction)
     }
@@ -156,7 +158,6 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     override func speak(_ instruction: SpokenInstruction) {
-        
         let input = pollyURL(for: instruction.ssmlText)
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
@@ -177,23 +178,23 @@ public class PollyVoiceController: RouteVoiceController {
         voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         
         guard let audioPlayer = audioPlayer else {
-            super.speak(fallbackInstruction)
+            super.speak(lastSpokenInstruction!)
             return
         }
         
         guard !audioPlayer.isPlaying else { return }
         
-        super.speak(fallbackInstruction)
+        super.speak(lastSpokenInstruction!)
     }
     
     func handle(_ awsTask: AWSTask<NSURL>) {
         guard awsTask.error == nil else {
-            speakWithoutPolly(fallbackInstruction, error: awsTask.error!)
+            speakWithoutPolly(lastSpokenInstruction!, error: awsTask.error!)
             return
         }
         
         guard let url = awsTask.result else {
-            speakWithoutPolly(fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud"))
+            speakWithoutPolly(lastSpokenInstruction!, error: NSError(localizedFailureReason: localizedErrorMessage))
             return
         }
         
@@ -206,12 +207,12 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             } else if let error = error {
                 // Cannot call super in a closure
-                strongSelf.speakWithoutPolly(strongSelf.fallbackInstruction, error: error)
+                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: error)
                 return
             }
             
             guard let data = data else {
-                strongSelf.speakWithoutPolly(strongSelf.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", code: .noDataInSpokenInstructionResponse))
+                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: NSError(localizedFailureReason: strongSelf.localizedErrorMessage, code: .noDataInSpokenInstructionResponse))
                 return
             }
             
@@ -257,7 +258,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let prepared = self.audioPlayer?.prepareToPlay() ?? false
                 
                 guard prepared else {
-                    self.speakWithoutPolly(self.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", code: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(localizedFailureReason: self.localizedErrorMessage, code: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 
@@ -266,12 +267,12 @@ public class PollyVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    self.speakWithoutPolly(self.fallbackInstruction, error: NSError(localizedFailureReason: "Unable to read instruction aloud", code: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(localizedFailureReason: self.localizedErrorMessage, code: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 
             } catch  let error as NSError {
-                self.speakWithoutPolly(self.fallbackInstruction, error: error)
+                self.speakWithoutPolly(self.lastSpokenInstruction!, error: error)
             }
         }
     }

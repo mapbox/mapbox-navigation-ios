@@ -11,8 +11,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     lazy var speechSynth = AVSpeechSynthesizer()
     var audioPlayer: AVAudioPlayer?
-    var recentlyAnnouncedRouteStep: RouteStep?
-    var fallbackInstruction: SpokenInstruction!
     
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
@@ -93,7 +91,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func didReroute(notification: NSNotification) {
-        
         // Play reroute sound when a faster route is found
         if notification.userInfo?[RouteControllerDidFindFasterRouteKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
@@ -140,39 +137,18 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func unDuckAudio() throws {
-        if !speechSynth.isSpeaking {
-            try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
-        }
+        try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
     }
     
     open func didPassSpokenInstructionPoint(notification: NSNotification) {
-        guard shouldSpeak(for: notification) == true else { return }
-        
-        speak(fallbackInstruction)
-    }
-    
-    func shouldSpeak(for notification: NSNotification) -> Bool {
-        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return false }
-        
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        
-        // We're guarding against two things here:
-        //   1. `recentlyAnnouncedRouteStep` being nil.
-        //   2. `recentlyAnnouncedRouteStep` being equal to currentStep
-        // If it has a value and they're equal, this means we gave an announcement with x seconds ago for this step
-        guard recentlyAnnouncedRouteStep != routeProgress.currentLegProgress.currentStep else {
-            return false
-        }
-        
-        // Set recentlyAnnouncedRouteStep to the current step
-        recentlyAnnouncedRouteStep = routeProgress.currentLegProgress.currentStep
-        
-        fallbackInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
-        
-        return true
+        guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
+        speak(instruction)
     }
     
     func speak(_ instruction: SpokenInstruction) {
+        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
+        
         do {
             try duckAudio()
         } catch {
@@ -195,7 +171,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
 }
 
 @objc public protocol VoiceControllerDelegate {
-    @objc optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
+    @objc(voiceController:spokenInstrucionsDidFailWithError:)
+    optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
     
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
     optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt: SpokenInstruction, with instruction: SpokenInstruction)
