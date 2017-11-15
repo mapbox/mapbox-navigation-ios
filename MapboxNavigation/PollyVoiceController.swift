@@ -194,7 +194,7 @@ public class PollyVoiceController: RouteVoiceController {
         }
         
         guard let url = awsTask.result else {
-            speakWithoutPolly(lastSpokenInstruction!, error: NSError(localizedFailureReason: localizedErrorMessage))
+            speakWithoutPolly(lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: localizedErrorMessage))
             return
         }
         
@@ -212,7 +212,7 @@ public class PollyVoiceController: RouteVoiceController {
             }
             
             guard let data = data else {
-                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: NSError(localizedFailureReason: strongSelf.localizedErrorMessage, code: .noDataInSpokenInstructionResponse))
+                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: strongSelf.localizedErrorMessage, spokenInstructionCode: .noDataInSpokenInstructionResponse))
                 return
             }
             
@@ -258,7 +258,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let prepared = self.audioPlayer?.prepareToPlay() ?? false
                 
                 guard prepared else {
-                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(localizedFailureReason: self.localizedErrorMessage, code: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 
@@ -267,7 +267,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(localizedFailureReason: self.localizedErrorMessage, code: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .spokenInstructionAudioPlayerFailedToPlay))
                     return
                 }
                 
