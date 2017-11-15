@@ -478,6 +478,9 @@ class RouteMapViewController: UIViewController {
     //MARK: - End Of Route
     
     func showEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
+        
+        endOfRouteViewController?.destination = route.legs.last?.destination
+        
         self.endOfRouteHide.isActive = false
         self.endOfRouteShow.isActive = true
         self.bannerHide.isActive = true
@@ -510,6 +513,7 @@ class RouteMapViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
         endOfRouteVC.dismiss = { self.hideEndOfRoute(duration: 0.3, completion: modalDismiss) }
+        endOfRouteViewController = endOfRouteVC
     }
 
 }
