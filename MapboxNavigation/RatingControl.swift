@@ -23,6 +23,7 @@ class RatingControl: UIStackView {
     var rating: Int = 0 {
         didSet {
             updateSelectionStates()
+            didChangeRating?(rating)
         }
     }
     
@@ -135,7 +136,5 @@ class RatingControl: UIStackView {
         let selectedRating = index + 1
         
         rating = (selectedRating == rating) ? 0 : selectedRating
-        
-        didChangeRating?(rating)
     }
 }

@@ -811,7 +811,7 @@ Label  </string>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4jh-bR-wXL" userLabel="Arrival Labels">
-                                <rect key="frame" x="0.0" y="20" width="375" height="88.5"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="80.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have arrived" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V4A-Bp-tr5">
                                         <rect key="frame" x="135" y="0.0" width="104" height="16.5"/>
@@ -819,14 +819,14 @@ Label  </string>
                                         <color key="textColor" red="0.25098039220000001" green="0.36078431370000003" blue="0.47843137250000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1773 Scott St" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I9w-ZT-7sx">
-                                        <rect key="frame" x="83" y="24.5" width="209" height="43"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1773 Scott St" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I9w-ZT-7sx">
+                                        <rect key="frame" x="0.0" y="16.5" width="375" height="43"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="San Francisco, CA" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QLC-Qt-vRy">
-                                        <rect key="frame" x="117.5" y="67.5" width="139" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="San Francisco, CA" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QLC-Qt-vRy">
+                                        <rect key="frame" x="0.0" y="59.5" width="375" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -835,16 +835,18 @@ Label  </string>
                                 <color key="backgroundColor" red="1" green="0.95314875229999996" blue="0.89889865449999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="QLC-Qt-vRy" firstAttribute="top" secondItem="I9w-ZT-7sx" secondAttribute="bottom" id="DRK-Gm-N99"/>
-                                    <constraint firstItem="I9w-ZT-7sx" firstAttribute="top" secondItem="V4A-Bp-tr5" secondAttribute="bottom" constant="8" id="GIU-NE-KVw"/>
-                                    <constraint firstItem="QLC-Qt-vRy" firstAttribute="centerX" secondItem="4jh-bR-wXL" secondAttribute="centerX" id="L6f-tz-J6W"/>
-                                    <constraint firstItem="I9w-ZT-7sx" firstAttribute="centerX" secondItem="4jh-bR-wXL" secondAttribute="centerX" id="hqF-bm-lA3"/>
+                                    <constraint firstItem="I9w-ZT-7sx" firstAttribute="top" secondItem="V4A-Bp-tr5" secondAttribute="bottom" id="GIU-NE-KVw"/>
+                                    <constraint firstAttribute="trailing" secondItem="I9w-ZT-7sx" secondAttribute="trailing" id="ID5-gY-b4l"/>
+                                    <constraint firstAttribute="trailing" secondItem="QLC-Qt-vRy" secondAttribute="trailing" id="Iax-m1-QQ9"/>
+                                    <constraint firstItem="QLC-Qt-vRy" firstAttribute="leading" secondItem="4jh-bR-wXL" secondAttribute="leading" id="Nqe-Up-36v"/>
+                                    <constraint firstItem="I9w-ZT-7sx" firstAttribute="leading" secondItem="4jh-bR-wXL" secondAttribute="leading" id="Qe4-Ig-E2w"/>
                                     <constraint firstItem="V4A-Bp-tr5" firstAttribute="centerX" secondItem="4jh-bR-wXL" secondAttribute="centerX" id="kYE-KB-M5d"/>
                                     <constraint firstAttribute="bottom" secondItem="QLC-Qt-vRy" secondAttribute="bottom" id="l5x-by-AXb"/>
                                     <constraint firstItem="V4A-Bp-tr5" firstAttribute="top" secondItem="4jh-bR-wXL" secondAttribute="top" id="n8N-UX-05e"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="evE-dd-pMr">
-                                <rect key="frame" x="0.0" y="129" width="375" height="54"/>
+                                <rect key="frame" x="0.0" y="121" width="375" height="54"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rate your drive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W5U-cV-cDO">
                                         <rect key="frame" x="139" y="0.0" width="97.5" height="17"/>

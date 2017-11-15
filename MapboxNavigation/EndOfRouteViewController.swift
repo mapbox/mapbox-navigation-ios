@@ -22,8 +22,8 @@ class EndOfRouteViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        clearInterface()
         stars.didChangeRating = { (new) in self.rating = new }
-        updateInterface()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -39,12 +39,26 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func updateInterface() {
-        primary.text = destination?.name
+        primary.text = destination?.name ?? string(for: destination?.coordinate)
         guard let coordinate = destination?.coordinate else { return }
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         geocoder.reverseGeocodeLocation(location) { (places, error) in
-            guard let city = places?.first?.locality, error == nil else { return self.secondary.text = nil }
-            self.secondary.text = city
+            guard let place = places?.first,
+                  let city = place.locality,
+                  let state = place.administrativeArea,
+                  error == nil else { return self.secondary.text = nil }
+            self.secondary.text = "\(city), \(state)"
         }
+    }
+
+private func clearInterface() {
+    [primary, secondary].forEach { $0.text = nil }
+    stars.rating = 0
+}
+    
+    //FIXME: Temporary Placeholder
+    private func string(for coordinate: CLLocationCoordinate2D?) -> String {
+        guard let coordinate = coordinate else { return "Unknown" }
+        return "\(coordinate.latitude),\(coordinate.longitude)"
     }
 }
