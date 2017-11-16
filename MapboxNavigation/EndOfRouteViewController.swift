@@ -8,6 +8,7 @@ enum ConstraintSpacing: CGFloat {
 
 class EndOfRouteViewController: UIViewController {
 
+    //MARK: - IBOutlets
     @IBOutlet weak var primary: UILabel!
     @IBOutlet weak var secondary: UILabel!
     @IBOutlet weak var endNavigationButton: UIButton!
@@ -17,15 +18,15 @@ class EndOfRouteViewController: UIViewController {
     @IBOutlet weak var hideCommentView: NSLayoutConstraint!
     @IBOutlet weak var ratingCommentsSpacing: NSLayoutConstraint!
     
+    //MARK: - Properties
+    lazy var geocoder: CLGeocoder = CLGeocoder()
+    var dismiss: (() -> Void)?
+    var comment: String?
     var rating: Int = 0 {
         didSet {
             rating == 0 ? hideComments() : showComments()
         }
     }
-    var comment: String?
-    
-    var dismiss: (() -> Void)?
-    lazy var geocoder: CLGeocoder = CLGeocoder()
     
     open var destination: Waypoint? {
         didSet {
@@ -34,20 +35,28 @@ class EndOfRouteViewController: UIViewController {
         }
     }
 
+    //MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         clearInterface()
         stars.didChangeRating = { (new) in self.rating = new }
+        subscribeToKeyboardNotifications()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 5, height: 5))
         let maskLayer = CAShapeLayer()
         maskLayer.path = path.cgPath
         view.layer.mask = maskLayer
     }
-
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    //MARK: - IBActions
     @IBAction func endNavigationPressed(_ sender: Any) {
         dismiss?()
     }
@@ -110,3 +119,59 @@ extension EndOfRouteViewController: UITextViewDelegate {
     }
 }
 
+//MARK: - Keyboard Handling
+
+extension EndOfRouteViewController {
+    fileprivate func subscribeToKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(EndOfRouteViewController.keyboardWillShow(notification:)), name:.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(EndOfRouteViewController.keyboardWillHide(notification:)), name:.UIKeyboardWillHide, object: nil)
+        
+    }
+    @objc fileprivate func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
+        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
+                       curve: curve!)
+        let keyboard = (size: (userInfo[UIKeyboardFrameBeginUserInfoKey] as! CGRect).size,
+                        offset: (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size)
+        
+        let animation = {
+            //TODO: EDGE CASE - What if someone enables predictive while keyboard is presented?
+           if (keyboard.size.height == keyboard.offset.height) { //predictive is off
+                self.view.frame.origin.y -= keyboard.size.height
+            } else { //predictive is on
+                self.view.frame.origin.y += keyboard.size.height - keyboard.offset.height
+            }
+        }
+        
+        let opts = UIViewAnimationOptions(curve: options.curve)
+        UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: animation, completion: nil)
+    }
+    
+    @objc fileprivate func keyboardWillHide(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        let keyboardSize = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! CGRect).size
+        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
+        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
+                       curve: curve!)
+        
+        let animation = { self.view.frame.origin.y += keyboardSize.height }
+        let opts = UIViewAnimationOptions(curve: options.curve)
+        UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: animation, completion: nil)
+    }
+}
+
+fileprivate extension UIViewAnimationOptions {
+    init(curve: UIViewAnimationCurve) {
+        switch curve {
+        case .easeIn:
+            self = .curveEaseIn
+        case .easeOut:
+            self = .curveEaseOut
+        case .easeInOut:
+            self = .curveEaseInOut
+        case .linear:
+            self = .curveLinear
+        }
+    }
+}
