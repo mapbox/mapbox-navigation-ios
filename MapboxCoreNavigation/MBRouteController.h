@@ -19,6 +19,11 @@ extern NSString *const MBRouteControllerDidFailToReroute;
 extern NSString *const MBRouteControllerDidFindFasterRouteKey;
 
 /**
- Constant representing the namespace in which errors created in this library will live under.
+ Constant representing the domain in which errors created in this library will live under.
  */
 extern NSString *const MBErrorDomain;
+
+/**
+ Key used for constructing errors when spoken instructions fail.
+ */
+extern NSString *const MBSpokenInstructionErrorCodeKey;

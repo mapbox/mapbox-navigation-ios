@@ -49,7 +49,7 @@ public class PollyVoiceController: RouteVoiceController {
     
     var lastSpokenInstruction: SpokenInstruction?
     
-    let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud", comment: "Unable to read instruction aloud")
+    let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
@@ -212,7 +212,7 @@ public class PollyVoiceController: RouteVoiceController {
             }
             
             guard let data = data else {
-                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: strongSelf.localizedErrorMessage, spokenInstructionCode: .noDataInSpokenInstructionResponse))
+                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: strongSelf.localizedErrorMessage, spokenInstructionCode: .emptyAwsResponse))
                 return
             }
             

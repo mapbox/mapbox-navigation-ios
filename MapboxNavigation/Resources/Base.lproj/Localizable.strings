@@ -1,8 +1,8 @@
 ﻿/* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Close";
 
-/* Unable to read instruction aloud */
-"FAILED_INSTRUCTION" = "Unable to read instruction aloud";
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";

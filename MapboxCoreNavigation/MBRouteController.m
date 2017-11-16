@@ -17,8 +17,5 @@ NSString *const MBRouteControllerWillReroute                    = @"RouteControl
 NSString *const MBRouteControllerDidReroute                     = @"RouteControllerDidReroute";
 NSString *const MBRouteControllerDidFailToReroute               = @"RouteControllerDidFailToReroute";
 NSString *const MBRouteControllerDidFindFasterRouteKey          = @"RouteControllerDidFindFasterRoute";
-
-/**
- Domain for errors created within this framework.
- */
 NSString *const MBErrorDomain = @"ErrorDomain";
+NSString *const MBSpokenInstructionErrorCodeKey = @"MBSpokenInstructionErrorCode"

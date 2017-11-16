@@ -17,7 +17,7 @@ public enum SpokenInstructionErrorCode: Int {
     /**
      The response did not include data
      */
-    case noDataInSpokenInstructionResponse
+    case emptyAwsResponse
 }
 
 /**
