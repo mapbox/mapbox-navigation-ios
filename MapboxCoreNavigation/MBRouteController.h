@@ -18,4 +18,3 @@ extern NSString *const MBRouteControllerDidReroute;
 extern NSString *const MBRouteControllerDidFailToReroute;
 extern NSString *const MBRouteControllerDidFindFasterRouteKey;
 extern NSString *const MBErrorDomain;
-extern NSString *const MBSpokenInstructionErrorCodeKey;
