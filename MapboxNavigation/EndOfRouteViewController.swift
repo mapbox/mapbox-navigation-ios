@@ -52,6 +52,7 @@ class EndOfRouteViewController: UIViewController {
         dismiss?()
     }
     
+    //MARK: - Private Functions
     private func showComments(animated: Bool = true) {
         showCommentView.isActive = true
         hideCommentView.isActive = false
@@ -86,16 +87,26 @@ class EndOfRouteViewController: UIViewController {
         }
     }
 
-private func clearInterface() {
-    [primary, secondary].forEach { $0.text = nil }
-    stars.rating = 0
-}
+    private func clearInterface() {
+        [primary, secondary].forEach { $0.text = nil }
+        stars.rating = 0
+    }
     
     //FIXME: Temporary Placeholder
     private func string(for destination: Waypoint?) -> String {
         guard let destination = destination else { return "Unknown" }
         guard destination.name?.isEmpty ?? false else { return destination.name! }
         let coord = destination.coordinate
-        return String(format: "%2f", coord.latitude) + "," + String(format: "%2f", coord.longitude)
+        return String(format: "%.2f", coord.latitude) + "," + String(format: "%.2f", coord.longitude)
     }
 }
+
+//MARK: - UITextViewDelegate
+extension EndOfRouteViewController: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        guard text == "\n" else { return true }
+        textView.resignFirstResponder()
+        return false
+    }
+}
+
