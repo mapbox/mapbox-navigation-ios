@@ -478,7 +478,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         guard UIApplication.shared.applicationState == .background else { return }
         
         let notification = UILocalNotification()
-        notification.alertBody = step.visualInstructionsAlongStep?.first?.primaryText
+        notification.alertBody = step.instructionsDisplayedAlongStep?.first?.primaryText
         notification.fireDate = Date()
         
         clearStaleNotifications()

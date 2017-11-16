@@ -30,7 +30,7 @@ open class InstructionLabel: StylableLabel {
             let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
             
-            if let imageURL = component.imageURLS[scale] {
+            if let imageURL = component.imageURLs[scale] {
                 let shieldKey = UIImage.shieldKey(imageURL, height: shieldHeight)
                 if let cachedImage = UIImage.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))

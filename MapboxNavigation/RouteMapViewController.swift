@@ -397,7 +397,7 @@ class RouteMapViewController: UIViewController {
         let distanceRemaining = stepProgress.distanceRemaining
         let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
         
-        guard let instructions = step.visualInstructionsAlongStep?.first else { return }
+        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
         
         instructionsBannerView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
@@ -414,7 +414,7 @@ class RouteMapViewController: UIViewController {
                 return
         }
         
-        guard let instructions = step.visualInstructionsAlongStep?.first else { return }
+        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
         
         nextBannerView.maneuverView.step = nextStep
         nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
@@ -720,7 +720,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     func addPreviewInstructions(step: RouteStep, distance: CLLocationDistance?) {
         removePreviewInstructions()
         
-        guard let instructions = step.visualInstructionsAlongStep?.first else { return }
+        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
         
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor

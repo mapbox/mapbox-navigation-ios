@@ -196,7 +196,7 @@ extension StepsViewController: UITableViewDataSource {
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
         let step = sections[indexPath.section][indexPath.row]
         
-        guard let instructions = step.visualInstructionsAlongStep?.first else { return }
+        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
         
         cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
         cell.instructionsView.maneuverView.step = step
