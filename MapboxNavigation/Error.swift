@@ -6,11 +6,11 @@ extension NSError {
      Creates a custom `Error` object.
      */
     convenience init(code: MBErrorCode, localizedFailureReason: String, spokenInstructionCode: SpokenInstructionErrorCode? = nil) {
-        let userInfo = [
+        var userInfo = [
             NSLocalizedFailureReasonErrorKey: localizedFailureReason
         ]
         if let spokenInstructionCode = spokenInstructionCode {
-            userInfo[MBSpokenInstructionErrorCodeKey] = spokenInstructionCode
+            userInfo[MBSpokenInstructionErrorCodeKey] = String(spokenInstructionCode.rawValue)
         }
         self.init(domain: MBErrorDomain, code: code.rawValue, userInfo: userInfo)
     }
