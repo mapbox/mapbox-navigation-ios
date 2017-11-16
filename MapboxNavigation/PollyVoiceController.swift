@@ -98,7 +98,7 @@ public class PollyVoiceController: RouteVoiceController {
         
         guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
         
-        speak(instruction)
+        super.speak(instruction)
     }
     
     func pollyURL(for instruction: String) ->  AWSPollySynthesizeSpeechURLBuilderRequest {
@@ -178,13 +178,13 @@ public class PollyVoiceController: RouteVoiceController {
         voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         
         guard let audioPlayer = audioPlayer else {
-            super.speak(lastSpokenInstruction!)
+            super.speak(instruction)
             return
         }
         
         guard !audioPlayer.isPlaying else { return }
         
-        super.speak(lastSpokenInstruction!)
+        super.speak(instruction)
     }
     
     func handle(_ awsTask: AWSTask<NSURL>) {
