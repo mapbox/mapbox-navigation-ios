@@ -160,11 +160,13 @@ class RouteMapViewController: UIViewController {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        subscribeToKeyboardNotifications()
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        unsubscribeFromKeyboardNotifications()
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -795,6 +797,59 @@ extension RouteMapViewController: StepsViewControllerDelegate {
 extension RouteMapViewController: BottomBannerViewDelegate {
     func didCancel() {
         delegate?.mapViewControllerDidCancelNavigation(self)
+    }
+}
+
+//MARK: - Keyboard Handling
+
+extension RouteMapViewController {
+    fileprivate func subscribeToKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(RouteMapViewController.keyboardWillShow(notification:)), name:.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(RouteMapViewController.keyboardWillHide(notification:)), name:.UIKeyboardWillHide, object: nil)
+        
+    }
+    fileprivate func unsubscribeFromKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    @objc fileprivate func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
+        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
+                       curve: curve!)
+        let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size
+        
+        self.endOfRouteShow.constant = -1 * keyboardSize.height
+        
+        
+        let opts = UIViewAnimationOptions(curve: options.curve)
+        UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: view.layoutIfNeeded, completion: nil)
+    }
+    
+    @objc fileprivate func keyboardWillHide(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
+        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
+                       curve: UIViewAnimationOptions(curve: curve!))
+        
+        endOfRouteShow.constant = 0
+
+        UIView.animate(withDuration: options.duration, delay: 0, options: options.curve, animations: view.layoutIfNeeded, completion: nil)
+    }
+}
+
+fileprivate extension UIViewAnimationOptions {
+    init(curve: UIViewAnimationCurve) {
+        switch curve {
+        case .easeIn:
+            self = .curveEaseIn
+        case .easeOut:
+            self = .curveEaseOut
+        case .easeInOut:
+            self = .curveEaseInOut
+        case .linear:
+            self = .curveLinear
+        }
     }
 }
 

@@ -40,7 +40,6 @@ class EndOfRouteViewController: UIViewController {
         super.viewDidLoad()
         clearInterface()
         stars.didChangeRating = { (new) in self.rating = new }
-        subscribeToKeyboardNotifications()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,7 +52,6 @@ class EndOfRouteViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
     }
 
     //MARK: - IBActions
@@ -119,59 +117,3 @@ extension EndOfRouteViewController: UITextViewDelegate {
     }
 }
 
-//MARK: - Keyboard Handling
-
-extension EndOfRouteViewController {
-    fileprivate func subscribeToKeyboardNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(EndOfRouteViewController.keyboardWillShow(notification:)), name:.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(EndOfRouteViewController.keyboardWillHide(notification:)), name:.UIKeyboardWillHide, object: nil)
-        
-    }
-    @objc fileprivate func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return }
-        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
-        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
-                       curve: curve!)
-        let keyboard = (size: (userInfo[UIKeyboardFrameBeginUserInfoKey] as! CGRect).size,
-                        offset: (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size)
-        
-        let animation = {
-            //TODO: EDGE CASE - What if someone enables predictive while keyboard is presented?
-           if (keyboard.size.height == keyboard.offset.height) { //predictive is off
-                self.view.frame.origin.y -= keyboard.size.height
-            } else { //predictive is on
-                self.view.frame.origin.y += keyboard.size.height - keyboard.offset.height
-            }
-        }
-        
-        let opts = UIViewAnimationOptions(curve: options.curve)
-        UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: animation, completion: nil)
-    }
-    
-    @objc fileprivate func keyboardWillHide(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return }
-        let keyboardSize = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! CGRect).size
-        let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
-        let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
-                       curve: curve!)
-        
-        let animation = { self.view.frame.origin.y += keyboardSize.height }
-        let opts = UIViewAnimationOptions(curve: options.curve)
-        UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: animation, completion: nil)
-    }
-}
-
-fileprivate extension UIViewAnimationOptions {
-    init(curve: UIViewAnimationCurve) {
-        switch curve {
-        case .easeIn:
-            self = .curveEaseIn
-        case .easeOut:
-            self = .curveEaseOut
-        case .easeInOut:
-            self = .curveEaseInOut
-        case .linear:
-            self = .curveLinear
-        }
-    }
-}
