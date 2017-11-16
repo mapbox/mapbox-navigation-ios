@@ -36,7 +36,8 @@ class StepsViewController: UIViewController {
         sections.removeAll()
         
         let legIndex = routeProgress.legIndex
-        let stepIndex = routeProgress.currentLegProgress.stepIndex
+        // Don't include the current step in the list
+        let stepIndex = routeProgress.currentLegProgress.stepIndex + 1
         let legs = routeProgress.route.legs
         
         for (index, leg) in legs.enumerated() {
@@ -196,9 +197,6 @@ extension StepsViewController: UITableViewDataSource {
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
         let step = sections[indexPath.section][indexPath.row]
         
-        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
-        
-        cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
         cell.instructionsView.maneuverView.step = step
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
@@ -206,13 +204,22 @@ extension StepsViewController: UITableViewDataSource {
         if usePreviousLeg {
             let leg = routeProgress.route.legs[indexPath.section-1]
             let stepBefore = leg.steps[leg.steps.count-1]
+            if let instructions = stepBefore.instructionsDisplayedAlongStep?.first {
+                cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
+            }
             cell.instructionsView.distance = stepBefore.distance
         } else {
             let leg = routeProgress.route.legs[indexPath.section]
             if let stepBefore = leg.steps.stepBefore(step) {
+                if let instructions = stepBefore.instructionsDisplayedAlongStep?.first {
+                    cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
+                }
                 cell.instructionsView.distance = stepBefore.distance
             } else {
                 cell.instructionsView.distance = nil
+                if let instructions = step.instructionsDisplayedAlongStep?.first {
+                    cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
+                }
             }
         }
     }

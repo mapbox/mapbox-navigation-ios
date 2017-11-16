@@ -395,9 +395,8 @@ class RouteMapViewController: UIViewController {
     func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
-        let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
         
-        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
+        guard let instructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.first else { return }
         
         instructionsBannerView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
