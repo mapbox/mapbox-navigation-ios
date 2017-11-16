@@ -81,10 +81,6 @@ open class FloatingButton: Button { }
 public class LanesView: UIView { }
 
 /// :nodoc:
-@objc(MBCellTurnArrowView)
-public class CellTurnArrowView: ManeuverView { }
-
-/// :nodoc:
 @objc(MBReportButton)
 public class ReportButton: Button {
     
@@ -297,14 +293,6 @@ open class TitleLabel: StylableLabel { }
 /// :nodoc:
 @objc(MBSubtitleLabel)
 open class SubtitleLabel: StylableLabel { }
-
-/// :nodoc:
-@objc(MBCellTitleLabel)
-open class CellTitleLabel: StylableLabel { }
-
-/// :nodoc:
-@objc(MBCellSubtitleLabel)
-open class CellSubtitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBWayNameLabel)
