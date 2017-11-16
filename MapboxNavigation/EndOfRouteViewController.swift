@@ -1,14 +1,28 @@
 import UIKit
 import MapboxDirections
 
+enum ConstraintSpacing: CGFloat {
+    case closer = 16.0
+    case further = 45.0
+}
+
 class EndOfRouteViewController: UIViewController {
 
     @IBOutlet weak var primary: UILabel!
     @IBOutlet weak var secondary: UILabel!
     @IBOutlet weak var endNavigationButton: UIButton!
     @IBOutlet weak var stars: RatingControl!
-    var rating: Int = 0
-    var comments: String?
+    @IBOutlet weak var commentView: UITextView!
+    @IBOutlet weak var showCommentView: NSLayoutConstraint!
+    @IBOutlet weak var hideCommentView: NSLayoutConstraint!
+    @IBOutlet weak var ratingCommentsSpacing: NSLayoutConstraint!
+    
+    var rating: Int = 0 {
+        didSet {
+            rating == 0 ? hideComments() : showComments()
+        }
+    }
+    var comment: String?
     
     var dismiss: (() -> Void)?
     lazy var geocoder: CLGeocoder = CLGeocoder()
@@ -38,8 +52,29 @@ class EndOfRouteViewController: UIViewController {
         dismiss?()
     }
     
+    private func showComments(animated: Bool = true) {
+        showCommentView.isActive = true
+        hideCommentView.isActive = false
+        ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
+        
+        let layout = view.layoutIfNeeded
+        
+        animated ? UIView.animate(withDuration: 0.3, animations: layout) : layout()
+    }
+    
+    private func hideComments(animated: Bool = true) {
+        showCommentView.isActive = false
+        hideCommentView.isActive = true
+        ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
+        
+        let layout = view.layoutIfNeeded
+        
+        animated ? UIView.animate(withDuration: 0.3, animations: layout) : layout()
+    }
+    
+    
     private func updateInterface() {
-        primary.text = destination?.name ?? string(for: destination?.coordinate)
+        primary.text = string(for: destination)
         guard let coordinate = destination?.coordinate else { return }
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         geocoder.reverseGeocodeLocation(location) { (places, error) in
@@ -57,8 +92,10 @@ private func clearInterface() {
 }
     
     //FIXME: Temporary Placeholder
-    private func string(for coordinate: CLLocationCoordinate2D?) -> String {
-        guard let coordinate = coordinate else { return "Unknown" }
-        return "\(coordinate.latitude),\(coordinate.longitude)"
+    private func string(for destination: Waypoint?) -> String {
+        guard let destination = destination else { return "Unknown" }
+        guard destination.name?.isEmpty ?? false else { return destination.name! }
+        let coord = destination.coordinate
+        return String(format: "%2f", coord.latitude) + "," + String(format: "%2f", coord.longitude)
     }
 }
