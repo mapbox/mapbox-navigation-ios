@@ -6,7 +6,7 @@ public struct Instruction: Equatable {
         return lhs.components == rhs.components
     }
     
-    public let components: [Instruction.Component]
+    public var components: [Instruction.Component]
     
     public struct Component: Equatable {
         
@@ -23,21 +23,19 @@ public struct Instruction: Equatable {
         public let roadCode: String?
         public let network: String?
         public let number: String?
+        public let direction: String?
+        public var prefix: String?
         
-        public var shieldKey: String? {
-            guard let roadCode = roadCode else { return nil }
-            let components = roadCode.components(separatedBy: " ")
-            return "\(components[0])\(components[1])"
-        }
-        
-        public init(_ text: String?, png: String? = nil, roadCode: String? = nil) {
+        public init(_ text: String?, png: String? = nil, roadCode: String? = nil, prefix: String? = nil) {
             self.text = text
             self.png = png
             self.roadCode = roadCode
+            self.prefix = prefix
             
             guard let roadCode = roadCode else {
                 self.network = nil
                 self.number = nil
+                self.direction = nil
                 return
             }
             
@@ -45,9 +43,12 @@ public struct Instruction: Equatable {
             if components.count == 2 || (components.count == 3 && ["North", "South", "East", "West", "Nord", "Sud", "Est", "Ouest", "Norte", "Sur", "Este", "Oeste"].contains(components[2])) {
                 self.network = components[0]
                 self.number = components[1]
+                let containsDirection = components.count == 3
+                self.direction = containsDirection ? components[2] : nil
             } else {
                 self.network = nil
                 self.number = nil
+                self.direction = nil
             }
         }
     }

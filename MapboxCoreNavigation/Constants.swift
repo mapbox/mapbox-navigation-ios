@@ -119,7 +119,7 @@ public var NavigationMetricsDebugLoggingEnabled = "MBNavigationMetricsDebugLoggi
  
  A multiplier of `1.2` gives us a buffer of 3 seconds, enough time insert a new instruction.
  */
-let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
+public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 
 /**
  Approximately the number of meters in a mile.
@@ -150,5 +150,10 @@ public var RouteControllerMinimumNumberLocationUpdatesBackwards = 3
  Number of seconds reroute feedback sections are shown in the feedback view after the user is rerouted.
  */
 public var RouteControllerNumberOfSecondsForRerouteFeedback: TimeInterval = 10
+
+/**
+ The number of seconds between attempts to automatically calculate a more optimal route while traveling.
+ */
+public var RouteControllerOpportunisticReroutingInterval: TimeInterval = 120
 
 let FasterRouteFoundEvent = "navigation.fasterRoute"

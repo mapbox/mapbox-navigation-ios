@@ -6,14 +6,13 @@ import MapboxCoreNavigation
 open class InstructionLabel: StylableLabel {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
+    var shieldHeight: CGFloat = 30
     
     var instruction: Instruction? {
         didSet {
             constructInstructions()
         }
     }
-    
-    var shieldSizeMultiplier: CGFloat = 1.0
     
     func constructInstructions() {
         guard let instruction = instruction else {
@@ -28,17 +27,24 @@ open class InstructionLabel: StylableLabel {
             let isFirst = component == instruction.components.first
             let joinChar = !isFirst ? " " : ""
             
+            if let prefix = component.prefix {
+                string.append(NSAttributedString(string: prefix, attributes: attributes))
+            }
+            
             if let roadCode = component.roadCode, let network = component.network, let number = component.number {
                 // Check if shield image is cached, otherwise display road code in text
-                if let cachedImage = component.cachedShield {
+                let shieldKey = UIImage.shieldKey(network, number: number, height: shieldHeight)
+                if let cachedImage = UIImage.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
+                    if let direction = component.direction {
+                        string.append(NSAttributedString(string: " "+direction, attributes: attributes))
+                    }
                 } else {
                     // Download shield and display road code in the meantime
                     string.append(NSAttributedString(string: joinChar+roadCode, attributes: attributes))
-                    let height = PrimaryLabel.appearance().font.pointSize * UIScreen.main.scale * shieldSizeMultiplier
-                    UIImage.shieldImage(network, number: number, height: height, completion: { [unowned self] (image) in
+                    UIImage.shieldImage(network, number: number, height: shieldHeight, completion: { [unowned self] (image) in
                         // Reconstruct instructions if we did get a shield image
-                        guard image != nil, component.cachedShield != nil else { return }
+                        guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }
                         self.constructInstructions()
                     })
                 }
@@ -60,13 +66,6 @@ open class InstructionLabel: StylableLabel {
         attachment.font = font
         attachment.image = shieldImage
         return NSAttributedString(attachment: attachment)
-    }
-}
-
-extension Instruction.Component {
-    var cachedShield: UIImage? {
-        guard roadCode == roadCode, let shieldKey = shieldKey else { return nil }
-        return UIImage.shieldImageCache.object(forKey: shieldKey as NSString)
     }
 }
 

@@ -1,4 +1,7 @@
-﻿/* Indicates a faster route was found */
+﻿/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Close";
+
+/* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
 
 /* Feedback type for Bad Route */
@@ -39,6 +42,9 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Resume";
+
+/* Then */
+"THEN" = "Then: ";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulating Navigation";

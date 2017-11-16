@@ -20,10 +20,12 @@ open class NavigationRouteOptions: RouteOptions {
             $0.coordinateAccuracy = -1
             return $0
         }, profileIdentifier: profileIdentifier)
+        includesAlternativeRoutes = true
         includesSteps = true
         routeShapeResolution = .full
         attributeOptions = [.congestionLevel, .expectedTravelTime]
         includesSpokenInstructions = true
+        locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
     }
 

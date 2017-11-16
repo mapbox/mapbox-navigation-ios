@@ -255,6 +255,7 @@ public class PollyVoiceController: RouteVoiceController {
                 }
                 
                 self.audioPlayer?.delegate = self
+                try super.duckAudio()
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {

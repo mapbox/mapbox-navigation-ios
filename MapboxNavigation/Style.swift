@@ -64,8 +64,13 @@ open class Style: NSObject {
 @objc(MBButton)
 open class Button: StylableButton { }
 
+/// :nodoc:
 @objc(MBCancelButton)
 open class CancelButton: Button { }
+
+/// :nodoc:
+@objc(MBDismissButton)
+open class DismissButton: Button { }
 
 /// :nodoc:
 @objc(MBFloatingButton)
@@ -78,6 +83,42 @@ public class LanesView: UIView { }
 /// :nodoc:
 @objc(MBCellTurnArrowView)
 public class CellTurnArrowView: ManeuverView { }
+
+/// :nodoc:
+@objc(MBReportButton)
+public class ReportButton: Button {
+    
+    let padding: CGFloat = 10
+    let downConstant: CGFloat = 10
+    
+    var upConstant: CGFloat {
+        return -bounds.height-(padding * 2)
+    }
+    
+    func slideDown(constraint: NSLayoutConstraint, interval: TimeInterval) {
+        guard isHidden == true else { return }
+        
+        isHidden = false
+        constraint.constant = downConstant
+        setNeedsUpdateConstraints()
+        UIView.defaultAnimation(0.5, animations: {
+            self.superview?.layoutIfNeeded()
+        }) { (completed) in
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(ReportButton.slideUp(constraint:)), object: nil)
+            self.perform(#selector(ReportButton.slideUp(constraint:)), with: constraint, afterDelay: interval)
+        }
+    }
+    
+    @objc func slideUp(constraint: NSLayoutConstraint) {
+        constraint.constant = upConstant
+        setNeedsUpdateConstraints()
+        UIView.defaultSpringAnimation(0.5, animations: {
+            self.superview?.layoutIfNeeded()
+        }) { (completed) in
+            self.isHidden = true
+        }
+    }
+}
 
 /**
  :nodoc:
@@ -138,7 +179,20 @@ public class ResumeButton: UIControl {
 
 /// :nodoc:
 @objc(MBStylableLabel)
-open class StylableLabel : UILabel { }
+open class StylableLabel : UILabel {
+    // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
+    dynamic open var normalTextColor: UIColor = .black {
+        didSet {
+            textColor = normalTextColor
+        }
+    }
+    
+    dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
+        didSet {
+            font = normalFont
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBDistanceLabel)
@@ -181,14 +235,11 @@ open class DistanceLabel: StylableLabel {
             return
         }
 
-        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor,
-                                              NSFontAttributeName: valueFont]
+        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor, NSFontAttributeName: valueFont]
+        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor, NSFontAttributeName: unitFont]
 
-        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor,
-                                             NSFontAttributeName: unitFont]
-
-        let valueSubstring = distanceString.substring(with: valueRange)
-        let unitSubstring = distanceString.substring(with: unitRange)
+        let valueSubstring = distanceString.substring(with: valueRange).trimmingCharacters(in: .whitespaces)
+        let unitSubstring = distanceString.substring(with: unitRange).trimmingCharacters(in: .whitespaces)
         let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
         let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
 
@@ -196,6 +247,7 @@ open class DistanceLabel: StylableLabel {
         let attributedString = NSMutableAttributedString()
 
         attributedString.append(startsWithUnit ? unitAttributedString : valueAttributedString)
+        attributedString.append(NSAttributedString(string: "\u{200A}", attributes: unitAttributes))
         attributedString.append(startsWithUnit ? valueAttributedString : unitAttributedString)
 
         attributedText = attributedString
@@ -204,9 +256,7 @@ open class DistanceLabel: StylableLabel {
 
 /// :nodoc:
 @objc(MBDestinationLabel)
-open class DestinationLabel: StylableLabel {
-
-}
+open class DestinationLabel: StylableLabel { }
 
 /// :nodoc
 @objc(MBPrimaryLabel)
@@ -354,6 +404,13 @@ public class SeparatorView: UIView { }
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
     
+    // Sets the font on the button’s titleLabel
+    dynamic open var textFont: UIFont = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium) {
+        didSet {
+            titleLabel?.font = textFont
+        }
+    }
+    
     // Sets the text color for normal state
     dynamic open var textColor: UIColor = .black {
         didSet {
@@ -385,7 +442,7 @@ open class StylableButton: UIButton {
 
 /// :nodoc:
 @objc(MBManeuverContainerView)
-class ManeuverContainerView: UIView {
+open class ManeuverContainerView: UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
     dynamic var height: CGFloat = 100 {
@@ -395,6 +452,14 @@ class ManeuverContainerView: UIView {
         }
     }
 }
+
+/// :nodoc:
+@objc(MBInstructionsBannerContentView)
+open class InstructionsBannerContentView: UIView { }
+
+/// :nodoc:
+@objc(MBBottomBannerContentView)
+open class BottomBannerContentView: UIView { }
 
 /// :nodoc:
 @objc(MBStatusView)

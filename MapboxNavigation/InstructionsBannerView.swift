@@ -1,16 +1,26 @@
 import UIKit
 import MapboxCoreNavigation
 
+protocol InstructionsBannerViewDelegate: class {
+    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
+}
+
+/// :nodoc:
 @IBDesignable
 @objc(MBInstructionsBannerView)
-open class InstructionsBannerView: UIView {
+open class InstructionsBannerView: BaseInstructionsBannerView { }
+
+/// :nodoc:
+open class BaseInstructionsBannerView: UIControl {
     
     weak var maneuverView: ManeuverView!
     weak var primaryLabel: PrimaryLabel!
     weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
     weak var dividerView: UIView!
-    weak var separatorView: UIView!
+    weak var _separatorView: UIView!
+    weak var separatorView: SeparatorView!
+    weak var delegate: InstructionsBannerViewDelegate?
     
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
@@ -47,6 +57,17 @@ open class InstructionsBannerView: UIView {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
+    }
+    
+    func commonInit() {
+        setupViews()
+        setupLayout()
+        centerYAlignInstructions()
+        setupAvailableBounds()
+    }
+    
+    @IBAction func tappedInstructionsBanner(_ sender: Any) {
+        delegate?.didTapInstructionsBanner(self)
     }
     
     func set(_ primaryInstruction: Instruction?, secondaryInstruction: Instruction?) {
