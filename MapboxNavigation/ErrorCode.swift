@@ -7,12 +7,12 @@ public enum SpokenInstructionErrorCode: Int {
     /**
      Default error.
      */
-    case defaultError = -1
+    case unknown = -1
     
     /**
      The audio player failed to play audio data.
      */
-    case spokenInstructionAudioPlayerFailedToPlay
+    case audioPlayerFailedToPlay
     
     /**
      The response did not include data

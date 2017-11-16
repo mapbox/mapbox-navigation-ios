@@ -166,7 +166,7 @@ public class PollyVoiceController: RouteVoiceController {
                 return nil
             }
             
-            strongSelf.handle(awsTask)
+            strongSelf.handle(awsTask, instruction: instruction)
             
             return nil
         }
@@ -187,9 +187,9 @@ public class PollyVoiceController: RouteVoiceController {
         super.speak(instruction)
     }
     
-    func handle(_ awsTask: AWSTask<NSURL>) {
+    func handle(_ awsTask: AWSTask<NSURL>, instruction: SpokenInstruction) {
         guard awsTask.error == nil else {
-            speakWithoutPolly(lastSpokenInstruction!, error: awsTask.error!)
+            speakWithoutPolly(instruction, error: awsTask.error!)
             return
         }
         
@@ -258,7 +258,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let prepared = self.audioPlayer?.prepareToPlay() ?? false
                 
                 guard prepared else {
-                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
                 
@@ -267,7 +267,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .spokenInstructionAudioPlayerFailedToPlay))
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
                 
