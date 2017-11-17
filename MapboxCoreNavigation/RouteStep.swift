@@ -1,6 +1,4 @@
 import MapboxDirections
-import OSRMTextInstructions
-import Turf
 
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
@@ -44,17 +42,5 @@ extension RouteStep {
      */
     open var lastInstruction: SpokenInstruction? {
         return instructionsSpokenAlongStep?.last
-    }
-}
-
-extension CLLocation {
-    /**
-     Returns a Boolean value indicating whether the receiver is within a given distance of a route step, inclusive.
-     */
-    func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
-        guard let closestCoordinate = Polyline(routeStep.coordinates!).closestCoordinate(to: coordinate) else {
-            return false
-        }
-        return closestCoordinate.distance < maximumDistance
     }
 }
