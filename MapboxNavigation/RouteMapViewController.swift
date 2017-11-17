@@ -406,15 +406,22 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
-        guard let step = routeProgress.currentLegProgress.upComingStep,
-            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            let nextStep = routeProgress.currentLegProgress.stepAfter(step),
+    
+        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+            let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
             laneViewsContainerView.isHidden
             else {
                 hideNextBanner()
                 return
         }
     
+        // If the followon step is short and the user is near the end of the current step, show the nextBanner.
+        guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
+            routeProgress.currentLegProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+            hideNextBanner()
+            return
+        }
+
         let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
         var instruction = instructions.0
         
