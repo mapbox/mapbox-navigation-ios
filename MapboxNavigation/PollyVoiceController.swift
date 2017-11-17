@@ -69,15 +69,6 @@ public class PollyVoiceController: RouteVoiceController {
     
     public override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        guard let instruction = routeProgresss.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
-        
-        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let previousInstruction = lastSpokenInstruction {
-            voiceControllerDelegate?.voiceController?(self, didInterrupt: previousInstruction, with: instruction)
-        }
-        pollyTask?.cancel()
-        audioPlayer?.stop()
-        lastSpokenInstruction = instruction
-        
         for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
             let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
             
@@ -151,6 +142,13 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     public override func speak(_ instruction: SpokenInstruction) {
+        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let previousInstruction = lastSpokenInstruction {
+            voiceControllerDelegate?.voiceController?(self, didInterrupt: previousInstruction, with: instruction)
+        }
+        pollyTask?.cancel()
+        audioPlayer?.stop()
+        lastSpokenInstruction = instruction
+        
         guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else {
             play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
             return
