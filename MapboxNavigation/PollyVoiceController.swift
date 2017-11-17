@@ -150,7 +150,7 @@ public class PollyVoiceController: RouteVoiceController {
         return input
     }
     
-    override func speak(_ instruction: SpokenInstruction) {
+    public override func speak(_ instruction: SpokenInstruction) {
         guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else {
             play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
             return

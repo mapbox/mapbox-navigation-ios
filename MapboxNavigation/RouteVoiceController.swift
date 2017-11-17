@@ -148,7 +148,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         speak(instruction)
     }
     
-    func speak(_ instruction: SpokenInstruction) {
+    /**
+     Reads aloud the given instruction.
+     
+     - parameter instruction: The instruction to read aloud.
+     */
+    open func speak(_ instruction: SpokenInstruction) {
         do {
             try duckAudio()
         } catch {
