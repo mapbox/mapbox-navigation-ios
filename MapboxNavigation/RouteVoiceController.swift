@@ -58,6 +58,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      */
     public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
+    var routeController: RouteController!
+    
+    var lastSpokenInstruction: SpokenInstruction?
+    
     /**
      Default initializer for `RouteVoiceController`.
      */
@@ -112,7 +116,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         do {
             try unDuckAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error, routeProgress: routeController.routeProgress)
         }
     }
     
@@ -120,7 +124,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         do {
             try unDuckAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error, routeProgress: routeController.routeProgress)
         }
     }
     
@@ -145,6 +149,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
+        lastSpokenInstruction = instruction
         speak(instruction)
     }
     
@@ -154,10 +159,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      - parameter instruction: The instruction to read aloud.
      */
     open func speak(_ instruction: SpokenInstruction) {
+        if speechSynth.isSpeaking, let lastSpokenInstruction = lastSpokenInstruction {
+            voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction, routeProgress: routeController.routeProgress)
+        }
+        
         do {
             try duckAudio()
         } catch {
-            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error, routeProgress: routeController.routeProgress)
         }
         
         let utterance = AVSpeechUtterance(string: instruction.text)
@@ -176,9 +185,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
 }
 
 @objc public protocol VoiceControllerDelegate {
-    @objc(voiceController:spokenInstrucionsDidFailWithError:)
-    optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
+    @objc(voiceController:spokenInstrucionsDidFailWithError:routeProgress:)
+    optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error, routeProgress: RouteProgress)
     
-    @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
-    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt: SpokenInstruction, with instruction: SpokenInstruction)
+    @objc(voiceController:didInterruptSpokenInstruction:withInstruction:routeProgress:)
+    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt: SpokenInstruction, with instruction: SpokenInstruction, routeProgress: RouteProgress)
 }
