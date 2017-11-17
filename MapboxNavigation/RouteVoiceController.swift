@@ -58,6 +58,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      */
     public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
+    var lastSpokenInstruction: SpokenInstruction?
+    
     /**
      Default initializer for `RouteVoiceController`.
      */
@@ -145,6 +147,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
+        lastSpokenInstruction = instruction
         speak(instruction)
     }
     
@@ -154,6 +157,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      - parameter instruction: The instruction to read aloud.
      */
     open func speak(_ instruction: SpokenInstruction) {
+        if speechSynth.isSpeaking, let lastSpokenInstruction = lastSpokenInstruction {
+            voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
+        }
+        
         do {
             try duckAudio()
         } catch {
@@ -176,9 +183,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
 }
 
 @objc public protocol VoiceControllerDelegate {
+    
+    /**
+     Called when there is an error speaking a voice instruction.
+     */
     @objc(voiceController:spokenInstrucionsDidFailWithError:)
     optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
     
+    /**
+     Called when an instruction interrupts another instruction.
+     */
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
-    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt: SpokenInstruction, with instruction: SpokenInstruction)
+    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
 }

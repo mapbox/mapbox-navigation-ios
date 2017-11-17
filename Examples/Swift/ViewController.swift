@@ -16,7 +16,7 @@ enum ExampleMode {
     case multipleWaypoints
 }
 
-class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, VoiceControllerDelegate {
 
     //MARK: - IBOutlets
     @IBOutlet weak var mapView: NavigationMapView!
@@ -306,14 +306,15 @@ extension ViewController: NavigationMapViewDelegate {
         self.present(actionSheet, animated: true, completion: nil)
     }
 
+    // To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
+    //
     // Called when there is an error with speaking a voice instruction.
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
         print(error.localizedDescription)
     }
-    
     // Called when an instruction is interrupted by a new voice instruction.
-    func voiceController(_ voiceController: RouteVoiceController, didInterrupt: String, with instruction: String) {
-        print("\(didInterrupt) interrupted by \(instruction)")
+    func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
+        print(interruptedInstruction.text, interruptingInstruction.text)
     }
 }
 

@@ -47,8 +47,6 @@ public class PollyVoiceController: RouteVoiceController {
     
     var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
-    var lastSpokenInstruction: SpokenInstruction?
-    
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
     public init(identityPoolId: String) {
@@ -142,8 +140,8 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     public override func speak(_ instruction: SpokenInstruction) {
-        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let previousInstruction = lastSpokenInstruction {
-            voiceControllerDelegate?.voiceController?(self, didInterrupt: previousInstruction, with: instruction)
+        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
+            voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
         pollyTask?.cancel()
         audioPlayer?.stop()
@@ -219,7 +217,6 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     func cacheSpokenInstruction(instruction: String) {
-        
         let pollyRequestURL = pollyURL(for: instruction)
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(pollyRequestURL)
