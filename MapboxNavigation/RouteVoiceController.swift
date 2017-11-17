@@ -141,14 +141,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     open func didPassSpokenInstructionPoint(notification: NSNotification) {
+        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
+        
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         speak(instruction)
     }
     
     func speak(_ instruction: SpokenInstruction) {
-        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
-        
         do {
             try duckAudio()
         } catch {

@@ -91,14 +91,7 @@ public class PollyVoiceController: RouteVoiceController {
             }
         }
         
-        guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else {
-            play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
-            return
-        }
-        
-        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
-        
-        super.speak(instruction)
+        super.didPassSpokenInstructionPoint(notification: notification)
     }
     
     func pollyURL(for instruction: String) ->  AWSPollySynthesizeSpeechURLBuilderRequest {
@@ -158,6 +151,11 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     override func speak(_ instruction: SpokenInstruction) {
+        guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else {
+            play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
+            return
+        }
+        
         let input = pollyURL(for: instruction.ssmlText)
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
