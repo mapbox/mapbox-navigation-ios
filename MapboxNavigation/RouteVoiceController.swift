@@ -183,9 +183,16 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
 }
 
 @objc public protocol VoiceControllerDelegate {
+    
+    /**
+     Called when there is an error speaking a voice instruction.
+     */
     @objc(voiceController:spokenInstrucionsDidFailWithError:)
     optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
     
+    /**
+     Called when an instruction interrupts another instruction.
+     */
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
-    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt: SpokenInstruction, with instruction: SpokenInstruction)
+    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
 }
