@@ -61,10 +61,18 @@ class EndOfRouteViewController: UIViewController {
 
     //MARK: - IBActions
     @IBAction func endNavigationPressed(_ sender: Any) {
-        dismiss?()
+        dismissView()
     }
     
     //MARK: - Private Functions
+    fileprivate func dismissView() {
+        guard commentView.isFirstResponder else { return _ = dismiss?() }
+        commentView.resignFirstResponder()
+        guard let dismiss = dismiss else { return }
+        let fireTime = DispatchTime.now() + 0.3 //Not ideal, but works for now
+        DispatchQueue.main.asyncAfter(deadline: fireTime, execute: dismiss)
+    }
+    
     private func showComments(animated: Bool = true) {
         endNavigationButton.setTitle(sendFeedback, for: .normal)
         endNavigationButton.layoutSubviews()
@@ -74,7 +82,6 @@ class EndOfRouteViewController: UIViewController {
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
         
         let layout = view.layoutIfNeeded
-        
         animated ? UIView.animate(withDuration: 0.3, animations: layout) : layout()
     }
     
@@ -87,7 +94,6 @@ class EndOfRouteViewController: UIViewController {
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
         
         let layout = view.layoutIfNeeded
-        
         animated ? UIView.animate(withDuration: 0.3, animations: layout) : layout()
     }
     
@@ -117,6 +123,7 @@ class EndOfRouteViewController: UIViewController {
         let coord = destination.coordinate
         return String(format: "%.2f", coord.latitude) + "," + String(format: "%.2f", coord.longitude)
     }
+    
     private func setPlaceholderText() {
         commentView.text = placeholder
         commentView.textColor = .lightGray
@@ -127,7 +134,8 @@ class EndOfRouteViewController: UIViewController {
 extension EndOfRouteViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         guard text == "\n" else { return true }
-        textView.resignFirstResponder()
+        guard textView.returnKeyType == .send else { textView.resignFirstResponder(); return false }
+        dismissView()
         return false
     }
     
