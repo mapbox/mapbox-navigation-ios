@@ -836,6 +836,7 @@ Label  </string>
                                     <constraint firstItem="V4A-Bp-tr5" firstAttribute="centerX" secondItem="4jh-bR-wXL" secondAttribute="centerX" id="kYE-KB-M5d"/>
                                     <constraint firstAttribute="bottom" secondItem="QLC-Qt-vRy" secondAttribute="bottom" id="l5x-by-AXb"/>
                                     <constraint firstItem="V4A-Bp-tr5" firstAttribute="top" secondItem="4jh-bR-wXL" secondAttribute="top" id="n8N-UX-05e"/>
+                                    <constraint firstAttribute="height" constant="80" id="oQv-RJ-I1f"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="evE-dd-pMr" userLabel="Rate Your Drive Container">

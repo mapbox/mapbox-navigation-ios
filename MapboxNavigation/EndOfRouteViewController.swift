@@ -1,7 +1,7 @@
 import UIKit
 import MapboxDirections
 
-enum ConstraintSpacing: CGFloat {
+fileprivate enum ConstraintSpacing: CGFloat {
     case closer = 16.0
     case further = 45.0
 }
@@ -19,6 +19,10 @@ class EndOfRouteViewController: UIViewController {
     @IBOutlet weak var ratingCommentsSpacing: NSLayoutConstraint!
     
     //MARK: - Properties
+    lazy var placeholder: String = NSLocalizedString("Add an optional comment here.", comment: "Comment Placeholder Text")
+    lazy var endNavigation: String = NSLocalizedString("End Navigation", comment: "End Navigation Button Text")
+    lazy var sendFeedback: String = NSLocalizedString("Send Feedback", comment: "Send Feedback Button Text")
+    
     lazy var geocoder: CLGeocoder = CLGeocoder()
     var dismiss: (() -> Void)?
     var comment: String?
@@ -40,6 +44,7 @@ class EndOfRouteViewController: UIViewController {
         super.viewDidLoad()
         clearInterface()
         stars.didChangeRating = { (new) in self.rating = new }
+        setPlaceholderText()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,6 +66,9 @@ class EndOfRouteViewController: UIViewController {
     
     //MARK: - Private Functions
     private func showComments(animated: Bool = true) {
+        endNavigationButton.setTitle(sendFeedback, for: .normal)
+        endNavigationButton.layoutSubviews()
+        
         showCommentView.isActive = true
         hideCommentView.isActive = false
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
@@ -71,6 +79,9 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func hideComments(animated: Bool = true) {
+        endNavigationButton.setTitle(endNavigation, for: .normal)
+        endNavigationButton.layoutSubviews()
+        
         showCommentView.isActive = false
         hideCommentView.isActive = true
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
@@ -106,6 +117,10 @@ class EndOfRouteViewController: UIViewController {
         let coord = destination.coordinate
         return String(format: "%.2f", coord.latitude) + "," + String(format: "%.2f", coord.longitude)
     }
+    private func setPlaceholderText() {
+        commentView.text = placeholder
+        commentView.textColor = .lightGray
+    }
 }
 
 //MARK: - UITextViewDelegate
@@ -114,6 +129,27 @@ extension EndOfRouteViewController: UITextViewDelegate {
         guard text == "\n" else { return true }
         textView.resignFirstResponder()
         return false
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let isEmpty = textView.text?.isEmpty ?? true
+        textView.returnKeyType = isEmpty ? .done : .send
+        textView.reloadInputViews()
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == placeholder {
+            textView.text = nil
+            textView.textColor = .black
+        }
+        textView.becomeFirstResponder()
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if (textView.text?.isEmpty ?? true) == true {
+            textView.text = placeholder
+            textView.textColor = .lightGray
+        }
     }
 }
 
