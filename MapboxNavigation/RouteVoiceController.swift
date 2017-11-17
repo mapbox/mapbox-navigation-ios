@@ -11,9 +11,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     lazy var speechSynth = AVSpeechSynthesizer()
     var audioPlayer: AVAudioPlayer?
-    var recentlyAnnouncedRouteStep: RouteStep?
-    var fallbackText: String!
-    var announcementTimer: Timer?
     
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
@@ -57,14 +54,18 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
+     Delegate used for getting metadata information about a particular spoken instruction.
+     */
+    public weak var voiceControllerDelegate: VoiceControllerDelegate?
+    
+    /**
      Default initializer for `RouteVoiceController`.
      */
     override public init() {
         super.init()
         
         if !Bundle.main.backgroundModes.contains("audio") {
-            print("Voice guidance may not work properly. " +
-                  "Add audio to the UIBackgroundModes key to your app’s Info.plist file")
+            assert(false, "This application’s Info.plist file must include “audio” in UIBackgroundModes. This background mode is used for spoken instructions while the application is in the background.")
         }
         
         speechSynth.delegate = self
@@ -75,7 +76,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     deinit {
         suspendNotifications()
         speechSynth.stopSpeaking(at: .word)
-        resetAnnouncementTimer()
     }
     
     func resumeNotifications() {
@@ -91,7 +91,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func didReroute(notification: NSNotification) {
-        
         // Play reroute sound when a faster route is found
         if notification.userInfo?[RouteControllerDidFindFasterRouteKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
@@ -113,7 +112,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         do {
             try unDuckAudio()
         } catch {
-            print(error)
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         }
     }
     
@@ -121,7 +120,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         do {
             try unDuckAudio()
         } catch {
-            print(error)
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         }
     }
     
@@ -138,62 +137,30 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     func unDuckAudio() throws {
-        if !speechSynth.isSpeaking {
-            try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
-        }
-    }
-    
-    func startAnnouncementTimer() {
-        announcementTimer?.invalidate()
-        announcementTimer = Timer.scheduledTimer(timeInterval: bufferBetweenAnnouncements, target: self, selector: #selector(resetAnnouncementTimer), userInfo: nil, repeats: false)
-    }
-    
-    func resetAnnouncementTimer() {
-        announcementTimer?.invalidate()
-        recentlyAnnouncedRouteStep = nil
+        try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
     }
     
     open func didPassSpokenInstructionPoint(notification: NSNotification) {
-        guard shouldSpeak(for: notification) == true else { return }
-        
-        speak(fallbackText, error: nil)
-        startAnnouncementTimer()
-    }
-    
-    func shouldSpeak(for notification: NSNotification) -> Bool {
-        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return false }
+        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        
-        // We're guarding against two things here:
-        //   1. `recentlyAnnouncedRouteStep` being nil.
-        //   2. `recentlyAnnouncedRouteStep` being equal to currentStep
-        // If it has a value and they're equal, this means we gave an announcement with x seconds ago for this step
-        guard recentlyAnnouncedRouteStep != routeProgress.currentLegProgress.currentStep else {
-            return false
-        }
-        
-        // Set recentlyAnnouncedRouteStep to the current step
-        recentlyAnnouncedRouteStep = routeProgress.currentLegProgress.currentStep
-        
-        fallbackText = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text
-        
-        return true
+        guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
+        speak(instruction)
     }
     
-    func speak(_ text: String, error: String? = nil) {
-        // Note why it failed
-        if let error = error {
-            print(error)
-        }
-        
+    /**
+     Reads aloud the given instruction.
+     
+     - parameter instruction: The instruction to read aloud.
+     */
+    open func speak(_ instruction: SpokenInstruction) {
         do {
             try duckAudio()
         } catch {
-            print(error)
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         }
         
-        let utterance = AVSpeechUtterance(string: text)
+        let utterance = AVSpeechUtterance(string: instruction.text)
         
         // Only localized languages will have a proper fallback voice
         if Locale.preferredLocalLanguageCountryCode == "en-US" {
@@ -206,4 +173,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         speechSynth.speak(utterance)
     }
+}
+
+@objc public protocol VoiceControllerDelegate {
+    @objc(voiceController:spokenInstrucionsDidFailWithError:)
+    optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
+    
+    @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
+    optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt: SpokenInstruction, with instruction: SpokenInstruction)
 }
