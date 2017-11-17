@@ -48,6 +48,7 @@ class RouteMapViewController: UIViewController {
             return camera
         }
     }
+    
     weak var delegate: RouteMapViewControllerDelegate? {
         didSet {
             mapView.delegate = mapView.delegate
@@ -239,6 +240,12 @@ class RouteMapViewController: UIViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        mapView.setContentInset(contentInsets, animated: true)
+        mapView.setNeedsUpdateConstraints()
     }
     
     func updateVisibleBounds() {

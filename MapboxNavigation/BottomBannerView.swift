@@ -23,6 +23,9 @@ open class BottomBannerView: UIView {
     let dateComponentsFormatter = DateComponentsFormatter()
     let distanceFormatter = DistanceFormatter(approximate: true)
     
+    var verticalCompactConstraints = [NSLayoutConstraint]()
+    var verticalRegularConstraints = [NSLayoutConstraint]()
+    
     var congestionLevel: CongestionLevel = .unknown {
         didSet {
             switch congestionLevel {
@@ -57,7 +60,6 @@ open class BottomBannerView: UIView {
         dateComponentsFormatter.unitsStyle = .abbreviated
         
         setupViews()
-        setupLayout()
         
         cancelButton.addTarget(self, action: #selector(BottomBannerView.cancel(_:)), for: .touchUpInside)
     }
