@@ -480,7 +480,7 @@ class RouteMapViewController: UIViewController {
     //MARK: - End Of Route
     
     func showEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
-        
+        self.view.layoutIfNeeded() //flush layout queue
         endOfRouteViewController?.destination = route.legs.last?.destination
         
         self.endOfRouteHide.isActive = false
@@ -489,24 +489,38 @@ class RouteMapViewController: UIViewController {
         self.bannerShow.isActive = false
         self.bannerContainerShow.isActive = false
         
+        let inset = UIEdgeInsets(top: 0, left: 0, bottom: endOfRouteContainer.bounds.height, right: 0)
+        mapView.setContentInset(inset, animated: true)
+
+        mapView.enableFrameByFrameCourseViewTracking(for: duration)
+        mapView.setNeedsUpdateConstraints()
+        
         let layout = view.layoutIfNeeded
         let noAnimation = { layout(); completion?(true) }
-        
-        duration > 0.0 ? UIView.animate(withDuration: duration, animations: layout, completion: completion) : noAnimation()
+
+        guard duration > 0.0 else { return noAnimation() }
+        UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: layout, completion: completion)
     }
     
     func hideEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
-        self.view.layoutIfNeeded()
+        self.view.layoutIfNeeded() //flush layout queue
         
         self.endOfRouteHide.isActive = true
         self.endOfRouteShow.isActive = false
         self.view.clipsToBounds = true
-
         
+        //NOTE: This isn't perfect, but it's better then using the pattern in showEndOfRoute(duration:completion:).
+        mapView.contentInset.top = instructionsBannerContainerView.bounds.height
+        mapView.contentInset.bottom = bottomBannerView.bounds.height
+        
+        mapView.enableFrameByFrameCourseViewTracking(for: duration)
+        mapView.setNeedsUpdateConstraints()
+
         let layout = view.layoutIfNeeded
         let noAnimation = { layout(); completion?(true) }
-        
-        duration > 0.0 ? UIView.animate(withDuration: duration, animations: layout, completion: completion) : noAnimation()
+
+        guard duration > 0.0 else { return noAnimation() }
+       UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: layout, completion: completion)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
