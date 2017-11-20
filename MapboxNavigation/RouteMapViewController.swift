@@ -831,9 +831,13 @@ extension RouteMapViewController {
         let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
         let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
                        curve: curve!)
-        let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size
-        
-        self.endOfRouteShow.constant = -1 * keyboardSize.height
+        let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size.height
+
+        if #available(iOS 11.0, *) {
+            self.endOfRouteShow.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
+        } else {
+            self.endOfRouteShow.constant = -1 * keyboardHeight
+        }
         
         
         let opts = UIViewAnimationOptions(curve: options.curve)
