@@ -2,6 +2,7 @@ import UIKit
 import Mapbox
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxMobileEvents
 import Turf
 
 class ArrowFillPolyline: MGLPolylineFeature {}
@@ -528,10 +529,17 @@ class RouteMapViewController: UIViewController {
         let modalDismiss = { (bool: Bool) -> Void in
             self.dismiss(animated: true, completion: nil)
         }
-        endOfRouteVC.dismiss = { self.hideEndOfRoute(duration: 0.3, completion: modalDismiss) }
+        endOfRouteVC.dismiss = { (stars, comment) in
+            self.routeController.sendCancelEvent(rating: self.rating(for: stars), comment: comment)
+            self.hideEndOfRoute(duration: 0.3, completion: modalDismiss)
+        }
         endOfRouteViewController = endOfRouteVC
     }
-
+    fileprivate func rating(for stars: Int) -> Int {
+        assert(stars >= 0 && stars <= 5)
+        guard stars > 0 else { return MMEEventsManager.unrated } //zero stars means this was unrated.
+        return (stars - 1) * 25
+    }
 }
 
 // - MARK: NavigationMapViewCourseTrackingDelegate

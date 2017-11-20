@@ -24,7 +24,7 @@ class EndOfRouteViewController: UIViewController {
     lazy var sendFeedback: String = NSLocalizedString("Send Feedback", comment: "Send Feedback Button Text")
     
     lazy var geocoder: CLGeocoder = CLGeocoder()
-    var dismiss: (() -> Void)?
+    var dismiss: ((Int, String?) -> Void)?
     var comment: String?
     var rating: Int = 0 {
         didSet {
@@ -66,11 +66,11 @@ class EndOfRouteViewController: UIViewController {
     
     //MARK: - Private Functions
     fileprivate func dismissView() {
-        guard commentView.isFirstResponder else { return _ = dismiss?() }
+        let dismissal: () -> Void = { self.dismiss?(self.rating, self.comment) }
+        guard commentView.isFirstResponder else { return _ = dismissal() }
         commentView.resignFirstResponder()
-        guard let dismiss = dismiss else { return }
         let fireTime = DispatchTime.now() + 0.3 //Not ideal, but works for now
-        DispatchQueue.main.asyncAfter(deadline: fireTime, execute: dismiss)
+        DispatchQueue.main.asyncAfter(deadline: fireTime, execute: dismissal)
     }
     
     private func showComments(animated: Bool = true) {
@@ -141,6 +141,7 @@ extension EndOfRouteViewController: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         let isEmpty = textView.text?.isEmpty ?? true
+        comment = textView.text //Bind data model
         textView.returnKeyType = isEmpty ? .done : .send
         textView.reloadInputViews()
     }

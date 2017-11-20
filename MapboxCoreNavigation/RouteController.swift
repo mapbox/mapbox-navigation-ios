@@ -196,7 +196,6 @@ open class RouteController: NSObject {
     deinit {
         suspendLocationUpdates()
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
-        sendCancelEvent()
         suspendNotifications()
         UIDevice.current.isBatteryMonitoringEnabled = false
     }
@@ -846,8 +845,9 @@ extension RouteController {
         events.flush()
     }
 
-    func sendCancelEvent() {
-        events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: events.navigationCancelEvent(routeController: self))
+    open func sendCancelEvent(rating: Int, comment: String?) {
+        let attributes = events.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
+        events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         events.flush()
     }
 
