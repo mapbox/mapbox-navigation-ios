@@ -1,12 +1,13 @@
 import UIKit
 
-extension BaseInstructionsBannerView {
+extension BaseInstructionsBannerView: AdaptiveView {
     
     static let padding: CGFloat = 16
     static let maneuverViewSize = CGSize(width: 38, height: 38)
     
     func setupViews() {
         backgroundColor = .clear
+        translatesAutoresizingMaskIntoConstraints = false
         
         let maneuverView = ManeuverView()
         maneuverView.backgroundColor = .clear
@@ -56,50 +57,79 @@ extension BaseInstructionsBannerView {
         self.separatorView = separatorView
         
         addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
+        
+        setupConstraints()
     }
     
-    func setupLayout() {
-        // Distance label
-        distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
-        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding).isActive = true
-        
-        // Turn arrow view
-        maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height).isActive = true
-        maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width).isActive = true
-        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
-        maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor).isActive = true
-        maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
-        
-        // Primary Label
-        primaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
-        primaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
+    fileprivate func setupConstraints() {
+        // Special constraints that are not based on trait collections.
         baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor))
         centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
         
-        // Secondary Label
-        secondaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
-        secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
         baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor))
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
-        // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
-        dividerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 70).isActive = true
-        dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
-        dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-        dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        let constraints = AdaptiveConstraintContainer(traitCollection: UITraitCollection(), constraints: [
+            // Primary Label
+            primaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor),
+            primaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18),
+            // Secondary Label
+            secondaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor),
+            secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18),
+            // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
+            dividerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 70),
+            dividerView.widthAnchor.constraint(equalToConstant: 1),
+            dividerView.heightAnchor.constraint(equalTo: heightAnchor),
+            dividerView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            // Separator view (invisible helper view for visualizing the constraints)
+            _separatorView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            _separatorView.heightAnchor.constraint(equalToConstant: 1),
+            _separatorView.widthAnchor.constraint(equalTo: widthAnchor),
+            _separatorView.leftAnchor.constraint(equalTo: leftAnchor),
+            // Visible separator docked to the bottom
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+            separatorView.leftAnchor.constraint(equalTo: leftAnchor),
+            separatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            separatorView.rightAnchor.constraint(equalTo: rightAnchor)
+            ])
         
-        // Separator view (invisible helper view for visualizing the result of the constraints)
-        _separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        _separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        _separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-        _separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        let verticalRegularConstraints = AdaptiveConstraintContainer(traitCollection: UITraitCollection(verticalSizeClass: .regular), constraints: [
+            heightAnchor.constraint(equalToConstant: 96),
+            // Distance label
+            distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0),
+            distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding),
+            // Maneuver view
+            maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height),
+            maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width),
+            maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: BaseInstructionsBannerView.padding),
+            maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor),
+            maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: BaseInstructionsBannerView.padding),
+            ])
         
-        // Visible separator docked to the bottom
-        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        let verticalCompactConstraints = AdaptiveConstraintContainer(traitCollection: UITraitCollection(verticalSizeClass: .compact), constraints: [
+            heightAnchor.constraint(equalToConstant: 60),
+            // Maneuver view
+            maneuverView.heightAnchor.constraint(equalToConstant: 28),
+            maneuverView.widthAnchor.constraint(equalToConstant: 28),
+            maneuverView.bottomAnchor.constraint(equalTo: distanceLabel.topAnchor),
+            maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: BaseInstructionsBannerView.padding),
+            maneuverView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor),
+            // Distance label
+            distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0),
+            distanceLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+            ])
+        
+        constraintContainers = [constraints,
+                                verticalRegularConstraints,
+                                verticalCompactConstraints]
+        
+        centerYAlignInstructions()
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        constraintContainers.forEach { $0.update(for: traitCollection ) }
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)

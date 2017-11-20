@@ -11,6 +11,7 @@ protocol InstructionsBannerViewDelegate: class {
 open class InstructionsBannerView: BaseInstructionsBannerView { }
 
 /// :nodoc:
+@objc(MBBaseInstructionsBannerView)
 open class BaseInstructionsBannerView: UIControl {
     
     weak var maneuverView: ManeuverView!
@@ -21,6 +22,9 @@ open class BaseInstructionsBannerView: UIControl {
     weak var _separatorView: UIView!
     weak var separatorView: SeparatorView!
     weak var delegate: InstructionsBannerViewDelegate?
+    
+    var adaptiveElements: [AdaptiveElement] = []
+    var constraintContainers: [AdaptiveConstraintContainer] = []
     
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
@@ -61,8 +65,6 @@ open class BaseInstructionsBannerView: UIControl {
     
     func commonInit() {
         setupViews()
-        setupLayout()
-        centerYAlignInstructions()
         setupAvailableBounds()
     }
     
@@ -73,7 +75,7 @@ open class BaseInstructionsBannerView: UIControl {
     func set(_ primaryInstruction: Instruction?, secondaryInstruction: Instruction?) {
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
-        if secondaryInstruction == nil {
+        if secondaryLabel.instruction == nil {
             centerYAlignInstructions()
         } else {
             baselineAlignInstructions()

@@ -158,7 +158,7 @@
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SKK-r5-nj0" customClass="MBResumeButton">
-                                <rect key="frame" x="10" y="364" width="100" height="44"/>
+                                <rect key="frame" x="10" y="239" width="100" height="44"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" placeholder="YES" id="Bdu-r9-50x"/>
@@ -169,7 +169,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
-                                <rect key="frame" x="315" y="197" width="50" height="108"/>
+                                <rect key="frame" x="607" y="141" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -212,22 +212,19 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C23-DT-v2t" customClass="MBSeparatorView">
-                                <rect key="frame" x="0.0" y="116" width="375" height="2"/>
+                                <rect key="frame" x="0.0" y="60" width="667" height="2"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="2" id="Qlo-Iw-KAF"/>
                                 </constraints>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="p9E-v0-Rt6" customClass="MBInstructionsBannerContentView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="116"/>
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="60"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UnK-tl-lPe" customClass="MBInstructionsBannerView">
-                                <rect key="frame" x="0.0" y="20" width="375" height="96"/>
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="60"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="96" id="T38-Uq-JYA"/>
-                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -269,7 +266,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bUe-nv-g0F"/>
                     </view>
-                    <size key="freeformSize" width="375" height="500"/>
                     <connections>
                         <outlet property="bottomBannerView" destination="sDs-aU-EMQ" id="SOJ-pC-0th"/>
                         <outlet property="instructionsBannerContainerView" destination="p9E-v0-Rt6" id="TMF-0X-Ode"/>

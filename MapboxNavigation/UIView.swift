@@ -65,6 +65,47 @@ extension UIView {
     }
 }
 
+protocol AdaptiveElement {
+    var traitCollection: UITraitCollection { get }
+    func update(for incomingTraitCollection: UITraitCollection)
+}
+
+struct AdaptiveConstraintContainer: AdaptiveElement {
+    
+    let traitCollection: UITraitCollection
+    let constraints: [NSLayoutConstraint]
+    
+    func update(for incomingTraitCollection: UITraitCollection) {
+        if incomingTraitCollection.containsTraits(in: traitCollection) {
+            NSLayoutConstraint.activate(constraints)
+        } else {
+            NSLayoutConstraint.deactivate(constraints)
+        }
+    }
+}
+
+protocol AdaptiveView: class, AdaptiveElement {
+    var adaptiveElements: [AdaptiveElement] { get set }
+}
+
+extension AdaptiveView {
+    func addConstraints(for traitCollections: [UITraitCollection], constraints: NSLayoutConstraint...) {
+        let container = AdaptiveConstraintContainer(traitCollection: traitCollection, constraints: constraints)
+        adaptiveElements.append(container)
+    }
+}
+
+extension AdaptiveView {
+    func update(for incomingTraitCollection: UITraitCollection) {
+        adaptiveElements.filter { incomingTraitCollection.containsTraits(in: $0.traitCollection) == false }.forEach {
+            $0.update(for: incomingTraitCollection)
+        }
+        adaptiveElements.filter { incomingTraitCollection.containsTraits(in: $0.traitCollection) == true }.forEach {
+            $0.update(for: incomingTraitCollection)
+        }
+    }
+}
+
 class RippleLayer: CAReplicatorLayer {
     var animationGroup: CAAnimationGroup? {
         didSet {
