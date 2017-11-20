@@ -37,9 +37,6 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
-/* Recording audio for feedback */
-"RECORDING_AUDIO" = "Recording Audio";
-
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Rerouting…";
 
