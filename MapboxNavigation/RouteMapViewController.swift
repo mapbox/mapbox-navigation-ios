@@ -406,24 +406,34 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
-        guard let step = routeProgress.currentLegProgress.upComingStep,
-            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            let nextStep = routeProgress.currentLegProgress.stepAfter(step),
+    
+        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+            let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
             laneViewsContainerView.isHidden
             else {
                 hideNextBanner()
                 return
         }
     
-        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
-        var instruction = instructions.0
-        
-        if let components = instruction?.components, components.count > 0 {
-            instruction?.components[0].prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
-            nextBannerView.maneuverView.step = nextStep
-            nextBannerView.instructionLabel.instruction = instruction
-            showNextBanner()
+        // If the followon step is short and the user is near the end of the current step, show the nextBanner.
+        guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
+            routeProgress.currentLegProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+            hideNextBanner()
+            return
         }
+
+        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
+        let instruction = instructions.0
+        
+        guard let components = instruction?.components, var firstComponent = components.first else {
+            hideNextBanner()
+            return
+        }
+        
+        firstComponent.prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
+        nextBannerView.maneuverView.step = nextStep
+        nextBannerView.instructionLabel.instruction = instruction
+        showNextBanner()
     }
     
     func showNextBanner() {
