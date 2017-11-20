@@ -300,11 +300,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      */
     public var annotatesSpokenInstructions = false
     
-    /**
-     A Boolean value that determines whether the user can long-press a feedback item to dictate feedback.
-     */
-    public var recordsAudioFeedback = false
-    
     let progressBar = ProgressBar()
     let routeStepFormatter = RouteStepFormatter()
     
@@ -563,10 +558,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
-    }
-    
-    func mapViewControllerShouldRecordAudioFeedback(_ routeMapViewController: RouteMapViewController) -> Bool {
-        return recordsAudioFeedback
     }
 }
 
