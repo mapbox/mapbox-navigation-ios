@@ -526,12 +526,10 @@ class RouteMapViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let endOfRouteVC = segue.destination as? EndOfRouteViewController else { return }
-        let modalDismiss = { (bool: Bool) -> Void in
-            self.dismiss(animated: true, completion: nil)
-        }
+        
         endOfRouteVC.dismiss = { (stars, comment) in
             self.routeController.sendCancelEvent(rating: self.rating(for: stars), comment: comment)
-            self.hideEndOfRoute(duration: 0.3, completion: modalDismiss)
+            self.dismiss(animated: true, completion: nil)
         }
         endOfRouteViewController = endOfRouteVC
     }
