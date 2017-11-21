@@ -484,6 +484,7 @@ class RouteMapViewController: UIViewController {
         self.view.layoutIfNeeded() //flush layout queue
         endOfRouteViewController?.destination = route.legs.last?.destination
         
+        self.endOfRouteContainer.isHidden = false
         self.endOfRouteHide.isActive = false
         self.endOfRouteShow.isActive = true
         self.bannerHide.isActive = true
@@ -518,10 +519,11 @@ class RouteMapViewController: UIViewController {
         mapView.setNeedsUpdateConstraints()
 
         let layout = view.layoutIfNeeded
-        let noAnimation = { layout(); completion?(true) }
+        let complete: (Bool) -> Void = { self.endOfRouteContainer.isHidden = true; completion?($0)}
+        let noAnimation = { layout(); complete(true) }
 
         guard duration > 0.0 else { return noAnimation() }
-       UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: layout, completion: completion)
+       UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: layout, completion: complete)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
