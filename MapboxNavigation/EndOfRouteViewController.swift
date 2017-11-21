@@ -21,7 +21,6 @@ class EndOfRouteViewController: UIViewController {
     //MARK: - Properties
     lazy var placeholder: String = NSLocalizedString("Add an optional comment here.", comment: "Comment Placeholder Text")
     lazy var endNavigation: String = NSLocalizedString("End Navigation", comment: "End Navigation Button Text")
-    lazy var sendFeedback: String = NSLocalizedString("Send Feedback", comment: "Send Feedback Button Text")
     
     lazy var geocoder: CLGeocoder = CLGeocoder()
     var dismiss: ((Int, String?) -> Void)?
@@ -85,9 +84,6 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func showComments(animated: Bool = true) {
-        endNavigationButton.setTitle(sendFeedback, for: .normal)
-        endNavigationButton.layoutSubviews()
-        
         showCommentView.isActive = true
         hideCommentView.isActive = false
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
@@ -97,9 +93,6 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func hideComments(animated: Bool = true) {
-        endNavigationButton.setTitle(endNavigation, for: .normal)
-        endNavigationButton.layoutSubviews()
-        
         showCommentView.isActive = false
         hideCommentView.isActive = true
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
@@ -145,16 +138,13 @@ class EndOfRouteViewController: UIViewController {
 extension EndOfRouteViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         guard text == "\n" else { return true }
-        guard textView.returnKeyType == .send else { textView.resignFirstResponder(); return false }
-        dismissView()
+        textView.resignFirstResponder()
         return false
     }
     
     func textViewDidChange(_ textView: UITextView) {
         let isEmpty = textView.text?.isEmpty ?? true
         comment = textView.text //Bind data model
-        textView.returnKeyType = isEmpty ? .done : .send
-        textView.reloadInputViews()
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
