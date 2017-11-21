@@ -3,14 +3,13 @@ import MapboxDirections
 
 fileprivate enum ConstraintSpacing: CGFloat {
     case closer = 8.0
-    case further = 45.0
+    case further = 65.0
 }
 
 class EndOfRouteViewController: UIViewController {
 
     //MARK: - IBOutlets
     @IBOutlet weak var primary: UILabel!
-    @IBOutlet weak var secondary: UILabel!
     @IBOutlet weak var endNavigationButton: UIButton!
     @IBOutlet weak var stars: RatingControl!
     @IBOutlet weak var commentView: UITextView!
@@ -22,7 +21,6 @@ class EndOfRouteViewController: UIViewController {
     lazy var placeholder: String = NSLocalizedString("Add an optional comment here.", comment: "Comment Placeholder Text")
     lazy var endNavigation: String = NSLocalizedString("End Navigation", comment: "End Navigation Button Text")
     
-    lazy var geocoder: CLGeocoder = CLGeocoder()
     var dismiss: ((Int, String?) -> Void)?
     var comment: String?
     var rating: Int = 0 {
@@ -104,19 +102,10 @@ class EndOfRouteViewController: UIViewController {
     
     private func updateInterface() {
         primary.text = string(for: destination)
-        guard let coordinate = destination?.coordinate else { return }
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        geocoder.reverseGeocodeLocation(location) { (places, error) in
-            guard let place = places?.first,
-                  let city = place.locality,
-                  let state = place.administrativeArea,
-                  error == nil else { return self.secondary.text = nil }
-            self.secondary.text = "\(city), \(state)"
-        }
     }
 
     private func clearInterface() {
-        [primary, secondary].forEach { $0.text = nil }
+        primary.text = nil
         stars.rating = 0
     }
     
