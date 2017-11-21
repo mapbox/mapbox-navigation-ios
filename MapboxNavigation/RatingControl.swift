@@ -1,10 +1,6 @@
 import UIKit
 import CoreGraphics
 
-enum RatingControlError: String, Error {
-    case tappedButtonNotInArray = "The button sending the tapped event is not in the internal button array."
-}
-
 typealias RatingClosure = (Int) -> Void //rating
 
 /*@IBDesignable*/
@@ -130,8 +126,8 @@ class RatingControl: UIStackView {
         NSLayoutConstraint.activate([width, height])
     }
     
-    @objc private func ratingButtonTapped(button sender: UIButton) throws {
-        guard let index = stars.index(of: sender) else { throw RatingControlError.tappedButtonNotInArray }
+    @objc private func ratingButtonTapped(button sender: UIButton) {
+        guard let index = stars.index(of: sender) else { return assertionFailure("RatingControl.swift: The Star button that was tapped was not found in the RatingControl.stars array. This should never happen.") }
         let selectedRating = index + 1
         
         rating = (selectedRating == rating) ? 0 : selectedRating
