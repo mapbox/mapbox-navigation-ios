@@ -869,7 +869,7 @@ Label  </string>
                                 <rect key="frame" x="0.0" y="211.5" width="375" height="128"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ioj-wd-4G8">
-                                        <rect key="frame" x="8" y="8" width="359" height="112"/>
+                                        <rect key="frame" x="25" y="8" width="325" height="112"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -879,12 +879,11 @@ Label  </string>
                                         </connections>
                                     </textView>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="0.89889865449999995" blue="0.99999775499999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="Ioj-wd-4G8" firstAttribute="top" secondItem="TEs-GQ-xWN" secondAttribute="topMargin" id="UY6-mY-01M"/>
-                                    <constraint firstItem="Ioj-wd-4G8" firstAttribute="leading" secondItem="TEs-GQ-xWN" secondAttribute="leadingMargin" id="oxH-Tq-z3y"/>
+                                    <constraint firstItem="Ioj-wd-4G8" firstAttribute="leading" secondItem="TEs-GQ-xWN" secondAttribute="leading" constant="25" id="oxH-Tq-z3y"/>
                                     <constraint firstAttribute="bottomMargin" secondItem="Ioj-wd-4G8" secondAttribute="bottom" id="srG-5D-YLI"/>
-                                    <constraint firstAttribute="trailingMargin" secondItem="Ioj-wd-4G8" secondAttribute="trailing" id="vZV-3y-0bv"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ioj-wd-4G8" secondAttribute="trailing" constant="25" id="vZV-3y-0bv"/>
                                     <constraint firstAttribute="height" constant="128" id="yA0-B8-HuR"/>
                                 </constraints>
                             </view>

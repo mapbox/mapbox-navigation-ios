@@ -611,6 +611,6 @@ extension NavigationViewController: RouteControllerDelegate {
     
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint, finalDestination: Bool) {
         let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint, finalDestination: finalDestination) }
-        mapViewController?.showEndOfRoute( completion: completion)
+        finalDestination ? mapViewController?.showEndOfRoute( completion: completion) : completion(true)
     }
 }

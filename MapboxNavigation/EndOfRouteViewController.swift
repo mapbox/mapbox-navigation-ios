@@ -2,7 +2,7 @@ import UIKit
 import MapboxDirections
 
 fileprivate enum ConstraintSpacing: CGFloat {
-    case closer = 16.0
+    case closer = 8.0
     case further = 45.0
 }
 
@@ -45,14 +45,12 @@ class EndOfRouteViewController: UIViewController {
         clearInterface()
         stars.didChangeRating = { (new) in self.rating = new }
         setPlaceholderText()
+        styleCommentView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 5, height: 5))
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = path.cgPath
-        view.layer.mask = maskLayer
+        roundCornersOfRootView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -65,6 +63,19 @@ class EndOfRouteViewController: UIViewController {
     }
     
     //MARK: - Private Functions
+    private func roundCornersOfRootView() {
+        let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 5, height: 5))
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path.cgPath
+        view.layer.mask = maskLayer
+    }
+    
+    private func styleCommentView() {
+        commentView.layer.cornerRadius = 6.0
+        commentView.layer.borderColor = UIColor.lightGray.cgColor
+        commentView.layer.borderWidth = 1.0
+    }
+    
     fileprivate func dismissView() {
         let dismissal: () -> Void = { self.dismiss?(self.rating, self.comment) }
         guard commentView.isFirstResponder else { return _ = dismissal() }
