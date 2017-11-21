@@ -698,8 +698,10 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
 extension RouteMapViewController: StepsViewControllerDelegate {
     
     func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell) {
+        
         viewController.dismiss {
-            self.addPreviewInstructions(step: step, distance: cell.instructionsView.distance)
+            guard let stepBefore = self.routeController.routeProgress.currentLegProgress.stepBefore(step) else { return }
+            self.addPreviewInstructions(step: stepBefore, distance: cell.instructionsView.distance)
             self.stepsViewController = nil
         }
         
