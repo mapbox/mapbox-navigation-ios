@@ -9,10 +9,12 @@ fileprivate enum ConstraintSpacing: CGFloat {
 class EndOfRouteViewController: UIViewController {
 
     //MARK: - IBOutlets
+    @IBOutlet weak var labelContainer: UIView!
     @IBOutlet weak var primary: UILabel!
     @IBOutlet weak var endNavigationButton: UIButton!
     @IBOutlet weak var stars: RatingControl!
     @IBOutlet weak var commentView: UITextView!
+    @IBOutlet weak var commentViewContainer: UIView!
     @IBOutlet weak var showCommentView: NSLayoutConstraint!
     @IBOutlet weak var hideCommentView: NSLayoutConstraint!
     @IBOutlet weak var ratingCommentsSpacing: NSLayoutConstraint!
@@ -82,21 +84,27 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func showComments(animated: Bool = true) {
+        commentViewContainer.isHidden = false
         showCommentView.isActive = true
         hideCommentView.isActive = false
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
         
         let layout = view.layoutIfNeeded
-        animated ? UIView.animate(withDuration: 0.3, animations: layout) : layout()
+        let completion: (Bool) -> Void = { _ in self.labelContainer.isHidden = true}
+        let noAnimate = { layout() ; completion(true) }
+        animated ? UIView.animate(withDuration: 0.3, animations: layout, completion: completion) : noAnimate()
     }
     
     private func hideComments(animated: Bool = true) {
+        labelContainer.isHidden = false
         showCommentView.isActive = false
         hideCommentView.isActive = true
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
         
         let layout = view.layoutIfNeeded
-        animated ? UIView.animate(withDuration: 0.3, animations: layout) : layout()
+        let completion: (Bool) -> Void = { _ in self.commentViewContainer.isHidden = true }
+        let noAnimation = { layout(); completion(true)}
+        animated ? UIView.animate(withDuration: 0.3, animations: layout, completion: completion) : noAnimation()
     }
     
     
@@ -132,7 +140,6 @@ extension EndOfRouteViewController: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        let isEmpty = textView.text?.isEmpty ?? true
         comment = textView.text //Bind data model
     }
     
