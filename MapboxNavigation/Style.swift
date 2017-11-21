@@ -445,43 +445,7 @@ open class InstructionsBannerContentView: UIView { }
 @objc(MBBottomBannerContentView)
 open class BottomBannerContentView: UIView { }
 
-/// :nodoc:
-@objc(MBStatusView)
-public class StatusView: UIView {
-    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    @IBOutlet weak var textLabel: UILabel!
-    
-    func show(_ title: String, showSpinner: Bool) {
-        textLabel.text = title
-        activityIndicatorView.hidesWhenStopped = true
-        if showSpinner {
-            activityIndicatorView.startAnimating()
-        } else {
-            activityIndicatorView.stopAnimating()
-        }
-        
-        guard isHidden == true else { return }
-        
-        UIView.defaultAnimation(0.3, animations: {
-            self.isHidden = false
-        }, completion: nil)
-    }
-    
-    func hide(delay: TimeInterval = 0, animated: Bool = true) {
-        
-        if animated {
-            guard isHidden == false else { return }
-            UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.isHidden = true
-            }, completion: { (completed) in
-                self.activityIndicatorView.stopAnimating()
-            })
-        } else {
-            self.activityIndicatorView.stopAnimating()
-            self.isHidden = true
-        }
-    }
-}
+
 
 
 /// :nodoc:

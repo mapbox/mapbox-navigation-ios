@@ -100,6 +100,7 @@ class RouteMapViewController: UIViewController {
         wayNameView.applyDefaultCornerRadiusShadow()
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
+        nextBannerView.isHidden = true
         isInOverviewMode = false
         instructionsBannerView.delegate = self
         bottomBannerView.delegate = self
