@@ -14,7 +14,6 @@ class RatingControl: UIStackView {
     static let defaultSize = CGSize(width: 32.0, height: 32.0)
     private let starTemplate = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
     
-    
     //MARK: Properties
     private var stars = [UIButton]()
     
@@ -27,16 +26,16 @@ class RatingControl: UIStackView {
         }
     }
     
-    @IBInspectable var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
-    @IBInspectable var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1)
+    dynamic public var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
+    dynamic public var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1)
     
-    @IBInspectable var starSize: CGSize = defaultSize {
+    dynamic public var starSize: CGSize = defaultSize {
         didSet {
             configureStars()
         }
     }
     
-    @IBInspectable var starCount: Int = 5 {
+    dynamic public var starCount: Int = 5 {
         didSet {
             configureStars()
         }
