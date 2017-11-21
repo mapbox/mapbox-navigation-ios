@@ -819,7 +819,6 @@ Label  </string>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="0.95314875229999996" blue="0.89889865449999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="I9w-ZT-7sx" firstAttribute="top" secondItem="V4A-Bp-tr5" secondAttribute="bottom" id="GIU-NE-KVw"/>
                                     <constraint firstAttribute="trailing" secondItem="I9w-ZT-7sx" secondAttribute="trailing" id="ID5-gY-b4l"/>
@@ -846,7 +845,6 @@ Label  </string>
                                         </constraints>
                                     </stackView>
                                 </subviews>
-                                <color key="backgroundColor" red="0.96528075449999995" green="1" blue="0.92496744789999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstItem="Izy-1z-tcx" firstAttribute="centerX" secondItem="evE-dd-pMr" secondAttribute="centerX" id="3Ml-0g-4rs"/>
                                     <constraint firstAttribute="bottom" secondItem="Izy-1z-tcx" secondAttribute="bottom" id="HhD-XW-0H5"/>
@@ -888,7 +886,6 @@ Label  </string>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="0.84833441840000001" green="0.99809138559999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="5f2-dT-la4" firstAttribute="centerY" secondItem="D6B-Ff-n7b" secondAttribute="centerY" id="4Wy-GC-ldH"/>
                                     <constraint firstItem="5f2-dT-la4" firstAttribute="centerX" secondItem="D6B-Ff-n7b" secondAttribute="centerX" id="qhb-Us-z20"/>
