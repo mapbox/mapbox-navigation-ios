@@ -701,7 +701,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         
         viewController.dismiss {
             guard let stepBefore = self.routeController.routeProgress.currentLegProgress.stepBefore(step) else { return }
-            self.addPreviewInstructions(step: stepBefore, distance: cell.instructionsView.distance)
+            self.addPreviewInstructions(step: stepBefore, maneuverStep: step, distance: cell.instructionsView.distance)
             self.stepsViewController = nil
         }
         
@@ -718,7 +718,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
     }
     
-    func addPreviewInstructions(step: RouteStep, distance: CLLocationDistance?) {
+    func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
         removePreviewInstructions()
         
         guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
@@ -727,7 +727,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
         instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
-        instructionsView.maneuverView.step = step
+        instructionsView.maneuverView.step = maneuverStep
         instructionsView.distance = distance
         
         instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor

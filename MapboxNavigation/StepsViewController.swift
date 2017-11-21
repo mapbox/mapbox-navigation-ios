@@ -68,10 +68,8 @@ class StepsViewController: UIViewController {
     }
     
     func progressDidChange(_ notification: Notification) {
-        if sections.first?.first != routeProgress.currentLegProgress.upComingStep {
-            rebuildDataSource()
-            tableView.reloadData()
-        }
+        rebuildDataSource()
+        tableView.reloadData()
     }
     
     func setupViews() {
