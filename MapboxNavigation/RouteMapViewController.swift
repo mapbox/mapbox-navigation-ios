@@ -480,7 +480,7 @@ class RouteMapViewController: UIViewController {
     }
     //MARK: - End Of Route
     
-    func showEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
+    func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         self.view.layoutIfNeeded() //flush layout queue
         endOfRouteViewController?.destination = route.legs.last?.destination
         
