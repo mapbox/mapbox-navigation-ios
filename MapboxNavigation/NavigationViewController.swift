@@ -421,8 +421,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         clearStaleNotifications()
         
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep, routeProgress.currentLegProgress.currentStepProgress.durationRemaining < RouteControllerHighAlertInterval {
-            scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+        if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
+            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
         
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
@@ -476,9 +476,10 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
         guard sendNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
+        guard let text = step.instructionsSpokenAlongStep?.last?.text else { return }
         
         let notification = UILocalNotification()
-        notification.alertBody = step.instructionsDisplayedAlongStep?.first?.primaryText
+        notification.alertBody = text
         notification.fireDate = Date()
         
         clearStaleNotifications()
