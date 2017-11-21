@@ -297,6 +297,7 @@ class RouteMapViewController: UIViewController {
     
     @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
+        hideLaneViews()
         statusView.show(title, showSpinner: true)
         statusView.hide(delay: 3, animated: true)
     }
