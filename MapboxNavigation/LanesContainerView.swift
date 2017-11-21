@@ -52,7 +52,7 @@ public class LanesContainerView: LanesView {
         
         separatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
         separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     

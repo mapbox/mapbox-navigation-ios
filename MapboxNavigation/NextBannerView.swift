@@ -28,6 +28,8 @@ open class NextBannerView: UIView {
     }
     
     func setupViews() {
+        translatesAutoresizingMaskIntoConstraints = false
+        
         let maneuverView = ManeuverView()
         maneuverView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(maneuverView)
