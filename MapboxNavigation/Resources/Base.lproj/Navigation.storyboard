@@ -249,7 +249,7 @@
                                     <constraint firstAttribute="height" constant="96" id="T38-Uq-JYA"/>
                                 </constraints>
                             </view>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Kx-12-EOg">
+                            <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Kx-12-EOg">
                                 <rect key="frame" x="0.0" y="500" width="375" height="260"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="260" id="Idg-60-CZm"/>
@@ -855,8 +855,8 @@ Label  </string>
                                     <constraint firstItem="W5U-cV-cDO" firstAttribute="top" secondItem="evE-dd-pMr" secondAttribute="top" id="lo0-lR-l4J"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TEs-GQ-xWN" userLabel="Comment Field Container">
-                                <rect key="frame" x="0.0" y="211.5" width="375" height="128"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TEs-GQ-xWN" userLabel="Comment Field Container">
+                                <rect key="frame" x="0.0" y="210.5" width="375" height="128"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ioj-wd-4G8">
                                         <rect key="frame" x="25" y="8" width="325" height="112"/>
@@ -922,8 +922,10 @@ Label  </string>
                     <size key="freeformSize" width="375" height="400"/>
                     <connections>
                         <outlet property="commentView" destination="Ioj-wd-4G8" id="Uw0-xP-mX0"/>
+                        <outlet property="commentViewContainer" destination="TEs-GQ-xWN" id="dny-Ty-ZDw"/>
                         <outlet property="endNavigationButton" destination="5f2-dT-la4" id="4Tt-b1-Pch"/>
                         <outlet property="hideCommentView" destination="rx6-4c-WD7" id="1wn-bP-gCg"/>
+                        <outlet property="labelContainer" destination="4jh-bR-wXL" id="FMX-A5-TdD"/>
                         <outlet property="primary" destination="I9w-ZT-7sx" id="Wl2-Mt-kRA"/>
                         <outlet property="ratingCommentsSpacing" destination="6IH-iM-ln5" id="c1p-PC-raO"/>
                         <outlet property="showCommentView" destination="GFJ-yQ-Cye" id="8Xj-ri-Kda"/>
