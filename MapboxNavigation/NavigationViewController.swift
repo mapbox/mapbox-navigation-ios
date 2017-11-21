@@ -17,7 +17,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user arrives at the destination.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint)
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint, finalDestination: Bool)
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -427,9 +427,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
             scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
         
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            delegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
-        }
         
         forceRefreshAppearanceIfNeeded()
     }
@@ -610,5 +607,10 @@ extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
         let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
         mapViewController?.statusView.show(title, showSpinner: false)
+    }
+    
+    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint, finalDestination: Bool) {
+        let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint, finalDestination: finalDestination) }
+        mapViewController?.showEndOfRoute( completion: completion)
     }
 }

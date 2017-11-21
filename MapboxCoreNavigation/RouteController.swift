@@ -81,6 +81,14 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:didUpdateLocations:)
     optional func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation])
+    
+    /**
+     Called when the route controller arrives at a waypoint.
+     - parameter waypoint: The waypoint that the controller has arrived at.
+     - parameter finalDestination: A boolean flag that signals that the waypoint is the final destination.
+    */
+    @objc(routeController:didArriveAtWaypoint:finalDestination:)
+    optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint, finalDestination: Bool)
 }
 
 /**
@@ -424,9 +432,13 @@ extension RouteController {
     }
 
     func didPassSpokenInstructionPoint(notification: NSNotification) {
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
+        let progress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
+        let destination = progress.currentLeg.destination
+        let isFinal = progress.currentLeg == progress.route.legs.last
+        if progress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
+            delegate?.routeController?(self, didArriveAt: destination, finalDestination: isFinal)
         }
         recentDistancesFromManeuver.removeAll()
     }
