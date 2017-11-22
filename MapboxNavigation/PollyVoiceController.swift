@@ -14,7 +14,7 @@ public class PollyVoiceController: RouteVoiceController {
     /**
      Forces Polly voice to always be of specified type. If not set, a localized voice will be used.
      */
-    public var globalVoiceId: AWSPollyVoiceId?
+    @objc public var globalVoiceId: AWSPollyVoiceId = .unknown
     
     /**
      `regionType` specifies what AWS region to use for Polly.
@@ -130,8 +130,8 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = .joanna
         }
         
-        if let voiceId = globalVoiceId {
-            input.voiceId = voiceId
+        if globalVoiceId != .unknown {
+            input.voiceId = globalVoiceId
         }
         
         input.text = instruction

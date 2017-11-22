@@ -6,12 +6,13 @@ import CoreLocation
  recorded with the single exception of the location’s timestamp which will be
  adjusted by interval between locations.
  */
-@objc public class ReplayLocationManager: NavigationLocationManager {
+@objc(MBReplayLocationManager)
+public class ReplayLocationManager: NavigationLocationManager {
     
     /**
      `speedMultiplier` adjusts the speed of the replay.
      */
-    public var speedMultiplier: TimeInterval = 1
+    @objc public var speedMultiplier: TimeInterval = 1
     
     var currentIndex: Int = 0
     
@@ -20,13 +21,13 @@ import CoreLocation
     /**
      `locations` to be replayed.
      */
-    public var locations: [CLLocation]! {
+    @objc public var locations: [CLLocation]! {
         didSet {
             currentIndex = 0
         }
     }
     
-    override public var location: CLLocation? {
+    @objc override public var location: CLLocation? {
         get {
             return lastKnownLocation
         }

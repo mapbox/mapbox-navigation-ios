@@ -21,19 +21,19 @@ public class ManeuverView: UIView {
         }
     }
     
-    public var step: RouteStep? {
+    @objc public var step: RouteStep? {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    public var isStart = false {
+    @objc public var isStart = false {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    public var isEnd = false {
+    @objc public var isEnd = false {
         didSet {
             setNeedsDisplay()
         }

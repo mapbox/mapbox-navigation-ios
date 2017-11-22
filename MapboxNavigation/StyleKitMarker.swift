@@ -13,7 +13,8 @@
 
 import UIKit
 
-@objc public class StyleKitMarker : NSObject {
+@objc(MBStyleKitMarker)
+public class StyleKitMarker : NSObject {
 
     //// Drawing Methods
 

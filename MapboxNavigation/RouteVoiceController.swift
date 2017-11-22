@@ -185,7 +185,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
 /**
  The `VoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
  */
-@objc public protocol VoiceControllerDelegate {
+@objc(MBVoiceControllerDelegate)
+public protocol VoiceControllerDelegate {
     
     /**
      Called when the voice controller failed to speak an instruction.

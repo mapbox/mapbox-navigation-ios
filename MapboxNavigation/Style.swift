@@ -26,7 +26,7 @@ open class Style: NSObject {
     /**
      Sets the tint color for guidance arrow, highlighted text, progress bar and more.
      */
-    public var tintColor: UIColor?
+    @objc public var tintColor: UIColor?
     
     /**
      Sets the status bar style.
@@ -37,22 +37,22 @@ open class Style: NSObject {
     /**
      Sets the font family for all labels.
      */
-    public var fontFamily: String?
+    @objc public var fontFamily: String?
     
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
      */
-    public var styleType: StyleType = .dayStyle
+    @objc public var styleType: StyleType = .dayStyle
     
     /**
      Map style to be used for the style.
      */
-    open var mapStyleURL: URL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
+    @objc open var mapStyleURL: URL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
     
     /**
      Applies the style for all changed properties.
      */
-    open func apply() {
+    @objc open func apply() {
         
     }
 }

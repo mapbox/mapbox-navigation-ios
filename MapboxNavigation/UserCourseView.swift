@@ -19,7 +19,8 @@ public protocol UserCourseView {
 /**
  A view representing the user’s location on screen.
  */
-@objc public class UserPuckCourseView: UIView, UserCourseView {
+@objc(MBUserPuckCourseView)
+public class UserPuckCourseView: UIView, UserCourseView {
     
     // Sets the color on the user puck
     @objc public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {

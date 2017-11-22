@@ -170,7 +170,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      
      In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
      */
-    public var route: Route! {
+    @objc public var route: Route! {
         didSet {
             if routeController == nil {
                 routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
@@ -186,7 +186,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
     */
     @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
-    public var destination: MGLAnnotation!
+    @objc public var destination: MGLAnnotation!
     
     
     /**
@@ -255,7 +255,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     /**
      Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
      */
-    public var sendNotifications: Bool = true
+    @objc public var sendsNotifications: Bool = true
     
     /**
      Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
@@ -470,7 +470,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
-        guard sendNotifications else { return }
+        guard sendsNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
         
         let notification = UILocalNotification()
@@ -484,7 +484,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func clearStaleNotifications() {
-        guard sendNotifications else { return }
+        guard sendsNotifications else { return }
         // Remove all outstanding notifications from notification center.
         // This will only work if it's set to 1 and then back to 0.
         // This way, there is always just one notification.

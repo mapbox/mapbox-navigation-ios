@@ -380,7 +380,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      If the view conforms to `UserCourseView`, its `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
      */
-    public var userCourseView: UIView? {
+    @objc public var userCourseView: UIView? {
         didSet {
             if let userCourseView = userCourseView {
                 addSubview(userCourseView)
@@ -1022,7 +1022,7 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
 
 //MARK: NavigationMapViewDelegate
 
-@objc
+@objc(MBNavigationMapViewDelegate)
 public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
