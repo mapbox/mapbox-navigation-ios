@@ -454,7 +454,8 @@ class RouteMapViewController: UIViewController {
     }
     
     var contentInsets: UIEdgeInsets {
-        return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottomBannerView.bounds.height, right: 0)
+        let bottom = self.endOfRouteShow.isActive ? endOfRouteContainer.bounds.height : bottomBannerView.bounds.height
+        return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottom, right: 0)
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
@@ -498,9 +499,6 @@ class RouteMapViewController: UIViewController {
         self.bannerShow.isActive = false
         self.bannerContainerShow.isActive = false
         
-        let inset = UIEdgeInsets(top: 0, left: 0, bottom: endOfRouteContainer.bounds.height, right: 0)
-        mapView.setContentInset(inset, animated: true)
-
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()
         
