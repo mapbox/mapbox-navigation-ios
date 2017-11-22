@@ -25,6 +25,8 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 * \>= Xcode 9
 * Swift 3.2 or 4
 
+Note: If you are using CocoaPods and Xcode 9, please install the [`swift4`] branch, which migrates to Swift 4.
+
 ## Installation
 
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
