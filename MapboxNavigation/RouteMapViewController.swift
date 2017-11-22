@@ -190,10 +190,6 @@ class RouteMapViewController: UIViewController {
             previewInstructionsView = nil
         }
     }
-    
-    @IBAction func toggleEndOfRouteFeedback(_ sender: Any) {
-        showEndOfRoute()
-    }
 
     @IBAction func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
