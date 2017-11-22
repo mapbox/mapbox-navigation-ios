@@ -17,7 +17,7 @@ open class Style: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func preferredContentSizeChanged(_ notification: Notification) {
+    @objc func preferredContentSizeChanged(_ notification: Notification) {
         apply()
     }
     
@@ -26,7 +26,7 @@ open class Style: NSObject {
     /**
      Sets the tint color for guidance arrow, highlighted text, progress bar and more.
      */
-    public var tintColor: UIColor?
+    @objc public var tintColor: UIColor?
     
     /**
      Sets the status bar style.
@@ -37,22 +37,22 @@ open class Style: NSObject {
     /**
      Sets the font family for all labels.
      */
-    public var fontFamily: String?
+    @objc public var fontFamily: String?
     
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
      */
-    public var styleType: StyleType = .dayStyle
+    @objc public var styleType: StyleType = .dayStyle
     
     /**
      Map style to be used for the style.
      */
-    open var mapStyleURL: URL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
+    @objc open var mapStyleURL: URL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
     
     /**
      Applies the style for all changed properties.
      */
-    open func apply() {
+    @objc open func apply() {
         
     }
 }
@@ -177,13 +177,13 @@ public class ResumeButton: UIControl {
 @objc(MBStylableLabel)
 open class StylableLabel : UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
-    dynamic open var normalTextColor: UIColor = .black {
+    @objc dynamic open var normalTextColor: UIColor = .black {
         didSet {
             textColor = normalTextColor
         }
     }
     
-    dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
+    @objc dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
         didSet {
             font = normalFont
         }
@@ -193,18 +193,18 @@ open class StylableLabel : UILabel {
 /// :nodoc:
 @objc(MBDistanceLabel)
 open class DistanceLabel: StylableLabel {
-    dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+    @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
     {
         didSet { update() }
     }
-    dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
+    @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
     {
         didSet { update() }
     }
-    dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: UIFontWeightMedium) {
+    @objc dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium) {
         didSet { update() }
     }
-    dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: UIFontWeightMedium) {
+    @objc dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: .medium) {
         didSet { update() }
     }
     
@@ -231,11 +231,11 @@ open class DistanceLabel: StylableLabel {
             return
         }
 
-        let valueAttributes: [String: Any] = [NSForegroundColorAttributeName: valueTextColor, NSFontAttributeName: valueFont]
-        let unitAttributes: [String: Any] = [NSForegroundColorAttributeName: unitTextColor, NSFontAttributeName: unitFont]
+        let valueAttributes: [NSAttributedStringKey: Any] = [.foregroundColor: valueTextColor, .font: valueFont]
+        let unitAttributes: [NSAttributedStringKey: Any] = [.foregroundColor: unitTextColor, .font: unitFont]
 
-        let valueSubstring = distanceString.substring(with: valueRange).trimmingCharacters(in: .whitespaces)
-        let unitSubstring = distanceString.substring(with: unitRange).trimmingCharacters(in: .whitespaces)
+        let valueSubstring = distanceString[valueRange].trimmingCharacters(in: .whitespaces)
+        let unitSubstring = distanceString[unitRange].trimmingCharacters(in: .whitespaces)
         let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
         let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
 
@@ -263,19 +263,19 @@ open class SecondaryLabel: InstructionLabel { }
 open class TimeRemainingLabel: StylableLabel {
     
     // Sets the text color for no or unknown traffic
-    dynamic public var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
+    @objc dynamic public var trafficUnknownColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) {
         didSet {
             textColor = trafficUnknownColor
         }
     }
     // Sets the text color for low traffic
-    dynamic public var trafficLowColor: UIColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
+    @objc dynamic public var trafficLowColor: UIColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
     // Sets the text color for moderate traffic
-    dynamic public var trafficModerateColor: UIColor = #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0)
+    @objc dynamic public var trafficModerateColor: UIColor = #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0)
     // Sets the text color for heavy traffic
-    dynamic public var trafficHeavyColor: UIColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
+    @objc dynamic public var trafficHeavyColor: UIColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
     // Sets the text color for severe traffic
-    dynamic public var trafficSevereColor: UIColor = #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0)
+    @objc dynamic public var trafficSevereColor: UIColor = #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0)
 }
 
 /// :nodoc:
@@ -302,7 +302,7 @@ open class WayNameLabel: StylableLabel { }
 @objc(MBWayNameView)
 open class WayNameView: UIView {
     
-    dynamic public var borderColor: UIColor = .white {
+    @objc dynamic public var borderColor: UIColor = .white {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
@@ -323,7 +323,7 @@ public class ProgressBar: UIView {
     var barHeight: CGFloat = 3
     
     // Sets the color of the progress bar.
-    dynamic public var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
+    @objc dynamic public var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
         didSet {
             bar.backgroundColor = barColor
         }
@@ -372,7 +372,7 @@ public class ProgressBar: UIView {
 public class LineView: UIView {
     
     // Set the line color on all line views.
-    dynamic public var lineColor: UIColor = .black {
+    @objc dynamic public var lineColor: UIColor = .black {
         didSet {
             setNeedsDisplay()
             setNeedsLayout()
@@ -389,35 +389,35 @@ public class SeparatorView: UIView { }
 open class StylableButton: UIButton {
     
     // Sets the font on the button’s titleLabel
-    dynamic open var textFont: UIFont = UIFont.systemFont(ofSize: 20, weight: UIFontWeightMedium) {
+    @objc dynamic open var textFont: UIFont = UIFont.systemFont(ofSize: 20, weight: .medium) {
         didSet {
             titleLabel?.font = textFont
         }
     }
     
     // Sets the text color for normal state
-    dynamic open var textColor: UIColor = .black {
+    @objc dynamic open var textColor: UIColor = .black {
         didSet {
             setTitleColor(textColor, for: .normal)
         }
     }
     
     // Sets the border color
-    dynamic open var borderColor: UIColor = .clear {
+    @objc dynamic open var borderColor: UIColor = .clear {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
     }
     
     // Sets the border width
-    dynamic open var borderWidth: CGFloat = 0 {
+    @objc dynamic open var borderWidth: CGFloat = 0 {
         didSet {
             layer.borderWidth = borderWidth
         }
     }
     
     // Sets the corner radius
-    dynamic open var cornerRadius: CGFloat = 0 {
+    @objc dynamic open var cornerRadius: CGFloat = 0 {
         didSet {
             layer.cornerRadius = cornerRadius
         }
@@ -429,7 +429,7 @@ open class StylableButton: UIButton {
 open class ManeuverContainerView: UIView {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
-    dynamic var height: CGFloat = 100 {
+    @objc dynamic var height: CGFloat = 100 {
         didSet {
             heightConstraint.constant = height
             setNeedsUpdateConstraints()
@@ -489,28 +489,28 @@ public class StatusView: UIView {
 public class MarkerView: UIView {
     
     // Sets the inner color on the pin.
-    public dynamic var innerColor: UIColor = .white {
+    @objc public dynamic var innerColor: UIColor = .white {
         didSet {
             setNeedsDisplay()
         }
     }
     
     // Sets the shadow color under the marker view.
-    public dynamic var shadowColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1) {
+    @objc public dynamic var shadowColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1) {
         didSet {
             setNeedsDisplay()
         }
     }
     
     // Sets the color on the marker view.
-    public dynamic var pinColor: UIColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1) {
+    @objc public dynamic var pinColor: UIColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1) {
         didSet {
             setNeedsDisplay()
         }
     }
     
     // Sets the stroke color on the marker view.
-    public dynamic var strokeColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) {
+    @objc public dynamic var strokeColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) {
         didSet {
             setNeedsDisplay()
         }

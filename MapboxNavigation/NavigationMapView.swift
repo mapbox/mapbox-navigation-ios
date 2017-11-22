@@ -27,22 +27,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Returns the altitude that the map camera initally defaults to.
      */
-    public static let defaultAltitude: CLLocationDistance = 1000.0
+    @objc public static let defaultAltitude: CLLocationDistance = 1000.0
     
     /**
      Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
     */
-    public static let zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
+    @objc public static let zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
     
     /**
      Returns the threshold for what the map considers a "long-enough" maneuver distance to trigger a zoom-out when the user enters a motorway.
      */
-    public static let longManeuverDistance: CLLocationDistance = 1000.0
+    @objc public static let longManeuverDistance: CLLocationDistance = 1000.0
     
     /**
      Maximum distnace the user can tap for a selection to be valid when selecting an alternate route.
      */
-    public var tapGestureDistanceThreshold: CGFloat = 50
+    @objc public var tapGestureDistanceThreshold: CGFloat = 50
     
     //MARK: Instance Properties
     let sourceIdentifier = "routeSource"
@@ -74,13 +74,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         22: MGLStyleValue(rawValue: 30)
     ]
     
-    dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
-    dynamic public var trafficLowColor: UIColor = .trafficLow
-    dynamic public var trafficModerateColor: UIColor = .trafficModerate
-    dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
-    dynamic public var trafficSevereColor: UIColor = .trafficSevere
-    dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
-    dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
+    @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
+    @objc dynamic public var trafficLowColor: UIColor = .trafficLow
+    @objc dynamic public var trafficModerateColor: UIColor = .trafficModerate
+    @objc dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
+    @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
+    @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
+    @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
@@ -155,7 +155,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
     }
     
-    func progressDidChange(_ notification: Notification) {
+    @objc func progressDidChange(_ notification: Notification) {
         guard tracksUserCourse else { return }
         
         let routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as! RouteProgress
@@ -213,7 +213,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    func updateCourseView(_ sender: UIGestureRecognizer) {
+    @objc func updateCourseView(_ sender: UIGestureRecognizer) {
         frameInterval = FrameIntervalOptions.defaultFrameInterval
         
         if sender.state == .ended {
@@ -299,7 +299,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
     }
     
-    public func updateCourseTracking(location: CLLocation?, animated: Bool) {
+    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         animatesUserLocation = animated
         userLocationForCourseTracking = location
         guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
@@ -380,7 +380,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      
      If the view conforms to `UserCourseView`, its `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
      */
-    public var userCourseView: UIView? {
+    @objc public var userCourseView: UIView? {
         didSet {
             if let userCourseView = userCourseView {
                 addSubview(userCourseView)
@@ -395,7 +395,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
-    func didRecieveTap(sender: UITapGestureRecognizer) {
+    @objc func didRecieveTap(sender: UITapGestureRecognizer) {
         guard let routes = routes, let tapPoint = sender.point else { return }
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?
@@ -465,7 +465,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Adds or updates both the route line and the route line casing
      */
-    public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
+    @objc public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
         guard let style = style else { return }
         guard let activeRoute = routes.first else { return }
         
@@ -523,7 +523,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Removes route line and route line casing from map
      */
-    public func removeRoutes() {
+    @objc public func removeRoutes() {
         guard let style = style else {
             return
         }
@@ -563,7 +563,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      */
-    public func showWaypoints(_ route: Route, legIndex: Int = 0) {
+    @objc public func showWaypoints(_ route: Route, legIndex: Int = 0) {
         guard let style = style else {
             return
         }
@@ -603,7 +603,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Removes all waypoints from the map.
      */
-    public func removeWaypoints() {
+    @objc public func removeWaypoints() {
         guard let style = style else { return }
         
         removeAnnotations(annotations ?? [])
@@ -628,7 +628,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Shows the step arrow given the current `RouteProgress`.
      */
-    public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
+    @objc public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
         guard route.legs.indices.contains(legIndex),
             route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
         
@@ -745,7 +745,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Removes the step arrow from the map.
      */
-    public func removeArrow() {
+    @objc public func removeArrow() {
         guard let style = style else {
             return
         }
@@ -962,7 +962,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return lineCasing
     }
     
-    public func showVoiceInstructionsOnMap(route: Route) {
+    @objc public func showVoiceInstructionsOnMap(route: Route) {
         guard let style = style else {
             return
         }
@@ -1022,7 +1022,7 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
 
 //MARK: NavigationMapViewDelegate
 
-@objc
+@objc(MBNavigationMapViewDelegate)
 public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     

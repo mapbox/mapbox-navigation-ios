@@ -288,13 +288,13 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    func willReroute(notification: NSNotification) {
+    @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         statusView.show(title, showSpinner: true)
         statusView.hide(delay: 3, animated: true)
     }
     
-    func didReroute(notification: NSNotification) {
+    @objc func didReroute(notification: NSNotification) {
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
             
@@ -626,7 +626,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         }
     }
     
-    func updateETA() {
+    @objc func updateETA() {
         bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
     }
     

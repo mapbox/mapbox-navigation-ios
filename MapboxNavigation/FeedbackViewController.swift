@@ -90,7 +90,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissFeedback), object: nil)
     }
     
-    func dismissFeedback() {
+    @objc func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
     }
@@ -101,7 +101,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         return !isDescendant
     }
     
-    func handleDismissTap(sender: UITapGestureRecognizer) {
+    @objc func handleDismissTap(sender: UITapGestureRecognizer) {
         dismissFeedback()
     }
 }
