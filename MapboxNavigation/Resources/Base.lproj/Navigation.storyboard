@@ -177,7 +177,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
-                                <rect key="frame" x="315" y="196" width="50" height="166"/>
+                                <rect key="frame" x="315" y="196" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
