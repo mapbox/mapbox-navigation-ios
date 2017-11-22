@@ -205,7 +205,7 @@
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EeE-dV-610" customClass="MBFloatingButton">
-                                        <rect key="frame" x="0.0" y="112" width="50" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="108" width="50" height="0.0"/>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" priority="999" constant="50" id="o37-gV-IxI"/>
@@ -215,18 +215,6 @@
                                         <state key="normal" image="feedback"/>
                                         <connections>
                                             <action selector="feedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="2mO-AS-TQL"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G8u-mb-57K">
-                                        <rect key="frame" x="0.0" y="116" width="50" height="50"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="50" id="L7T-zM-W3m"/>
-                                            <constraint firstAttribute="height" constant="50" id="YJx-ME-AgO"/>
-                                        </constraints>
-                                        <state key="normal" image="report_checkmark"/>
-                                        <connections>
-                                            <action selector="toggleEndOfRouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="jAG-us-9bn"/>
                                         </connections>
                                     </button>
                                 </subviews>
