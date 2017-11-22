@@ -182,16 +182,26 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
 }
 
+/**
+ The `VoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
+ */
 @objc public protocol VoiceControllerDelegate {
     
     /**
-     Called when there is an error speaking a voice instruction.
+     Called when the voice controller failed to speak an instruction.
+     
+     - parameter voiceController: The voice controller that experienced the failure.
+     - parameter error: An error explaining the failure and its cause. The `MBSpokenInstructionErrorCodeKey` key of the error’s user info dictionary is a `SpokenInstructionErrorCode` indicating the cause of the failure.
      */
     @objc(voiceController:spokenInstrucionsDidFailWithError:)
     optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
     
     /**
-     Called when an instruction interrupts another instruction.
+     Called when one spoken instruction interrupts another instruction currently being spoken.
+     
+     - parameter voiceController: The voice controller that experienced the interruption.
+     - parameter interruptedInstruction: The spoken instruction currently in progress that has been interrupted.
+     - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
      */
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
     optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
