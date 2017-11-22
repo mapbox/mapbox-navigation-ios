@@ -691,13 +691,16 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
             
             controller.didMove(toParentViewController: self)
             controller.dropDownAnimation()
+            sender.isOpen = true
             
             stepsViewController = controller
             return
         }
         
         stepsViewController = nil
-        controller.dismiss {}
+        controller.dismiss {
+            sender.isOpen = false
+        }
     }
 }
 
@@ -709,6 +712,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         viewController.dismiss {
             self.addPreviewInstructions(step: step, distance: cell.instructionsView.distance)
             self.stepsViewController = nil
+            self.instructionsBannerView.isOpen = false
         }
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
@@ -728,20 +732,22 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         removePreviewInstructions()
         
         let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
-        let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
-        instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
-        instructionsView.delegate = self
-        instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
-        instructionsView.maneuverView.step = step
-        instructionsView.distance = distance
+        let previewInstructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
+        previewInstructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
+        previewInstructionsView.delegate = self
+        previewInstructionsView.set(instructions.0, secondaryInstruction: instructions.1)
+        previewInstructionsView.maneuverView.step = step
+        previewInstructionsView.distance = distance
         
-        view.addSubview(instructionsView)
-        previewInstructionsView = instructionsView
+        instructionsBannerView.addSubview(previewInstructionsView)
+        previewInstructionsView.pinInSuperview()
+        self.previewInstructionsView = previewInstructionsView
     }
     
     func didDismissStepsViewController(_ viewController: StepsViewController) {
         viewController.dismiss {
             self.stepsViewController = nil
+            self.instructionsBannerView.isOpen = false
         }
     }
 }

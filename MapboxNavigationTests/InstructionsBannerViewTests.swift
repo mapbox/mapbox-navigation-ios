@@ -91,6 +91,8 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         let view = UIView()
         view.backgroundColor = .white
         let instructionsBannerView = instructionsView()
+        instructionsBannerView.constraintContainers.forEach { $0.update(for: UITraitCollection(verticalSizeClass: .regular)) }
+        
         let nextBannerViewFrame = CGRect(x: 0, y: instructionsBannerView.frame.maxY, width: instructionsBannerView.bounds.width, height: 44)
         let nextBannerView = NextBannerView(frame: nextBannerViewFrame)
         view.addSubview(instructionsBannerView)
@@ -126,7 +128,6 @@ extension InstructionsBannerViewTests {
         view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
         view.primaryLabel.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)
         view.secondaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
-        view.dividerView.backgroundColor = .red
         view._separatorView.backgroundColor = .red
         
         view.distanceLabel.valueFont = UIFont.systemFont(ofSize: 24)

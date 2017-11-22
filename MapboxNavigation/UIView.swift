@@ -36,6 +36,14 @@ extension UIView {
         return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? T
     }
     
+    func pinInSuperview() {
+        guard let superview = superview else { return }
+        topAnchor.constraint(equalTo: superview.topAnchor).isActive = true
+        leftAnchor.constraint(equalTo: superview.leftAnchor).isActive = true
+        bottomAnchor.constraint(equalTo: superview.bottomAnchor).isActive = true
+        rightAnchor.constraint(equalTo: superview.rightAnchor).isActive = true
+    }
+    
     var safeTopAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return safeAreaLayoutGuide.topAnchor
@@ -62,6 +70,13 @@ extension UIView {
             return safeAreaLayoutGuide.rightAnchor
         }
         return rightAnchor
+    }
+    
+    var safeTrailingAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.trailingAnchor
+        }
+        return trailingAnchor
     }
 }
 
