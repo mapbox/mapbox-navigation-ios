@@ -14,6 +14,8 @@ open class InstructionsBannerView: BaseInstructionsBannerView { }
 @objc(MBBaseInstructionsBannerView)
 open class BaseInstructionsBannerView: UIControl {
     
+    weak var contentView: UIView!
+    weak var compactView: UIView!
     weak var maneuverView: ManeuverView!
     weak var primaryLabel: PrimaryLabel!
     weak var secondaryLabel: SecondaryLabel!
