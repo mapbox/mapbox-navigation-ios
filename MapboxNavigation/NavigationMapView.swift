@@ -120,16 +120,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        makeGestureRecognizersRespectCourseTracking()
-        makeGestureRecognizersUpdateCourseView()
-        
-        resumeNotifications()
+        commonInit()
     }
     
     public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
-        
+        commonInit()
+    }
+    
+    public override init(frame: CGRect, styleURL: URL?) {
+        super.init(frame: frame, styleURL: styleURL)
+        commonInit()
+    }
+    
+    fileprivate func commonInit() {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
@@ -161,9 +165,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         
-        if !isPluggedIn,
-            durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver,
+        guard !isPluggedIn else {
+            frameInterval = FrameIntervalOptions.pluggedInFrameInterval
+            return
+        }
+    
+        if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
             durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
+            frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
+        } else if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .straightAhead {
             frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
         } else {
             frameInterval = FrameIntervalOptions.pluggedInFrameInterval

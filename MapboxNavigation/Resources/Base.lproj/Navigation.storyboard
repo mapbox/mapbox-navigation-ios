@@ -54,7 +54,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-iR-MZm" customClass="MBReportButton">
-                                <rect key="frame" x="121.5" y="196" width="132" height="38"/>
+                                <rect key="frame" x="121.5" y="196.5" width="132" height="38"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.23921568627450979" blue="0.3411764705882353" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
@@ -65,10 +65,10 @@
                                     <action selector="rerouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="yRc-0Z-7Pz"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
                                 <rect key="frame" x="134" y="381" width="106.5" height="29"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
                                         <rect key="frame" x="14" y="6" width="78.5" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
@@ -98,12 +98,9 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDs-aU-EMQ" customClass="MBBottomBannerView">
                                 <rect key="frame" x="0.0" y="420" width="375" height="80"/>
                                 <color key="backgroundColor" red="0.4858537946" green="0.87731584819999997" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="XRo-9W-nl8"/>
-                                </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG" userLabel="Lanes/Next/Status Stack View">
-                                <rect key="frame" x="0.0" y="116" width="375" height="70"/>
+                                <rect key="frame" x="0.0" y="116.5" width="375" height="70"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="LanesContainerView" customModule="MapboxNavigation" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
@@ -177,7 +174,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
-                                <rect key="frame" x="315" y="196" width="50" height="108"/>
+                                <rect key="frame" x="315" y="197" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -238,7 +235,7 @@
                                 </constraints>
                             </view>
                             <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Kx-12-EOg">
-                                <rect key="frame" x="0.0" y="500" width="375" height="260"/>
+                                <rect key="frame" x="0.0" y="510" width="375" height="260"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="260" id="Idg-60-CZm"/>
                                 </constraints>
@@ -265,10 +262,9 @@
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="bottom" secondItem="SKK-r5-nj0" secondAttribute="bottom" constant="92" id="KT2-TO-Mr4"/>
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="NZN-Hw-HBT"/>
                             <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="bUe-nv-g0F" secondAttribute="centerX" id="O0m-0k-ilC"/>
-                            <constraint firstItem="bUe-nv-g0F" firstAttribute="bottom" secondItem="drb-do-FoT" secondAttribute="bottom" constant="90" id="OD1-Zy-Gvh"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="bottom" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="OJu-tK-ZSa"/>
                             <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="QHw-st-QI3"/>
-                            <constraint firstItem="1Kx-12-EOg" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="bottom" id="TgB-K7-2M6"/>
+                            <constraint firstItem="1Kx-12-EOg" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="bottom" constant="10" id="TgB-K7-2M6"/>
                             <constraint firstAttribute="trailing" secondItem="p9E-v0-Rt6" secondAttribute="trailing" id="UtJ-Ea-CLv"/>
                             <constraint firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="VK1-eQ-4VK"/>
@@ -440,7 +436,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -602,7 +598,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lll-SJ-8q4">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>

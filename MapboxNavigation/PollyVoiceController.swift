@@ -3,6 +3,7 @@ import AWSPolly
 import AVFoundation
 import MapboxCoreNavigation
 import CoreLocation
+import MapboxDirections
 
 /**
  `PollyVoiceController` extends the default `RouteVoiceController` by providing support for AWSPolly. `RouteVoiceController` will be used as a fallback during poor network conditions.
@@ -29,7 +30,7 @@ public class PollyVoiceController: RouteVoiceController {
     /**
      Number of seconds a Polly request can wait before it is canceled and the default speech synthesizer speaks the instruction.
      */
-    public var timeoutIntervalForRequest:TimeInterval = 2
+    public var timeoutIntervalForRequest:TimeInterval = 5
     
     /**
      Number of steps ahead of the current step to cache spoken instructions.
@@ -45,6 +46,8 @@ public class PollyVoiceController: RouteVoiceController {
     var cachePollyTask: URLSessionDataTask?
     
     var spokenInstructionsForRoute = NSCache<NSString, NSData>()
+    
+    let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
     public init(identityPoolId: String) {
         self.identityPoolId = identityPoolId
@@ -63,15 +66,7 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     public override func didPassSpokenInstructionPoint(notification: NSNotification) {
-        guard shouldSpeak(for: notification) == true else { return }
-        
         let routeProgresss = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        guard let instruction = routeProgresss.currentLegProgress.currentStepProgress.currentSpokenInstruction?.ssmlText else { return }
-        
-        pollyTask?.cancel()
-        audioPlayer?.stop()
-        startAnnouncementTimer()
-        
         for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
             let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
             
@@ -85,12 +80,7 @@ public class PollyVoiceController: RouteVoiceController {
             }
         }
         
-        guard spokenInstructionsForRoute.object(forKey: instruction as NSString) == nil else {
-            play(spokenInstructionsForRoute.object(forKey: instruction as NSString)! as Data)
-            return
-        }
-        
-        speak(instruction, error: nil)
+        super.didPassSpokenInstructionPoint(notification: notification)
     }
     
     func pollyURL(for instruction: String) ->  AWSPollySynthesizeSpeechURLBuilderRequest {
@@ -149,10 +139,20 @@ public class PollyVoiceController: RouteVoiceController {
         return input
     }
     
-    override func speak(_ text: String, error: String?) {
-        assert(!text.isEmpty)
+    public override func speak(_ instruction: SpokenInstruction) {
+        if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
+            voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
+        }
+        pollyTask?.cancel()
+        audioPlayer?.stop()
+        lastSpokenInstruction = instruction
         
-        let input = pollyURL(for: text)
+        guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else {
+            play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
+            return
+        }
+        
+        let input = pollyURL(for: instruction.ssmlText)
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
@@ -160,33 +160,35 @@ public class PollyVoiceController: RouteVoiceController {
                 return nil
             }
             
-            strongSelf.handle(awsTask)
+            strongSelf.handle(awsTask, instruction: instruction)
             
             return nil
         }
     }
     
-    func callSuperSpeak(_ text: String, error: String) {
+    func speakWithoutPolly(_ instruction: SpokenInstruction, error: Error) {
         pollyTask?.cancel()
         
+        voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+        
         guard let audioPlayer = audioPlayer else {
-            super.speak(fallbackText, error: error)
+            super.speak(instruction)
             return
         }
         
         guard !audioPlayer.isPlaying else { return }
         
-        super.speak(fallbackText, error: error)
+        super.speak(instruction)
     }
     
-    func handle(_ awsTask: AWSTask<NSURL>) {
+    func handle(_ awsTask: AWSTask<NSURL>, instruction: SpokenInstruction) {
         guard awsTask.error == nil else {
-            callSuperSpeak(fallbackText, error: awsTask.error!.localizedDescription)
+            speakWithoutPolly(instruction, error: awsTask.error!)
             return
         }
         
         guard let url = awsTask.result else {
-            callSuperSpeak(fallbackText, error: "No polly response")
+            speakWithoutPolly(lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: localizedErrorMessage))
             return
         }
         
@@ -199,12 +201,12 @@ public class PollyVoiceController: RouteVoiceController {
                 return
             } else if let error = error {
                 // Cannot call super in a closure
-                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: error.localizedDescription)
+                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: error)
                 return
             }
             
             guard let data = data else {
-                strongSelf.callSuperSpeak(strongSelf.fallbackText, error: "No data")
+                strongSelf.speakWithoutPolly(strongSelf.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: strongSelf.localizedErrorMessage, spokenInstructionCode: .emptyAwsResponse))
                 return
             }
             
@@ -215,7 +217,6 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     func cacheSpokenInstruction(instruction: String) {
-        
         let pollyRequestURL = pollyURL(for: instruction)
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(pollyRequestURL)
@@ -250,7 +251,7 @@ public class PollyVoiceController: RouteVoiceController {
                 let prepared = self.audioPlayer?.prepareToPlay() ?? false
                 
                 guard prepared else {
-                    self.callSuperSpeak(self.fallbackText, error: "Audio player failed to prepare")
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
                 
@@ -259,12 +260,12 @@ public class PollyVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    self.callSuperSpeak(self.fallbackText, error: "Audio player failed to play")
+                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
                 
             } catch  let error as NSError {
-                self.callSuperSpeak(self.fallbackText, error: error.localizedDescription)
+                self.speakWithoutPolly(self.lastSpokenInstruction!, error: error)
             }
         }
     }

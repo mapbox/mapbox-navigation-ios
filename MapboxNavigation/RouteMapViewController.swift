@@ -56,6 +56,7 @@ class RouteMapViewController: UIViewController {
             return camera
         }
     }
+    
     weak var delegate: RouteMapViewControllerDelegate? {
         didSet {
             mapView.delegate = mapView.delegate
@@ -84,11 +85,6 @@ class RouteMapViewController: UIViewController {
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
     var annotatesSpokenInstructions = false
-    
-    /**
-     A Boolean value that determines whether the user can long-press a feedback item to dictate feedback.
-     */
-    var recordsAudioFeedback = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -219,7 +215,6 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
     
         let controller = FeedbackViewController.loadFromStoryboard()
-        controller.recordsAudioFeedback = recordsAudioFeedback
         let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
         controller.sections = sections
         let feedbackId = routeController.recordFeedback()
@@ -227,7 +222,7 @@ class RouteMapViewController: UIViewController {
         controller.sendFeedbackHandler = { [weak self] (item) in
             guard let strongSelf = self else { return }
             strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, source: source, description: nil, audio: item.audio)
+            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
                 DialogViewController.present(on: parent)
             }
@@ -248,6 +243,12 @@ class RouteMapViewController: UIViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        mapView.setContentInset(contentInsets, animated: true)
+        mapView.setNeedsUpdateConstraints()
     }
     
     func updateVisibleBounds() {
@@ -307,7 +308,7 @@ class RouteMapViewController: UIViewController {
             statusView.hide(delay: 0.5, animated: true)
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 10)
+                self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
             })
         }
         
@@ -408,24 +409,34 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
-        guard let step = routeProgress.currentLegProgress.upComingStep,
-            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            let nextStep = routeProgress.currentLegProgress.stepAfter(step),
+    
+        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+            let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
             laneViewsContainerView.isHidden
             else {
                 hideNextBanner()
                 return
         }
     
-        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
-        var instruction = instructions.0
-        
-        if let components = instruction?.components, components.count > 0 {
-            instruction?.components[0].prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
-            nextBannerView.maneuverView.step = nextStep
-            nextBannerView.instructionLabel.instruction = instruction
-            showNextBanner()
+        // If the followon step is short and the user is near the end of the current step, show the nextBanner.
+        guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
+            routeProgress.currentLegProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+            hideNextBanner()
+            return
         }
+
+        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
+        let instruction = instructions.0
+        
+        guard let components = instruction?.components, var firstComponent = components.first else {
+            hideNextBanner()
+            return
+        }
+        
+        firstComponent.prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
+        nextBannerView.maneuverView.step = nextStep
+        nextBannerView.instructionLabel.instruction = instruction
+        showNextBanner()
     }
     
     func showNextBanner() {
@@ -895,5 +906,4 @@ protocol RouteMapViewControllerDelegate: class {
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
-    func mapViewControllerShouldRecordAudioFeedback(_ routeMapViewController: RouteMapViewController) -> Bool
 }

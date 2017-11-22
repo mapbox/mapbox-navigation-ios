@@ -87,6 +87,29 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         verifyView(view, size: view.bounds.size)
     }
     
+    func testInstructionsAndNextInstructions() {
+        let view = UIView()
+        view.backgroundColor = .white
+        let instructionsBannerView = instructionsView()
+        let nextBannerViewFrame = CGRect(x: 0, y: instructionsBannerView.frame.maxY, width: instructionsBannerView.bounds.width, height: 44)
+        let nextBannerView = NextBannerView(frame: nextBannerViewFrame)
+        view.addSubview(instructionsBannerView)
+        view.addSubview(nextBannerView)
+        view.frame = CGRect(origin: .zero, size: CGSize(width: nextBannerViewFrame.width, height: nextBannerViewFrame.maxY))
+        
+        instructionsBannerView.maneuverView.isStart = true
+        instructionsBannerView.distance = 482
+        
+        instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
+                              Instruction.Component("South")]),
+                 secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
+        
+        nextBannerView.instructionLabel.instruction = Instruction([Instruction.Component("I 280 / South", roadCode: "I 280", prefix: "Then: ")])
+        nextBannerView.maneuverView.backgroundColor = .clear
+        nextBannerView.maneuverView.isEnd = true
+        
+        verifyView(view, size: view.bounds.size)
+    }
 }
 
 extension InstructionsBannerViewTests {

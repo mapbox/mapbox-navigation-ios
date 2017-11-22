@@ -55,12 +55,13 @@ open class NextBannerView: UIView {
     func setupLayout() {
         heightAnchor.constraint(equalToConstant: 44).isActive = true
         
-        maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
+        let midX = BaseInstructionsBannerView.padding + BaseInstructionsBannerView.maneuverViewSize.width / 2
+        maneuverView.centerXAnchor.constraint(equalTo: leftAnchor, constant: midX).isActive = true
         maneuverView.heightAnchor.constraint(equalToConstant: 22).isActive = true
         maneuverView.widthAnchor.constraint(equalToConstant: 22).isActive = true
         maneuverView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        instructionLabel.leftAnchor.constraint(equalTo: maneuverView.rightAnchor, constant: 16).isActive = true
+        instructionLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 70).isActive = true
         instructionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         instructionLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
     }
