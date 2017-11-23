@@ -31,7 +31,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', => tag: 'v0.11.0-rc.1'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v0.11.0-rc.1'
    ```
 1. Run `pod install` and open the resulting Xcode workspace.
 
