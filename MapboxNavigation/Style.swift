@@ -438,10 +438,6 @@ open class ManeuverContainerView: UIView {
 }
 
 /// :nodoc:
-@objc(MBInstructionsBannerContentView)
-open class InstructionsBannerContentView: UIView { }
-
-/// :nodoc:
 @objc(MBBottomBannerContentView)
 open class BottomBannerContentView: UIView { }
 

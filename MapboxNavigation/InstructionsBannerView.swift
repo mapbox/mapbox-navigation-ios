@@ -11,19 +11,40 @@ protocol InstructionsBannerViewDelegate: class {
 open class InstructionsBannerView: BaseInstructionsBannerView { }
 
 /// :nodoc:
+@objc(MBBaseInstructionsBannerView)
 open class BaseInstructionsBannerView: UIControl {
     
+    open override var backgroundColor: UIColor? {
+        didSet {
+            if leftView != nil {
+                leftView.backgroundColor = backgroundColor
+            }
+        }
+    }
+    
+    weak var contentView: UIView!
+    weak var leftView: UIView!
     weak var maneuverView: ManeuverView!
     weak var primaryLabel: PrimaryLabel!
     weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
-    weak var dividerView: UIView!
     weak var _separatorView: UIView!
     weak var separatorView: SeparatorView!
     weak var delegate: InstructionsBannerViewDelegate?
     
+    var adaptiveElements: [AdaptiveElement] = []
+    var constraintContainers: [AdaptiveConstraintContainer] = []
+    
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
+    
+    var isOpen: Bool = false {
+        didSet {
+            // Force a regular size when the instuctions banner is open
+            let traitCollection = isOpen ? UITraitCollection(verticalSizeClass: .regular) : self.traitCollection
+            constraintContainers.forEach { $0.update(for: traitCollection) }
+        }
+    }
     
     fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
     
@@ -61,8 +82,6 @@ open class BaseInstructionsBannerView: UIControl {
     
     func commonInit() {
         setupViews()
-        setupLayout()
-        centerYAlignInstructions()
         setupAvailableBounds()
     }
     
@@ -71,13 +90,8 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     func set(_ primaryInstruction: Instruction?, secondaryInstruction: Instruction?) {
-        primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
-        
-        if secondaryInstruction == nil {
-            centerYAlignInstructions()
-        } else {
-            baselineAlignInstructions()
-        }
+        let isRegularVerticalSizeClass = traitCollection.verticalSizeClass != .compact
+        primaryLabel.numberOfLines = secondaryInstruction == nil && isRegularVerticalSizeClass ? 2 : 1
         
         primaryLabel.instruction = primaryInstruction
         secondaryLabel.instruction = secondaryInstruction
@@ -89,5 +103,8 @@ open class BaseInstructionsBannerView: UIControl {
         primaryLabel.text = "Primary Label"
         secondaryLabel.text = "Secondary Label"
         distanceLabel.text = "100m"
+        backgroundColor = .blue
+        contentView.backgroundColor = .gray
+        leftView.backgroundColor = .lightGray
     }
 }

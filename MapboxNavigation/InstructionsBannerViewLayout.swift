@@ -1,24 +1,36 @@
 import UIKit
 
-extension BaseInstructionsBannerView {
+extension BaseInstructionsBannerView: AdaptiveView {
     
     static let padding: CGFloat = 16
     static let maneuverViewSize = CGSize(width: 38, height: 38)
     
     func setupViews() {
-        backgroundColor = .clear
+        clipsToBounds = false
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        let contentView = UIView()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.isUserInteractionEnabled = false
+        addSubview(contentView)
+        self.contentView = contentView
+        
+        let leftView = UIView() // Overlapping view on the left side, visible in compact mode
+        leftView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(leftView)
+        self.leftView = leftView
         
         let maneuverView = ManeuverView()
         maneuverView.backgroundColor = .clear
         maneuverView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(maneuverView)
+        leftView.addSubview(maneuverView)
         self.maneuverView = maneuverView
         
         let distanceLabel = DistanceLabel()
         distanceLabel.translatesAutoresizingMaskIntoConstraints = false
         distanceLabel.adjustsFontSizeToFitWidth = true
         distanceLabel.minimumScaleFactor = 20.0 / 22.0
-        addSubview(distanceLabel)
+        leftView.addSubview(distanceLabel)
         self.distanceLabel = distanceLabel
         
         let primaryLabel = PrimaryLabel()
@@ -28,7 +40,7 @@ extension BaseInstructionsBannerView {
         primaryLabel.numberOfLines = 1
         primaryLabel.minimumScaleFactor = 26.0 / 30.0
         primaryLabel.lineBreakMode = .byTruncatingTail
-        addSubview(primaryLabel)
+        contentView.addSubview(primaryLabel)
         self.primaryLabel = primaryLabel
         
         let secondaryLabel = SecondaryLabel()
@@ -37,69 +49,123 @@ extension BaseInstructionsBannerView {
         secondaryLabel.numberOfLines = 1
         secondaryLabel.minimumScaleFactor = 20.0 / 26.0
         secondaryLabel.lineBreakMode = .byTruncatingTail
-        addSubview(secondaryLabel)
+        contentView.addSubview(secondaryLabel)
         self.secondaryLabel = secondaryLabel
-        
-        let dividerView = UIView()
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(dividerView)
-        self.dividerView = dividerView
         
         let _separatorView = UIView()
         _separatorView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(_separatorView)
+        contentView.addSubview(_separatorView)
         self._separatorView = _separatorView
         
         let separatorView = SeparatorView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(separatorView)
+        contentView.addSubview(separatorView)
         self.separatorView = separatorView
         
         addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
+        
+        setupConstraints()
     }
     
-    func setupLayout() {
-        // Distance label
-        distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
-        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding).isActive = true
-        
-        // Turn arrow view
-        maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height).isActive = true
-        maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width).isActive = true
-        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
-        maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor).isActive = true
-        maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
-        
-        // Primary Label
-        primaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
-        primaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
+    fileprivate func setupConstraints() {
+        // Special constraints that are not based on trait collections.
         baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor))
-        centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
+        centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor))
         
-        // Secondary Label
-        secondaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
-        secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
         baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor))
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
-        // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
-        dividerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 70).isActive = true
-        dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
-        dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-        dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        let constraints = AdaptiveConstraintContainer(traitCollection: UITraitCollection(), constraints: [
+            bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            // Content view
+            contentView.topAnchor.constraint(equalTo: safeTopAnchor),
+            contentView.leftAnchor.constraint(equalTo: safeLeftAnchor),
+            contentView.rightAnchor.constraint(equalTo: safeRightAnchor),
+            // Separator view (invisible helper view for visualizing the constraints)
+            _separatorView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            _separatorView.heightAnchor.constraint(equalToConstant: 1),
+            _separatorView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
+            _separatorView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            // Visible separator docked to the bottom
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+            separatorView.leftAnchor.constraint(equalTo: leftAnchor),
+            separatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            separatorView.rightAnchor.constraint(equalTo: rightAnchor),
+            // Distance label
+            distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0),
+            distanceLabel.lastBaselineAnchor.constraint(equalTo: leftView.bottomAnchor, constant: -BaseInstructionsBannerView.padding),
+            // Maneuver view
+            maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height),
+            maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width),
+            maneuverView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: BaseInstructionsBannerView.padding),
+            maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor),
+            maneuverView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: BaseInstructionsBannerView.padding)
+            ])
         
-        // Separator view (invisible helper view for visualizing the result of the constraints)
-        _separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        _separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        _separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-        _separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        let verticalRegularConstraints = AdaptiveConstraintContainer(traitCollection: UITraitCollection(verticalSizeClass: .regular), constraints: [
+            contentView.heightAnchor.constraint(equalToConstant: 96),
+            
+            // Left view
+            leftView.heightAnchor.constraint(equalTo: contentView.heightAnchor),
+            leftView.rightAnchor.constraint(equalTo: safeLeftAnchor, constant: 70),
+            leftView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            leftView.leftAnchor.constraint(equalTo: leftAnchor),
+            
+            // Primary Label
+            primaryLabel.leftAnchor.constraint(equalTo: leftView.rightAnchor),
+            primaryLabel.rightAnchor.constraint(lessThanOrEqualTo: contentView.rightAnchor, constant: -18),
+            // Secondary Label
+            secondaryLabel.leftAnchor.constraint(equalTo: leftView.rightAnchor),
+            secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: contentView.rightAnchor, constant: -18),
+            ])
         
-        // Visible separator docked to the bottom
-        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        let verticalCompactConstraints = AdaptiveConstraintContainer(traitCollection: UITraitCollection(verticalSizeClass: .compact), constraints: [
+            contentView.heightAnchor.constraint(equalToConstant: 60),
+            
+            // Left view
+            leftView.heightAnchor.constraint(equalToConstant: 96),
+            leftView.rightAnchor.constraint(equalTo: safeLeftAnchor, constant: 70),
+            leftView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            leftView.leftAnchor.constraint(equalTo: leftAnchor),
+            
+            // Primary Label
+            primaryLabel.leftAnchor.constraint(equalTo: leftView.rightAnchor),
+            primaryLabel.rightAnchor.constraint(lessThanOrEqualTo: contentView.rightAnchor, constant: -18),
+            primaryLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            // Secondary Label
+            secondaryLabel.leftAnchor.constraint(equalTo: primaryLabel.rightAnchor, constant: 10),
+            secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: contentView.rightAnchor, constant: -18),
+            secondaryLabel.lastBaselineAnchor.constraint(equalTo: primaryLabel.lastBaselineAnchor)
+            ])
+        
+        constraintContainers = [constraints,
+                                verticalRegularConstraints,
+                                verticalCompactConstraints]
+        
+        centerYAlignInstructions()
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        let traitCollection = isOpen ? UITraitCollection(verticalSizeClass: .regular) : self.traitCollection
+        constraintContainers.forEach { $0.update(for: traitCollection ) }
+    }
+    
+    open override func updateConstraints() {
+        super.updateConstraints()
+        
+        let isRegularVerticalSizeClass = traitCollection.verticalSizeClass != .compact
+        if isRegularVerticalSizeClass || isOpen {
+            if secondaryLabel.instruction == nil {
+                centerYAlignInstructions()
+            } else {
+                baselineAlignInstructions()
+            }
+        } else {
+            centerYConstraints.forEach { $0.isActive = false }
+            baselineConstraints.forEach { $0.isActive = false }
+        }
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)
