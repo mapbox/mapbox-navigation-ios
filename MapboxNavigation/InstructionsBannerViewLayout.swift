@@ -148,8 +148,8 @@ extension BaseInstructionsBannerView: AdaptiveView {
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        let trait = isOpen ? UITraitCollection(verticalSizeClass: .regular) : traitCollection
-        constraintContainers.forEach { $0.update(for: trait ) }
+        let traitCollection = isOpen ? UITraitCollection(verticalSizeClass: .regular) : self.traitCollection
+        constraintContainers.forEach { $0.update(for: traitCollection ) }
     }
     
     open override func updateConstraints() {

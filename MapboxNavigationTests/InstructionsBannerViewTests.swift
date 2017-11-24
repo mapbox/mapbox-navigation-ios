@@ -30,7 +30,10 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     }
     
     func instructionsView() -> InstructionsBannerView {
-        return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
+        let view = InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
+        // Force regular vertical size class
+        view.constraintContainers.forEach { $0.update(for: UITraitCollection(verticalSizeClass: .regular) ) }
+        return view
     }
     
     func testSinglelinePrimary() {
@@ -109,21 +112,24 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         nextBannerView.instructionLabel.instruction = Instruction([Instruction.Component("I 280 / South", roadCode: "I 280", prefix: "Then: ")])
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
-        
-        verifyView(view, size: view.bounds.size)
+
+        FBSnapshotVerifyView(view)
     }
 }
 
 extension InstructionsBannerViewTests {
     
-    func verifyView(_ view: UIView, size: CGSize) {
-        view.frame.size = size
-        FBSnapshotVerifyView(view)
+    func verifyView(_ view: InstructionsBannerView, size: CGSize) {
+        let testView = UIView(frame: CGRect(origin: .zero, size: size))
+        testView.addSubview(view)
+        view.pinInSuperview()
+        FBSnapshotVerifyView(testView)
     }
     
     // UIAppearance proxy do not work in unit test environment so we have to style manually
     func styleInstructionsView(_ view: InstructionsBannerView) {
         view.backgroundColor = .white
+        view.leftView.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.1984209947)
         view.maneuverView.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)
         view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
         view.primaryLabel.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)

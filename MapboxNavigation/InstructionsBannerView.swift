@@ -41,8 +41,8 @@ open class BaseInstructionsBannerView: UIControl {
     var isOpen: Bool = false {
         didSet {
             // Force a regular size when the instuctions banner is open
-            let trait = isOpen ? UITraitCollection(verticalSizeClass: .regular) : traitCollection
-            constraintContainers.forEach { $0.update(for: trait) }
+            let traitCollection = isOpen ? UITraitCollection(verticalSizeClass: .regular) : self.traitCollection
+            constraintContainers.forEach { $0.update(for: traitCollection) }
         }
     }
     
