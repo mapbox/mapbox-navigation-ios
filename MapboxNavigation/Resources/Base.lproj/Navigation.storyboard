@@ -514,7 +514,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tgj-dm-1KN">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -568,7 +568,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lll-SJ-8q4">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -676,7 +676,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yPS-fp-q2X">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>

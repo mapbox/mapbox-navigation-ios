@@ -50,8 +50,8 @@ open class InstructionLabel: StylableLabel {
         attributedText = string
     }
     
-    var attributes: [String: Any] {
-        return [NSFontAttributeName: font, NSForegroundColorAttributeName: textColor]
+    var attributes: [NSAttributedStringKey: Any] {
+        return [.font: font, .foregroundColor: textColor]
     }
     
     func attributedString(with shieldImage: UIImage) -> NSAttributedString {

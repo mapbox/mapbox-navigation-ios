@@ -13,6 +13,7 @@
 
 import UIKit
 
+@objc(MBManeuversStyleKit)
 public class ManeuversStyleKit : NSObject {
 
     //// Drawing Methods

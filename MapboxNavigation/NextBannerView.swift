@@ -40,7 +40,7 @@ open class NextBannerView: UIView {
         self.instructionLabel = instructionLabel
         
         instructionLabel.availableBounds = {
-            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.instructionLabel.font]).height
+            let height = ("|" as NSString).size(withAttributes: [.font: self.instructionLabel.font]).height
             let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(16*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }

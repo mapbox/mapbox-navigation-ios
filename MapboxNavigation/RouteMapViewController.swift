@@ -75,11 +75,6 @@ class RouteMapViewController: UIViewController {
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
     var annotatesSpokenInstructions = false
-    
-    /**
-     A Boolean value that determines whether the user can long-press a feedback item to dictate feedback.
-     */
-    var recordsAudioFeedback = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -209,7 +204,6 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
     
         let controller = FeedbackViewController.loadFromStoryboard()
-        controller.recordsAudioFeedback = recordsAudioFeedback
         let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
         controller.sections = sections
         let feedbackId = routeController.recordFeedback()
@@ -217,7 +211,7 @@ class RouteMapViewController: UIViewController {
         controller.sendFeedbackHandler = { [weak self] (item) in
             guard let strongSelf = self else { return }
             strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, source: source, description: nil, audio: item.audio)
+            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
                 DialogViewController.present(on: parent)
             }
@@ -292,13 +286,13 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    func willReroute(notification: NSNotification) {
+    @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         statusView.show(title, showSpinner: true)
         statusView.hide(delay: 3, animated: true)
     }
     
-    func didReroute(notification: NSNotification) {
+    @objc func didReroute(notification: NSNotification) {
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
             
@@ -404,16 +398,26 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
-        guard let step = routeProgress.currentLegProgress.upComingStep,
-            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            let nextStep = routeProgress.currentLegProgress.stepAfter(step),
+    
+        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+            let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
             laneViewsContainerView.isHidden
             else {
                 hideNextBanner()
                 return
         }
         
-        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
+        // If the followon step is short and the user is near the end of the current step, show the nextBanner.
+        guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
+            routeProgress.currentLegProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+                hideNextBanner()
+                return
+        }
+        
+        guard let instructions = upcomingStep.instructionsDisplayedAlongStep?.first else {
+            hideNextBanner()
+            return
+        }
         
         nextBannerView.maneuverView.step = nextStep
         nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
@@ -616,7 +620,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         }
     }
     
-    func updateETA() {
+    @objc func updateETA() {
         bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
     }
     
@@ -771,5 +775,4 @@ protocol RouteMapViewControllerDelegate: class {
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
-    func mapViewControllerShouldRecordAudioFeedback(_ routeMapViewController: RouteMapViewController) -> Bool
 }

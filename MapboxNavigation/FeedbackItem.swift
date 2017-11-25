@@ -12,7 +12,6 @@ struct FeedbackItem {
     var title: String
     var image: UIImage
     var feedbackType: FeedbackType
-    var audio: Data? = nil
     
     init(title: String, image: UIImage, feedbackType: FeedbackType) {
         self.title = title

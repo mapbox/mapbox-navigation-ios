@@ -11,7 +11,9 @@ protocol StepsViewControllerDelegate: class {
     func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
-class StepsViewController: UIViewController {
+/// :nodoc:
+@objc(MBStepsViewController)
+open class StepsViewController: UIViewController {
     
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
@@ -55,7 +57,7 @@ class StepsViewController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         rebuildDataSource()
@@ -67,7 +69,7 @@ class StepsViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
     }
     
-    func progressDidChange(_ notification: Notification) {
+    @objc func progressDidChange(_ notification: Notification) {
         rebuildDataSource()
         tableView.reloadData()
     }
@@ -164,7 +166,7 @@ class StepsViewController: UIViewController {
 }
 
 extension StepsViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let step = sections[indexPath.section][indexPath.row]
         let cell = tableView.cellForRow(at: indexPath) as! StepTableViewCell
@@ -173,20 +175,20 @@ extension StepsViewController: UITableViewDelegate {
 }
 
 extension StepsViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
+    public func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let steps = sections[section]
         return steps.count
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 96
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
         updateCell(cell, at: indexPath)
         return cell
@@ -222,7 +224,7 @@ extension StepsViewController: UITableViewDataSource {
         }
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return nil
         }
@@ -244,9 +246,11 @@ extension StepsViewController: UITableViewDataSource {
 }
 
 /// :nodoc:
+@objc(MBStepInstructionsView)
 open class StepInstructionsView: BaseInstructionsBannerView { }
 
 /// :nodoc:
+@objc(MBStepTableViewCell)
 open class StepTableViewCell: UITableViewCell {
     
     weak var instructionsView: StepInstructionsView!

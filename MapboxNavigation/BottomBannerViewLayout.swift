@@ -6,13 +6,13 @@ extension BottomBannerView {
         
         let timeRemainingLabel = TimeRemainingLabel()
         timeRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
-        timeRemainingLabel.font = .systemFont(ofSize: 28, weight: UIFontWeightMedium)
+        timeRemainingLabel.font = .systemFont(ofSize: 28, weight: .medium)
         addSubview(timeRemainingLabel)
         self.timeRemainingLabel = timeRemainingLabel
         
         let distanceRemainingLabel = DistanceRemainingLabel()
         distanceRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
-        distanceRemainingLabel.font = .systemFont(ofSize: 18, weight: UIFontWeightMedium)
+        distanceRemainingLabel.font = .systemFont(ofSize: 18, weight: .medium)
         addSubview(distanceRemainingLabel)
         self.distanceRemainingLabel = distanceRemainingLabel
         

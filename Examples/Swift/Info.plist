@@ -58,7 +58,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>The microphone is used if the user would like to share brief audio recordings while giving feedback</string>
 </dict>
 </plist>
