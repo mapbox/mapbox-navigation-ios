@@ -56,7 +56,7 @@ open class NextBannerView: UIView {
     
     func setupLayout() {
         let heightConstraint = heightAnchor.constraint(equalToConstant: 44)
-        heightConstraint.priority = 999
+        heightConstraint.priority = UILayoutPriority(rawValue: 999)
         heightConstraint.isActive = true
         
         let midX = BaseInstructionsBannerView.padding + BaseInstructionsBannerView.maneuverViewSize.width / 2
