@@ -98,6 +98,7 @@ class RouteMapViewController: UIViewController {
         wayNameView.applyDefaultCornerRadiusShadow()
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
+        nextBannerView.isHidden = true
         isInOverviewMode = false
         instructionsBannerView.delegate = self
         bottomBannerView.delegate = self
@@ -148,11 +149,13 @@ class RouteMapViewController: UIViewController {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -286,8 +289,13 @@ class RouteMapViewController: UIViewController {
         }
     }
     
+    @objc func applicationWillEnterForeground(notification: NSNotification) {
+        mapView.updateCourseTracking(location: routeController.location, animated: false)
+    }
+    
     @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
+        hideLaneViews()
         statusView.show(title, showSpinner: true)
         statusView.hide(delay: 3, animated: true)
     }

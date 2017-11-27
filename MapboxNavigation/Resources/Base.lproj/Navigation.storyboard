@@ -95,66 +95,27 @@
                                 <color key="backgroundColor" red="0.4858537946" green="0.87731584819999997" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG">
-                                <rect key="frame" x="0.0" y="116.5" width="375" height="70"/>
+                                <rect key="frame" x="0.0" y="116.5" width="375" height="114"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="LanesContainerView" customModule="MapboxNavigation" customModuleProvider="target">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="MBLanesContainerView">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YOs-u9-Vze" customClass="MBSeparatorView">
-                                                <rect key="frame" x="0.0" y="40" width="375" height="2"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="2" id="Mkc-cj-A6R"/>
-                                                </constraints>
-                                            </view>
-                                        </subviews>
                                         <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                        <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="YOs-u9-Vze" secondAttribute="bottom" constant="-2" id="0Xh-Gu-bSp"/>
-                                            <constraint firstItem="YOs-u9-Vze" firstAttribute="leading" secondItem="NE9-ru-uJw" secondAttribute="leading" id="3gB-jE-wVp"/>
-                                            <constraint firstAttribute="trailing" secondItem="YOs-u9-Vze" secondAttribute="trailing" id="4O1-Y5-NIJ"/>
-                                            <constraint firstAttribute="height" priority="999" constant="40" id="vE6-3z-p4c"/>
-                                        </constraints>
                                         <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
                                     </view>
-                                    <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nvl-aX-s8B" customClass="MBNextBannerView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nvl-aX-s8B" customClass="MBNextBannerView">
                                         <rect key="frame" x="0.0" y="40" width="375" height="44"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="kg2-Il-mKD"/>
-                                        </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
-                                        <rect key="frame" x="0.0" y="40" width="375" height="30"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Rerouting…" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UpZ-gr-OKM">
-                                                <rect key="frame" x="141.5" y="5" width="92.5" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                                <color key="textColor" red="0.94117647058823528" green="0.94117647058823528" blue="0.94117647058823528" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="jgC-8q-YUu">
-                                                <rect key="frame" x="345" y="5" width="20" height="20"/>
-                                            </activityIndicatorView>
-                                        </subviews>
+                                        <rect key="frame" x="0.0" y="84" width="375" height="30"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.67473591549295775" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstItem="jgC-8q-YUu" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="Ghp-Pc-H3U"/>
-                                            <constraint firstAttribute="trailing" secondItem="jgC-8q-YUu" secondAttribute="trailing" constant="10" id="JTW-3W-9TJ"/>
-                                            <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerX" secondItem="Jym-DH-tdD" secondAttribute="centerX" id="gSp-Qg-FgY"/>
-                                            <constraint firstAttribute="height" priority="999" constant="30" id="lnn-re-skW"/>
-                                            <constraint firstItem="UpZ-gr-OKM" firstAttribute="centerY" secondItem="Jym-DH-tdD" secondAttribute="centerY" id="uEG-1L-ErF"/>
-                                        </constraints>
-                                        <connections>
-                                            <outlet property="activityIndicatorView" destination="jgC-8q-YUu" id="mGB-sM-IEl"/>
-                                            <outlet property="textLabel" destination="UpZ-gr-OKM" id="aOh-bx-0nv"/>
-                                        </connections>
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="NE9-ru-uJw" firstAttribute="leading" secondItem="Eeb-3z-AWG" secondAttribute="leading" id="KYj-hp-PPs"/>
-                                    <constraint firstItem="NE9-ru-uJw" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="top" id="Whw-yv-z8o"/>
-                                    <constraint firstAttribute="trailing" secondItem="NE9-ru-uJw" secondAttribute="trailing" id="sW3-fN-Taw"/>
+                                    <constraint firstItem="NE9-ru-uJw" firstAttribute="leading" secondItem="Eeb-3z-AWG" secondAttribute="leading" id="LSX-ah-yaX"/>
+                                    <constraint firstAttribute="trailing" secondItem="Jym-DH-tdD" secondAttribute="trailing" id="NxB-vc-wJN"/>
+                                    <constraint firstAttribute="trailing" secondItem="NE9-ru-uJw" secondAttribute="trailing" id="bW9-2b-3aA"/>
+                                    <constraint firstItem="Jym-DH-tdD" firstAttribute="leading" secondItem="Eeb-3z-AWG" secondAttribute="leading" id="kR4-1L-iSo"/>
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SKK-r5-nj0" customClass="MBResumeButton">
