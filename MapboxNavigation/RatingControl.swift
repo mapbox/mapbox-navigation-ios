@@ -120,10 +120,8 @@ class RatingControl: UIStackView {
     
     
     private func addButtonSizeConstraints(to view: UIView) {
-        let width = NSLayoutConstraint(item: view, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: starSize.width)
-        let height = NSLayoutConstraint(item: view, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: starSize.height)
-        
-        NSLayoutConstraint.activate([width, height])
+        view.widthAnchor.constraint(equalToConstant: starSize.width).isActive = true
+        view.heightAnchor.constraint(equalToConstant: starSize.height).isActive = true
     }
     
     @objc private func ratingButtonTapped(button sender: UIButton) {
