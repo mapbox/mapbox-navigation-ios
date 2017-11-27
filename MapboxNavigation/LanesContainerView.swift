@@ -47,8 +47,9 @@ public class LanesContainerView: LanesView {
         addSubview(separatorView)
         self.separatorView = separatorView
         
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[stackView]-0-|", options: [], metrics: nil, views: ["stackView": stackView]))
-        addConstraint(NSLayoutConstraint(item: self, attribute: .centerX, relatedBy: .equal, toItem: stackView, attribute: .centerX, multiplier: 1, constant: 0))
+        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         separatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
         separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
