@@ -17,7 +17,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user arrives at the destination.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint, finalDestination: Bool)
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint)
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -599,8 +599,10 @@ extension NavigationViewController: RouteControllerDelegate {
         mapViewController?.statusView.show(title, showSpinner: false)
     }
     
-    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint, finalDestination: Bool) {
-        let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint, finalDestination: finalDestination) }
-        finalDestination ? mapViewController?.showEndOfRoute( completion: completion) : completion(true)
+    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
+        let isFinalDestination = routeController.routeProgress.isFinalLeg
+        
+        let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
+        isFinalDestination ? mapViewController?.showEndOfRoute( completion: completion) : completion(true)
     }
 }
