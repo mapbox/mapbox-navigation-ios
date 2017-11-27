@@ -26,13 +26,13 @@ public class StatusView: UIView {
         let textLabel = UILabel()
         textLabel.text = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         textLabel.translatesAutoresizingMaskIntoConstraints = false
-        textLabel.font = UIFont.systemFont(ofSize: 17, weight: UIFontWeightSemibold)
+        textLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         textLabel.textColor = .white
         addSubview(textLabel)
         self.textLabel = textLabel
         
         let heightConstraint = heightAnchor.constraint(equalToConstant: 30)
-        heightConstraint.priority = 999
+        heightConstraint.priority = UILayoutPriority(rawValue: 999)
         heightConstraint.isActive = true
         textLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         textLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true

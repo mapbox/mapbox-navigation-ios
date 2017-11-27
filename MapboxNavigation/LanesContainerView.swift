@@ -30,7 +30,7 @@ public class LanesContainerView: LanesView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let heightConstraint = heightAnchor.constraint(equalToConstant: 40)
-        heightConstraint.priority = 999
+        heightConstraint.priority = UILayoutPriority(rawValue: 999)
         heightConstraint.isActive = true
         
         let stackView = UIStackView(arrangedSubviews: [])
