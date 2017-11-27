@@ -49,7 +49,7 @@ class EndOfRouteViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        roundCornersOfRootView()
+        view.roundCorners([.topLeft, .topRight])
     }
 
     //MARK: - IBActions
@@ -58,13 +58,6 @@ class EndOfRouteViewController: UIViewController {
     }
     
     //MARK: - Private Functions
-    private func roundCornersOfRootView() {
-        let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 5, height: 5))
-        let maskLayer = CAShapeLayer()
-        maskLayer.path = path.cgPath
-        view.layer.mask = maskLayer
-    }
-    
     private func styleCommentView() {
         commentView.layer.cornerRadius = 6.0
         commentView.layer.borderColor = UIColor.lightGray.cgColor
