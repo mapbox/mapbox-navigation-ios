@@ -24,6 +24,7 @@ public class StatusView: UIView {
         self.activityIndicatorView = activityIndicatorView
         
         let textLabel = UILabel()
+        textLabel.contentMode = .bottom
         textLabel.text = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
@@ -54,6 +55,7 @@ public class StatusView: UIView {
         
         UIView.defaultAnimation(0.3, animations: {
             self.isHidden = false
+            self.textLabel.alpha = 1
             self.superview?.layoutIfNeeded()
         }, completion: nil)
     }
@@ -62,8 +64,10 @@ public class StatusView: UIView {
         
         if animated {
             guard isHidden == false else { return }
+            
             UIView.defaultAnimation(0.3, delay: delay, animations: {
                 self.isHidden = true
+                self.textLabel.alpha = 0
                 self.superview?.layoutIfNeeded()
             }, completion: { (completed) in
                 self.activityIndicatorView.stopAnimating()
