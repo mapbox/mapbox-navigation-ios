@@ -54,6 +54,7 @@ public class StatusView: UIView {
         
         UIView.defaultAnimation(0.3, animations: {
             self.isHidden = false
+            self.superview?.layoutIfNeeded()
         }, completion: nil)
     }
     
@@ -63,6 +64,7 @@ public class StatusView: UIView {
             guard isHidden == false else { return }
             UIView.defaultAnimation(0.3, delay: delay, animations: {
                 self.isHidden = true
+                self.superview?.layoutIfNeeded()
             }, completion: { (completed) in
                 self.activityIndicatorView.stopAnimating()
             })
