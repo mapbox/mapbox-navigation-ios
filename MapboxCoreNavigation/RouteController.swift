@@ -761,7 +761,9 @@ extension RouteController: CLLocationManagerDelegate {
         if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-            } else if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
+            }
+            
+            if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
                 incrementRouteProgress()
             }
         }
@@ -775,10 +777,6 @@ extension RouteController: CLLocationManagerDelegate {
 
         for (voiceInstructionIndex, voiceInstruction) in spokenInstructions.enumerated() {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex {
-                
-                if voiceInstructionIndex == spokenInstructions.count - 1 && routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
-                    routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-                }
 
                 NotificationCenter.default.post(name: RouteControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
