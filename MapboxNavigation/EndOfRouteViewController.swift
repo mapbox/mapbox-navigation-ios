@@ -51,10 +51,6 @@ class EndOfRouteViewController: UIViewController {
         super.viewWillDisappear(animated)
         roundCornersOfRootView()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-    }
 
     //MARK: - IBActions
     @IBAction func endNavigationPressed(_ sender: Any) {
