@@ -844,9 +844,9 @@ extension RouteMapViewController {
         let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size.height
 
         if #available(iOS 11.0, *) {
-            self.endOfRouteShow.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
+            endOfRouteShow.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
         } else {
-            self.endOfRouteShow.constant = -1 * keyboardHeight
+            endOfRouteShow.constant = -1 * keyboardHeight
         }
         
         
