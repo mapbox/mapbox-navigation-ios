@@ -454,7 +454,8 @@ class RouteMapViewController: UIViewController {
     }
     
     var contentInsets: UIEdgeInsets {
-        let bottom = self.endOfRouteShow.isActive ? endOfRouteContainer.bounds.height : bottomBannerView.bounds.height
+        let containerHeight = self.view.bounds.height - endOfRouteContainer.frame.origin.y
+        let bottom = self.endOfRouteShow.isActive ? containerHeight : bottomBannerView.bounds.height
         return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottom, right: 0)
     }
     
@@ -509,16 +510,12 @@ class RouteMapViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: layout, completion: completion)
     }
     
-    func hideEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
+    func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         self.view.layoutIfNeeded() //flush layout queue
         
         self.endOfRouteHide.isActive = true
         self.endOfRouteShow.isActive = false
         self.view.clipsToBounds = true
-        
-        //NOTE: This isn't perfect, but it's better then using the pattern in showEndOfRoute(duration:completion:).
-        mapView.contentInset.top = instructionsBannerContainerView.bounds.height
-        mapView.contentInset.bottom = bottomBannerView.bounds.height
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()
