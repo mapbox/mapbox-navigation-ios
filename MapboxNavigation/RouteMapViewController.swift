@@ -531,9 +531,10 @@ class RouteMapViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let endOfRouteVC = segue.destination as? EndOfRouteViewController else { return }
         
-        endOfRouteVC.dismiss = { (stars, comment) in
-            self.routeController.sendCancelEvent(rating: self.rating(for: stars), comment: comment)
-            self.dismiss(animated: true, completion: nil)
+        endOfRouteVC.dismiss = { [weak self] (stars, comment) in
+            guard let rating = self?.rating(for: stars) else { return }
+            self?.routeController.sendCancelEvent(rating: rating, comment: comment)
+            self?.dismiss(animated: true, completion: nil)
         }
         endOfRouteViewController = endOfRouteVC
     }
