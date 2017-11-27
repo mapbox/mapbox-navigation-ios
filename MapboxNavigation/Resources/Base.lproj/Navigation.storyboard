@@ -65,10 +65,10 @@
                                     <action selector="rerouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="yRc-0Z-7Pz"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
                                 <rect key="frame" x="134" y="381" width="106.5" height="29"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
                                         <rect key="frame" x="14" y="6" width="78.5" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
@@ -276,6 +276,7 @@
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="gAd-tT-w0a"/>
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="top" secondItem="bUe-nv-g0F" secondAttribute="top" id="gER-Br-LqP"/>
                             <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
+                            <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="bottom" constant="10" id="gZP-im-os7"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gfU-Wb-qye"/>
                             <constraint firstItem="sDs-aU-EMQ" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="hUt-on-4Oa"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
