@@ -110,6 +110,7 @@ class RouteMapViewController: UIViewController {
     
     deinit {
         suspendNotifications()
+        removeTimer()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -144,20 +145,21 @@ class RouteMapViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        updateETATimer?.invalidate()
-        updateETATimer = nil
+        removeTimer()
     }
-    
+
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationWillResignActive, object: nil)
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
@@ -171,6 +173,11 @@ class RouteMapViewController: UIViewController {
                          stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         
         removePreviewInstructions()
+    }
+    
+    @objc func removeTimer() {
+        updateETATimer?.invalidate()
+        updateETATimer = nil
     }
     
     func removePreviewInstructions() {
@@ -293,6 +300,7 @@ class RouteMapViewController: UIViewController {
     
     @objc func applicationWillEnterForeground(notification: NSNotification) {
         mapView.updateCourseTracking(location: routeController.location, animated: false)
+        resetETATimer()
     }
     
     @objc func willReroute(notification: NSNotification) {
