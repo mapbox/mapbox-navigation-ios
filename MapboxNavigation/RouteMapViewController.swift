@@ -306,9 +306,11 @@ class RouteMapViewController: UIViewController {
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
-            })
+            if !reportButton.isHidden {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
+                    self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
+                })
+            }
         }
         
         if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
