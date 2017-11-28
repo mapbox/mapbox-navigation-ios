@@ -1,3 +1,9 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Stäng";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
+
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Hittade snabbare rutt";
 
@@ -5,27 +11,24 @@
 "FEEDBACK_BAD_ROUTE" = "Dålig\nRutt";
 
 /* Feedback type for Confusing Instruction */
-"FEEDBACK_CONFUSING_INSTRUCTION" = "Förvirrande\nRutt";
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Förvirrande\nInstruktion";
 
-/* Feedback type for inaccurate GPS */
-"FEEDBACK_GPS_INACCURATE" = "Felaktig\nPosition";
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Övrigt\nKartproblem";
 
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Tung\nTrafik";
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Avfart\nSaknas";
 
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Fel\nInstruktioner";
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Väg\nSaknas";
 
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Dålig\nTiming";
-
-/* Feedback type for turn not allowed */
-"FEEDBACK_NOT_ALLOWED" = "Inte\nTillåtet";
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Ej\nTillåtet";
 
 /* Feedback type for Report Traffic */
 "FEEDBACK_REPORT_TRAFFIC" = "Rapportera\nTrafik";
 
-/* Feedback type for Closure */
+/* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Väg\nAvstängd";
 
 /* Format for displaying the first two major ways */
@@ -39,6 +42,9 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Återuppta";
+
+/* Then */
+"THEN" = "Sedan: ";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulera navigation";
