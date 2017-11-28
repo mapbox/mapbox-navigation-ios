@@ -761,9 +761,7 @@ extension RouteController: CLLocationManagerDelegate {
         if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius {
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-            }
-            
-            if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
+            } else if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
                 incrementRouteProgress()
             }
         }
