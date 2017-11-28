@@ -1,6 +1,9 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Đóng";
 
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Không thể đọc lời chỉ dẫn.";
+
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Đã Tìm thấy Đường Nhanh Hơn";
 
@@ -33,9 +36,6 @@
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
-
-/* Recording audio for feedback */
-"RECORDING_AUDIO" = "Đang Ghi âm";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Đang tính tuyến mới…";
