@@ -353,6 +353,7 @@ open class RouteStepProgress: NSObject {
     @objc public init(step: RouteStep, spokenInstructionIndex: Int = 0) {
         self.step = step
         self.intersectionIndex = 0
+        self.visualInstructionIndex = 0
         self.spokenInstructionIndex = spokenInstructionIndex
     }
     
@@ -388,9 +389,15 @@ open class RouteStepProgress: NSObject {
     public var userDistanceToUpcomingIntersection: CLLocationDistance?
     
     /**
-     Index into `step.instructionsSpokenAlongStep` representing the current instruction.
+     Index into `step.instructionsSpokenAlongStep` representing the current spoken instruction.
      */
     @objc public var spokenInstructionIndex:Int = 0
+    
+    
+    /**
+     Index into `step.instructionsSpokenAlongStep` representing the current visual instruction.
+     */
+    @objc public var visualInstructionIndex:Int = 0
     
     /**
      Current Instruction for the user's progress along a step.

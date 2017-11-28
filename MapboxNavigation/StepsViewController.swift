@@ -204,20 +204,20 @@ extension StepsViewController: UITableViewDataSource {
         if usePreviousLeg {
             let leg = routeProgress.route.legs[indexPath.section-1]
             let stepBefore = leg.steps[leg.steps.count-1]
-            if let instructions = stepBefore.instructionsDisplayedAlongStep?.first {
+            if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
                 cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
             }
             cell.instructionsView.distance = stepBefore.distance
         } else {
             let leg = routeProgress.route.legs[indexPath.section]
             if let stepBefore = leg.steps.stepBefore(step) {
-                if let instructions = stepBefore.instructionsDisplayedAlongStep?.first {
+                if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
                     cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
                 }
                 cell.instructionsView.distance = stepBefore.distance
             } else {
                 cell.instructionsView.distance = nil
-                if let instructions = step.instructionsDisplayedAlongStep?.first {
+                if let instructions = step.instructionsDisplayedAlongStep?.last {
                     cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
                 }
             }

@@ -408,9 +408,18 @@ class RouteMapViewController: UIViewController {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
-        guard let instructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.first else { return }
+        guard let visualInstructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep else { return }
         
-        instructionsBannerView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
+        for (visualInstructionIndex, visualInstruction) in visualInstructions.enumerated() {
+            if routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= visualInstruction.distanceAlongStep && visualInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex {
+                
+                instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
+                
+                routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
+                break
+            }
+        }
+        
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
         instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
