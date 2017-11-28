@@ -636,6 +636,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
+        guard step.maneuverType != .arrive else { return }
+        
         let minimumZoomLevel: Float = 14.5
         
         let shaftLength = max(min(30 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 30), 10)
