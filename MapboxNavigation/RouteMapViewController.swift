@@ -120,27 +120,29 @@ class RouteMapViewController: UIViewController {
         
         muteButton.isSelected = NavigationSettings.shared.muted
         mapView.compassView.isHidden = true
+        
+        mapView.tracksUserCourse = true
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
 
         if let camera = pendingCamera {
             mapView.camera = camera
-        } else if let firstCoordinate = route.coordinates?.first {
-            let location = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
+        } else if let location = routeController.location, location.course > 0 {
             mapView.updateCourseTracking(location: location, animated: false)
+        } else if let coordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
+            let secondCoordinate = coordinates[1]
+            let course = firstCoordinate.direction(to: secondCoordinate)
+            let newLocation = CLLocation(coordinate: routeController.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
+            mapView.updateCourseTracking(location: newLocation, animated: false)
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
-        
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        mapView.tracksUserCourse = true
-        
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
