@@ -159,7 +159,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
