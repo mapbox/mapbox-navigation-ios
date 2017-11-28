@@ -85,6 +85,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var isPluggedIn: Bool = false
+    var batteryStateObservation: NSKeyValueObservation?
     var altitude: CLLocationDistance = defaultAltitude
     
     struct FrameIntervalOptions {
@@ -137,11 +138,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
+        batteryStateObservation = UIDevice.current.observe(\.batteryState) { [weak self] (device, changed) in
+            self?.isPluggedIn = device.batteryState == .charging || device.batteryState == .full
+        }
+        
         resumeNotifications()
     }
     
     func resumeNotifications() {
-        UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
         
         let gestures = gestureRecognizers ?? []
@@ -151,7 +155,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func suspendNotifications() {
-        UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
         NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
     }
     
@@ -204,13 +207,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     deinit {
         suspendNotifications()
-    }
-    
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "batteryState" {
-            let batteryState = UIDevice.current.batteryState
-            isPluggedIn = batteryState == .charging || batteryState == .full
-        }
     }
     
     @objc func updateCourseView(_ sender: UIGestureRecognizer) {
