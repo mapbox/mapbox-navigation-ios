@@ -302,6 +302,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     let progressBar = ProgressBar()
     
+    var previousArrivalWaypoint: Waypoint?
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -406,6 +408,11 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
+        
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint && routeProgress.currentLegProgress.leg.destination != previousArrivalWaypoint {
+            delegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
+            previousArrivalWaypoint = routeProgress.currentLegProgress.leg.destination
+        }
     }
     
     @objc func didPassInstructionPoint(notification: NSNotification) {
@@ -418,10 +425,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
             scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
-        }
-        
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            delegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
         }
         
         forceRefreshAppearanceIfNeeded()
