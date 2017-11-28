@@ -230,9 +230,9 @@
                                 </constraints>
                             </view>
                             <containerView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Kx-12-EOg">
-                                <rect key="frame" x="0.0" y="510" width="375" height="260"/>
+                                <rect key="frame" x="0.0" y="510" width="375" height="200"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="260" id="Idg-60-CZm"/>
+                                    <constraint firstAttribute="height" constant="200" id="Idg-60-CZm"/>
                                 </constraints>
                                 <connections>
                                     <segue destination="WD9-Na-hrx" kind="embed" id="h6e-Lg-8fk"/>
@@ -296,6 +296,7 @@
                         <outlet property="bannerShow" destination="gER-Br-LqP" id="zjy-C4-GLc"/>
                         <outlet property="bottomBannerView" destination="sDs-aU-EMQ" id="SOJ-pC-0th"/>
                         <outlet property="endOfRouteContainer" destination="1Kx-12-EOg" id="KJt-8r-bbQ"/>
+                        <outlet property="endOfRouteHeight" destination="Idg-60-CZm" id="a9S-CD-afz"/>
                         <outlet property="endOfRouteHide" destination="TgB-K7-2M6" id="CWj-ub-rPd"/>
                         <outlet property="endOfRouteShow" destination="1kU-o5-DsQ" id="boW-aY-y45"/>
                         <outlet property="instructionsBannerContainerView" destination="p9E-v0-Rt6" id="TMF-0X-Ode"/>
@@ -825,6 +826,7 @@ Label  </string>
                                         </constraints>
                                     </stackView>
                                 </subviews>
+                                <color key="backgroundColor" red="1" green="0.89889865449999995" blue="0.99999775499999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="Izy-1z-tcx" firstAttribute="centerX" secondItem="evE-dd-pMr" secondAttribute="centerX" id="3Ml-0g-4rs"/>
                                     <constraint firstAttribute="bottom" secondItem="Izy-1z-tcx" secondAttribute="bottom" id="HhD-XW-0H5"/>

@@ -6,6 +6,11 @@ fileprivate enum ConstraintSpacing: CGFloat {
     case further = 65.0
 }
 
+fileprivate enum ContainerHeight: CGFloat {
+    case normal = 200.0
+    case feedbackShowing = 260.0
+}
+
 class EndOfRouteViewController: UIViewController {
 
     //MARK: - IBOutlets
@@ -23,6 +28,8 @@ class EndOfRouteViewController: UIViewController {
     lazy var placeholder: String = NSLocalizedString("Add an optional comment here.", comment: "Comment Placeholder Text")
     lazy var endNavigation: String = NSLocalizedString("End Navigation", comment: "End Navigation Button Text")
     
+    var heightConstraint: NSLayoutConstraint!
+//    var resize: ((CGFloat) -> Void)?
     var dismiss: ((Int, String?) -> Void)?
     var comment: String?
     var rating: Int = 0 {
@@ -73,12 +80,20 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func showComments(animated: Bool = true) {
+//        resize?(ContainerHeight.feedbackShowing.rawValue)
+//        view.layoutIfNeeded()
+        
         commentViewContainer.isHidden = false
         showCommentView.isActive = true
         hideCommentView.isActive = false
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
-        
-        let layout = view.layoutIfNeeded
+        heightConstraint.constant = ContainerHeight.feedbackShowing.rawValue
+        view.setNeedsDisplay()
+        let layout = {
+            self.view.superview?.layoutIfNeeded()
+            self.view.layoutIfNeeded()
+        }
+//        let layout = view.layoutIfNeeded
         let completion: (Bool) -> Void = { _ in self.labelContainer.isHidden = true}
         let noAnimate = { layout() ; completion(true) }
         animated ? UIView.animate(withDuration: 0.3, animations: layout, completion: completion) : noAnimate()
@@ -89,9 +104,14 @@ class EndOfRouteViewController: UIViewController {
         showCommentView.isActive = false
         hideCommentView.isActive = true
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
-        
-        let layout = view.layoutIfNeeded
-        let completion: (Bool) -> Void = { _ in self.commentViewContainer.isHidden = true }
+        heightConstraint.constant = ContainerHeight.normal.rawValue
+//        resize?(ContainerHeight.normal.rawValue)
+        self.view.setNeedsLayout()
+        let layout = {self.view.layoutIfNeeded(); self.view.superview?.layoutIfNeeded()}
+//        let layout = view.layoutIfNeeded
+        let completion: (Bool) -> Void = { _ in self.commentViewContainer.isHidden = true
+            self.view.setNeedsLayout()
+        }
         let noAnimation = { layout(); completion(true)}
         animated ? UIView.animate(withDuration: 0.3, animations: layout, completion: completion) : noAnimation()
     }

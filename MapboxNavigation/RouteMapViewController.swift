@@ -28,6 +28,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var endOfRouteContainer: UIView!
     @IBOutlet weak var endOfRouteShow: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteHide: NSLayoutConstraint!
+    @IBOutlet weak var endOfRouteHeight: NSLayoutConstraint!
     @IBOutlet weak var bannerHide: NSLayoutConstraint!
     @IBOutlet weak var bannerShow: NSLayoutConstraint!
     @IBOutlet weak var bannerContainerShow: NSLayoutConstraint!
@@ -536,6 +537,11 @@ class RouteMapViewController: UIViewController {
             self?.routeController.sendCancelEvent(rating: rating, comment: comment)
             self?.dismiss(animated: true, completion: nil)
         }
+        endOfRouteVC.heightConstraint = self.endOfRouteHeight
+//        endOfRouteVC.resize = { [weak self] (height) in
+//            self?.endOfRouteHeight.constant = height
+//            UIView.animate(withDuration: 0.3, animations: self!.endOfRouteContainer.layoutIfNeeded)
+//        }
         endOfRouteViewController = endOfRouteVC
     }
     fileprivate func rating(for stars: Int) -> Int {
