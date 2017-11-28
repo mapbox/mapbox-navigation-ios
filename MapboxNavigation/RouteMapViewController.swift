@@ -110,6 +110,7 @@ class RouteMapViewController: UIViewController {
     
     deinit {
         suspendNotifications()
+        removeTimer()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -151,7 +152,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationWillResignActive, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
     }
     
     func suspendNotifications() {
