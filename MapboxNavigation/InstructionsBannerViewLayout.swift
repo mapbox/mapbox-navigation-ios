@@ -120,13 +120,13 @@ extension BaseInstructionsBannerView {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = {
             let height = ("|" as NSString).size(withAttributes: [.font: self.primaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
+            let availableWidth = self.bounds.width - (8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
         
         secondaryLabel.availableBounds = {
             let height = ("|" as NSString).size(withAttributes: [.font: self.secondaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
+            let availableWidth = self.bounds.width - (8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
     }
