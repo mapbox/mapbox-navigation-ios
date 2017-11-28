@@ -353,7 +353,7 @@ extension ViewController: NavigationViewControllerDelegate {
 }
 
 /**
- To find more pieces of the UI to customize, checkout DayStyle.swift and NightStyle.swift
+ To find more pieces of the UI to customize, checkout DayStyle.swift.
  */
 //MARK: CustomDayStyle
 class CustomDayStyle: DayStyle {
