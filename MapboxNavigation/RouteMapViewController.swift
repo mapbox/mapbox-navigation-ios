@@ -11,6 +11,7 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 
 class RouteMapViewController: UIViewController {
     @IBOutlet weak var mapView: NavigationMapView!
+    @IBOutlet weak var buttonStack: UIStackView!
     @IBOutlet weak var overviewButton: Button!
     @IBOutlet weak var reportButton: Button!
     @IBOutlet weak var rerouteReportButton: ReportButton!
@@ -493,24 +494,29 @@ class RouteMapViewController: UIViewController {
     //MARK: End Of Route
     
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
-        self.view.layoutIfNeeded() //flush layout queue
+        view.layoutIfNeeded() //flush layout queue
         endOfRouteViewController?.destination = route.legs.last?.destination
         
-        self.endOfRouteContainer.isHidden = false
-        self.endOfRouteHide.isActive = false
-        self.endOfRouteShow.isActive = true
-        self.bannerHide.isActive = true
-        self.bannerShow.isActive = false
-        self.bannerContainerShow.isActive = false
+        endOfRouteContainer.isHidden = false
+        endOfRouteHide.isActive = false
+        endOfRouteShow.isActive = true
+        bannerHide.isActive = true
+        bannerShow.isActive = false
+        bannerContainerShow.isActive = false
+       
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()
         
-        let layout = view.layoutIfNeeded
-        let noAnimation = { layout(); completion?(true) }
+        let animate = {
+            self.view.layoutIfNeeded()
+            self.buttonStack.alpha = 0.0
+        }
+        
+        let noAnimation = { animate(); completion?(true) }
 
         guard duration > 0.0 else { return noAnimation() }
-        UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: layout, completion: completion)
+        UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
     }
     
     func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
@@ -523,12 +529,16 @@ class RouteMapViewController: UIViewController {
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()
 
-        let layout = view.layoutIfNeeded
+        let animate = {
+            self.view.layoutIfNeeded()
+            self.buttonStack.alpha = 1.0
+        }
+        
         let complete: (Bool) -> Void = { self.endOfRouteContainer.isHidden = true; completion?($0)}
-        let noAnimation = { layout(); complete(true) }
+        let noAnimation = { animate() ; complete(true) }
 
         guard duration > 0.0 else { return noAnimation() }
-       UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: layout, completion: complete)
+       UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: complete)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

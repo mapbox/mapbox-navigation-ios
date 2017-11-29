@@ -50,6 +50,7 @@ class EndOfRouteViewController: UIViewController {
         stars.didChangeRating = { (new) in self.rating = new }
         setPlaceholderText()
         styleCommentView()
+        commentViewContainer.alpha = 0.0 //setting initial hidden state
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,16 +80,20 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func showComments(animated: Bool = true) {
-        commentViewContainer.isHidden = false
         showCommentView.isActive = true
         hideCommentView.isActive = false
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
         preferredContentSize.height = height(for: .commentShowing)
 
-        let layout = view.layoutIfNeeded
+        let animate = {
+            self.view.layoutIfNeeded()
+            self.commentViewContainer.alpha = 1.0
+            self.labelContainer.alpha = 0.0
+        }
+        
         let completion: (Bool) -> Void = { _ in self.labelContainer.isHidden = true}
-        let noAnimate = { layout() ; completion(true) }
-        animated ? UIView.animate(withDuration: 0.3, animations: layout, completion: completion) : noAnimate()
+        let noAnimate = { animate() ; completion(true) }
+        animated ? UIView.animate(withDuration: 0.3, animations: animate, completion: nil) : noAnimate()
     }
     
     private func hideComments(animated: Bool = true) {
@@ -98,10 +103,15 @@ class EndOfRouteViewController: UIViewController {
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
         preferredContentSize.height = height(for: .normal)
         
-        let layout = view.layoutIfNeeded
+        let animate = {
+            self.view.layoutIfNeeded()
+            self.commentViewContainer.alpha = 0.0
+            self.labelContainer.alpha = 1.0
+        }
+        
         let completion: (Bool) -> Void = { _ in self.commentViewContainer.isHidden = true }
-        let noAnimation = { layout(); completion(true)}
-        animated ? UIView.animate(withDuration: 0.3, animations: layout, completion: completion) : noAnimation()
+        let noAnimation = { animate(); completion(true)}
+        animated ? UIView.animate(withDuration: 0.3, animations: animate, completion: nil) : noAnimation()
     }
     
     private func height(for height: ContainerHeight) -> CGFloat {

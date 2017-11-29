@@ -295,6 +295,7 @@
                         <outlet property="bannerHide" destination="94e-lw-9ic" id="LPp-8K-A5y"/>
                         <outlet property="bannerShow" destination="gER-Br-LqP" id="zjy-C4-GLc"/>
                         <outlet property="bottomBannerView" destination="sDs-aU-EMQ" id="SOJ-pC-0th"/>
+                        <outlet property="buttonStack" destination="8P3-NB-IRq" id="dgG-mb-DjI"/>
                         <outlet property="endOfRouteContainer" destination="1Kx-12-EOg" id="KJt-8r-bbQ"/>
                         <outlet property="endOfRouteHeight" destination="Idg-60-CZm" id="zTk-0Q-RAz"/>
                         <outlet property="endOfRouteHide" destination="TgB-K7-2M6" id="CWj-ub-rPd"/>
@@ -834,7 +835,7 @@ Label  </string>
                                     <constraint firstItem="W5U-cV-cDO" firstAttribute="top" secondItem="evE-dd-pMr" secondAttribute="top" id="lo0-lR-l4J"/>
                                 </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TEs-GQ-xWN" userLabel="Comment Field Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TEs-GQ-xWN" userLabel="Comment Field Container">
                                 <rect key="frame" x="0.0" y="210.5" width="375" height="128"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ioj-wd-4G8">
