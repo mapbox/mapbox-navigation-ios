@@ -6,6 +6,11 @@ fileprivate enum ConstraintSpacing: CGFloat {
     case further = 65.0
 }
 
+fileprivate enum ContainerHeight: CGFloat {
+    case normal = 200
+    case commentShowing = 260
+}
+
 class EndOfRouteViewController: UIViewController {
 
     //MARK: - IBOutlets
@@ -50,6 +55,7 @@ class EndOfRouteViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         view.roundCorners([.topLeft, .topRight])
+        preferredContentSize.height = height(for: .normal)
     }
 
     //MARK: - IBActions
@@ -77,7 +83,8 @@ class EndOfRouteViewController: UIViewController {
         showCommentView.isActive = true
         hideCommentView.isActive = false
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
-        
+        preferredContentSize.height = height(for: .commentShowing)
+
         let layout = view.layoutIfNeeded
         let completion: (Bool) -> Void = { _ in self.labelContainer.isHidden = true}
         let noAnimate = { layout() ; completion(true) }
@@ -89,6 +96,7 @@ class EndOfRouteViewController: UIViewController {
         showCommentView.isActive = false
         hideCommentView.isActive = true
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
+        preferredContentSize.height = height(for: .normal)
         
         let layout = view.layoutIfNeeded
         let completion: (Bool) -> Void = { _ in self.commentViewContainer.isHidden = true }
@@ -96,6 +104,12 @@ class EndOfRouteViewController: UIViewController {
         animated ? UIView.animate(withDuration: 0.3, animations: layout, completion: completion) : noAnimation()
     }
     
+    private func height(for height: ContainerHeight) -> CGFloat {
+        guard #available(iOS 11.0, *) else { return height.rawValue }
+        let window = UIApplication.shared.keyWindow
+        let bottomMargin = window!.safeAreaInsets.bottom
+        return height.rawValue + bottomMargin
+    }
     
     private func updateInterface() {
         primary.text = string(for: destination)
@@ -106,7 +120,6 @@ class EndOfRouteViewController: UIViewController {
         stars.rating = 0
     }
     
-    //FIXME: Temporary Placeholder
     private func string(for destination: Waypoint?) -> String {
         guard let destination = destination else { return "Unknown" }
         guard destination.name?.isEmpty ?? false else { return destination.name! }

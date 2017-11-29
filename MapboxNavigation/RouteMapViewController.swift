@@ -28,6 +28,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var endOfRouteContainer: UIView!
     @IBOutlet weak var endOfRouteShow: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteHide: NSLayoutConstraint!
+    @IBOutlet weak var endOfRouteHeight: NSLayoutConstraint!
     @IBOutlet weak var bannerHide: NSLayoutConstraint!
     @IBOutlet weak var bannerShow: NSLayoutConstraint!
     @IBOutlet weak var bannerContainerShow: NSLayoutConstraint!
@@ -454,7 +455,9 @@ class RouteMapViewController: UIViewController {
     }
     
     var contentInsets: UIEdgeInsets {
-        let containerHeight = self.view.bounds.height - endOfRouteContainer.frame.origin.y
+        var margin: CGFloat = 0.0
+        if #available(iOS 11.0, *) { margin = view.safeAreaInsets.bottom }
+        let containerHeight = endOfRouteContainer.frame.height - margin
         let bottom = self.endOfRouteShow.isActive ? containerHeight : bottomBannerView.bounds.height
         return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottom, right: 0)
     }
@@ -487,7 +490,7 @@ class RouteMapViewController: UIViewController {
             self.laneViewsContainerView.isHidden = true
         }, completion: nil)
     }
-    //MARK: - End Of Route
+    //MARK: End Of Route
     
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         self.view.layoutIfNeeded() //flush layout queue
@@ -545,7 +548,17 @@ class RouteMapViewController: UIViewController {
     }
 }
 
-// - MARK: NavigationMapViewCourseTrackingDelegate
+//MARK: - UIContentContainer
+
+extension RouteMapViewController {
+    override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        endOfRouteHeight.constant = container.preferredContentSize.height
+        
+        UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
+    }
+}
+
+// MARK: - NavigationMapViewCourseTrackingDelegate
 
 extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
