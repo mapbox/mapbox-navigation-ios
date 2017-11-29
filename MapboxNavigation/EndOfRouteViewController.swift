@@ -25,7 +25,7 @@ class EndOfRouteViewController: UIViewController {
     @IBOutlet weak var ratingCommentsSpacing: NSLayoutConstraint!
     
     //MARK: - Properties
-    lazy var placeholder: String = NSLocalizedString("Add an optional comment here.", comment: "Comment Placeholder Text")
+    lazy var placeholder: String = NSLocalizedString("How can we improve?", comment: "Comment Placeholder Text")
     lazy var endNavigation: String = NSLocalizedString("End Navigation", comment: "End Navigation Button Text")
     
     var dismiss: ((Int, String?) -> Void)?
