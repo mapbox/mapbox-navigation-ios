@@ -503,7 +503,7 @@ class RouteMapViewController: UIViewController {
         bannerHide.isActive = true
         bannerShow.isActive = false
         bannerContainerShow.isActive = false
-       
+        mapView.tracksUserCourse = false
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()
@@ -521,7 +521,6 @@ class RouteMapViewController: UIViewController {
     
     func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         view.layoutIfNeeded() //flush layout queue
-        
         endOfRouteHide.isActive = true
         endOfRouteShow.isActive = false
         view.clipsToBounds = true
@@ -627,6 +626,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+        guard !endOfRouteShow.isActive else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
         return delegate?.mapViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
