@@ -410,18 +410,9 @@ class RouteMapViewController: UIViewController {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
-        guard let visualInstructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep else { return }
+        guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
         
-        for (visualInstructionIndex, visualInstruction) in visualInstructions.enumerated() {
-            if routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= visualInstruction.distanceAlongStep && visualInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex {
-                
-                instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
-                
-                routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
-                break
-            }
-        }
-        
+        instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
         instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
@@ -443,7 +434,7 @@ class RouteMapViewController: UIViewController {
                 return
         }
         
-        guard let instructions = upcomingStep.instructionsDisplayedAlongStep?.first else {
+        guard let instructions = upcomingStep.instructionsDisplayedAlongStep?.last else {
             hideNextBanner()
             return
         }
@@ -754,7 +745,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
         removePreviewInstructions()
         
-        guard let instructions = step.instructionsDisplayedAlongStep?.first else { return }
+        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
