@@ -145,6 +145,7 @@ class RouteMapViewController: UIViewController {
         
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
+        remvoeExits()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -214,6 +215,16 @@ class RouteMapViewController: UIViewController {
     @IBAction func feedback(_ sender: Any) {
         showFeedback()
         delegate?.mapViewControllerDidOpenFeedback(self)
+    }
+    
+    func remvoeExits() {
+        guard let style = mapView.style else { return }
+        
+        for layer in style.layers {
+            if let symbolLayer = layer as? MGLSymbolStyleLayer, symbolLayer.sourceLayerIdentifier == "motorway_junction" {
+                style.removeLayer(layer)
+            }
+        }
     }
     
     func showFeedback(source: FeedbackSource = .user) {
