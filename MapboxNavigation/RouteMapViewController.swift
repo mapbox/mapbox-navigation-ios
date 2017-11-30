@@ -654,7 +654,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func resetETATimer() {
-        updateETATimer?.invalidate()
+        removeTimer()
         updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
 }
