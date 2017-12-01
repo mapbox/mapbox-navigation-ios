@@ -363,6 +363,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         super.viewDidLoad()
         resumeNotifications()
         progressBar.dock(on: view)
+        view.clipsToBounds = true
     }
     
     public override func viewWillAppear(_ animated: Bool) {
