@@ -991,7 +991,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             symbol.textHaloWidth = MGLStyleValue(rawValue: 1)
             symbol.textHaloColor = MGLStyleValue(rawValue: .white)
             symbol.textOpacity = MGLStyleValue(rawValue: 0.75)
-            symbol.textAnchor = MGLStyleValue(rawValue: NSValue(mglTextAnchor: .left))
+            symbol.textAnchor = MGLStyleValue(rawValue: NSValue(mglTextAnchor: .bottomLeft))
+            symbol.textJustification = MGLStyleValue(rawValue: NSValue(mglTextJustification: .left))
             
             let circle = MGLCircleStyleLayer(identifier: instructionCircle, source: sourceShape)
             circle.circleRadius = MGLStyleValue(rawValue: 5)

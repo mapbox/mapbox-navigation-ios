@@ -304,6 +304,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     var previousArrivalWaypoint: Waypoint?
     
+    var previousArrivalWaypoint: Waypoint?
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
