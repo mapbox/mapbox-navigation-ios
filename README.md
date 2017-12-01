@@ -23,7 +23,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Requirements:
 * \>= Xcode 9
-* Swift 3.2 or 4
+* Swift 4. If you'd like to use Swift 3.2, the last supported release is v0.10.1.
 
 ## Installation
 
@@ -31,7 +31,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Specify the following dependency in your Podfile:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.10'
+   pod 'MapboxNavigation', '~> 0.11'
    ```
 1. Run `pod install` and open the resulting Xcode workspace.
 
@@ -41,7 +41,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.10
+   github "mapbox/mapbox-navigation-ios" ~> 0.11
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
@@ -53,11 +53,11 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 ### Running the example project
 
 1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
-1. Run `carthage update --platform ios` to build just the iOS dependencies
-1. Open `MapboxNavigation.xcodeproj`
-1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
-1. Open the `Info.plist` for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`
-1. Build and run the `Example-Swift` or `Example-Objective-C` target
+1. Run `carthage update --platform ios` to build just the iOS dependencies.
+1. Open `MapboxNavigation.xcodeproj`.
+1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
+1. Open the Info.plist for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`. (If you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
+1. Build and run the `Example-Swift` or `Example-Objective-C` target.
 
 ## Usage
 

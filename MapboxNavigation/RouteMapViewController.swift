@@ -110,6 +110,7 @@ class RouteMapViewController: UIViewController {
         wayNameView.applyDefaultCornerRadiusShadow()
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
+        nextBannerView.isHidden = true
         isInOverviewMode = false
         instructionsBannerView.delegate = self
         bottomBannerView.delegate = self
@@ -118,6 +119,7 @@ class RouteMapViewController: UIViewController {
     
     deinit {
         suspendNotifications()
+        removeTimer()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -127,44 +129,49 @@ class RouteMapViewController: UIViewController {
         
         muteButton.isSelected = NavigationSettings.shared.muted
         mapView.compassView.isHidden = true
+        
+        mapView.tracksUserCourse = true
+        mapView.enableFrameByFrameCourseViewTracking(for: 3)
 
         if let camera = pendingCamera {
             mapView.camera = camera
-        } else if let firstCoordinate = route.coordinates?.first {
-            let location = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
+        } else if let location = routeController.location, location.course > 0 {
             mapView.updateCourseTracking(location: location, animated: false)
+        } else if let coordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
+            let secondCoordinate = coordinates[1]
+            let course = firstCoordinate.direction(to: secondCoordinate)
+            let newLocation = CLLocation(coordinate: routeController.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
+            mapView.updateCourseTracking(location: newLocation, animated: false)
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
-        
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        mapView.tracksUserCourse = true
-        
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        updateETATimer?.invalidate()
-        updateETATimer = nil
+        removeTimer()
     }
-    
+
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
         subscribeToKeyboardNotifications()
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
 
@@ -179,6 +186,11 @@ class RouteMapViewController: UIViewController {
                          stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         
         removePreviewInstructions()
+    }
+    
+    @objc func removeTimer() {
+        updateETATimer?.invalidate()
+        updateETATimer = nil
     }
     
     func removePreviewInstructions() {
@@ -299,19 +311,27 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    func willReroute(notification: NSNotification) {
+    @objc func applicationWillEnterForeground(notification: NSNotification) {
+        mapView.updateCourseTracking(location: routeController.location, animated: false)
+        resetETATimer()
+    }
+    
+    @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
+        hideLaneViews()
         statusView.show(title, showSpinner: true)
         statusView.hide(delay: 3, animated: true)
     }
     
-    func didReroute(notification: NSNotification) {
+    @objc func didReroute(notification: NSNotification) {
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
-            })
+            if !reportButton.isHidden {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
+                    self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
+                })
+            }
         }
         
         if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
@@ -716,12 +736,12 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         }
     }
     
-    func updateETA() {
+    @objc func updateETA() {
         bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
     }
     
     func resetETATimer() {
-        updateETATimer?.invalidate()
+        removeTimer()
         updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
 }

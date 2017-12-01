@@ -9,31 +9,31 @@ import Turf
 @objc(MBManeuverView)
 public class ManeuverView: UIView {
     
-    public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
+    @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
+    @objc public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    public var step: RouteStep? {
+    @objc public var step: RouteStep? {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    public var isStart = false {
+    @objc public var isStart = false {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    public var isEnd = false {
+    @objc public var isEnd = false {
         didSet {
             setNeedsDisplay()
         }

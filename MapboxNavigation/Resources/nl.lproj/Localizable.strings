@@ -1,3 +1,9 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Sluit";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
+
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Snellere route gevonden";
 
@@ -5,28 +11,25 @@
 "FEEDBACK_BAD_ROUTE" = "Verkeerde\nRoute";
 
 /* Feedback type for Confusing Instruction */
-"FEEDBACK_CONFUSING_INSTRUCTION" = "Verwarrend\nInstructie";
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Inaccuraat";
 
-/* Feedback type for inaccurate GPS */
-"FEEDBACK_GPS_INACCURATE" = "GPS\nInaccuraat";
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Ander";
 
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Druk\nVerkeer";
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Ontbrekende\nafslag";
 
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Instructie\nProbleem";
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Ontbrekende\nstraat";
 
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Instructie\nMoment";
-
-/* Feedback type for turn not allowed */
-"FEEDBACK_NOT_ALLOWED" = "Geweigerd";
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Niet\ntoegestaan";
 
 /* Feedback type for Report Traffic */
-"FEEDBACK_REPORT_TRAFFIC" = "Rapport\nVerkeer";
+"FEEDBACK_REPORT_TRAFFIC" = "Rapporteer\nverkeer";
 
-/* Feedback type for Closure */
-"FEEDBACK_ROAD_CLOSURE" = "Straat\nGesloten";
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "Straat\nafgesloten";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ en %2$@";
@@ -39,6 +42,9 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Doorgaan";
+
+/* Then */
+"THEN" = "Hierna: ";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Navigatie Simuleren";

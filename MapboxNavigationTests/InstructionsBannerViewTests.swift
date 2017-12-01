@@ -93,6 +93,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         let instructionsBannerView = instructionsView()
         let nextBannerViewFrame = CGRect(x: 0, y: instructionsBannerView.frame.maxY, width: instructionsBannerView.bounds.width, height: 44)
         let nextBannerView = NextBannerView(frame: nextBannerViewFrame)
+        nextBannerView.translatesAutoresizingMaskIntoConstraints = true
         view.addSubview(instructionsBannerView)
         view.addSubview(nextBannerView)
         view.frame = CGRect(origin: .zero, size: CGSize(width: nextBannerViewFrame.width, height: nextBannerViewFrame.maxY))
@@ -131,7 +132,7 @@ extension InstructionsBannerViewTests {
         
         view.distanceLabel.valueFont = UIFont.systemFont(ofSize: 24)
         view.distanceLabel.unitFont = UIFont.systemFont(ofSize: 14)
-        view.primaryLabel.font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)
-        view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium)
+        view.primaryLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
+        view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: .medium)
     }
 }

@@ -15,43 +15,43 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
      */
-    public var isEnabled: Bool = true
+    @objc public var isEnabled: Bool = true
     
     
     /**
      Volume of announcements.
      */
-    public var volume: Float = 1.0
+    @objc public var volume: Float = 1.0
     
     
     /**
      SSML option which controls at which speed Polly instructions are read.
      */
-    public var instructionVoiceSpeedRate = 1.08
+    @objc public var instructionVoiceSpeedRate = 1.08
     
     
     /**
      SSML option that specifies the voice loudness.
      */
-    public var instructionVoiceVolume = "default"
+    @objc public var instructionVoiceVolume = "default"
     
     
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
-    public var playRerouteSound = true
+    @objc public var playRerouteSound = true
 
     
     /**
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
-    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileTypeMPEGLayer3)
+    @objc public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
     
     
     /**
      Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
     */
-    public var bufferBetweenAnnouncements: TimeInterval = 3
+    @objc public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
      Delegate used for getting metadata information about a particular spoken instruction.
@@ -92,14 +92,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
     }
     
-    func didReroute(notification: NSNotification) {
+    @objc func didReroute(notification: NSNotification) {
         // Play reroute sound when a faster route is found
         if notification.userInfo?[RouteControllerDidFindFasterRouteKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
     
-    func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
+    @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)
         
         guard playRerouteSound && !NavigationSettings.shared.muted else {
@@ -110,7 +110,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         rerouteSoundPlayer.play()
     }
     
-    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+    @objc public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         do {
             try unDuckAudio()
         } catch {
@@ -118,7 +118,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         }
     }
     
-    public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+    @objc public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         do {
             try unDuckAudio()
         } catch {
@@ -142,7 +142,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
     }
     
-    open func didPassSpokenInstructionPoint(notification: NSNotification) {
+    @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
@@ -182,16 +182,27 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
 }
 
-@objc public protocol VoiceControllerDelegate {
+/**
+ The `VoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
+ */
+@objc(MBVoiceControllerDelegate)
+public protocol VoiceControllerDelegate {
     
     /**
-     Called when there is an error speaking a voice instruction.
+     Called when the voice controller failed to speak an instruction.
+     
+     - parameter voiceController: The voice controller that experienced the failure.
+     - parameter error: An error explaining the failure and its cause. The `MBSpokenInstructionErrorCodeKey` key of the error’s user info dictionary is a `SpokenInstructionErrorCode` indicating the cause of the failure.
      */
     @objc(voiceController:spokenInstrucionsDidFailWithError:)
     optional func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error)
     
     /**
-     Called when an instruction interrupts another instruction.
+     Called when one spoken instruction interrupts another instruction currently being spoken.
+     
+     - parameter voiceController: The voice controller that experienced the interruption.
+     - parameter interruptedInstruction: The spoken instruction currently in progress that has been interrupted.
+     - parameter interruptingInstruction: The spoken instruction that is interrupting the current instruction.
      */
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
     optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)

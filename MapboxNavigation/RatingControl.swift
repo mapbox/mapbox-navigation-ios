@@ -22,16 +22,16 @@ class RatingControl: UIStackView {
         }
     }
     
-    dynamic public var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
-    dynamic public var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1)
+    @objc dynamic public var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
+    @objc dynamic public var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1)
     
-    dynamic public var starSize: CGSize = defaultSize {
+    @objc dynamic public var starSize: CGSize = defaultSize {
         didSet {
             configureStars()
         }
     }
     
-    dynamic public var starCount: Int = 5 {
+    @objc dynamic public var starCount: Int = 5 {
         didSet {
             configureStars()
         }

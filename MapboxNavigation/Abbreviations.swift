@@ -65,6 +65,6 @@ extension String {
     }
     
     func fittedSize(with size: CGSize, font: UIFont) -> CGSize {
-        return self.boundingRect(with: size, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [NSFontAttributeName: font], context: nil).size
+        return self.boundingRect(with: size, options: [.usesLineFragmentOrigin, .usesFontLeading], attributes: [.font: font], context: nil).size
     }
 }

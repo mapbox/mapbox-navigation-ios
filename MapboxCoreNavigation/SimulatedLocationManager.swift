@@ -36,7 +36,7 @@ public class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var locations: [SimulatedLocation]!
     fileprivate var routeLine = [CLLocationCoordinate2D]()
     
-    override public var location: CLLocation? {
+    @objc override public var location: CLLocation? {
         get {
             return currentLocation
         }
@@ -56,7 +56,7 @@ public class SimulatedLocationManager: NavigationLocationManager {
      - parameter route: The initial route.
      - returns: A `SimulatedLocationManager`
      */
-    public init(route: Route) {
+    @objc public init(route: Route) {
         super.init()
         self.route = route
         reset()
