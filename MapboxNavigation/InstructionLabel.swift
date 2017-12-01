@@ -37,10 +37,12 @@ open class InstructionLabel: StylableLabel {
                     if let text = component.text {
                         string.append(NSAttributedString(string: joinChar + text, attributes: attributes))
                     }
-                    UIImage.shieldImage(imageURL, height: shieldHeight, completion: { [unowned self] (image) in
-                        guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }
-                        self.constructInstructions()
-                    })
+                    DispatchQueue.main.async {
+                        UIImage.shieldImage(imageURL, height: self.shieldHeight, completion: { [unowned self] (image) in
+                            guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }
+                            self.constructInstructions()
+                        })
+                    }
                 }
             } else if let text = component.text {
                 string.append(NSAttributedString(string: (joinChar+text).abbreviated(toFit: availableBounds(), font: font), attributes: attributes))
