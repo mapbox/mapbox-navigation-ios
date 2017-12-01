@@ -40,8 +40,13 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
-        view.set(Instruction([Instruction.Component("US-45 / Chicago")]),
-                                              secondaryInstruction: nil)
+        let instructions = [
+            VisualInstructionComponent(text: "US-45", imageURL: nil),
+            VisualInstructionComponent(text: "/", imageURL: nil),
+            VisualInstructionComponent(text: "Chicago", imageURL: nil)
+        ]
+        
+        view.set(instructions, secondaryInstruction: nil)
         
         verifyView(view, size: view.bounds.size)
     }
@@ -49,40 +54,55 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     func testMultilinePrimary() {
         let view = instructionsView()
         styleInstructionsView(view)
-        
+
         view.maneuverView.isStart = true
         view.distance = 482
-        
-        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                                                           Instruction.Component("US-45 / Chicago / US-45 / Chicago")]),
-                                              secondaryInstruction: nil)
-        
+
+        let instructions = [
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "South", imageURL: nil),
+            VisualInstructionComponent(text: "US-45 / Chicago / US-45 / Chicago", imageURL: nil)
+        ]
+
+        view.set(instructions, secondaryInstruction: nil)
+    
         verifyView(view, size: view.bounds.size)
     }
     
     func testSinglelinePrimaryAndSecondary() {
         let view = instructionsView()
         styleInstructionsView(view)
-        
+
         view.maneuverView.isStart = true
         view.distance = 482
         
-        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                                                           Instruction.Component("South")]),
-                                              secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
+        let primary = [
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "/", imageURL: nil),
+            VisualInstructionComponent(text: "South", imageURL: nil)
+        ]
+        let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
         
+        view.set(primary, secondaryInstruction: secondary)
+
         verifyView(view, size: view.bounds.size)
     }
     
     func testPrimaryShieldAndSecondary() {
         let view = instructionsView()
         styleInstructionsView(view)
-        
+
         view.maneuverView.isStart = true
         view.distance = 482
         
-        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280")]),
-                                              secondaryInstruction: Instruction([Instruction.Component("Mountain View Test")]))
+        let primary = [
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "/", imageURL: nil),
+            VisualInstructionComponent(text: "South", imageURL: nil)
+        ]
+        let secondary = [VisualInstructionComponent(text: "Mountain View Test", imageURL: nil)]
+
+        view.set(primary, secondaryInstruction: secondary)
         
         verifyView(view, size: view.bounds.size)
     }
@@ -97,18 +117,30 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.addSubview(instructionsBannerView)
         view.addSubview(nextBannerView)
         view.frame = CGRect(origin: .zero, size: CGSize(width: nextBannerViewFrame.width, height: nextBannerViewFrame.maxY))
-        
+
         instructionsBannerView.maneuverView.isStart = true
         instructionsBannerView.distance = 482
         
-        instructionsBannerView.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                              Instruction.Component("South")]),
-                 secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
+        let primary = [
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "/", imageURL: nil),
+            VisualInstructionComponent(text: "South", imageURL: nil)
+        ]
+        let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
         
-        nextBannerView.instructionLabel.instruction = Instruction([Instruction.Component("I 280 / South", roadCode: "I 280", prefix: "Then: ")])
+        instructionsBannerView.set(primary, secondaryInstruction: secondary)
+
+        
+        let primaryThen = [
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "/", imageURL: nil),
+            VisualInstructionComponent(text: "South", imageURL: nil)
+        ]
+        
+        nextBannerView.instructionLabel.instruction = primaryThen
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
-        
+
         verifyView(view, size: view.bounds.size)
     }
 }
