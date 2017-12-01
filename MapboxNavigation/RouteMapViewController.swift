@@ -138,9 +138,7 @@ class RouteMapViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
         annotatesSpokenInstructions = delegate?.mapViewControllerShouldAnnotateSpokenInstructions(self) ?? false
-
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
     }
