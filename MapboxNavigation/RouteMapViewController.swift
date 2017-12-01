@@ -523,7 +523,7 @@ class RouteMapViewController: UIViewController {
         bannerHide.isActive = true
         bannerShow.isActive = false
         bannerContainerShow.isActive = false
-        mapView.tracksUserCourse = false
+       
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()

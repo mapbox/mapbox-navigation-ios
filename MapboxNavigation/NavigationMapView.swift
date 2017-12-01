@@ -301,15 +301,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
             return
         }
+        
+        if tracksUserCourse {
+            let point = userAnchorPoint
+            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
+            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
+            let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
+            let duration: TimeInterval = animated ? 1 : 0
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+        }
+        
         let duration: TimeInterval = animated ? 1 : 0
-        let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
-        let point = self.userAnchorPoint
-        let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
-        let pitch: CGFloat = tracksUserCourse ? 45.0 : 0.0
-        
-        let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: pitch, heading: location.course)
-        setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
-        
         UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
             self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
         }, completion: nil)
