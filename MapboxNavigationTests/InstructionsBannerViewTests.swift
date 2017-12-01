@@ -61,7 +61,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         let instructions = [
             VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
             VisualInstructionComponent(text: "South", imageURL: nil),
-            VisualInstructionComponent(text: "US-45 / Chicago / US-45 / Chicago", imageURL: nil)
+            VisualInstructionComponent(text: "Chicago / US-45 / Chicago", imageURL: nil)
         ]
 
         view.set(instructions, secondaryInstruction: nil)

@@ -40,7 +40,7 @@ extension UIImage {
             })
         } else {
             UIImage.shieldURLCache.setObject(url as NSURL, forKey: shieldKey as NSString)
-            
+                        
             SDWebImageDownloader.shared().downloadImage(with: url, options: [], progress: nil, completed: { (image, data, error, successful) in
                 guard let imageData = data else { return }
                 guard let downscaledImage = UIImage(data: imageData, scale: scale) else {
