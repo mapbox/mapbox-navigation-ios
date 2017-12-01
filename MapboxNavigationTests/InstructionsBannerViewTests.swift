@@ -78,7 +78,6 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         
         let primary = [
             VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
-            VisualInstructionComponent(text: "/", imageURL: nil),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
@@ -97,7 +96,6 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         
         let primary = [
             VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
-            VisualInstructionComponent(text: "/", imageURL: nil),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "Mountain View Test", imageURL: nil)]
@@ -123,7 +121,6 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         
         let primary = [
             VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
-            VisualInstructionComponent(text: "/", imageURL: nil),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
@@ -133,7 +130,6 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         
         let primaryThen = [
             VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
-            VisualInstructionComponent(text: "/", imageURL: nil),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         
