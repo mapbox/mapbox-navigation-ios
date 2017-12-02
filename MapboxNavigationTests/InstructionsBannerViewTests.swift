@@ -59,7 +59,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
 
         let instructions = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
             VisualInstructionComponent(text: "South", imageURL: nil),
             VisualInstructionComponent(text: "Chicago / US-45 / Chicago", imageURL: nil)
         ]
@@ -77,7 +77,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
@@ -95,7 +95,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "Mountain View Test", imageURL: nil)]
@@ -120,7 +120,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
         
         let primary = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
@@ -129,7 +129,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
 
         
         let primaryThen = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@2x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         
@@ -145,10 +145,7 @@ extension InstructionsBannerViewTests {
     
     func verifyView(_ view: UIView, size: CGSize) {
         view.frame.size = size
-        // Allow the UI to download images
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
-            self.FBSnapshotVerifyView(view)
-        }
+        FBSnapshotVerifyView(view)
     }
     
     // UIAppearance proxy do not work in unit test environment so we have to style manually
