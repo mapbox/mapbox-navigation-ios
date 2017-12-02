@@ -136,7 +136,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         nextBannerView.instructionLabel.instruction = primaryThen
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
-
+        
         verifyView(view, size: view.bounds.size)
     }
 }
@@ -145,7 +145,10 @@ extension InstructionsBannerViewTests {
     
     func verifyView(_ view: UIView, size: CGSize) {
         view.frame.size = size
-        FBSnapshotVerifyView(view)
+        // Allow the UI to download images
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+            self.FBSnapshotVerifyView(view)
+        }
     }
     
     // UIAppearance proxy do not work in unit test environment so we have to style manually
