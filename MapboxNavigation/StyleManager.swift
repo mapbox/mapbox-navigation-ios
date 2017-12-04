@@ -9,8 +9,9 @@ protocol StyleManagerDelegate: class {
 
 class StyleManager: NSObject {
     
-    weak var delegate: StyleManagerDelegate!
+    weak var delegate: StyleManagerDelegate?
     
+    internal var date: Date?
     var currentStyleType: StyleType?
     var styles = [Style]() { didSet { applyStyle() } }
     var automaticallyAdjustsStyleForTimeOfDay = true {
@@ -32,10 +33,12 @@ class StyleManager: NSObject {
     func resumeNotifications() {
         suspendNotifications()
         
-        guard automaticallyAdjustsStyleForTimeOfDay else { return }
+        NotificationCenter.default.addObserver(self, selector: #selector(timeOfDayChanged), name: .UIApplicationSignificantTimeChange, object: nil)
         
-        let location = delegate.locationFor(styleManager: self)
-        guard let solar = Solar(coordinate: location.coordinate),
+        guard automaticallyAdjustsStyleForTimeOfDay else { return }
+        guard let location = delegate?.locationFor(styleManager: self) else { return }
+        
+        guard let solar = Solar(date: date, coordinate: location.coordinate),
             let sunrise = solar.sunrise,
             let sunset = solar.sunset else {
                 return
@@ -51,6 +54,7 @@ class StyleManager: NSObject {
     
     func suspendNotifications() {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationSignificantTimeChange, object: nil)
     }
     
     @objc func timeOfDayChanged() {
@@ -59,20 +63,20 @@ class StyleManager: NSObject {
     }
     
     func applyStyle() {
-        let location = delegate.locationFor(styleManager: self)
+        guard let location = delegate?.locationFor(styleManager: self) else { return }
         let styleTypeForTimeOfDay = styleType(for: location)
         
         for style in styles {
             if style.styleType == styleTypeForTimeOfDay {
                 style.apply()
                 currentStyleType = style.styleType
-                delegate.styleManager(self, didApply: style)
+                delegate?.styleManager(self, didApply: style)
             }
         }
     }
     
     func styleType(for location: CLLocation) -> StyleType {
-        guard let solar = Solar(coordinate: location.coordinate),
+        guard let solar = Solar(date: date, coordinate: location.coordinate),
             let sunrise = solar.sunrise,
             let sunset = solar.sunset else {
                 return .dayStyle
@@ -82,7 +86,7 @@ class StyleManager: NSObject {
     }
     
     func forceRefreshAppearanceIfNeeded() {
-        let location = delegate.locationFor(styleManager: self)
+        guard let location = delegate?.locationFor(styleManager: self) else { return }
         
         guard currentStyleType != styleType(for: location) else {
             return
@@ -97,7 +101,7 @@ class StyleManager: NSObject {
             }
         }
         
-        delegate.styleManagerDidRefreshAppearance(self)
+        delegate?.styleManagerDidRefreshAppearance(self)
     }
 }
 
@@ -130,5 +134,15 @@ extension Date {
         let sunriseMinutesFromMidnight = calendar.component(.hour, from: sunrise) * 60 + calendar.component(.minute, from: sunrise)
         let sunsetMinutesFromMidnight = calendar.component(.hour, from: sunset) * 60 + calendar.component(.minute, from: sunset)
         return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
+    }
+}
+
+extension Solar {
+    init?(date: Date?, coordinate: CLLocationCoordinate2D) {
+        if let date = date {
+            self.init(for: date, coordinate: coordinate)
+        } else {
+            self.init(coordinate: coordinate)
+        }
     }
 }
