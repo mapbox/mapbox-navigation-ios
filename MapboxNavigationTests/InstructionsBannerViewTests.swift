@@ -43,7 +43,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let instructions = [
-            VisualInstructionComponent(text: "US-45", imageURL: nil),
+            VisualInstructionComponent(text: "US 45", imageURL: nil),
             VisualInstructionComponent(text: "/", imageURL: nil),
             VisualInstructionComponent(text: "Chicago", imageURL: nil)
         ]
@@ -81,7 +81,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
             VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
-        let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
+        let secondary = [VisualInstructionComponent(text: "US 45 / Chicago", imageURL: nil)]
         
         view.set(primary, secondaryInstruction: secondary)
 
@@ -122,7 +122,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         let primary = [
             VisualInstructionComponent(text: "I 280", imageURL: shieldURL)
         ]
-        let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
+        let secondary = [VisualInstructionComponent(text: "US 45 / Chicago", imageURL: nil)]
         
         instructionsBannerView.set(primary, secondaryInstruction: secondary)
 
