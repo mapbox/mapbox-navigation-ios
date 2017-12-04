@@ -653,13 +653,6 @@
 			name = "Supporting files";
 			sourceTree = "<group>";
 		};
-		351174F71EF1FC8F0065E248 /* Helpers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Helpers;
-			sourceTree = "<group>";
-		};
 		351BEBD81E5BCC28006FE110 /* MapboxNavigation */ = {
 			isa = PBXGroup;
 			children = (
@@ -946,7 +939,6 @@
 		C5ADFBD61DDCC7840011824B /* MapboxCoreNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
-				351174F71EF1FC8F0065E248 /* Helpers */,
 				C52D09CF1DEF5E5F00BE3C5C /* Fixtures */,
 				C52D09D21DEF636C00BE3C5C /* Fixture.swift */,
 				C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */,
