@@ -88,7 +88,7 @@ public class ManeuverView: UIView {
         case .arrive:
             switch direction {
             case .right:
-                ManeuversStyleKit.drawArrowright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
+                ManeuversStyleKit.drawArriveright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             case .left:
                 ManeuversStyleKit.drawArriveright(frame: bounds, resizing: resizing, primaryColor: primaryColor)
                 flip = true
