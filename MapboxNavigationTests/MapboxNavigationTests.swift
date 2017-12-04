@@ -27,7 +27,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         recordMode = false
         isDeviceAgnostic = true
         
-        UIImage.shieldImageCache.setObject(shieldImage, forKey: "I280")
+        VisualInstructionComponent.shieldImageCache.setObject(shieldImage, forKey: "I280")
     }
     
     func storyboard() -> UIStoryboard {

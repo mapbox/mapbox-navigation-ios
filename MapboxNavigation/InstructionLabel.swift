@@ -28,9 +28,9 @@ open class InstructionLabel: StylableLabel {
             let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
             
-            if let imageURL = component.imageURL {
-                let shieldKey = UIImage.shieldKey(imageURL, height: shieldHeight)
-                if let cachedImage = UIImage.cachedShield(shieldKey) {
+            if let _ = component.imageURL {
+                let shieldKey = component.shieldKey()
+                if let cachedImage = component.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
                 } else {
                     // Download shield and display road code in the meantime
@@ -38,8 +38,8 @@ open class InstructionLabel: StylableLabel {
                         string.append(NSAttributedString(string: joinChar + text, attributes: attributes))
                     }
                     DispatchQueue.main.async {
-                        UIImage.shieldImage(imageURL, height: self.shieldHeight, completion: { [unowned self] (image) in
-                            guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }
+                        component.shieldImage(height: self.shieldHeight, completion: { [unowned self] (image) in
+                            guard image != nil, component.cachedShield(shieldKey) != nil else { return }
                             self.constructInstructions()
                         })
                     }

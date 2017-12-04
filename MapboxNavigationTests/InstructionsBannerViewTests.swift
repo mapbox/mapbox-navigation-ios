@@ -27,8 +27,9 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        let shieldKey = UIImage.shieldKey(shieldURL, height: 30)
-        UIImage.shieldImageCache.setObject(shieldImage, forKey: shieldKey as NSString)
+        let instruction = VisualInstructionComponent(text: nil, imageURL: shieldURL)
+        let shieldKey = instruction.shieldKey()
+        VisualInstructionComponent.shieldImageCache.setObject(shieldImage, forKey: shieldKey as NSString)
     }
     
     func instructionsView() -> InstructionsBannerView {
