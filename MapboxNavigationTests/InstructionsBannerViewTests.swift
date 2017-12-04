@@ -14,10 +14,12 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     
     let bannerHeight: CGFloat = 96
     
+    let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
+    
     var shieldImage: UIImage {
         get {
             let bundle = Bundle(for: MapboxNavigationTests.self)
-            return UIImage(named: "80px-I-280", in: bundle, compatibleWith: nil)!
+            return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
         }
     }
     
@@ -25,8 +27,8 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        let height = Int(instructionsView().primaryLabel.shieldHeight)
-        UIImage.shieldImageCache.setObject(shieldImage, forKey: "I-280-\(height)" as NSString)
+        let shieldKey = UIImage.shieldKey(shieldURL, height: 30)
+        UIImage.shieldImageCache.setObject(shieldImage, forKey: shieldKey as NSString)
     }
     
     func instructionsView() -> InstructionsBannerView {
@@ -59,7 +61,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
 
         let instructions = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(text: "South", imageURL: nil),
             VisualInstructionComponent(text: "Chicago / US-45 / Chicago", imageURL: nil)
         ]
@@ -77,7 +79,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
@@ -95,7 +97,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "Mountain View Test", imageURL: nil)]
@@ -120,7 +122,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
         
         let primary = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(text: "US-45 / Chicago", imageURL: nil)]
@@ -129,7 +131,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
 
         
         let primaryThen = [
-            VisualInstructionComponent(text: "I 280", imageURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!),
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(text: "South", imageURL: nil)
         ]
         
