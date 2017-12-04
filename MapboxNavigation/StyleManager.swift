@@ -28,12 +28,21 @@ class StyleManager: NSObject {
     
     deinit {
         suspendNotifications()
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
     }
     
     func resumeNotifications() {
-        suspendNotifications()
-        
         NotificationCenter.default.addObserver(self, selector: #selector(timeOfDayChanged), name: .UIApplicationSignificantTimeChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: .UIContentSizeCategoryDidChange, object: nil)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: .UIContentSizeCategoryDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationSignificantTimeChange, object: nil)
+    }
+    
+    func resetTimeOfDayTimer() {
+        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
         
         guard automaticallyAdjustsStyleForTimeOfDay else { return }
         guard let location = delegate?.locationFor(styleManager: self) else { return }
@@ -52,14 +61,13 @@ class StyleManager: NSObject {
         perform(#selector(timeOfDayChanged), with: nil, afterDelay: interval+1)
     }
     
-    func suspendNotifications() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
-        NotificationCenter.default.removeObserver(self, name: .UIApplicationSignificantTimeChange, object: nil)
+    @objc func preferredContentSizeChanged(_ notification: Notification) {
+        applyStyle()
     }
     
     @objc func timeOfDayChanged() {
         applyStyle()
-        resumeNotifications()
+        resetTimeOfDayTimer()
     }
     
     func applyStyle() {

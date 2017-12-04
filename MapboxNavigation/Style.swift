@@ -8,19 +8,6 @@ import UIKit
 @objc(MBStyle)
 open class Style: NSObject {
     
-    required public override init() {
-        super.init()
-        NotificationCenter.default.addObserver(self, selector: #selector(preferredContentSizeChanged(_:)), name: NSNotification.Name.UIContentSizeCategoryDidChange, object: nil)
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func preferredContentSizeChanged(_ notification: Notification) {
-        apply()
-    }
-    
     ///  General styling
     
     /**
