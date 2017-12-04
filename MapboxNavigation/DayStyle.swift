@@ -42,7 +42,7 @@ extension UIFont {
 @objc(MBDayStyle)
 open class DayStyle: Style {
     
-    public required init() {
+    public required override init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
         styleType = .dayStyle
