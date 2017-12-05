@@ -276,8 +276,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     var styleTypeForTimeOfDay: StyleType {
         guard automaticallyAdjustsStyleForTimeOfDay else { return .dayStyle }
 
-        guard let coordinate = routeController.location?.coordinate,
-            let solar = Solar(latitude: coordinate.latitude, longitude: coordinate.longitude),
+        guard let location = routeController.location,
+            let solar = Solar(coordinate: location.coordinate),
             let sunrise = solar.sunrise, let sunset = solar.sunset else {
                 return .dayStyle
         }
