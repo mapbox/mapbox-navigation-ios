@@ -49,6 +49,7 @@ open class StyleManager: NSObject {
         self.delegate = delegate
         super.init()
         resumeNotifications()
+        resetTimeOfDayTimer()
     }
     
     deinit {
@@ -91,7 +92,7 @@ open class StyleManager: NSObject {
     }
     
     @objc func timeOfDayChanged() {
-        applyStyle()
+        forceRefreshAppearanceIfNeeded()
         resetTimeOfDayTimer()
     }
     
