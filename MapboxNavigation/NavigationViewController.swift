@@ -310,15 +310,15 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
-        self.styleManager = StyleManager(self)
-        self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
-        
         self.directions = directions
         self.route = route
         
         addChildViewController(mapViewController)
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapViewController.view)
+        
+        self.styleManager = StyleManager(self)
+        self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
         let v = mapViewController.view!
         v.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
