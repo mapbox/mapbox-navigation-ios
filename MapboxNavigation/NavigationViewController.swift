@@ -320,12 +320,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         self.styleManager = StyleManager(self)
         self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
-        let v = mapViewController.view!
-        v.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        v.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        v.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        v.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-
+        mapViewController.view!.pinInSuperview()
         mapViewController.delegate = self
         mapViewController.routeController = routeController
         mapViewController.reportButton.isHidden = !showsReportFeedback
