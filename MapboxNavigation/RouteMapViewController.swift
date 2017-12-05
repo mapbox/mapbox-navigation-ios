@@ -33,8 +33,6 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var bannerHide: NSLayoutConstraint!
     @IBOutlet weak var bannerShow: NSLayoutConstraint!
     @IBOutlet weak var bannerContainerShow: NSLayoutConstraint!
-    
-    let visualInstructionFormatter = VisualInstructionFormatter()
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -160,7 +158,7 @@ class RouteMapViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        annotatesSpokenInstructions = delegate?.mapViewControllerShouldAnnotateSpokenInstructions(self) ?? false
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
     }
@@ -433,10 +431,10 @@ class RouteMapViewController: UIViewController {
     func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
-        let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
-        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: step)
         
-        instructionsBannerView.set(instructions.0, secondaryInstruction: instructions.1)
+        guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
+        
+        instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
         instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
         instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
@@ -450,25 +448,21 @@ class RouteMapViewController: UIViewController {
                 hideNextBanner()
                 return
         }
-    
+        
         // If the followon step is short and the user is near the end of the current step, show the nextBanner.
         guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
             routeProgress.currentLegProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
-            hideNextBanner()
-            return
+                hideNextBanner()
+                return
         }
-
-        let instructions = visualInstructionFormatter.instructions(leg: routeProgress.currentLeg, step: nextStep)
-        let instruction = instructions.0
         
-        guard let components = instruction?.components, var firstComponent = components.first else {
+        guard let instructions = upcomingStep.instructionsDisplayedAlongStep?.last else {
             hideNextBanner()
             return
         }
         
-        firstComponent.prefix = NSLocalizedString("THEN", bundle: .mapboxNavigation, value: "Then: ", comment: "Then")
         nextBannerView.maneuverView.step = nextStep
-        nextBannerView.instructionLabel.instruction = instruction
+        nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
         showNextBanner()
     }
     
@@ -843,8 +837,10 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
 extension RouteMapViewController: StepsViewControllerDelegate {
     
     func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell) {
+        
         viewController.dismiss {
-            self.addPreviewInstructions(step: step, distance: cell.instructionsView.distance)
+            guard let stepBefore = self.routeController.routeProgress.currentLegProgress.stepBefore(step) else { return }
+            self.addPreviewInstructions(step: stepBefore, maneuverStep: step, distance: cell.instructionsView.distance)
             self.stepsViewController = nil
         }
         
@@ -861,15 +857,16 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
     }
     
-    func addPreviewInstructions(step: RouteStep, distance: CLLocationDistance?) {
+    func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {
         removePreviewInstructions()
         
-        let instructions = visualInstructionFormatter.instructions(leg: nil, step: step)
+        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
+        
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
-        instructionsView.maneuverView.step = step
+        instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
+        instructionsView.maneuverView.step = maneuverStep
         instructionsView.distance = distance
         
         instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor
