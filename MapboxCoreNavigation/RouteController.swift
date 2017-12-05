@@ -386,6 +386,25 @@ open class RouteController: NSObject {
 
         return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
     }
+    
+    func closestStep(to coordinate: CLLocationCoordinate2D) -> (CLLocationDistance, Int)? {
+        var closestStep = Int.max
+        var lowestDistance = Double.infinity
+        
+        let remainingSteps = routeProgress.currentLeg.steps.suffix(routeProgress.currentLegProgress.stepIndex)
+        
+        for (stepIndex, step) in remainingSteps.enumerated() {
+            guard let coords = step.coordinates else { continue }
+            guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
+            
+            if closestCoordOnStep.distance < lowestDistance {
+                lowestDistance = closestCoordOnStep.distance
+                closestStep = stepIndex
+            }
+        }
+        
+        return closestStep == Int.max ? nil : (lowestDistance, closestStep)
+    }
 
     /**
      Send feedback about the current road segment/maneuver to the Mapbox data team.
@@ -583,7 +602,10 @@ extension RouteController: CLLocationManagerDelegate {
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-
+        
+        if isCloseToCurrentStep {
+            return true
+        }
 
         // Check to see if the user is moving away from the maneuver.
         // Here, we store an array of distances. If the current distance is greater than the last distance,
@@ -606,27 +628,17 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
 
-        // If the user is moving away from the maneuver location
-        // and they are close to the upcoming or follow on step,
-        // we can safely say they have completed the maneuver.
-        // This is intended to be a fallback case when we do find
-        // that the users course matches the exit bearing.
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-            let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
-            if !isCloseToCurrentStep && isCloseToUpComingStep {
-                incrementRouteProgress()
-                return true
-            }
+        // Check and see if the user is near a future step.
+        guard let nearestStep = closestStep(to: location.coordinate) else {
+            return false
         }
-        if let followOnStep = routeProgress.currentLegProgress.followOnStep {
-            let isCloseToUpComingStep = newLocation.isWithin(radius, of: followOnStep)
-            if !isCloseToCurrentStep && isCloseToUpComingStep {
-                incrementRouteProgress()
-                return true
-            }
+        
+        if nearestStep.0 < radius {
+            incrementRouteProgress(forcedStepIndex: nearestStep.1)
+            return true
         }
-
-        return isCloseToCurrentStep
+        
+        return false
     }
 
     func checkForFasterRoute(from location: CLLocation) {
@@ -807,8 +819,12 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func incrementRouteProgress() {
-        routeProgress.currentLegProgress.stepIndex += 1
+    func incrementRouteProgress(forcedStepIndex: Int? = nil) {
+        if let forcedStepIndex = forcedStepIndex {
+            routeProgress.currentLegProgress.stepIndex = forcedStepIndex
+        } else {
+            routeProgress.currentLegProgress.stepIndex += 1
+        }
 
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint,
             (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
