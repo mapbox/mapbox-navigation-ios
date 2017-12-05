@@ -390,13 +390,12 @@ open class RouteController: NSObject {
     func closestStep(to coordinate: CLLocationCoordinate2D) -> (CLLocationDistance, Int)? {
         var closestStep = Int.max
         var lowestDistance = Double.infinity
-        
-        let remainingSteps = routeProgress.currentLeg.steps.suffix(routeProgress.currentLegProgress.stepIndex)
+        let remainingSteps = routeProgress.currentLeg.steps.suffix(from: routeProgress.currentLegProgress.stepIndex)
         
         for (stepIndex, step) in remainingSteps.enumerated() {
             guard let coords = step.coordinates else { continue }
             guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
-            
+
             if closestCoordOnStep.distance < lowestDistance {
                 lowestDistance = closestCoordOnStep.distance
                 closestStep = stepIndex
