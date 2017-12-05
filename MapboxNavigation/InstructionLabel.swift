@@ -28,8 +28,7 @@ open class InstructionLabel: StylableLabel {
             let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
             
-            if let _ = component.imageURL {
-                let shieldKey = component.shieldKey()
+            if let shieldKey = component.shieldKey(), let _ = component.imageURL {
                 if let cachedImage = component.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
                 } else {

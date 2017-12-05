@@ -6,8 +6,9 @@ extension VisualInstructionComponent {
     
     static let scale = UIScreen.main.scale
     
-    func shieldKey() -> String {
-        return "\(imageURL!.absoluteString)-\(VisualInstructionComponent.scale)"
+    func shieldKey() -> String? {
+        guard let imageURL = imageURL else { return nil }
+        return "\(imageURL.absoluteString)-\(VisualInstructionComponent.scale)"
     }
     
     func cachedShield(_ shieldKey: String) -> UIImage? {
@@ -16,7 +17,7 @@ extension VisualInstructionComponent {
     
     func shieldImage(height: CGFloat, completion: @escaping (UIImage?) -> Void) {
         guard let imageURL = imageURL else { return }
-        let shieldKey = self.shieldKey()
+        guard let shieldKey = self.shieldKey() else { return }
         
         if let cachedImage = self.cachedShield(shieldKey) {
             completion(cachedImage)
@@ -32,8 +33,9 @@ extension VisualInstructionComponent {
                 return
             }
             
-            SDImageCache.shared().store(downscaledImage, forKey: shieldKey, toDisk: true, completion: nil)
-            completion(downscaledImage)
+            SDImageCache.shared().store(downscaledImage, forKey: shieldKey, toDisk: true, completion: {
+                completion(downscaledImage)
+            })
         })
     }
 }
