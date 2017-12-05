@@ -23,18 +23,15 @@ extension VisualInstructionComponent {
             completion(cachedImage)
             return
         }
-        
             
         SDWebImageDownloader.shared().downloadImage(with: imageURL, options: [], progress: nil, completed: { (image, data, error, successful) in
-            guard let imageData = data else { return }
-            
-            guard let downscaledImage = UIImage(data: imageData, scale: VisualInstructionComponent.scale) else {
+            guard let image = image else {
                 completion(nil)
                 return
             }
             
-            SDImageCache.shared().store(downscaledImage, forKey: shieldKey, toDisk: true, completion: {
-                completion(downscaledImage)
+            SDImageCache.shared().store(image, forKey: shieldKey, toDisk: true, completion: {
+                completion(image)
             })
         })
     }
