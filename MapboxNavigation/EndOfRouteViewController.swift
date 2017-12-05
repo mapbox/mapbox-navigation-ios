@@ -11,12 +11,19 @@ fileprivate enum ContainerHeight: CGFloat {
     case commentShowing = 260
 }
 
+/// :nodoc:
 @objc(MBEndOfRouteContentView)
 open class EndOfRouteContentView: UIView {}
+
+/// :nodoc:
 @objc(MBEndOfRouteTitleLabel)
 open class EndOfRouteTitleLabel: StylableLabel {}
+
+/// :nodoc:
 @objc(MBEndOfRouteStaticLabel)
 open class EndOfRouteStaticLabel: StylableLabel {}
+
+/// :nodoc:
 @objc(MBEndOfRouteButton)
 open class EndOfRouteButton: StylableButton {}
 
