@@ -541,7 +541,7 @@ extension NavigationViewController: RouteControllerDelegate {
 
 extension NavigationViewController: StyleManagerDelegate {
     
-    func locationFor(styleManager: StyleManager) -> CLLocation {
+    public func locationFor(styleManager: StyleManager) -> CLLocation {
         guard let location = routeController.location else {
             if let coordinate = routeController.routeProgress.route.coordinates?.first {
                 return CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -553,14 +553,14 @@ extension NavigationViewController: StyleManagerDelegate {
         return location
     }
     
-    func styleManager(_ styleManager: StyleManager, didApply style: Style) {
+    public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         if mapView?.styleURL != style.mapStyleURL {
             mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView?.styleURL = style.mapStyleURL
         }
     }
     
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
     }
 }
