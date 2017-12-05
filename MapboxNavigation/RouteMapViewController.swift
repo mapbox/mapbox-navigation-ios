@@ -47,6 +47,8 @@ class RouteMapViewController: UIViewController {
             endOfRouteViewController?.destination = destination
         }
     }
+    
+    var showsEndOfRoute: Bool = true
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {

@@ -266,6 +266,12 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         }
     }
     
+    @objc public var showsEndOfRoute: Bool = true {
+        didSet {
+            mapViewController?.showsEndOfRoute = showsEndOfRoute
+        }
+    }
+    
     /**
      If true, the map style and UI will automatically be updated given the time of day.
      */
@@ -602,6 +608,6 @@ extension NavigationViewController: RouteControllerDelegate {
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
         let isFinalDestination = routeController.routeProgress.isFinalLeg
         let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
-        isFinalDestination ? mapViewController?.showEndOfRoute( completion: completion) : completion(true)
+        isFinalDestination && showsEndOfRoute ? mapViewController?.showEndOfRoute( completion: completion) : completion(true)
     }
 }
