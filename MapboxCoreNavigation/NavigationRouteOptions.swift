@@ -21,7 +21,6 @@ open class NavigationRouteOptions: RouteOptions {
             $0.coordinateAccuracy = -1
             return $0
         }, profileIdentifier: profileIdentifier)
-        populateNames(for: waypoints)
         includesAlternativeRoutes = true
         includesSteps = true
         routeShapeResolution = .full
@@ -55,18 +54,5 @@ open class NavigationRouteOptions: RouteOptions {
 
     @objc public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
-    }
-    
-    private lazy var geocoder: CLGeocoder = CLGeocoder()
-    
-    private func populateNames(for waypoints: [Waypoint]) {
-        let geocode: (Waypoint) -> Void = { waypoint in
-            let location = CLLocation(latitude: waypoint.coordinate.latitude, longitude: waypoint.coordinate.longitude)
-            self.geocoder.reverseGeocodeLocation(location, completionHandler: { (places, error) in
-                guard let place = places?.first, let placeName = place.name, error == nil else { return }
-                waypoint.name = placeName
-            })
-        }
-        waypoints.filter({ $0.name == nil }).forEach(geocode)
     }
 }

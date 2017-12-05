@@ -43,6 +43,12 @@ class RouteMapViewController: UIViewController {
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
     var endOfRouteViewController: EndOfRouteViewController?
+    private lazy var geocoder: CLGeocoder = CLGeocoder()
+    var destination: Waypoint? {
+        didSet {
+            endOfRouteViewController?.destination = destination
+        }
+    }
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -64,7 +70,12 @@ class RouteMapViewController: UIViewController {
             mapView.delegate = mapView.delegate
         }
     }
-    weak var routeController: RouteController!
+    weak var routeController: RouteController! {
+        didSet {
+            guard let destination = route.legs.last?.destination else { return }
+            populateName(for: destination, populated: { self.destination = $0 })
+        }
+    }
     let distanceFormatter = DistanceFormatter(approximate: true)
     var arrowCurrentStep: RouteStep?
     var isInOverviewMode = false {
@@ -515,7 +526,6 @@ class RouteMapViewController: UIViewController {
     
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         view.layoutIfNeeded() //flush layout queue
-        endOfRouteViewController?.destination = route.legs.last?.destination
         
         endOfRouteContainer.isHidden = false
         endOfRouteHide.isActive = false
@@ -570,10 +580,20 @@ class RouteMapViewController: UIViewController {
         }
         endOfRouteViewController = endOfRouteVC
     }
+
     fileprivate func rating(for stars: Int) -> Int {
         assert(stars >= 0 && stars <= 5)
         guard stars > 0 else { return MMEEventsManager.unrated } //zero stars means this was unrated.
         return (stars - 1) * 25
+    }
+
+    fileprivate func populateName(for waypoint: Waypoint, populated: @escaping (Waypoint) -> Void) {
+        guard waypoint.name == nil else { return populated(waypoint) }
+        CLGeocoder().reverseGeocodeLocation(waypoint.location) { (places, error) in
+        guard let place = places?.first, let placeName = place.name, error == nil else { return }
+            let named = Waypoint(coordinate: waypoint.coordinate, name: placeName)
+            return populated(named)
+        }
     }
 }
 
