@@ -547,6 +547,11 @@ class RouteMapViewController: UIViewController {
 
         guard duration > 0.0 else { return noAnimation() }
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
+        
+        // Prevent the user puck from floating around.
+        if let location = routeController.location {
+            mapView.updateCourseTracking(location: location, animated: false)
+        }
     }
     
     func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
