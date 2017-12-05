@@ -16,12 +16,5 @@
 /* Format for speech string; 1 = way name; 2 = way route number */
 "NAME_AND_REF" = "%1$@ (%2$@)";
 
-/* Delimiter between route numbers in a road concurrency */
-"REF_DELIMITER" = " / ";
-
-/* Delimiter between multiple destinations */
-"DESTINATION_DELIMITER" = " / ";
-
 /* Format for speech string; 1 = formatted distance; 2 = instruction */
 "WITH_DISTANCE_UTTERANCE_FORMAT" = "In %1$@, %2$@";
-

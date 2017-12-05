@@ -301,7 +301,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     @objc public var annotatesSpokenInstructions = false
     
     let progressBar = ProgressBar()
-    let routeStepFormatter = RouteStepFormatter()
     
     var previousArrivalWaypoint: Waypoint?
     
@@ -424,8 +423,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         clearStaleNotifications()
         
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep, routeProgress.currentLegProgress.currentStepProgress.durationRemaining < RouteControllerHighAlertInterval {
-            scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+        if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
+            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
         
         forceRefreshAppearanceIfNeeded()
@@ -475,9 +474,10 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
         guard sendsNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
+        guard let text = step.instructionsSpokenAlongStep?.last?.text else { return }
         
         let notification = UILocalNotification()
-        notification.alertBody = routeStepFormatter.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: false)
+        notification.alertBody = text
         notification.fireDate = Date()
         
         clearStaleNotifications()

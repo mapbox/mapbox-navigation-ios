@@ -25,7 +25,6 @@ open class StepsViewController: UIViewController {
     
     let cellId = "StepTableViewCellId"
     var routeProgress: RouteProgress!
-    let instructionFormatter = VisualInstructionFormatter()
     
     typealias StepSection = [RouteStep]
     var sections = [StepSection]()
@@ -39,7 +38,8 @@ open class StepsViewController: UIViewController {
         sections.removeAll()
         
         let legIndex = routeProgress.legIndex
-        let stepIndex = routeProgress.currentLegProgress.stepIndex
+        // Don't include the current step in the list
+        let stepIndex = routeProgress.currentLegProgress.stepIndex + 1
         let legs = routeProgress.route.legs
         
         for (index, leg) in legs.enumerated() {
@@ -70,10 +70,8 @@ open class StepsViewController: UIViewController {
     }
     
     @objc func progressDidChange(_ notification: Notification) {
-        if sections.first?.first != routeProgress.currentLegProgress.upComingStep {
-            rebuildDataSource()
-            tableView.reloadData()
-        }
+        rebuildDataSource()
+        tableView.reloadData()
     }
     
     func setupViews() {
@@ -199,22 +197,34 @@ extension StepsViewController: UITableViewDataSource {
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
         let step = sections[indexPath.section][indexPath.row]
         
-        let instructions = instructionFormatter.instructions(leg: nil, step: step)
-        cell.instructionsView.set(instructions.0, secondaryInstruction: instructions.1)
         cell.instructionsView.maneuverView.step = step
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
+        let leg = routeProgress.route.legs[indexPath.section]
+        let arrivalSecondaryInstruction = leg.destination.name
         
         if usePreviousLeg {
             let leg = routeProgress.route.legs[indexPath.section-1]
             let stepBefore = leg.steps[leg.steps.count-1]
+            if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
+                let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction, imageURL: nil)] : instructions.secondaryTextComponents
+                cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: secondaryInstruction)
+            }
             cell.instructionsView.distance = stepBefore.distance
         } else {
             let leg = routeProgress.route.legs[indexPath.section]
             if let stepBefore = leg.steps.stepBefore(step) {
+                if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
+                    let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction, imageURL: nil)] : instructions.secondaryTextComponents
+                    cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: secondaryInstruction)
+                }
                 cell.instructionsView.distance = stepBefore.distance
             } else {
                 cell.instructionsView.distance = nil
+                if let instructions = step.instructionsDisplayedAlongStep?.last {
+                    let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction, imageURL: nil)] : instructions.secondaryTextComponents
+                    cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: secondaryInstruction)
+                }
             }
         }
     }

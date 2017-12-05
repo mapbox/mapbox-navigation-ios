@@ -15,7 +15,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
     var simulateLocation = false
-    let visualInstructionFormatter = VisualInstructionFormatter()
     
     @IBOutlet var mapView: MGLMapView!
     @IBOutlet weak var arrowView: UILabel!
@@ -113,7 +112,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
                 self.arrowView.text = "⬆️"
             }
         }
-        self.instructionLabel.text = visualInstructionFormatter.string(leg: routeProgress.currentLeg, step: routeProgress.currentLegProgress.upComingStep)
+        self.instructionLabel.text = routeProgress.currentLegProgress.currentStepProgress.step.instructionsDisplayedAlongStep?.first?.primaryText
         let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
         self.distanceLabel.text = textDistanceFormatter.string(fromMeters: distance)
     }

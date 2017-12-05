@@ -1,5 +1,6 @@
 import UIKit
 import MapboxCoreNavigation
+import MapboxDirections
 
 /// :nodoc:
 @objc(MBInstructionLabel)
@@ -8,7 +9,7 @@ open class InstructionLabel: StylableLabel {
     var availableBounds: AvailableBoundsHandler!
     var shieldHeight: CGFloat = 30
     
-    var instruction: Instruction? {
+    var instruction: [VisualInstructionComponent]? {
         didSet {
             constructInstructions()
         }
@@ -23,32 +24,25 @@ open class InstructionLabel: StylableLabel {
         let string = NSMutableAttributedString()
         
         // Add text or image
-        for component in instruction.components {
-            let isFirst = component == instruction.components.first
+        for component in instruction {
+            let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
             
-            if let prefix = component.prefix {
-                string.append(NSAttributedString(string: prefix, attributes: attributes))
-            }
-            
-            if let roadCode = component.roadCode, let network = component.network, let number = component.number {
-                // Check if shield image is cached, otherwise display road code in text
-                let shieldKey = UIImage.shieldKey(network, number: number, height: shieldHeight)
-                if let cachedImage = UIImage.cachedShield(shieldKey) {
+            if let shieldKey = component.shieldKey(), let _ = component.imageURL {
+                if let cachedImage = component.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
-                    if let direction = component.direction {
-                        string.append(NSAttributedString(string: " "+direction, attributes: attributes))
-                    }
                 } else {
                     // Download shield and display road code in the meantime
-                    string.append(NSAttributedString(string: joinChar+roadCode, attributes: attributes))
-                    UIImage.shieldImage(network, number: number, height: shieldHeight, completion: { [unowned self] (image) in
-                        // Reconstruct instructions if we did get a shield image
-                        guard image != nil, UIImage.cachedShield(shieldKey) != nil else { return }
-                        self.constructInstructions()
-                    })
+                    if let text = component.text {
+                        string.append(NSAttributedString(string: joinChar + text, attributes: attributes))
+                    }
+                    DispatchQueue.main.async {
+                        component.shieldImage(height: self.shieldHeight, completion: { [unowned self] (image) in
+                            guard image != nil, component.cachedShield(shieldKey) != nil else { return }
+                            self.constructInstructions()
+                        })
+                    }
                 }
-                
             } else if let text = component.text {
                 string.append(NSAttributedString(string: (joinChar+text).abbreviated(toFit: availableBounds(), font: font), attributes: attributes))
             }

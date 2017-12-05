@@ -388,7 +388,7 @@ open class RouteStepProgress: NSObject {
     public var userDistanceToUpcomingIntersection: CLLocationDistance?
     
     /**
-     Index into `step.instructionsSpokenAlongStep` representing the current instruction.
+     Index into `step.instructionsSpokenAlongStep` representing the current spoken instruction.
      */
     @objc public var spokenInstructionIndex:Int = 0
     
