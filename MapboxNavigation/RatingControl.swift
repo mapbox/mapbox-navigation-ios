@@ -110,11 +110,12 @@ class RatingControl: UIStackView {
         
         switch rating {
         case 0:
-            value = NSLocalizedString("No rating set.", comment: "No Rating Set")
+            value = NSLocalizedString("No rating set.", bundle: .mapboxNavigation, comment: "No Rating Set")
         case 1:
-            value = NSLocalizedString("1 star set.", comment: "One Star Set")
+            value = NSLocalizedString("1 star set.", bundle: .mapboxNavigation, comment: "One Star Set")
         default:
-            value = "\(rating) " + NSLocalizedString("stars set.", comment:"(multiple) Stars Set, as in '30 stars set'")
+            let starsSet = NSLocalizedString("stars set.", bundle: .mapboxNavigation, comment:"(multiple) Stars Set, as in '30 stars set'")
+            value = String.localizedStringWithFormat("%li %@", rating, starsSet)
         }
         
         button.accessibilityValue = value
