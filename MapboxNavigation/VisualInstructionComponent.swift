@@ -4,15 +4,14 @@ import MapboxDirections
 
 extension VisualInstructionComponent {
     
-    static let shieldURLCache = NSCache<NSString, NSURL>()
-    static let shieldImageCache = NSCache<NSString, UIImage>()
+    static let scale = UIScreen.main.scale
     
     func shieldKey() -> String {
-        return imageURL!.absoluteString
+        return "\(imageURL!.absoluteString)-\(VisualInstructionComponent.scale)"
     }
     
     func cachedShield(_ shieldKey: String) -> UIImage? {
-        return VisualInstructionComponent.shieldImageCache.object(forKey: shieldKey as NSString)
+        return SDImageCache.shared().imageFromCache(forKey: shieldKey)
     }
     
     func shieldImage(height: CGFloat, completion: @escaping (UIImage?) -> Void) {
@@ -24,32 +23,18 @@ extension VisualInstructionComponent {
             return
         }
         
-        if let cachedURL = VisualInstructionComponent.shieldURLCache.object(forKey: shieldKey as NSString) {
-            SDWebImageDownloader.shared().downloadImage(with: (cachedURL as URL), options: [], progress: nil, completed: { (image, data, error, successful) in
-                guard let imageData = data else { return }
-                guard let downscaledImage = UIImage(data: imageData) else {
-                    completion(nil)
-                    return
-                }
-                
-                VisualInstructionComponent.shieldImageCache.setObject(downscaledImage, forKey: shieldKey as NSString)
-                completion(downscaledImage)
-                return
-            })
-        } else {
-            VisualInstructionComponent.shieldURLCache.setObject(imageURL as NSURL, forKey: shieldKey as NSString)
             
-            SDWebImageDownloader.shared().downloadImage(with: imageURL, options: [], progress: nil, completed: { (image, data, error, successful) in
-                guard let imageData = data else { return }
-                
-                guard let downscaledImage = UIImage(data: imageData) else {
-                    completion(nil)
-                    return
-                }
-                VisualInstructionComponent.shieldImageCache.setObject(downscaledImage, forKey: shieldKey as NSString)
-                completion(downscaledImage)
-            })
-        }
+        SDWebImageDownloader.shared().downloadImage(with: imageURL, options: [], progress: nil, completed: { (image, data, error, successful) in
+            guard let imageData = data else { return }
+            
+            guard let downscaledImage = UIImage(data: imageData, scale: VisualInstructionComponent.scale) else {
+                completion(nil)
+                return
+            }
+            
+            SDImageCache.shared().store(downscaledImage, forKey: shieldKey, toDisk: true, completion: nil)
+            completion(downscaledImage)
+        })
     }
 }
 

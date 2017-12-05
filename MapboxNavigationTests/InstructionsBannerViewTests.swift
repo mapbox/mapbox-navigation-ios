@@ -1,6 +1,7 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
+import SDWebImage
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -29,7 +30,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         
         let instruction = VisualInstructionComponent(text: nil, imageURL: shieldURL)
         let shieldKey = instruction.shieldKey()
-        VisualInstructionComponent.shieldImageCache.setObject(shieldImage, forKey: shieldKey as NSString)
+        SDImageCache.shared().store(shieldImage, forKey: shieldKey)
     }
     
     func instructionsView() -> InstructionsBannerView {
