@@ -110,11 +110,11 @@ class RatingControl: UIStackView {
         
         switch rating {
         case 0:
-            value = "No rating set."
+            value = NSLocalizedString("No rating set.", comment: "No Rating Set")
         case 1:
-            value = "1 star set."
+            value = NSLocalizedString("1 star set.", comment: "One Star Set")
         default:
-            value = "\(rating) stars set."
+            value = "\(rating) " + NSLocalizedString("stars set.", comment:"(multiple) Stars Set, as in '30 stars set'")
         }
         
         button.accessibilityValue = value
