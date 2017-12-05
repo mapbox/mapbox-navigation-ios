@@ -22,8 +22,16 @@ class RatingControl: UIStackView {
         }
     }
     
-    @objc dynamic public var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
-    @objc dynamic public var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1)
+    @objc dynamic public var selectedColor: UIColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1) {
+        didSet {
+            updateSelectionStates()
+        }
+    }
+    @objc dynamic public var normalColor: UIColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1) {
+        didSet {
+            updateSelectionStates()
+        }
+    }
     
     @objc dynamic public var starSize: CGSize = defaultSize {
         didSet {
@@ -38,12 +46,12 @@ class RatingControl: UIStackView {
     }
     
     //MARK: Initializers
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         configureStars()
     }
     
-    required init(coder: NSCoder) {
+    required public init(coder: NSCoder) {
         super.init(coder: coder)
         configureStars()
     }

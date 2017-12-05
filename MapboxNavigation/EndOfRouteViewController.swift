@@ -11,6 +11,15 @@ fileprivate enum ContainerHeight: CGFloat {
     case commentShowing = 260
 }
 
+@objc(MBEndOfRouteContentView)
+open class EndOfRouteContentView: UIView {}
+@objc(MBEndOfRouteTitleLabel)
+open class EndOfRouteTitleLabel: StylableLabel {}
+@objc(MBEndOfRouteStaticLabel)
+open class EndOfRouteStaticLabel: StylableLabel {}
+@objc(MBEndOfRouteButton)
+open class EndOfRouteButton: StylableButton {}
+
 class EndOfRouteViewController: UIViewController {
 
     //MARK: - IBOutlets
