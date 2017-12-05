@@ -1,13 +1,33 @@
 import UIKit
 import Solar
 
-protocol StyleManagerDelegate: class {
-    func locationFor(styleManager: StyleManager) -> CLLocation
-    func styleManager(_ styleManager: StyleManager, didApply style: Style)
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
+/**
+ The `StyleManagerDelegate` protocol defines a set of methods used for controlling the style.
+ */
+@objc(MBStyleManagerDelegate)
+public protocol StyleManagerDelegate: NSObjectProtocol {
+    /**
+     Asks the delegate for a location to use when calculating sunset and sunrise.
+     */
+    @objc func locationFor(styleManager: StyleManager) -> CLLocation
+    
+    /**
+     Informs the delegate that a style was applied.
+     */
+    @objc optional func styleManager(_ styleManager: StyleManager, didApply style: Style)
+    
+    /**
+     Informs the delegate that the manager forcefully refreshed UIAppearance.
+     */
+    @objc optional func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
 }
 
-class StyleManager: NSObject {
+/**
+ A manager that handles `Style` objects. The manager listens for significant time changes
+ and changes to the content size to apply an approriate style for the given condition.
+ */
+@objc(MBStyleManager)
+open class StyleManager: NSObject {
     
     weak var delegate: StyleManagerDelegate?
     
@@ -20,7 +40,12 @@ class StyleManager: NSObject {
         }
     }
     
-    required init(_ delegate: StyleManagerDelegate) {
+    /**
+     Initializes a new `StyleManager`.
+     
+     - parameter delegate: The receiver’s delegate
+     */
+    required public init(_ delegate: StyleManagerDelegate) {
         self.delegate = delegate
         super.init()
         resumeNotifications()
@@ -78,7 +103,7 @@ class StyleManager: NSObject {
             if style.styleType == styleTypeForTimeOfDay {
                 style.apply()
                 currentStyleType = style.styleType
-                delegate?.styleManager(self, didApply: style)
+                delegate?.styleManager?(self, didApply: style)
             }
         }
     }
@@ -109,7 +134,7 @@ class StyleManager: NSObject {
             }
         }
         
-        delegate?.styleManagerDidRefreshAppearance(self)
+        delegate?.styleManagerDidRefreshAppearance?(self)
     }
 }
 
