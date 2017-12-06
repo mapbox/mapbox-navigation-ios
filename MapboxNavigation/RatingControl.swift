@@ -72,7 +72,7 @@ class RatingControl: UIStackView {
             
             let setRatingNumber = NSNumber(value: index + 1)
             let setRatingString = NumberFormatter.localizedString(from: setRatingNumber, number: .none)
-            let localizedStarLabel = NSLocalizedString("Set %@ star rating", comment: "Accessibility Star Label")
+            let localizedStarLabel = NSLocalizedString("Set %@ star rating", bundle: .mapboxNavigation, comment: "Accessibility Star Label")
             button.accessibilityLabel = String.localizedStringWithFormat(localizedStarLabel, setRatingString)
                 
             
@@ -124,7 +124,7 @@ class RatingControl: UIStackView {
     private func setAccessibilityHint(for button: UIButton, at index: Int) {
         guard rating == (index + 1) else { return } //This applies only to the zero-resettable button.
         
-        button.accessibilityHint = NSLocalizedString("Tap to reset the rating to zero.", comment: "Rating Reset To Zero Accessability Hint")
+        button.accessibilityHint = NSLocalizedString("Tap to reset the rating to zero.", bundle: .mapboxNavigation, comment: "Rating Reset To Zero Accessability Hint")
     }
     
     
