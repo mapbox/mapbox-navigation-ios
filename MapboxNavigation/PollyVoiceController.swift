@@ -19,7 +19,7 @@ public class PollyVoiceController: RouteVoiceController {
     /**
      `regionType` specifies what AWS region to use for Polly.
      */
-    @objc public var regionType: AWSRegionType = .USEast1
+    @objc public let regionType: AWSRegionType
     
     /**
      `identityPoolId` is a required value for using AWS Polly voice instead of iOS's built in AVSpeechSynthesizer.
@@ -49,8 +49,9 @@ public class PollyVoiceController: RouteVoiceController {
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
-    public init(identityPoolId: String) {
+    public init(identityPoolId: String, regionType: AWSRegionType = .USEast1) {
         self.identityPoolId = identityPoolId
+        self.regionType = regionType
         
         spokenInstructionsForRoute.countLimit = 200
         
