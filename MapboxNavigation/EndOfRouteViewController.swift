@@ -166,7 +166,7 @@ class EndOfRouteViewController: UIViewController {
 //MARK: - UITextViewDelegate
 extension EndOfRouteViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        guard text == "\n" else { return true }
+        guard text.count == 1, text.rangeOfCharacter(from: CharacterSet.newlines) != nil else { return true }
         textView.resignFirstResponder()
         return false
     }
