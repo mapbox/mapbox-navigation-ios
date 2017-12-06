@@ -247,15 +247,15 @@
                     </view>
                     <size key="freeformSize" width="375" height="500"/>
                     <connections>
-                        <outlet property="bannerContainerShow" destination="K6m-Le-IeP" id="N95-yW-Wmg"/>
-                        <outlet property="bannerHide" destination="94e-lw-9ic" id="LPp-8K-A5y"/>
-                        <outlet property="bannerShow" destination="gER-Br-LqP" id="zjy-C4-GLc"/>
+                        <outlet property="bannerContainerShowConstraint" destination="K6m-Le-IeP" id="N95-yW-Wmg"/>
+                        <outlet property="bannerHideConstraint" destination="94e-lw-9ic" id="LPp-8K-A5y"/>
+                        <outlet property="bannerShowConstraint" destination="gER-Br-LqP" id="zjy-C4-GLc"/>
                         <outlet property="bottomBannerView" destination="sDs-aU-EMQ" id="SOJ-pC-0th"/>
                         <outlet property="buttonStack" destination="8P3-NB-IRq" id="dgG-mb-DjI"/>
-                        <outlet property="endOfRouteContainer" destination="1Kx-12-EOg" id="KJt-8r-bbQ"/>
-                        <outlet property="endOfRouteHeight" destination="Idg-60-CZm" id="zTk-0Q-RAz"/>
-                        <outlet property="endOfRouteHide" destination="TgB-K7-2M6" id="CWj-ub-rPd"/>
-                        <outlet property="endOfRouteShow" destination="1kU-o5-DsQ" id="boW-aY-y45"/>
+                        <outlet property="endOfRouteContainerView" destination="1Kx-12-EOg" id="KJt-8r-bbQ"/>
+                        <outlet property="endOfRouteHeightConstraint" destination="Idg-60-CZm" id="zTk-0Q-RAz"/>
+                        <outlet property="endOfRouteHideConstraint" destination="TgB-K7-2M6" id="CWj-ub-rPd"/>
+                        <outlet property="endOfRouteShowConstraint" destination="1kU-o5-DsQ" id="boW-aY-y45"/>
                         <outlet property="instructionsBannerContainerView" destination="p9E-v0-Rt6" id="TMF-0X-Ode"/>
                         <outlet property="instructionsBannerView" destination="UnK-tl-lPe" id="Qdh-aT-dPs"/>
                         <outlet property="laneViewsContainerView" destination="NE9-ru-uJw" id="Iy6-hg-9rK"/>

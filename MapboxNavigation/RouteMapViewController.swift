@@ -26,13 +26,13 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var laneViewsContainerView: LanesContainerView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var endOfRouteContainer: UIView!
-    @IBOutlet weak var endOfRouteShow: NSLayoutConstraint!
-    @IBOutlet weak var endOfRouteHide: NSLayoutConstraint!
-    @IBOutlet weak var endOfRouteHeight: NSLayoutConstraint!
-    @IBOutlet weak var bannerHide: NSLayoutConstraint!
-    @IBOutlet weak var bannerShow: NSLayoutConstraint!
-    @IBOutlet weak var bannerContainerShow: NSLayoutConstraint!
+    @IBOutlet weak var endOfRouteContainerView: UIView!
+    @IBOutlet weak var endOfRouteShowConstraint: NSLayoutConstraint!
+    @IBOutlet weak var endOfRouteHideConstraint: NSLayoutConstraint!
+    @IBOutlet weak var endOfRouteHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bannerHideConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bannerShowConstraint: NSLayoutConstraint!
+    @IBOutlet weak var bannerContainerShowConstraint: NSLayoutConstraint!
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -485,8 +485,8 @@ class RouteMapViewController: UIViewController {
     var contentInsets: UIEdgeInsets {
         var margin: CGFloat = 0.0
         if #available(iOS 11.0, *) { margin = view.safeAreaInsets.bottom }
-        let containerHeight = endOfRouteContainer.frame.height - margin
-        let bottom = self.endOfRouteShow.isActive ? containerHeight : bottomBannerView.bounds.height
+        let containerHeight = endOfRouteContainerView.frame.height - margin
+        let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : bottomBannerView.bounds.height
         return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottom, right: 0)
     }
     
@@ -523,12 +523,12 @@ class RouteMapViewController: UIViewController {
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         view.layoutIfNeeded() //flush layout queue
         
-        endOfRouteContainer.isHidden = false
-        endOfRouteHide.isActive = false
-        endOfRouteShow.isActive = true
-        bannerHide.isActive = true
-        bannerShow.isActive = false
-        bannerContainerShow.isActive = false
+        endOfRouteContainerView.isHidden = false
+        endOfRouteHideConstraint.isActive = false
+        endOfRouteShowConstraint.isActive = true
+        bannerHideConstraint.isActive = true
+        bannerShowConstraint.isActive = false
+        bannerContainerShowConstraint.isActive = false
        
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
@@ -550,8 +550,8 @@ class RouteMapViewController: UIViewController {
     
     func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         view.layoutIfNeeded() //flush layout queue
-        endOfRouteHide.isActive = true
-        endOfRouteShow.isActive = false
+        endOfRouteHideConstraint.isActive = true
+        endOfRouteShowConstraint.isActive = false
         view.clipsToBounds = true
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
@@ -562,7 +562,7 @@ class RouteMapViewController: UIViewController {
             self.buttonStack.alpha = 1.0
         }
         
-        let complete: (Bool) -> Void = { self.endOfRouteContainer.isHidden = true; completion?($0)}
+        let complete: (Bool) -> Void = { self.endOfRouteContainerView.isHidden = true; completion?($0)}
         let noAnimation = { animate() ; complete(true) }
 
         guard duration > 0.0 else { return noAnimation() }
@@ -600,7 +600,7 @@ class RouteMapViewController: UIViewController {
 
 extension RouteMapViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
-        endOfRouteHeight.constant = container.preferredContentSize.height
+        endOfRouteHeightConstraint.constant = container.preferredContentSize.height
         
         UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
     }
@@ -665,7 +665,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        guard !endOfRouteShow.isActive else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
+        guard !endOfRouteShowConstraint.isActive else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
         return delegate?.mapViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
@@ -910,9 +910,9 @@ extension RouteMapViewController {
         let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size.height
 
         if #available(iOS 11.0, *) {
-            endOfRouteShow.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
+            endOfRouteShowConstraint.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
         } else {
-            endOfRouteShow.constant = -1 * keyboardHeight
+            endOfRouteShowConstraint.constant = -1 * keyboardHeight
         }
         
         
@@ -926,7 +926,7 @@ extension RouteMapViewController {
         let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
                        curve: UIViewAnimationOptions(curve: curve!))
         
-        endOfRouteShow.constant = 0
+        endOfRouteShowConstraint.constant = 0
 
         UIView.animate(withDuration: options.duration, delay: 0, options: options.curve, animations: view.layoutIfNeeded, completion: nil)
     }
