@@ -49,8 +49,9 @@ public class PollyVoiceController: RouteVoiceController {
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
-    public init(identityPoolId: String) {
+    public init(regionType: AWSRegionType, identityPoolId: String) {
         self.identityPoolId = identityPoolId
+        self.regionType = regionType
         
         spokenInstructionsForRoute.countLimit = 200
         
