@@ -68,7 +68,7 @@ public class StatusView: UIView {
         } else if sender.state == .changed {
             guard let startPoint = panStartPoint else { return }
             let offsetX = location.x - startPoint.x
-            let coefficient = (offsetX / bounds.width) / 50.0
+            let coefficient = (offsetX / bounds.width) / 20.0
             sliderValue = Double(min(max(CGFloat(sliderValue) + coefficient, 0), 1))
         }
     }
