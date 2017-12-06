@@ -24,6 +24,10 @@ open class EndOfRouteTitleLabel: StylableLabel {}
 open class EndOfRouteStaticLabel: StylableLabel {}
 
 /// :nodoc:
+@objc(MBEndOfRouteCommentView)
+open class EndOfRouteCommentView: StylableTextView {}
+
+/// :nodoc:
 @objc(MBEndOfRouteButton)
 open class EndOfRouteButton: StylableButton {}
 
@@ -85,6 +89,7 @@ class EndOfRouteViewController: UIViewController {
         commentView.layer.cornerRadius = 6.0
         commentView.layer.borderColor = UIColor.lightGray.cgColor
         commentView.layer.borderWidth = 1.0
+        commentView.textContainerInset = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     }
     
     fileprivate func dismissView() {
@@ -173,7 +178,7 @@ extension EndOfRouteViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == placeholder {
             textView.text = nil
-            textView.textColor = .black
+            textView.alpha = 1.0
         }
         textView.becomeFirstResponder()
     }
@@ -181,7 +186,7 @@ extension EndOfRouteViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         if (textView.text?.isEmpty ?? true) == true {
             textView.text = placeholder
-            textView.textColor = .lightGray
+            textView.alpha = 0.9
         }
     }
 }
