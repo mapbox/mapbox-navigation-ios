@@ -263,6 +263,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     @objc public var showsReportFeedback: Bool = true {
         didSet {
             mapViewController?.reportButton.isHidden = !showsReportFeedback
+            showsEndOfRoute = showsReportFeedback
         }
     }
     
