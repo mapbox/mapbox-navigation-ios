@@ -258,18 +258,22 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     @objc public var sendsNotifications: Bool = true
     
     /**
-     Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
+     Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `true`.
      */
     @objc public var showsReportFeedback: Bool = true {
         didSet {
             mapViewController?.reportButton.isHidden = !showsReportFeedback
-            showsEndOfRoute = showsReportFeedback
+            showsEndOfRouteFeedback = showsReportFeedback
         }
     }
     
-    @objc public var showsEndOfRoute: Bool = true {
+    
+    /**
+    Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
+    */
+    @objc public var showsEndOfRouteFeedback: Bool = true {
         didSet {
-            mapViewController?.showsEndOfRoute = showsEndOfRoute
+            mapViewController?.showsEndOfRoute = showsEndOfRouteFeedback
         }
     }
     
@@ -611,6 +615,6 @@ extension NavigationViewController: RouteControllerDelegate {
         
         let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
         let noEndOfRouteShow = { self.routeController.sendCancelEvent(); completion(true) }
-        showsEndOfRoute ? self.mapViewController?.showEndOfRoute( completion: completion) : noEndOfRouteShow()
+        showsEndOfRouteFeedback ? self.mapViewController?.showEndOfRoute( completion: completion) : noEndOfRouteShow()
     }
 }
