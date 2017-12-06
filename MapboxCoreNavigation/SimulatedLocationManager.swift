@@ -36,6 +36,8 @@ public class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var locations: [SimulatedLocation]!
     fileprivate var routeLine = [CLLocationCoordinate2D]()
     
+    public var speedMultiplier: Double = 1
+    
     @objc override public var location: CLLocation? {
         get {
             return currentLocation
@@ -148,18 +150,18 @@ public class SimulatedLocationManager: NavigationLocationManager {
         }
         
         let location = CLLocation(coordinate: newCoordinate,
-                                     altitude: 0,
-                                     horizontalAccuracy: horizontalAccuracy,
-                                     verticalAccuracy: verticalAccuracy,
-                                     course: newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360),
-                                     speed: currentSpeed,
-                                     timestamp: Date())
+                                  altitude: 0,
+                                  horizontalAccuracy: horizontalAccuracy,
+                                  verticalAccuracy: verticalAccuracy,
+                                  course: newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360),
+                                  speed: currentSpeed,
+                                  timestamp: Date())
         currentLocation = location
         lastKnownLocation = location
         
         delegate?.locationManager?(self, didUpdateLocations: [currentLocation])
-        currentDistance += currentSpeed
-        perform(#selector(tick), with: nil, afterDelay: 0.95)
+        currentDistance += currentSpeed * speedMultiplier
+        perform(#selector(tick), with: nil, afterDelay: 1)
     }
 }
 
