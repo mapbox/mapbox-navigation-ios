@@ -155,7 +155,6 @@ class EndOfRouteViewController: UIViewController {
     
     private func setPlaceholderText() {
         commentView.text = placeholder
-        commentView.textColor = .lightGray
     }
 }
 

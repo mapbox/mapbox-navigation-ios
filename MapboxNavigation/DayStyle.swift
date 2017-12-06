@@ -203,10 +203,13 @@ open class NightStyle: DayStyle {
         WayNameLabel.appearance().textColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         EndOfRouteContentView.appearance().backgroundColor = backgroundColor
-        RatingControl.appearance().selectedColor = #colorLiteral(red: 0.8937445747, green: 0.988140566, blue: 1, alpha: 1)
+        RatingControl.appearance().selectedColor = #colorLiteral(red: 0.9803059896, green: 0.9978019022, blue: 1, alpha: 1)
         RatingControl.appearance().normalColor = #colorLiteral(red: 0.555841727, green: 0.5559353299, blue: 0.5558293842, alpha: 1)
         EndOfRouteTitleLabel.appearance().textColor = .white
-        EndOfRouteStaticLabel.appearance().textColor = .lightGray
+        EndOfRouteStaticLabel.appearance().textColor = UIColor.white.withAlphaComponent(0.9)
+        EndOfRouteStaticLabel.appearance().alpha = 1.0
+        UITextView.appearance(whenContainedInInstancesOf: [EndOfRouteContentView.self]).backgroundColor = #colorLiteral(red: 0.1875049942, green: 0.2981707989, blue: 0.4181857639, alpha: 1)
+        UITextView.appearance(whenContainedInInstancesOf: [EndOfRouteContentView.self]).textColor = .white
         EndOfRouteButton.appearance().textColor = .white
     }
 }
