@@ -121,6 +121,8 @@ class RouteMapViewController: UIViewController {
         wayNameView.applyDefaultCornerRadiusShadow()
         laneViewsContainerView.isHidden = true
         statusView.isHidden = true
+        statusView.delegate = self
+        statusView.isSliderEnabled = true
         nextBannerView.isHidden = true
         isInOverviewMode = false
         instructionsBannerView.delegate = self
@@ -943,6 +945,18 @@ fileprivate extension UIViewAnimationOptions {
             self = .curveEaseInOut
         case .linear:
             self = .curveLinear
+        }
+    }
+}
+
+extension RouteMapViewController: StatusViewDelegate {
+    func statusView(_ statusView: StatusView, sliderValueChangedTo value: Double) {
+        let displayValue = 1+min(Int(9 * value), 8)
+        let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."), displayValue)
+        statusView.show(title, showSpinner: false)
+        
+        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
+            locationManager.speedMultiplier = Double(displayValue)
         }
     }
 }

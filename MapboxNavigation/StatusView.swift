@@ -1,11 +1,24 @@
 import UIKit
 
+protocol StatusViewDelegate: class {
+    func statusView(_ statusView: StatusView, sliderValueChangedTo value: Double)
+}
+
 /// :nodoc:
 @IBDesignable
 @objc(MBStatusView)
 public class StatusView: UIView {
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
+    weak var delegate: StatusViewDelegate?
+    var panStartPoint: CGPoint?
+    
+    var isSliderEnabled = false
+    var sliderValue: Double = 0 {
+        didSet {
+            delegate?.statusView(self, sliderValueChangedTo: sliderValue)
+        }
+    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -40,6 +53,24 @@ public class StatusView: UIView {
         
         activityIndicatorView.rightAnchor.constraint(equalTo: safeRightAnchor, constant: -10).isActive = true
         activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        
+        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(StatusView.handlePan(_:)))
+        addGestureRecognizer(recognizer)
+    }
+    
+    @objc func handlePan(_ sender: UIPanGestureRecognizer) {
+        guard isSliderEnabled else { return }
+        
+        let location = sender.location(in: self)
+        
+        if sender.state == .began {
+            panStartPoint = location
+        } else if sender.state == .changed {
+            guard let startPoint = panStartPoint else { return }
+            let offsetX = location.x - startPoint.x
+            let coefficient = (offsetX / bounds.width) / 50.0
+            sliderValue = Double(min(max(CGFloat(sliderValue) + coefficient, 0), 1))
+        }
     }
     
     func show(_ title: String, showSpinner: Bool) {
