@@ -607,8 +607,10 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
-        let isFinalDestination = routeController.routeProgress.isFinalLeg
+        guard routeController.routeProgress.isFinalLeg else { return }
+        
         let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
-        isFinalDestination && showsEndOfRoute ? mapViewController?.showEndOfRoute( completion: completion) : completion(true)
+        let noEndOfRouteShow = { self.routeController.sendCancelEvent(); completion(true) }
+        showsEndOfRoute ? self.mapViewController?.showEndOfRoute( completion: completion) : noEndOfRouteShow()
     }
 }

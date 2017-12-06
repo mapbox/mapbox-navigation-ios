@@ -863,7 +863,7 @@ extension RouteController {
         events.flush()
     }
 
-    open func sendCancelEvent(rating: Int, comment: String?) {
+    open func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         let attributes = events.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
         events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         events.flush()

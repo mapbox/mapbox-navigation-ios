@@ -196,7 +196,8 @@ extension MMEEventsManager {
     }
     
     //TODO: Change event semantic to `.exit`
-    func navigationCancelEvent(routeController: RouteController, rating: Int = unrated, comment: String? = nil) -> [String: Any] {
+    func navigationCancelEvent(routeController: RouteController, rating potentialRating: Int? = nil, comment: String? = nil) -> [String: Any] {
+        let rating = potentialRating ?? MMEEventsManager.unrated
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationCancel
         eventDictionary["arrivalTimestamp"] = routeController.sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
