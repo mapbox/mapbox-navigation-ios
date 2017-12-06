@@ -67,7 +67,7 @@ class EndOfRouteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         clearInterface()
-        stars.didChangeRating = { (new) in self.rating = new }
+        stars.didChangeRating = { [weak self] (new) in self?.rating = new }
         setPlaceholderText()
         styleCommentView()
         commentViewContainer.alpha = 0.0 //setting initial hidden state
