@@ -191,6 +191,17 @@ open class StylableLabel : UILabel {
 }
 
 /// :nodoc:
+@objc(MBStylableTextView)
+open class StylableTextView: UITextView {
+    // Workaround the fact that UITextView properties are not marked with UI_APPEARANCE_SELECTOR
+    @objc dynamic open var normalTextColor: UIColor = .black {
+        didSet {
+            textColor = normalTextColor
+        }
+    }
+}
+
+/// :nodoc:
 @objc(MBDistanceLabel)
 open class DistanceLabel: StylableLabel {
     @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)

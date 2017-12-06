@@ -127,13 +127,21 @@ open class DayStyle: Style {
         WayNameLabel.appearance().textColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
-
+        EndOfRouteTitleLabel.appearance().textColor = .black
+        EndOfRouteTitleLabel.appearance().normalFont = .systemFont(ofSize: 36.0)
+        EndOfRouteContentView.appearance().backgroundColor = .white
+        RatingControl.appearance().selectedColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
+        RatingControl.appearance().normalColor = #colorLiteral(red: 0.8508961797, green: 0.8510394692, blue: 0.850877285, alpha: 1)
+        EndOfRouteStaticLabel.appearance().textColor = #colorLiteral(red: 0.217173934, green: 0.3645851612, blue: 0.489295125, alpha: 1)
+        EndOfRouteStaticLabel.appearance().normalFont = .systemFont(ofSize: 14.0)
+        EndOfRouteButton.appearance().textColor = .darkGray
+        EndOfRouteButton.appearance().textFont = .systemFont(ofSize: 15)
         UIApplication.shared.statusBarStyle = statusBarStyle ?? .default
     }
 }
 
 /**
- `NightStyle` is default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
+ `NightStyle` is the default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
 @objc(MBNightStyle)
 open class NightStyle: DayStyle {
@@ -194,5 +202,14 @@ open class NightStyle: DayStyle {
         WayNameLabel.appearance().backgroundColor = .clear
         WayNameLabel.appearance().textColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
+        EndOfRouteContentView.appearance().backgroundColor = backgroundColor
+        RatingControl.appearance().selectedColor = #colorLiteral(red: 0.9803059896, green: 0.9978019022, blue: 1, alpha: 1)
+        RatingControl.appearance().normalColor = #colorLiteral(red: 0.149668334, green: 0.1680230035, blue: 0.1472480238, alpha: 1)
+        EndOfRouteTitleLabel.appearance().textColor = .white
+        EndOfRouteStaticLabel.appearance().textColor = UIColor.white.withAlphaComponent(0.9)
+        EndOfRouteStaticLabel.appearance().alpha = 1.0
+        EndOfRouteCommentView.appearance().backgroundColor = #colorLiteral(red: 0.1875049942, green: 0.2981707989, blue: 0.4181857639, alpha: 1)
+        EndOfRouteCommentView.appearance().normalTextColor = .white
+        EndOfRouteButton.appearance().textColor = .white
     }
 }

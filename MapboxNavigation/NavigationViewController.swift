@@ -258,11 +258,22 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     @objc public var sendsNotifications: Bool = true
     
     /**
-     Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
+     Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `true`.
      */
     @objc public var showsReportFeedback: Bool = true {
         didSet {
             mapViewController?.reportButton.isHidden = !showsReportFeedback
+            showsEndOfRouteFeedback = showsReportFeedback
+        }
+    }
+    
+    
+    /**
+    Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
+    */
+    @objc public var showsEndOfRouteFeedback: Bool = true {
+        didSet {
+            mapViewController?.showsEndOfRoute = showsEndOfRouteFeedback
         }
     }
     
@@ -301,8 +312,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     @objc public var annotatesSpokenInstructions = false
     
     let progressBar = ProgressBar()
-    
-    var previousArrivalWaypoint: Waypoint?
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -364,6 +373,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         super.viewDidLoad()
         resumeNotifications()
         progressBar.dock(on: view)
+        view.clipsToBounds = true
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -408,11 +418,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
-        
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint && routeProgress.currentLegProgress.leg.destination != previousArrivalWaypoint {
-            delegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
-            previousArrivalWaypoint = routeProgress.currentLegProgress.leg.destination
-        }
     }
     
     @objc func didPassInstructionPoint(notification: NSNotification) {
@@ -603,5 +608,13 @@ extension NavigationViewController: RouteControllerDelegate {
     @objc public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
         let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
         mapViewController?.statusView.show(title, showSpinner: false)
+    }
+    
+    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
+        guard routeController.routeProgress.isFinalLeg else { return }
+        
+        let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
+        let noEndOfRouteShow = { self.routeController.sendCancelEvent(); completion(true) }
+        showsEndOfRouteFeedback ? self.mapViewController?.showEndOfRoute( completion: completion) : noEndOfRouteShow()
     }
 }

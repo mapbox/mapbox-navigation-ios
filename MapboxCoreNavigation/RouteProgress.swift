@@ -31,6 +31,14 @@ open class RouteProgress: NSObject {
         return route.legs[legIndex]
     }
 
+    /**
+    Returns true if `currentLeg` is the last leg.
+    */
+    public var isFinalLeg: Bool {
+        guard let lastLeg = route.legs.last else { return false }
+        return currentLeg == lastLeg
+    }
+ 
     
     /**
      Total distance traveled by user along all legs.

@@ -133,6 +133,9 @@
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
+		8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D391CE11FD71E78006BB91F /* Waypoint.swift */; };
+		8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB63A391FBBCA2200928389 /* RatingControl.swift */; };
+		8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */; };
 		8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */; };
 		C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5000A921EC25C6E00563EA9 /* Abbreviations.swift */; };
 		C51245F21F19471C00E33B52 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
@@ -436,6 +439,9 @@
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
+		8D391CE11FD71E78006BB91F /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
+		8DB63A391FBBCA2200928389 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
+		8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRouteViewController.swift; sourceTree = "<group>"; };
 		8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIGestureRecognizer.swift; sourceTree = "<group>"; };
 		C5000A921EC25C6E00563EA9 /* Abbreviations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Abbreviations.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
@@ -666,6 +672,7 @@
 				35726EE71F0856E900AFA1B6 /* DayStyle.swift */,
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
+				8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */,
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				351A40151F0291D100E6D378 /* PollyVoiceController.swift */,
 				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
@@ -821,6 +828,7 @@
 				35B7837D1F9547B300291F9A /* Transitioning.swift */,
 				359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */,
 				3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */,
+				8D391CE11FD71E78006BB91F /* Waypoint.swift */,
 				C5A7EC5B1FD610A80008B9BA /* VisualInstructionComponent.swift */,
 			);
 			name = Extensions;
@@ -843,6 +851,7 @@
 				355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */,
 				35F520BF1FB482A200FC9C37 /* NextBannerView.swift */,
 				35DA85781FC45787004092EC /* StatusView.swift */,
+				8DB63A391FBBCA2200928389 /* RatingControl.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1483,9 +1492,12 @@
 				3512C7C81FB0A0C100CDD2A3 /* UIViewController.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
+				8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */,
+				8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesContainerView.swift in Sources */,
+				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
 				C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */,
 				C58159011EA6D02700FC6C3D /* MGLVectorSource.swift in Sources */,
 				351BEC011E5BCC63006FE110 /* ManeuverView.swift in Sources */,

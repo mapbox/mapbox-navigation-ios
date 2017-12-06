@@ -81,6 +81,14 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:didUpdateLocations:)
     optional func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation])
+    
+    /**
+     Called when the route controller arrives at a waypoint.
+     - parameter waypoint: The waypoint that the controller has arrived at.
+     - parameter finalDestination: A boolean flag that signals that the waypoint is the final destination.
+    */
+    @objc(routeController:didArriveAtWaypoint:)
+    optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint)
 }
 
 /**
@@ -167,6 +175,9 @@ open class RouteController: NSObject {
 
     var recentDistancesFromManeuver: [CLLocationDistance] = []
 
+    var previousArrivalWaypoint: Waypoint?
+
+
     /**
      Intializes a new `RouteController`.
 
@@ -196,7 +207,6 @@ open class RouteController: NSObject {
     deinit {
         suspendLocationUpdates()
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
-        sendCancelEvent()
         suspendNotifications()
         UIDevice.current.isBatteryMonitoringEnabled = false
     }
@@ -417,15 +427,26 @@ open class RouteController: NSObject {
 
 extension RouteController {
     @objc func progressDidChange(notification: NSNotification) {
+        if let progress = notification.userInfo?[RouteControllerProgressDidChangeNotificationProgressKey] as? RouteProgress {
+            let destination = progress.currentLeg.destination
+
+            if progress.currentLegProgress.userHasArrivedAtWaypoint, sessionState.arrivalTimestamp == nil, destination != previousArrivalWaypoint  {
+                delegate?.routeController?(self, didArriveAt: destination)
+                
+                previousArrivalWaypoint = destination
+            }
+        }
         if sessionState.departureTimestamp == nil {
             sessionState.departureTimestamp = Date()
             sendDepartEvent()
         }
+        
         checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
 
     @objc func didPassSpokenInstructionPoint(notification: NSNotification) {
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
+        let progress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
+        if progress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
         }
@@ -842,8 +863,9 @@ extension RouteController {
         events.flush()
     }
 
-    func sendCancelEvent() {
-        events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: events.navigationCancelEvent(routeController: self))
+    open func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
+        let attributes = events.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
+        events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         events.flush()
     }
 

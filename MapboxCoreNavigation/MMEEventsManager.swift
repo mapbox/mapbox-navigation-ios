@@ -177,6 +177,8 @@ struct EventDetails {
 }
 
 extension MMEEventsManager {
+    open static var unrated: Int { return -1 }
+    
     func addDefaultEvents(routeController: RouteController) -> [String: Any] {
         return EventDetails(routeController: routeController, session: routeController.sessionState).eventDictionary
     }
@@ -193,10 +195,21 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationCancelEvent(routeController: RouteController) -> [String: Any] {
+    //TODO: Change event semantic to `.exit`
+    func navigationCancelEvent(routeController: RouteController, rating potentialRating: Int? = nil, comment: String? = nil) -> [String: Any] {
+        let rating = potentialRating ?? MMEEventsManager.unrated
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationCancel
         eventDictionary["arrivalTimestamp"] = routeController.sessionState.arrivalTimestamp?.ISO8601 ?? NSNull()
+        
+        let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
+        assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
+        guard validRating else { return eventDictionary }
+        eventDictionary["rating"] = rating
+        
+        if comment != nil {
+            eventDictionary["comment"] = comment
+        }
         return eventDictionary
     }
     
