@@ -97,7 +97,7 @@ open class BottomBannerView: UIView {
         let coordinatesLeftOnStepCount = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
 
         guard coordinatesLeftOnStepCount >= 0 else {
-            timeRemainingLabel.textColor = TimeRemainingLabel.appearance(for: traitCollection).textColor
+            congestionLevel = .unknown
             return
         }
 
