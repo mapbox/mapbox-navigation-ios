@@ -39,9 +39,9 @@ open class Style: NSObject {
     /**
      Applies the style for all changed properties.
      */
-    @objc open func apply() {
-        
-    }
+    @objc open func apply() { }
+    
+    @objc public required override init() { }
 }
 
 /**
