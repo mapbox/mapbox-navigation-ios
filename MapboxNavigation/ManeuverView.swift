@@ -80,10 +80,13 @@ public class ManeuverView: UIView {
             switch direction {
             case .straightAhead:
                 ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 180)
+                flip = step.drivingSide == .left
             case .left, .slightLeft, .sharpLeft:
                 ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 275)
+                flip = step.drivingSide == .left
             default:
                 ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 90)
+                flip = step.drivingSide == .left
             }
         case .arrive:
             switch direction {
