@@ -397,7 +397,6 @@ open class RouteController: NSObject {
             guard let coords = step.coordinates else { continue }
             guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
             
-            
             // First time around, currentClosest will be `nil`.
             guard let currentClosestDistance = currentClosest?.distance else {
                 currentClosest = (index: stepIndex, distance: closestCoordOnStep.distance)
