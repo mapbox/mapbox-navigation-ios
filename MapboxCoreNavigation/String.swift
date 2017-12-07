@@ -31,14 +31,6 @@ extension String {
             ])
     }
     
-    var removingPunctuation: String {
-        return byReplacing([
-            ("(", ""),
-            (")", ""),
-            ("_", "")
-            ])
-    }
-    
     var asSSMLAddress: String {
         return "<say-as interpret-as=\"address\">\(self.addingXMLEscapes)</say-as>"
     }

@@ -3,6 +3,45 @@ import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
 
+extension NSAttributedString {
+    @available(iOS 10.0, *)
+    public func pronounced(_ pronunciation: String) -> NSAttributedString {
+        let phoneticWords = pronunciation.components(separatedBy: " ")
+        let phoneticString = NSMutableAttributedString()
+        for (word, phoneticWord) in zip(string.components(separatedBy: " "), phoneticWords) {
+            // AVSpeechSynthesizer doesn’t recognize some common IPA symbols.
+            let phoneticWord = phoneticWord.byReplacing([("ɡ", "g"), ("ɹ", "r")])
+            if phoneticString.length > 0 {
+                phoneticString.append(NSAttributedString(string: " "))
+            }
+            phoneticString.append(NSAttributedString(string: word, attributes: [
+                NSAttributedStringKey(rawValue: AVSpeechSynthesisIPANotationAttribute): phoneticWord,
+            ]))
+        }
+        return phoneticString
+    }
+}
+
+extension SpokenInstruction {
+    @available(iOS 10.0, *)
+    func attributedText(for legProgress: RouteLegProgress) -> NSAttributedString {
+        let attributedText = NSMutableAttributedString(string: text)
+        let step = legProgress.currentStep
+        if let name = step.names?.first,
+            let phoneticName = step.phoneticNames?.first {
+            let nameRange = attributedText.mutableString.range(of: name)
+            attributedText.replaceCharacters(in: nameRange, with: NSAttributedString(string: name).pronounced(phoneticName))
+        }
+        if let step = legProgress.upComingStep,
+            let name = step.names?.first,
+            let phoneticName = step.phoneticNames?.first {
+            let nameRange = attributedText.mutableString.range(of: name)
+            attributedText.replaceCharacters(in: nameRange, with: NSAttributedString(string: name).pronounced(phoneticName))
+        }
+        return attributedText
+    }
+}
+
 /**
  The `RouteVoiceController` class provides voice guidance.
  */
@@ -59,6 +98,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
+    var legProgress: RouteLegProgress?
     
     /**
      Default initializer for `RouteVoiceController`.
@@ -146,6 +186,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
+        legProgress = routeProgress.currentLegProgress
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         lastSpokenInstruction = instruction
         speak(instruction)
@@ -167,18 +208,28 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         }
         
-        let utterance = AVSpeechUtterance(string: instruction.text)
+        var utterance: AVSpeechUtterance?
+        if Locale.preferredLocalLanguageCountryCode == "en-US" {
+            // Alex can’t handle attributed text.
+            utterance = AVSpeechUtterance(string: instruction.text)
+            utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+        }
+        
+        if #available(iOS 10.0, *), utterance?.voice == nil, let legProgress = legProgress {
+            utterance = AVSpeechUtterance(attributedString: instruction.attributedText(for: legProgress))
+        } else {
+            utterance = AVSpeechUtterance(string: instruction.text)
+        }
         
         // Only localized languages will have a proper fallback voice
-        if Locale.preferredLocalLanguageCountryCode == "en-US" {
-            utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
+        if utterance?.voice == nil {
+            utterance?.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
         }
-        if utterance.voice == nil {
-            utterance.voice = AVSpeechSynthesisVoice(language: Locale.preferredLocalLanguageCountryCode)
-        }
-        utterance.volume = volume
+        utterance?.volume = volume
         
-        speechSynth.speak(utterance)
+        if let utterance = utterance {
+            speechSynth.speak(utterance)
+        }
     }
 }
 
