@@ -43,9 +43,6 @@
 /* Button title for resume tracking */
 "RESUME" = "Doorgaan";
 
-/* Then */
-"THEN" = "Hierna: ";
-
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Navigatie Simuleren";
 
