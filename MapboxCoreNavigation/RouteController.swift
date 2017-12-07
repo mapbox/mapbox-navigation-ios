@@ -176,8 +176,6 @@ open class RouteController: NSObject {
     var recentDistancesFromManeuver: [CLLocationDistance] = []
 
     var previousArrivalWaypoint: Waypoint?
-    
-    typealias StepIndexDistance = (index: Int, distance: CLLocationDistance)
 
 
     /**
@@ -387,28 +385,6 @@ open class RouteController: NSObject {
         }
 
         return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
-    }
-    
-    func closestStep(to coordinate: CLLocationCoordinate2D) -> StepIndexDistance? {
-        var currentClosest: StepIndexDistance?
-        let remainingSteps = routeProgress.currentLeg.steps.suffix(from: routeProgress.currentLegProgress.stepIndex)
-        
-        for (stepIndex, step) in remainingSteps.enumerated() {
-            guard let coords = step.coordinates else { continue }
-            guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
-            
-            // First time around, currentClosest will be `nil`.
-            guard let currentClosestDistance = currentClosest?.distance else {
-                currentClosest = (index: stepIndex, distance: closestCoordOnStep.distance)
-                continue
-            }
-
-            if closestCoordOnStep.distance < currentClosestDistance {
-                currentClosest = (index: stepIndex, distance: closestCoordOnStep.distance)
-            }
-        }
-        
-        return currentClosest
     }
 
     /**
@@ -634,7 +610,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         // Check and see if the user is near a future step.
-        guard let nearestStep = closestStep(to: location.coordinate) else {
+        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
             return false
         }
         
@@ -824,7 +800,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func advanceStepIndex(to: Int? = nil) {
+    func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {
         if let forcedStepIndex = to {
             routeProgress.currentLegProgress.stepIndex = forcedStepIndex
         } else {
