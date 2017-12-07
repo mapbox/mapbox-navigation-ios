@@ -176,6 +176,8 @@ open class RouteController: NSObject {
     var recentDistancesFromManeuver: [CLLocationDistance] = []
 
     var previousArrivalWaypoint: Waypoint?
+    
+    typealias StepIndexDistance = (index: Int, distance: CLLocationDistance)
 
 
     /**
@@ -387,22 +389,27 @@ open class RouteController: NSObject {
         return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
     }
     
-    func closestStep(to coordinate: CLLocationCoordinate2D) -> (CLLocationDistance, Int)? {
-        var closestStep = Int.max
-        var lowestDistance = Double.infinity
+    func closestStep(to coordinate: CLLocationCoordinate2D) -> StepIndexDistance? {
+        var currentClosest: StepIndexDistance?
         let remainingSteps = routeProgress.currentLeg.steps.suffix(from: routeProgress.currentLegProgress.stepIndex)
         
         for (stepIndex, step) in remainingSteps.enumerated() {
             guard let coords = step.coordinates else { continue }
             guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
+            
+            
+            // First time around, currentClosest will be `nil`.
+            guard let currentClosestDistance = currentClosest?.distance else {
+                currentClosest = (index: stepIndex, distance: closestCoordOnStep.distance)
+                continue
+            }
 
-            if closestCoordOnStep.distance < lowestDistance {
-                lowestDistance = closestCoordOnStep.distance
-                closestStep = stepIndex
+            if closestCoordOnStep.distance < currentClosestDistance {
+                currentClosest = (index: stepIndex, distance: closestCoordOnStep.distance)
             }
         }
         
-        return closestStep == Int.max ? nil : (lowestDistance, closestStep)
+        return currentClosest
     }
 
     /**
@@ -632,8 +639,8 @@ extension RouteController: CLLocationManagerDelegate {
             return false
         }
         
-        if nearestStep.0 < radius {
-            incrementRouteProgress(forcedStepIndex: nearestStep.1)
+        if nearestStep.distance < radius {
+            advanceStepIndex(to: nearestStep.index)
             return true
         }
         
@@ -794,7 +801,7 @@ extension RouteController: CLLocationManagerDelegate {
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
             } else if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
-                incrementRouteProgress()
+                advanceStepIndex()
             }
         }
 
@@ -818,8 +825,8 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func incrementRouteProgress(forcedStepIndex: Int? = nil) {
-        if let forcedStepIndex = forcedStepIndex {
+    func advanceStepIndex(to: Int? = nil) {
+        if let forcedStepIndex = to {
             routeProgress.currentLegProgress.stepIndex = forcedStepIndex
         } else {
             routeProgress.currentLegProgress.stepIndex += 1
