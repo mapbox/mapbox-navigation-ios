@@ -36,7 +36,10 @@ public class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var locations: [SimulatedLocation]!
     fileprivate var routeLine = [CLLocationCoordinate2D]()
     
-    public var speedMultiplier: Double = 1
+    /**
+     Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
+     */
+    @objc public var speedMultiplier: Double = 1
     
     @objc override public var location: CLLocation? {
         get {
