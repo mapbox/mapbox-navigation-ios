@@ -26,7 +26,7 @@ struct FeedbackItem {
     static let badRoute = FeedbackItem(title: badRouteTitle, image: .feedbackImage(named:"feedback-wrong-directions"), feedbackType: .routingError)
     static let missingRoad = FeedbackItem(title: missingExitTitle, image: .feedbackImage(named:"feedback-missing-road"), feedbackType: .missingRoad)
     static let missingExit = FeedbackItem(title: missingRoadTitle, image: .feedbackImage(named:"feedback-exit"), feedbackType: .missingExit)
-    static let generalMapError = FeedbackItem(title: generalIssueTitle, image: .feedbackImage(named:"feedback-map-error"), feedbackType: .general)
+    static let generalMapError = FeedbackItem(title: generalIssueTitle, image: .feedbackImage(named:"feedback-map-error"), feedbackType: .mapIssue)
 }
 
 
