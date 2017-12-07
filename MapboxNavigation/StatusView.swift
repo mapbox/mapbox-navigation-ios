@@ -1,7 +1,7 @@
 import UIKit
 
 protocol StatusViewDelegate: class {
-    func statusView(_ statusView: StatusView, sliderValueChangedTo value: Double)
+    func statusView(_ statusView: StatusView, valueChangedTo value: Double)
 }
 
 /// :nodoc:
@@ -13,10 +13,10 @@ public class StatusView: UIView {
     weak var delegate: StatusViewDelegate?
     var panStartPoint: CGPoint?
     
-    var isSliderEnabled = false
-    var sliderValue: Double = 0 {
+    var canChangeValue = false
+    var value: Double = 0 {
         didSet {
-            delegate?.statusView(self, sliderValueChangedTo: sliderValue)
+            delegate?.statusView(self, valueChangedTo: value)
         }
     }
     
@@ -54,12 +54,15 @@ public class StatusView: UIView {
         activityIndicatorView.rightAnchor.constraint(equalTo: safeRightAnchor, constant: -10).isActive = true
         activityIndicatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(StatusView.handlePan(_:)))
+        let recognizer = UIPanGestureRecognizer(target: self, action: #selector(StatusView.pan(_:)))
         addGestureRecognizer(recognizer)
+        
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(StatusView.tap(_:)))
+        addGestureRecognizer(tapRecognizer)
     }
     
-    @objc func handlePan(_ sender: UIPanGestureRecognizer) {
-        guard isSliderEnabled else { return }
+    @objc func pan(_ sender: UIPanGestureRecognizer) {
+        guard canChangeValue else { return }
         
         let location = sender.location(in: self)
         
@@ -69,7 +72,18 @@ public class StatusView: UIView {
             guard let startPoint = panStartPoint else { return }
             let offsetX = location.x - startPoint.x
             let coefficient = (offsetX / bounds.width) / 20.0
-            sliderValue = Double(min(max(CGFloat(sliderValue) + coefficient, 0), 1))
+            value = Double(min(max(CGFloat(value) + coefficient, 0), 1))
+        }
+    }
+    
+    @objc func tap(_ sender: UITapGestureRecognizer) {
+        guard canChangeValue else { return }
+        
+        let location = sender.location(in: self)
+        
+        if sender.state == .ended {
+            let incrementer = location.x > bounds.midX ? 0.1 : -0.1
+            value = min(max(value + incrementer, 0), 1)
         }
     }
     
