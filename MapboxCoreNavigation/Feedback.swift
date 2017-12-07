@@ -55,6 +55,11 @@ public enum FeedbackType: Int, CustomStringConvertible {
      */
     case reportTraffic
     
+    /**
+     Identifies the feedback as a general map issue.
+     */
+    case mapIssue
+    
     public var description: String {
         switch self {
         case .general:
@@ -77,6 +82,8 @@ public enum FeedbackType: Int, CustomStringConvertible {
             return "confusing_instruction"
         case .reportTraffic:
             return "report_traffic"
+        case .mapIssue:
+            return "other_map_issue"
         }
     }
 }
