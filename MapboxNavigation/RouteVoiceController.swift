@@ -26,17 +26,21 @@ extension SpokenInstruction {
     @available(iOS 10.0, *)
     func attributedText(for legProgress: RouteLegProgress) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: text)
-        let step = legProgress.currentStep
-        if let name = step.names?.first,
-            let phoneticName = step.phoneticNames?.first {
-            let nameRange = attributedText.mutableString.range(of: name)
-            attributedText.replaceCharacters(in: nameRange, with: NSAttributedString(string: name).pronounced(phoneticName))
-        }
         if let step = legProgress.upComingStep,
             let name = step.names?.first,
             let phoneticName = step.phoneticNames?.first {
             let nameRange = attributedText.mutableString.range(of: name)
-            attributedText.replaceCharacters(in: nameRange, with: NSAttributedString(string: name).pronounced(phoneticName))
+            if (nameRange.location != NSNotFound) {
+                attributedText.replaceCharacters(in: nameRange, with: NSAttributedString(string: name).pronounced(phoneticName))
+            }
+        }
+        if let step = legProgress.followOnStep,
+            let name = step.names?.first,
+            let phoneticName = step.phoneticNames?.first {
+            let nameRange = attributedText.mutableString.range(of: name)
+            if (nameRange.location != NSNotFound) {
+                attributedText.replaceCharacters(in: nameRange, with: NSAttributedString(string: name).pronounced(phoneticName))
+            }
         }
         return attributedText
     }
