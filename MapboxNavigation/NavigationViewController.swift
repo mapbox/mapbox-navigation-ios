@@ -348,9 +348,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         routeController.resume()
         
         if routeController.locationManager is SimulatedLocationManager {
-            let test = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
-            let title = String.localizedStringWithFormat(test, 1)
-            mapViewController?.statusView.show(title, showSpinner: false)
+            let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
+            mapViewController?.statusView.show(String.localizedStringWithFormat(format, 1), showSpinner: false)
         }
     }
     
