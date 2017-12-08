@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxSpeech
 
 extension NSAttributedString {
     @available(iOS 10.0, *)
@@ -96,23 +97,67 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     */
     @objc public var bufferBetweenAnnouncements: TimeInterval = 3
     
+    
     /**
      Delegate used for getting metadata information about a particular spoken instruction.
      */
     public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
+    /**
+     The locale of the spoken instructions. This will be default to user device locale.
+     */
+    @objc public var spokenlocale: Locale?
+    
     var lastSpokenInstruction: SpokenInstruction?
     var legProgress: RouteLegProgress?
+    
+    
+    /**
+     Number of seconds a Polly request can wait before it is canceled and the default speech synthesizer speaks the instruction.
+     */
+    @objc public var timeoutIntervalForRequest:TimeInterval = 5
+    
+    
+    /**
+     Number of steps ahead of the current step to cache spoken instructions.
+     */
+    @objc public var stepsAheadToCache: Int = 3
+    
+    var pollyTask: URLSessionDataTask?
+    
+    let sessionConfiguration = URLSessionConfiguration.default
+    var urlSession: URLSession
+    var cacheURLSession: URLSession
+    var cachePollyTask: URLSessionDataTask?
+    
+    var spokenInstructionsForRoute = NSCache<NSString, NSData>()
+    
+    let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
+    
+    var mapboxSpeechSynth: SpeechSynthesizer
     
     /**
      Default initializer for `RouteVoiceController`.
      */
-    override public init() {
-        super.init()
-        
+    public init(accessToken: String? = nil, host: String? = nil) {
         if !Bundle.main.backgroundModes.contains("audio") {
             assert(false, "This application’s Info.plist file must include “audio” in UIBackgroundModes. This background mode is used for spoken instructions while the application is in the background.")
         }
+        if let accessToken = accessToken, let host = host {
+            mapboxSpeechSynth = SpeechSynthesizer(accessToken: accessToken, host: host)
+        } else if let accessToken = accessToken {
+            mapboxSpeechSynth = SpeechSynthesizer(accessToken: accessToken)
+        } else {
+            mapboxSpeechSynth = SpeechSynthesizer.shared
+        }
+
+        spokenInstructionsForRoute.countLimit = 200
+        sessionConfiguration.timeoutIntervalForRequest = timeoutIntervalForRequest;
+        
+        urlSession = URLSession(configuration: URLSessionConfiguration.default)
+        cacheURLSession = URLSession(configuration: URLSessionConfiguration.default)
+        
+        super.init()
         
         speechSynth.delegate = self
         rerouteSoundPlayer.delegate = self
@@ -193,15 +238,29 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         legProgress = routeProgress.currentLegProgress
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         lastSpokenInstruction = instruction
-        speak(instruction)
+        
+        for (stepIndex, step) in routeProgress.currentLegProgress.leg.steps.suffix(from: routeProgress.currentLegProgress.stepIndex).enumerated() {
+            let adjustedStepIndex = stepIndex + routeProgress.currentLegProgress.stepIndex
+            
+            guard adjustedStepIndex < routeProgress.currentLegProgress.stepIndex + stepsAheadToCache else { continue }
+            guard let instructions = step.instructionsSpokenAlongStep else { continue }
+            
+            for instruction in instructions {
+                guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else { continue }
+                
+                cacheAndPlay(instruction: instruction, play: false)
+            }
+        }
+        
+        cacheAndPlay(instruction: instruction, play: true)
     }
     
     /**
-     Reads aloud the given instruction.
+     Reads aloud the given instruction using iOS's built in speech synthesizer.
      
      - parameter instruction: The instruction to read aloud.
      */
-    open func speak(_ instruction: SpokenInstruction) {
+    open func speakWithNativeSpeechSynth(_ instruction: SpokenInstruction) {
         if speechSynth.isSpeaking, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
@@ -233,6 +292,60 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         if let utterance = utterance {
             speechSynth.speak(utterance)
+        }
+    }
+    
+    /**
+     Fetches, caches and optionally plays an instruction using MapboxSpeech.
+     
+     - parameter instruction: The instruction to read aloud.
+     - parameter play: Bool whether the fetched instruction should also be played.
+     */
+    open func cacheAndPlay(instruction: SpokenInstruction, play: Bool) {
+        let options = SpeechOptions(ssml: instruction.ssmlText)
+        if let spokenlocale = spokenlocale {
+            options.locale = spokenlocale
+        }
+        mapboxSpeechSynth.audioData(with: options) { (data, error) in
+            guard let data = data else {
+                if play {
+                    self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
+                    self.speakWithNativeSpeechSynth(instruction)
+                }
+                return
+            }
+            
+            self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
+            
+            if play {
+                self.play(data)
+            }
+        }
+    }
+
+    func play(_ data: Data) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            do {
+                self.audioPlayer = try AVAudioPlayer(data: data)
+                let prepared = self.audioPlayer?.prepareToPlay() ?? false
+                guard prepared else {
+                    self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
+                    self.speakWithNativeSpeechSynth(self.lastSpokenInstruction!)
+                    return
+                }
+                self.audioPlayer?.delegate = self
+                self.audioPlayer?.volume = self.volume
+                try self.duckAudio()
+                let played = self.audioPlayer?.play() ?? false
+                guard played else {
+                    self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
+                    self.speakWithNativeSpeechSynth(self.lastSpokenInstruction!)
+                    return
+                }
+            } catch  let error as NSError {
+                self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+                self.speakWithNativeSpeechSynth(self.lastSpokenInstruction!)
+            }
         }
     }
 }
