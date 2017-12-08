@@ -1,5 +1,5 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 3.7
-github "mapbox/MapboxDirections.swift" ~> 0.15.1
+github "mapbox/MapboxDirections.swift" ~> 0.15
 github "mapbox/turf-swift" ~> 0.0.3
 github "rs/SDWebImage" ~> 4.1
 github "frederoni/aws-sdk-ios" ~> 2.6
