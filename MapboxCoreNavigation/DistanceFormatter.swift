@@ -36,7 +36,7 @@ public class DistanceFormatter: LengthFormatter {
      
      - parameter approximate: approximates the distances.
      */
-    public init(approximate: Bool = false) {
+    @objc public init(approximate: Bool = false) {
         self.approx = approximate
         super.init()
     }
@@ -87,7 +87,7 @@ public class DistanceFormatter: LengthFormatter {
      
      The user’s `Locale` is used here to set the units.
     */
-    public func string(from distance: CLLocationDistance) -> String {
+    @objc public func string(from distance: CLLocationDistance) -> String {
         // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
         let localeIdentifier = numberFormatter.locale.identifier
         if localeIdentifier == "en-GB" || localeIdentifier == "en_GB" {
@@ -108,7 +108,7 @@ public class DistanceFormatter: LengthFormatter {
         return formattedDistance(distance, modify: &unit)
     }
     
-    public override func string(fromMeters numberInMeters: Double) -> String {
+    @objc public override func string(fromMeters numberInMeters: Double) -> String {
         return self.string(from: numberInMeters)
     }
     

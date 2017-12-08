@@ -157,3 +157,4 @@ public var RouteControllerNumberOfSecondsForRerouteFeedback: TimeInterval = 10
 public var RouteControllerOpportunisticReroutingInterval: TimeInterval = 120
 
 let FasterRouteFoundEvent = "navigation.fasterRoute"
+

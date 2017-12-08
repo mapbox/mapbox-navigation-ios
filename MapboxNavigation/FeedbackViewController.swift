@@ -20,16 +20,13 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 
 typealias FeedbackSection = [FeedbackItem]
 
-class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollectionViewCellDelegate, AVAudioRecorderDelegate, UIGestureRecognizerDelegate {
+class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     
     typealias SendFeedbackHandler = (FeedbackItem) -> ()
     
-    var recordsAudioFeedback = false
     var sendFeedbackHandler: SendFeedbackHandler?
     var dismissFeedbackHandler: (() -> ())?
     var sections = [FeedbackSection]()
-    var recordingSession: AVAudioSession?
-    var audioRecorder: AVAudioRecorder?
     var activeFeedbackItem: FeedbackItem?
     
     let cellReuseIdentifier = "collectionViewCellId"
@@ -71,92 +68,11 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         }
         
         enableAutoDismiss()
-        
-        if recordsAudioFeedback {
-            validateAudio()
-            enableAudioRecording()
-        }
-    }
-    
-    func validateAudio() {
-        guard Bundle.main.microphoneUsageDescription != nil else {
-            assert(false, "If `recordsAudioFeedback` is enabled, `NSMicrophoneUsageDescription` must be added in app plist")
-            return
-        }
-    }
-    
-    func enableAudioRecording() {
-        abortAutodismiss()
-        recordingSession = AVAudioSession.sharedInstance()
-        recordingSession?.requestRecordPermission() { [weak self] allowed in
-            self?.enableAutoDismiss()
-        }
     }
     
     func enableAutoDismiss() {
         abortAutodismiss()
         perform(#selector(dismissFeedback), with: nil, afterDelay: autoDismissInterval)
-    }
-    
-    func didLongPress(on cell: FeedbackCollectionViewCell, sender: UILongPressGestureRecognizer) {
-        guard sender.state == .began || sender.state == .ended else { return }
-        let touchLocation = sender.location(in: self.collectionView)
-        guard let indexPath = self.collectionView.indexPathForItem(at: touchLocation) else { return }
-        
-        abortAutodismiss()
-        activeFeedbackItem = sections[indexPath.section][indexPath.row]
-        
-        if sender.state == .began {
-            
-            reportIssueLabel.text = NSLocalizedString("RECORDING_AUDIO", bundle: .mapboxNavigation, value: "Recording Audio", comment: "Recording audio for feedback")
-            reportIssueLabel.textColor = .red
-            
-            reportIssueLabel.startRippleAnimation()
-            
-            if audioRecorder == nil {
-                startRecording()
-            }
-        }
-        
-        if sender.state == .ended {
-            finishRecording()
-        }
-    }
-    
-    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        if let fileData = NSData(contentsOfFile: recorder.url.path) as Data? {
-            activeFeedbackItem!.audio = fileData
-            sendFeedbackHandler?(activeFeedbackItem!)
-        }
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func startRecording() {
-        guard let audioFile = FileManager().cacheAudioFileLocation else { return }
-        
-        let settings = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.low.rawValue
-        ]
-        
-        do {
-            audioRecorder = try AVAudioRecorder(url: audioFile, settings: settings)
-            audioRecorder?.delegate = self
-            audioRecorder?.record()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func finishRecording() {
-        audioRecorder?.stop()
-        audioRecorder = nil
     }
     
     func presentError(_ message: String) {
@@ -174,7 +90,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(dismissFeedback), object: nil)
     }
     
-    func dismissFeedback() {
+    @objc func dismissFeedback() {
         abortAutodismiss()
         dismissFeedbackHandler?()
     }
@@ -185,14 +101,8 @@ class FeedbackViewController: UIViewController, DismissDraggable, FeedbackCollec
         return !isDescendant
     }
     
-    func handleDismissTap(sender: UITapGestureRecognizer) {
+    @objc func handleDismissTap(sender: UITapGestureRecognizer) {
         dismissFeedback()
-    }
-}
-
-extension FileManager {
-    var cacheAudioFileLocation: URL? {
-        return self.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent("recording-\(Date().timeIntervalSince1970).m4a")
     }
 }
 
@@ -204,7 +114,6 @@ extension FeedbackViewController: UICollectionViewDataSource {
         cell.titleLabel.text = item.title
         cell.imageView.tintColor = .clear
         cell.imageView.image = item.image
-        cell.delegate = self
         
         return cell
     }
@@ -238,27 +147,16 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-protocol FeedbackCollectionViewCellDelegate: class {
-    func didLongPress(on cell: FeedbackCollectionViewCell, sender: UILongPressGestureRecognizer)
-}
-
 class FeedbackCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var circleView: UIView!
     
-    weak var delegate: FeedbackCollectionViewCellDelegate?
     var longPress: UILongPressGestureRecognizer?
     var originalTransform: CGAffineTransform?
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        if longPress == nil {
-            longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.didLongPress(_:)))
-            longPress?.minimumPressDuration = 0.5
-            addGestureRecognizer(longPress!)
-        }
     }
     
     override func layoutSubviews() {
@@ -281,10 +179,6 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
                 }
             }, completion: nil)
         }
-    }
-    
-    func didLongPress(_ sender: UILongPressGestureRecognizer) {
-        delegate?.didLongPress(on: self, sender: sender)
     }
 }
 

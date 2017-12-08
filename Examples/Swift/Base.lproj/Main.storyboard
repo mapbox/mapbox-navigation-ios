@@ -97,7 +97,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Mapbox Navigation" id="zxr-0T-HBr">
-                        <barButtonItem key="leftBarButtonItem" style="plain" id="XbQ-fY-lUb">
+                        <barButtonItem key="leftBarButtonItem" id="XbQ-fY-lUb">
                             <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="6ux-mK-LQF">
                                 <rect key="frame" x="16" y="7" width="83" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

@@ -2,15 +2,20 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
-class LanesContainerView: LanesView {
-    var stackView: UIStackView!
+
+/// :nodoc:
+@IBDesignable
+@objc(MBLanesContainerView)
+public class LanesContainerView: LanesView {
+    weak var stackView: UIStackView!
+    weak var separatorView: SeparatorView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -22,16 +27,34 @@ class LanesContainerView: LanesView {
     }
     
     func commonInit() {
-        stackView = UIStackView(arrangedSubviews: [])
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        let heightConstraint = heightAnchor.constraint(equalToConstant: 40)
+        heightConstraint.priority = UILayoutPriority(rawValue: 999)
+        heightConstraint.isActive = true
+        
+        let stackView = UIStackView(arrangedSubviews: [])
         stackView.axis = .horizontal
         stackView.spacing = 4
         stackView.distribution = .equalCentering
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(stackView)
+        self.stackView = stackView
         
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-0-[stackView]-0-|", options: [], metrics: nil, views: ["stackView": stackView]))
-        addConstraint(NSLayoutConstraint(item: self, attribute: .centerX, relatedBy: .equal, toItem: stackView, attribute: .centerX, multiplier: 1, constant: 0))
+        let separatorView = SeparatorView()
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(separatorView)
+        self.separatorView = separatorView
+        
+        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
+        separatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {

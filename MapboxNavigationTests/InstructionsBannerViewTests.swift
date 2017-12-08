@@ -1,6 +1,7 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
+import SDWebImage
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -14,10 +15,12 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     
     let bannerHeight: CGFloat = 96
     
+    let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
+    
     var shieldImage: UIImage {
         get {
             let bundle = Bundle(for: MapboxNavigationTests.self)
-            return UIImage(named: "80px-I-280", in: bundle, compatibleWith: nil)!
+            return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
         }
     }
     
@@ -25,8 +28,9 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        let height = Int(instructionsView().primaryLabel.shieldHeight)
-        UIImage.shieldImageCache.setObject(shieldImage, forKey: "I-280-\(height)" as NSString)
+        let instruction = VisualInstructionComponent(text: nil, imageURL: shieldURL)
+        let shieldKey = instruction.shieldKey()
+        SDImageCache.shared().store(shieldImage, forKey: shieldKey)
     }
     
     func instructionsView() -> InstructionsBannerView {
@@ -40,8 +44,13 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
-        view.set(Instruction([Instruction.Component("US-45 / Chicago")]),
-                                              secondaryInstruction: nil)
+        let instructions = [
+            VisualInstructionComponent(text: "US 45", imageURL: nil),
+            VisualInstructionComponent(text: "/", imageURL: nil),
+            VisualInstructionComponent(text: "Chicago", imageURL: nil)
+        ]
+        
+        view.set(instructions, secondaryInstruction: nil)
         
         verifyView(view, size: view.bounds.size)
     }
@@ -49,44 +58,87 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     func testMultilinePrimary() {
         let view = instructionsView()
         styleInstructionsView(view)
-        
+
         view.maneuverView.isStart = true
         view.distance = 482
-        
-        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                                                           Instruction.Component("US-45 / Chicago / US-45 / Chicago")]),
-                                              secondaryInstruction: nil)
-        
+
+        let instructions = [
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
+            VisualInstructionComponent(text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil)
+        ]
+
+        view.set(instructions, secondaryInstruction: nil)
+    
         verifyView(view, size: view.bounds.size)
     }
     
     func testSinglelinePrimaryAndSecondary() {
         let view = instructionsView()
         styleInstructionsView(view)
-        
+
         view.maneuverView.isStart = true
         view.distance = 482
         
-        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280"),
-                                                           Instruction.Component("South")]),
-                                              secondaryInstruction: Instruction([Instruction.Component("US-45 / Chicago")]))
+        let primary = [
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL),
+            VisualInstructionComponent(text: "South", imageURL: nil)
+        ]
+        let secondary = [VisualInstructionComponent(text: "US 45 / Chicago", imageURL: nil)]
         
+        view.set(primary, secondaryInstruction: secondary)
+
         verifyView(view, size: view.bounds.size)
     }
     
     func testPrimaryShieldAndSecondary() {
         let view = instructionsView()
         styleInstructionsView(view)
-        
+
         view.maneuverView.isStart = true
         view.distance = 482
         
-        view.set(Instruction([Instruction.Component("I 280 / South", roadCode: "I 280")]),
-                                              secondaryInstruction: Instruction([Instruction.Component("Mountain View Test")]))
+        let primary = [
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL)
+        ]
+        let secondary = [VisualInstructionComponent(text: "Mountain View Test", imageURL: nil)]
+
+        view.set(primary, secondaryInstruction: secondary)
         
         verifyView(view, size: view.bounds.size)
     }
     
+    func testInstructionsAndNextInstructions() {
+        let view = UIView()
+        view.backgroundColor = .white
+        let instructionsBannerView = instructionsView()
+        let nextBannerViewFrame = CGRect(x: 0, y: instructionsBannerView.frame.maxY, width: instructionsBannerView.bounds.width, height: 44)
+        let nextBannerView = NextBannerView(frame: nextBannerViewFrame)
+        nextBannerView.translatesAutoresizingMaskIntoConstraints = true
+        view.addSubview(instructionsBannerView)
+        view.addSubview(nextBannerView)
+        view.frame = CGRect(origin: .zero, size: CGSize(width: nextBannerViewFrame.width, height: nextBannerViewFrame.maxY))
+
+        instructionsBannerView.maneuverView.isStart = true
+        instructionsBannerView.distance = 482
+        
+        let primary = [
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL)
+        ]
+        let secondary = [VisualInstructionComponent(text: "US 45 / Chicago", imageURL: nil)]
+        
+        instructionsBannerView.set(primary, secondaryInstruction: secondary)
+
+        
+        let primaryThen = [
+            VisualInstructionComponent(text: "I 280", imageURL: shieldURL)
+        ]
+        
+        nextBannerView.instructionLabel.instruction = primaryThen
+        nextBannerView.maneuverView.backgroundColor = .clear
+        nextBannerView.maneuverView.isEnd = true
+        
+        verifyView(view, size: view.bounds.size)
+    }
 }
 
 extension InstructionsBannerViewTests {
@@ -108,7 +160,7 @@ extension InstructionsBannerViewTests {
         
         view.distanceLabel.valueFont = UIFont.systemFont(ofSize: 24)
         view.distanceLabel.unitFont = UIFont.systemFont(ofSize: 14)
-        view.primaryLabel.font = UIFont.systemFont(ofSize: 30, weight: UIFontWeightMedium)
-        view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: UIFontWeightMedium)
+        view.primaryLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
+        view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: .medium)
     }
 }

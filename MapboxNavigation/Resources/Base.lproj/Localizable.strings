@@ -1,5 +1,8 @@
-﻿/* Dismiss button title on the steps view */
+/* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Close";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Faster Route Found";
@@ -34,20 +37,14 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
-/* Recording audio for feedback */
-"RECORDING_AUDIO" = "Recording Audio";
-
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Rerouting…";
 
 /* Button title for resume tracking */
 "RESUME" = "Resume";
 
-/* Then */
-"THEN" = "Then: ";
-
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Simulating Navigation";
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %d×";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";

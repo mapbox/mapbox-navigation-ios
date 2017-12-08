@@ -2,7 +2,6 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
-import Solar
 
 /**
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -170,7 +169,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      
      In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
      */
-    public var route: Route! {
+    @objc public var route: Route! {
         didSet {
             if routeController == nil {
                 routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
@@ -186,60 +185,49 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
     */
     @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
-    public var destination: MGLAnnotation!
+    @objc public var destination: MGLAnnotation!
     
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    public var directions: Directions!
+    @objc public var directions: Directions!
     
     /**
      An optional `MGLMapCamera` you can use to improve the initial transition from a previous viewport and prevent a trigger from an excessive significant location update.
      */
-    public var pendingCamera: MGLMapCamera?
+    @objc public var pendingCamera: MGLMapCamera?
     
     /**
      An instance of `MGLAnnotation` representing the origin of your route.
      */
-    public var origin: MGLAnnotation?
+    @objc public var origin: MGLAnnotation?
     
     /**
      The receiver’s delegate.
      */
-    public weak var delegate: NavigationViewControllerDelegate?
+    @objc public weak var delegate: NavigationViewControllerDelegate?
     
     /**
      Provides access to various speech synthesizer options.
      
      See `RouteVoiceController` for more information.
      */
-    public var voiceController: RouteVoiceController? = RouteVoiceController()
+    @objc public var voiceController: RouteVoiceController? = RouteVoiceController()
     
     /**
      Provides all routing logic for the user.
 
      See `RouteController` for more information.
      */
-    public var routeController: RouteController!
-    
-    /**
-     Styles that will be used for various system traits.
-     
-     See `Style` and `DefaultStyle` for more information.
-     */
-    public var styles: [Style]? {
-        didSet {
-            applyStyle()
-        }
-    }
+    @objc public var routeController: RouteController!
     
     /**
      The main map view displayed inside the view controller.
      
      - note: Do not change this map view’s delegate.
      */
-    public var mapView: NavigationMapView? {
+    @objc public var mapView: NavigationMapView? {
         get {
             return mapViewController?.mapView
         }
@@ -250,47 +238,40 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      
      By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
      */
-    public var snapsUserLocationAnnotationToRoute = true
+    @objc public var snapsUserLocationAnnotationToRoute = true
     
     /**
      Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
      */
-    public var sendNotifications: Bool = true
+    @objc public var sendsNotifications: Bool = true
     
     /**
-     Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `false`.
+     Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `true`.
      */
-    public var showsReportFeedback: Bool = true {
+    @objc public var showsReportFeedback: Bool = true {
         didSet {
             mapViewController?.reportButton.isHidden = !showsReportFeedback
+            showsEndOfRouteFeedback = showsReportFeedback
+        }
+    }
+    
+    
+    /**
+    Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
+    */
+    @objc public var showsEndOfRouteFeedback: Bool = true {
+        didSet {
+            mapViewController?.showsEndOfRoute = showsEndOfRouteFeedback
         }
     }
     
     /**
      If true, the map style and UI will automatically be updated given the time of day.
      */
-    public var automaticallyAdjustsStyleForTimeOfDay = true
-    
-    var currentStyleType: StyleType?
-    
-    var styleTypeForTimeOfDay: StyleType {
-        guard automaticallyAdjustsStyleForTimeOfDay else { return .dayStyle }
-
-        guard let location = routeController.location,
-            let solar = Solar(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude),
-            let sunrise = solar.sunrise, let sunset = solar.sunset else {
-                return .dayStyle
+    @objc public var automaticallyAdjustsStyleForTimeOfDay = true {
+        didSet {
+            styleManager.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
         }
-
-        return isNighttime(date: solar.date, sunrise: sunrise, sunset: sunset) ? .nightStyle : .dayStyle
-    }
-    
-    func isNighttime(date: Date, sunrise: Date, sunset: Date) -> Bool {
-        let calendar = Calendar.current
-        let currentMinutesFromMidnight = calendar.component(.hour, from: date) * 60 + calendar.component(.minute, from: date)
-        let sunriseMinutesFromMidnight = calendar.component(.hour, from: sunrise) * 60 + calendar.component(.minute, from: sunrise)
-        let sunsetMinutesFromMidnight = calendar.component(.hour, from: sunset) * 60 + calendar.component(.minute, from: sunset)
-        return currentMinutesFromMidnight < sunriseMinutesFromMidnight || currentMinutesFromMidnight > sunsetMinutesFromMidnight
     }
     
     var mapViewController: RouteMapViewController?
@@ -298,15 +279,10 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
-    public var annotatesSpokenInstructions = false
-    
-    /**
-     A Boolean value that determines whether the user can long-press a feedback item to dictate feedback.
-     */
-    public var recordsAudioFeedback = false
+    @objc public var annotatesSpokenInstructions = false
     
     let progressBar = ProgressBar()
-    let routeStepFormatter = RouteStepFormatter()
+    var styleManager: StyleManager!
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -330,30 +306,24 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         super.init(nibName: nil, bundle: nil)
         
-        self.styles = styles ?? [DayStyle(), NightStyle()]
+        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
+        self.routeController.usesDefaultUserInterface = true
+        self.routeController.delegate = self
+        
+        self.directions = directions
+        self.route = route
         
         addChildViewController(mapViewController)
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapViewController.view)
         
-        let v = mapViewController.view!
-        v.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        v.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        v.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        v.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        self.styleManager = StyleManager(self)
+        self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
-        self.directions = directions
-        self.route = route
-        
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
-        self.routeController.usesDefaultUserInterface = true
-        self.routeController.delegate = self
-
+        mapViewController.view!.pinInSuperview()
         mapViewController.delegate = self
         mapViewController.routeController = routeController
         mapViewController.reportButton.isHidden = !showsReportFeedback
-
-        self.currentStyleType = styleTypeForTimeOfDay
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
@@ -362,13 +332,13 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     deinit {
         suspendNotifications()
-        voiceController?.announcementTimer?.invalidate()
     }
     
     override public func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
         progressBar.dock(on: view)
+        view.clipsToBounds = true
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -377,11 +347,9 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
         
-        applyStyle()
-        
         if routeController.locationManager is SimulatedLocationManager {
-            let title = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
-            mapViewController?.statusView.show(title, showSpinner: false)
+            let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
+            mapViewController?.statusView.show(String.localizedStringWithFormat(format, 1), showSpinner: false)
         }
     }
     
@@ -405,7 +373,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
-    func progressDidChange(notification: NSNotification) {
+    @objc func progressDidChange(notification: NSNotification) {
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
         let secondsRemaining = notification.userInfo![RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
@@ -415,7 +383,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }
     
-    func didPassInstructionPoint(notification: NSNotification) {
+    @objc func didPassInstructionPoint(notification: NSNotification) {
         let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         
         mapViewController?.updateMapOverlays(for: routeProgress)
@@ -423,64 +391,18 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         clearStaleNotifications()
         
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep, routeProgress.currentLegProgress.currentStepProgress.durationRemaining < RouteControllerHighAlertInterval {
-            scheduleLocalNotification(about: upComingStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
+        if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
+            scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
-        
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            delegate?.navigationViewController?(self, didArriveAt: routeProgress.currentLegProgress.leg.destination)
-        }
-        
-        forceRefreshAppearanceIfNeeded()
-    }
-    
-    func applyStyle() {
-        guard let styles = styles else { return }
-        
-        for style in styles {
-            if style.styleType == styleTypeForTimeOfDay {
-                style.apply()
-                
-                if mapView?.styleURL != style.mapStyleURL {
-                    mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
-                    mapView?.styleURL = style.mapStyleURL
-                }
-            }
-        }
-    }
-    
-    func forceRefreshAppearanceIfNeeded() {
-        // Don't update the style if they are equal
-        guard currentStyleType != styleTypeForTimeOfDay else {
-            currentStyleType = styleTypeForTimeOfDay
-            return
-        }
-        
-        styles?.forEach {
-            if $0.styleType == styleTypeForTimeOfDay {
-                $0.apply()
-                mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
-                mapView?.styleURL = $0.mapStyleURL
-                currentStyleType = $0.styleType
-            }
-        }
-        
-        for window in UIApplication.shared.windows {
-            for view in window.subviews {
-                view.removeFromSuperview()
-                window.addSubview(view)
-            }
-        }
-        
-        mapView?.reloadStyle(self)
     }
     
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
-        guard sendNotifications else { return }
+        guard sendsNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
+        guard let text = step.instructionsSpokenAlongStep?.last?.text else { return }
         
         let notification = UILocalNotification()
-        notification.alertBody = routeStepFormatter.string(for: step, legIndex: legIndex, numberOfLegs: numberOfLegs, markUpWithSSML: false)
+        notification.alertBody = text
         notification.fireDate = Date()
         
         clearStaleNotifications()
@@ -490,7 +412,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     func clearStaleNotifications() {
-        guard sendNotifications else { return }
+        guard sendsNotifications else { return }
         // Remove all outstanding notifications from notification center.
         // This will only work if it's set to 1 and then back to 0.
         // This way, there is always just one notification.
@@ -565,35 +487,31 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
     }
-    
-    func mapViewControllerShouldRecordAudioFeedback(_ routeMapViewController: RouteMapViewController) -> Bool {
-        return recordsAudioFeedback
-    }
 }
 
 extension NavigationViewController: RouteControllerDelegate {
-    public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
+    @objc public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
         return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
     }
     
-    public func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
+    @objc public func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
         return delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint) ?? true
     }
     
-    public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
+    @objc public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
-    public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
+    @objc public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
         mapViewController?.notifyDidReroute(route: route)
         delegate?.navigationViewController?(self, didRerouteAlong: route)
     }
     
-    public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
+    @objc public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
         delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
-    public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
+    @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
         if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
             mapViewController?.labelCurrentRoad(at: location)
@@ -607,8 +525,42 @@ extension NavigationViewController: RouteControllerDelegate {
         }
     }
     
-    public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
+    @objc public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
         let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
         mapViewController?.statusView.show(title, showSpinner: false)
+    }
+    
+    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
+        guard routeController.routeProgress.isFinalLeg else { return }
+        
+        let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
+        let noEndOfRouteShow = { self.routeController.sendCancelEvent(); completion(true) }
+        showsEndOfRouteFeedback ? self.mapViewController?.showEndOfRoute( completion: completion) : noEndOfRouteShow()
+    }
+}
+
+extension NavigationViewController: StyleManagerDelegate {
+    
+    public func locationFor(styleManager: StyleManager) -> CLLocation {
+        guard let location = routeController.location else {
+            if let coordinate = routeController.routeProgress.route.coordinates?.first {
+                return CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            } else {
+                return CLLocation()
+            }
+        }
+        
+        return location
+    }
+    
+    public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
+        if mapView?.styleURL != style.mapStyleURL {
+            mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
+            mapView?.styleURL = style.mapStyleURL
+        }
+    }
+    
+    public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+        mapView?.reloadStyle(self)
     }
 }

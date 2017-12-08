@@ -84,7 +84,7 @@
     NSArray<MBWaypoint *> *waypoints = @[[[MBWaypoint alloc] initWithCoordinate:self.mapView.userLocation.coordinate coordinateAccuracy:-1 name:nil],
                                          [[MBWaypoint alloc] initWithCoordinate:self.destination coordinateAccuracy:-1 name:nil]];
     
-    MBRouteOptions *options = [[MBRouteOptions alloc] initWithWaypoints:waypoints profileIdentifier:MBDirectionsProfileIdentifierAutomobileAvoidingTraffic];
+    MBNavigationRouteOptions *options = [[MBNavigationRouteOptions alloc] initWithWaypoints:waypoints profileIdentifier:MBDirectionsProfileIdentifierAutomobileAvoidingTraffic];
     options.includesSteps = YES;
     options.routeShapeResolution = MBRouteShapeResolutionFull;
     
@@ -123,10 +123,6 @@
         
         controller.directions = [MBDirections sharedDirections];
         controller.route = self.route;
-        
-        MGLPointAnnotation *destination = [[MGLPointAnnotation alloc] init];
-        destination.coordinate = self.destination;
-        controller.destination = destination;
         
         controller.routeController.locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:self.route];
     }

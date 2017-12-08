@@ -2,6 +2,9 @@ import UIKit
 
 extension BaseInstructionsBannerView {
     
+    static let padding: CGFloat = 16
+    static let maneuverViewSize = CGSize(width: 38, height: 38)
+    
     func setupViews() {
         backgroundColor = .clear
         
@@ -58,14 +61,14 @@ extension BaseInstructionsBannerView {
     func setupLayout() {
         // Distance label
         distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
-        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -16).isActive = true
+        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding).isActive = true
         
         // Turn arrow view
-        maneuverView.heightAnchor.constraint(equalToConstant: 38).isActive = true
-        maneuverView.widthAnchor.constraint(equalToConstant: 38).isActive = true
-        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: 16).isActive = true
+        maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height).isActive = true
+        maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width).isActive = true
+        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
         maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor).isActive = true
-        maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: 16).isActive = true
+        maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
         
         // Primary Label
         primaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
@@ -116,13 +119,13 @@ extension BaseInstructionsBannerView {
     func setupAvailableBounds() {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = {
-            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.primaryLabel.font]).height
+            let height = ("|" as NSString).size(withAttributes: [.font: self.primaryLabel.font]).height
             let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }
         
         secondaryLabel.availableBounds = {
-            let height = ("|" as NSString).size(attributes: [NSFontAttributeName: self.secondaryLabel.font]).height
+            let height = ("|" as NSString).size(withAttributes: [.font: self.secondaryLabel.font]).height
             let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
             return CGRect(x: 0, y: 0, width: availableWidth, height: height)
         }

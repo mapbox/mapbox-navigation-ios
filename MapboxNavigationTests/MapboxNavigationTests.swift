@@ -1,6 +1,7 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
+import SDWebImage
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -27,7 +28,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         recordMode = false
         isDeviceAgnostic = true
         
-        UIImage.shieldImageCache.setObject(shieldImage, forKey: "I280")
+        SDImageCache.shared().store(shieldImage, forKey: "I280")
     }
     
     func storyboard() -> UIStoryboard {

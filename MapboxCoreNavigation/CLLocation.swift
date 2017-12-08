@@ -1,5 +1,6 @@
 import CoreLocation
-
+import MapboxDirections
+import Turf
 
 extension CLLocation {
     
@@ -62,5 +63,15 @@ extension CLLocation {
                   course: course,
                   speed: speed,
                   timestamp: date!)
+    }
+    
+    /**
+     Returns a Boolean value indicating whether the receiver is within a given distance of a route step, inclusive.
+     */
+    func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
+        guard let closestCoordinate = Polyline(routeStep.coordinates!).closestCoordinate(to: coordinate) else {
+            return false
+        }
+        return closestCoordinate.distance < maximumDistance
     }
 }
