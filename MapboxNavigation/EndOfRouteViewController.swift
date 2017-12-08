@@ -35,6 +35,7 @@ class EndOfRouteViewController: UIViewController {
 
     //MARK: - IBOutlets
     @IBOutlet weak var labelContainer: UIView!
+    @IBOutlet weak var staticYouHaveArrived: EndOfRouteStaticLabel!
     @IBOutlet weak var primary: UILabel!
     @IBOutlet weak var endNavigationButton: UIButton!
     @IBOutlet weak var stars: RatingControl!
@@ -143,7 +144,8 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func updateInterface() {
-        primary.text = string(for: destination)
+        guard let name = destination?.name?.nonEmptyString else { return styleForUnnamedDestination() }
+        primary.text = name
     }
 
     private func clearInterface() {
@@ -151,11 +153,9 @@ class EndOfRouteViewController: UIViewController {
         stars.rating = 0
     }
     
-    private func string(for destination: Waypoint?) -> String {
-        guard let destination = destination else { return "Unknown" }
-        guard destination.name?.isEmpty ?? false else { return destination.name! }
-        let coord = destination.coordinate
-        return String(format: "%.2f", coord.latitude) + "," + String(format: "%.2f", coord.longitude)
+    private func styleForUnnamedDestination() {
+        staticYouHaveArrived.alpha = 0.0
+        primary.text = NSLocalizedString("You have arrived", bundle: .mapboxNavigation, comment:"")
     }
     
     private func setPlaceholderText() {

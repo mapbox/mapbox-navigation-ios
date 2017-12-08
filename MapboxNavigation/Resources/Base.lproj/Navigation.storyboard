@@ -873,6 +873,7 @@ Label  </string>
                         <outlet property="ratingCommentsSpacing" destination="6IH-iM-ln5" id="c1p-PC-raO"/>
                         <outlet property="showCommentView" destination="GFJ-yQ-Cye" id="8Xj-ri-Kda"/>
                         <outlet property="stars" destination="Izy-1z-tcx" id="Rsy-R6-Hcs"/>
+                        <outlet property="staticYouHaveArrived" destination="V4A-Bp-tr5" id="ooO-62-TT3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A8g-0A-gn2" userLabel="First Responder" sceneMemberID="firstResponder"/>
