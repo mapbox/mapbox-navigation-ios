@@ -1,0 +1,1237 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBAttribute.swift",
+      "line": null,
+      "symbol": "AttributeOptions",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBAttribute.swift",
+      "line": null,
+      "symbol": "AttributeOptions",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBAttribute.swift",
+      "line": null,
+      "symbol": "AttributeOptions",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBAttribute.swift",
+      "line": null,
+      "symbol": "AttributeOptions",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBCongestion.swift",
+      "line": 41,
+      "symbol": "CongestionLevel.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBCongestion.swift",
+      "line": 41,
+      "symbol": "CongestionLevel.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBCongestion.swift",
+      "line": 41,
+      "symbol": "CongestionLevel.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBCongestion.swift",
+      "line": 41,
+      "symbol": "CongestionLevel.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 95,
+      "symbol": "Intersection.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 95,
+      "symbol": "Intersection.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 95,
+      "symbol": "Intersection.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 95,
+      "symbol": "Intersection.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 126,
+      "symbol": "Intersection.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 126,
+      "symbol": "Intersection.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 126,
+      "symbol": "Intersection.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 126,
+      "symbol": "Intersection.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 128,
+      "symbol": "Intersection.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 128,
+      "symbol": "Intersection.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 128,
+      "symbol": "Intersection.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBIntersection.swift",
+      "line": 128,
+      "symbol": "Intersection.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 23,
+      "symbol": "Lane.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 23,
+      "symbol": "Lane.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 23,
+      "symbol": "Lane.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 23,
+      "symbol": "Lane.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 31,
+      "symbol": "Lane.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 31,
+      "symbol": "Lane.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 31,
+      "symbol": "Lane.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 31,
+      "symbol": "Lane.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 33,
+      "symbol": "Lane.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 33,
+      "symbol": "Lane.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 33,
+      "symbol": "Lane.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLane.swift",
+      "line": 33,
+      "symbol": "Lane.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLaneIndication.swift",
+      "line": null,
+      "symbol": "LaneIndication",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLaneIndication.swift",
+      "line": null,
+      "symbol": "LaneIndication",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLaneIndication.swift",
+      "line": null,
+      "symbol": "LaneIndication",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBLaneIndication.swift",
+      "line": null,
+      "symbol": "LaneIndication",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoadClasses.swift",
+      "line": null,
+      "symbol": "RoadClasses",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoadClasses.swift",
+      "line": null,
+      "symbol": "RoadClasses",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoadClasses.swift",
+      "line": null,
+      "symbol": "RoadClasses",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoadClasses.swift",
+      "line": null,
+      "symbol": "RoadClasses",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 52,
+      "symbol": "Route.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 52,
+      "symbol": "Route.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 52,
+      "symbol": "Route.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 52,
+      "symbol": "Route.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 75,
+      "symbol": "Route.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 75,
+      "symbol": "Route.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 75,
+      "symbol": "Route.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 75,
+      "symbol": "Route.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 77,
+      "symbol": "Route.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 77,
+      "symbol": "Route.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 77,
+      "symbol": "Route.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 77,
+      "symbol": "Route.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 141,
+      "symbol": "Route.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 141,
+      "symbol": "Route.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 141,
+      "symbol": "Route.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRoute.swift",
+      "line": 141,
+      "symbol": "Route.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 71,
+      "symbol": "RouteLeg.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 71,
+      "symbol": "RouteLeg.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 71,
+      "symbol": "RouteLeg.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 71,
+      "symbol": "RouteLeg.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 104,
+      "symbol": "RouteLeg.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 104,
+      "symbol": "RouteLeg.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 104,
+      "symbol": "RouteLeg.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 104,
+      "symbol": "RouteLeg.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 106,
+      "symbol": "RouteLeg.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 106,
+      "symbol": "RouteLeg.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 106,
+      "symbol": "RouteLeg.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 106,
+      "symbol": "RouteLeg.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 200,
+      "symbol": "RouteLeg.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 200,
+      "symbol": "RouteLeg.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 200,
+      "symbol": "RouteLeg.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteLeg.swift",
+      "line": 200,
+      "symbol": "RouteLeg.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 25,
+      "symbol": "RouteShapeFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 25,
+      "symbol": "RouteShapeFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 25,
+      "symbol": "RouteShapeFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 25,
+      "symbol": "RouteShapeFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 76,
+      "symbol": "RouteShapeResolution.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 76,
+      "symbol": "RouteShapeResolution.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 76,
+      "symbol": "RouteShapeResolution.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 76,
+      "symbol": "RouteShapeResolution.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 123,
+      "symbol": "MeasurementSystem.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 123,
+      "symbol": "MeasurementSystem.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 123,
+      "symbol": "MeasurementSystem.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 123,
+      "symbol": "MeasurementSystem.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 194,
+      "symbol": "RouteOptions.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 194,
+      "symbol": "RouteOptions.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 194,
+      "symbol": "RouteOptions.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 194,
+      "symbol": "RouteOptions.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 244,
+      "symbol": "RouteOptions.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 244,
+      "symbol": "RouteOptions.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 244,
+      "symbol": "RouteOptions.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 244,
+      "symbol": "RouteOptions.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 246,
+      "symbol": "RouteOptions.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 246,
+      "symbol": "RouteOptions.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 246,
+      "symbol": "RouteOptions.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 246,
+      "symbol": "RouteOptions.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 501,
+      "symbol": "RouteOptions.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 501,
+      "symbol": "RouteOptions.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 501,
+      "symbol": "RouteOptions.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 501,
+      "symbol": "RouteOptions.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 519,
+      "symbol": "RouteOptions.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 519,
+      "symbol": "RouteOptions.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 519,
+      "symbol": "RouteOptions.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 519,
+      "symbol": "RouteOptions.isEqual(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 525,
+      "symbol": "RouteOptions.isEqual(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 525,
+      "symbol": "RouteOptions.isEqual(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 525,
+      "symbol": "RouteOptions.isEqual(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 525,
+      "symbol": "RouteOptions.isEqual(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 562,
+      "symbol": "InstructionFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 562,
+      "symbol": "InstructionFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 562,
+      "symbol": "InstructionFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteOptions.swift",
+      "line": 562,
+      "symbol": "InstructionFormat.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 63,
+      "symbol": "TransportType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 63,
+      "symbol": "TransportType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 63,
+      "symbol": "TransportType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 63,
+      "symbol": "TransportType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 243,
+      "symbol": "ManeuverType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 243,
+      "symbol": "ManeuverType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 243,
+      "symbol": "ManeuverType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 243,
+      "symbol": "ManeuverType.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 377,
+      "symbol": "ManeuverDirection.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 377,
+      "symbol": "ManeuverDirection.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 377,
+      "symbol": "ManeuverDirection.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 377,
+      "symbol": "ManeuverDirection.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 439,
+      "symbol": "DrivingSide.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 439,
+      "symbol": "DrivingSide.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 439,
+      "symbol": "DrivingSide.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 439,
+      "symbol": "DrivingSide.init(description:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 617,
+      "symbol": "RouteStep.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 617,
+      "symbol": "RouteStep.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 617,
+      "symbol": "RouteStep.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 617,
+      "symbol": "RouteStep.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 685,
+      "symbol": "RouteStep.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 685,
+      "symbol": "RouteStep.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 685,
+      "symbol": "RouteStep.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 685,
+      "symbol": "RouteStep.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 687,
+      "symbol": "RouteStep.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 687,
+      "symbol": "RouteStep.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 687,
+      "symbol": "RouteStep.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 687,
+      "symbol": "RouteStep.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 810,
+      "symbol": "RouteStep.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 810,
+      "symbol": "RouteStep.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 810,
+      "symbol": "RouteStep.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBRouteStep.swift",
+      "line": 810,
+      "symbol": "RouteStep.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 60,
+      "symbol": "SpokenInstruction.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 60,
+      "symbol": "SpokenInstruction.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 60,
+      "symbol": "SpokenInstruction.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 60,
+      "symbol": "SpokenInstruction.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 66,
+      "symbol": "SpokenInstruction.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 66,
+      "symbol": "SpokenInstruction.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 66,
+      "symbol": "SpokenInstruction.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 66,
+      "symbol": "SpokenInstruction.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 68,
+      "symbol": "SpokenInstruction.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 68,
+      "symbol": "SpokenInstruction.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 68,
+      "symbol": "SpokenInstruction.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBSpokenInstruction.swift",
+      "line": 68,
+      "symbol": "SpokenInstruction.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 8,
+      "symbol": "Waypoint.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 8,
+      "symbol": "Waypoint.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 8,
+      "symbol": "Waypoint.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 8,
+      "symbol": "Waypoint.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 63,
+      "symbol": "Waypoint.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 63,
+      "symbol": "Waypoint.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 63,
+      "symbol": "Waypoint.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 63,
+      "symbol": "Waypoint.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 73,
+      "symbol": "Waypoint.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 73,
+      "symbol": "Waypoint.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 73,
+      "symbol": "Waypoint.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 73,
+      "symbol": "Waypoint.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 82,
+      "symbol": "Waypoint.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 82,
+      "symbol": "Waypoint.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 82,
+      "symbol": "Waypoint.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 82,
+      "symbol": "Waypoint.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 146,
+      "symbol": "Waypoint.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 146,
+      "symbol": "Waypoint.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 146,
+      "symbol": "Waypoint.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/MapboxDirections.swift/MapboxDirections/MBWaypoint.swift",
+      "line": 146,
+      "symbol": "Waypoint.description",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/bobby/Documents/mapbox/MapboxDirections.swift"
+}
