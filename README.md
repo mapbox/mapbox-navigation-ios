@@ -95,7 +95,7 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
 
 #### Styling
 
-You can customize the appearance in order to blend in with the rest of your app.
+You can customize the appearance in order to blend in with the rest of your app. Checkout [`DayStye.swift`](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/DayStyle.swift) for all styleable elements.
 
 ```swift
 class CustomStyle: DayStyle {
