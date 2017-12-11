@@ -525,12 +525,12 @@ class RouteMapViewController: UIViewController {
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         view.layoutIfNeeded() //flush layout queue
         
+        bannerShowConstraint.isActive = false
+        bannerContainerShowConstraint.isActive = false
+        bannerHideConstraint.isActive = true
         endOfRouteContainerView.isHidden = false
         endOfRouteHideConstraint.isActive = false
         endOfRouteShowConstraint.isActive = true
-        bannerHideConstraint.isActive = true
-        bannerShowConstraint.isActive = false
-        bannerContainerShowConstraint.isActive = false
        
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
