@@ -6,5 +6,4 @@ target 'PodInstall' do
   # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :branch => 'BRANCH_NAME'
   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :branch => 'BRANCH_NAME'
-  pod 'OSRMTextInstructions', '~> 0.1'
 end
