@@ -583,7 +583,8 @@ extension RouteController: CLLocationManagerDelegate {
         let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-
+        
+        guard !isCloseToCurrentStep else { return true }
 
         // Check to see if the user is moving away from the maneuver.
         // Here, we store an array of distances. If the current distance is greater than the last distance,
@@ -606,27 +607,17 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
 
-        // If the user is moving away from the maneuver location
-        // and they are close to the upcoming or follow on step,
-        // we can safely say they have completed the maneuver.
-        // This is intended to be a fallback case when we do find
-        // that the users course matches the exit bearing.
-        if let upComingStep = routeProgress.currentLegProgress.upComingStep {
-            let isCloseToUpComingStep = newLocation.isWithin(radius, of: upComingStep)
-            if !isCloseToCurrentStep && isCloseToUpComingStep {
-                incrementRouteProgress()
-                return true
-            }
+        // Check and see if the user is near a future step.
+        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
+            return false
         }
-        if let followOnStep = routeProgress.currentLegProgress.followOnStep {
-            let isCloseToUpComingStep = newLocation.isWithin(radius, of: followOnStep)
-            if !isCloseToCurrentStep && isCloseToUpComingStep {
-                incrementRouteProgress()
-                return true
-            }
+        
+        if nearestStep.distance < radius {
+            advanceStepIndex(to: nearestStep.index)
+            return true
         }
-
-        return isCloseToCurrentStep
+        
+        return false
     }
 
     func checkForFasterRoute(from location: CLLocation) {
@@ -783,7 +774,7 @@ extension RouteController: CLLocationManagerDelegate {
             if routeProgress.currentLegProgress.upComingStep?.maneuverType == ManeuverType.arrive {
                 routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
             } else if courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
-                incrementRouteProgress()
+                advanceStepIndex()
             }
         }
 
@@ -807,8 +798,12 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func incrementRouteProgress() {
-        routeProgress.currentLegProgress.stepIndex += 1
+    func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {
+        if let forcedStepIndex = to {
+            routeProgress.currentLegProgress.stepIndex = forcedStepIndex
+        } else {
+            routeProgress.currentLegProgress.stepIndex += 1
+        }
 
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint,
             (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {

@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import Turf
 
 
 /**
@@ -305,6 +306,30 @@ open class RouteLegProgress: NSObject {
         let nearby = priorCoords + currentCoords + upcomingCoords
         assert(!nearby.isEmpty, "Step must have coordinates")
         return nearby
+    }
+    
+    typealias StepIndexDistance = (index: Int, distance: CLLocationDistance)
+    
+    func closestStep(to coordinate: CLLocationCoordinate2D) -> StepIndexDistance? {
+        var currentClosest: StepIndexDistance?
+        let remainingSteps = leg.steps.suffix(from: stepIndex)
+        
+        for (stepIndex, step) in remainingSteps.enumerated() {
+            guard let coords = step.coordinates else { continue }
+            guard let closestCoordOnStep = Polyline(coords).closestCoordinate(to: coordinate) else { continue }
+            
+            // First time around, currentClosest will be `nil`.
+            guard let currentClosestDistance = currentClosest?.distance else {
+                currentClosest = (index: stepIndex, distance: closestCoordOnStep.distance)
+                continue
+            }
+            
+            if closestCoordOnStep.distance < currentClosestDistance {
+                currentClosest = (index: stepIndex, distance: closestCoordOnStep.distance)
+            }
+        }
+        
+        return currentClosest
     }
 }
 
