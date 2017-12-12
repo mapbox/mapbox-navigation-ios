@@ -584,9 +584,7 @@ extension RouteController: CLLocationManagerDelegate {
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
-        if isCloseToCurrentStep {
-            return true
-        }
+        guard !isCloseToCurrentStep else { return true }
 
         // Check to see if the user is moving away from the maneuver.
         // Here, we store an array of distances. If the current distance is greater than the last distance,
