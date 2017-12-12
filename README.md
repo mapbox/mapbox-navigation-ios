@@ -95,7 +95,7 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
 
 #### Styling
 
-You can customize the appearance in order to blend in with the rest of your app. Checkout [`DayStye.swift`](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/DayStyle.swift) for all styleable elements.
+You can customize the appearance in order to blend in with the rest of your app. Checkout [`DayStyle.swift`](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/DayStyle.swift) for all styleable elements.
 
 ```swift
 class CustomStyle: DayStyle {
@@ -182,6 +182,8 @@ This library relies heavily on `NSNotification`s for letting the developer know 
 
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
+
+Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
 
 ## License
 
