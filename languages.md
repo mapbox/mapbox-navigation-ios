@@ -3,19 +3,19 @@
 
 | Language | UI Elements  | PollyVoiceController  |
 |----------|--------------|-----------------------|
-| `ca` | ✅ | ❌ |
-| `de` | ✅ | ✅ |
-| `en` | ✅ | ✅ |
-| `es` | ❌ | ✅ |
-| `fr` | ✅ | ✅ |
-| `hu` | ✅ | ❌ |
-| `it` | ✅ | ✅ |
-| `nl` | ✅ | ✅ |
-| `pr` | ✅ | ✅ |
-| `pl` | ❌ | ✅ |
-| `ro` | ❌ | ✅ |
-| `ru` | ✅ | ✅ |
-| `sv` | ✅ | ✅ |
-| `tr` | ❌ | ✅ |
-| `vi` | ✅ | ❌ |
-| `zh` | ✅ | ❌ |
+| Catalan | ✅ | ❌ |
+| Chinese (Simplified) | ✅ | ❌ |
+| Dutch | ✅ | ✅ |
+| English | ✅ | ✅ |
+| French | ✅ | ✅ |
+| German | ✅ | ✅ |
+| Hungarian | ✅ | ❌ |
+| Italian | ✅ | ✅ |
+| Portuguese | ✅ | ✅ |
+| Polish | ❌ | ✅ |
+| Romanian | ❌ | ✅ |
+| Russian | ✅ | ✅ |
+| Spanish | ✅ | ✅ |
+| Swedish | ✅ | ✅ |
+| Turkish | ❌ | ✅ |
+| Vietnamese | ✅ | ❌ |
