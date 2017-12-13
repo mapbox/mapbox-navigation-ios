@@ -28,16 +28,15 @@ public class MapboxSpeechController: RouteVoiceController {
      */
     @objc public var locale: Locale?
     
-    var pollyTask: URLSessionDataTask?
-    
     let sessionConfiguration = URLSessionConfiguration.default
     var urlSession: URLSession
     var cacheURLSession: URLSession
+    var pollyTask: URLSessionDataTask?
     var cachePollyTask: URLSessionDataTask?
+    var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
     var mapboxSpeechSynth: SpeechSynthesizer
     
-    var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
     public init(accessToken: String? = nil, host: String? = nil) {
