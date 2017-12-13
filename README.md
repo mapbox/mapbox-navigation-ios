@@ -56,7 +56,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 1. Run `carthage update --platform ios` to build just the iOS dependencies.
 1. Open `MapboxNavigation.xcodeproj`.
 1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
-1. Open the Info.plist for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`. (If you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
+1. Open the Info.plist for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`. (Alternatively, if you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
 1. Build and run the `Example-Swift` or `Example-Objective-C` target.
 
 ## Usage
@@ -72,9 +72,7 @@ import MapboxNavigation
 let origin = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.9131752, longitude: -77.0324047), name: "Mapbox")
 let destination = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.8977, longitude: -77.0365), name: "White House")
 
-let options = RouteOptions(forNavigationWithWaypoints: [origin, destination])
-options.routeShapeResolution = .full
-options.includesSteps = true
+let options = NavigationRouteOptions(forNavigationWithWaypoints: [origin, destination])
 
 Directions.shared.calculate(options) { (waypoints, routes, error) in
     guard let route = routes?.first else { return }
@@ -83,6 +81,8 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
     self.present(viewController, animated: true, completion: nil)
 }
 ```
+
+**The [example app](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Examples/Swift/ViewController.swift) is also a great resource for referencing various APIs.**
 
 #### Required Info.plist Keys
 Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
@@ -95,7 +95,7 @@ Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign
 
 #### Styling
 
-You can customize the appearance in order to blend in with the rest of your app.
+You can customize the appearance in order to blend in with the rest of your app. Checkout [`DayStyle.swift`](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/DayStyle.swift) for all styleable elements.
 
 ```swift
 class CustomStyle: DayStyle {
@@ -108,8 +108,7 @@ class CustomStyle: DayStyle {
 
     override func apply() {
         super.apply()
-        ManeuverView.appearance().backgroundColor = .darkGray
-        RouteTableViewHeaderView.appearance().backgroundColor = .darkGray
+        BottomBannerView.appearance().backgroundColor = .orange
     }
 }
 ```
@@ -153,33 +152,6 @@ If you need additional flexibility, you can use the following building blocks to
 * [OSRM Text Instructions for Swift](https://github.com/Project-OSRM/osrm-text-instructions.swift/) (also compatible with macOS, tvOS, and watchOS)
   * Localized guidance instructions
 
-### Installing Mapbox Core Navigation
-
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![CocoaPods](https://img.shields.io/cocoapods/v/MapboxCoreNavigation.svg)](https://cocoapods.org/pods/MapboxCoreNavigation/)
-
-To install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
-
-1. Specify the following dependency in your Podfile:
-   ```ruby
-   pod 'MapboxCoreNavigation', '~> 0.7.0'
-   ```
-
-1. Run `pod install` and open the resulting Xcode workspace.
-
-Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
-
-Alternatively, to install Mapbox Core Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
-
-1. Specify the following dependency in your Cartfile:
-   ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.7.0
-   ```
-
-1. Run `carthage update --platform iOS` to build just the iOS dependencies.
-
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include MapboxCoreNavigation.framework.
-
 ### Route Controller
 
 `RouteController` is given a route. Internally `RouteController` matches the user's current location to the route while looking at 3 principle pieces:
@@ -211,15 +183,7 @@ This library relies heavily on `NSNotification`s for letting the developer know 
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
 
-
-### Rerouting
-
-In the event of a reroute, it's necessary to update the current route with a new route. Once fetched, you can update the current route by:
-
-```swift
-var navigation: RouteController!
-navigation.routeProgress = RouteProgress(route: newRoute)
-```
+Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
 
 ## License
 
