@@ -17,6 +17,11 @@ open class NavigationLocationManager: CLLocationManager {
     
     var lastKnownLocation: CLLocation?
     
+    /**
+     The accuracy of the `CLLocationManager`.
+     */
+    @objc public var locationAccuracy: CLLocationAccuracy = kCLLocationAccuracyBestForNavigation
+    
     override public init() {
         super.init()
         
@@ -35,6 +40,6 @@ open class NavigationLocationManager: CLLocationManager {
             }
         }
         
-        desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        desiredAccuracy = locationAccuracy
     }
 }
