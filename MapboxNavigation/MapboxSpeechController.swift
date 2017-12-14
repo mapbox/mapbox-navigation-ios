@@ -6,13 +6,13 @@ import CoreLocation
 import MapboxDirections
 
 /**
- `PollyVoiceController` extends the default `RouteVoiceController` by providing support for AWSPolly. `RouteVoiceController` will be used as a fallback during poor network conditions.
+ `MapboxVoiceController` extends the default `RouteVoiceController` by providing a more robust speech synthesizer via the Mapbox Speech API. `RouteVoiceController` will be used as a fallback during poor network conditions.
  */
-@objc(MBMapboxSpeechController)
-public class MapboxSpeechController: RouteVoiceController {
+@objc(MBMapboxVoiceController)
+public class MapboxVoiceController: RouteVoiceController {
     
     /**
-     Number of seconds a Polly request can wait before it is canceled and the default speech synthesizer speaks the instruction.
+     Number of seconds a request can wait before it is canceled and the default speech synthesizer speaks the instruction.
      */
     @objc public var timeoutIntervalForRequest:TimeInterval = 5
     
@@ -28,31 +28,24 @@ public class MapboxSpeechController: RouteVoiceController {
      */
     @objc public var locale: Locale?
     
-    let sessionConfiguration = URLSessionConfiguration.default
-    var urlSession: URLSession
-    var cacheURLSession: URLSession
-    var pollyTask: URLSessionDataTask?
-    var cachePollyTask: URLSessionDataTask?
+    var audioTask: URLSessionDataTask?
     var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
-    var mapboxSpeechSynth: SpeechSynthesizer
+    var speech: SpeechSynthesizer
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
     public init(accessToken: String? = nil, host: String? = nil) {
         
         if let accessToken = accessToken, let host = host {
-            mapboxSpeechSynth = SpeechSynthesizer(accessToken: accessToken, host: host)
+            speech = SpeechSynthesizer(accessToken: accessToken, host: host)
         } else if let accessToken = accessToken {
-            mapboxSpeechSynth = SpeechSynthesizer(accessToken: accessToken)
+            speech = SpeechSynthesizer(accessToken: accessToken)
         } else {
-            mapboxSpeechSynth = SpeechSynthesizer.shared
+            speech = SpeechSynthesizer.shared
         }
         
         spokenInstructionsForRoute.countLimit = 200
-        sessionConfiguration.timeoutIntervalForRequest = timeoutIntervalForRequest;
-        urlSession = URLSession(configuration: sessionConfiguration)
-        cacheURLSession = URLSession(configuration: URLSessionConfiguration.default)
         
         super.init()
     }
@@ -68,7 +61,7 @@ public class MapboxSpeechController: RouteVoiceController {
             for instruction in instructions {
                 guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else { continue }
                 
-                cacheSpokenInstruction(instruction: instruction.ssmlText)
+                cacheSpokenInstruction(instruction: instruction)
             }
         }
         
@@ -79,7 +72,7 @@ public class MapboxSpeechController: RouteVoiceController {
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
-        pollyTask?.cancel()
+        audioTask?.cancel()
         audioPlayer?.stop()
         lastSpokenInstruction = instruction
         
@@ -88,11 +81,11 @@ public class MapboxSpeechController: RouteVoiceController {
             return
         }
         
-        cacheSpokenInstruction(instruction: instruction.ssmlText, alsoPlay: true)
+        fetch(instruction: instruction)
     }
     
     func speakWithoutPolly(_ instruction: SpokenInstruction, error: Error) {
-        pollyTask?.cancel()
+        audioTask?.cancel()
         
         voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
         
@@ -106,18 +99,38 @@ public class MapboxSpeechController: RouteVoiceController {
         super.speak(instruction)
     }
     
-    func cacheSpokenInstruction(instruction: String, alsoPlay: Bool = false) {
-        let options = SpeechOptions(ssml: instruction)
+    func fetch(instruction: SpokenInstruction) {
+        audioTask?.cancel()
+        let options = SpeechOptions(ssml: instruction.ssmlText)
         if let locale = locale {
             options.locale = locale
         }
-        mapboxSpeechSynth.audioData(with: options) { (data, error) in
-            guard let data = data else { return }
-            self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction as NSString)
-            
-            if alsoPlay {
-                self.play(data)
+        audioTask = speech.audioData(with: options) { (data, error) in
+            if let error = error as? URLError, error.code == .cancelled {
+                return
+            } else if let error = error {
+                self.speakWithoutPolly(instruction, error: error)
+                return
             }
+            
+            guard let data = data else {
+                self.speakWithoutPolly(instruction, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .emptyMapboxSpeechResponse))
+                return
+            }
+            self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
+        }
+        
+        audioTask?.resume()
+    }
+    
+    func cacheSpokenInstruction(instruction: SpokenInstruction) {
+        let options = SpeechOptions(ssml: instruction.ssmlText)
+        if let locale = locale {
+            options.locale = locale
+        }
+        speech.audioData(with: options) { (data, error) in
+            guard let data = data else { return }
+            self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
         }
     }
     
