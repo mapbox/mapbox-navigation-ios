@@ -425,6 +425,12 @@ open class RouteStepProgress: NSObject {
      */
     @objc public var spokenInstructionIndex:Int = 0
     
+    
+    /**
+     Index into `step.instructionsDisplayedAlongStep` representing the current visual instruction for the step.
+     */
+    @objc public var visualInstructionIndex:Int = 0
+    
     /**
      Current Instruction for the user's progress along a step.
      */
