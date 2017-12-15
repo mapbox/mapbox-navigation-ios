@@ -213,7 +213,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = MapboxVoiceController()
+    @objc public var voiceController: RouteVoiceController?
     
     /**
      Provides all routing logic for the user.
@@ -312,6 +312,10 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         self.directions = directions
         self.route = route
+        
+        if voiceController == nil {
+            voiceController = MapboxVoiceController(locale: routeController.routeProgress.route.routeOptions.locale)
+        }
         
         addChildViewController(mapViewController)
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false

@@ -1,8 +1,8 @@
 import Foundation
-import MapboxSpeech
-import AVFoundation
-import MapboxCoreNavigation
 import CoreLocation
+import AVFoundation
+import MapboxSpeech
+import MapboxCoreNavigation
 import MapboxDirections
 
 /**
@@ -21,21 +21,17 @@ public class MapboxVoiceController: RouteVoiceController {
      */
     @objc public var stepsAheadToCache: Int = 3
     
-    /**
-     Locale used to decide on language for spoken instruction.
-     
-     By default, the users device will be used to decide on the locale.
-     */
-    @objc public var locale: Locale?
-    
     var audioTask: URLSessionDataTask?
     var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
     var speech: SpeechSynthesizer
+    var locale: Locale
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
-    public init(accessToken: String? = nil, host: String? = nil) {
+    public init(locale: Locale, accessToken: String? = nil, host: String? = nil) {
+        
+        self.locale = locale
         
         if let accessToken = accessToken, let host = host {
             speech = SpeechSynthesizer(accessToken: accessToken, host: host)
@@ -102,9 +98,8 @@ public class MapboxVoiceController: RouteVoiceController {
     func fetch(instruction: SpokenInstruction) {
         audioTask?.cancel()
         let options = SpeechOptions(ssml: instruction.ssmlText)
-        if let locale = locale {
-            options.locale = locale
-        }
+        options.locale = locale
+        
         audioTask = speech.audioData(with: options) { (data, error) in
             if let error = error as? URLError, error.code == .cancelled {
                 return
@@ -117,6 +112,7 @@ public class MapboxVoiceController: RouteVoiceController {
                 self.speakWithoutPolly(instruction, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .emptyMapboxSpeechResponse))
                 return
             }
+            self.play(data)
             self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
         }
         
@@ -125,9 +121,8 @@ public class MapboxVoiceController: RouteVoiceController {
     
     func cacheSpokenInstruction(instruction: SpokenInstruction) {
         let options = SpeechOptions(ssml: instruction.ssmlText)
-        if let locale = locale {
-            options.locale = locale
-        }
+        options.locale = locale
+        
         speech.audioData(with: options) { (data, error) in
             guard let data = data else { return }
             self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
