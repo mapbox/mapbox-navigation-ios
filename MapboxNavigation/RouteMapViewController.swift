@@ -442,9 +442,7 @@ class RouteMapViewController: UIViewController {
             if routeProgress.currentLegProgress.currentStepProgress.distanceRemaining <= visualInstruction.distanceAlongStep && visualInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex {
                 
                 instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
-                instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
-                instructionsBannerView.maneuverView.maneuverType = visualInstruction.maneuverType
-                instructionsBannerView.maneuverView.maneuverDirection = visualInstruction.maneuverDirection
+                instructionsBannerView.maneuverView.maneuverTypeModifier = (maneuverType: visualInstruction.maneuverType, maneuverDirection: visualInstruction.maneuverDirection)
                 
                 routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex += 1
                 break
@@ -476,7 +474,7 @@ class RouteMapViewController: UIViewController {
             return
         }
         
-        nextBannerView.maneuverView.step = nextStep
+        nextBannerView.maneuverView.maneuverTypeModifier = (maneuverType: nextStep.maneuverType, maneuverDirection: nextStep.maneuverDirection)
         nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
         showNextBanner()
     }
@@ -879,7 +877,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
         instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
-        instructionsView.maneuverView.step = maneuverStep
+        instructionsView.maneuverView.maneuverTypeModifier = (maneuverType: maneuverStep.maneuverType, maneuverDirection: maneuverStep.maneuverDirection)
         instructionsView.distance = distance
         
         instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor

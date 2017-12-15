@@ -20,20 +20,8 @@ public class ManeuverView: UIView {
             setNeedsDisplay()
         }
     }
-    
-    @objc public var step: RouteStep? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    public var maneuverType: ManeuverType? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    public var maneuverDirection: ManeuverDirection? {
+
+    public var maneuverTypeModifier: (maneuverType: ManeuverType?, maneuverDirection: ManeuverDirection?) {
         didSet {
             setNeedsDisplay()
         }
@@ -63,20 +51,9 @@ public class ManeuverView: UIView {
         
         transform = CGAffineTransform.identity
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
-        
-        guard let step = step else {
-            if isStart {
-                ManeuversStyleKit.drawStarting(frame: bounds, resizing: resizing, primaryColor: primaryColor)
-            } else if isEnd {
-                ManeuversStyleKit.drawDestination(frame: bounds, resizing: resizing, primaryColor: primaryColor)
-            }
-            return
-        }
-        
         var flip: Bool = false
-        let type: ManeuverType = maneuverType ?? step.maneuverType ?? .turn
-        let angle = ((step.finalHeading ?? 0) - (step.initialHeading ?? 0)).wrap(min: -180, max: 180)
-        let direction: ManeuverDirection = maneuverDirection ?? step.maneuverDirection ??  ManeuverDirection(angle: Int(angle))
+        let type = maneuverTypeModifier.maneuverType ?? .turn
+        let direction = maneuverTypeModifier.maneuverDirection ?? .straightAhead
 
         switch type {
         case .merge:
@@ -92,13 +69,13 @@ public class ManeuverView: UIView {
             switch direction {
             case .straightAhead:
                 ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 180)
-                flip = step.drivingSide == .left
+                flip = direction.isLeftSide
             case .left, .slightLeft, .sharpLeft:
                 ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 275)
-                flip = step.drivingSide == .left
+                flip = direction.isLeftSide
             default:
                 ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 90)
-                flip = step.drivingSide == .left
+                flip = direction.isLeftSide
             }
         case .arrive:
             switch direction {
@@ -132,12 +109,23 @@ public class ManeuverView: UIView {
                 flip = true
             case .uTurn:
                 ManeuversStyleKit.drawArrow180right(frame: bounds, resizing: resizing, primaryColor: primaryColor)
-                flip = angle < 0
+                flip = direction.isLeftSide
             default:
                 ManeuversStyleKit.drawArrowstraight(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }
         }
         
         transform = CGAffineTransform(scaleX: flip ? -1 : 1, y: 1)
+    }
+}
+
+extension ManeuverDirection {
+    var isLeftSide: Bool {
+        switch self {
+        case .left, .slightLeft, .sharpLeft:
+            return true
+        default:
+            return false
+        }
     }
 }
