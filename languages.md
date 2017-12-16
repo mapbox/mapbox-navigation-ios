@@ -29,10 +29,4 @@ Note that street and destination names – as displayed on the map and UI and he
 
 # Add a new language or contribute to an existing
 
-- Create an account on [Transifex.com](https://www.transifex.com)
-- Request a new language or join an existing team [Transifex.com/mapbox/mapbox-navigation-ios](https://www.transifex.com/mapbox/mapbox-navigation-ios)
-- * Update the SDK
-	- Create a pull request in [github.com/mapbox/mapbox-navigation-ios](https://github.com/mapbox/mapbox-navigation-ios)
-	- Run `tx pull -l <language-code>`
-
-*_If you are unfamiliar with the workflow on Github, feel free to [open an issue](https://github.com/mapbox/mapbox-navigation-ios), inform us about the changes and we will make sure the new language is included in an upcoming release._
+Interested in adding or updating a language? See [contributing guide](./CONTRIBUTING.md#adding-or-updating-a-localization).
