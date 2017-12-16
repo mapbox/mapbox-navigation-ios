@@ -185,6 +185,10 @@ This library relies heavily on `NSNotification`s for letting the developer know 
 
 Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
 
+## Language support
+
+See [languages.md](./languages.md) for more information.
+
 ## Contributing
 
 We welcome feedback and code contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for details.
