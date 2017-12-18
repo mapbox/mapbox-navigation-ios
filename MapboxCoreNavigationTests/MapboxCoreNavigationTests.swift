@@ -38,8 +38,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     func testNewStep() {
         route.accessToken = "foo"
-        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.79132445827303, longitude: -122.42229044437408),
-                                    altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.78895, longitude: -122.42543), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
         let locationManager = ReplayLocationManager(locations: [location, location])
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         
@@ -48,7 +47,7 @@ class MapboxCoreNavigationTests: XCTestCase {
             
             let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
             
-            return routeProgress?.currentLegProgress.stepIndex == 1
+            return routeProgress?.currentLegProgress.stepIndex == 2
         }
         
         navigation.resume()
