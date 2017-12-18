@@ -553,13 +553,14 @@ extension RouteController: CLLocationManagerDelegate {
                     ])
             }
         }
+        
+        updateDistanceToIntersection(from: location)
+        monitorStepProgress(location)
+        
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
         }
-
-        updateDistanceToIntersection(from: location)
-        monitorStepProgress(location)
 
         // Check for faster route given users current location
         guard reroutesOpportunistically else { return }
