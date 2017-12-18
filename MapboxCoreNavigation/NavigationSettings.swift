@@ -30,6 +30,7 @@ public class NavigationSettings: NSObject {
     
     public static let shared = NavigationSettings()
     
+    /// Returns a reflection of this class excluding the `properties` variable.
     lazy var properties: [Mirror.Child] = {
         let properties = Mirror(reflecting: self).children
         return properties.filter({ (child) -> Bool in
