@@ -59,6 +59,29 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
+    func testJumpAheadToLastStep() {
+        route.accessToken = "foo"
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.772701, longitude: -122.433378), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
+        
+        let locationManager = ReplayLocationManager(locations: [location])
+        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
+        
+        expectation(forNotification: RouteControllerDidPassSpokenInstructionPoint, object: navigation) { (notification) -> Bool in
+            XCTAssertEqual(notification.userInfo?.count, 1)
+            
+            let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
+            
+            return routeProgress?.currentLegProgress.stepIndex == 7
+        }
+        
+        navigation.resume()
+        navigation.routeProgress.currentLegProgress.stepIndex = 2
+        
+        waitForExpectations(timeout: waitForInterval) { (error) in
+            XCTAssertNil(error)
+        }
+    }
+    
     func testShouldReroute() {
         route.accessToken = "foo"
         let firstLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123),
