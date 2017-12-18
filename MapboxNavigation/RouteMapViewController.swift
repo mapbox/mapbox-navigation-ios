@@ -140,7 +140,7 @@ class RouteMapViewController: UIViewController {
         
         resetETATimer()
         
-        muteButton.isSelected = NavigationSettings.shared.muted
+        muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
         
         mapView.tracksUserCourse = true
@@ -224,7 +224,7 @@ class RouteMapViewController: UIViewController {
         sender.isSelected = !sender.isSelected
 
         let muted = sender.isSelected
-        NavigationSettings.shared.muted = muted
+        NavigationSettings.shared.voiceMuted = muted
     }
     
     @IBAction func rerouteFeedback(_ sender: Any) {
