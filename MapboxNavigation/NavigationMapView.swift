@@ -91,18 +91,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 10
         fileprivate static let durationSincePreviousManeuver: TimeInterval = 5
-        fileprivate static let decreasedFrameInterval: Int = 12
-        fileprivate static let defaultFrameInterval: Int = 1
-        fileprivate static let pluggedInFrameInterval: Int = 2
+        fileprivate static let defaultFramesPerSecond: Int = 60
+        fileprivate static let pluggedInFramesPerSecond: Int = 30
+        fileprivate static let decreasedFramesPerSecond: Int = 5
     }
     
-    fileprivate var frameInterval: Int {
-        get {
-            return displayLink?.frameInterval ?? FrameIntervalOptions.defaultFrameInterval
-        }
-        set {
-            if displayLink?.frameInterval != newValue {
-                displayLink?.frameInterval = newValue
+    fileprivate var preferredFramesPerSecond: Int = 60 {
+        didSet {
+            if #available(iOS 10.0, *) {
+                displayLink?.preferredFramesPerSecond = preferredFramesPerSecond
+            } else {
+                displayLink?.frameInterval = FrameIntervalOptions.defaultFramesPerSecond / preferredFramesPerSecond
             }
         }
     }
@@ -169,17 +168,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         
         guard !isPluggedIn else {
-            frameInterval = FrameIntervalOptions.pluggedInFrameInterval
+            preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
             return
         }
     
         if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
             durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
         } else if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .straightAhead {
-            frameInterval = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFrameInterval : FrameIntervalOptions.decreasedFrameInterval
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
         } else {
-            frameInterval = FrameIntervalOptions.pluggedInFrameInterval
+            preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         }
     }
     
@@ -210,7 +209,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc func updateCourseView(_ sender: UIGestureRecognizer) {
-        frameInterval = FrameIntervalOptions.defaultFrameInterval
+        preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
         
         if sender.state == .ended {
             altitude = self.camera.altitude
@@ -244,7 +243,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
             if shouldPositionCourseViewFrameByFrame {
-                frameInterval = FrameIntervalOptions.defaultFrameInterval
+                preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
             }
         }
     }
