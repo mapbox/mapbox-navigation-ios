@@ -19,3 +19,5 @@ NSString *const MBRouteControllerDidFailToReroute               = @"RouteControl
 NSString *const MBRouteControllerDidFindFasterRouteKey          = @"RouteControllerDidFindFasterRoute";
 NSString *const MBErrorDomain = @"ErrorDomain";
 NSString *const MBSpokenInstructionErrorCodeKey = @"MBSpokenInstructionErrorCode";
+
+NSString *const MBNavigationSettingsDidChange = @"MBNavigationSettingsDidChange";
