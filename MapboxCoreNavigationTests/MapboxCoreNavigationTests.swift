@@ -61,7 +61,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         route.accessToken = "foo"
         let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.77386, longitude: -122.43085), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date())
         
-        let locationManager = ReplayLocationManager(locations: [location, location, location])
+        let locationManager = ReplayLocationManager(locations: [location, location])
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         
         expectation(forNotification: RouteControllerDidPassSpokenInstructionPoint, object: navigation) { (notification) -> Bool in
