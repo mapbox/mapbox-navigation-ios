@@ -1,9 +1,11 @@
 import Foundation
 
-/**
- Emitted when something changed in the `NavigationSettings`.
- */
-public let NavigationSettingsDidChange = Notification.Name("MBNavigationSettingsDidChange")
+extension Notification.Name {
+    /**
+     Emitted when something changed in the `NavigationSettings`.
+     */
+    public static let navigationSettingsDidChange = Notification.Name(MBNavigationSettingsDidChange)
+}
 
 /**
  `NavigationSettings` provides a wrapper for UserDefaults.
@@ -65,14 +67,14 @@ public class NavigationSettings: NSObject {
                 guard let val = change?[.newKey] else { continue }
                 
                 UserDefaults.standard.set(val, forKey: key.prefixed)
-                NotificationCenter.default.post(name: NavigationSettingsDidChange, object: nil, userInfo: [key: val])
+                NotificationCenter.default.post(name: .navigationSettingsDidChange, object: nil, userInfo: [key: val])
                 
                 found = true
                 break
             }
         }
         
-        if found == false {
+        if !found {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
         }
     }

@@ -128,14 +128,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(settingsDidChange(_:)), name: NavigationSettingsDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(settingsDidChange(_:)), name: .navigationSettingsDidChange, object: nil)
     }
     
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NavigationSettingsDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .navigationSettingsDidChange, object: nil)
     }
     
     @objc func settingsDidChange(_ notification: Notification) {
