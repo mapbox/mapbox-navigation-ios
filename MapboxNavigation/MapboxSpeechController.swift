@@ -25,14 +25,11 @@ public class MapboxVoiceController: RouteVoiceController {
     var spokenInstructionsForRoute = NSCache<NSString, NSData>()
     
     var speech: SpeechSynthesizer
-    var locale: Locale
+    var locale: Locale?
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
-    public init(locale: Locale, accessToken: String? = nil, host: String? = nil) {
-        
-        self.locale = locale
-        
+    public init(accessToken: String? = nil, host: String? = nil) {
         if let accessToken = accessToken, let host = host {
             speech = SpeechSynthesizer(accessToken: accessToken, host: host)
         } else if let accessToken = accessToken {
@@ -48,6 +45,8 @@ public class MapboxVoiceController: RouteVoiceController {
     
     @objc public override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
+        locale = routeProgresss.route.routeOptions.locale
+        
         for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
             let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
             
@@ -98,7 +97,9 @@ public class MapboxVoiceController: RouteVoiceController {
     func fetch(instruction: SpokenInstruction) {
         audioTask?.cancel()
         let options = SpeechOptions(ssml: instruction.ssmlText)
-        options.locale = locale
+        if let locale = locale {
+            options.locale = locale
+        }
         
         audioTask = speech.audioData(with: options) { (data, error) in
             if let error = error as? URLError, error.code == .cancelled {
@@ -121,7 +122,9 @@ public class MapboxVoiceController: RouteVoiceController {
     
     func cacheSpokenInstruction(instruction: SpokenInstruction) {
         let options = SpeechOptions(ssml: instruction.ssmlText)
-        options.locale = locale
+        if let locale = locale {
+            options.locale = locale
+        }
         
         speech.audioData(with: options) { (data, error) in
             guard let data = data else { return }
