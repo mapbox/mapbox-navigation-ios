@@ -38,34 +38,35 @@ public let RouteControllerNotificationErrorKey = MBRouteControllerNotificationEr
 public let RouteControllerDidFindFasterRouteKey = MBRouteControllerDidFindFasterRouteKey
 
 /**
- Emitted when the user moves along the route.
- */
-public let RouteControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
-
-/**
- Emitted when the user passes an ideal point for saying an instruction aloud.
- */
-public let RouteControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
-
-/**
  Key for accessing the `RouteProgress` key emitted when `RouteControllerDidPassSpokenInstructionPoint` is fired.
  */
 public let RouteControllerDidPassSpokenInstructionPointRouteProgressKey = MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey
 
-/**
- Emitted when the user has gone off-route and the `RouteController` is about to reroute.
- */
-public let RouteControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
-
-/**
- Emitted after the user has gone off-route and the `RouteController` rerouted.
- */
-public let RouteControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
-
-/**
- Emitted after the user has gone off-route but the `RouteController` failed to reroute.
- */
-public let RouteControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
+extension Notification.Name {
+    /**
+     Emitted after the user has gone off-route but the `RouteController` failed to reroute.
+     */
+    public static let routeControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
+    /**
+     Emitted when the user has gone off-route and the `RouteController` is about to reroute.
+     */
+    public static let routeControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
+    
+    /**
+     Emitted after the user has gone off-route and the `RouteController` rerouted.
+     */
+    public static let routeControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
+    
+    /**
+     Emitted when the user moves along the route.
+     */
+    public static let routeControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
+    
+    /**
+     Emitted when the user passes an ideal point for saying an instruction aloud.
+     */
+    public static let routeControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
+}
 
 /**
  Maximum number of meters the user can travel away from step before `RouteControllerShouldReroute` is emitted.

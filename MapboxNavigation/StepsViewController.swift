@@ -62,11 +62,11 @@ open class StepsViewController: UIViewController {
         setupViews()
         rebuildDataSource()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
     }
     
     @objc func progressDidChange(_ notification: Notification) {

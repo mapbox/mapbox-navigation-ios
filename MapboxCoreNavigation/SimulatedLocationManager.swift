@@ -65,8 +65,8 @@ public class SimulatedLocationManager: NavigationLocationManager {
         super.init()
         self.route = route
         reset()
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: RouteControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
     private func reset() {
@@ -95,8 +95,8 @@ public class SimulatedLocationManager: NavigationLocationManager {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
     }
     
     override public func startUpdatingLocation() {

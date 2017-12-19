@@ -155,7 +155,7 @@ open class RouteController: NSObject {
                 userInfo[MBRouteControllerNotificationLocationKey] = location
             }
             userInfo[RouteControllerDidFindFasterRouteKey] = didFindFasterRoute
-            NotificationCenter.default.post(name: RouteControllerDidReroute, object: self, userInfo: userInfo)
+            NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
 
@@ -237,10 +237,10 @@ open class RouteController: NSObject {
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
@@ -530,7 +530,7 @@ extension RouteController: CLLocationManagerDelegate {
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
 
         guard routeProgress.remainingWaypoints.count > 0 else {
-            NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
+            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
                 RouteControllerProgressDidChangeNotificationLocationKey: location,
                 RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
@@ -546,7 +546,7 @@ extension RouteController: CLLocationManagerDelegate {
             let distanceTraveled = currentStep.distance - remainingDistance
             if distanceTraveled != currentStepProgress.distanceTraveled {
                 currentStepProgress.distanceTraveled = distanceTraveled
-                NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
+                NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                     RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
                     RouteControllerProgressDidChangeNotificationLocationKey: location,
                     RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
@@ -645,7 +645,7 @@ extension RouteController: CLLocationManagerDelegate {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-                strongSelf.didReroute(notification: NSNotification(name: RouteControllerDidReroute, object: nil, userInfo: [
+                strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
                     RouteControllerDidFindFasterRouteKey: true
                     ]))
                 strongSelf.didFindFasterRoute = false
@@ -667,7 +667,7 @@ extension RouteController: CLLocationManagerDelegate {
         isRerouting = true
 
         delegate?.routeController?(self, willRerouteFrom: location)
-        NotificationCenter.default.post(name: RouteControllerWillReroute, object: self, userInfo: [
+        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             MBRouteControllerNotificationLocationKey: location
             ])
 
@@ -680,7 +680,7 @@ extension RouteController: CLLocationManagerDelegate {
 
             if let error = error {
                 strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
-                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
+                NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     MBRouteControllerNotificationErrorKey: error
                     ])
             }
@@ -788,7 +788,7 @@ extension RouteController: CLLocationManagerDelegate {
         for (voiceInstructionIndex, voiceInstruction) in spokenInstructions.enumerated() {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex {
 
-                NotificationCenter.default.post(name: RouteControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
+                NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
                     ])
 
