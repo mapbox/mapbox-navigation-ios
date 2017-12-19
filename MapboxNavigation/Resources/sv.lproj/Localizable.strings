@@ -2,7 +2,7 @@
 "DISMISS_STEPS_TITLE" = "Stäng";
 
 /* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
+"FAILED_INSTRUCTION" = "Misslyckades med att läsa upp instruktioner";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Hittade snabbare rutt";
@@ -44,7 +44,7 @@
 "RESUME" = "Återuppta";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Simulera navigation";
+"USER_IN_SIMULATION_MODE" = "Simulerar Navigation i %d×";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
