@@ -2,9 +2,6 @@
 /* Class = "UIButton"; normalTitle = "Report Problem"; ObjectID = "I8f-iR-MZm"; */
 "I8f-iR-MZm.normalTitle" = "Rapportera Problem";
 
-/* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
-"UpZ-gr-OKM.text" = "Uppdaterar rutt…";
-
 /* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
 "upm-fg-ffn.text" = "Tack för din feedback!";
 
