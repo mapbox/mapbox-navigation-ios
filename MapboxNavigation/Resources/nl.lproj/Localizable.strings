@@ -44,7 +44,7 @@
 "RESUME" = "Doorgaan";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Navigatie Simuleren";
+"USER_IN_SIMULATION_MODE" = "Simulating Navigation at %d×";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
