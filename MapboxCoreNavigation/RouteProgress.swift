@@ -76,7 +76,7 @@ open class RouteProgress: NSObject {
      Number of waypoints remaining on the current route.
      */
     @objc public var remainingWaypoints: [Waypoint] {
-        return route.legs.suffix(from: legIndex).map { $0.destination }
+        return route.legs.suffix(from: legIndex).filter { $0.destination != nil }.map { $0.destination! }
     }
     
     /**

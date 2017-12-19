@@ -11,7 +11,8 @@ let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042,
 let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
 let bogusToken = "pk.feedCafeDeadBeefBadeBede"
 let directions = Directions(accessToken: bogusToken)
-let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: RouteOptions(waypoints: [waypoint1, waypoint2]))
+let decoder = DirectionsDecoder(options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+let route = try! decoder.decode(Route.self, from: try! JSONSerialization.data(withJSONObject: jsonRoute, options: []))
 
 class MapboxNavigationTests: FBSnapshotTestCase {
     

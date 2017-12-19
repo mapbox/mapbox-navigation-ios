@@ -8,10 +8,12 @@ let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
 let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
 let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
 let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
-let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+
+let data = try! JSONSerialization.data(withJSONObject: jsonRoute, options: [])
+let decoder = DirectionsDecoder(options: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+let route = try! decoder.decode(Route.self, from: data)
 
 let waitForInterval: TimeInterval = 5
-
 
 class MapboxCoreNavigationTests: XCTestCase {
     
@@ -94,8 +96,11 @@ class MapboxCoreNavigationTests: XCTestCase {
         let locationManager = ReplayLocationManager(locations: locations)
         locationManager.speedMultiplier = 20
         
-        let routeFilePath = bundle.path(forResource: "tunnel", ofType: "route")!
-        let route = NSKeyedUnarchiver.unarchiveObject(withFile: routeFilePath) as! Route
+        let response = Fixture.JSONFromFileNamed(name: "tunnel-response")
+        let routes = response["routes"] as! [[String: Any]]
+        let data = try! JSONSerialization.data(withJSONObject: routes.first!, options: [])
+        let route = try! decoder.decode(Route.self, from: data)
+        
         route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         

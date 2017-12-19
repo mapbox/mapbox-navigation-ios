@@ -431,7 +431,7 @@ extension RouteController {
             let destination = progress.currentLeg.destination
 
             if progress.currentLegProgress.userHasArrivedAtWaypoint, sessionState.arrivalTimestamp == nil, destination != previousArrivalWaypoint  {
-                delegate?.routeController?(self, didArriveAt: destination)
+                delegate?.routeController?(self, didArriveAt: destination!)
                 
                 previousArrivalWaypoint = destination
             }
@@ -806,7 +806,8 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint,
-            (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
+            let destination = routeProgress.currentLeg.destination,
+            (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: destination) ?? true) {
             routeProgress.legIndex += 1
         }
     }

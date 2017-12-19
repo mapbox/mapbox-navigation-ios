@@ -564,8 +564,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        let remainingWaypoints = Array(route.legs.suffix(from: legIndex).map { $0.destination }.dropLast())
-        
+        let remainingWaypoints = Array(route.legs.suffix(from: legIndex).filter { $0.destination != nil }.map { $0.destination! }.dropLast())
         let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: remainingWaypoints) ?? shape(for: remainingWaypoints)
         if route.routeOptions.waypoints.count > 2 { //are we on a multipoint route?
             
@@ -589,10 +588,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
         }
         
-        if let lastLeg =  route.legs.last {
+        if let lastLeg =  route.legs.last,
+            let destinationWaypoint = lastLeg.destination {
             removeAnnotations(annotations ?? [])
             let destination = MGLPointAnnotation()
-            destination.coordinate = lastLeg.destination.coordinate
+            destination.coordinate = destinationWaypoint.coordinate
             addAnnotation(destination)
         }
     }

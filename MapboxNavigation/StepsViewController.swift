@@ -201,13 +201,13 @@ extension StepsViewController: UITableViewDataSource {
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
         let leg = routeProgress.route.legs[indexPath.section]
-        let arrivalSecondaryInstruction = leg.destination.name
+        let arrivalSecondaryInstruction = leg.destination?.name
         
         if usePreviousLeg {
             let leg = routeProgress.route.legs[indexPath.section-1]
             let stepBefore = leg.steps[leg.steps.count-1]
             if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
-                let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction, imageURL: nil)] : instructions.secondaryTextComponents
+                let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction)] : instructions.secondaryTextComponents
                 cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: secondaryInstruction)
             }
             cell.instructionsView.distance = stepBefore.distance
@@ -215,14 +215,14 @@ extension StepsViewController: UITableViewDataSource {
             let leg = routeProgress.route.legs[indexPath.section]
             if let stepBefore = leg.steps.stepBefore(step) {
                 if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
-                    let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction, imageURL: nil)] : instructions.secondaryTextComponents
+                    let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction)] : instructions.secondaryTextComponents
                     cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: secondaryInstruction)
                 }
                 cell.instructionsView.distance = stepBefore.distance
             } else {
                 cell.instructionsView.distance = nil
                 if let instructions = step.instructionsDisplayedAlongStep?.last {
-                    let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction, imageURL: nil)] : instructions.secondaryTextComponents
+                    let secondaryInstruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [VisualInstructionComponent(text: arrivalSecondaryInstruction)] : instructions.secondaryTextComponents
                     cell.instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: secondaryInstruction)
                 }
             }
@@ -235,8 +235,8 @@ extension StepsViewController: UITableViewDataSource {
         }
         
         let leg = routeProgress.route.legs[section]
-        let sourceName = leg.source.name
-        let destinationName = leg.destination.name
+        let sourceName = leg.source?.name
+        let destinationName = leg.destination?.name
         let majorWays = leg.name.components(separatedBy: ", ")
         
         if let destinationName = destinationName?.nonEmptyString, majorWays.count > 1 {
