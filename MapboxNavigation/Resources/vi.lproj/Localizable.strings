@@ -44,7 +44,7 @@
 "RESUME" = "Tiếp tục";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Đang Mô phỏng Điều hướng";
+"USER_IN_SIMULATION_MODE" = "Đang Mô phỏng Điều hướng (Tốc độ Gấp %d Lần)";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@ qua %2$@";
