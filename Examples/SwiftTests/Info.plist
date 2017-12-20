@@ -18,5 +18,7 @@
 	<string>0.11.0</string>
 	<key>CFBundleVersion</key>
 	<string>13</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Get user location</string>
 </dict>
 </plist>
