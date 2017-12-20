@@ -160,25 +160,25 @@ If you need additional flexibility, you can use the following building blocks to
 1. How far along the step is the user?
 1. Does the user need to be alerted about an upcoming maneuver?
 
-The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via `NSNotification`.
+The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via notifications.
 
 ### Guidance Notifications
 
-This library relies heavily on `NSNotification`s for letting the developer know when events have occurred.
+This library relies heavily on notifications for letting the developer know when events have occurred.
 
-#### `RouteControllerProgressDidChange`
+#### `.routeControllerProgressDidChange`
 
 * Emitted when the user moves along the route. Notification contains 3 keys:
   * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
   * `RouteControllerProgressDidChangeNotificationLocationKey` - `CLLocation` - Current location
   * `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey` - `Double` - Given users speed and location, this is the number of seconds left to the end of the step
 
-#### `RouteControllerDidPassSpokenInstructionPoint`
+#### `.routeControllerDidPassSpokenInstructionPoint`
 
 * Emitted when user passes a point where instructions should be spoken. This indicates the user should be notified about the upcoming maneuver. You can find the instruction narrative in the `RouteProgress` object. Notification contains 1 key:
-  * `MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey` - `RouteProgress` - Current progress along route
+  * `RouteControllerDidPassSpokenInstructionPointRouteProgressKey` - `RouteProgress` - Current progress along route
 
-#### `RouteControllerShouldReroute`
+#### `.routeControllerShouldReroute`
 
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
