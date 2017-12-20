@@ -88,6 +88,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var batteryStateObservation: NSKeyValueObservation?
     var altitude: CLLocationDistance = defaultAltitude
     
+    var previousLocation: CLLocation?
+    
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 7
         fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
@@ -310,15 +312,31 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let duration: TimeInterval = animated ? 1 : 0
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         }
-        
         let duration: TimeInterval = animated ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-        }, completion: nil)
         
-        if let userCourseView = userCourseView as? UserCourseView {
-            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+        if let route = routes?.first, let coordinates = route.coordinates, let previousLocation = previousLocation {
+            let points = Polyline(coordinates).sliced(from: previousLocation.coordinate, to: location.coordinate).coordinates.map {
+                return self.convert($0, toPointTo: self)
+            }
+            
+            UIView.animateKeyframes(withDuration: duration, delay: 0, options: .beginFromCurrentState, animations: {
+                for (pointIndex, point) in points.enumerated() {
+                    UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: {
+                        self.userCourseView?.center = point
+                    }, completion: nil)
+                }
+            }, completion: nil)
+        } else {
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+            }, completion: nil)
+            
+            if let userCourseView = userCourseView as? UserCourseView {
+                userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            }
         }
+        
+        previousLocation = location
     }
     
     /**
