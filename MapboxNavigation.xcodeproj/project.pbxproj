@@ -173,6 +173,8 @@
 		C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
 		C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */; };
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
+		C5F130A11FE9E82F00463E86 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35B711D31E5E7AD2001EDA8D /* Info.plist */; };
+		C5F130A41FE9EAF600463E86 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C5ADFBD91DDCC7840011824B /* Info.plist */; };
 		DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
@@ -1292,6 +1294,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5F130A11FE9E82F00463E86 /* Info.plist in Resources */,
 				351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */,
 				3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */,
 				35DC9D8D1F431E59001ECD64 /* route.json in Resources */,
@@ -1316,6 +1319,7 @@
 			files = (
 				C5387A9D1F8FDB13000D2E93 /* routeWithInstructions.json in Resources */,
 				DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */,
+				C5F130A41FE9EAF600463E86 /* Info.plist in Resources */,
 				35718BE71EF3194200AFA3D1 /* tunnel.json in Resources */,
 				C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */,
 				35718BE81EF3194500AFA3D1 /* tunnel.route in Resources */,
