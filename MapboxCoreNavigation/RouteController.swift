@@ -202,6 +202,10 @@ open class RouteController: NSObject {
         DispatchQueue.main.async {
             self.startEvents(route: route)
         }
+        
+        if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
+            assert(false, "This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
+        }
     }
 
     deinit {
