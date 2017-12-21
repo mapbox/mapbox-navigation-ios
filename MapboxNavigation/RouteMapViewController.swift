@@ -140,6 +140,9 @@ class RouteMapViewController: UIViewController {
         
         resetETATimer()
         
+        let isPresented = presentingViewController == nil
+        bottomBannerView.isShowingCancelButton = delegate?.mapViewController(self, shouldShowCancelButtonIn: bottomBannerView) ?? isPresented
+        
         muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
         
@@ -887,7 +890,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
 // MARK: BottomBannerViewDelegate
 
 extension RouteMapViewController: BottomBannerViewDelegate {
-    func didCancel() {
+    func bottomBannerViewDidCancel(_ banner: BottomBannerView) {
         delegate?.mapViewControllerDidCancelNavigation(self)
     }
 }
@@ -961,6 +964,7 @@ extension RouteMapViewController: StatusViewDelegate {
     }
 }
 
+//MARK: - RouteMapViewControllerDelegate
 protocol RouteMapViewControllerDelegate: class {
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
@@ -976,9 +980,19 @@ protocol RouteMapViewControllerDelegate: class {
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
+    func mapViewController(_ mapViewController: RouteMapViewController, shouldShowCancelButtonIn bottomBanner: BottomBannerView) -> Bool
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     
     func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+}
+
+extension RouteMapViewControllerDelegate where Self: UIViewController {
+    
+    //default implementation -- Shows cancel button if RMVC (or ancestor) was presented.
+    func mapViewController(_ mapViewController: RouteMapViewController, shouldShowCancelButtonIn : BottomBannerView) -> Bool {
+        let isPresented = self.presentingViewController != nil
+        return isPresented
+    }
 }

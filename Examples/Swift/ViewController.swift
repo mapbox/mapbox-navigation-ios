@@ -338,6 +338,12 @@ extension ViewController: NavigationViewControllerDelegate {
         return false
     }
 
+    // By default, the NavigationViewController will show a cancel button in the BottomBannerView when it is presented modally onto the screen.
+    // There are some situations where you may want to manually determine whether the cancel button should appear. If so, you can implement this delegate method.
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldShowCancelButtonIn bottomBanner: BottomBannerView) -> Bool {
+        return true
+    }
+    
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
         // Multiple waypoint demo
         guard exampleMode == .multipleWaypoints else { return }

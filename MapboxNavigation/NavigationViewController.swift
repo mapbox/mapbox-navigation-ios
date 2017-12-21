@@ -154,6 +154,19 @@ public protocol NavigationViewControllerDelegate {
      Returns the center point of the user course view in screen coordinates relative to the map view.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
+    
+    /**
+     Returns whether the `BottomBannerView` in the `RouteMapViewController` should show a cancel button.
+     
+     If implemented, this method is called at `RouteMapViewController`'s `viewWillAppear()` time. This is used to initally determine whether the cancel button should be shown when the view first appears. If you need to set the visibility of the cancel button after this point, manipulate the `BottomBannerView.isShowingCancelButton` property directly.
+     
+     - parameter navigationViewController: The navigation view controller that needs to know wheather or not to show the cancel button.
+     - parameter bottomBanner: The bottom banner containing the cancel button.
+     - note: If this method is not implemented, the default behavior is to show the cancel button if the `NavigationViewController` was modally presented.
+     - returns: True to show the cancel button, False to hide.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldShowCancelButtonIn bottomBanner: BottomBannerView) -> Bool
+
 }
 
 /**
@@ -420,6 +433,7 @@ open class NavigationViewController: UIViewController, RouteMapViewControllerDel
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
+    //MARK: - RouteMapViewControllerDelegate Methods
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
@@ -472,7 +486,14 @@ open class NavigationViewController: UIViewController, RouteMapViewControllerDel
         if delegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
-            dismiss(animated: true, completion: nil)
+            if self.presentingViewController != nil {
+                dismiss(animated: true, completion: nil)
+            } else if let nav = self.navigationController {
+                nav.popViewController(animated: true)
+            } else {
+                assertionFailure("Cancel button hit but view is not part of a modal presentation or navigation stack.")
+            }
+            
         }
     }
     
@@ -486,6 +507,11 @@ open class NavigationViewController: UIViewController, RouteMapViewControllerDel
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
+    }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, shouldShowCancelButtonIn bottomBanner: BottomBannerView) -> Bool {
+        let isPresented = self.presentingViewController != nil
+        return delegate?.navigationViewController?(self, shouldShowCancelButtonIn: bottomBanner) ?? isPresented
     }
 }
 
