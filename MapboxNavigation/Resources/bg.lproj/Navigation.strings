@@ -1,0 +1,10 @@
+
+/* Class = "UIButton"; normalTitle = "Report Problem"; ObjectID = "I8f-iR-MZm"; */
+"I8f-iR-MZm.normalTitle" = "Сигнал за проблем";
+
+/* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
+"upm-fg-ffn.text" = "Благодарим за сигнала!";
+
+/* Class = "UILabel"; text = "Report Problem"; ObjectID = "xTH-eK-F5H"; */
+"xTH-eK-F5H.text" = "Сигнал за проблем";
+

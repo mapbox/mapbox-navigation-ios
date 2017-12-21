@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;поток&quot;, &quot;П-к&quot;
+&quot;център&quot;, &quot;Ц-р&quot;
+&quot;национален&quot;, &quot;Нац&quot;
+&quot;Връх&quot;, &quot;Вр&quot;
+&quot;планина&quot;, &quot;Пл&quot;
+&quot;проход&quot;, &quot;Прох&quot;
+&quot;център&quot;, &quot;Ц-р&quot;
+&quot;международен&quot;, &quot;Межд&quot;
+&quot;парк&quot;, &quot;Пк&quot;
+&quot;площад&quot;, &quot;Пл&quot;
+&quot;светисвети&quot;, &quot;СвСв&quot;
+&quot;височини&quot;, &quot;вис&quot;
+&quot;маршрут&quot;, &quot;М-т&quot;
+&quot;свети&quot;, &quot;Св&quot;
+&quot;крепост&quot;, &quot;К-т&quot;
+&quot;пазар&quot;, &quot;Mkt&quot;
+&quot;център&quot;, &quot;Ц-р&quot;
+&quot;уилям&quot;, &quot;Ум&quot;
+&quot;училище&quot;, &quot;Уч&quot;
+&quot;старши&quot;, &quot;Стрш&quot;
+&quot;река&quot;, &quot;Рек&quot;
+&quot;сестра&quot;, &quot;сес&quot;
+&quot;село&quot;, &quot;с.&quot;
+&quot;станция&quot;, &quot;С-я&quot;
+&quot;апартаменти&quot;, &quot;ап&quot;
+&quot;университет&quot;, &quot;Уни&quot;
+&quot;район&quot;, &quot;Р-н&quot;
+&quot;езеро&quot;, &quot;Ез&quot;
+&quot;младши&quot;, &quot;Мл&quot;
+&quot;баща&quot;, &quot;Бщ&quot;
+&quot;точка&quot;, &quot;Точ&quot;
+&quot;паметник&quot;, &quot;Пам&quot;
+&quot;възел&quot;, &quot;Въз&quot;</string>
+    <key>classifications</key>
+    <string>&quot;съд&quot;, &quot;Сд&quot;
+&quot;задминаване&quot;, &quot;Задм&quot;
+&quot;шофиране&quot;, &quot;Шоф&quot;
+&quot;магистрала&quot;, &quot;М-ла&quot;
+&quot;мост&quot;, &quot;Мо&quot;
+&quot;място&quot;, &quot;Мя&quot;
+&quot;плавен&quot;, &quot;Пл&quot;
+&quot;магистрала&quot;, &quot;М-ла&quot;
+&quot;платно&quot;, &quot;Пл&quot;
+&quot;булевард&quot;, &quot;Бул&quot;
+&quot;скоростна&quot;, &quot;Скор&quot;
+&quot;магистрала&quot;, &quot;М-ла&quot;
+&quot;площад&quot;, &quot;Пл&quot;
+&quot;пешеходна&quot;, &quot;Пеш&quot;
+&quot;връх&quot;, &quot;Вр&quot;
+&quot;път&quot;, &quot;Път&quot;
+&quot;улица&quot;, &quot;Ул&quot;
+&quot;пътека&quot;, &quot;П-ка&quot;
+&quot;тераса&quot;, &quot;Тер&quot;
+&quot;булевард&quot;, &quot;Бул&quot;
+&quot;залив&quot;, &quot;З-в&quot;
+&quot;магистрала&quot;, &quot;М-ла&quot;
+&quot;път&quot;, &quot;Път&quot;
+&quot;пеш&quot;, &quot;Пеш&quot;
+&quot;площад&quot;, &quot;Пл&quot;
+&quot;кръгово&quot;, &quot;Кр&quot;
+&quot;алея&quot;, &quot;Ал&quot;
+&quot;точка&quot;, &quot;Тч&quot;</string>
+    <key>directions</key>
+    <string>&quot;изток&quot;, &quot;И&quot;
+&quot;североизток&quot;, &quot;СИ&quot;
+&quot;юг&quot;, &quot;Ю&quot;
+&quot;северозапад&quot;, &quot;СЗ&quot;
+&quot;север&quot;, &quot;С&quot;
+&quot;югоизток&quot;, &quot;ЮИ&quot;
+&quot;югозапад&quot;, &quot;ЮЗ&quot;
+&quot;запад&quot;, &quot;З
+</string>
+  </dict>
+</plist>
