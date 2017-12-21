@@ -197,7 +197,7 @@ extension StepsViewController: UITableViewDataSource {
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
         let step = sections[indexPath.section][indexPath.row]
         
-        cell.instructionsView.maneuverView.step = step
+        cell.instructionsView.maneuverView.maneuverTypeModifier = (maneuverType: step.maneuverType, maneuverDirection: step.maneuverDirection)
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
         let leg = routeProgress.route.legs[indexPath.section]
