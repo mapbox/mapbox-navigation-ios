@@ -120,7 +120,7 @@ public class ManeuverView: UIView {
                 flip = true
             case .uTurn:
                 ManeuversStyleKit.drawArrow180right(frame: bounds, resizing: resizing, primaryColor: primaryColor)
-                flip = angle < 0
+                flip = step.drivingSide == .right
             default:
                 ManeuversStyleKit.drawArrowstraight(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }
