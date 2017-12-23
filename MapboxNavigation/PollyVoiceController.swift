@@ -63,7 +63,7 @@ public class PollyVoiceController: RouteVoiceController {
         startAnnouncementTimer()
     }
     
-    override func speak(_ text: String, error: String?) {
+    override open func speak(_ text: String, error: String?) {
         assert(!text.isEmpty)
         
         let input = AWSPollySynthesizeSpeechURLBuilderRequest()

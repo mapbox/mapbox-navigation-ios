@@ -192,7 +192,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         return true
     }
     
-    func speak(_ text: String, error: String? = nil) {
+   open func speak(_ text: String, error: String? = nil) {
         // Note why it failed
         if let error = error {
             print(error)
