@@ -137,12 +137,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
     }
 
-    func duckAudio() throws {
+    open func duckAudio() throws {
         try validateDuckingOptions()
         try AVAudioSession.sharedInstance().setActive(true)
     }
     
-    func unDuckAudio() throws {
+    open func unDuckAudio() throws {
         if !speechSynth.isSpeaking {
             try AVAudioSession.sharedInstance().setActive(false, with: [.notifyOthersOnDeactivation])
         }
