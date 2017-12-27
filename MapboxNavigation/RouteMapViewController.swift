@@ -455,7 +455,7 @@ class RouteMapViewController: UIViewController {
         
         // If the followon step is short and the user is near the end of the current step, show the nextBanner.
         guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+            upcomingStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
                 hideNextBanner()
                 return
         }
