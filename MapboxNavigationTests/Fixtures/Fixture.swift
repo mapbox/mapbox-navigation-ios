@@ -2,6 +2,7 @@ import XCTest
 import Foundation
 import MapboxDirections
 import CoreLocation
+import MapboxCoreNavigation
 
 internal class Fixture {
     internal class func stringFromFileNamed(name: String) -> String {
@@ -55,6 +56,7 @@ internal class Fixture {
     class func route(from jsonFile: String, waypoints: [Waypoint]) -> Route {
         let response = JSONFromFileNamed(name: jsonFile)
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
-        return Route(json: jsonRoute, waypoints: waypoints, routeOptions: RouteOptions(waypoints: waypoints))
+        let decoder = DirectionsDecoder(options: NavigationRouteOptions(waypoints: waypoints))
+        return try! decoder.decode(Route.self, from: try! JSONSerialization.data(withJSONObject: jsonRoute, options: []))
     }
 }

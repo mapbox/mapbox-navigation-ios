@@ -52,8 +52,8 @@ open class NavigationRouteOptions: RouteOptions {
     @objc public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
-
-    @objc public required init?(coder decoder: NSCoder) {
-        super.init(coder: decoder)
+    
+    required public init(from decoder: Decoder) throws {
+        try super.init(from: decoder)
     }
 }
