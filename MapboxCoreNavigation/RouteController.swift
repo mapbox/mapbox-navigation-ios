@@ -158,6 +158,18 @@ open class RouteController: NSObject {
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
+    
+    /**
+     :nodoc:
+     A star rating from 0 to 5 where 0 is the worst and 5 is the best.
+     */
+    public var endOfRouteStarRating: Int?
+    
+    /**
+     :nodoc:
+     The users comment amount their navigation experience.
+     */
+    public var endOfRouteComment: String?
 
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
@@ -211,6 +223,7 @@ open class RouteController: NSObject {
 
     deinit {
         suspendLocationUpdates()
+        sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         UIDevice.current.isBatteryMonitoringEnabled = false
