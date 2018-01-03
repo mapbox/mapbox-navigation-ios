@@ -534,8 +534,9 @@ extension NavigationViewController: RouteControllerDelegate {
         guard routeController.routeProgress.isFinalLeg else { return }
         
         let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
-        let noEndOfRouteShow = { self.routeController.sendCancelEvent(); completion(true) }
-        showsEndOfRouteFeedback ? self.mapViewController?.showEndOfRoute( completion: completion) : noEndOfRouteShow()
+        if showsEndOfRouteFeedback {
+            self.mapViewController?.showEndOfRoute( completion: completion)
+        }
     }
 }
 
