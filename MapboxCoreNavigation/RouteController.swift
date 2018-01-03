@@ -158,6 +158,9 @@ open class RouteController: NSObject {
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
+    
+    var endOfRouteStarRating: Int?
+    var endOfRouteComment: String?
 
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
@@ -211,6 +214,7 @@ open class RouteController: NSObject {
 
     deinit {
         suspendLocationUpdates()
+        sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         UIDevice.current.isBatteryMonitoringEnabled = false
@@ -438,6 +442,14 @@ open class RouteController: NSObject {
         if let index = outstandingFeedbackEvents.index(where: {$0.id.uuidString == feedbackId}) {
             outstandingFeedbackEvents.remove(at: index)
         }
+    }
+    
+    /**
+     Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.
+     */
+    @objc public func setEndOfRoute(rating: Int, comment: String?) {
+        endOfRouteStarRating = rating
+        endOfRouteComment = comment
     }
 }
 

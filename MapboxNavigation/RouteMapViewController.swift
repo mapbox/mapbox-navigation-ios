@@ -576,7 +576,7 @@ class RouteMapViewController: UIViewController {
         
         endOfRouteVC.dismiss = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
-            self?.routeController.sendCancelEvent(rating: rating, comment: comment)
+            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
             self?.dismiss(animated: true, completion: nil)
         }
         endOfRouteViewController = endOfRouteVC
