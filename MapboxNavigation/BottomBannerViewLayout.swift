@@ -74,7 +74,6 @@ extension BottomBannerView {
         distanceRemainingLabel.leftAnchor.constraint(equalTo: timeRemainingLabel.leftAnchor),
         distanceRemainingLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor, constant: 0)
         ]
-        timeRemainingLabel.setContentCompressionResistancePriority(UILayoutPriority.required, for: .vertical)
         return constraints + commonConstraints
     }
     
