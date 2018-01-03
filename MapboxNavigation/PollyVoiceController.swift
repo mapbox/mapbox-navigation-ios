@@ -84,6 +84,10 @@ public class PollyVoiceController: RouteVoiceController {
         super.didPassSpokenInstructionPoint(notification: notification)
     }
     
+    override func didReceiveMemoryWarning() {
+        spokenInstructionsForRoute.removeAllObjects()
+    }
+    
     func pollyURL(for instruction: String) ->  AWSPollySynthesizeSpeechURLBuilderRequest {
         let input = AWSPollySynthesizeSpeechURLBuilderRequest()
         input.textType = .ssml

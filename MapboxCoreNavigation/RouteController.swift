@@ -253,6 +253,7 @@ open class RouteController: NSObject {
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveMemoryWarning), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
 
     func suspendNotifications() {
@@ -299,6 +300,11 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+    }
+    
+    @objc func didReceiveMemoryWarning() {
+        events.flush()
+        resetSession()
     }
     
     /**

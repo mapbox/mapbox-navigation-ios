@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
+import SDWebImage
 
 extension NSAttributedString {
     @available(iOS 10.0, *)
@@ -131,6 +132,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReceiveMemoryWarning), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
         
         volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
             self?.audioPlayer?.volume = settings.voiceVolume
@@ -148,6 +150,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
     
     @objc func didReroute(notification: NSNotification) {
@@ -156,6 +159,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
+    
+    @objc func didReceiveMemoryWarning() {}
     
     @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)

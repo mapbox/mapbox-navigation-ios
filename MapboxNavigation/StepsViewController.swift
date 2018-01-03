@@ -63,6 +63,7 @@ open class StepsViewController: UIViewController {
         rebuildDataSource()
         
         NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
     
     deinit {
