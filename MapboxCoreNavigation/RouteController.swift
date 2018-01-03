@@ -444,12 +444,16 @@ open class RouteController: NSObject {
 extension RouteController {
     @objc func progressDidChange(notification: NSNotification) {
         if let progress = notification.userInfo?[RouteControllerProgressDidChangeNotificationProgressKey] as? RouteProgress {
-            let destination = progress.currentLeg.destination
+            let currentDestinationWaypoint = progress.currentLeg.destination
 
-            if progress.currentLegProgress.userHasArrivedAtWaypoint, sessionState.arrivalTimestamp == nil, destination != previousArrivalWaypoint  {
-                delegate?.routeController?(self, didArriveAt: destination)
+            if progress.currentLegProgress.userHasArrivedAtWaypoint, sessionState.arrivalTimestamp == nil, currentDestinationWaypoint != previousArrivalWaypoint  {
+                delegate?.routeController?(self, didArriveAt: currentDestinationWaypoint)
+                previousArrivalWaypoint = currentDestinationWaypoint
                 
-                previousArrivalWaypoint = destination
+                if let lastRouteWaypoint = progress.route.legs.last?.destination, lastRouteWaypoint == currentDestinationWaypoint {
+                    sessionState.arrivalTimestamp = Date()
+                    sendArriveEvent()
+                }
             }
         }
         if sessionState.departureTimestamp == nil {
@@ -461,11 +465,6 @@ extension RouteController {
     }
 
     @objc func didPassSpokenInstructionPoint(notification: NSNotification) {
-        let progress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        if progress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
-            sessionState.arrivalTimestamp = Date()
-            sendArriveEvent()
-        }
         recentDistancesFromManeuver.removeAll()
     }
 
