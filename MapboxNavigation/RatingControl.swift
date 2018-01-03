@@ -72,9 +72,8 @@ class RatingControl: UIStackView {
             
             let setRatingNumber = NSNumber(value: index + 1)
             let setRatingString = NumberFormatter.localizedString(from: setRatingNumber, number: .none)
-            let localizedStarLabel = NSLocalizedString("Set %@ star rating", bundle: .mapboxNavigation, comment: "Accessibility Star Label")
-            button.accessibilityLabel = String.localizedStringWithFormat(localizedStarLabel, setRatingString)
-                
+            let localizedString = NSLocalizedString("RATING_ACCESSIBILITY_SET", bundle: .mapboxNavigation, value: "Set %@ star rating", comment: "Accessibility Star Label")
+            button.accessibilityLabel = String.localizedStringWithFormat(localizedString, setRatingString)
             
             button.addTarget(self, action: #selector(RatingControl.ratingButtonTapped(button:)), for: .touchUpInside)
             
@@ -110,12 +109,11 @@ class RatingControl: UIStackView {
         
         switch rating {
         case 0:
-            value = NSLocalizedString("No rating set.", bundle: .mapboxNavigation, comment: "No Rating Set")
+            value = NSLocalizedString("NO_RATING", bundle: .mapboxNavigation, value: "No rating set.", comment: "No Rating Set")
         case 1:
-            value = NSLocalizedString("1 star set.", bundle: .mapboxNavigation, comment: "One Star Set")
+            value = NSLocalizedString("RATING_1_STAR", bundle: .mapboxNavigation, value: "1 star set.", comment: "One Star Set")
         default:
-            let starsSet = NSLocalizedString("stars set.", bundle: .mapboxNavigation, comment:"(multiple) Stars Set, as in '30 stars set'")
-            value = String.localizedStringWithFormat("%li %@", rating, starsSet)
+            value = String.localizedStringWithFormat(NSLocalizedString("RATING_STARS_FORMAT", bundle: .mapboxNavigation, value: "%li stars set.", comment: "Format for rating stars set"), rating)
         }
         
         button.accessibilityValue = value
@@ -124,7 +122,7 @@ class RatingControl: UIStackView {
     private func setAccessibilityHint(for button: UIButton, at index: Int) {
         guard rating == (index + 1) else { return } //This applies only to the zero-resettable button.
         
-        button.accessibilityHint = NSLocalizedString("Tap to reset the rating to zero.", bundle: .mapboxNavigation, comment: "Rating Reset To Zero Accessability Hint")
+        button.accessibilityHint = NSLocalizedString("RATING_ACCESSIBILITY_RESET", bundle: .mapboxNavigation, value: "Tap to reset the rating to zero.", comment: "Rating Reset To Zero Accessability Hint")
     }
     
     

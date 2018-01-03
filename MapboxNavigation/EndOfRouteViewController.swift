@@ -46,8 +46,8 @@ class EndOfRouteViewController: UIViewController {
     @IBOutlet weak var ratingCommentsSpacing: NSLayoutConstraint!
     
     //MARK: - Properties
-    lazy var placeholder: String = NSLocalizedString("How can we improve?", bundle: .mapboxNavigation, comment: "Comment Placeholder Text")
-    lazy var endNavigation: String = NSLocalizedString("End Navigation", bundle: .mapboxNavigation, comment: "End Navigation Button Text")
+    lazy var placeholder: String = NSLocalizedString("END_OF_ROUTE_TITLE", bundle: .mapboxNavigation, value: "How can we improve?", comment: "Comment Placeholder Text")
+    lazy var endNavigation: String = NSLocalizedString("END_NAVIGATION", bundle: .mapboxNavigation, value: "End Navigation", comment: "End Navigation Button Text")
     
     var dismiss: ((Int, String?) -> Void)?
     var comment: String?
@@ -155,7 +155,7 @@ class EndOfRouteViewController: UIViewController {
     
     private func styleForUnnamedDestination() {
         staticYouHaveArrived.alpha = 0.0
-        primary.text = NSLocalizedString("You have arrived", bundle: .mapboxNavigation, comment:"")
+        primary.text = NSLocalizedString("END_OF_ROUTE_ARRIVED", bundle: .mapboxNavigation, value:"You have arrived", comment:"Title used for arrival")
     }
     
     private func setPlaceholderText() {
