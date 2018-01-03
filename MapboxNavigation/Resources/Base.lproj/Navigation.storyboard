@@ -749,12 +749,28 @@ Label  </string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" red="0.25098039220000001" green="0.36078431370000003" blue="0.47843137250000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="smallSystem"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1773 Scott St" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I9w-ZT-7sx" customClass="MBEndOfRouteTitleLabel">
                                         <rect key="frame" x="0.0" y="17" width="375" height="43"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="36"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="smallSystem"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
                                     </label>
                                 </subviews>
                                 <constraints>
@@ -800,6 +816,14 @@ Label  </string>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="smallSystem"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
                                         <connections>
                                             <outlet property="delegate" destination="WD9-Na-hrx" id="XeS-Fw-dv9"/>
                                         </connections>
@@ -823,6 +847,14 @@ Label  </string>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5f2-dT-la4" customClass="MBEndOfRouteButton">
                                         <rect key="frame" x="136" y="10" width="103" height="30"/>
                                         <state key="normal" title="End Navigation"/>
+                                        <attributedString key="userComments">
+                                            <fragment content="DO NOT TRANSLATE">
+                                                <attributes>
+                                                    <font key="NSFont" metaFont="smallSystem"/>
+                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                </attributes>
+                                            </fragment>
+                                        </attributedString>
                                         <connections>
                                             <action selector="endNavigationPressed:" destination="WD9-Na-hrx" eventType="touchUpInside" id="WD3-dO-JvE"/>
                                         </connections>
