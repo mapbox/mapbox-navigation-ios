@@ -374,7 +374,7 @@ open class RouteController: NSObject {
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
         
-        var averageRelativeAngle: Double!
+        let averageRelativeAngle: Double
         // User is at the beginning of the route, there is no closest point behind the user.
         if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
             averageRelativeAngle = relativeAnglepointAhead
