@@ -1,5 +1,14 @@
-/* Dismiss button title on the steps view */
+﻿/* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Close";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "End Navigation";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "You have arrived";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "How can we improve?";
 
 /* Error message when the SDK is unable to read a spoken instruction. */
 "FAILED_INSTRUCTION" = "Unable to read instruction aloud.";
@@ -36,6 +45,21 @@
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
+
+/* No Rating Set */
+"NO_RATING" = "No rating set.";
+
+/* One Star Set */
+"RATING_1_STAR" = "1 star set.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tap to reset the rating to zero.";
+
+/* Accessibility Star Label */
+"RATING_ACCESSIBILITY_SET" = "Set %@ star rating";
+
+/* Format for rating stars set */
+"RATING_STARS_FORMAT" = "%li stars set.";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Rerouting…";
