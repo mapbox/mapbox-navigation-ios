@@ -159,17 +159,8 @@ open class RouteController: NSObject {
         }
     }
     
-    /**
-     :nodoc:
-     A star rating from 0 to 5 where 0 is the worst and 5 is the best.
-     */
-    public var endOfRouteStarRating: Int?
-    
-    /**
-     :nodoc:
-     The users comment amount their navigation experience.
-     */
-    public var endOfRouteComment: String?
+    var endOfRouteStarRating: Int?
+    var endOfRouteComment: String?
 
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
@@ -440,6 +431,14 @@ open class RouteController: NSObject {
         if let index = outstandingFeedbackEvents.index(where: {$0.id.uuidString == feedbackId}) {
             outstandingFeedbackEvents.remove(at: index)
         }
+    }
+    
+    /**
+     Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.
+     */
+    @objc public func setEndOfRoute(rating: Int, comment: String?) {
+        endOfRouteStarRating = rating
+        endOfRouteComment = comment
     }
 }
 
