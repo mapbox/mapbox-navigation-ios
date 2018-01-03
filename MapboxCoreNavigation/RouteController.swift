@@ -373,7 +373,18 @@ open class RouteController: NSObject {
         let wrappedCourse = location.course.wrap(min: -180, max: 180)
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
-        let averageRelativeAngle = pointBehindClosest.distance > 0 ? (relativeAnglepointBehind + relativeAnglepointAhead) / 2 : relativeAnglepointAhead
+        
+        let averageRelativeAngle: Double
+        // User is at the beginning of the route, there is no closest point behind the user.
+        if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
+            averageRelativeAngle = relativeAnglepointAhead
+        // User is at the end of the route, there is no closest point in front of the user.
+        } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
+            averageRelativeAngle = relativeAnglepointBehind
+        } else {
+            averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
+        }
+        
         let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
         
         var userCourse = calculatedCourseForLocationOnStep
