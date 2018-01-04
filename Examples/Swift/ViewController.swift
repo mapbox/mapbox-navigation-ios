@@ -335,7 +335,7 @@ extension ViewController: NavigationViewControllerDelegate {
     // If however you would like to pause and allow the user to provide input, set this delegate method to false.
     // This does however require you to increment the leg count on your own. See the example below in `confirmationControllerDidConfirm()`.
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
-        return false
+        return exampleMode == .multipleWaypoints ? false : true
     }
 
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
