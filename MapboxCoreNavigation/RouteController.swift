@@ -827,7 +827,9 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {
+        
         if let forcedStepIndex = to {
+            guard forcedStepIndex < routeProgress.currentLeg.steps.count else { return }
             routeProgress.currentLegProgress.stepIndex = forcedStepIndex
         } else {
             routeProgress.currentLegProgress.stepIndex += 1
