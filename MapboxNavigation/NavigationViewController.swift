@@ -532,7 +532,7 @@ extension NavigationViewController: RouteControllerDelegate {
     
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
         guard routeController.routeProgress.isFinalLeg else {
-            delegate?.navigationViewController!(self, didArriveAt: waypoint)
+            delegate?.navigationViewController?(self, didArriveAt: waypoint)
             return
         }
         
