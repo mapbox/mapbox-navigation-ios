@@ -536,6 +536,12 @@ extension NavigationViewController: RouteControllerDelegate {
             return
         }
         
+        // Do not show end of route feedback if the developer is implementing their own waypoint UI.
+        guard let shouldIncrement = delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint), shouldIncrement == true else {
+            delegate?.navigationViewController?(self, didArriveAt: waypoint)
+            return
+        }
+        
         let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
         if showsEndOfRouteFeedback {
             self.mapViewController?.showEndOfRoute( completion: completion)
