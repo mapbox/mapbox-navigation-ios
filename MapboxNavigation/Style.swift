@@ -294,7 +294,22 @@ open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBWayNameLabel)
-open class WayNameLabel: StylableLabel { }
+open class WayNameLabel: StylableLabel {
+    
+    /// :nodoc:
+    open var textInsets: UIEdgeInsets = .zero
+    
+    open override var intrinsicContentSize: CGSize {
+        var size = super.intrinsicContentSize
+        size.height += textInsets.top + textInsets.bottom
+        size.width += textInsets.left + textInsets.right
+        return size
+    }
+    
+    override open func drawText(in rect: CGRect) {
+        super.drawText(in: UIEdgeInsetsInsetRect(rect, textInsets))
+    }
+}
 
 /// :nodoc:
 @objc(MBWayNameView)
