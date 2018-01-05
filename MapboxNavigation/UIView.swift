@@ -2,7 +2,7 @@ import UIKit
 
 extension UIView {
     class func defaultAnimation(_ duration: TimeInterval, delay: TimeInterval = 0, animations: @escaping () -> Void, completion: ((_ completed: Bool) -> Void)?) {
-        UIView.animate(withDuration: duration, delay: delay, options: .curveEaseInOut, animations: animations, completion: completion)
+        UIView.animate(withDuration: duration, delay: delay, options: .curveLinear, animations: animations, completion: completion)
     }
     
     class func defaultSpringAnimation(_ duration: TimeInterval, delay: TimeInterval = 0, animations: @escaping () -> Void, completion: ((_ completed: Bool) -> Void)?) {

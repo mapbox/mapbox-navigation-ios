@@ -225,6 +225,8 @@ class RouteMapViewController: UIViewController {
 
         let muted = sender.isSelected
         NavigationSettings.shared.voiceMuted = muted
+        let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
+        statusView.show(title, delay: 5, showSpinner: true)
     }
     
     @IBAction func rerouteFeedback(_ sender: Any) {
@@ -332,13 +334,11 @@ class RouteMapViewController: UIViewController {
     @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         hideLaneViews()
-        statusView.show(title, showSpinner: true)
-        statusView.hide(delay: 3, animated: true)
+        statusView.show(title, delay: 3, showSpinner: true)
     }
     
     @objc func didReroute(notification: NSNotification) {
         if !(routeController.locationManager is SimulatedLocationManager) {
-            statusView.hide(delay: 0.5, animated: true)
             
             if !reportButton.isHidden {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
@@ -349,8 +349,7 @@ class RouteMapViewController: UIViewController {
         
         if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            statusView.show(title, showSpinner: true)
-            statusView.hide(delay: 5, animated: true)
+            statusView.show(title, delay: 3, showSpinner: true)
         }
     }
 

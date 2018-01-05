@@ -12,6 +12,7 @@ public class StatusView: UIView {
     weak var textLabel: UILabel!
     weak var delegate: StatusViewDelegate?
     var panStartPoint: CGPoint?
+    var animationIsComplete = true
     
     var canChangeValue = false
     var value: Double = 0 {
@@ -87,7 +88,7 @@ public class StatusView: UIView {
         }
     }
     
-    func show(_ title: String, showSpinner: Bool) {
+    func show(_ title: String, delay: TimeInterval = 0, showSpinner: Bool) {
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
         if showSpinner {
@@ -98,28 +99,31 @@ public class StatusView: UIView {
         
         guard isHidden == true else { return }
         
-        UIView.defaultAnimation(0.3, animations: {
+        UIView.defaultAnimation(0.3, delay: delay, animations: {
             self.isHidden = false
             self.textLabel.alpha = 1
             self.superview?.layoutIfNeeded()
         }, completion: nil)
     }
     
-    func hide(delay: TimeInterval = 0, animated: Bool = true) {
-        
-        if animated {
-            guard isHidden == false else { return }
-            
-            UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.isHidden = true
-                self.textLabel.alpha = 0
-                self.superview?.layoutIfNeeded()
-            }, completion: { (completed) in
-                self.activityIndicatorView.stopAnimating()
-            })
-        } else {
-            activityIndicatorView.stopAnimating()
-            isHidden = true
-        }
-    }
+//    func hide(delay: TimeInterval = 0, animated: Bool = true) {
+//
+//        if animated {
+//            guard isHidden == false else { return }
+//            guard animationIsComplete else { return }
+//
+//            animationIsComplete = false
+//            UIView.defaultAnimation(0.3, delay: delay, animations: {
+//                self.isHidden = true
+//                self.textLabel.alpha = 0
+//                self.superview?.layoutIfNeeded()
+//            }, completion: { (completed) in
+//                self.animationIsComplete = true
+//                self.activityIndicatorView.stopAnimating()
+//            })
+//        } else {
+//            activityIndicatorView.stopAnimating()
+//            isHidden = true
+//        }
+//    }
 }
