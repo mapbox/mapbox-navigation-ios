@@ -21,6 +21,8 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 - Automatic rerouting
 - Snap to route
 
+## [Documentation](https://www.mapbox.com/mapbox-navigation-ios/navigation/)
+
 ## Requirements:
 * \>= Xcode 9
 * Swift 4. If you'd like to use Swift 3.2, the last supported release is v0.10.1.
