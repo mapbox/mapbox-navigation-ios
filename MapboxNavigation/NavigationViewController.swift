@@ -538,7 +538,6 @@ extension NavigationViewController: RouteControllerDelegate {
         // If the developer implements`NavigationViewController(shouldIncrementLegWhenArrivingAtWaypoint:)` and sets it to false,
         // we should emit `NavigationViewController(didArriveAt:)` and not show the end of route feedback UI.
         if let shouldIncrementLegWhenArrivingAtWaypoint = delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint), shouldIncrementLegWhenArrivingAtWaypoint == false {
-            delegate?.navigationViewController?(self, didArriveAt: waypoint)
             return
         }
         
