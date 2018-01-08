@@ -531,10 +531,14 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
-        let isFinalLeg = routeController.routeProgress.isFinalLeg
-        let shouldIncrementLeg = delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint) ?? false
+        guard routeController.routeProgress.isFinalLeg else {
+            delegate?.navigationViewController?(self, didArriveAt: waypoint)
+            return
+        }
         
-        if !isFinalLeg || !shouldIncrementLeg {
+        // If the developer implements`NavigationViewController(shouldIncrementLegWhenArrivingAtWaypoint:)` and sets it to false,
+        // we should emit `NavigationViewController(didArriveAt:)` and not show the end of route feedback UI.
+        if let shouldIncrementLegWhenArrivingAtWaypoint = delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint), shouldIncrementLegWhenArrivingAtWaypoint == false {
             delegate?.navigationViewController?(self, didArriveAt: waypoint)
             return
         }
