@@ -92,7 +92,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG" userLabel="Lanes/Next/Status Stack View">
                                 <rect key="frame" x="0.0" y="116.5" width="375" height="114"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="MBLanesContainerView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="MBLanesView">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                         <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>

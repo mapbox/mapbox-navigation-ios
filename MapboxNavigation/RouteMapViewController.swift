@@ -24,7 +24,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var nextBannerView: NextBannerView!
     @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
-    @IBOutlet weak var laneViewsContainerView: LanesContainerView!
+    @IBOutlet weak var laneViewsContainerView: LanesView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteContainerView: UIView!
     @IBOutlet weak var endOfRouteShowConstraint: NSLayoutConstraint!
