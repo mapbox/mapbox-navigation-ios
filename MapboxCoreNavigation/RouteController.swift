@@ -836,6 +836,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint,
+            routeProgress.remainingWaypoints.count > 0,
             (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
             routeProgress.legIndex += 1
         }
