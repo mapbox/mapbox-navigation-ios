@@ -97,7 +97,6 @@
 		359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359D1B271FFE70D30052FA42 /* NavigationView.swift */; };
 		359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */; };
 		35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A5413A1EFC052700E49846 /* RouteOptions.swift */; };
-		35AC91A21FFFB6EC00D39BE0 /* NavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 35AC91A11FFFB6EC00D39BE0 /* NavigationView.xib */; };
 		35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */; };
 		35B5A47E1FFFDCE5000A3C8D /* NavigationViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B5A47D1FFFDCE5000A3C8D /* NavigationViewLayout.swift */; };
 		35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */; };
@@ -126,13 +125,12 @@
 		35DC585D1FABC61100B5A956 /* InstructionsBannerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC585C1FABC61100B5A956 /* InstructionsBannerViewTests.swift */; };
 		35DC9D8D1F431E59001ECD64 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */; };
-		35DC9D911F4323AA001ECD64 /* LanesContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesContainerView.swift */; };
+		35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesView.swift */; };
 		35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E407671F5625FF00EFC814 /* StyleKitMarker.swift */; };
 		35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
 		35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */; };
 		35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F520BF1FB482A200FC9C37 /* NextBannerView.swift */; };
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
-		35FA96D91FFFD6BC0077EDD9 /* NavigationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 35FA96D81FFFD6BC0077EDD9 /* NavigationView.xib */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D391CE11FD71E78006BB91F /* Waypoint.swift */; };
@@ -399,7 +397,6 @@
 		359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
 		35A1D3651E6624EF00A48FE8 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = Carthage/Build/iOS/Mapbox.framework; sourceTree = "<group>"; };
 		35A5413A1EFC052700E49846 /* RouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteOptions.swift; sourceTree = "<group>"; };
-		35AC91A11FFFB6EC00D39BE0 /* NavigationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NavigationView.xib; sourceTree = "<group>"; };
 		35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCourseView.swift; sourceTree = "<group>"; };
 		35B5A47D1FFFDCE5000A3C8D /* NavigationViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewLayout.swift; sourceTree = "<group>"; };
 		35B711CF1E5E7AD2001EDA8D /* MapboxNavigationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -436,12 +433,11 @@
 		35DA85781FC45787004092EC /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		35DC585C1FABC61100B5A956 /* InstructionsBannerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerViewTests.swift; sourceTree = "<group>"; };
 		35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-lanes.json"; sourceTree = "<group>"; };
-		35DC9D901F4323AA001ECD64 /* LanesContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesContainerView.swift; sourceTree = "<group>"; };
+		35DC9D901F4323AA001ECD64 /* LanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesView.swift; sourceTree = "<group>"; };
 		35E407671F5625FF00EFC814 /* StyleKitMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleKitMarker.swift; sourceTree = "<group>"; };
 		35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManagerTests.swift; sourceTree = "<group>"; };
 		35F520BF1FB482A200FC9C37 /* NextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBannerView.swift; sourceTree = "<group>"; };
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
-		35FA96D81FFFD6BC0077EDD9 /* NavigationView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NavigationView.xib; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		8D391CE11FD71E78006BB91F /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
@@ -456,7 +452,7 @@
 		C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteProgressTests.swift; sourceTree = "<group>"; };
 		C52D09CD1DEF5E5100BE3C5C /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		C52D09D21DEF636C00BE3C5C /* Fixture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fixture.swift; sourceTree = "<group>"; };
-		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationMapView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C53208AA1E81FFB900910266 /* NavigationMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = NavigationMapView.swift; sourceTree = "<group>"; };
 		C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithInstructions.json; sourceTree = "<group>"; };
 		C53C19701F38EACD008DB406 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		C53C19711F38EADB008DB406 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -693,7 +689,6 @@
 				C5D1C9931FB236900067C619 /* ErrorCode.swift */,
 				353AA55F1FCEF583009F0384 /* StyleManager.swift */,
 				359D1B271FFE70D30052FA42 /* NavigationView.swift */,
-				35FA96D81FFFD6BC0077EDD9 /* NavigationView.xib */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -761,7 +756,6 @@
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
 				DA23C9621F4FC0A600BA9522 /* MGLMapView+CustomAdditions.h */,
 				DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */,
-				35AC91A11FFFB6EC00D39BE0 /* NavigationView.xib */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -853,7 +847,7 @@
 				359A8AEE1FA7B25800BDB486 /* LanesStyleKit.swift */,
 				351BEBED1E5BCC63006FE110 /* ManeuversStyleKit.swift */,
 				351BEBEF1E5BCC63006FE110 /* ManeuverView.swift */,
-				35DC9D901F4323AA001ECD64 /* LanesContainerView.swift */,
+				35DC9D901F4323AA001ECD64 /* LanesView.swift */,
 				35E407671F5625FF00EFC814 /* StyleKitMarker.swift */,
 				3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */,
 				35D428281FA0B61F00176028 /* InstructionsBannerViewLayout.swift */,
@@ -1265,7 +1259,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */,
-				35FA96D91FFFD6BC0077EDD9 /* NavigationView.xib in Resources */,
 				351BEC291E5BD530006FE110 /* Assets.xcassets in Resources */,
 				C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */,
 				C5212B551EC4BE97009538EB /* Abbreviations.plist in Resources */,
@@ -1292,7 +1285,6 @@
 			files = (
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */,
-				35AC91A21FFFB6EC00D39BE0 /* NavigationView.xib in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
 				35002D621E5F6ADB0090E733 /* Base.lproj in Resources */,
 				355D20DC1EF30A6D0012B1E0 /* tunnel.route in Resources */,
@@ -1507,7 +1499,7 @@
 				8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
-				35DC9D911F4323AA001ECD64 /* LanesContainerView.swift in Sources */,
+				35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
 				C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */,

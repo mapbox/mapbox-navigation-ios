@@ -11,6 +11,12 @@ public class NavigationView: UIView {
     weak var bottomBannerContentView: BottomBannerContentView!
     weak var instructionsBannerView: InstructionsBannerView!
     weak var instructionsBannerContentView: InstructionsBannerContentView!
+    weak var lanesView: LanesView!
+    weak var nextBannerView: NextBannerView!
+    weak var statusView: StatusView!
+    
+    // Vertically laid-out stack view below the instructions banner consisting of StatusView, NextBannerView, and LanesView.
+    weak var informationStackView: UIStackView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,6 +30,7 @@ public class NavigationView: UIView {
     
     func commonInit() {
         setupViews()
+        setupConstraints()
     }
     
     public override func prepareForInterfaceBuilder() {
@@ -32,6 +39,9 @@ public class NavigationView: UIView {
         
         instructionsBannerView.maneuverView.isStart = true
         instructionsBannerView.distance = 100
+        
+        lanesView.backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        nextBannerView.backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         
         let primary = VisualInstructionComponent(text: "Primary text label", imageURL: nil)
         instructionsBannerView.set([primary], secondaryInstruction: nil)

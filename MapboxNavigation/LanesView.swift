@@ -5,8 +5,8 @@ import MapboxDirections
 
 /// :nodoc:
 @IBDesignable
-@objc(MBLanesContainerView)
-public class LanesContainerView: LanesView {
+@objc(MBLanesView)
+public class LanesView: UIView {
     weak var stackView: UIStackView!
     weak var separatorView: SeparatorView!
     
