@@ -337,6 +337,8 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func didReroute(notification: NSNotification) {
+        guard self.isViewLoaded else { return }
+        
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
             
@@ -758,6 +760,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     @objc func updateETA() {
+        guard isViewLoaded else { return }
         bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
     }
     
