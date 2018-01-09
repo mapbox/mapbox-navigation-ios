@@ -24,6 +24,38 @@ extension NavigationView {
         addSubview(informationStackView)
         self.informationStackView = informationStackView
         
+        let floatingStackView = UIStackView()
+        floatingStackView.axis = .vertical
+        floatingStackView.distribution = .equalSpacing
+        floatingStackView.spacing = 8
+        floatingStackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(floatingStackView)
+        self.floatingStackView = floatingStackView
+        
+        let overviewButton = FloatingButton(type: .custom)
+        overviewButton.translatesAutoresizingMaskIntoConstraints = false
+        overviewButton.constrainedSize = CGSize(width: 50, height: 50)
+        overviewButton.backgroundColor = .white
+        overviewButton.setImage(UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        floatingStackView.addArrangedSubview(overviewButton)
+        self.overviewButton = overviewButton
+        
+        let muteButton = FloatingButton(type: .custom)
+        muteButton.translatesAutoresizingMaskIntoConstraints = false
+        muteButton.constrainedSize = CGSize(width: 50, height: 50)
+        muteButton.backgroundColor = .white
+        muteButton.setImage(UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        floatingStackView.addArrangedSubview(muteButton)
+        self.muteButton = muteButton
+        
+        let reportButton = FloatingButton(type: .custom)
+        reportButton.translatesAutoresizingMaskIntoConstraints = false
+        reportButton.constrainedSize = CGSize(width: 50, height: 50)
+        reportButton.backgroundColor = .white
+        reportButton.setImage(UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        floatingStackView.addArrangedSubview(reportButton)
+        self.reportButton = reportButton
+        
         let lanesView = LanesView(frame: .zero)
         informationStackView.addArrangedSubview(lanesView)
         self.lanesView = lanesView
@@ -78,6 +110,9 @@ extension NavigationView {
         informationStackView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
         informationStackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         informationStackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        floatingStackView.topAnchor.constraint(equalTo: informationStackView.bottomAnchor, constant: 10).isActive = true
+        floatingStackView.rightAnchor.constraint(equalTo: safeRightAnchor, constant: -10).isActive = true
         
         resumeButton.leftAnchor.constraint(equalTo: safeLeftAnchor, constant: 10).isActive = true
         resumeButton.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
