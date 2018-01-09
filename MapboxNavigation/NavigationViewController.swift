@@ -364,13 +364,13 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     // MARK: Route controller notifications
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: routeController)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: routeController)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: routeController)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: routeController)
     }
     
     @objc func progressDidChange(notification: NSNotification) {
@@ -531,11 +531,20 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
+        delegate?.navigationViewController?(self, didArriveAt: waypoint)
+        
         guard routeController.routeProgress.isFinalLeg else { return }
         
+        // If the developer implements`NavigationViewController(shouldIncrementLegWhenArrivingAtWaypoint:)` and sets it to false,
+        // we should emit `NavigationViewController(didArriveAt:)` and not show the end of route feedback UI.
+        if let shouldIncrementLegWhenArrivingAtWaypoint = delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint), shouldIncrementLegWhenArrivingAtWaypoint == false {
+            return
+        }
+        
         let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
-        let noEndOfRouteShow = { self.routeController.sendCancelEvent(); completion(true) }
-        showsEndOfRouteFeedback ? self.mapViewController?.showEndOfRoute( completion: completion) : noEndOfRouteShow()
+        if showsEndOfRouteFeedback {
+            self.mapViewController?.showEndOfRoute( completion: completion)
+        }
     }
 }
 

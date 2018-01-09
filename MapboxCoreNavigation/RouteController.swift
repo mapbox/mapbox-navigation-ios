@@ -155,9 +155,12 @@ open class RouteController: NSObject {
                 userInfo[MBRouteControllerNotificationLocationKey] = location
             }
             userInfo[RouteControllerDidFindFasterRouteKey] = didFindFasterRoute
-            NotificationCenter.default.post(name: RouteControllerDidReroute, object: self, userInfo: userInfo)
+            NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
+    
+    var endOfRouteStarRating: Int?
+    var endOfRouteComment: String?
 
     var isRerouting = false
     var lastRerouteLocation: CLLocation?
@@ -202,10 +205,16 @@ open class RouteController: NSObject {
         DispatchQueue.main.async {
             self.startEvents(route: route)
         }
+        
+        guard let _ = Bundle.main.bundleIdentifier else { return }
+        if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
+            preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
+        }
     }
 
     deinit {
         suspendLocationUpdates()
+        sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         UIDevice.current.isBatteryMonitoringEnabled = false
@@ -237,10 +246,10 @@ open class RouteController: NSObject {
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: RouteControllerProgressDidChange, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState), name: .UIApplicationDidEnterBackground, object: nil)
@@ -368,7 +377,18 @@ open class RouteController: NSObject {
         let wrappedCourse = location.course.wrap(min: -180, max: 180)
         let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
         let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
-        let averageRelativeAngle = pointBehindClosest.distance > 0 ? (relativeAnglepointBehind + relativeAnglepointAhead) / 2 : relativeAnglepointAhead
+        
+        let averageRelativeAngle: Double
+        // User is at the beginning of the route, there is no closest point behind the user.
+        if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
+            averageRelativeAngle = relativeAnglepointAhead
+        // User is at the end of the route, there is no closest point in front of the user.
+        } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
+            averageRelativeAngle = relativeAnglepointBehind
+        } else {
+            averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
+        }
+        
         let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
         
         var userCourse = calculatedCourseForLocationOnStep
@@ -423,17 +443,29 @@ open class RouteController: NSObject {
             outstandingFeedbackEvents.remove(at: index)
         }
     }
+    
+    /**
+     Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.
+     */
+    @objc public func setEndOfRoute(rating: Int, comment: String?) {
+        endOfRouteStarRating = rating
+        endOfRouteComment = comment
+    }
 }
 
 extension RouteController {
     @objc func progressDidChange(notification: NSNotification) {
         if let progress = notification.userInfo?[RouteControllerProgressDidChangeNotificationProgressKey] as? RouteProgress {
-            let destination = progress.currentLeg.destination
+            let currentDestinationWaypoint = progress.currentLeg.destination
 
-            if progress.currentLegProgress.userHasArrivedAtWaypoint, sessionState.arrivalTimestamp == nil, destination != previousArrivalWaypoint  {
-                delegate?.routeController?(self, didArriveAt: destination)
+            if progress.currentLegProgress.userHasArrivedAtWaypoint, sessionState.arrivalTimestamp == nil, currentDestinationWaypoint != previousArrivalWaypoint  {
+                delegate?.routeController?(self, didArriveAt: currentDestinationWaypoint)
+                previousArrivalWaypoint = currentDestinationWaypoint
                 
-                previousArrivalWaypoint = destination
+                if let lastRouteWaypoint = progress.route.legs.last?.destination, lastRouteWaypoint == currentDestinationWaypoint {
+                    sessionState.arrivalTimestamp = Date()
+                    sendArriveEvent()
+                }
             }
         }
         if sessionState.departureTimestamp == nil {
@@ -445,11 +477,6 @@ extension RouteController {
     }
 
     @objc func didPassSpokenInstructionPoint(notification: NSNotification) {
-        let progress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        if progress.currentLegProgress.userHasArrivedAtWaypoint && sessionState.arrivalTimestamp == nil {
-            sessionState.arrivalTimestamp = Date()
-            sendArriveEvent()
-        }
         recentDistancesFromManeuver.removeAll()
     }
 
@@ -530,7 +557,7 @@ extension RouteController: CLLocationManagerDelegate {
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
 
         guard routeProgress.remainingWaypoints.count > 0 else {
-            NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
+            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
                 RouteControllerProgressDidChangeNotificationLocationKey: location,
                 RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
@@ -546,20 +573,21 @@ extension RouteController: CLLocationManagerDelegate {
             let distanceTraveled = currentStep.distance - remainingDistance
             if distanceTraveled != currentStepProgress.distanceTraveled {
                 currentStepProgress.distanceTraveled = distanceTraveled
-                NotificationCenter.default.post(name: RouteControllerProgressDidChange, object: self, userInfo: [
+                NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                     RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
                     RouteControllerProgressDidChangeNotificationLocationKey: location,
                     RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
                     ])
             }
         }
+        
+        updateDistanceToIntersection(from: location)
+        monitorStepProgress(location)
+        
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
         }
-
-        updateDistanceToIntersection(from: location)
-        monitorStepProgress(location)
 
         // Check for faster route given users current location
         guard reroutesOpportunistically else { return }
@@ -645,7 +673,7 @@ extension RouteController: CLLocationManagerDelegate {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-                strongSelf.didReroute(notification: NSNotification(name: RouteControllerDidReroute, object: nil, userInfo: [
+                strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
                     RouteControllerDidFindFasterRouteKey: true
                     ]))
                 strongSelf.didFindFasterRoute = false
@@ -667,7 +695,7 @@ extension RouteController: CLLocationManagerDelegate {
         isRerouting = true
 
         delegate?.routeController?(self, willRerouteFrom: location)
-        NotificationCenter.default.post(name: RouteControllerWillReroute, object: self, userInfo: [
+        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             MBRouteControllerNotificationLocationKey: location
             ])
 
@@ -680,7 +708,7 @@ extension RouteController: CLLocationManagerDelegate {
 
             if let error = error {
                 strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
-                NotificationCenter.default.post(name: RouteControllerDidFailToReroute, object: self, userInfo: [
+                NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     MBRouteControllerNotificationErrorKey: error
                     ])
             }
@@ -788,7 +816,7 @@ extension RouteController: CLLocationManagerDelegate {
         for (voiceInstructionIndex, voiceInstruction) in spokenInstructions.enumerated() {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex {
 
-                NotificationCenter.default.post(name: RouteControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
+                NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
                     ])
 
@@ -799,13 +827,16 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {
+        
         if let forcedStepIndex = to {
+            guard forcedStepIndex < routeProgress.currentLeg.steps.count else { return }
             routeProgress.currentLegProgress.stepIndex = forcedStepIndex
         } else {
             routeProgress.currentLegProgress.stepIndex += 1
         }
 
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint,
+            routeProgress.remainingWaypoints.count > 0,
             (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
             routeProgress.legIndex += 1
         }

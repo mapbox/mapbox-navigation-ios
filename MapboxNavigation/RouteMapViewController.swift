@@ -140,7 +140,7 @@ class RouteMapViewController: UIViewController {
         
         resetETATimer()
         
-        muteButton.isSelected = NavigationSettings.shared.muted
+        muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
         
         mapView.tracksUserCourse = true
@@ -173,16 +173,16 @@ class RouteMapViewController: UIViewController {
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: RouteControllerWillReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
         subscribeToKeyboardNotifications()
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
         unsubscribeFromKeyboardNotifications()
@@ -224,7 +224,7 @@ class RouteMapViewController: UIViewController {
         sender.isSelected = !sender.isSelected
 
         let muted = sender.isSelected
-        NavigationSettings.shared.muted = muted
+        NavigationSettings.shared.voiceMuted = muted
     }
     
     @IBAction func rerouteFeedback(_ sender: Any) {
@@ -337,6 +337,8 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func didReroute(notification: NSNotification) {
+        guard self.isViewLoaded else { return }
+        
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 0.5, animated: true)
             
@@ -455,7 +457,7 @@ class RouteMapViewController: UIViewController {
         
         // If the followon step is short and the user is near the end of the current step, show the nextBanner.
         guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            routeProgress.currentLegProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+            upcomingStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
                 hideNextBanner()
                 return
         }
@@ -576,7 +578,7 @@ class RouteMapViewController: UIViewController {
         
         endOfRouteVC.dismiss = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
-            self?.routeController.sendCancelEvent(rating: rating, comment: comment)
+            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
             self?.dismiss(animated: true, completion: nil)
         }
         endOfRouteViewController = endOfRouteVC
@@ -758,6 +760,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     @objc func updateETA() {
+        guard isViewLoaded else { return }
         bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
     }
     

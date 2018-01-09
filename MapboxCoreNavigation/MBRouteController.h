@@ -18,6 +18,8 @@ extern NSString *const MBRouteControllerDidReroute;
 extern NSString *const MBRouteControllerDidFailToReroute;
 extern NSString *const MBRouteControllerDidFindFasterRouteKey;
 
+extern NSString *const MBNavigationSettingsDidChange;
+
 /**
  Constant representing the domain in which errors created in this library will live under.
  */

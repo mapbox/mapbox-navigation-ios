@@ -77,8 +77,8 @@ open class BottomBannerView: UIView {
     }
     
     func updateETA(routeProgress: RouteProgress) {
-        let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date())
-        arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate!)
+        guard let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date()) else { return }
+        arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate)
 
         if routeProgress.durationRemaining < 5 {
             distanceRemainingLabel.text = nil
@@ -88,8 +88,8 @@ open class BottomBannerView: UIView {
 
         dateComponentsFormatter.unitsStyle = routeProgress.durationRemaining < 3600 ? .short : .abbreviated
 
-        if routeProgress.durationRemaining < 60 {
-            timeRemainingLabel.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining"), dateComponentsFormatter.string(from: 61)!)
+        if let hardcodedTime = dateComponentsFormatter.string(from: 61), routeProgress.durationRemaining < 60 {
+            timeRemainingLabel.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining"), hardcodedTime)
         } else {
             timeRemainingLabel.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
         }

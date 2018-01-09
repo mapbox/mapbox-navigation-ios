@@ -105,6 +105,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     var lastSpokenInstruction: SpokenInstruction?
     var legProgress: RouteLegProgress?
     
+    var volumeToken: NSKeyValueObservation? = nil
+    var muteToken: NSKeyValueObservation? = nil
+    
     /**
      Default initializer for `RouteVoiceController`.
      */
@@ -122,19 +125,30 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     deinit {
         suspendNotifications()
-        speechSynth.stopSpeaking(at: .word)
+        speechSynth.stopSpeaking(at: .immediate)
     }
     
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: RouteControllerWillReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
+        
+        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
+            self?.audioPlayer?.volume = settings.voiceVolume
+        }
+        
+        muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
+            if settings.voiceMuted {
+                self?.audioPlayer?.stop()
+                self?.speechSynth.stopSpeaking(at: .immediate)
+            }
+        }
     }
     
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
     }
     
     @objc func didReroute(notification: NSNotification) {
@@ -147,7 +161,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
         speechSynth.stopSpeaking(at: .word)
         
-        guard playRerouteSound && !NavigationSettings.shared.muted else {
+        guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
             return
         }
         
@@ -188,7 +202,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     }
     
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
-        guard isEnabled, volume > 0, !NavigationSettings.shared.muted else { return }
+        guard !NavigationSettings.shared.voiceMuted else { return }
         
         let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         legProgress = routeProgress.currentLegProgress
@@ -220,10 +234,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
         }
         
+        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction) ?? instruction
+        
         if #available(iOS 10.0, *), utterance?.voice == nil, let legProgress = legProgress {
-            utterance = AVSpeechUtterance(attributedString: instruction.attributedText(for: legProgress))
+            utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: legProgress))
         } else {
-            utterance = AVSpeechUtterance(string: instruction.text)
+            utterance = AVSpeechUtterance(string: modifiedInstruction.text)
         }
         
         // Only localized languages will have a proper fallback voice
@@ -262,4 +278,12 @@ public protocol VoiceControllerDelegate {
      */
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
     optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
+    
+    /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
+     
+     - parameter voiceController: The voice controller that experienced the interruption.
+     - parameter instruction: The spoken instruction that will be said.
+     **/
+    @objc(voiceController:willSpeakSpokenInstruction:)
+    optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction?
 }

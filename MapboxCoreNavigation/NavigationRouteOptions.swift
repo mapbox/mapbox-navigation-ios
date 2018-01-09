@@ -28,6 +28,7 @@ open class NavigationRouteOptions: RouteOptions {
         locale = Locale.nationalizedCurrent
         distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
         includesVisualInstructions = true
+        includesExitRoundaboutManeuver = true
     }
 
 

@@ -58,15 +58,15 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(shouldSpeak(_:)), name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: RouteControllerProgressDidChange, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: RouteControllerWillReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(shouldSpeak(_:)), name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerWillReroute, object: nil)
     }
 
     func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: RouteControllerDidPassSpokenInstructionPoint, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerProgressDidChange, object: nil)
-        NotificationCenter.default.removeObserver(self, name: RouteControllerWillReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {

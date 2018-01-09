@@ -88,7 +88,7 @@ struct EventDetails {
         screenBrightness = Int(UIScreen.main.brightness * 100)
         
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
-        batteryLevel = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel) * 100 : -1
+        batteryLevel = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
         applicationState = UIApplication.shared.applicationState
         if let manager = routeController.locationManager {
             locationEngine = type(of: manager)
