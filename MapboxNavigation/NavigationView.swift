@@ -41,7 +41,10 @@ public class NavigationView: UIView {
         instructionsBannerView.distance = 100
         
         lanesView.backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        lanesView.prepareForInterfaceBuilder()
+        
         nextBannerView.backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
+        nextBannerView.instructionLabel.instruction = [VisualInstructionComponent(text: "Next step", imageURL: nil)]
         
         let primary = VisualInstructionComponent(text: "Primary text label", imageURL: nil)
         instructionsBannerView.set([primary], secondaryInstruction: nil)

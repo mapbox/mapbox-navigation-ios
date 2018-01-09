@@ -20,6 +20,15 @@ public class LanesView: UIView {
         commonInit()
     }
     
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+
+        for _ in 0...4 {
+            let laneView = laneArrowView()
+            stackView.addArrangedSubview(laneView)
+        }
+    }
+    
     func laneArrowView() -> LaneView {
         let view = LaneView(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
         view.backgroundColor = .clear
