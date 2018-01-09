@@ -315,15 +315,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let duration: TimeInterval = animated ? 1 : 0
         
         if let route = routes?.first, let coordinates = route.coordinates, let previousLocation = previousLocation {
+            
             let points = Polyline(coordinates).sliced(from: previousLocation.coordinate, to: location.coordinate).coordinates.map {
                 return self.convert($0, toPointTo: self)
             }
             
-            UIView.animateKeyframes(withDuration: duration, delay: 0, options: .beginFromCurrentState, animations: {
+            let relativeDuration = Double(duration) / Double(points.count)
+            
+            UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeLinear, .beginFromCurrentState], animations: {
                 for (pointIndex, point) in points.enumerated() {
-                    UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 0, initialSpringVelocity: 0, options: .beginFromCurrentState, animations: {
+                    UIView.addKeyframe(withRelativeStartTime: relativeDuration * Double(pointIndex), relativeDuration: Double(duration) / Double(points.count), animations: {
                         self.userCourseView?.center = point
-                    }, completion: nil)
+                    })
                 }
             }, completion: nil)
         } else {
