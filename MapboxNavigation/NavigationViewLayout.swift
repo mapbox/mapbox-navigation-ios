@@ -56,6 +56,11 @@ extension NavigationView {
         floatingStackView.addArrangedSubview(reportButton)
         self.reportButton = reportButton
         
+        let separatorView = SeparatorView(frame: .zero)
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(separatorView)
+        self.separatorView = separatorView
+        
         let lanesView = LanesView(frame: .zero)
         informationStackView.addArrangedSubview(lanesView)
         self.lanesView = lanesView
@@ -107,6 +112,11 @@ extension NavigationView {
         instructionsBannerView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         instructionsBannerView.heightAnchor.constraint(equalToConstant: 96).isActive = true
         
+        separatorView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+        separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+
         informationStackView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
         informationStackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         informationStackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true

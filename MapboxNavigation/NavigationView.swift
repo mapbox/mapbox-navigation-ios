@@ -23,6 +23,7 @@ public class NavigationView: UIView {
     weak var overviewButton: FloatingButton!
     weak var muteButton: FloatingButton!
     weak var reportButton: FloatingButton!
+    weak var separatorView: SeparatorView!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -59,6 +60,7 @@ public class NavigationView: UIView {
         bottomBannerContentView.backgroundColor = .white
         
         bottomBannerView.prepareForInterfaceBuilder()
+        separatorView.backgroundColor = .lightGray
         
         wayNameLabel.backgroundColor = .lightGray
         wayNameLabel.text = "Street Label"
