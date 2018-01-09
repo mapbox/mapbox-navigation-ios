@@ -36,6 +36,12 @@ extension NavigationView {
         informationStackView.addArrangedSubview(statusView)
         self.statusView = statusView
         
+        let resumeButton = ResumeButton(frame: .zero)
+        resumeButton.backgroundColor = .white
+        resumeButton.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(resumeButton)
+        self.resumeButton = resumeButton
+        
         let wayNameLabel = WayNameLabel()
         wayNameLabel.textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
         wayNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -72,6 +78,9 @@ extension NavigationView {
         informationStackView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
         informationStackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         informationStackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        resumeButton.leftAnchor.constraint(equalTo: safeLeftAnchor, constant: 10).isActive = true
+        resumeButton.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
         
         bottomBannerContentView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         bottomBannerContentView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

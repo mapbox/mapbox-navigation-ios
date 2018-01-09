@@ -14,7 +14,7 @@ public class NavigationView: UIView {
     weak var lanesView: LanesView!
     weak var nextBannerView: NextBannerView!
     weak var statusView: StatusView!
-    
+    weak var resumeButton: ResumeButton!
     // Vertically laid-out stack view below the instructions banner consisting of StatusView, NextBannerView, and LanesView.
     weak var informationStackView: UIStackView!
     
