@@ -67,6 +67,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 ```swift
 import MapboxDirections
+import MapboxCoreNavigation
 import MapboxNavigation
 ```
 
