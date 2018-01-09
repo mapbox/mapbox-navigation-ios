@@ -89,8 +89,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var altitude: CLLocationDistance = defaultAltitude
     
     struct FrameIntervalOptions {
-        fileprivate static let durationUntilNextManeuver: TimeInterval = 10
-        fileprivate static let durationSincePreviousManeuver: TimeInterval = 5
+        fileprivate static let durationUntilNextManeuver: TimeInterval = 7
+        fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
         fileprivate static let defaultFramesPerSecond: Int = 60
         fileprivate static let pluggedInFramesPerSecond: Int = 30
         fileprivate static let decreasedFramesPerSecond: Int = 5
@@ -172,10 +172,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
     
-        if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
-            durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
+        if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+            upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
             preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
-        } else if let upcomingStep = routeProgress.currentLegProgress.upComingStep, upcomingStep.maneuverDirection == .straightAhead {
+        } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
+            durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
             preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
         } else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
