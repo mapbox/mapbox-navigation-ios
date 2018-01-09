@@ -284,5 +284,5 @@ public protocol VoiceControllerDelegate {
      - parameter instruction: The spoken instruction that will be said.
      **/
     @objc(voiceController:willSpeakSpokenInstruction:)
-    optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction
+    optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction?
 }
