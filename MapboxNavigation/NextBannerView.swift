@@ -1,4 +1,5 @@
 import UIKit
+import MapboxDirections
 
 /// :nodoc:
 @objc(MBNextInstructionLabel)
@@ -68,6 +69,11 @@ open class NextBannerView: UIView {
         instructionLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 70).isActive = true
         instructionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         instructionLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
+    }
+    
+    func update(step: RouteStep, instruction: VisualInstruction) {
+        maneuverView.step = step
+        instructionLabel.instruction = instruction.primaryTextComponents
     }
     
 }

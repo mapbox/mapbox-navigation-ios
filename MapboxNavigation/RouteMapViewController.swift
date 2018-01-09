@@ -434,31 +434,21 @@ class RouteMapViewController: UIViewController {
         updateVisibleBounds()
     }
     
-    
     func updateNextBanner(routeProgress: RouteProgress) {
-    
-        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
-            let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
-            laneViewsContainerView.isHidden
-            else {
+        let tooLong = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
+        
+        guard let progress = routeProgress.currentLegProgress,
+            let upcoming = progress.upComingStep,
+            let next = progress.stepAfter(upcoming),
+            laneViewsContainerView.isHidden, //banner should not show if the lane view is visible
+            next.expectedTravelTime <= tooLong, //banner should not show if the current step's completion is time-consuming.
+            upcoming.expectedTravelTime <= tooLong,  //banner should not show if the upcoming step is time-consuming.
+            let instruction = upcoming.instructionsDisplayedAlongStep?.last else {  //banner should not show if the upcoming step contains no instructions.
                 hideNextBanner()
                 return
         }
         
-        // If the followon step is short and the user is near the end of the current step, show the nextBanner.
-        guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            upcomingStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
-                hideNextBanner()
-                return
-        }
-        
-        guard let instructions = upcomingStep.instructionsDisplayedAlongStep?.last else {
-            hideNextBanner()
-            return
-        }
-        
-        nextBannerView.maneuverView.step = nextStep
-        nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
+        nextBannerView.update(step: next, instruction: instruction)
         showNextBanner()
     }
     
