@@ -760,7 +760,6 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func selectRouteBySimilarity(from routes: [Route]) -> Route? {
-        print(routes)
         return routes.min { (left, right) -> Bool in
             let leftDistance = left.description.minimumEditDistance(to: routeProgress.route.description)
             let rightDistance = right.description.minimumEditDistance(to: routeProgress.route.description)
