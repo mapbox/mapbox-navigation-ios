@@ -52,6 +52,11 @@ public class ManeuverView: UIView {
         transform = CGAffineTransform.identity
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
         
+        #if TARGET_INTERFACE_BUILDER
+            ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
+            return
+        #endif
+        
         guard let step = step else {
             if isStart {
                 ManeuversStyleKit.drawStarting(frame: bounds, resizing: resizing, primaryColor: primaryColor)
