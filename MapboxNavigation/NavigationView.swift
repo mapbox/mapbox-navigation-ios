@@ -17,6 +17,12 @@ public class NavigationView: UIView {
     weak var resumeButton: ResumeButton!
     // Vertically laid-out stack view below the instructions banner consisting of StatusView, NextBannerView, and LanesView.
     weak var informationStackView: UIStackView!
+    // Vertically laid-out stack view below the information stack view ontop of the map view, docked
+    // to the top right, consisting of Overview, Mute, and Report button.
+    weak var floatingStackView: UIStackView!
+    weak var overviewButton: FloatingButton!
+    weak var muteButton: FloatingButton!
+    weak var reportButton: FloatingButton!
     
     override init(frame: CGRect) {
         super.init(frame: frame)

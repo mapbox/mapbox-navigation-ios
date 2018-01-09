@@ -61,7 +61,19 @@ open class DismissButton: Button { }
 
 /// :nodoc:
 @objc(MBFloatingButton)
-open class FloatingButton: Button { }
+open class FloatingButton: Button {
+    var constrainedSize: CGSize? {
+        didSet {
+            guard let size = constrainedSize else {
+                widthAnchor.constraint(equalToConstant: 0).isActive = false
+                heightAnchor.constraint(equalToConstant: 0).isActive = false
+                return
+            }
+            widthAnchor.constraint(equalToConstant: size.width).isActive = true
+            heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBReportButton)
