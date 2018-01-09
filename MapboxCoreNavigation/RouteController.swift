@@ -744,11 +744,27 @@ extension RouteController: CLLocationManagerDelegate {
             if let error = error {
                 return completion(nil, error)
             }
-            guard let route = routes?.first else {
+            
+            guard let routes = routes else {
                 return completion(nil, nil)
             }
 
-            return completion(route, error)
+            if let route = self?.selectRouteBySimilarity(from: routes) {
+                return completion(route, error)
+            } else if let route = routes.first {
+                return completion(route, error)
+            } else {
+                return completion(nil, nil)
+            }
+        }
+    }
+    
+    func selectRouteBySimilarity(from routes: [Route]) -> Route? {
+        print(routes)
+        return routes.min { (left, right) -> Bool in
+            let leftDistance = left.description.minimumEditDistance(to: routeProgress.route.description)
+            let rightDistance = right.description.minimumEditDistance(to: routeProgress.route.description)
+            return leftDistance < rightDistance
         }
     }
 
