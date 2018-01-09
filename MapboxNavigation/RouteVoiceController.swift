@@ -233,10 +233,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
         }
         
+        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction) ?? instruction
+        
         if #available(iOS 10.0, *), utterance?.voice == nil, let legProgress = legProgress {
-            utterance = AVSpeechUtterance(attributedString: instruction.attributedText(for: legProgress))
+            utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: legProgress))
         } else {
-            utterance = AVSpeechUtterance(string: instruction.text)
+            utterance = AVSpeechUtterance(string: modifiedInstruction.text)
         }
         
         // Only localized languages will have a proper fallback voice
@@ -275,4 +277,12 @@ public protocol VoiceControllerDelegate {
      */
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
     optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
+    
+    /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
+     
+     - parameter voiceController: The voice controller that experienced the interruption.
+     - parameter instruction: The spoken instruction that will be said.
+     **/
+    @objc(voiceController:willSpeakSpokenInstruction:)
+    optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction?
 }

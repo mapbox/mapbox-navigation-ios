@@ -144,16 +144,17 @@ public class PollyVoiceController: RouteVoiceController {
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
+        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction) ?? instruction
         pollyTask?.cancel()
         audioPlayer?.stop()
-        lastSpokenInstruction = instruction
+        lastSpokenInstruction = modifiedInstruction
         
-        guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else {
-            play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
+        guard spokenInstructionsForRoute.object(forKey: modifiedInstruction.ssmlText as NSString) == nil else {
+            play(spokenInstructionsForRoute.object(forKey: modifiedInstruction.ssmlText as NSString)! as Data)
             return
         }
         
-        let input = pollyURL(for: instruction.ssmlText)
+        let input = pollyURL(for: modifiedInstruction.ssmlText)
         
         let builder = AWSPollySynthesizeSpeechURLBuilder.default().getPreSignedURL(input)
         builder.continueWith { [weak self] (awsTask: AWSTask<NSURL>) -> Any? in
@@ -161,7 +162,7 @@ public class PollyVoiceController: RouteVoiceController {
                 return nil
             }
             
-            strongSelf.handle(awsTask, instruction: instruction)
+            strongSelf.handle(awsTask, instruction: modifiedInstruction)
             
             return nil
         }

@@ -315,6 +315,10 @@ extension ViewController: NavigationMapViewDelegate {
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
         print(interruptedInstruction.text, interruptingInstruction.text)
     }
+    
+    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction? {
+        return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
+    }
 }
 
 //MARK: WaypointConfirmationViewControllerDelegate
