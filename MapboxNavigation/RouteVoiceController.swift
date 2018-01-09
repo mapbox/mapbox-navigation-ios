@@ -278,7 +278,7 @@ public protocol VoiceControllerDelegate {
     @objc(voiceController:didInterruptSpokenInstruction:withInstruction:)
     optional func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction)
     
-    /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead.
+    /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
      
      - parameter voiceController: The voice controller that experienced the interruption.
      - parameter instruction: The spoken instruction that will be said.
