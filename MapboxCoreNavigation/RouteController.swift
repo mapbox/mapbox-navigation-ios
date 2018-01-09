@@ -749,7 +749,7 @@ extension RouteController: CLLocationManagerDelegate {
                 return completion(nil, nil)
             }
 
-            if let route = self?.selectRouteBySimilarity(from: routes) {
+            if let route = self?.mostSimilarRoute(in: routes) {
                 return completion(route, error)
             } else if let route = routes.first {
                 return completion(route, error)
@@ -759,7 +759,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    func selectRouteBySimilarity(from routes: [Route]) -> Route? {
+    func mostSimilarRoute(in routes: [Route]) -> Route? {
         return routes.min { (left, right) -> Bool in
             let leftDistance = left.description.minimumEditDistance(to: routeProgress.route.description)
             let rightDistance = right.description.minimumEditDistance(to: routeProgress.route.description)
