@@ -301,7 +301,7 @@ class RouteMapViewController: UIViewController {
         updateETA()
         
         if let location = routeController.location {
-            updateInstructions(routeProgress: routeController.routeProgress, location: location, secondsRemaining: 0)
+            instructionsBannerView.update(progress: routeController.routeProgress.currentLegProgress, location: location, secondsRemaining: 0)
         }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
@@ -413,7 +413,7 @@ class RouteMapViewController: UIViewController {
         }
         
         previousStep = step
-        updateInstructions(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
+        instructionsBannerView.update(progress: routeProgress.currentLegProgress, location: location, secondsRemaining: secondsRemaining)
         updateNextBanner(routeProgress: routeProgress)
         
         if currentLegIndexMapped != routeProgress.legIndex {
@@ -434,16 +434,6 @@ class RouteMapViewController: UIViewController {
         updateVisibleBounds()
     }
     
-    func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
-        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-        let distanceRemaining = stepProgress.distanceRemaining
-        
-        guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
-        
-        instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
-        instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
-        instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
-    }
     
     func updateNextBanner(routeProgress: RouteProgress) {
     
