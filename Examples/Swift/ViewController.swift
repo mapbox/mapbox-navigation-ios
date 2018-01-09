@@ -100,6 +100,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
             self.startBasicNavigation()
         }))
+        alertController.addAction(UIAlertAction(title: "DayStyle UI", style: .default, handler: { (action) in
+            self.startNavigation(styles: [DayStyle()])
+        }))
+        alertController.addAction(UIAlertAction(title: "NightStyle UI", style: .default, handler: { (action) in
+            self.startNavigation(styles: [NightStyle()])
+        }))
         alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
             self.startCustomNavigation()
         }))
@@ -219,6 +225,17 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
+        present(navigationViewController, animated: true, completion: nil)
+    }
+    
+    func startNavigation(styles: [Style]) {
+        guard let route = currentRoute else { return }
+        
+        exampleMode = .default
+        
+        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        navigationViewController.delegate = self
+        
         present(navigationViewController, animated: true, completion: nil)
     }
 
