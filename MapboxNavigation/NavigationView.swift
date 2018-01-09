@@ -1,9 +1,42 @@
 import UIKit
 import MapboxDirections
 
+/**
+ A view that represents the root view of the MapboxNavigation drop-in UI.
+ 
+ ## Components
+ 
+ 1. InstructionsBannerView
+ 2. InformationStackView
+ 3. BottomBannerView
+ 4. ResumeButton
+ 5. WayNameLabel
+ 6. FloatingStackView
+ 7. NavigationMapView
+ 
+ ```
+ +--------------------+
+ |         1          |
+ +--------------------+
+ |         2          |
+ +----------------+---+
+ |                |   |
+ |                | 6 |
+ |                |   |
+ |         7      +---+
+ |                    |
+ |                    |
+ |                    |
+ +------------+       |
+ |  4  ||  5  |       |
+ +------------+-------+
+ |         3          |
+ +--------------------+
+ ```
+*/
 @IBDesignable
 @objc(MBNavigationView)
-public class NavigationView: UIView {
+open class NavigationView: UIView {
     
     weak var mapView: NavigationMapView!
     weak var wayNameLabel: WayNameLabel!
@@ -40,16 +73,16 @@ public class NavigationView: UIView {
         setupConstraints()
     }
     
-    public override func prepareForInterfaceBuilder() {
+    open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         mapView.prepareForInterfaceBuilder()
+        lanesView.prepareForInterfaceBuilder()
+        bottomBannerView.prepareForInterfaceBuilder()
         
         DayStyle().apply()
         
         instructionsBannerView.maneuverView.isStart = true
         instructionsBannerView.distance = 100
-        
-        lanesView.prepareForInterfaceBuilder()
         
         nextBannerView.instructionLabel.instruction = [VisualInstructionComponent(text: "Next step", imageURL: nil)]
         
@@ -57,12 +90,7 @@ public class NavigationView: UIView {
         instructionsBannerView.set([primary], secondaryInstruction: nil)
         
         bottomBannerView.arrivalTimeLabel.text = bottomBannerView.dateFormatter.string(from: Date())
-        bottomBannerContentView.backgroundColor = .white
         
-        bottomBannerView.prepareForInterfaceBuilder()
-        separatorView.backgroundColor = .lightGray
-        
-        wayNameLabel.backgroundColor = .lightGray
         wayNameLabel.text = "Street Label"
     }
 }
