@@ -87,6 +87,7 @@ extension NavigationView {
         let wayNameLabel = WayNameLabel()
         wayNameLabel.textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
         wayNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        wayNameLabel.clipsToBounds = true
         addSubview(wayNameLabel)
         self.wayNameLabel = wayNameLabel
         
