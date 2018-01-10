@@ -320,7 +320,16 @@ open class WayNameLabel: StylableLabel {
         }
     }
     
+    @objc open override var backgroundColor: UIColor? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     override open func drawText(in rect: CGRect) {
+        backgroundColor?.setFill()
+        let ctx = UIGraphicsGetCurrentContext()
+        ctx?.fill(rect)
         super.drawText(in: UIEdgeInsetsInsetRect(rect, textInsets))
     }
     
