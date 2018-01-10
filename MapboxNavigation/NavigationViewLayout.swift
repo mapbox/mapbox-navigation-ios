@@ -32,27 +32,32 @@ extension NavigationView {
         addSubview(floatingStackView)
         self.floatingStackView = floatingStackView
         
+        let buttonSize = CGSize(width: 50, height: 50)
+        
         let overviewButton = FloatingButton(type: .custom)
         overviewButton.translatesAutoresizingMaskIntoConstraints = false
-        overviewButton.constrainedSize = CGSize(width: 50, height: 50)
+        overviewButton.constrainedSize = buttonSize
         overviewButton.backgroundColor = .white
         overviewButton.setImage(UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: buttonSize.width / 2)
         floatingStackView.addArrangedSubview(overviewButton)
         self.overviewButton = overviewButton
         
         let muteButton = FloatingButton(type: .custom)
         muteButton.translatesAutoresizingMaskIntoConstraints = false
-        muteButton.constrainedSize = CGSize(width: 50, height: 50)
+        muteButton.constrainedSize = buttonSize
         muteButton.backgroundColor = .white
         muteButton.setImage(UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: buttonSize.width / 2)
         floatingStackView.addArrangedSubview(muteButton)
         self.muteButton = muteButton
         
         let reportButton = FloatingButton(type: .custom)
         reportButton.translatesAutoresizingMaskIntoConstraints = false
-        reportButton.constrainedSize = CGSize(width: 50, height: 50)
+        reportButton.constrainedSize = buttonSize
         reportButton.backgroundColor = .white
         reportButton.setImage(UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: buttonSize.width / 2)
         floatingStackView.addArrangedSubview(reportButton)
         self.reportButton = reportButton
         
