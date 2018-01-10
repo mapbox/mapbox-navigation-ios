@@ -314,19 +314,14 @@ open class WayNameLabel: StylableLabel {
         return size
     }
     
-    override open func drawText(in rect: CGRect) {
-        super.drawText(in: UIEdgeInsetsInsetRect(rect, textInsets))
-    }
-}
-
-/// :nodoc:
-@objc(MBWayNameView)
-open class WayNameView: UIView {
-    
     @objc dynamic public var borderColor: UIColor = .white {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
+    }
+    
+    override open func drawText(in rect: CGRect) {
+        super.drawText(in: UIEdgeInsetsInsetRect(rect, textInsets))
     }
     
     open override func layoutSubviews() {
