@@ -76,19 +76,14 @@ open class NavigationView: UIView {
     
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        mapView.prepareForInterfaceBuilder()
-        lanesView.prepareForInterfaceBuilder()
-        bottomBannerView.prepareForInterfaceBuilder()
         
         DayStyle().apply()
         
-        instructionsBannerView.maneuverView.isStart = true
-        instructionsBannerView.distance = 100
-        
-        nextBannerView.instructionLabel.instruction = [VisualInstructionComponent(text: "Next step", imageURL: nil)]
-        
-        let primary = VisualInstructionComponent(text: "Primary text label", imageURL: nil)
-        instructionsBannerView.set([primary], secondaryInstruction: nil)
+        mapView.prepareForInterfaceBuilder()
+        instructionsBannerView.prepareForInterfaceBuilder()
+        lanesView.prepareForInterfaceBuilder()
+        bottomBannerView.prepareForInterfaceBuilder()
+        nextBannerView.prepareForInterfaceBuilder()
         
         wayNameLabel.text = "Street Label"
     }
