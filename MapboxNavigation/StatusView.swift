@@ -31,8 +31,6 @@ public class StatusView: UIView {
     }
     
     func commonInit() {
-        backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.6679962588)
-        
         let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(activityIndicatorView)
