@@ -90,6 +90,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     var previousLocation: CLLocation?
     
+    var routeProgress: RouteProgress?
+    
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 7
         fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
@@ -162,9 +164,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc func progressDidChange(_ notification: Notification) {
         guard tracksUserCourse else { return }
         
-        let routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as! RouteProgress
+        routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as? RouteProgress
         
-        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let stepProgress = routeProgress?.currentLegProgress.currentStepProgress else { return }
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
@@ -174,7 +176,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
     
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+        if let upcomingStep = routeProgress?.currentLegProgress.upComingStep,
             upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
             preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
@@ -314,17 +316,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         let duration: TimeInterval = animated ? 1 : 0
         
-        if let route = routes?.first, let coordinates = route.coordinates, let previousLocation = previousLocation {
-            
+        if let coordinates = routeProgress?.route.coordinates, let previousLocation = previousLocation {
             let points = Polyline(coordinates).sliced(from: previousLocation.coordinate, to: location.coordinate).coordinates.map {
                 return self.convert($0, toPointTo: self)
             }
             
-            let relativeDuration = Double(duration) / Double(points.count)
+            let relativeDuration = Double(duration) / Double(points.count - 1)
             
-            UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeLinear, .beginFromCurrentState], animations: {
+            UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.beginFromCurrentState], animations: {
                 for (pointIndex, point) in points.enumerated() {
-                    UIView.addKeyframe(withRelativeStartTime: relativeDuration * Double(pointIndex), relativeDuration: Double(duration) / Double(points.count), animations: {
+                    UIView.addKeyframe(withRelativeStartTime: relativeDuration * Double(pointIndex), relativeDuration: relativeDuration, animations: {
                         self.userCourseView?.center = point
                     })
                 }
