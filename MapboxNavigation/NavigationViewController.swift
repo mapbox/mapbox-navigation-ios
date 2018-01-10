@@ -250,7 +250,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      */
     @objc public var showsReportFeedback: Bool = true {
         didSet {
-            mapViewController?.reportButton.isHidden = !showsReportFeedback
+            mapViewController?.navigationView.reportButton.isHidden = !showsReportFeedback
             showsEndOfRouteFeedback = showsReportFeedback
         }
     }
@@ -323,7 +323,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         mapViewController.view!.pinInSuperview()
         mapViewController.delegate = self
         mapViewController.routeController = routeController
-        mapViewController.reportButton.isHidden = !showsReportFeedback
+        mapViewController.navigationView.reportButton.isHidden = !showsReportFeedback
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
@@ -349,7 +349,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         if routeController.locationManager is SimulatedLocationManager {
             let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
-            mapViewController?.statusView.show(String.localizedStringWithFormat(format, 1), showSpinner: false)
+            mapViewController?.navigationView.statusView.show(String.localizedStringWithFormat(format, 1), showSpinner: false)
         }
     }
     
@@ -521,13 +521,13 @@ extension NavigationViewController: RouteControllerDelegate {
         }
     
         if !(routeController.locationManager is SimulatedLocationManager) {
-            mapViewController?.statusView.hide(delay: 3, animated: true)
+            mapViewController?.navigationView.statusView.hide(delay: 3, animated: true)
         }
     }
     
     @objc public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
         let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
-        mapViewController?.statusView.show(title, showSpinner: false)
+        mapViewController?.navigationView.statusView.show(title, showSpinner: false)
     }
     
     public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
