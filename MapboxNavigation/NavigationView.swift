@@ -90,8 +90,6 @@ open class NavigationView: UIView {
         let primary = VisualInstructionComponent(text: "Primary text label", imageURL: nil)
         instructionsBannerView.set([primary], secondaryInstruction: nil)
         
-        bottomBannerView.arrivalTimeLabel.text = bottomBannerView.dateFormatter.string(from: Date())
-        
         wayNameLabel.text = "Street Label"
     }
 }
