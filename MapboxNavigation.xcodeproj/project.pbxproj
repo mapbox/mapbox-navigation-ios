@@ -105,7 +105,6 @@
 		35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35B839481E2E3D5D0045A868 /* MBRouteController.m */; };
 		35BF8CA21F28EB60003F6125 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA11F28EB60003F6125 /* Array.swift */; };
 		35BF8CA41F28EBD8003F6125 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA31F28EBD8003F6125 /* String.swift */; };
-		35C289F92003CFBE00B371A1 /* Test.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35C289F82003CFBE00B371A1 /* Test.storyboard */; };
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35375EC01F31FA86004CE727 /* NavigationSettings.swift */; };
 		35C9973F1E732C1B00544D1C /* RouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */; };
@@ -407,7 +406,6 @@
 		35B839481E2E3D5D0045A868 /* MBRouteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBRouteController.m; sourceTree = "<group>"; };
 		35BF8CA11F28EB60003F6125 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		35BF8CA31F28EBD8003F6125 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		35C289F82003CFBE00B371A1 /* Test.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Test.storyboard; sourceTree = "<group>"; };
 		35C6A3461E5E418D0004CA57 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		35C6A3471E5E418D0004CA57 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		35C6A34C1E5E418D0004CA57 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -758,7 +756,6 @@
 				6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */,
 				DA23C9621F4FC0A600BA9522 /* MGLMapView+CustomAdditions.h */,
 				DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */,
-				35C289F82003CFBE00B371A1 /* Test.storyboard */,
 			);
 			name = Swift;
 			path = Examples/Swift;
@@ -1057,7 +1054,6 @@
 				358D14601E5E3B7700ADE590 /* Frameworks */,
 				358D14611E5E3B7700ADE590 /* Resources */,
 				354A01C41E66265100D765C2 /* Embed Frameworks */,
-				35E9B0AC1F9E0C2300BF84AB /* Copy Carthage Dependencies */,
 				DA408F661FB3CA3C004D9661 /* Apply Mapbox Access Token */,
 			);
 			buildRules = (
@@ -1286,7 +1282,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35C289F92003CFBE00B371A1 /* Test.storyboard in Resources */,
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
@@ -1379,38 +1374,6 @@
 			);
 			name = "Carthage copy frameworks";
 			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
-		};
-		35E9B0AC1F9E0C2300BF84AB /* Copy Carthage Dependencies */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Mapbox.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxDirections.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Polyline.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/AWSPolly.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/AWSCore.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Turf.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Solar.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/MapboxMobileEvents.framework",
-			);
-			name = "Copy Carthage Dependencies";
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Mapbox.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/MapboxDirections.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Polyline.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AWSPolly.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AWSCore.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Turf.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Solar.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/MapboxMobileEvents.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
