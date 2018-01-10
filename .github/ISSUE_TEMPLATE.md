@@ -9,6 +9,6 @@ Before continuing, can you check if the answer is available within:
 
 -->
 
-<!-- Please not which version of the Mapbox Navigation SDK you are using. -->
+<!-- Please note which version of the Mapbox Navigation SDK you are using. -->
 
 **Mapbox Navigation SDK version:**
