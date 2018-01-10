@@ -49,6 +49,7 @@ class RouteMapViewController: UIViewController {
     }
     
     var showsEndOfRoute: Bool = true
+    var lastTimeUserUnmuted: Date?
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -225,6 +226,21 @@ class RouteMapViewController: UIViewController {
 
         let muted = sender.isSelected
         NavigationSettings.shared.voiceMuted = muted
+        
+        guard let lastTimeUserUnmuted = lastTimeUserUnmuted else {
+            NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
+                MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeController.routeProgress
+                ])
+            self.lastTimeUserUnmuted = Date()
+            return
+        }
+        
+        if Date().timeIntervalSince(lastTimeUserUnmuted) > 10 {
+            NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
+                MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeController.routeProgress
+                ])
+            self.lastTimeUserUnmuted = Date()
+        }
     }
     
     @IBAction func rerouteFeedback(_ sender: Any) {
