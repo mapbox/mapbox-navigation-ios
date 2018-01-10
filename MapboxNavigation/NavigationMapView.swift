@@ -317,9 +317,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let duration: TimeInterval = animated ? 1 : 0
         
         if let coordinates = routeProgress?.route.coordinates, let previousLocation = previousLocation {
-            let points = Polyline(coordinates).sliced(from: previousLocation.coordinate, to: location.coordinate).coordinates.map {
+            var points = Polyline(coordinates).sliced(from: previousLocation.coordinate, to: location.coordinate).coordinates.map {
                 return self.convert($0, toPointTo: self)
             }
+            points.removeLast()
             
             let relativeDuration = Double(duration) / Double(points.count - 1)
             
