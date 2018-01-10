@@ -56,6 +56,7 @@ open class NavigationView: UIView {
     weak var overviewButton: FloatingButton!
     weak var muteButton: FloatingButton!
     weak var reportButton: FloatingButton!
+    weak var rerouteReportButton: ReportButton!
     weak var separatorView: SeparatorView!
     
     override init(frame: CGRect) {

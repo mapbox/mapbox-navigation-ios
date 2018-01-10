@@ -79,17 +79,25 @@ extension NavigationView {
         self.statusView = statusView
         
         let resumeButton = ResumeButton(frame: .zero)
-        resumeButton.backgroundColor = .white
         resumeButton.translatesAutoresizingMaskIntoConstraints = false
+        resumeButton.backgroundColor = .white
         addSubview(resumeButton)
         self.resumeButton = resumeButton
         
         let wayNameLabel = WayNameLabel()
-        wayNameLabel.textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
         wayNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        wayNameLabel.textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
         wayNameLabel.clipsToBounds = true
         addSubview(wayNameLabel)
         self.wayNameLabel = wayNameLabel
+        
+        let rerouteReportButton = ReportButton(type: .custom)
+        rerouteReportButton.translatesAutoresizingMaskIntoConstraints = false
+        rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
+        rerouteReportButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        rerouteReportButton.setTitle(NSLocalizedString("REROUTE_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title on button that appears when a reroute occurs"), for: .normal)
+        addSubview(rerouteReportButton)
+        self.rerouteReportButton = rerouteReportButton
         
         let bottomBannerContentView = BottomBannerContentView()
         bottomBannerContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -132,6 +140,9 @@ extension NavigationView {
         
         resumeButton.leftAnchor.constraint(equalTo: safeLeftAnchor, constant: 10).isActive = true
         resumeButton.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        
+        rerouteReportButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        rerouteReportButton.topAnchor.constraint(equalTo: informationStackView.bottomAnchor, constant: 10).isActive = true
         
         bottomBannerContentView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         bottomBannerContentView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
