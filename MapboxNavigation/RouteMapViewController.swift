@@ -24,7 +24,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var nextBannerView: NextBannerView!
     @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
-    @IBOutlet weak var laneViewsContainerView: LanesContainerView!
+    @IBOutlet weak var lanesView: LanesView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteContainerView: UIView!
     @IBOutlet weak var endOfRouteShowConstraint: NSLayoutConstraint!
@@ -120,7 +120,7 @@ class RouteMapViewController: UIViewController {
         
         wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
         wayNameView.applyDefaultCornerRadiusShadow()
-        laneViewsContainerView.isHidden = true
+        lanesView.isHidden = true
         statusView.isHidden = true
         statusView.delegate = self
         nextBannerView.isHidden = true
@@ -449,7 +449,7 @@ class RouteMapViewController: UIViewController {
     
         guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
             let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
-            laneViewsContainerView.isHidden
+            lanesView.isHidden
             else {
                 hideNextBanner()
                 return
@@ -495,9 +495,9 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
-        laneViewsContainerView.updateLaneViews(step: step, durationRemaining: durationRemaining)
+        lanesView.updateLaneViews(step: step, durationRemaining: durationRemaining)
         
-        if laneViewsContainerView.stackView.arrangedSubviews.count > 0 {
+        if lanesView.stackView.arrangedSubviews.count > 0 {
             showLaneViews()
         } else {
             hideLaneViews()
@@ -506,20 +506,20 @@ class RouteMapViewController: UIViewController {
     
     func showLaneViews(animated: Bool = true) {
         hideNextBanner()
-        guard laneViewsContainerView.isHidden == true else { return }
+        guard lanesView.isHidden == true else { return }
         if animated {
             UIView.defaultAnimation(0.3, animations: {
-                self.laneViewsContainerView.isHidden = false
+                self.lanesView.isHidden = false
             }, completion: nil)
         } else {
-            self.laneViewsContainerView.isHidden = false
+            self.lanesView.isHidden = false
         }
     }
     
     func hideLaneViews() {
-        guard laneViewsContainerView.isHidden == false else { return }
+        guard lanesView.isHidden == false else { return }
         UIView.defaultAnimation(0.3, animations: {
-            self.laneViewsContainerView.isHidden = true
+            self.lanesView.isHidden = true
         }, completion: nil)
     }
     //MARK: End Of Route
