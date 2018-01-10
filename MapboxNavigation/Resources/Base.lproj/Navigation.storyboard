@@ -55,10 +55,10 @@
                                     <action selector="rerouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="yRc-0Z-7Pz"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
                                 <rect key="frame" x="134" y="381" width="106.5" height="29"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
                                         <rect key="frame" x="14" y="6" width="78.5" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
@@ -81,28 +81,28 @@
                                     <constraint firstItem="bcm-ca-nGv" firstAttribute="leading" secondItem="drb-do-FoT" secondAttribute="leading" constant="14" id="gei-Oh-7XJ"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-Bj-wuQ" userLabel="Bottom Banner Content View" customClass="MBBottomBannerContentView">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-Bj-wuQ" userLabel="Bottom Banner Content View" customClass="MBBottomBannerContentView">
                                 <rect key="frame" x="0.0" y="420" width="375" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDs-aU-EMQ" customClass="MBBottomBannerView">
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sDs-aU-EMQ" customClass="MBBottomBannerView">
                                 <rect key="frame" x="0.0" y="420" width="375" height="80"/>
                                 <color key="backgroundColor" red="0.4858537946" green="0.87731584819999997" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG" userLabel="Lanes/Next/Status Stack View">
-                                <rect key="frame" x="0.0" y="116.5" width="375" height="114"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG" userLabel="Lanes/Next/Status Stack View">
+                                <rect key="frame" x="0.0" y="116.5" width="375" height="150"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="MBLanesContainerView">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" customClass="MBLanesView">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
                                         <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nvl-aX-s8B" customClass="MBNextBannerView">
-                                        <rect key="frame" x="0.0" y="40" width="375" height="44"/>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nvl-aX-s8B" customClass="MBNextBannerView">
+                                        <rect key="frame" x="0.0" y="50" width="375" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
-                                        <rect key="frame" x="0.0" y="84" width="375" height="30"/>
+                                    <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
+                                        <rect key="frame" x="0.0" y="100" width="375" height="50"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.67473591549295775" colorSpace="calibratedRGB"/>
                                     </view>
                                 </subviews>
@@ -258,7 +258,7 @@
                         <outlet property="endOfRouteShowConstraint" destination="1kU-o5-DsQ" id="boW-aY-y45"/>
                         <outlet property="instructionsBannerContainerView" destination="p9E-v0-Rt6" id="TMF-0X-Ode"/>
                         <outlet property="instructionsBannerView" destination="UnK-tl-lPe" id="Qdh-aT-dPs"/>
-                        <outlet property="laneViewsContainerView" destination="NE9-ru-uJw" id="Iy6-hg-9rK"/>
+                        <outlet property="lanesView" destination="NE9-ru-uJw" id="Dmx-d8-mLY"/>
                         <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
                         <outlet property="muteButton" destination="Y2a-qB-86S" id="YK6-ak-WNw"/>
                         <outlet property="nextBannerView" destination="Nvl-aX-s8B" id="mlR-y1-FBQ"/>
