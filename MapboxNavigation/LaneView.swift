@@ -114,7 +114,8 @@ open class LaneView: UIView {
         }
         
         #if TARGET_INTERFACE_BUILDER
-            LanesStyleKit.drawLane_straight_right(primaryColor: appropriatePrimaryColor)
+            isValid = true
+            LanesStyleKit.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
         #endif
     }
 }
