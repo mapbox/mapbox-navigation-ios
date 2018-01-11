@@ -17,9 +17,9 @@ custom_categories:
   - name: Examples
     children:
       - Basic
-      - Styled-UI-Elements
-      - Waypoint-Arrival-Screen
-      - Embedded-Navigation
+      - Styled UI Elements
+      - Waypoint Arrival Screen
+      - Embedded Navigation
       - Advanced
   - name: Turn-by-turn UI
     children:

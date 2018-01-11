@@ -16,4 +16,8 @@ for file in docs/examples/*.swift; do
     mv "$file" "docs/examples/$(basename "$file" .swift).md"
 done
 
+for file in docs/examples/*.md; do
+  mv $file "${file//-/ }"
+done
+
 rm -rf navigation-ios-examples
