@@ -87,6 +87,10 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
 
 **The [example app](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Examples/Swift/ViewController.swift) is also a great resource for referencing various APIs.**
 
+## More Examples
+
+Looking for more examples and use cases on how to the Mapbox Navigation SDK? Check out our example repository, [mapbox/navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples).
+
 #### Required Info.plist Keys
 Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
 
