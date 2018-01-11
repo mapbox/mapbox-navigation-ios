@@ -7,7 +7,7 @@ cp navigation-ios-examples/Navigation-Examples/Examples/*.swift docs/examples
 
 for file in docs/examples/*.swift; do
     # Add markdown formatting
-    url="https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation%20Examples/Examples/$(basename "$file" .swift).swift"
+    url="https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation-Examples/Examples/$(basename "$file" .swift).swift"
     urlNote="\n_Source available [here]($url)_\n"
 
     echo -e "$urlNote\n\`\`\`swift\n$(cat $file)\n\`\`\`" > $file
