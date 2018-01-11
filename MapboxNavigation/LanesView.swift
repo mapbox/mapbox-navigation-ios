@@ -10,8 +10,8 @@ public class LanesView: UIView {
     weak var stackView: UIStackView!
     weak var separatorView: SeparatorView!
     
-    var count: Int {
-        return stackView.arrangedSubviews.count
+    var hasLanes: Bool {
+        return !stackView.arrangedSubviews.isEmpty
     }
     
     override init(frame: CGRect) {

@@ -12,10 +12,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TopBannerViewController" customModule="MapboxNavigation" customModuleProvider="target">
             <connections>
-                <outlet property="instructions" destination="PtL-Gu-NOd" id="ETT-cc-3DN"/>
-                <outlet property="lanes" destination="MY7-Db-DRc" id="mZ0-UM-wuq"/>
+                <outlet property="instructionsBanner" destination="PtL-Gu-NOd" id="wfG-vx-S0m"/>
+                <outlet property="laneGuidanceBanner" destination="MY7-Db-DRc" id="Ndm-SK-sya"/>
                 <outlet property="nextBanner" destination="f6q-Jv-U8Z" id="jsT-3e-W0O"/>
-                <outlet property="status" destination="qh7-W8-qYQ" id="Twd-zD-XtI"/>
+                <outlet property="statusBanner" destination="qh7-W8-qYQ" id="T5h-Xc-cpB"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
