@@ -98,8 +98,8 @@ open class StyleManager: NSObject {
     
     func applyStyle() {
         guard let location = delegate?.locationFor(styleManager: self) else {
-            // We can't calculate sunset or sunrise w/o a location so just apply all styles
-            for style in styles {
+            // We can't calculate sunset or sunrise w/o a location so just apply the first style
+            if let style = styles.first {
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }
