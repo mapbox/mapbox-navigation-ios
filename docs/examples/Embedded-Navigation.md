@@ -1,5 +1,5 @@
 
-_Source available [here](https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation%20Examples/Examples/EmbeddedExample.swift)_
+_Source available [here](https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation%20Examples/Examples/Embedded-Navigation.swift)_
 
 ```swift
 import Foundation

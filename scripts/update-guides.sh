@@ -3,7 +3,7 @@ set -eu
 if [ -d "navigation-ios-examples" ]; then rm -Rf navigation-ios-examples; fi
 git clone https://github.com/mapbox/navigation-ios-examples
 
-cp navigation-ios-examples/Navigation\ Examples/Examples/*.swift docs/examples
+cp navigation-ios-examples/Navigation-Examples/Examples/*.swift docs/examples
 
 for file in docs/examples/*.swift; do
     # Add markdown formatting
