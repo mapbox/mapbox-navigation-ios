@@ -28,7 +28,7 @@ class LaneTests: FBSnapshotTestCase {
         controller.updateLaneViews(step: step, durationRemaining: 20)
         controller.showLaneViews(animated: false)
         
-        FBSnapshotVerifyView(controller.laneViewsContainerView)
+        FBSnapshotVerifyView(controller.lanesView)
     }
     
     func testRightRight() {

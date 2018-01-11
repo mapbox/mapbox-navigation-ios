@@ -18,7 +18,6 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var recenterButton: ResumeButton!
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
-    @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     @IBOutlet weak var nextBannerView: NextBannerView!
@@ -84,7 +83,7 @@ class RouteMapViewController: UIViewController {
             if isInOverviewMode {
                 overviewButton.isHidden = true
                 recenterButton.isHidden = false
-                wayNameView.isHidden = true
+                wayNameLabel.isHidden = true
                 mapView.logoView.isHidden = true
             } else {
                 overviewButton.isHidden = false
@@ -118,8 +117,9 @@ class RouteMapViewController: UIViewController {
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
         
-        wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
-        wayNameView.applyDefaultCornerRadiusShadow()
+        wayNameLabel.clipsToBounds = true
+        wayNameLabel.layer.borderWidth = 1.0 / UIScreen.main.scale
+        wayNameLabel.applyDefaultCornerRadiusShadow()
         lanesView.isHidden = true
         statusView.isHidden = true
         statusView.delegate = self
@@ -315,7 +315,7 @@ class RouteMapViewController: UIViewController {
             updateVisibleBounds()
         } else {
             mapView.tracksUserCourse = true
-            wayNameView.isHidden = true
+            wayNameLabel.isHidden = true
         }
         
         stepsViewController?.dismiss {
@@ -753,9 +753,9 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         if smallestLabelDistance < 5 && currentName != nil {
             wayNameLabel.text = currentName
-            wayNameView.isHidden = false
+            wayNameLabel.isHidden = false
         } else {
-            wayNameView.isHidden = true
+            wayNameLabel.isHidden = true
         }
     }
     
@@ -779,7 +779,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
             userTrackingMode = .followWithCourse
         }
         if userTrackingMode == .none && !isInOverviewMode {
-            wayNameView.isHidden = true
+            wayNameLabel.isHidden = true
         }
     }
 

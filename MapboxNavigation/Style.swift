@@ -302,10 +302,11 @@ open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBWayNameLabel)
+@IBDesignable
 open class WayNameLabel: StylableLabel {
     
     /// :nodoc:
-    open var textInsets: UIEdgeInsets = .zero
+    open var textInsets: UIEdgeInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
     
     open override var intrinsicContentSize: CGSize {
         var size = super.intrinsicContentSize
