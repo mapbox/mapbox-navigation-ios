@@ -19,6 +19,9 @@ custom_categories:
       - Embedded-Navigation
       - Styled-UI-Elements
       - Waypoint-Arrival-Screen
+  - name: Guides
+    children:
+      - Storyboards
   - name: Turn-by-turn UI
     children:
       - NavigationViewController
