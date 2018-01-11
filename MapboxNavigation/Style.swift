@@ -64,10 +64,6 @@ open class DismissButton: Button { }
 open class FloatingButton: Button { }
 
 /// :nodoc:
-@objc(MBLanesView)
-public class LanesView: UIView { }
-
-/// :nodoc:
 @objc(MBReportButton)
 public class ReportButton: Button {
     

@@ -44,7 +44,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I8f-iR-MZm" customClass="MBReportButton">
-                                <rect key="frame" x="121.5" y="240.5" width="132" height="38"/>
+                                <rect key="frame" x="121.5" y="266.5" width="132" height="38"/>
                                 <color key="backgroundColor" red="0.14901960784313725" green="0.23921568627450979" blue="0.3411764705882353" alpha="0.80000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
@@ -84,26 +84,38 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-Bj-wuQ" userLabel="Bottom Banner Content View" customClass="MBBottomBannerContentView">
                                 <rect key="frame" x="0.0" y="420" width="375" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="mCw-pS-Qas"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sDs-aU-EMQ" customClass="MBBottomBannerView">
                                 <rect key="frame" x="0.0" y="420" width="375" height="80"/>
                                 <color key="backgroundColor" red="0.4858537946" green="0.87731584819999997" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG" userLabel="Lanes/Next/Status Stack View">
-                                <rect key="frame" x="0.0" y="116.5" width="375" height="114"/>
+                                <rect key="frame" x="0.0" y="116.5" width="375" height="140"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="MBLanesContainerView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="MBLanesView">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                         <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="37K-6b-zhg"/>
+                                        </constraints>
                                         <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nvl-aX-s8B" customClass="MBNextBannerView">
-                                        <rect key="frame" x="0.0" y="40" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="40" width="375" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="y1w-PW-C5X"/>
+                                        </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jym-DH-tdD" customClass="MBStatusView">
-                                        <rect key="frame" x="0.0" y="84" width="375" height="30"/>
+                                        <rect key="frame" x="0.0" y="90" width="375" height="50"/>
                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.67473591549295775" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="giq-MN-YWs"/>
+                                        </constraints>
                                     </view>
                                 </subviews>
                                 <constraints>
@@ -125,7 +137,7 @@
                                 </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="8P3-NB-IRq" userLabel="Floating Stack View">
-                                <rect key="frame" x="315" y="240.5" width="50" height="108"/>
+                                <rect key="frame" x="315" y="266.5" width="50" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dry-gO-T7u" customClass="MBFloatingButton">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -552,7 +564,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lll-SJ-8q4">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -606,7 +618,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pt1-9i-cSt">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -660,7 +672,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yPS-fp-q2X">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>

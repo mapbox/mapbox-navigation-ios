@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TopBannerViewController" customModule="MapboxNavigation" customModuleProvider="target">
+            <connections>
+                <outlet property="instructions" destination="PtL-Gu-NOd" id="ETT-cc-3DN"/>
+                <outlet property="lanes" destination="MY7-Db-DRc" id="mZ0-UM-wuq"/>
+                <outlet property="nextBanner" destination="f6q-Jv-U8Z" id="jsT-3e-W0O"/>
+                <outlet property="status" destination="qh7-W8-qYQ" id="Twd-zD-XtI"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="238"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PtL-Gu-NOd" customClass="MBInstructionsBannerView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
+                    <color key="backgroundColor" red="0.84833441840000001" green="0.99809138559999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="96" id="9Hn-3s-cjb"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AOm-zG-luT" customClass="MBSeparatorView">
+                    <rect key="frame" x="0.0" y="96" width="375" height="2"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="xfg-qg-myw"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="pmK-zc-XwM">
+                    <rect key="frame" x="0.0" y="98" width="375" height="140"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MY7-Db-DRc" customClass="MBLanesView">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="66"/>
+                            <color key="backgroundColor" red="1" green="0.83234566450000003" blue="0.47320586440000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f6q-Jv-U8Z" customClass="MBNextBannerView">
+                            <rect key="frame" x="0.0" y="66" width="375" height="44"/>
+                            <color key="backgroundColor" red="0.7037046267" green="0.98106676339999999" blue="0.86589570900000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="l1Y-AQ-60O"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qh7-W8-qYQ" customClass="MBStatusView">
+                            <rect key="frame" x="0.0" y="110" width="375" height="30"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.67000000000000004" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="30" id="v2g-Bh-N1B"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="f6q-Jv-U8Z" secondAttribute="trailing" id="Ult-2B-ekg"/>
+                        <constraint firstItem="f6q-Jv-U8Z" firstAttribute="leading" secondItem="pmK-zc-XwM" secondAttribute="leading" id="VKV-BV-fXv"/>
+                        <constraint firstItem="qh7-W8-qYQ" firstAttribute="leading" secondItem="pmK-zc-XwM" secondAttribute="leading" id="WJu-M8-s6q"/>
+                        <constraint firstAttribute="trailing" secondItem="qh7-W8-qYQ" secondAttribute="trailing" id="hAy-SD-86h"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="pmK-zc-XwM" secondAttribute="trailing" id="BH0-Wa-ibX"/>
+                <constraint firstAttribute="bottom" secondItem="pmK-zc-XwM" secondAttribute="bottom" id="GKP-T1-pjn"/>
+                <constraint firstItem="AOm-zG-luT" firstAttribute="top" secondItem="PtL-Gu-NOd" secondAttribute="bottom" id="JPc-7L-V6J"/>
+                <constraint firstItem="PtL-Gu-NOd" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Jkd-rT-alU"/>
+                <constraint firstItem="pmK-zc-XwM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="nI9-5r-UIt"/>
+                <constraint firstItem="PtL-Gu-NOd" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="tOv-2h-f8h"/>
+                <constraint firstItem="AOm-zG-luT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tV7-jS-5SP"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="PtL-Gu-NOd" secondAttribute="trailing" id="tYx-EF-fmO"/>
+                <constraint firstAttribute="trailing" secondItem="AOm-zG-luT" secondAttribute="trailing" id="y7K-PD-91B"/>
+                <constraint firstItem="pmK-zc-XwM" firstAttribute="top" secondItem="AOm-zG-luT" secondAttribute="bottom" id="zCp-fo-Hj0"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
+            <point key="canvasLocation" x="34.5" y="70.5"/>
+        </view>
+    </objects>
+</document>
