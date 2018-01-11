@@ -1,3 +1,5 @@
-﻿/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
-"CONTINUE_ON_ROAD" = "Continuez sur %1$@ pendant %2$@";
+/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
+"CONTINUE" = "Continuer durant %@";
 
+/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
+"CONTINUE_ON_ROAD" = "Continuer par %1$@ durant %2$@";
