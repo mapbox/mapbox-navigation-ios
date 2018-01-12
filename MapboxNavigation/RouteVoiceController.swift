@@ -203,7 +203,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard !NavigationSettings.shared.voiceMuted else { return }
         
-        routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
+        routeProgress = (notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress)
         
         guard let routeProgress = routeProgress else { return }
         
