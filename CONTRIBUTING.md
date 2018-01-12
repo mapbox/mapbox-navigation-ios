@@ -27,6 +27,10 @@ To build this SDK, you need Xcode 9 and [Carthage](https://github.com/Carthage/C
 
 See [the README](./README.md#running-the-example-project) for instructions on building and running the included Swift and Objective-C example projects.
 
+## Opening a pull request
+
+Pull requests are appreciated. If your PR includes any changes that would impact developers or end users, please mention those changes in the “master” section of [CHANGELOG.md](CHANGELOG.md), noting the PR number. Examples of noteworthy changes include new features, fixes for user-visible bugs, renamed or deleted public symbols, and changes that affect bridging to Objective-C.
+
 ## Making any symbol public
 
 To add any type, constant, or member to the SDK’s public interface:
