@@ -23,8 +23,14 @@ public protocol RouteControllerDelegate: class {
     @objc(routeController:shouldRerouteFromLocation:)
     optional func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool
 
-    @objc(routeController:shouldIncrementLegWhenArrivingAtWaypoint:)
-    optional func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool
+   /**
+     Called before the route controller arrives at a waypoint to allow the delegate to prevent the route controller from advancing to the next leg.
+     
+     - returns: True to advance to the next leg, or false to remain on the completed leg.
+     - postcondition: If you return false, you must manually advance to the next leg by obtaining the value of the `routeProgress` property and incrementing the `RouteProgress.legIndex` property.
+     */
+    @objc(routeController:shouldAdvanceToNextLegWhenArrivingAtWaypoint:)
+    optional func routeController(_ routeController: RouteController, shouldAdvanceToNextLegWhenArrivingAt waypoint: Waypoint) -> Bool
 
     /**
      Called immediately before the route controller calculates a new route.
@@ -595,7 +601,7 @@ extension RouteController: CLLocationManagerDelegate {
             delegate?.routeController?(self, didArriveAt: currentDestination)
             
             if !routeProgress.isFinalLeg,
-                (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
+                (delegate?.routeController?(self, shouldAdvanceToNextLegWhenArrivingAt: routeProgress.currentLeg.destination) ?? true) {
                 routeProgress.legIndex += 1
             }
         }

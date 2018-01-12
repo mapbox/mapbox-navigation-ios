@@ -353,9 +353,10 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
 //MARK: NavigationViewControllerDelegate
 extension ViewController: NavigationViewControllerDelegate {
     // By default, when the user arrives at a waypoint, the next leg starts immediately.
-    // If however you would like to pause and allow the user to provide input, set this delegate method to false.
-    // This does however require you to increment the leg count on your own. See the example below in `confirmationControllerDidConfirm()`.
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
+    // If you implement this method, return true to preserve this behavior.
+    // Return false to remain on the current leg, for example to allow the user to provide input.
+    // If you return false, you must manually advance to the next leg. See the example above in `confirmationControllerDidConfirm(_:)`.
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldAdvanceToNextLegWhenArrivingAt waypoint: Waypoint) -> Bool {
         return exampleMode == .multipleWaypoints ? false : true
     }
 
@@ -364,7 +365,7 @@ extension ViewController: NavigationViewControllerDelegate {
         guard exampleMode == .multipleWaypoints else { return }
 
         // When the user arrives, present a view controller that prompts the user to continue to their next destination
-        // This typ of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
+        // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
         guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return }
 
         confirmationController.delegate = self

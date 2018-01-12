@@ -33,16 +33,17 @@ public protocol NavigationViewControllerDelegate {
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
     
     /**
-     Asks the reciever if the next leg of the route should start immediately after arrival at the waypoint.
-     If custom UI is to be shown when upon arrival at the waypoint, implement this delegate method and return false.
+     Asks the reciever if the navigation view controller should automatically advance to the next leg of the route after arriving at the given waypoint.
+     
+     This method is called just before the navigation view controller arrives at the waypoint. To pause navigation and show an interstitial view controller upon arriving at the waypoint, implement this delegate method and return `false`.
     
-     - important: If the implementation returns false, the user must increment the `legIndex` property of the `routeProgress` object within the `routeController`.
+     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `routeController` and its `RouteController.routeProgress` property, then increment the `RouteProgress.legIndex` property.
      - parameter navigationViewController: The Navigation View Controller.
      - parameter waypoint: The waypoint that the user has arrived at.
-     - returns: true if the RouteController should immediately start on the next leg of the route, false otherwise.
+     - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
-    @objc(navigationViewController:shouldIncrementLegWhenArrivingAtWaypoint:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool
+    @objc(navigationViewController:shouldAdvanceToNextLegWhenArrivingAtWaypoint:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldAdvanceToNextLegWhenArrivingAt waypoint: Waypoint) -> Bool
     
     /**
      Called immediately before the navigation view controller calculates a new route.
@@ -510,8 +511,8 @@ extension NavigationViewController: RouteControllerDelegate {
         return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
     }
     
-    @objc public func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
-        return delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint) ?? true
+    @objc public func routeController(_ routeController: RouteController, shouldAdvanceToNextLegWhenArrivingAt waypoint: Waypoint) -> Bool {
+        return delegate?.navigationViewController?(self, shouldAdvanceToNextLegWhenArrivingAt: waypoint) ?? true
     }
     
     @objc public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
@@ -551,9 +552,9 @@ extension NavigationViewController: RouteControllerDelegate {
         
         guard routeController.routeProgress.isFinalLeg else { return }
         
-        // If the developer implements`NavigationViewController(shouldIncrementLegWhenArrivingAtWaypoint:)` and sets it to false,
-        // we should emit `NavigationViewController(didArriveAt:)` and not show the end of route feedback UI.
-        if let shouldIncrementLegWhenArrivingAtWaypoint = delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint), shouldIncrementLegWhenArrivingAtWaypoint == false {
+        // If the developer implements `NavigationViewController(_:shouldAdvanceToNextLegWhenArrivingAt:)` and sets it to false,
+        // we should emit `NavigationViewController(_:didArriveAt:)` and not show the end of route feedback UI.
+        if !(delegate?.navigationViewController?(self, shouldAdvanceToNextLegWhenArrivingAt: waypoint) ?? true) {
             return
         }
         
