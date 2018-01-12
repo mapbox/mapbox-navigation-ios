@@ -55,4 +55,4 @@ find ${OUTPUT} -name *.html -exec \
     perl -pi -e "$REPLACE_REGEXP" {} \;
 
 
-echo $SHORT_VERSION > $output/latest_version
+echo $SHORT_VERSION > $OUTPUT/latest_version

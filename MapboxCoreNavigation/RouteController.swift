@@ -725,8 +725,8 @@ extension RouteController: CLLocationManagerDelegate {
     
     func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
-        guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
-        let latestVersion = String(describing: version)
+            guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
+            let latestVersion = String(describing: version)
             let _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
