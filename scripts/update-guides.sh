@@ -17,7 +17,7 @@ for file in docs/examples/*.swift; do
 done
 
 for file in docs/examples/*.md; do
-  mv $file "${file//-/ }"
+  mv "$file" "${file//-/ }"
 done
 
 rm -rf navigation-ios-examples

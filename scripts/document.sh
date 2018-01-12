@@ -4,7 +4,7 @@ set -e
 set -o pipefail
 set -u
 
-./update-guides.sh
+./scripts/update-guides.sh
 
 if [ -z `which jazzy` ]; then
     echo "Installing jazzy…"

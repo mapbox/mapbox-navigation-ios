@@ -12,7 +12,7 @@ hide_documentation_coverage: Yes
 
 custom_categories:
   - name: Guides
-     children:
+    children:
       - Storyboards
   - name: Examples
     children:
