@@ -88,6 +88,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var batteryStateObservation: NSKeyValueObservation?
     var altitude: CLLocationDistance = defaultAltitude
     
+    var previousLocation: CLLocation?
+    
+    var routeProgress: RouteProgress?
+    
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 7
         fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
@@ -160,9 +164,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc func progressDidChange(_ notification: Notification) {
         guard tracksUserCourse else { return }
         
-        let routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as! RouteProgress
+        routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as? RouteProgress
         
-        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let stepProgress = routeProgress?.currentLegProgress.currentStepProgress else { return }
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
@@ -172,7 +176,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
     
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
+        if let upcomingStep = routeProgress?.currentLegProgress.upComingStep,
             upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
             preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : FrameIntervalOptions.decreasedFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
@@ -310,15 +314,34 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let duration: TimeInterval = animated ? 1 : 0
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         }
-        
         let duration: TimeInterval = animated ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-        }, completion: nil)
         
-        if let userCourseView = userCourseView as? UserCourseView {
-            userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+        if let coordinates = routeProgress?.route.coordinates, let previousLocation = previousLocation {
+            var points = Polyline(coordinates).sliced(from: previousLocation.coordinate, to: location.coordinate).coordinates.map {
+                return self.convert($0, toPointTo: self)
+            }
+            points.removeLast()
+            
+            let relativeDuration = Double(duration) / Double(points.count - 1)
+            
+            UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.beginFromCurrentState], animations: {
+                for (pointIndex, point) in points.enumerated() {
+                    UIView.addKeyframe(withRelativeStartTime: relativeDuration * Double(pointIndex), relativeDuration: relativeDuration, animations: {
+                        self.userCourseView?.center = point
+                    })
+                }
+            }, completion: nil)
+        } else {
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+            }, completion: nil)
+            
+            if let userCourseView = userCourseView as? UserCourseView {
+                userCourseView.update(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            }
         }
+        
+        previousLocation = location
     }
     
     /**
