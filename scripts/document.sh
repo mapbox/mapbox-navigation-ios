@@ -53,3 +53,6 @@ REPLACE_REGEXP+="s/<span class=\"kt\">(${DIRECTIONS_SYMBOLS})<\/span>/<span clas
 
 find ${OUTPUT} -name *.html -exec \
     perl -pi -e "$REPLACE_REGEXP" {} \;
+
+
+echo $SHORT_VERSION > $OUTPUT/latest_version
