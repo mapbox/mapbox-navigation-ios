@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 protocol BottomBannerViewDelegate: class {
-    func didCancel()
+    func bottomBannerViewDidCancel(_ banner: BottomBannerView)
 }
 
 /// :nodoc:
@@ -14,8 +14,13 @@ open class BottomBannerView: UIView {
     weak var timeRemainingLabel: TimeRemainingLabel!
     weak var distanceRemainingLabel: DistanceRemainingLabel!
     weak var arrivalTimeLabel: ArrivalTimeLabel!
-    weak var cancelButton: CancelButton!
-    weak var dividerView: SeparatorView!
+    weak var cancelButton: CancelButton? {
+        didSet {
+            guard let cancel = cancelButton else { return }
+            cancel.addTarget(self, action: #selector(BottomBannerView.cancel(_:)), for: .touchUpInside)
+        }
+    }
+    weak var dividerView: SeparatorView?
     weak var routeController: RouteController!
     weak var delegate: BottomBannerViewDelegate?
     
@@ -23,8 +28,12 @@ open class BottomBannerView: UIView {
     let dateComponentsFormatter = DateComponentsFormatter()
     let distanceFormatter = DistanceFormatter(approximate: true)
     
-    var verticalCompactConstraints = [NSLayoutConstraint]()
-    var verticalRegularConstraints = [NSLayoutConstraint]()
+    var isShowingCancelButton: Bool = false {
+        didSet {
+            isShowingCancelButton ? addCancelButton() : removeCancelButton()
+            updateLayout(showingButton: isShowingCancelButton)
+        }
+    }
     
     var congestionLevel: CongestionLevel = .unknown {
         didSet {
@@ -60,17 +69,15 @@ open class BottomBannerView: UIView {
         dateComponentsFormatter.unitsStyle = .abbreviated
         
         setupViews()
-        
-        cancelButton.addTarget(self, action: #selector(BottomBannerView.cancel(_:)), for: .touchUpInside)
     }
     
     @IBAction func cancel(_ sender: Any) {
-        delegate?.didCancel()
+        delegate?.bottomBannerViewDidCancel(self)
     }
     
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        dividerView.backgroundColor = .red
+        dividerView?.backgroundColor = .red
         timeRemainingLabel.text = "22 min"
         distanceRemainingLabel.text = "4 mi"
         arrivalTimeLabel.text = "10:09"

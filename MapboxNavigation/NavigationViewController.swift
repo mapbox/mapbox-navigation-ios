@@ -154,6 +154,19 @@ public protocol NavigationViewControllerDelegate {
      Returns the center point of the user course view in screen coordinates relative to the map view.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
+    
+    /**
+     Returns whether the `BottomBannerView` in the `RouteMapViewController` should show a cancel button.
+     
+     If implemented, this method is called at `RouteMapViewController`'s `viewWillAppear()` time. This is used to initally determine whether the cancel button should be shown when the view first appears. If you need to set the visibility of the cancel button after this point, manipulate the `BottomBannerView.isShowingCancelButton` property directly.
+     
+     - parameter navigationViewController: The navigation view controller that needs to know wheather or not to show the cancel button.
+     - parameter bottomBanner: The bottom banner containing the cancel button.
+     - note: If this method is not implemented, the default behavior is to show the cancel button if the `NavigationViewController` was modally presented.
+     - returns: True to show the cancel button, False to hide.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldShowCancelButtonIn bottomBanner: BottomBannerView) -> Bool
+
 }
 
 /**
@@ -162,14 +175,14 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: UIViewController, RouteMapViewControllerDelegate {
+open class NavigationViewController: UIViewController, RouteMapViewControllerDelegate {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
      
      In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
      */
-    @objc public var route: Route! {
+    @objc open var route: Route! {
         didSet {
             if routeController == nil {
                 routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
@@ -185,49 +198,49 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
     */
     @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
-    @objc public var destination: MGLAnnotation!
+    @objc open var destination: MGLAnnotation!
     
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc public var directions: Directions!
+    @objc open var directions: Directions!
     
     /**
      An optional `MGLMapCamera` you can use to improve the initial transition from a previous viewport and prevent a trigger from an excessive significant location update.
      */
-    @objc public var pendingCamera: MGLMapCamera?
+    @objc open var pendingCamera: MGLMapCamera?
     
     /**
      An instance of `MGLAnnotation` representing the origin of your route.
      */
-    @objc public var origin: MGLAnnotation?
+    @objc open var origin: MGLAnnotation?
     
     /**
      The receiver’s delegate.
      */
-    @objc public weak var delegate: NavigationViewControllerDelegate?
+    @objc open weak var delegate: NavigationViewControllerDelegate?
     
     /**
      Provides access to various speech synthesizer options.
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = RouteVoiceController()
+    @objc open var voiceController: RouteVoiceController? = RouteVoiceController()
     
     /**
      Provides all routing logic for the user.
 
      See `RouteController` for more information.
      */
-    @objc public var routeController: RouteController!
+    @objc open var routeController: RouteController!
     
     /**
      The main map view displayed inside the view controller.
      
      - note: Do not change this map view’s delegate.
      */
-    @objc public var mapView: NavigationMapView? {
+    @objc open var mapView: NavigationMapView? {
         get {
             return mapViewController?.mapView
         }
@@ -238,17 +251,17 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      
      By default, this property is set to `true`, causing the user location annotation to be snapped to the route.
      */
-    @objc public var snapsUserLocationAnnotationToRoute = true
+    @objc open var snapsUserLocationAnnotationToRoute = true
     
     /**
      Toggles sending of UILocalNotification upon upcoming steps when application is in the background. Defaults to `true`.
      */
-    @objc public var sendsNotifications: Bool = true
+    @objc open var sendsNotifications: Bool = true
     
     /**
      Shows a button that allows drivers to report feedback such as accidents, closed roads,  poor instructions, etc. Defaults to `true`.
      */
-    @objc public var showsReportFeedback: Bool = true {
+    @objc open var showsReportFeedback: Bool = true {
         didSet {
             mapViewController?.reportButton.isHidden = !showsReportFeedback
             showsEndOfRouteFeedback = showsReportFeedback
@@ -259,7 +272,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     /**
     Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
     */
-    @objc public var showsEndOfRouteFeedback: Bool = true {
+    @objc open var showsEndOfRouteFeedback: Bool = true {
         didSet {
             mapViewController?.showsEndOfRoute = showsEndOfRouteFeedback
         }
@@ -268,7 +281,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     /**
      If true, the map style and UI will automatically be updated given the time of day.
      */
-    @objc public var automaticallyAdjustsStyleForTimeOfDay = true {
+    @objc open var automaticallyAdjustsStyleForTimeOfDay = true {
         didSet {
             styleManager.automaticallyAdjustsStyleForTimeOfDay = automaticallyAdjustsStyleForTimeOfDay
         }
@@ -279,7 +292,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
-    @objc public var annotatesSpokenInstructions = false
+    @objc open var annotatesSpokenInstructions = false
     
     let progressBar = ProgressBar()
     var styleManager: StyleManager!
@@ -334,14 +347,14 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         suspendNotifications()
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
         progressBar.dock(on: view)
         view.clipsToBounds = true
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = true
@@ -353,7 +366,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         }
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
+    override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
@@ -420,6 +433,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
+    //MARK: - RouteMapViewControllerDelegate Methods
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
@@ -472,7 +486,14 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         if delegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
-            dismiss(animated: true, completion: nil)
+            if self.presentingViewController != nil {
+                dismiss(animated: true, completion: nil)
+            } else if let nav = self.navigationController {
+                nav.popViewController(animated: true)
+            } else {
+                assertionFailure("Cancel button hit but view is not part of a modal presentation or navigation stack.")
+            }
+            
         }
     }
     
@@ -486,6 +507,11 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
+    }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, shouldShowCancelButtonIn bottomBanner: BottomBannerView) -> Bool {
+        let isPresented = self.presentingViewController != nil
+        return delegate?.navigationViewController?(self, shouldShowCancelButtonIn: bottomBanner) ?? isPresented
     }
 }
 
@@ -550,7 +576,7 @@ extension NavigationViewController: RouteControllerDelegate {
 
 extension NavigationViewController: StyleManagerDelegate {
     
-    public func locationFor(styleManager: StyleManager) -> CLLocation {
+    open func locationFor(styleManager: StyleManager) -> CLLocation {
         guard let location = routeController.location else {
             if let coordinate = routeController.routeProgress.route.coordinates?.first {
                 return CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -562,14 +588,14 @@ extension NavigationViewController: StyleManagerDelegate {
         return location
     }
     
-    public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
+    open func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         if mapView?.styleURL != style.mapStyleURL {
             mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView?.styleURL = style.mapStyleURL
         }
     }
     
-    public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    open func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
     }
 }

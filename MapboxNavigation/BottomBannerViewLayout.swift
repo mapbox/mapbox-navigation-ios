@@ -2,8 +2,8 @@ import UIKit
 
 extension BottomBannerView {
     
+    //MARK: - View Setup
     func setupViews() {
-        
         let timeRemainingLabel = TimeRemainingLabel()
         timeRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
         timeRemainingLabel.font = .systemFont(ofSize: 28, weight: .medium)
@@ -21,6 +21,11 @@ extension BottomBannerView {
         addSubview(arrivalTimeLabel)
         self.arrivalTimeLabel = arrivalTimeLabel
         
+        if isShowingCancelButton { addCancelButton() }
+        updateLayout()
+    }
+    
+    func addCancelButton() {
         let cancelButton = CancelButton(type: .custom)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.setImage(UIImage(named: "close", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
@@ -31,65 +36,96 @@ extension BottomBannerView {
         dividerView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(dividerView)
         self.dividerView = dividerView
-        
-        setupConstraints()
     }
     
-    fileprivate func setupConstraints() {
-        setupVerticalCompactLayout(&verticalCompactConstraints)
-        setupVerticalRegularLayout(&verticalRegularConstraints)
+    func removeCancelButton() {
+        let views: [UIView?] = [cancelButton, dividerView]
+        views.forEach { (view) in
+            view?.willMove(toSuperview: nil)
+            view?.removeFromSuperview()
+        }
+    
+        cancelButton = nil
+        dividerView = nil
     }
     
-    fileprivate func setupVerticalCompactLayout(_ c: inout [NSLayoutConstraint]) {
-        c.append(heightAnchor.constraint(equalToConstant: 50))
-        
-        c.append(cancelButton.widthAnchor.constraint(equalTo: heightAnchor))
-        c.append(cancelButton.topAnchor.constraint(equalTo: topAnchor))
-        c.append(cancelButton.rightAnchor.constraint(equalTo: rightAnchor))
-        c.append(cancelButton.bottomAnchor.constraint(equalTo: bottomAnchor))
-        
-        c.append(timeRemainingLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 10))
-        c.append(timeRemainingLabel.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor))
-        
-        c.append(distanceRemainingLabel.leftAnchor.constraint(equalTo: timeRemainingLabel.rightAnchor, constant: 10))
-        c.append(distanceRemainingLabel.lastBaselineAnchor.constraint(equalTo: timeRemainingLabel.lastBaselineAnchor))
-        
-        c.append(dividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(dividerView.heightAnchor.constraint(equalToConstant: 40))
-        c.append(dividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
-        c.append(dividerView.rightAnchor.constraint(equalTo: cancelButton.leftAnchor))
-        
-        c.append(arrivalTimeLabel.rightAnchor.constraint(equalTo: dividerView.leftAnchor, constant: -10))
-        c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor))
+    //MARK: - Computed Constraint Properties
+    fileprivate var commonConstraints: [NSLayoutConstraint] {
+        let constraints = [
+            timeRemainingLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 10),
+        ]
+        return constraints
     }
     
-    fileprivate func setupVerticalRegularLayout(_ c: inout [NSLayoutConstraint]) {
-        c.append(heightAnchor.constraint(equalToConstant: 80))
-        
-        c.append(timeRemainingLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 10))
-        c.append(timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: centerYAnchor, constant: 0))
-        
-        c.append(distanceRemainingLabel.leftAnchor.constraint(equalTo: timeRemainingLabel.leftAnchor))
-        c.append(distanceRemainingLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor, constant: 0))
-        
-        c.append(cancelButton.widthAnchor.constraint(equalToConstant: 80))
-        c.append(cancelButton.topAnchor.constraint(equalTo: topAnchor))
-        c.append(cancelButton.rightAnchor.constraint(equalTo: rightAnchor))
-        c.append(cancelButton.bottomAnchor.constraint(equalTo: bottomAnchor))
-        
-        c.append(dividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(dividerView.heightAnchor.constraint(equalToConstant: 40))
-        c.append(dividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
-        c.append(dividerView.rightAnchor.constraint(equalTo: cancelButton.leftAnchor))
-        
-        c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
-        c.append(arrivalTimeLabel.rightAnchor.constraint(equalTo: dividerView.leftAnchor, constant: -10))
+    fileprivate var commonCompactConstraints: [NSLayoutConstraint] {
+        let constraints = [
+        heightAnchor.constraint(equalToConstant: 50),
+        distanceRemainingLabel.leftAnchor.constraint(equalTo: timeRemainingLabel.rightAnchor, constant: 10),
+        distanceRemainingLabel.lastBaselineAnchor.constraint(equalTo: timeRemainingLabel.lastBaselineAnchor),
+        timeRemainingLabel.centerYAnchor.constraint(equalTo: cancelButton?.centerYAnchor ?? centerYAnchor)
+        ]
+        return constraints + commonConstraints
     }
     
+    fileprivate var commonRegularConstraints: [NSLayoutConstraint] {
+        let constraints = [
+        heightAnchor.constraint(equalToConstant: 80),
+        timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: centerYAnchor, constant: 0),
+        distanceRemainingLabel.leftAnchor.constraint(equalTo: timeRemainingLabel.leftAnchor),
+        distanceRemainingLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor, constant: 0)
+        ]
+        return constraints + commonConstraints
+    }
+    
+    fileprivate var cancelButtonShowConstraints: [NSLayoutConstraint] {
+        let constraints = [
+            cancelButton!.widthAnchor.constraint(equalTo: heightAnchor),
+            cancelButton!.topAnchor.constraint(equalTo: topAnchor),
+            cancelButton!.rightAnchor.constraint(equalTo: rightAnchor),
+            cancelButton!.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            dividerView!.widthAnchor.constraint(equalToConstant: 1),
+            dividerView!.heightAnchor.constraint(equalToConstant: 40),
+            dividerView!.centerYAnchor.constraint(equalTo: centerYAnchor),
+            dividerView!.rightAnchor.constraint(equalTo: cancelButton!.leftAnchor),
+            arrivalTimeLabel.rightAnchor.constraint(equalTo: dividerView!.leftAnchor, constant: -10),
+            arrivalTimeLabel.centerYAnchor.constraint(equalTo: cancelButton!.centerYAnchor)
+        ]
+        return constraints
+    }
+    
+    fileprivate var cancelButtonHideConstraints: [NSLayoutConstraint] {
+        let constraints = [
+            arrivalTimeLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -10),
+            arrivalTimeLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+        ]
+        return constraints
+    }
+    
+    //MARK: - Utility Methods
+    func layoutConstraints(for traits: UITraitCollection, showingButton show: Bool) -> [NSLayoutConstraint] {
+        let buttonConstraints = show ? cancelButtonShowConstraints : cancelButtonHideConstraints
+        
+        switch traits.verticalSizeClass {
+        case .compact:
+                return commonCompactConstraints + buttonConstraints
+            default:
+                return commonRegularConstraints + buttonConstraints
+        
+        }
+    }
+    
+    func updateLayout(with traitCollection: UITraitCollection? = nil, showingButton: Bool? = nil) {
+        let traits = traitCollection ?? self.traitCollection
+        let isShowing = showingButton ?? isShowingCancelButton
+        
+        let newConstraints = layoutConstraints(for: traits, showingButton: isShowing)
+        constraints.active.deactivate()
+        newConstraints.activate()
+    }
+    
+    //MARK: - UITraitEnvironment
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        verticalCompactConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass == .compact }
-        verticalRegularConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass != .compact }
+        updateLayout(with: traitCollection)
     }
 }
-
