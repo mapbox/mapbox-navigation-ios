@@ -141,7 +141,10 @@ public class PollyVoiceController: RouteVoiceController {
     }
     
     public override func speak(_ instruction: SpokenInstruction) {
-        guard let routeProgress = routeProgress else { return }
+        guard let routeProgress = routeProgress else {
+            assert(false, "`routeProgress should not be nil`")
+            return
+        }
         
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)

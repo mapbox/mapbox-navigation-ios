@@ -203,9 +203,12 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard !NavigationSettings.shared.voiceMuted else { return }
         
-        routeProgress = (notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress)
+        routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
         
-        guard let routeProgress = routeProgress else { return }
+        guard let routeProgress = routeProgress else {
+            assert(false, "`routeProgress should not be nil`")
+            return
+        }
         
         guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         lastSpokenInstruction = instruction
@@ -218,7 +221,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      - parameter instruction: The instruction to read aloud.
      */
     open func speak(_ instruction: SpokenInstruction) {
-        guard let routeProgress = routeProgress else { return }
+        guard let routeProgress = routeProgress else {
+            assert(false, "`routeProgress should not be nil`")
+            return
+        }
         
         if speechSynth.isSpeaking, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
@@ -284,9 +290,9 @@ public protocol VoiceControllerDelegate {
     
     /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
      
-     - parameter voiceController: The voice controller that experienced the interruption.
+     - parameter voiceController: The voice controller that will speak an instruction.
      - parameter instruction: The spoken instruction that will be said.
-     - parameter routeProgress: The current `RouteProgress` when the instruction was generated.
+     - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
      **/
     @objc(voiceController:willSpeakSpokenInstruction:routeProgress:)
     optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
