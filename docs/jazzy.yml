@@ -12,8 +12,15 @@ hide_documentation_coverage: Yes
 
 custom_categories:
   - name: Guides
-    children:
+     children:
       - Storyboards
+  - name: Examples
+    children:
+      - Basic
+      - Styled UI Elements
+      - Waypoint Arrival Screen
+      - Embedded Navigation
+      - Advanced
   - name: Turn-by-turn UI
     children:
       - NavigationViewController
