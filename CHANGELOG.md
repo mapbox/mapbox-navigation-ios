@@ -2,6 +2,8 @@
 
 ## master
 
+## v0.12.2 (January 12, 2018)
+
 Beginning with this release, we’ve compiled [a set of examples](https://www.mapbox.com/mapbox-navigation-ios/navigation/0.12.2/Examples.html) showing how to accomplish common tasks with this SDK. You can also check out the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project and run the included application on your device.
 
 ### User interface
