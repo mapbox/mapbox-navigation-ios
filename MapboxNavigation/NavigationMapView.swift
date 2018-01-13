@@ -347,7 +347,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                               contentFrame.minY + contentFrame.height * 0.5))
     }
     
-    var tracksUserCourse: Bool = false {
+    /**
+     Determines whether the map should follow the user location and rotate when the course changes.
+     */
+    open var tracksUserCourse: Bool = false {
         didSet {
             if tracksUserCourse {
                 enableFrameByFrameCourseViewTracking(for: 3)
