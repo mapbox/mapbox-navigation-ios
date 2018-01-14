@@ -40,7 +40,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc public static let longManeuverDistance: CLLocationDistance = 1000.0
     
     /**
-     Maximum distnace the user can tap for a selection to be valid when selecting an alternate route.
+     Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
      */
     @objc public var tapGestureDistanceThreshold: CGFloat = 50
     
