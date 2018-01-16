@@ -5,6 +5,6 @@ target 'PodInstall' do
   pod 'MapboxGeocoder.swift', '~> 0.6.0'
   # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :branch => 'BRANCH_NAME'
-  pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :branch => 'BRANCH_NAME'
+  pod 'MapboxCoreNavigation', :git => 'git@github.com:getnexar/mapbox-navigation-ios.git', :commit => '8de2639abf72757dece4e9e1cb7b7e5e917e3597'
   pod 'OSRMTextInstructions', '~> 0.1'
 end
