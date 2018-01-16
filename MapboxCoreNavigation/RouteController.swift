@@ -589,18 +589,18 @@ extension RouteController: CLLocationManagerDelegate {
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
         let userSnapToStepDistanceFromManeuver = polyline.distance(from: location.coordinate)
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
-        guard secondsToEndOfStep < RouteControllerDurationRemainingWaypointArrival else { return }
-        
         let currentDestination = routeProgress.currentLeg.destination
-        guard currentDestination != previousArrivalWaypoint else { return }
-        previousArrivalWaypoint = currentDestination
         
-        routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-        delegate?.routeController?(self, didArriveAt: currentDestination)
-        
-        if !routeProgress.isFinalLeg,
-            (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
-            routeProgress.legIndex += 1
+        if secondsToEndOfStep < RouteControllerDurationRemainingWaypointArrival, currentDestination != previousArrivalWaypoint {
+            previousArrivalWaypoint = currentDestination
+            
+            routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
+            delegate?.routeController?(self, didArriveAt: currentDestination)
+            
+            if !routeProgress.isFinalLeg,
+                (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
+                routeProgress.legIndex += 1
+            }
         }
     }
     
