@@ -178,9 +178,6 @@ open class RouteController: NSObject {
 
     var recentDistancesFromManeuver: [CLLocationDistance] = []
 
-    var previousArrivalWaypoint: Waypoint?
-
-
     /**
      Intializes a new `RouteController`.
 
@@ -462,6 +459,11 @@ extension RouteController {
             sendDepartEvent()
         }
         
+        if let _ = routeProgress.route.legs.last?.destination, routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
+            sessionState.arrivalTimestamp = Date()
+            sendArriveEvent()
+        }
+        
         checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
 
@@ -585,17 +587,8 @@ extension RouteController: CLLocationManagerDelegate {
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         guard secondsToEndOfStep < RouteControllerDurationRemainingWaypointArrival else { return }
         
-        let currentDestinationWaypoint = routeProgress.currentLeg.destination
-        guard currentDestinationWaypoint != previousArrivalWaypoint else { return }
-        
         routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-        previousArrivalWaypoint = currentDestinationWaypoint
         delegate?.routeController?(self, didArriveAt: routeProgress.currentLeg.destination)
-            
-        if let lastRouteWaypoint = routeProgress.route.legs.last?.destination, lastRouteWaypoint == currentDestinationWaypoint {
-            sessionState.arrivalTimestamp = Date()
-            sendArriveEvent()
-        }
         
         if !routeProgress.isFinalLeg,
             (delegate?.routeController?(self, shouldIncrementLegWhenArrivingAtWaypoint: routeProgress.currentLeg.destination) ?? true) {
