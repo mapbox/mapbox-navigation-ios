@@ -199,7 +199,6 @@ open class RouteController: NSObject {
         checkAndSendOutstandingFeedbackEvents(forceAll: true)
         sendCancelEvent()
         suspendNotifications()
-        UIDevice.current.isBatteryMonitoringEnabled = false
     }
     
     func startEvents(route: Route) {
