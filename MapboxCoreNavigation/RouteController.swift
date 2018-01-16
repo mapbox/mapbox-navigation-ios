@@ -461,7 +461,9 @@ extension RouteController {
             sendDepartEvent()
         }
         
-        if let _ = routeProgress.route.legs.last?.destination, routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
+        if let _ = routeProgress.route.legs.last?.destination,
+            sessionState.arrivalTimestamp == nil,
+            routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
         }
