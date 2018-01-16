@@ -532,7 +532,7 @@ extension RouteController: CLLocationManagerDelegate {
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let filteredLocations = locations.filter { $0.isQualified }
         
-        if !filteredLocations.isEmpty {
+        if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
         }
         
