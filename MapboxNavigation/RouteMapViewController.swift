@@ -165,6 +165,7 @@ class RouteMapViewController: UIViewController {
         annotatesSpokenInstructions = delegate?.mapViewControllerShouldAnnotateSpokenInstructions(self) ?? false
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
+        removeExits()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -361,6 +362,16 @@ class RouteMapViewController: UIViewController {
             mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         } else {
             mapView.removeArrow()
+        }
+    }
+    
+    func removeExits() {
+        guard let style = mapView.style else { return }
+        
+        for layer in style.layers {
+            if let symbolLayer = layer as? MGLSymbolStyleLayer, symbolLayer.sourceLayerIdentifier == "motorway_junction" {
+                style.removeLayer(layer)
+            }
         }
     }
 
