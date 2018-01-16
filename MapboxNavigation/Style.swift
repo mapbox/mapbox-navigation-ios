@@ -248,11 +248,11 @@ open class DistanceLabel: StylableLabel {
     }
 }
 
-/// :nodoc
+/// :nodoc:
 @objc(MBPrimaryLabel)
 open class PrimaryLabel: InstructionLabel { }
 
-/// :nodoc
+/// :nodoc:
 @objc(MBSecondaryLabel)
 open class SecondaryLabel: InstructionLabel { }
 

@@ -40,7 +40,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc public static let longManeuverDistance: CLLocationDistance = 1000.0
     
     /**
-     Maximum distnace the user can tap for a selection to be valid when selecting an alternate route.
+     Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
      */
     @objc public var tapGestureDistanceThreshold: CGFloat = 50
     
@@ -347,7 +347,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                               contentFrame.minY + contentFrame.height * 0.5))
     }
     
-    var tracksUserCourse: Bool = false {
+    /**
+     Determines whether the map should follow the user location and rotate when the course changes.
+     */
+    open var tracksUserCourse: Bool = false {
         didSet {
             if tracksUserCourse {
                 enableFrameByFrameCourseViewTracking(for: 3)
