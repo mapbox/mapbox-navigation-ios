@@ -560,8 +560,8 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         updateDistanceToIntersection(from: location)
-        monitorStepProgress(location)
-        monitorLegProgress(location)
+        updateRouteStepProgress(for: location)
+        updateRouteLegProgress(for: location)
         
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
@@ -577,7 +577,7 @@ extension RouteController: CLLocationManagerDelegate {
         checkForFasterRoute(from: location)
     }
     
-    func monitorLegProgress(_ location: CLLocation) {
+    func updateRouteLegProgress(for location: CLLocation) {
         guard routeProgress.currentLegProgress.upComingStep?.maneuverType == .arrive else { return }
         
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
@@ -806,7 +806,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func monitorStepProgress(_ location: CLLocation) {
+    func updateRouteStepProgress(for location: CLLocation) {
 
         let userSnapToStepDistanceFromManeuver = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!).distance(from: location.coordinate)
         var courseMatchesManeuverFinalHeading = false
