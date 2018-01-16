@@ -532,18 +532,19 @@ extension RouteController: CLLocationManagerDelegate {
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let filteredLocations = locations.filter { $0.isQualified }
         
-        guard let location = filteredLocations.last else { return }
-        self.rawLocation = location
-        sessionState.pastLocations.push(location)
-
         if !filteredLocations.isEmpty {
             hasFoundOneQualifiedLocation = true
         }
-
-        if filteredLocations.isEmpty && hasFoundOneQualifiedLocation {
-            delegate?.routeController?(self, didDiscard: location)
+        
+        guard let location = filteredLocations.last else {
+            if let lastLocation = locations.last, hasFoundOneQualifiedLocation {
+                delegate?.routeController?(self, didDiscard: lastLocation)
+            }
             return
         }
+        
+        self.rawLocation = location
+        sessionState.pastLocations.push(location)
 
         delegate?.routeController?(self, didUpdate: [location])
 
