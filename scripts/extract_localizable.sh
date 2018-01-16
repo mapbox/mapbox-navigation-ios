@@ -13,6 +13,10 @@ do
     find ${NAVIGATION} -name "*.swift" -print0 | xargs -0 xcrun extractLocStrings -o "${NAVIGATION}/Resources/${lang}.lproj"
     STRINGS_FILE="${NAVIGATION}/Resources/${lang}.lproj/Localizable.strings"
 
+    # Extract localizable strings from .swift files
+    find ${CORE} -name "*.swift" -print0 | xargs -0 xcrun extractLocStrings -o "${CORE}/Resources/${lang}.lproj"
+    STRINGS_FILE="${CORE}/Resources/${lang}.lproj/Localizable.strings"
+
     # Extract localizable strings from storyboard
     ibtool ${NAVIGATION}/Resources/${lang}.lproj/Navigation.storyboard --generate-strings-file ${NAVIGATION}/Resources/${lang}.lproj/Navigation.strings
 

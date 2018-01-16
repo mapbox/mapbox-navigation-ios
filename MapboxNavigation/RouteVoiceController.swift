@@ -103,7 +103,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     public weak var voiceControllerDelegate: VoiceControllerDelegate?
     
     var lastSpokenInstruction: SpokenInstruction?
-    var legProgress: RouteLegProgress?
+    var routeProgress: RouteProgress?
     
     var volumeToken: NSKeyValueObservation? = nil
     var muteToken: NSKeyValueObservation? = nil
@@ -204,9 +204,10 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard !NavigationSettings.shared.voiceMuted else { return }
         
-        let routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        legProgress = routeProgress.currentLegProgress
-        guard let instruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
+        routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
+        assert(routeProgress != nil, "routeProgress should not be nil.")
+        
+        guard let instruction = routeProgress!.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         lastSpokenInstruction = instruction
         speak(instruction)
     }
@@ -217,6 +218,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      - parameter instruction: The instruction to read aloud.
      */
     open func speak(_ instruction: SpokenInstruction) {
+        assert(routeProgress != nil, "routeProgress should not be nil.")
+        
         if speechSynth.isSpeaking, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
@@ -234,9 +237,9 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             utterance!.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
         }
         
-        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction) ?? instruction
+        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
         
-        if #available(iOS 10.0, *), utterance?.voice == nil, let legProgress = legProgress {
+        if #available(iOS 10.0, *), utterance?.voice == nil, let legProgress = routeProgress!.currentLegProgress {
             utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: legProgress))
         } else {
             utterance = AVSpeechUtterance(string: modifiedInstruction.text)
@@ -281,9 +284,10 @@ public protocol VoiceControllerDelegate {
     
     /** Called when a spoken is about to speak. Useful if it is necessary to give a custom instruction instead. Noting, changing the `distanceAlongStep` property on `SpokenInstruction` will have no impact on when the instruction will be said.
      
-     - parameter voiceController: The voice controller that experienced the interruption.
+     - parameter voiceController: The voice controller that will speak an instruction.
      - parameter instruction: The spoken instruction that will be said.
+     - parameter routeProgress: The `RouteProgress` just before when the instruction is scheduled to be spoken.
      **/
-    @objc(voiceController:willSpeakSpokenInstruction:)
-    optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction?
+    @objc(voiceController:willSpeakSpokenInstruction:routeProgress:)
+    optional func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction?
 }

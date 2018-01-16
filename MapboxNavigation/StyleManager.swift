@@ -97,7 +97,24 @@ open class StyleManager: NSObject {
     }
     
     func applyStyle() {
-        guard let location = delegate?.locationFor(styleManager: self) else { return }
+        guard let location = delegate?.locationFor(styleManager: self) else {
+            // We can't calculate sunset or sunrise w/o a location so just apply the first style
+            if let style = styles.first {
+                style.apply()
+                delegate?.styleManager?(self, didApply: style)
+            }
+            return
+        }
+        
+        // Single style usage
+        guard styles.count > 1 else {
+            if let style = styles.first {
+                style.apply()
+                delegate?.styleManager?(self, didApply: style)
+            }
+            return
+        }
+        
         let styleTypeForTimeOfDay = styleType(for: location)
         
         for style in styles {

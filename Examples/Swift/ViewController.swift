@@ -100,6 +100,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
             self.startBasicNavigation()
         }))
+        alertController.addAction(UIAlertAction(title: "DayStyle UI", style: .default, handler: { (action) in
+            self.startNavigation(styles: [DayStyle()])
+        }))
+        alertController.addAction(UIAlertAction(title: "NightStyle UI", style: .default, handler: { (action) in
+            self.startNavigation(styles: [NightStyle()])
+        }))
         alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
             self.startCustomNavigation()
         }))
@@ -221,6 +227,17 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         present(navigationViewController, animated: true, completion: nil)
     }
+    
+    func startNavigation(styles: [Style]) {
+        guard let route = currentRoute else { return }
+        
+        exampleMode = .default
+        
+        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        navigationViewController.delegate = self
+        
+        present(navigationViewController, animated: true, completion: nil)
+    }
 
     // MARK: Custom Navigation UI
 
@@ -316,7 +333,7 @@ extension ViewController: NavigationMapViewDelegate {
         print(interruptedInstruction.text, interruptingInstruction.text)
     }
     
-    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction) -> SpokenInstruction? {
+    func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
         return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
     }
 }

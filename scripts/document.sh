@@ -4,6 +4,8 @@ set -e
 set -o pipefail
 set -u
 
+./scripts/update-guides.sh
+
 if [ -z `which jazzy` ]; then
     echo "Installing jazzy…"
     gem install jazzy
@@ -40,7 +42,7 @@ jazzy \
     --sdk iphonesimulator \
     --module-version ${SHORT_VERSION} \
     --github-file-prefix "https://github.com/mapbox/mapbox-navigation-ios/tree/${BRANCH}" \
-    --documentation=docs/guides/*.md \
+    --documentation=docs/{guides,examples}/*.md \
     --root-url "${BASE_URL}/navigation/${RELEASE_VERSION}/" \
     --theme ${THEME} \
     --output ${OUTPUT}
@@ -51,3 +53,6 @@ REPLACE_REGEXP+="s/<span class=\"kt\">(${DIRECTIONS_SYMBOLS})<\/span>/<span clas
 
 find ${OUTPUT} -name *.html -exec \
     perl -pi -e "$REPLACE_REGEXP" {} \;
+
+
+echo $SHORT_VERSION > $OUTPUT/latest_version

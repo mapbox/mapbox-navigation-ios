@@ -206,6 +206,8 @@ open class RouteController: NSObject {
             self.startEvents(route: route)
         }
         
+        checkForUpdates()
+        
         guard let _ = Bundle.main.bundleIdentifier else { return }
         if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
             preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
@@ -720,6 +722,24 @@ extension RouteController: CLLocationManagerDelegate {
             strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
         }
     }
+    
+    func checkForUpdates() {
+        #if TARGET_IPHONE_SIMULATOR
+            guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
+            let latestVersion = String(describing: version)
+            let _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
+                if let _ = error { return }
+                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
+                
+                guard let data = data, let currentVersion = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .newlines) else { return }
+                
+                if latestVersion != currentVersion {
+                    let updateString = NSLocalizedString("UPDATE_AVAILABLE", bundle: .mapboxCoreNavigation, value: "Mapbox Navigation SDK for iOS version %@ is now available.", comment: "Inform developer an update is available")
+                    print(String.localizedStringWithFormat(updateString, latestVersion), "https://github.com/mapbox/mapbox-navigation-ios/releases/tag/v\(latestVersion)")
+                }
+            }).resume()
+        #endif
+    }
 
     func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->()) {
         routeTask?.cancel()
@@ -744,11 +764,26 @@ extension RouteController: CLLocationManagerDelegate {
             if let error = error {
                 return completion(nil, error)
             }
-            guard let route = routes?.first else {
+            
+            guard let routes = routes else {
                 return completion(nil, nil)
             }
 
-            return completion(route, error)
+            if let route = self?.mostSimilarRoute(in: routes) {
+                return completion(route, error)
+            } else if let route = routes.first {
+                return completion(route, error)
+            } else {
+                return completion(nil, nil)
+            }
+        }
+    }
+    
+    func mostSimilarRoute(in routes: [Route]) -> Route? {
+        return routes.min { (left, right) -> Bool in
+            let leftDistance = left.description.minimumEditDistance(to: routeProgress.route.description)
+            let rightDistance = right.description.minimumEditDistance(to: routeProgress.route.description)
+            return leftDistance < rightDistance
         }
     }
 
