@@ -69,14 +69,18 @@ public class MapboxVoiceController: RouteVoiceController {
         }
         audioTask?.cancel()
         audioPlayer?.stop()
-        lastSpokenInstruction = instruction
         
-        guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else {
-            play(spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString)! as Data)
+        assert(routeProgress != nil, "routeProgress should not be nil.")
+        
+        let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
+        lastSpokenInstruction = modifiedInstruction
+        
+        guard spokenInstructionsForRoute.object(forKey: modifiedInstruction.ssmlText as NSString) == nil else {
+            play(spokenInstructionsForRoute.object(forKey: modifiedInstruction.ssmlText as NSString)! as Data)
             return
         }
         
-        fetch(instruction: instruction)
+        fetch(instruction: modifiedInstruction)
     }
     
     func speakWithoutPolly(_ instruction: SpokenInstruction, error: Error) {
