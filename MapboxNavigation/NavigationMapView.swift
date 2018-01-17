@@ -1027,7 +1027,9 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
 }
 
 //MARK: NavigationMapViewDelegate
-
+/**
+ The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
+ */
 @objc(MBNavigationMapViewDelegate)
 public protocol NavigationMapViewDelegate: class  {
     /**
@@ -1126,7 +1128,9 @@ public protocol NavigationMapViewDelegate: class  {
 }
 
 //MARK: NavigationMapViewCourseTrackingDelegate
-
+/**
+ The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
+ */
 protocol NavigationMapViewCourseTrackingDelegate: class {
     /**
      Tells the reciever that the map is now tracking the user course.
