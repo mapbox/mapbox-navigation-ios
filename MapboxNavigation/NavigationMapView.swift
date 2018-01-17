@@ -1033,7 +1033,7 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
 public protocol NavigationMapViewDelegate: class  {
     /**
      Asks the receiver to return an MGLStyleLayer for routes, given an identifier and source.
-     - note: This method is invoked at initalization time and anytime routes are added.
+     This method is invoked when the map view loads and any time routes are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
@@ -1043,7 +1043,7 @@ public protocol NavigationMapViewDelegate: class  {
     
     /**
      Asks the receiver to return an MGLStyleLayer for waypoints, given an identifier and source.
-     - note: This method is invoked at initalization time and anytime waypoints are added.
+     This method is invoked when the map view loads and any time waypoints are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
@@ -1053,7 +1053,7 @@ public protocol NavigationMapViewDelegate: class  {
     
     /**
      Asks the receiver to return an MGLStyleLayer for waypoint symbols, given an identifier and source.
-     - note: This method is invoked at initalization time and anytime waypoints are added.
+     This method is invoked when the map view loads and any time waypoints are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
@@ -1063,7 +1063,7 @@ public protocol NavigationMapViewDelegate: class  {
     
     /**
      Asks the receiver to return an MGLStyleLayer for route casings, given an identifier and source.
-     - note: This method is invoked at initalization time and anytime routes are added.
+     This method is invoked when the map view loads and anytime routes are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
