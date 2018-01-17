@@ -1033,6 +1033,7 @@ public protocol NavigationMapViewDelegate: class  {
     /**
      Asks the reciever to return an MGLStyleLayer for routes, given an identifier and source.
      - note: This method is invoked at initalization time and anytime routes are added.
+     - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
      - returns: an MGLStyleLayer that the map applies to all routes.
@@ -1042,6 +1043,7 @@ public protocol NavigationMapViewDelegate: class  {
     /**
      Asks the reciever to return an MGLStyleLayer for waypoints, given an identifier and source.
      - note: This method is invoked at initalization time and anytime waypoints are added.
+     - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
      - returns: an MGLStyleLayer that the map applies to all waypoints.
@@ -1051,6 +1053,7 @@ public protocol NavigationMapViewDelegate: class  {
     /**
      Asks the reciever to return an MGLStyleLayer for waypoint symbols, given an identifier and source.
      - note: This method is invoked at initalization time and anytime waypoints are added.
+     - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
      - returns: an MGLStyleLayer that the map applies to all waypoint symbols.
@@ -1060,6 +1063,7 @@ public protocol NavigationMapViewDelegate: class  {
     /**
      Asks the reciever to return an MGLStyleLayer for route casings, given an identifier and source.
      - note: This method is invoked at initalization time and anytime routes are added.
+     - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
      - parameter source: The Layer source provided.
      - returns: an MGLStyleLayer that the map applies to the route.
