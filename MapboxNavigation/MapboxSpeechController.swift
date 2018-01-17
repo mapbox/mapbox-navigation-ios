@@ -29,7 +29,7 @@ public class MapboxVoiceController: RouteVoiceController {
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
     
-    public init(accessToken: String? = nil, host: String? = nil) {
+    @objc public init(accessToken: String? = nil, host: String? = nil) {
         if let accessToken = accessToken, let host = host {
             speech = SpeechSynthesizer(accessToken: accessToken, host: host)
         } else if let accessToken = accessToken {
@@ -43,7 +43,7 @@ public class MapboxVoiceController: RouteVoiceController {
         super.init()
     }
     
-    @objc public override func didPassSpokenInstructionPoint(notification: NSNotification) {
+    @objc open override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
         locale = routeProgresss.route.routeOptions.locale
         
@@ -63,7 +63,7 @@ public class MapboxVoiceController: RouteVoiceController {
         super.didPassSpokenInstructionPoint(notification: notification)
     }
     
-    public override func speak(_ instruction: SpokenInstruction) {
+    @objc open override func speak(_ instruction: SpokenInstruction) {
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
