@@ -1073,7 +1073,7 @@ public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Tells the receiver that a route was selected.
+     Tells the receiver that the user has selected a route by interacting with the map view.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that was selected.
     */
@@ -1090,7 +1090,7 @@ public protocol NavigationMapViewDelegate: class  {
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route.
-     - note: If you implement this, you'll probably want to implement `simplifiedShapeDescribingRoute:` as well.
+     - note: The returned value represents the route in full detail. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeDescribing:)`, which defines the overall route as a single feature.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
@@ -1100,7 +1100,7 @@ public protocol NavigationMapViewDelegate: class  {
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route at lower zoomlevels.
-     - note: If you implement `shapeDescribingRoute:`, you probably want to implement this too.
+     - note: The returned value represents the simplfied route. It is designed to be used with `navigationMapView(_:shapeDescribing:), and if used without its parent method, can cause unexpected behavior.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route at lower zoomlevels, or `nil` to use default behavior.
@@ -1118,10 +1118,10 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
     /**
-     Asks the receiver to return a CGPoint to serve as the anchor for the User Icon.
+     Asks the receiver to return a CGPoint to serve as the anchor for the user icon.
      - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
      - parameter mapView: The NavigationMapView.
-     - returns: A CGPoint (in regular coordinate-space) that represents the point on-screen where the User Location Icon should be drawn.
+     - returns: A CGPoint (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
     */
     @objc(navigationMapViewUserAnchorPoint:)
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
