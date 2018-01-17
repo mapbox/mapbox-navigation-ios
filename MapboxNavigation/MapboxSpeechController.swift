@@ -9,7 +9,7 @@ import MapboxDirections
  `MapboxVoiceController` extends the default `RouteVoiceController` by providing a more robust speech synthesizer via the Mapbox Speech API. `RouteVoiceController` will be used as a fallback during poor network conditions.
  */
 @objc(MBMapboxVoiceController)
-public class MapboxVoiceController: RouteVoiceController {
+open class MapboxVoiceController: RouteVoiceController {
     
     /**
      Number of seconds a request can wait before it is canceled and the default speech synthesizer speaks the instruction.
