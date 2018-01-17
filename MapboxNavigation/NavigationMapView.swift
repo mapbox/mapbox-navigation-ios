@@ -1026,7 +1026,6 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
     }
 }
 
-//MARK: NavigationMapViewDelegate
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
