@@ -480,13 +480,14 @@ extension RouteController {
     }
     
     @objc func didReroute(notification: NSNotification) {
-        if let _ = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool {
+        if let didFindFasterRoute = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool, didFindFasterRoute {
             _ = enqueueFoundFasterRouteEvent()
         }
         
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
+        
         recentDistancesFromManeuver.removeAll()
     }
 }
