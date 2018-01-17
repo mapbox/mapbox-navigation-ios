@@ -585,14 +585,10 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func updateRouteLegProgress(for location: CLLocation) {
-        guard routeProgress.currentLegProgress.upComingStep?.maneuverType == .arrive else { return }
-        
-        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        let userSnapToStepDistanceFromManeuver = polyline.distance(from: location.coordinate)
-        let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         let currentDestination = routeProgress.currentLeg.destination
+        let legDurationRemaining = routeProgress.currentLegProgress.durationRemaining
         
-        if secondsToEndOfStep < RouteControllerDurationRemainingWaypointArrival, currentDestination != previousArrivalWaypoint {
+        if legDurationRemaining < RouteControllerDurationRemainingWaypointArrival, currentDestination != previousArrivalWaypoint {
             previousArrivalWaypoint = currentDestination
             
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
@@ -839,8 +835,7 @@ extension RouteController: CLLocationManagerDelegate {
         let lastKnownUserAbsoluteDistance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation
 
         if userSnapToStepDistanceFromManeuver <= RouteControllerManeuverZoneRadius &&
-            courseMatchesManeuverFinalHeading ||
-            (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius) {
+            (courseMatchesManeuverFinalHeading || (userAbsoluteDistance > lastKnownUserAbsoluteDistance && lastKnownUserAbsoluteDistance > RouteControllerManeuverZoneRadius)) {
             advanceStepIndex()
         }
 
