@@ -1032,7 +1032,7 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
 @objc(MBNavigationMapViewDelegate)
 public protocol NavigationMapViewDelegate: class  {
     /**
-     Asks the reciever to return an MGLStyleLayer for routes, given an identifier and source.
+     Asks the receiver to return an MGLStyleLayer for routes, given an identifier and source.
      - note: This method is invoked at initalization time and anytime routes are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
@@ -1042,7 +1042,7 @@ public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Asks the reciever to return an MGLStyleLayer for waypoints, given an identifier and source.
+     Asks the receiver to return an MGLStyleLayer for waypoints, given an identifier and source.
      - note: This method is invoked at initalization time and anytime waypoints are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
@@ -1052,7 +1052,7 @@ public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Asks the reciever to return an MGLStyleLayer for waypoint symbols, given an identifier and source.
+     Asks the receiver to return an MGLStyleLayer for waypoint symbols, given an identifier and source.
      - note: This method is invoked at initalization time and anytime waypoints are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
@@ -1062,7 +1062,7 @@ public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Asks the reciever to return an MGLStyleLayer for route casings, given an identifier and source.
+     Asks the receiver to return an MGLStyleLayer for route casings, given an identifier and source.
      - note: This method is invoked at initalization time and anytime routes are added.
      - parameter mapView: the NavigationMapView.
      - parameter identifier: the style identifier.
@@ -1072,7 +1072,7 @@ public protocol NavigationMapViewDelegate: class  {
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
     
     /**
-     Tells the reciever that a route was selected.
+     Tells the receiver that a route was selected.
      - parameter mapView: the NavigationMapView.
      - parameter route: The route that was selected.
     */
@@ -1080,7 +1080,7 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route)
     
     /**
-     Tells the reciever that a waypoint was selected.
+     Tells the receiver that a waypoint was selected.
      - parameter mapView: the NavigationMapView.
      - parameter waypoint: The waypoint that was selected.
      */
@@ -1088,7 +1088,7 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint)
     
     /**
-     Asks the reciever to return an MGLShape that describes the geometry of the route.
+     Asks the receiver to return an MGLShape that describes the geometry of the route.
      - note: If you implement this, you'll probably want to implement `simplifiedShapeDescribingRoute:` as well.
      - parameter mapView: the NavigationMapView.
      - parameter route: The route that the sender is asking about.
@@ -1098,7 +1098,7 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     
     /**
-     Asks the reciever to return an MGLShape that describes the geometry of the route at lower zoomlevels.
+     Asks the receiver to return an MGLShape that describes the geometry of the route at lower zoomlevels.
      - note: If you implement `shapeDescribingRoute:`, you probably want to implement this too.
      - parameter mapView: the NavigationMapView.
      - parameter route: The route that the sender is asking about.
@@ -1108,7 +1108,7 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
     /**
-     Asks the reciever to return an MGLShape that describes the geometry of the waypoint.
+     Asks the receiver to return an MGLShape that describes the geometry of the waypoint.
      - parameter mapView: the NavigationMapView.
      - parameter waypoint: The waypoint that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
@@ -1117,7 +1117,7 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
     /**
-     Asks the reciever to return a CGPoint to serve as the anchor for the User Icon.
+     Asks the receiver to return a CGPoint to serve as the anchor for the User Icon.
      - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
      - parameter mapView: the NavigationMapView.
      - returns: A CGPoint (in regular coordinate-space) that represents the point on-screen where the User Location Icon should be drawn.
@@ -1132,14 +1132,14 @@ public protocol NavigationMapViewDelegate: class  {
  */
 protocol NavigationMapViewCourseTrackingDelegate: class {
     /**
-     Tells the reciever that the map is now tracking the user course.
+     Tells the receiver that the map is now tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: the NavigationMapView.
      */
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
     
     /**
-     Tells the reciever that `tracksUserCourse` was set to false, signifying that the map is no longer tracking the user course.
+     Tells the receiver that `tracksUserCourse` was set to false, signifying that the map is no longer tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: the NavigationMapView.
      */
