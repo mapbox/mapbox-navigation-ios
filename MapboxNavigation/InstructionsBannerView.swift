@@ -71,6 +71,17 @@ open class BaseInstructionsBannerView: UIControl {
         delegate?.didTapInstructionsBanner(self)
     }
     
+    func update(progress: RouteLegProgress, location: CLLocation, secondsRemaining: TimeInterval) {
+        let stepProgress = progress.currentStepProgress
+        let distanceRemaining = stepProgress.distanceRemaining
+        
+        guard let visualInstruction = progress.currentStep.instructionsDisplayedAlongStep?.last else { return }
+        
+        set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
+        distance = distanceRemaining > 5 ? distanceRemaining : 0
+        maneuverView.step = progress.upComingStep
+    }
+    
     func set(_ primaryInstruction: [VisualInstructionComponent]?, secondaryInstruction: [VisualInstructionComponent]?) {
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         

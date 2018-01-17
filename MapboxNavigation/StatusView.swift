@@ -87,7 +87,7 @@ public class StatusView: UIView {
         }
     }
     
-    func show(_ title: String, showSpinner: Bool) {
+    func show(_ title: String, showSpinner: Bool, animated: Bool = true) {
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
         if showSpinner {
@@ -98,28 +98,26 @@ public class StatusView: UIView {
         
         guard isHidden == true else { return }
         
-        UIView.defaultAnimation(0.3, animations: {
+        let show = {
             self.isHidden = false
             self.textLabel.alpha = 1
             self.superview?.layoutIfNeeded()
-        }, completion: nil)
+        }
+        
+        animated ? UIView.defaultAnimation(0.3, animations: show, completion: nil) : show()
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
-        
-        if animated {
-            guard isHidden == false else { return }
-            
-            UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.isHidden = true
-                self.textLabel.alpha = 0
-                self.superview?.layoutIfNeeded()
-            }, completion: { (completed) in
-                self.activityIndicatorView.stopAnimating()
-            })
-        } else {
-            activityIndicatorView.stopAnimating()
-            isHidden = true
+        let hide = {
+            self.isHidden = true
+            self.textLabel.alpha = 0
+            self.superview?.layoutIfNeeded()
         }
+        let complete: (Bool?) -> Void = { _ in
+            self.activityIndicatorView.stopAnimating()
+        }
+        let noAnimate = { hide(); complete(true) }
+        
+        animated ? UIView.defaultAnimation(0.3, animations: hide, completion: complete) : noAnimate()
     }
 }
