@@ -1064,6 +1064,7 @@ public protocol NavigationMapViewDelegate: class  {
     /**
      Asks the receiver to return an MGLStyleLayer for route casings, given an identifier and source.
      This method is invoked when the map view loads and anytime routes are added.
+     - note: Specify a casing to ensure good contrast between the route line and the underlying map layers.
      - parameter mapView: The NavigationMapView.
      - parameter identifier: The style identifier.
      - parameter source: The Layer source containing the route data that this method would style.
