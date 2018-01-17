@@ -63,6 +63,11 @@ open class MapboxVoiceController: RouteVoiceController {
         super.didPassSpokenInstructionPoint(notification: notification)
     }
     
+    /**
+     Speaks an instruction.
+     
+     The cache is first checked to see if we have already downloaded the speech file. If not, the instruction is fetched and played. If there is an error anywhere along the way, the instruction will be spoken with the default speech synthesizer.
+     */
     @objc open override func speak(_ instruction: SpokenInstruction) {
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
@@ -83,7 +88,12 @@ open class MapboxVoiceController: RouteVoiceController {
         fetch(instruction: modifiedInstruction)
     }
     
-    func speakWithoutPolly(_ instruction: SpokenInstruction, error: Error) {
+    /**
+     Speaks an instruction with the built in speech synthesizer.
+     
+     This method should be used in cases where `fetch(instruction:)` or `play(_:)` fails.
+     */
+    @objc open func speakWithDefaultSpeechSynthesizer(_ instruction: SpokenInstruction, error: Error) {
         audioTask?.cancel()
         
         voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
@@ -98,7 +108,10 @@ open class MapboxVoiceController: RouteVoiceController {
         super.speak(instruction)
     }
     
-    func fetch(instruction: SpokenInstruction) {
+    /**
+     Fetches and plays an instruction.
+     */
+    @objc open func fetch(instruction: SpokenInstruction) {
         audioTask?.cancel()
         let options = SpeechOptions(ssml: instruction.ssmlText)
         if let locale = locale {
@@ -109,12 +122,12 @@ open class MapboxVoiceController: RouteVoiceController {
             if let error = error as? URLError, error.code == .cancelled {
                 return
             } else if let error = error {
-                self.speakWithoutPolly(instruction, error: error)
+                self.speakWithDefaultSpeechSynthesizer(instruction, error: error)
                 return
             }
             
             guard let data = data else {
-                self.speakWithoutPolly(instruction, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .emptyMapboxSpeechResponse))
+                self.speakWithDefaultSpeechSynthesizer(instruction, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .emptyMapboxSpeechResponse))
                 return
             }
             self.play(data)
@@ -124,7 +137,11 @@ open class MapboxVoiceController: RouteVoiceController {
         audioTask?.resume()
     }
     
-    func cacheSpokenInstruction(instruction: SpokenInstruction) {
+    
+    /**
+     Caches an instruction in an in-memory cache.
+     */
+    @objc open func cacheSpokenInstruction(instruction: SpokenInstruction) {
         let options = SpeechOptions(ssml: instruction.ssmlText)
         if let locale = locale {
             options.locale = locale
@@ -136,14 +153,17 @@ open class MapboxVoiceController: RouteVoiceController {
         }
     }
     
-    func play(_ data: Data) {
+    /**
+     Plays an audio file.
+     */
+    @objc open func play(_ data: Data) {
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 self.audioPlayer = try AVAudioPlayer(data: data)
                 let prepared = self.audioPlayer?.prepareToPlay() ?? false
                 
                 guard prepared else {
-                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
+                    self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
                 
@@ -152,12 +172,12 @@ open class MapboxVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    self.speakWithoutPolly(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
+                    self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
                 
             } catch  let error as NSError {
-                self.speakWithoutPolly(self.lastSpokenInstruction!, error: error)
+                self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: error)
             }
         }
     }
