@@ -178,7 +178,13 @@ open class RouteController: NSObject {
 
     var recentDistancesFromManeuver: [CLLocationDistance] = []
     
-    var previousArrivalWaypoint: Waypoint?
+    var previousArrivalWaypoint: Waypoint? {
+        didSet {
+            if oldValue != previousArrivalWaypoint {
+                sessionState.arrivalTimestamp = nil
+            }
+        }
+    }
 
     /**
      Intializes a new `RouteController`.
@@ -461,8 +467,7 @@ extension RouteController {
             sendDepartEvent()
         }
         
-        if let _ = routeProgress.route.legs.last?.destination,
-            sessionState.arrivalTimestamp == nil,
+        if sessionState.arrivalTimestamp == nil,
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()

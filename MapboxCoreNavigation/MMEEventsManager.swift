@@ -192,6 +192,8 @@ extension MMEEventsManager {
     func navigationArriveEvent(routeController: RouteController) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationArrive
+        eventDictionary["totalDestinationWaypoints"] = routeController.routeProgress.route.legs.count
+        eventDictionary["remainingDestinationWaypoints"] = routeController.routeProgress.remainingWaypoints.count
         return eventDictionary
     }
     
