@@ -1036,7 +1036,7 @@ public protocol NavigationMapViewDelegate: class  {
      This method is invoked when the map view loads and any time routes are added.
      - parameter mapView: The NavigationMapView.
      - parameter identifier: The style identifier.
-     - parameter source: The Layer source provided.
+     - parameter source: The Layer source containing the route data that this method would style.
      - returns: An MGLStyleLayer that the map applies to all routes.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
@@ -1046,7 +1046,7 @@ public protocol NavigationMapViewDelegate: class  {
      This method is invoked when the map view loads and any time waypoints are added.
      - parameter mapView: The NavigationMapView.
      - parameter identifier: The style identifier.
-     - parameter source: The Layer source provided.
+     - parameter source: The Layer source containing the waypoint data that this method would style.
      - returns: An MGLStyleLayer that the map applies to all waypoints.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
@@ -1056,7 +1056,7 @@ public protocol NavigationMapViewDelegate: class  {
      This method is invoked when the map view loads and any time waypoints are added.
      - parameter mapView: The NavigationMapView.
      - parameter identifier: The style identifier.
-     - parameter source: The Layer source provided.
+     - parameter source: The Layer source containing the waypoint data that this method would style.
      - returns: An MGLStyleLayer that the map applies to all waypoint symbols.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
@@ -1066,7 +1066,7 @@ public protocol NavigationMapViewDelegate: class  {
      This method is invoked when the map view loads and anytime routes are added.
      - parameter mapView: The NavigationMapView.
      - parameter identifier: The style identifier.
-     - parameter source: The Layer source provided.
+     - parameter source: The Layer source containing the route data that this method would style.
      - returns: An MGLStyleLayer that the map applies to the route.
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
