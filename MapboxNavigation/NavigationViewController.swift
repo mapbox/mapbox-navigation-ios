@@ -14,7 +14,9 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController : NavigationViewController)
     
     /**
-     Called when the user arrives at the destination.
+     Called when the user arrives at the destination waypoint for the route leg.
+     - parameter navigationViewController: The Navigation View Controller.
+     - parameter waypoint: The waypoint that the user has arrived at.
      */
     @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint)
 
@@ -30,6 +32,15 @@ public protocol NavigationViewControllerDelegate {
     @objc(navigationViewController:shouldRerouteFromLocation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
     
+    /**
+     Asks the reciever if the next leg of the route should start immediately after arrival at the waypoint.
+     If custom UI is to be shown when upon arrival at the waypoint, implement this delegate method and return false.
+    
+     - important: If the implementation returns false, the user must increment the `legIndex` property of the `routeProgress` object within the `routeController`.
+     - parameter navigationViewController: The Navigation View Controller.
+     - parameter waypoint: The waypoint that the user has arrived at.
+     - returns: true if the RouteController should immediately start on the next leg of the route, false otherwise.
+     */
     @objc(navigationViewController:shouldIncrementLegWhenArrivingAtWaypoint:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool
     
@@ -115,6 +126,11 @@ public protocol NavigationViewControllerDelegate {
      */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
+    /**
+     Called when the user taps on the route.
+     - parameter mapView: The map view of the NavigationViewController
+     - parameter route: The route (on the map) that was tapped.
+     */
     @objc optional func navigationMapView(_ mapView: NavigationMapView, didTap route: Route)
     
     /**
