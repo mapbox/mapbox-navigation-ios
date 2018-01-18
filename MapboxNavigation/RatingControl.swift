@@ -70,10 +70,9 @@ class RatingControl: UIStackView {
             button.adjustsImageWhenHighlighted = false
             addButtonSizeConstraints(to: button)
             
-            let setRatingNumber = NSNumber(value: index + 1)
-            let setRatingString = NumberFormatter.localizedString(from: setRatingNumber, number: .none)
-            let localizedString = NSLocalizedString("RATING_ACCESSIBILITY_SET", bundle: .mapboxNavigation, value: "Set %@ star rating", comment: "Accessibility Star Label")
-            button.accessibilityLabel = String.localizedStringWithFormat(localizedString, setRatingString)
+            let setRatingNumber = index + 1
+            let localizedString = NSLocalizedString("RATING_ACCESSIBILITY_SET", bundle: .mapboxNavigation, value: "Set %ld-star rating", comment: "Format for accessibility label of button for setting a rating; 1 = number of stars")
+            button.accessibilityLabel = String.localizedStringWithFormat(localizedString, setRatingNumber)
             
             button.addTarget(self, action: #selector(RatingControl.ratingButtonTapped(button:)), for: .touchUpInside)
             
@@ -105,18 +104,7 @@ class RatingControl: UIStackView {
     private func setAccessibility(for button: UIButton, at index: Int) {
         setAccessibilityHint(for: button, at: index)
         
-        let value: String
-        
-        switch rating {
-        case 0:
-            value = NSLocalizedString("NO_RATING", bundle: .mapboxNavigation, value: "No rating set.", comment: "No Rating Set")
-        case 1:
-            value = NSLocalizedString("RATING_1_STAR", bundle: .mapboxNavigation, value: "1 star set.", comment: "One Star Set")
-        default:
-            value = String.localizedStringWithFormat(NSLocalizedString("RATING_STARS_FORMAT", bundle: .mapboxNavigation, value: "%li stars set.", comment: "Format for rating stars set"), rating)
-        }
-        
-        button.accessibilityValue = value
+        button.accessibilityValue = String.localizedStringWithFormat(NSLocalizedString("RATING_STARS_FORMAT", bundle: .mapboxNavigation, value: "%ld star(s) set.", comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars"), rating)
     }
     
     private func setAccessibilityHint(for button: UIButton, at index: Int) {
