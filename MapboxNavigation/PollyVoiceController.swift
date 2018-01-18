@@ -97,6 +97,8 @@ public class PollyVoiceController: RouteVoiceController {
         }
         
         switch (langCode, countryCode) {
+        case ("da", _):
+            input.voiceId = .naja
         case ("de", _):
             input.voiceId = .marlene
         case ("en", "CA"):
