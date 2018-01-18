@@ -17,7 +17,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     var userRoute: Route?
     var simulateLocation = false
     let voiceController = MapboxVoiceController()
-    
+
     @IBOutlet var mapView: MGLMapView!
     @IBOutlet weak var arrowView: UILabel!
     @IBOutlet weak var instructionLabel: UILabel!
@@ -30,11 +30,11 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         mapView.delegate = self
 
         textDistanceFormatter.numberFormatter.maximumFractionDigits = 0
-        
+
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
-        
+
         routeController = RouteController(along: userRoute!, directions: directions, locationManager: locationManager)
-        
+
         mapView.userLocationVerticalAlignment = .center
         mapView.userTrackingMode = .followWithCourse
 
@@ -43,10 +43,10 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         // Start navigation
         routeController.resume()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         // Disable the map view's default location manager if we're simulating locations
         if simulateLocation {
             mapView.locationManager.stopUpdatingHeading()
@@ -100,7 +100,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         default:
             self.arrowView.text = "⬆️"
         }
-        
+
         self.instructionLabel.text = routeProgress.currentLegProgress.currentStepProgress.step.instructionsDisplayedAlongStep?.first?.primaryText
         let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
         self.distanceLabel.text = textDistanceFormatter.string(fromMeters: distance)

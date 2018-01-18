@@ -15,6 +15,17 @@ open class InstructionLabel: StylableLabel {
         }
     }
     
+    func instructionHasDownloadedAllShields() -> Bool {
+        for component in instruction! {
+            guard let key = component.shieldKey() else { continue }
+            
+            if component.cachedShield(key) == nil {
+               return false
+            }
+        }
+        return true
+    }
+    
     func constructInstructions() {
         guard let instruction = instruction else {
             text = nil
@@ -28,7 +39,7 @@ open class InstructionLabel: StylableLabel {
             let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
             
-            if let shieldKey = component.shieldKey(), let _ = component.imageURL {
+            if let shieldKey = component.shieldKey() {
                 if let cachedImage = component.cachedShield(shieldKey) {
                     string.append(attributedString(with: cachedImage))
                 } else {
@@ -44,6 +55,9 @@ open class InstructionLabel: StylableLabel {
                     }
                 }
             } else if let text = component.text {
+                if component.type == .delimiter && instructionHasDownloadedAllShields() {
+                    continue
+                }
                 string.append(NSAttributedString(string: (joinChar+text).abbreviated(toFit: availableBounds(), font: font), attributes: attributes))
             }
         }

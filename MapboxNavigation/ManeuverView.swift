@@ -8,55 +8,55 @@ import Turf
 @IBDesignable
 @objc(MBManeuverView)
 public class ManeuverView: UIView {
-    
+
     @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     @objc public dynamic var secondaryColor: UIColor = .defaultTurnArrowSecondary {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     @objc public var step: RouteStep? {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     @objc public var isStart = false {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     @objc public var isEnd = false {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     @IBInspectable
     var scale: CGFloat = 1 {
         didSet {
             setNeedsDisplay()
         }
     }
-    
+
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
-        
+
         transform = CGAffineTransform.identity
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
-        
+
         #if TARGET_INTERFACE_BUILDER
             ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             return
         #endif
-        
+
         guard let step = step else {
             if isStart {
                 ManeuversStyleKit.drawStarting(frame: bounds, resizing: resizing, primaryColor: primaryColor)
@@ -65,7 +65,7 @@ public class ManeuverView: UIView {
             }
             return
         }
-        
+
         var flip: Bool = false
         let type: ManeuverType = step.maneuverType != .none ? step.maneuverType : .turn
         let angle = ((step.finalHeading ?? 0) - (step.initialHeading ?? 0)).wrap(min: -180, max: 180)
@@ -130,7 +130,7 @@ public class ManeuverView: UIView {
                 ManeuversStyleKit.drawArrowstraight(frame: bounds, resizing: resizing, primaryColor: primaryColor)
             }
         }
-        
+
         transform = CGAffineTransform(scaleX: flip ? -1 : 1, y: 1)
     }
 }
