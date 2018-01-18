@@ -640,6 +640,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let style = style else {
             return
         }
+
+        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
+        style.setImage(triangleImage, forName: "triangle-tip-navigation")
         
         guard step.maneuverType != .arrive else { return }
         

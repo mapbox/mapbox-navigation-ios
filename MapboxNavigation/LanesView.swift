@@ -5,8 +5,8 @@ import MapboxDirections
 
 /// :nodoc:
 @IBDesignable
-@objc(MBLanesContainerView)
-public class LanesContainerView: LanesView {
+@objc(MBLanesView)
+public class LanesView: UIView {
     weak var stackView: UIStackView!
     weak var separatorView: SeparatorView!
     
@@ -18,6 +18,15 @@ public class LanesContainerView: LanesView {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
+    }
+    
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+
+        for _ in 0...4 {
+            let laneView = laneArrowView()
+            stackView.addArrangedSubview(laneView)
+        }
     }
     
     func laneArrowView() -> LaneView {

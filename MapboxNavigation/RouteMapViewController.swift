@@ -18,13 +18,12 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var recenterButton: ResumeButton!
     @IBOutlet weak var muteButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
-    @IBOutlet weak var wayNameView: UIView!
     @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     @IBOutlet weak var nextBannerView: NextBannerView!
     @IBOutlet weak var bottomBannerView: BottomBannerView!
     @IBOutlet weak var statusView: StatusView!
-    @IBOutlet weak var laneViewsContainerView: LanesContainerView!
+    @IBOutlet weak var lanesView: LanesView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteContainerView: UIView!
     @IBOutlet weak var endOfRouteShowConstraint: NSLayoutConstraint!
@@ -84,7 +83,7 @@ class RouteMapViewController: UIViewController {
             if isInOverviewMode {
                 overviewButton.isHidden = true
                 recenterButton.isHidden = false
-                wayNameView.isHidden = true
+                wayNameLabel.isHidden = true
                 mapView.logoView.isHidden = true
             } else {
                 overviewButton.isHidden = false
@@ -118,9 +117,10 @@ class RouteMapViewController: UIViewController {
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
         
-        wayNameView.layer.borderWidth = 1.0 / UIScreen.main.scale
-        wayNameView.applyDefaultCornerRadiusShadow()
-        laneViewsContainerView.isHidden = true
+        wayNameLabel.clipsToBounds = true
+        wayNameLabel.layer.borderWidth = 1.0 / UIScreen.main.scale
+        wayNameLabel.applyDefaultCornerRadiusShadow()
+        lanesView.isHidden = true
         statusView.isHidden = true
         statusView.delegate = self
         nextBannerView.isHidden = true
@@ -315,7 +315,7 @@ class RouteMapViewController: UIViewController {
             updateVisibleBounds()
         } else {
             mapView.tracksUserCourse = true
-            wayNameView.isHidden = true
+            wayNameLabel.isHidden = true
         }
         
         stepsViewController?.dismiss {
@@ -449,7 +449,7 @@ class RouteMapViewController: UIViewController {
     
         guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
             let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
-            laneViewsContainerView.isHidden
+            lanesView.isHidden
             else {
                 hideNextBanner()
                 return
@@ -495,9 +495,9 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
-        laneViewsContainerView.updateLaneViews(step: step, durationRemaining: durationRemaining)
+        lanesView.updateLaneViews(step: step, durationRemaining: durationRemaining)
         
-        if laneViewsContainerView.stackView.arrangedSubviews.count > 0 {
+        if lanesView.stackView.arrangedSubviews.count > 0 {
             showLaneViews()
         } else {
             hideLaneViews()
@@ -506,20 +506,20 @@ class RouteMapViewController: UIViewController {
     
     func showLaneViews(animated: Bool = true) {
         hideNextBanner()
-        guard laneViewsContainerView.isHidden == true else { return }
+        guard lanesView.isHidden == true else { return }
         if animated {
             UIView.defaultAnimation(0.3, animations: {
-                self.laneViewsContainerView.isHidden = false
+                self.lanesView.isHidden = false
             }, completion: nil)
         } else {
-            self.laneViewsContainerView.isHidden = false
+            self.lanesView.isHidden = false
         }
     }
     
     func hideLaneViews() {
-        guard laneViewsContainerView.isHidden == false else { return }
+        guard lanesView.isHidden == false else { return }
         UIView.defaultAnimation(0.3, animations: {
-            self.laneViewsContainerView.isHidden = true
+            self.lanesView.isHidden = true
         }, completion: nil)
     }
     //MARK: End Of Route
@@ -753,9 +753,9 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         
         if smallestLabelDistance < 5 && currentName != nil {
             wayNameLabel.text = currentName
-            wayNameView.isHidden = false
+            wayNameLabel.isHidden = false
         } else {
-            wayNameView.isHidden = true
+            wayNameLabel.isHidden = true
         }
     }
     
@@ -779,12 +779,11 @@ extension RouteMapViewController: MGLMapViewDelegate {
             userTrackingMode = .followWithCourse
         }
         if userTrackingMode == .none && !isInOverviewMode {
-            wayNameView.isHidden = true
+            wayNameLabel.isHidden = true
         }
     }
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        style.setImage(Bundle.mapboxNavigation.image(named: "triangle")!.withRenderingMode(.alwaysTemplate), forName: "triangle-tip-navigation")
         // This method is called before the view is added to a window
         // (if the style is cached) preventing UIAppearance to apply the style.
         showRouteIfNeeded()

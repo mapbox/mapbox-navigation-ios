@@ -55,32 +55,20 @@
                                     <action selector="rerouteFeedback:" destination="3z2-H5-unA" eventType="touchUpInside" id="yRc-0Z-7Pz"/>
                                 </connections>
                             </button>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="drb-do-FoT" userLabel="Way Name View" customClass="MBWayNameView">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
                                 <rect key="frame" x="134" y="381" width="106.5" height="29"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Street Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcm-ca-nGv" customClass="MBWayNameLabel">
-                                        <rect key="frame" x="14" y="6" width="78.5" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                        <attributedString key="userComments">
-                                            <fragment content="DO NOT TRANSLATE">
-                                                <attributes>
-                                                    <font key="NSFont" metaFont="smallSystem"/>
-                                                    <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                                </attributes>
-                                            </fragment>
-                                        </attributedString>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="bcm-ca-nGv" secondAttribute="trailing" constant="14" id="16w-UW-7Y7"/>
-                                    <constraint firstAttribute="bottom" secondItem="bcm-ca-nGv" secondAttribute="bottom" constant="6" id="Hs4-ZE-bmP"/>
-                                    <constraint firstItem="bcm-ca-nGv" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="top" constant="6" id="N8i-oQ-85J"/>
-                                    <constraint firstItem="bcm-ca-nGv" firstAttribute="leading" secondItem="drb-do-FoT" secondAttribute="leading" constant="14" id="gei-Oh-7XJ"/>
-                                </constraints>
-                            </view>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                                <attributedString key="userComments">
+                                    <fragment content="DO NOT TRANSLATE">
+                                        <attributes>
+                                            <font key="NSFont" metaFont="smallSystem"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gx9-Bj-wuQ" userLabel="Bottom Banner Content View" customClass="MBBottomBannerContentView">
                                 <rect key="frame" x="0.0" y="420" width="375" height="80"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -92,7 +80,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-3z-AWG" userLabel="Lanes/Next/Status Stack View">
                                 <rect key="frame" x="0.0" y="116.5" width="375" height="114"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" userLabel="Lanes Container View" customClass="MBLanesContainerView">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NE9-ru-uJw" customClass="MBLanesView">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                         <color key="backgroundColor" red="0.9700858161" green="0.9700858161" blue="0.9700858161" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <edgeInsets key="layoutMargins" top="16" left="16" bottom="16" right="16"/>
@@ -200,7 +188,6 @@
                             <constraint firstItem="nNr-30-cGD" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="0tN-KV-QpL"/>
                             <constraint firstItem="1Kx-12-EOg" firstAttribute="bottom" secondItem="Gvo-VD-DXF" secondAttribute="bottom" id="1kU-o5-DsQ"/>
                             <constraint firstItem="nNr-30-cGD" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="4Si-h7-lL5"/>
-                            <constraint firstItem="drb-do-FoT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bUe-nv-g0F" secondAttribute="leading" constant="20" id="4oP-yz-9W5"/>
                             <constraint firstItem="I8f-iR-MZm" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="7KD-9u-9mi" userLabel="Reroute Slide Constraint"/>
                             <constraint firstItem="1Kx-12-EOg" firstAttribute="trailing" secondItem="bUe-nv-g0F" secondAttribute="trailing" id="7yd-r7-wXI"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="top" secondItem="p9E-v0-Rt6" secondAttribute="bottom" id="81D-S0-3wU"/>
@@ -212,7 +199,6 @@
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="top" id="K6m-Le-IeP"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="bottom" secondItem="SKK-r5-nj0" secondAttribute="bottom" constant="92" id="KT2-TO-Mr4"/>
                             <constraint firstItem="8P3-NB-IRq" firstAttribute="top" secondItem="Eeb-3z-AWG" secondAttribute="bottom" constant="10" id="NZN-Hw-HBT"/>
-                            <constraint firstItem="drb-do-FoT" firstAttribute="centerX" secondItem="bUe-nv-g0F" secondAttribute="centerX" id="O0m-0k-ilC"/>
                             <constraint firstItem="p9E-v0-Rt6" firstAttribute="bottom" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="OJu-tK-ZSa"/>
                             <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="QHw-st-QI3"/>
                             <constraint firstItem="1Kx-12-EOg" firstAttribute="top" secondItem="Gvo-VD-DXF" secondAttribute="bottom" constant="10" id="TgB-K7-2M6"/>
@@ -220,14 +206,14 @@
                             <constraint firstAttribute="trailing" secondItem="Eeb-3z-AWG" secondAttribute="trailing" id="UuF-xy-kx3"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="top" secondItem="UnK-tl-lPe" secondAttribute="bottom" id="VK1-eQ-4VK"/>
                             <constraint firstAttribute="bottom" secondItem="nNr-30-cGD" secondAttribute="bottom" id="Wir-eN-QUd"/>
-                            <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="drb-do-FoT" secondAttribute="trailing" constant="20" id="Y9d-Eh-5kY"/>
+                            <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="top" secondItem="bcm-ca-nGv" secondAttribute="bottom" constant="10" id="Xuz-Ug-HJ9"/>
                             <constraint firstItem="1Kx-12-EOg" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="YfA-CW-bVf"/>
                             <constraint firstItem="bUe-nv-g0F" firstAttribute="trailing" secondItem="8P3-NB-IRq" secondAttribute="trailing" constant="10" id="aek-g0-Rdp"/>
                             <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="bottom" secondItem="Gvo-VD-DXF" secondAttribute="bottom" id="doU-NT-mFp"/>
+                            <constraint firstItem="bcm-ca-nGv" firstAttribute="centerX" secondItem="bUe-nv-g0F" secondAttribute="centerX" id="fca-O1-ND0"/>
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="gAd-tT-w0a"/>
                             <constraint firstItem="UnK-tl-lPe" firstAttribute="top" secondItem="bUe-nv-g0F" secondAttribute="top" id="gER-Br-LqP"/>
                             <constraint firstAttribute="trailing" secondItem="nNr-30-cGD" secondAttribute="trailing" id="gPI-GC-2rk"/>
-                            <constraint firstItem="Gx9-Bj-wuQ" firstAttribute="top" secondItem="drb-do-FoT" secondAttribute="bottom" constant="10" id="gZP-im-os7"/>
                             <constraint firstItem="Eeb-3z-AWG" firstAttribute="leading" secondItem="Gvo-VD-DXF" secondAttribute="leading" id="gfU-Wb-qye"/>
                             <constraint firstItem="sDs-aU-EMQ" firstAttribute="leading" secondItem="bUe-nv-g0F" secondAttribute="leading" id="hUt-on-4Oa"/>
                             <constraint firstItem="C23-DT-v2t" firstAttribute="leading" secondItem="p9E-v0-Rt6" secondAttribute="leading" id="ijr-CB-GLx"/>
@@ -258,7 +244,7 @@
                         <outlet property="endOfRouteShowConstraint" destination="1kU-o5-DsQ" id="boW-aY-y45"/>
                         <outlet property="instructionsBannerContainerView" destination="p9E-v0-Rt6" id="TMF-0X-Ode"/>
                         <outlet property="instructionsBannerView" destination="UnK-tl-lPe" id="Qdh-aT-dPs"/>
-                        <outlet property="laneViewsContainerView" destination="NE9-ru-uJw" id="Iy6-hg-9rK"/>
+                        <outlet property="lanesView" destination="NE9-ru-uJw" id="Dmx-d8-mLY"/>
                         <outlet property="mapView" destination="nNr-30-cGD" id="Znv-B1-wdj"/>
                         <outlet property="muteButton" destination="Y2a-qB-86S" id="YK6-ak-WNw"/>
                         <outlet property="nextBannerView" destination="Nvl-aX-s8B" id="mlR-y1-FBQ"/>
@@ -269,7 +255,6 @@
                         <outlet property="rerouteReportButton" destination="I8f-iR-MZm" id="pZV-kq-FBI"/>
                         <outlet property="statusView" destination="Jym-DH-tdD" id="9Hw-jY-J4n"/>
                         <outlet property="wayNameLabel" destination="bcm-ca-nGv" id="8Sy-Pk-fQZ"/>
-                        <outlet property="wayNameView" destination="drb-do-FoT" id="oby-w9-mC3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VoA-f6-EWh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -390,7 +375,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-Og-q0a">
-                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
@@ -444,7 +429,7 @@ Label  </string>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E8e-VY-Wnj">
-                                                    <rect key="frame" x="38" y="86" width="50" height="43"/>
+                                                    <rect key="frame" x="37" y="86" width="50" height="43"/>
                                                     <string key="text">Label 
 Label  </string>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>

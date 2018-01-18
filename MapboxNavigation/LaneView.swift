@@ -112,5 +112,10 @@ open class LaneView: UIView {
             
             transform = CGAffineTransform(scaleX: flipLane ? -1 : 1, y: 1)
         }
+        
+        #if TARGET_INTERFACE_BUILDER
+            isValid = true
+            LanesStyleKit.drawLane_right_only(primaryColor: appropriatePrimaryColor, secondaryColor: secondaryColor)
+        #endif
     }
 }
