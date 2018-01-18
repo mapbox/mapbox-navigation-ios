@@ -1,6 +1,15 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Đóng";
 
+/* End Navigation Button Text */
+"END_NAVIGATION" = "Kết thúc Điều hướng";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Đã đến nơi rồi";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Chúng tôi có thể cải thiện bằng cách nào?";
+
 /* Error message when the SDK is unable to read a spoken instruction. */
 "FAILED_INSTRUCTION" = "Không thể đọc lời chỉ dẫn.";
 
@@ -36,6 +45,21 @@
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
+
+/* No Rating Set */
+"NO_RATING" = "Chưa đánh giá.";
+
+/* One Star Set */
+"RATING_1_STAR" = "Đã đánh giá 1 sao.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Chạm để đặt lại đánh giá.";
+
+/* Accessibility Star Label */
+"RATING_ACCESSIBILITY_SET" = "Đánh giá %@ sao.";
+
+/* Format for rating stars set */
+"RATING_STARS_FORMAT" = "Đã đánh giá %li sao.";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Đang tính tuyến mới…";
