@@ -11,6 +11,21 @@ extension CGSize {
     static let iPhoneX      : CGSize    = CGSize(width: 375, height: 812)
 }
 
+func instructionsView() -> InstructionsBannerView {
+    let bannerHeight: CGFloat = 96
+    return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
+}
+
+func resetSDImageCache() {
+    SDImageCache.shared().clearMemory()
+
+    let clearDiskSemaphore = DispatchSemaphore.init(value: 1)
+    SDImageCache.shared().clearDisk {
+        clearDiskSemaphore.signal()
+    }
+    clearDiskSemaphore.wait()
+}
+
 class InstructionsBannerViewTests: XCTestCase {
 
     let shieldURL1 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-41@3x.png")!
@@ -38,7 +53,7 @@ class InstructionsBannerViewTests: XCTestCase {
             VisualInstructionComponent(type: .destination, text: "I 94", imageURL: shieldURL2)
         ]
 
-        let view = InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: 96)))
+        let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
 
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
@@ -61,23 +76,14 @@ class InstructionsBannerViewTests: XCTestCase {
         SDImageCache.shared().store(shieldImage(), forKey: instruction1.shieldKey())
         SDImageCache.shared().store(shieldImage(), forKey: instruction2.shieldKey())
 
-        let view = InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: 96)))
+        let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
-
-        //Advance run loop (let's see if all this is needed)
-        RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 0.1))
 
         //the delimiter should NOT be present since both shields are already in the cache
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
-
-        //reset the cache here (for now).
-        SDImageCache.shared().clearMemory()
-        let diskClearExpectation = self.expectation(description: "Clear the disk cache")
-        SDImageCache.shared().clearDisk {
-            diskClearExpectation.fulfill()
-        }
-        self.wait(for: [diskClearExpectation], timeout: 1)
+        //explicitly reset the cache
+        resetSDImageCache()
     }
 
 //    func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
@@ -88,8 +94,6 @@ class InstructionsBannerViewTests: XCTestCase {
 }
 
 class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
-
-    let bannerHeight: CGFloat = 96
 
     let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
 
@@ -109,8 +113,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         SDImageCache.shared().store(shieldImage, forKey: shieldKey)
     }
 
-    func instructionsView() -> InstructionsBannerView {
-        return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
+    override func tearDown() {
+        super.tearDown()
+
+        resetSDImageCache()
     }
 
     func testSinglelinePrimary() {
