@@ -24,13 +24,24 @@ class MapboxNavigationTests: FBSnapshotTestCase {
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
         recordMode = false
         isDeviceAgnostic = true
         
         SDImageCache.shared().store(shieldImage, forKey: "I280")
     }
-    
+
+    override func tearDown() {
+        super.tearDown()
+
+        SDImageCache.shared().clearMemory()
+
+        let clearDiskSemaphore = DispatchSemaphore.init(value: 1)
+        SDImageCache.shared().clearDisk {
+            clearDiskSemaphore.signal()
+        }
+        clearDiskSemaphore.wait()
+    }
+
     func storyboard() -> UIStoryboard {
         return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }

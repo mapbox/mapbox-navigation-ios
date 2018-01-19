@@ -16,15 +16,67 @@ func instructionsView() -> InstructionsBannerView {
     return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
 }
 
-func resetSDImageCache() {
-    SDImageCache.shared().clearMemory()
+func resetImageCache(_ cache: SDImageCache) {
+    cache.clearMemory()
 
     let clearDiskSemaphore = DispatchSemaphore.init(value: 1)
-    SDImageCache.shared().clearDisk {
+    cache.clearDisk {
         clearDiskSemaphore.signal()
     }
     clearDiskSemaphore.wait()
 }
+
+class TestWebImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterface {
+
+    private static var operationsForURLs: [URL : TestWebImageDownloadOperation] = [:]
+
+    private var request: URLRequest?
+    private var session: URLSession?
+    private var options: SDWebImageDownloaderOptions
+
+    private(set) var progressBlock: SDWebImageDownloaderProgressBlock?
+    private(set) var completedBlock: SDWebImageDownloaderCompletedBlock?
+
+    required init(request: URLRequest?, in session: URLSession?, options: SDWebImageDownloaderOptions) {
+        self.request = request
+        self.session = session
+        self.options = options
+
+        super.init()
+
+        TestWebImageDownloadOperation.operationsForURLs[request!.url!] = self
+    }
+
+    static func resetAll() {
+        operationsForURLs.removeAll()
+    }
+
+    static func operationWithURL(_ URL: URL) -> TestWebImageDownloadOperation? {
+        return operationsForURLs[URL]
+    }
+
+    func addHandlers(forProgress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: SDWebImageDownloaderCompletedBlock?) -> Any? {
+        self.progressBlock = progressBlock
+        self.completedBlock = completedBlock
+
+        return nil
+    }
+
+    func shouldDecompressImages() -> Bool {
+        return false
+    }
+
+    func setShouldDecompressImages(_ value: Bool) {
+    }
+
+    func credential() -> URLCredential? {
+        fatalError("credential() has not been implemented")
+    }
+
+    func setCredential(_ value: URLCredential?) {
+    }
+}
+
 
 class InstructionsBannerViewTests: XCTestCase {
 
@@ -38,21 +90,32 @@ class InstructionsBannerViewTests: XCTestCase {
         }
     }
 
-    override func setUp() {
-        super.setUp()
-    }
+    let imageCache = SDImageCache.shared()
+    let imageDownloader = SDWebImageDownloader.shared()
 
-    override func tearDown() {
-        super.tearDown()
-    }
-
-    func testDelimiterIsShownWhenShieldsNotLoaded() {
-        let instructions = [
+    lazy var instructions = {
+        return [
             VisualInstructionComponent(type: .destination, text: "US 41", imageURL: shieldURL1),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil),
             VisualInstructionComponent(type: .destination, text: "I 94", imageURL: shieldURL2)
         ]
+    }()
 
+    override func setUp() {
+        super.setUp()
+
+        resetImageCache(self.imageCache)
+        TestWebImageDownloadOperation.resetAll()
+        imageDownloader.setOperationClass(TestWebImageDownloadOperation.self)
+    }
+
+    override func tearDown() {
+        super.tearDown()
+
+        imageDownloader.setOperationClass(nil)
+    }
+
+    func testDelimiterIsShownWhenShieldsNotLoaded() {
         let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
 
@@ -60,12 +123,6 @@ class InstructionsBannerViewTests: XCTestCase {
     }
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
-        let instructions = [
-            VisualInstructionComponent(type: .destination, text: "US 41", imageURL: shieldURL1),
-            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil),
-            VisualInstructionComponent(type: .destination, text: "I 94", imageURL: shieldURL2)
-        ]
-
         //prime the cache to simulate images having already been loaded
         let instruction1 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL1)
         let instruction2 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL2)
@@ -73,8 +130,8 @@ class InstructionsBannerViewTests: XCTestCase {
             let bundle = Bundle(for: MapboxNavigationTests.self)
             return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
         }
-        SDImageCache.shared().store(shieldImage(), forKey: instruction1.shieldKey())
-        SDImageCache.shared().store(shieldImage(), forKey: instruction2.shieldKey())
+        imageCache.store(shieldImage(), forKey: instruction1.shieldKey())
+        imageCache.store(shieldImage(), forKey: instruction2.shieldKey())
 
         let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
@@ -83,13 +140,34 @@ class InstructionsBannerViewTests: XCTestCase {
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
         //explicitly reset the cache
-        resetSDImageCache()
+        resetImageCache(self.imageCache)
     }
 
-//    func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
-//
-//
-//    }
+    func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
+        let view = instructionsView()
+        view.set(instructions, secondaryInstruction: nil)
+
+        //TODO: encapsulate in a method/block
+        let operation1 = TestWebImageDownloadOperation.operationWithURL(shieldURL1)
+        XCTAssertNotNil(operation1)
+        operation1!.completedBlock!(shieldImage, nil, nil, true)
+        XCTAssertNotNil(imageCache.imageFromCache(forKey: instructions[0].shieldKey()!))
+        RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 0.1))
+
+        //Slash should be present until all shields are downloaded
+        NSLog("================> %@", "Checking after the first...")
+        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+
+        let operation2 = TestWebImageDownloadOperation.operationWithURL(shieldURL2)
+        XCTAssertNotNil(operation2)
+        operation2!.completedBlock!(shieldImage, nil, nil, true)
+        XCTAssertNotNil(imageCache.imageFromCache(forKey: instructions[2].shieldKey()!))
+        RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 0.1))
+
+        //Slash should no longer be present
+        NSLog("================> %@", "Checking after the second...")
+        XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
+    }
 
 }
 
@@ -116,7 +194,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     override func tearDown() {
         super.tearDown()
 
-        resetSDImageCache()
+        resetImageCache(SDImageCache.shared())
     }
 
     func testSinglelinePrimary() {

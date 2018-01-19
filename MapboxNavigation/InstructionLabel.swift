@@ -20,7 +20,8 @@ open class InstructionLabel: StylableLabel {
             guard let key = component.shieldKey() else { continue }
             
             if component.cachedShield(key) == nil {
-               return false
+                NSLog("================> No shield found for %@", String.init(describing: component.text))
+                return false
             }
         }
         return true
@@ -47,12 +48,11 @@ open class InstructionLabel: StylableLabel {
                     if let text = component.text {
                         string.append(NSAttributedString(string: joinChar + text, attributes: attributes))
                     }
-                    DispatchQueue.main.async {
-                        component.shieldImage(height: self.shieldHeight, completion: { [unowned self] (image) in
-                            guard image != nil, component.cachedShield(shieldKey) != nil else { return }
-                            self.constructInstructions()
-                        })
-                    }
+                    component.shieldImage(height: self.shieldHeight, completion: { [unowned self] (image) in
+                        guard image != nil, component.cachedShield(shieldKey) != nil else { return }
+                        NSLog("================> Got an image for \(component.text!) -- rebuilding instructions")
+                        self.constructInstructions()
+                    })
                 }
             } else if let text = component.text {
                 if component.type == .delimiter && instructionHasDownloadedAllShields() {
