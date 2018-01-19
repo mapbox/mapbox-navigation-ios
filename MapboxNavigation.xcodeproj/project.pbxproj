@@ -126,6 +126,7 @@
 		35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */; };
 		35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F520BF1FB482A200FC9C37 /* NextBannerView.swift */; };
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
+		3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D391CE11FD71E78006BB91F /* Waypoint.swift */; };
@@ -434,6 +435,7 @@
 		35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManagerTests.swift; sourceTree = "<group>"; };
 		35F520BF1FB482A200FC9C37 /* NextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBannerView.swift; sourceTree = "<group>"; };
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
+		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		8D391CE11FD71E78006BB91F /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
@@ -697,17 +699,24 @@
 		351BEBD81E5BCC28006FE110 /* MapboxNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				356B7D8A1EE166E100FE5B89 /* scripts */,
 				C51923B41EA55C5E002AF9E1 /* Extensions */,
+				356B7D8A1EE166E100FE5B89 /* scripts */,
 				351BEC201E5BD4DC006FE110 /* Supporting files */,
 				C51923B51EA55CD4002AF9E1 /* Views */,
+				35726EE71F0856E900AFA1B6 /* DayStyle.swift */,
+				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
+				8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */,
+				C58821FF1FB0F0D7008B0A2D /* Error.swift */,
+				C5D1C9931FB236900067C619 /* ErrorCode.swift */,
+				35CB1E121F97DD740011CC44 /* FeedbackItem.swift */,
+				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
+				3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */,
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
 				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
-				351BEBE01E5BCC63006FE110 /* Style.swift */,
-				35726EE71F0856E900AFA1B6 /* DayStyle.swift */,
+				359D1B271FFE70D30052FA42 /* NavigationView.swift */,
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
+				351A40151F0291D100E6D378 /* PollyVoiceController.swift */,
 				351BEBE41E5BCC63006FE110 /* RouteMapViewController.swift */,
-				8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */,
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				C565168A1FE1E23E00A0AD18 /* MapboxSpeechController.swift */,
 				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
@@ -716,8 +725,7 @@
 				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
 				35CB1E121F97DD740011CC44 /* FeedbackItem.swift */,
 				353EC9D61FB09708002EB0AB /* StepsViewController.swift */,
-				C58821FF1FB0F0D7008B0A2D /* Error.swift */,
-				C5D1C9931FB236900067C619 /* ErrorCode.swift */,
+				351BEBE01E5BCC63006FE110 /* Style.swift */,
 				353AA55F1FCEF583009F0384 /* StyleManager.swift */,
 				359D1B271FFE70D30052FA42 /* NavigationView.swift */,
 				C54C655120336F2600D338E0 /* Constants.swift */,
@@ -1531,6 +1539,7 @@
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
 				C5D1C9941FB236900067C619 /* ErrorCode.swift in Sources */,
+				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
