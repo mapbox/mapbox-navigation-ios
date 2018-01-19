@@ -9,6 +9,7 @@
 | English | ✅ | ✅ |
 | French | ✅ | ✅ |
 | German | ✅ | ✅ |
+| Hebrew | ✅ | ❌ |
 | Hungarian | ✅ | ❌ |
 | Italian | ✅ | ✅ |
 | Portuguese | ✅ | ✅ |

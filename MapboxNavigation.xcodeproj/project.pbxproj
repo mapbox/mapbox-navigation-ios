@@ -488,6 +488,9 @@
 		DA181204201290FC00C91918 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = es; path = Resources/es.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA1812052012910000C91918 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = vi; path = Resources/vi.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA181207201292E700C91918 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = fr; path = Resources/fr.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		DA1811FD20128B0900C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Main.strings; sourceTree = "<group>"; };
+		DA1811FE20128B0900C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DA18120120128B7B00C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA23C9621F4FC0A600BA9522 /* MGLMapView+CustomAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGLMapView+CustomAdditions.h"; sourceTree = "<group>"; };
 		DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+CustomAdditions.m"; sourceTree = "<group>"; };
 		DA3327391F50C6DA00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
@@ -1247,6 +1250,7 @@
 				nl,
 				bg,
 				da,
+				he,
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1750,6 +1754,7 @@
 				DA545ABF1FA9A1530090908E /* nl */,
 				DA5AD03D1FEBA03700FC7D7B /* bg */,
 				DA352568201096F20048DDFC /* da */,
+				DA1811FD20128B0900C91918 /* he */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1777,6 +1782,7 @@
 				DA545AC31FAA86350090908E /* de */,
 				DA5AD03E1FEBA03700FC7D7B /* bg */,
 				DA352572201143BA0048DDFC /* da */,
+				DA1811FE20128B0900C91918 /* he */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
@@ -1817,6 +1823,7 @@
 				3531C26A1F9DDC6F00D92F9A /* pt-BR */,
 				DA545ABC1FA9941F0090908E /* de */,
 				DA545AC01FA9A15A0090908E /* nl */,
+				DA18120120128B7B00C91918 /* he */,
 			);
 			name = Localizable.strings;
 			path = Resources;
