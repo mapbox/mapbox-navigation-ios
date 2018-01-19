@@ -539,9 +539,7 @@ extension NavigationViewController: RouteControllerDelegate {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
         if routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            self.mapViewController?.showEndOfRoute { _ in
-                self.delegate?.navigationViewController?(self, didArriveAt: waypoint)
-            }
+            self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg
     }

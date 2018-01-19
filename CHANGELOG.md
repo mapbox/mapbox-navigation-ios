@@ -3,6 +3,7 @@
 ## master
 
 * Removed `RouteControllerDelegate.routeController(_:shouldIncrementLegWhenArrivingAtWaypoint:)` and `NavigationViewControllerDelegate.navigationViewController(_:shouldIncrementLegWhenArrivingAtWaypoint:)`. `RouteControllerDelegate.routeController(_:didArriveAt:)` and `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` now return a Boolean that determines whether the route controller automatically advances to the next leg of the route. (#1038)
+* Fixed an issue where `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was called twice at the end of the route. (#1038)
 
 ## v0.12.2 (January 12, 2018)
 
