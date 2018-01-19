@@ -46,7 +46,7 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
-/* No Rating Set */
+/* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "Chưa đánh giá.";
 
 /* One Star Set */

@@ -28,8 +28,6 @@
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
-			<key>zero</key>
-			<string>No rating set.</string>
 			<key>one</key>
 			<string>%ld star set.</string>
 			<key>other</key>

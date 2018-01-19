@@ -104,7 +104,14 @@ class RatingControl: UIStackView {
     private func setAccessibility(for button: UIButton, at index: Int) {
         setAccessibilityHint(for: button, at: index)
         
-        button.accessibilityValue = String.localizedStringWithFormat(NSLocalizedString("RATING_STARS_FORMAT", bundle: .mapboxNavigation, value: "%ld star(s) set.", comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars"), rating)
+        let value: String
+        if rating == 0 {
+            value = NSLocalizedString("NO_RATING", bundle: .mapboxNavigation, value: "No rating set.", comment: "Accessibility value of label indicating the absence of a rating")
+        } else {
+            value = String.localizedStringWithFormat(NSLocalizedString("RATING_STARS_FORMAT", bundle: .mapboxNavigation, value: "%ld star(s) set.", comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars"), rating)
+        }
+        
+        button.accessibilityValue = value
     }
     
     private func setAccessibilityHint(for button: UIButton, at index: Int) {
