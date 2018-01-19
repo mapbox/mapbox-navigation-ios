@@ -49,7 +49,7 @@
 /* No Rating Set */
 "NO_RATING" = "No hay calificación.";
 
-/* One Star Set */
+/* Accessibility value of label indicating the absence of a rating */
 "RATING_1_STAR" = "Ha calificado 1 estrella.";
 
 /* Rating Reset To Zero Accessability Hint */
