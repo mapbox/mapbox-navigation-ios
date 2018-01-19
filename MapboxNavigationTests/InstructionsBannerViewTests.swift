@@ -18,12 +18,6 @@ func instructionsView() -> InstructionsBannerView {
 
 func resetImageCache(_ cache: SDImageCache) {
     cache.clearMemory()
-
-    let clearDiskSemaphore = DispatchSemaphore.init(value: 1)
-    cache.clearDisk {
-        clearDiskSemaphore.signal()
-    }
-    clearDiskSemaphore.wait()
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
@@ -52,6 +46,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
+        VisualInstructionComponent.disableDiskCache()
         resetImageCache(self.imageCache)
         TestImageDownloadOperation.resetAll()
         imageDownloader.setOperationClass(TestImageDownloadOperation.self)
@@ -78,8 +73,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
             let bundle = Bundle(for: MapboxNavigationTests.self)
             return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
         }
-        imageCache.store(shieldImage(), forKey: instruction1.shieldKey())
-        imageCache.store(shieldImage(), forKey: instruction2.shieldKey())
+        imageCache.store(shieldImage(), forKey: instruction1.shieldKey(), toDisk: false)
+        imageCache.store(shieldImage(), forKey: instruction2.shieldKey(), toDisk: false)
 
         let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
@@ -99,24 +94,20 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         simulateDownloadingShieldForComponent(firstDestinationComponent)
 
         //Slash should be present until all shields are downloaded
-        NSLog("================> %@", "Checking after the first...")
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
 
         let secondDestinationComponent = instructions[2]
         simulateDownloadingShieldForComponent(secondDestinationComponent)
 
         //Slash should no longer be present
-        NSLog("================> %@", "Checking after the second...")
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
     }
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
-        let operation: TestImageDownloadOperation! = TestImageDownloadOperation.currentOperationForURL(component.imageURL!)
-
+        let operation: TestImageDownloadOperation = TestImageDownloadOperation.currentOperationForURL(component.imageURL!)!
         operation.completedBlock!(shieldImage, nil, nil, true)
-        XCTAssertNotNil(imageCache.imageFromCache(forKey: component.shieldKey()!))
 
-        RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 0.1))
+        XCTAssertNotNil(imageCache.imageFromCache(forKey: component.shieldKey()!))
     }
 
 }
@@ -124,6 +115,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
     let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
+    let imageCache = SDImageCache.shared()
 
     var shieldImage: UIImage {
         get {
@@ -138,13 +130,13 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
         let instruction = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL)
         let shieldKey = instruction.shieldKey()
-        SDImageCache.shared().store(shieldImage, forKey: shieldKey)
+        imageCache.store(shieldImage, forKey: shieldKey, toDisk: false)
     }
 
     override func tearDown() {
         super.tearDown()
 
-        resetImageCache(SDImageCache.shared())
+        resetImageCache(imageCache)
     }
 
     func testSinglelinePrimary() {

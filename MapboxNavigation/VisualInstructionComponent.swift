@@ -5,6 +5,7 @@ import MapboxDirections
 extension VisualInstructionComponent {
     
     static let scale = UIScreen.main.scale
+    static var useDiskCache = true
     
     func shieldKey() -> String? {
         guard let imageURL = imageURL else { return nil }
@@ -30,9 +31,13 @@ extension VisualInstructionComponent {
                 return
             }
             
-            SDImageCache.shared().store(image, forKey: shieldKey, toDisk: true, completion: {
+            SDImageCache.shared().store(image, forKey: shieldKey, toDisk: VisualInstructionComponent.useDiskCache, completion: {
                 completion(image)
             })
         })
+    }
+
+    static func disableDiskCache() {
+        useDiskCache = false
     }
 }
