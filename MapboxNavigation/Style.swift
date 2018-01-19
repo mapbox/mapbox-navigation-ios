@@ -329,6 +329,7 @@ open class WayNameLabel: StylableLabel {
     
     override open func drawText(in rect: CGRect) {
         backgroundColor?.setFill()
+        clipsToBounds = true
         let ctx = UIGraphicsGetCurrentContext()
         ctx?.fill(rect)
         super.drawText(in: UIEdgeInsetsInsetRect(rect, textInsets))
