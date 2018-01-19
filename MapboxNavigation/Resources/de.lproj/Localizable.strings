@@ -1,3 +1,18 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Schließen";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "Navigation beenden";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Du bist angekommen";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Wie können wir uns verbessern?";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Anweisung kann nicht laut vorgelesen werden.";
+
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Schnellere Route gefunden";
 
@@ -7,25 +22,22 @@
 /* Feedback type for Confusing Instruction */
 "FEEDBACK_CONFUSING_INSTRUCTION" = "Verwirrende\nAnweisung";
 
-/* Feedback type for inaccurate GPS */
-"FEEDBACK_GPS_INACCURATE" = "GPS\nungenau";
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Anderes\nKartenproblem";
 
-/* Feedback type for Heavy Traffic */
-"FEEDBACK_HEAVY_TRAFFIC" = "Viel\nVerkehr";
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Fehlende\nAusfahrt";
 
-/* Feedback type for Instruction Issue */
-"FEEDBACK_INSTRUCTION_ISSUE" = "Anweisungs-\nfehler";
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Fehlende\nStraße";
 
-/* Feedback type for Instruction Timing */
-"FEEDBACK_INSTRUCTION_TIMING" = "Anweisungs-\nzeitpunkt";
-
-/* Feedback type for turn not allowed */
-"FEEDBACK_NOT_ALLOWED" = "Nicht erlaubt";
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Nicht\nerlaubt";
 
 /* Feedback type for Report Traffic */
 "FEEDBACK_REPORT_TRAFFIC" = "Verkehr\nmelden";
 
-/* Feedback type for Closure */
+/* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Straße\ngesperrt";
 
 /* Format for displaying the first two major ways */
@@ -34,6 +46,15 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Klicke, um Bewertung auf 0 zurückzusetzen.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Set %ld-star rating";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld star(s) set.";
+
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Routenneuberechnung…";
 
@@ -41,7 +62,7 @@
 "RESUME" = "Fortfahren";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
-"USER_IN_SIMULATION_MODE" = "Navigation simulieren";
+"USER_IN_SIMULATION_MODE" = "Navigation bei %d simulieren.";
 
 /* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
 "WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, über %2$@";
