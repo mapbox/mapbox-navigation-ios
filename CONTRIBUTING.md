@@ -75,5 +75,4 @@ The .strings files should still be in the original English – that’s expecte
 1. To facilitate diffing and merging, convert any added .strings files from UTF-16 encoding to UTF-8 encoding. You can convert the file encoding using Xcode’s File inspector or by running `scripts/convert_string_files.sh`.
 1. If you’ve translated the “localizableabbreviations” resource, change to the [scripts/abbreviations/](scripts/abbreviations/) folder and run `./main import xyz`, where _xyz_ is the language code.
 1. For each of the localizable files in the project, open the file, then, in the File inspector, check the box for your new localization.
-1. If both [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions/blob/master/languages.js) and [Amazon Polly](https://aws.amazon.com/es/polly/details/#features_voices) support the new language, add a case for it to `PollyVoiceController.pollyURL(for:)` in [MapboxNavigation/PollyVoiceController.swift](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/PollyVoiceController.swift).
 1. Add the new language to [the language support matrix](languages.md).
