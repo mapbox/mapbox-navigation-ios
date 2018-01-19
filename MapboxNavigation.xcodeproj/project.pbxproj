@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		16E3625C201265D600DF0592 /* TestImageDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D621E5F6ADB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D601E5F6ADB0090E733 /* Base.lproj */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
@@ -305,6 +306,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageDownloadOperation.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D601E5F6ADB0090E733 /* Base.lproj */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Base.lproj; sourceTree = "<group>"; };
@@ -658,6 +660,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		16E3625A2012656C00DF0592 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
 		35002D721E5F6C830090E733 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
@@ -801,13 +811,14 @@
 			isa = PBXGroup;
 			children = (
 				355DB5731EFA73410091BFB7 /* Fixtures */,
-				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
-				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
-				3540514E1F73F3F300ED572D /* TurnArrowTests.swift */,
-				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
+				16E3625A2012656C00DF0592 /* Support */,
+				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewTests.swift */,
+				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
+				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
+				3540514E1F73F3F300ED572D /* TurnArrowTests.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -1568,6 +1579,7 @@
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
 				3540514F1F73F3F300ED572D /* TurnArrowTests.swift in Sources */,
+				16E3625C201265D600DF0592 /* TestImageDownloadOperation.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */,
 				352690491ECC843700E387BD /* Fixture.swift in Sources */,

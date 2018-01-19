@@ -26,59 +26,7 @@ func resetImageCache(_ cache: SDImageCache) {
     clearDiskSemaphore.wait()
 }
 
-class TestWebImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterface {
-
-    private static var operationsForURLs: [URL : TestWebImageDownloadOperation] = [:]
-
-    private var request: URLRequest?
-    private var session: URLSession?
-    private var options: SDWebImageDownloaderOptions
-
-    private(set) var progressBlock: SDWebImageDownloaderProgressBlock?
-    private(set) var completedBlock: SDWebImageDownloaderCompletedBlock?
-
-    required init(request: URLRequest?, in session: URLSession?, options: SDWebImageDownloaderOptions) {
-        self.request = request
-        self.session = session
-        self.options = options
-
-        super.init()
-
-        TestWebImageDownloadOperation.operationsForURLs[request!.url!] = self
-    }
-
-    static func resetAll() {
-        operationsForURLs.removeAll()
-    }
-
-    static func operationWithURL(_ URL: URL) -> TestWebImageDownloadOperation? {
-        return operationsForURLs[URL]
-    }
-
-    func addHandlers(forProgress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: SDWebImageDownloaderCompletedBlock?) -> Any? {
-        self.progressBlock = progressBlock
-        self.completedBlock = completedBlock
-
-        return nil
-    }
-
-    func shouldDecompressImages() -> Bool {
-        return false
-    }
-
-    func setShouldDecompressImages(_ value: Bool) {
-    }
-
-    func credential() -> URLCredential? {
-        fatalError("credential() has not been implemented")
-    }
-
-    func setCredential(_ value: URLCredential?) {
-    }
-}
-
-
-class InstructionsBannerViewTests: XCTestCase {
+class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     let shieldURL1 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-41@3x.png")!
     let shieldURL2 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-94@3x.png")!
@@ -105,8 +53,8 @@ class InstructionsBannerViewTests: XCTestCase {
         super.setUp()
 
         resetImageCache(self.imageCache)
-        TestWebImageDownloadOperation.resetAll()
-        imageDownloader.setOperationClass(TestWebImageDownloadOperation.self)
+        TestImageDownloadOperation.resetAll()
+        imageDownloader.setOperationClass(TestImageDownloadOperation.self)
     }
 
     override func tearDown() {
@@ -148,7 +96,7 @@ class InstructionsBannerViewTests: XCTestCase {
         view.set(instructions, secondaryInstruction: nil)
 
         //TODO: encapsulate in a method/block
-        let operation1 = TestWebImageDownloadOperation.operationWithURL(shieldURL1)
+        let operation1 = TestImageDownloadOperation.currentOperationForURL(shieldURL1)
         XCTAssertNotNil(operation1)
         operation1!.completedBlock!(shieldImage, nil, nil, true)
         XCTAssertNotNil(imageCache.imageFromCache(forKey: instructions[0].shieldKey()!))
@@ -158,7 +106,7 @@ class InstructionsBannerViewTests: XCTestCase {
         NSLog("================> %@", "Checking after the first...")
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
 
-        let operation2 = TestWebImageDownloadOperation.operationWithURL(shieldURL2)
+        let operation2 = TestImageDownloadOperation.currentOperationForURL(shieldURL2)
         XCTAssertNotNil(operation2)
         operation2!.completedBlock!(shieldImage, nil, nil, true)
         XCTAssertNotNil(imageCache.imageFromCache(forKey: instructions[2].shieldKey()!))
