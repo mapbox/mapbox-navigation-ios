@@ -23,15 +23,6 @@ public protocol RouteControllerDelegate: class {
     @objc(routeController:shouldRerouteFromLocation:)
     optional func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool
 
-   /**
-     Called before the route controller arrives at a waypoint to allow the delegate to prevent the route controller from advancing to the next leg.
-     
-     - returns: True to advance to the next leg, or false to remain on the completed leg.
-     - postcondition: If you return false, you must manually advance to the next leg by obtaining the value of the `routeProgress` property and incrementing the `RouteProgress.legIndex` property.
-     */
-    @objc(routeController:shouldAdvanceToNextLegWhenArrivingAtWaypoint:)
-    optional func routeController(_ routeController: RouteController, shouldAdvanceToNextLegWhenArrivingAt waypoint: Waypoint) -> Bool
-
     /**
      Called immediately before the route controller calculates a new route.
 
@@ -90,11 +81,17 @@ public protocol RouteControllerDelegate: class {
     
     /**
      Called when the route controller arrives at a waypoint.
+     
+     You can implement this method to prevent the route controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the route controller automatically advances to the next leg when arriving at a waypoint.
+     
+     - postcondition: If you return false, you must manually advance to the next leg: obtain the value of the `routeProgress` property, then increment the `RouteProgress.legIndex` property.
+     - parameter routeController: The route controller that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the controller has arrived at.
      - parameter finalDestination: A boolean flag that signals that the waypoint is the final destination.
+     - returns: True to advance to the next leg, if any, or false to remain on the completed leg.
     */
     @objc(routeController:didArriveAtWaypoint:)
-    optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint)
+    optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool
 }
 
 /**
@@ -598,10 +595,9 @@ extension RouteController: CLLocationManagerDelegate {
             previousArrivalWaypoint = currentDestination
             
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
-            delegate?.routeController?(self, didArriveAt: currentDestination)
+            let advancesToNextLeg = delegate?.routeController?(self, didArriveAt: currentDestination) ?? true
             
-            if !routeProgress.isFinalLeg,
-                (delegate?.routeController?(self, shouldAdvanceToNextLegWhenArrivingAt: routeProgress.currentLeg.destination) ?? true) {
+            if !routeProgress.isFinalLeg && advancesToNextLeg {
                 routeProgress.legIndex += 1
             }
         }

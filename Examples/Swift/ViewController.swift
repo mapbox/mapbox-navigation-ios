@@ -356,21 +356,18 @@ extension ViewController: NavigationViewControllerDelegate {
     // If you implement this method, return true to preserve this behavior.
     // Return false to remain on the current leg, for example to allow the user to provide input.
     // If you return false, you must manually advance to the next leg. See the example above in `confirmationControllerDidConfirm(_:)`.
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldAdvanceToNextLegWhenArrivingAt waypoint: Waypoint) -> Bool {
-        return exampleMode == .multipleWaypoints ? false : true
-    }
-
-    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) {
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         // Multiple waypoint demo
-        guard exampleMode == .multipleWaypoints else { return }
+        guard exampleMode == .multipleWaypoints else { return true }
 
         // When the user arrives, present a view controller that prompts the user to continue to their next destination
         // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
-        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return }
+        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else { return true }
 
         confirmationController.delegate = self
 
         navigationViewController.present(confirmationController, animated: true, completion: nil)
+        return false
     }
 }
 
