@@ -95,26 +95,28 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
 
-        //TODO: encapsulate in a method/block
-        let operation1 = TestImageDownloadOperation.currentOperationForURL(shieldURL1)
-        XCTAssertNotNil(operation1)
-        operation1!.completedBlock!(shieldImage, nil, nil, true)
-        XCTAssertNotNil(imageCache.imageFromCache(forKey: instructions[0].shieldKey()!))
-        RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 0.1))
+        let firstDestinationComponent: VisualInstructionComponent = instructions[0]
+        simulateDownloadingShieldForComponent(firstDestinationComponent)
 
         //Slash should be present until all shields are downloaded
         NSLog("================> %@", "Checking after the first...")
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
 
-        let operation2 = TestImageDownloadOperation.currentOperationForURL(shieldURL2)
-        XCTAssertNotNil(operation2)
-        operation2!.completedBlock!(shieldImage, nil, nil, true)
-        XCTAssertNotNil(imageCache.imageFromCache(forKey: instructions[2].shieldKey()!))
-        RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 0.1))
+        let secondDestinationComponent = instructions[2]
+        simulateDownloadingShieldForComponent(secondDestinationComponent)
 
         //Slash should no longer be present
         NSLog("================> %@", "Checking after the second...")
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
+    }
+
+    private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
+        let operation: TestImageDownloadOperation! = TestImageDownloadOperation.currentOperationForURL(component.imageURL!)
+
+        operation.completedBlock!(shieldImage, nil, nil, true)
+        XCTAssertNotNil(imageCache.imageFromCache(forKey: component.shieldKey()!))
+
+        RunLoop.main.run(until: Date.init(timeIntervalSinceNow: 0.1))
     }
 
 }
