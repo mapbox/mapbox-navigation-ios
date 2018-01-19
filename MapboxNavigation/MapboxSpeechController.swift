@@ -147,6 +147,11 @@ open class MapboxVoiceController: RouteVoiceController {
             options.locale = locale
         }
         
+        // TODO: this should in the future come from `route`.
+        if let locale = routeProgress?.route.routeOptions.locale {
+            options.locale = locale
+        }
+        
         speech.audioData(with: options) { (data, error) in
             guard let data = data else { return }
             self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
