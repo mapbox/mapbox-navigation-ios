@@ -1,6 +1,15 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Cerrar";
 
+/* End Navigation Button Text */
+"END_NAVIGATION" = "Terminar navegación";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Ha llegado";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "¿Cómo podemos mejorar?";
+
 /* Error message when the SDK is unable to read a spoken instruction. */
 "FAILED_INSTRUCTION" = "No se logró leer la instrucción en voz alta.";
 
@@ -36,6 +45,21 @@
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
+
+/* No Rating Set */
+"NO_RATING" = "No hay calificación.";
+
+/* One Star Set */
+"RATING_1_STAR" = "Ha calificado 1 estrella.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tocar para volver la calificación a cero.";
+
+/* Accessibility Star Label */
+"RATING_ACCESSIBILITY_SET" = "Dar la calificación de %@ estrellas.";
+
+/* Format for rating stars set */
+"RATING_STARS_FORMAT" = "Ha calificado %li estrellas.";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Reenrutando…";
