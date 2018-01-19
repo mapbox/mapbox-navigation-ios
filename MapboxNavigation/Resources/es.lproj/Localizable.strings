@@ -46,20 +46,14 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
-/* No Rating Set */
-"NO_RATING" = "No hay calificación.";
-
-/* Accessibility value of label indicating the absence of a rating */
-"RATING_1_STAR" = "Ha calificado 1 estrella.";
-
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tocar para volver la calificación a cero.";
 
-/* Accessibility Star Label */
-"RATING_ACCESSIBILITY_SET" = "Dar la calificación de %@ estrellas.";
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Dar la calificación de %ld estrella(s).";
 
-/* Format for rating stars set */
-"RATING_STARS_FORMAT" = "Ha calificado %li estrellas.";
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "Ha calificado %li estrella(s).";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Reenrutando…";

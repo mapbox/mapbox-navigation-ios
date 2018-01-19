@@ -46,20 +46,14 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
-/* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "Chưa đánh giá.";
-
-/* One Star Set */
-"RATING_1_STAR" = "Đã đánh giá 1 sao.";
-
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Chạm để đặt lại đánh giá.";
 
-/* Accessibility Star Label */
-"RATING_ACCESSIBILITY_SET" = "Đánh giá %@ sao.";
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Đánh giá %ld sao";
 
-/* Format for rating stars set */
-"RATING_STARS_FORMAT" = "Đã đánh giá %li sao.";
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "Đã đánh giá %ld sao.";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Đang tính tuyến mới…";
