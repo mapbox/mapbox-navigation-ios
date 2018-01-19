@@ -35,7 +35,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
 
         SDImageCache.shared().clearMemory()
 
-        let clearDiskSemaphore = DispatchSemaphore.init(value: 1)
+        let clearDiskSemaphore = DispatchSemaphore(value: 1)
         SDImageCache.shared().clearDisk {
             clearDiskSemaphore.signal()
         }
@@ -60,7 +60,6 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.lanesView)
     }
 }
-
 
 
 extension CLLocationCoordinate2D {
