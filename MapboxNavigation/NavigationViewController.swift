@@ -14,11 +14,16 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController : NavigationViewController)
     
     /**
-     Called when the user arrives at the destination waypoint for the route leg.
-     - parameter navigationViewController: The Navigation View Controller.
+     Called when the user arrives at the destination waypoint for a route leg.
+     
+     This method is called when the navigation view controller arrives at the waypoint. You can implement this method to prevent the navigation view controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the navigation view controller automatically advances to the next leg when arriving at a waypoint.
+     
+     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `routeController` and its `RouteController.routeProgress` property, then increment the `RouteProgress.legIndex` property.
+     - parameter navigationViewController: The navigation view controller that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the user has arrived at.
+     - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint)
+    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -31,18 +36,6 @@ public protocol NavigationViewControllerDelegate {
     */
     @objc(navigationViewController:shouldRerouteFromLocation:)
     optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
-    
-    /**
-     Asks the reciever if the next leg of the route should start immediately after arrival at the waypoint.
-     If custom UI is to be shown when upon arrival at the waypoint, implement this delegate method and return false.
-    
-     - important: If the implementation returns false, the user must increment the `legIndex` property of the `routeProgress` object within the `routeController`.
-     - parameter navigationViewController: The Navigation View Controller.
-     - parameter waypoint: The waypoint that the user has arrived at.
-     - returns: true if the RouteController should immediately start on the next leg of the route, false otherwise.
-     */
-    @objc(navigationViewController:shouldIncrementLegWhenArrivingAtWaypoint:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool
     
     /**
      Called immediately before the navigation view controller calculates a new route.
@@ -510,10 +503,6 @@ extension NavigationViewController: RouteControllerDelegate {
         return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
     }
     
-    @objc public func routeController(_ routeController: RouteController, shouldIncrementLegWhenArrivingAtWaypoint waypoint: Waypoint) -> Bool {
-        return delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint) ?? true
-    }
-    
     @objc public func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation) {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
@@ -546,21 +535,13 @@ extension NavigationViewController: RouteControllerDelegate {
         mapViewController?.statusView.show(title, showSpinner: false)
     }
     
-    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) {
-        delegate?.navigationViewController?(self, didArriveAt: waypoint)
+    @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
+        let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
-        guard routeController.routeProgress.isFinalLeg else { return }
-        
-        // If the developer implements`NavigationViewController(shouldIncrementLegWhenArrivingAtWaypoint:)` and sets it to false,
-        // we should emit `NavigationViewController(didArriveAt:)` and not show the end of route feedback UI.
-        if let shouldIncrementLegWhenArrivingAtWaypoint = delegate?.navigationViewController?(self, shouldIncrementLegWhenArrivingAtWaypoint: waypoint), shouldIncrementLegWhenArrivingAtWaypoint == false {
-            return
+        if routeController.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
+            self.mapViewController?.showEndOfRoute { _ in }
         }
-        
-        let completion: (Bool) -> Void = { _ in self.delegate?.navigationViewController?(self, didArriveAt: waypoint) }
-        if showsEndOfRouteFeedback {
-            self.mapViewController?.showEndOfRoute( completion: completion)
-        }
+        return advancesToNextLeg
     }
 }
 
