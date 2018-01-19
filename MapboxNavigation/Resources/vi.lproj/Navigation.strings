@@ -3,7 +3,7 @@
 "I8f-iR-MZm.normalTitle" = "Báo cáo Vấn đề";
 
 /* Class = "UILabel"; text = "Rate your trip"; ObjectID = "W5U-cV-cDO"; */
-"W5U-cV-cDO.text" = "Đánh giá chuyến lái xe của bạn";
+"W5U-cV-cDO.text" = "Đánh giá chuyến đi của bạn";
 
 /* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
 "upm-fg-ffn.text" = "Cảm ơn bạn đã báo cáo!";
