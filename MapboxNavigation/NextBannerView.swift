@@ -52,7 +52,7 @@ open class NextBannerView: UIView {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
-        instructionLabel.instruction = [VisualInstructionComponent(text: "Next step", imageURL: nil)]
+        instructionLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Next step", imageURL: nil)]
     }
     
     func setupLayout() {
