@@ -88,6 +88,7 @@ public class StatusView: UIView {
     }
     
     func show(_ title: String, showSpinner: Bool) {
+        layer.removeAllAnimations()
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
         if showSpinner {
@@ -106,7 +107,7 @@ public class StatusView: UIView {
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
-        
+        layer.removeAllAnimations()
         if animated {
             guard isHidden == false else { return }
             
