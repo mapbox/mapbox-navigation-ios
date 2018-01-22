@@ -409,21 +409,16 @@
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="c1">// By default, when the user arrives at a waypoint, the next leg starts immediately.</span>
-    <span class="c1">// If however you would like to pause and allow the user to provide input, set this delegate method to false.</span>
-    <span class="c1">// This does however require you to increment the leg count on your own. See the example below in `confirmationControllerDidConfirm()`.</span>
-    <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt">NavigationViewController</span><span class="p">,</span> <span class="n">shouldIncrementLegWhenArrivingAtWaypoint</span> <span class="nv">waypoint</span><span class="p">:</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.16.0/Classes/Waypoint.html">Waypoint</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="kc">false</span>
-    <span class="p">}</span>
-
-    <span class="c1">// Show an alert when arriving at the waypoint</span>
-    <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt">NavigationViewController</span><span class="p">,</span> <span class="n">didArriveAt</span> <span class="nv">waypoint</span><span class="p">:</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.16.0/Classes/Waypoint.html">Waypoint</a></span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Show an alert when arriving at the waypoint and wait until the user to start next leg.</span>
+    <span class="kd">func</span> <span class="nf">navigationViewController</span><span class="p">(</span><span class="n">_</span> <span class="nv">navigationViewController</span><span class="p">:</span> <span class="kt">NavigationViewController</span><span class="p">,</span> <span class="n">didArriveAt</span> <span class="nv">waypoint</span><span class="p">:</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.16.0/Classes/Waypoint.html">Waypoint</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
         <span class="k">let</span> <span class="nv">alert</span> <span class="o">=</span> <span class="kt">UIAlertController</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"Arrived at </span><span class="se">\(</span><span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="se">)</span><span class="s">"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="s">"Would you like to continue?"</span><span class="p">,</span> <span class="nv">preferredStyle</span><span class="p">:</span> <span class="o">.</span><span class="n">alert</span><span class="p">)</span>
         <span class="n">alert</span><span class="o">.</span><span class="nf">addAction</span><span class="p">(</span><span class="kt">UIAlertAction</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"Ok"</span><span class="p">,</span> <span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="p">{</span> <span class="n">action</span> <span class="k">in</span>
             <span class="c1">// Begin the next leg once the driver confirms</span>
             <span class="n">navigationViewController</span><span class="o">.</span><span class="n">routeController</span><span class="o">.</span><span class="n">routeProgress</span><span class="o">.</span><span class="n">legIndex</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="p">}))</span>
         <span class="n">navigationViewController</span><span class="o">.</span><span class="nf">present</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">false</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
