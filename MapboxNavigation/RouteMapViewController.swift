@@ -577,9 +577,10 @@ class RouteMapViewController: UIViewController {
         guard let endOfRouteVC = segue.destination as? EndOfRouteViewController else { return }
         
         endOfRouteVC.dismiss = { [weak self] (stars, comment) in
-            guard let rating = self?.rating(for: stars) else { return }
-            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
-            self?.dismiss(animated: true, completion: nil)
+            guard let rating = self?.rating(for: stars), let weakSelf = self else { return }
+            weakSelf.routeController.setEndOfRoute(rating: rating, comment: comment)
+            weakSelf.dismiss(animated: true, completion: nil)
+            weakSelf.delegate?.mapViewControllerDidCancelNavigation(weakSelf)
         }
         endOfRouteViewController = endOfRouteVC
     }

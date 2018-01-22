@@ -369,6 +369,12 @@ extension ViewController: NavigationViewControllerDelegate {
         navigationViewController.present(confirmationController, animated: true, completion: nil)
         return false
     }
+    
+    // Called when the user hits the exit button.
+    // If implemented, you are responsible for also dismissing the UI.
+    func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController) {
+        navigationViewController.dismiss(animated: true, completion: nil)
+    }
 }
 
 /**
