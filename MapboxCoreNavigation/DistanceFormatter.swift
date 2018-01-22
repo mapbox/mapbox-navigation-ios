@@ -50,7 +50,7 @@ public class DistanceFormatter: LengthFormatter {
     }
     
     func maximumFractionDigits(for distance: CLLocationDistance) -> Int {
-        if numberFormatter.locale.usesMetric {
+        if NavigationSettings.shared.usesMetric {
             return distance < 3_000 ? 1 : 0
         } else {
             return distance.miles < 3 ? 1 : 0
@@ -58,7 +58,7 @@ public class DistanceFormatter: LengthFormatter {
     }
     
     func roundingIncrement(for distance: CLLocationDistance, unit: LengthFormatter.Unit) -> Double {
-        if numberFormatter.locale.usesMetric {
+        if NavigationSettings.shared.usesMetric {
             if distance < 25 {
                 return 5
             } else if distance < 100 {
@@ -112,7 +112,7 @@ public class DistanceFormatter: LengthFormatter {
     
     func formattedDistance(_ distance: CLLocationDistance, modify unit: inout LengthFormatter.Unit) -> String {
         var formattedDistance: String
-        if numberFormatter.locale.usesMetric {
+        if NavigationSettings.shared.usesMetric {
             let roundedDistance: CLLocationDistance = numberFormatter.number(from: numberFormatter.string(from: distance as NSNumber)!)?.doubleValue ?? distance
             numberFormatter.roundingIncrement = roundingIncrement(for: roundedDistance, unit: unit) as NSNumber
             
