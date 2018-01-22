@@ -1,5 +1,3 @@
-/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
-"CONTINUE" = "Continuer durant %@";
+/* Inform developer an update is available */
+"UPDATE_AVAILABLE" = "Le SDK de Navigation Mapbox pour iOS version %@ est maintenant disponible.";
 
-/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
-"CONTINUE_ON_ROAD" = "Continuer par %1$@ durant %2$@";

@@ -86,22 +86,21 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     func updateRouteProgress(routeProgress: RouteProgress) {
         guard let step = routeProgress.currentLegProgress.upComingStep else { return }
 
-        if let direction = step.maneuverDirection {
-            switch direction {
-            case .slightRight:
-                self.arrowView.text = "↗️"
-            case .sharpRight, .right:
-                self.arrowView.text = "➡️"
-            case .slightLeft:
-                self.arrowView.text = "↖️"
-            case .sharpLeft, .left:
-                self.arrowView.text = "⬅️"
-            case .uTurn:
-                self.arrowView.text = "⤵️"
-            default:
-                self.arrowView.text = "⬆️"
-            }
+        switch step.maneuverDirection {
+        case .slightRight:
+            self.arrowView.text = "↗️"
+        case .sharpRight, .right:
+            self.arrowView.text = "➡️"
+        case .slightLeft:
+            self.arrowView.text = "↖️"
+        case .sharpLeft, .left:
+            self.arrowView.text = "⬅️"
+        case .uTurn:
+            self.arrowView.text = "⤵️"
+        default:
+            self.arrowView.text = "⬆️"
         }
+        
         self.instructionLabel.text = routeProgress.currentLegProgress.currentStepProgress.step.instructionsDisplayedAlongStep?.first?.primaryText
         let distance = routeProgress.currentLegProgress.currentStepProgress.distanceRemaining
         self.distanceLabel.text = textDistanceFormatter.string(fromMeters: distance)

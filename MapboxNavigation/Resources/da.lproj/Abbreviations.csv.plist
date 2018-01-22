@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;plads&quot;, &quot;Pl.&quot;
+&quot;station&quot;, &quot;St.&quot;
+&quot;nordre&quot;, &quot;Nr.&quot;
+&quot;vænge&quot;, &quot;vg.&quot;
+&quot;sankt&quot;, &quot;Skt.&quot;
+&quot;ved&quot;, &quot;v.&quot;
+&quot;vestre&quot;, &quot;v.&quot;
+&quot;universitet&quot;, &quot;Uni.&quot;
+&quot;stræde&quot;, &quot;Str.&quot;
+&quot;hospital&quot;, &quot;Hosp.&quot;
+&quot;skole&quot;, &quot;Sk.&quot;
+&quot;centrum&quot;, &quot;C.&quot;
+</string>
+    <key>classifications</key>
+    <string>&quot;boulevard&quot;, &quot;Boul.&quot;
+&quot;nørre&quot;, &quot;Nr.&quot;
+&quot;avenue&quot;, &quot;Ave&quot;
+&quot;dronning&quot;, &quot;Dronn.&quot;
+&quot;gammel&quot;, &quot;Gl.&quot;
+&quot;sønder&quot;, &quot;Sdr.&quot;
+&quot;øster&quot;, &quot;Ø.&quot;
+&quot;vestre&quot;, &quot;V.&quot;
+&quot;østre&quot;, &quot;Ø.&quot;
+&quot;vester&quot;, &quot;V.&quot;
+</string>
+    <key>directions</key>
+    <string>&quot;øst&quot;, &quot;Ø&quot;
+&quot;nordøst&quot;, &quot;NØ&quot;
+&quot;syd&quot;, &quot;S&quot;
+&quot;nordvest&quot;, &quot;NV&quot;
+&quot;nord&quot;, &quot;N&quot;
+&quot;sydøst&quot;, &quot;SØ&quot;
+&quot;sydvest&quot;, &quot;SV&quot;
+&quot;vest&quot;, &quot;V&quot;
+</string>
+  </dict>
+</plist>

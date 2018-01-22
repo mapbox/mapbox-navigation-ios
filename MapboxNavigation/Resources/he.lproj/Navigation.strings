@@ -1,0 +1,13 @@
+
+/* Class = "UIButton"; normalTitle = "Report Problem"; ObjectID = "I8f-iR-MZm"; */
+"I8f-iR-MZm.normalTitle" = "דווח על בעיה";
+
+/* Class = "UILabel"; text = "Rate your trip"; ObjectID = "W5U-cV-cDO"; */
+"W5U-cV-cDO.text" = "דרג את הנסיעה שלך";
+
+/* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
+"upm-fg-ffn.text" = "תודה על הדיווח שלך!";
+
+/* Class = "UILabel"; text = "Report Problem"; ObjectID = "xTH-eK-F5H"; */
+"xTH-eK-F5H.text" = "דווח על בעיה";
+

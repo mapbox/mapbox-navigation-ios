@@ -4,10 +4,12 @@
 |----------|-------------|----------------------|
 | Catalan | ✅ | ❌ |
 | Chinese (Simplified) | ✅ | ❌ |
+| Danish | ✅ | ❌ |
 | Dutch | ✅ | ✅ |
 | English | ✅ | ✅ |
 | French | ✅ | ✅ |
 | German | ✅ | ✅ |
+| Hebrew | ✅ | ❌ |
 | Hungarian | ✅ | ❌ |
 | Italian | ✅ | ✅ |
 | Portuguese | ✅ | ✅ |

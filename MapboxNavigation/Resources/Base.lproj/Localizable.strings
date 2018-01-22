@@ -46,20 +46,20 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
-/* No Rating Set */
+/* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No rating set.";
-
-/* One Star Set */
-"RATING_1_STAR" = "1 star set.";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tap to reset the rating to zero.";
 
-/* Accessibility Star Label */
-"RATING_ACCESSIBILITY_SET" = "Set %@ star rating";
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Set %ld-star rating";
 
-/* Format for rating stars set */
-"RATING_STARS_FORMAT" = "%li stars set.";
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld star(s) set.";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "Report Problem";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Rerouting…";

@@ -26,6 +26,7 @@ class EmbeddedExampleViewController: UIViewController, NavigationViewControllerD
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         NotificationCenter.default.addObserver(self, selector: #selector(EmbeddedExampleViewController.flashReroutedLabel(_:)), name: .routeControllerDidReroute, object: nil)
         reroutedLabel.isHidden = true
         calculateDirections()
