@@ -10,6 +10,8 @@ import MapboxDirections
 
 class BasicViewController: UIViewController {
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
         let options = NavigationRouteOptions(coordinates: [origin, destination])
