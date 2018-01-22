@@ -1,0 +1,11 @@
+framework module MapboxSpeech {
+  umbrella header "MapboxSpeech.h"
+
+  export *
+  module * { export * }
+}
+
+module MapboxSpeech.Swift {
+    header "MapboxSpeech-Swift.h"
+    requires objc
+}

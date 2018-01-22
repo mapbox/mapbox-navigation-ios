@@ -147,8 +147,7 @@ open class MapboxVoiceController: RouteVoiceController {
             options.locale = locale
         }
         
-        // TODO: this should in the future come from `route`.
-        if let locale = routeProgress?.route.routeOptions.locale {
+        if let locale = routeProgress?.route.spokenLocale {
             options.locale = locale
         }
         

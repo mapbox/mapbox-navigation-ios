@@ -1,5 +1,5 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 3.7
-github "mapbox/MapboxDirections.swift" ~> 0.16.0
+github "mapbox/MapboxDirections.swift" "voiceLocale"
 github "mapbox/turf-swift" ~> 0.0.3
 github "rs/SDWebImage" ~> 4.1
 github "mapbox/mapbox-telemetry-ios" ~> 0.2
