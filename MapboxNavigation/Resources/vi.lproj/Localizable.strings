@@ -46,6 +46,9 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Chưa đánh giá.";
+
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Chạm để đặt lại đánh giá.";
 
@@ -54,6 +57,9 @@
 
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Đã đánh giá %ld sao.";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "Báo cáo Vấn đề";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Đang tính tuyến mới…";
