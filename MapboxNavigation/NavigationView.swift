@@ -73,7 +73,7 @@ open class NavigationView: UIView {
         return stack
     }()
     
-    lazy var overivewButton = FloatingButton.rounded(image: Images.overview)
+    lazy var overviewButton = FloatingButton.rounded(image: Images.overview)
     lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp)
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
@@ -143,7 +143,7 @@ open class NavigationView: UIView {
     
     func setupStackViews() {
         informationStackView.addArrangedSubviews([instructionsBannerView, lanesView, nextBannerView, statusView])
-        floatingStackView.addArrangedSubviews([overivewButton, muteButton, reportButton])
+        floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
     }
     
     func setupContainers() {
