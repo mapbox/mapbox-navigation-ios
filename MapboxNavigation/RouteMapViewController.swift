@@ -24,7 +24,7 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
 //    @IBOutlet weak var bottomBannerView: BottomBannerView!
 //    @IBOutlet weak var statusView: StatusView!
 //    @IBOutlet weak var lanesView: LanesView!
-    var navView: NavigationView!
+    var navView: NavigationView { return view as! NavigationView }
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteContainerView: UIView!
     @IBOutlet weak var endOfRouteShowConstraint: NSLayoutConstraint!
@@ -58,7 +58,7 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     }
     var tiltedCamera: MGLMapCamera {
         get {
-            let camera = mapView.camera
+            let camera = navView.mapView.camera
             camera.altitude = 1000
             camera.pitch = 45
             return camera
@@ -67,12 +67,12 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     
     weak var delegate: RouteMapViewControllerDelegate? {
         didSet {
-            mapView.delegate = mapView.delegate
+            navView.delegate = delegate
         }
     }
     weak var routeController: RouteController! {
         didSet {
-            statusView.canChangeValue = routeController.locationManager is SimulatedLocationManager
+            navView.statusView.canChangeValue = routeController.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
             populateName(for: destination, populated: { self.destination = $0 })
         }
@@ -82,14 +82,14 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     var isInOverviewMode = false {
         didSet {
             if isInOverviewMode {
-                overviewButton.isHidden = true
-                recenterButton.isHidden = false
-                wayNameLabel.isHidden = true
-                mapView.logoView.isHidden = true
+                navView.overviewButton.isHidden = true
+                navView.resumeButton.isHidden = false
+                navView.wayNameLabel.isHidden = true
+                navView.mapView.logoView.isHidden = true
             } else {
-                overviewButton.isHidden = false
-                recenterButton.isHidden = true
-                mapView.logoView.isHidden = false
+                navView.overviewButton.isHidden = false
+                navView.resumeButton.isHidden = true
+                navView.mapView.logoView.isHidden = false
             }
         }
     }
@@ -103,7 +103,7 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     override func loadView() {
         let nav = NavigationView(delegate: self)
         self.view = nav
-        self.navView = nav
+        navView.mapView.contentInset = contentInsets
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,23 +146,23 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         
         resetETATimer()
         
-        muteButton.isSelected = NavigationSettings.shared.voiceMuted
-        mapView.compassView.isHidden = true
+        navView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
+        navView.mapView.compassView.isHidden = true
         
-        mapView.tracksUserCourse = true
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
+        navView.mapView.tracksUserCourse = true
+        navView.mapView.enableFrameByFrameCourseViewTracking(for: 3)
 
         if let camera = pendingCamera {
-            mapView.camera = camera
+            navView.mapView.camera = camera
         } else if let location = routeController.location, location.course > 0 {
-            mapView.updateCourseTracking(location: location, animated: false)
+            navView.mapView.updateCourseTracking(location: location, animated: false)
         } else if let coordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates, let firstCoordinate = coordinates.first, coordinates.count > 1 {
             let secondCoordinate = coordinates[1]
             let course = firstCoordinate.direction(to: secondCoordinate)
             let newLocation = CLLocation(coordinate: routeController.location?.coordinate ?? firstCoordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: course, speed: 0, timestamp: Date())
-            mapView.updateCourseTracking(location: newLocation, animated: false)
+            navView.mapView.updateCourseTracking(location: newLocation, animated: false)
         } else {
-            mapView.setCamera(tiltedCamera, animated: false)
+            navView.mapView.setCamera(tiltedCamera, animated: false)
         }
     }
     
@@ -195,12 +195,12 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     }
 
     @IBAction func recenter(_ sender: AnyObject) {
-        mapView.tracksUserCourse = true
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
+        navView.mapView.tracksUserCourse = true
+        navView.mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
         updateCameraAltitude(for: routeController.routeProgress)
         
-        mapView.addArrow(route: routeController.routeProgress.route,
+        navView.mapView.addArrow(route: routeController.routeProgress.route,
                          legIndex: routeController.routeProgress.legIndex,
                          stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         
@@ -215,13 +215,13 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     func removePreviewInstructions() {
         if let view = previewInstructionsView {
             view.removeFromSuperview()
-            instructionsBannerContainerView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
+            navView.instructionsBannerContentView.backgroundColor = InstructionsBannerView.appearance().backgroundColor
             previewInstructionsView = nil
         }
     }
 
     @IBAction func toggleOverview(_ sender: Any) {
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
+        navView.mapView.enableFrameByFrameCourseViewTracking(for: 3)
         updateVisibleBounds()
         isInOverviewMode = true
     }
@@ -235,7 +235,7 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     
     @IBAction func rerouteFeedback(_ sender: Any) {
         showFeedback(source: .reroute)
-        rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
+        navView.rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
@@ -275,32 +275,32 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
+        navView.mapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        mapView.setContentInset(contentInsets, animated: true)
-        mapView.setNeedsUpdateConstraints()
+        navView.mapView.setContentInset(contentInsets, animated: true)
+        navView.mapView.setNeedsUpdateConstraints()
     }
     
     func updateVisibleBounds() {
         guard let userLocation = routeController.locationManager.location?.coordinate else { return }
         
-        let overviewContentInset = UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
+        let overviewContentInset = UIEdgeInsets(top: navView.instructionsBannerView.bounds.height, left: 20, bottom: navView.bottomBannerView.bounds.height, right: 20)
         let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
-        mapView.tracksUserCourse = false
-        let camera = mapView.camera
+        navView.mapView.tracksUserCourse = false
+        let camera = navView.mapView.camera
         camera.pitch = 0
         camera.heading = 0
-        mapView.camera = camera
+        navView.mapView.camera = camera
         
         // Don't keep zooming in
         guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > 200 else { return }
         
-        mapView.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: overviewContentInset, animated: true)
+        navView.mapView.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: overviewContentInset, animated: true)
     }
 
     func notifyDidReroute(route: Route) {
@@ -310,18 +310,18 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
             updateInstructions(routeProgress: routeController.routeProgress, location: location, secondsRemaining: 0)
         }
         
-        mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        navView.mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        navView.mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
         
         if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+            navView.mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
 
         if isInOverviewMode {
             updateVisibleBounds()
         } else {
-            mapView.tracksUserCourse = true
-            wayNameLabel.isHidden = true
+            navView.mapView.tracksUserCourse = true
+            navView.wayNameLabel.isHidden = true
         }
         
         stepsViewController?.dismiss {
@@ -331,47 +331,47 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     }
     
     @objc func applicationWillEnterForeground(notification: NSNotification) {
-        mapView.updateCourseTracking(location: routeController.location, animated: false)
+        navView.mapView.updateCourseTracking(location: routeController.location, animated: false)
         resetETATimer()
     }
     
     @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         hideLaneViews()
-        statusView.show(title, showSpinner: true)
-        statusView.hide(delay: 3, animated: true)
+        navView.statusView.show(title, showSpinner: true)
+        navView.statusView.hide(delay: 3, animated: true)
     }
     
     @objc func didReroute(notification: NSNotification) {
         guard self.isViewLoaded else { return }
         
         if !(routeController.locationManager is SimulatedLocationManager) {
-            statusView.hide(delay: 0.5, animated: true)
+            navView.statusView.hide(delay: 0.5, animated: true)
             
-            if !reportButton.isHidden {
+            if !navView.reportButton.isHidden {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                    self.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
+                    self.navView.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
                 })
             }
         }
         
         if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            statusView.show(title, showSpinner: true)
-            statusView.hide(delay: 5, animated: true)
+            navView.statusView.show(title, showSpinner: true)
+            navView.statusView.hide(delay: 5, animated: true)
         }
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
         if routeProgress.currentLegProgress.followOnStep != nil {
-            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+            navView.mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         } else {
-            mapView.removeArrow()
+            navView.mapView.removeArrow()
         }
     }
 
     func updateCameraAltitude(for routeProgress: RouteProgress) {
-        guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
+        guard navView.mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
         
         let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
         let defaultAltitude = NavigationMapView.defaultAltitude
@@ -395,8 +395,8 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     }
     
     private func setCamera(altitude: Double) {
-        guard mapView.altitude != altitude else { return }
-        mapView.altitude = altitude
+        guard navView.mapView.altitude != altitude else { return }
+        navView.mapView.altitude = altitude
     }
     
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
@@ -423,14 +423,14 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         updateNextBanner(routeProgress: routeProgress)
         
         if currentLegIndexMapped != routeProgress.legIndex {
-            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
+            navView.mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
+            navView.mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
         }
         
         if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+            navView.mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
 
         guard isInOverviewMode else {
@@ -446,16 +446,16 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         
         guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
         
-        instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
-        instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
-        instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
+        navView.instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
+        navView.instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
+        navView.instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
     
         guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
             let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
-            lanesView.isHidden
+            navView.lanesView.isHidden
             else {
                 hideNextBanner()
                 return
@@ -473,22 +473,22 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
             return
         }
         
-        nextBannerView.maneuverView.step = nextStep
-        nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
+        navView.nextBannerView.maneuverView.step = nextStep
+        navView.nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
         showNextBanner()
     }
     
     func showNextBanner() {
-        guard nextBannerView.isHidden else { return }
+        guard navView.nextBannerView.isHidden else { return }
         UIView.defaultAnimation(0.3, animations: {
-            self.nextBannerView.isHidden = false
+            self.navView.nextBannerView.isHidden = false
         }, completion: nil)
     }
     
     func hideNextBanner() {
-        guard !nextBannerView.isHidden else { return }
+        guard !navView.nextBannerView.isHidden else { return }
         UIView.defaultAnimation(0.3, animations: {
-            self.nextBannerView.isHidden = true
+            self.navView.nextBannerView.isHidden = true
         }, completion: nil)
     }
     
@@ -496,14 +496,14 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         var margin: CGFloat = 0.0
         if #available(iOS 11.0, *) { margin = view.safeAreaInsets.bottom }
         let containerHeight = endOfRouteContainerView.frame.height - margin
-        let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : bottomBannerView.bounds.height
-        return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottom, right: 0)
+        let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : navView.bottomBannerView.bounds.height
+        return UIEdgeInsets(top: navView.instructionsBannerContentView.bounds.height, left: 0, bottom: bottom, right: 0)
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
-        lanesView.updateLaneViews(step: step, durationRemaining: durationRemaining)
+        navView.lanesView.updateLaneViews(step: step, durationRemaining: durationRemaining)
         
-        if lanesView.stackView.arrangedSubviews.count > 0 {
+        if navView.lanesView.stackView.arrangedSubviews.count > 0 {
             showLaneViews()
         } else {
             hideLaneViews()
@@ -512,20 +512,20 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     
     func showLaneViews(animated: Bool = true) {
         hideNextBanner()
-        guard lanesView.isHidden == true else { return }
+        guard navView.lanesView.isHidden == true else { return }
         if animated {
             UIView.defaultAnimation(0.3, animations: {
-                self.lanesView.isHidden = false
+                self.navView.lanesView.isHidden = false
             }, completion: nil)
         } else {
-            self.lanesView.isHidden = false
+            self.navView.lanesView.isHidden = false
         }
     }
     
     func hideLaneViews() {
-        guard lanesView.isHidden == false else { return }
+        guard navView.lanesView.isHidden == false else { return }
         UIView.defaultAnimation(0.3, animations: {
-            self.lanesView.isHidden = true
+            self.navView.lanesView.isHidden = true
         }, completion: nil)
     }
     //MARK: End Of Route
@@ -541,12 +541,12 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         endOfRouteShowConstraint.isActive = true
        
         
-        mapView.enableFrameByFrameCourseViewTracking(for: duration)
-        mapView.setNeedsUpdateConstraints()
+        navView.mapView.enableFrameByFrameCourseViewTracking(for: duration)
+        navView.mapView.setNeedsUpdateConstraints()
         
         let animate = {
             self.view.layoutIfNeeded()
-            self.buttonStack.alpha = 0.0
+            self.navView.floatingStackView.alpha = 0.0
         }
         
         let noAnimation = { animate(); completion?(true) }
@@ -555,7 +555,7 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
         
         // Prevent the user puck from floating around.
-        mapView.updateCourseTracking(location: routeController.location, animated: false)
+        navView.mapView.updateCourseTracking(location: routeController.location, animated: false)
     }
     
     func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
@@ -564,12 +564,12 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         endOfRouteShowConstraint.isActive = false
         view.clipsToBounds = true
         
-        mapView.enableFrameByFrameCourseViewTracking(for: duration)
-        mapView.setNeedsUpdateConstraints()
+        navView.mapView.enableFrameByFrameCourseViewTracking(for: duration)
+        navView.mapView.setNeedsUpdateConstraints()
 
         let animate = {
             self.view.layoutIfNeeded()
-            self.buttonStack.alpha = 1.0
+            self.navView.floatingStackView.alpha = 1.0
         }
         
         let complete: (Bool) -> Void = { self.endOfRouteContainerView.isHidden = true; completion?($0)}
@@ -620,13 +620,13 @@ extension RouteMapViewController {
 
 extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
-        recenterButton.isHidden = true
-        mapView.logoView.isHidden = false
+        navView.resumeButton.isHidden = true
+        navView.mapView.logoView.isHidden = false
     }
     
     func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
-        recenterButton.isHidden = false
-        mapView.logoView.isHidden = true
+        navView.resumeButton.isHidden = false
+        navView.mapView.logoView.isHidden = true
     }
 }
 
@@ -635,39 +635,39 @@ extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
 extension RouteMapViewController: NavigationMapViewDelegate {
     
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationMapView(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
+        return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
-        return delegate?.navigationMapView(mapView, shapeFor: waypoints)
+        return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
-        return delegate?.navigationMapView(mapView, shapeDescribing: route)
+        return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didTap: Route) {
-        delegate?.navigationMapView(mapView, didTap: route)
+        delegate?.navigationMapView?(mapView, didTap: route)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
-        return delegate?.navigationMapView(mapView, simplifiedShapeDescribing: route)
+        return delegate?.navigationMapView?(mapView, simplifiedShapeDescribing: route)
     }
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return delegate?.navigationMapView(mapView, imageFor :annotation)
+        return delegate?.navigationMapView?(mapView, imageFor :annotation)
     }
     
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
@@ -676,7 +676,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         guard !endOfRouteShowConstraint.isActive else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
-        return delegate?.mapViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
+        return delegate?.mapViewController?(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
     /**
@@ -685,9 +685,9 @@ extension RouteMapViewController: NavigationMapViewDelegate {
      - parameter location: The user’s current location.
      */
     func labelCurrentRoad(at location: CLLocation) {
-        guard let style = mapView.style,
+        guard let style = navView.mapView.style,
             let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
-            recenterButton.isHidden else {
+            navView.resumeButton.isHidden else {
             return
         }
         
@@ -715,8 +715,8 @@ extension RouteMapViewController: NavigationMapViewDelegate {
             style.insertLayer(streetLabelLayer, at: 0)
         }
         
-        let userPuck = mapView.convert(closestCoordinate, toPointTo: mapView)
-        let features = mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
+        let userPuck = navView.mapView.convert(closestCoordinate, toPointTo: navView.mapView)
+        let features = navView.mapView.visibleFeatures(at: userPuck, styleLayerIdentifiers: Set([roadLabelLayerIdentifier]))
         var smallestLabelDistance = Double.infinity
         var currentName: String?
         
@@ -758,16 +758,16 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         }
         
         if smallestLabelDistance < 5 && currentName != nil {
-            wayNameLabel.text = currentName
-            wayNameLabel.isHidden = false
+            navView.wayNameLabel.text = currentName
+            navView.wayNameLabel.isHidden = false
         } else {
-            wayNameLabel.isHidden = true
+            navView.wayNameLabel.isHidden = true
         }
     }
     
     @objc func updateETA() {
         guard isViewLoaded else { return }
-        bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
+        navView.bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
     }
     
     func resetETATimer() {
@@ -785,7 +785,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
             userTrackingMode = .followWithCourse
         }
         if userTrackingMode == .none && !isInOverviewMode {
-            wayNameLabel.isHidden = true
+            navView.wayNameLabel.isHidden = true
         }
     }
 
@@ -797,7 +797,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
     
     func showRouteIfNeeded() {
         guard isViewLoaded && view.window != nil else { return }
-        let map = mapView as NavigationMapView
+        let map = navView.mapView as NavigationMapView
         guard !map.showsRoute else { return }
         map.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
         map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
@@ -807,7 +807,7 @@ extension RouteMapViewController: MGLMapViewDelegate {
         }
         
         if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+            navView.mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
     }
 }
@@ -823,9 +823,9 @@ extension RouteMapViewController: InstructionsBannerViewDelegate {
             let controller = StepsViewController(routeProgress: routeController.routeProgress)
             controller.delegate = self
             addChildViewController(controller)
-            view.insertSubview(controller.view, belowSubview: instructionsBannerContainerView)
+            view.insertSubview(controller.view, belowSubview: navView.instructionsBannerContentView)
             
-            controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+            controller.view.topAnchor.constraint(equalTo: navView.instructionsBannerView.bottomAnchor).isActive = true
             controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
             controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
             controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
@@ -854,15 +854,15 @@ extension RouteMapViewController: StepsViewControllerDelegate {
             self.stepsViewController = nil
         }
         
-        mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        mapView.tracksUserCourse = false
-        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+        navView.mapView.enableFrameByFrameCourseViewTracking(for: 1)
+        navView.mapView.tracksUserCourse = false
+        navView.mapView.setCenter(step.maneuverLocation, zoomLevel: navView.mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
         
         guard isViewLoaded && view.window != nil else { return }
         if let legIndex = routeController.routeProgress.route.legs.index(where: { !$0.steps.filter { $0 == step }.isEmpty }) {
             let leg = routeController.routeProgress.route.legs[legIndex]
             if let stepIndex = leg.steps.index(where: { $0 == step }), leg.steps.last != step {
-                mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
+               navView.mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
             }
         }
     }
@@ -872,14 +872,14 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
-        let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
+        let instructionsView = StepInstructionsView(frame: navView.instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
         instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
         instructionsView.maneuverView.step = maneuverStep
         instructionsView.distance = distance
         
-        instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor
+        navView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
         
         view.addSubview(instructionsView)
         previewInstructionsView = instructionsView
@@ -968,25 +968,27 @@ extension RouteMapViewController: StatusViewDelegate {
         }
     }
 }
+protocol RouteMapViewControllerDelegate: NavigationViewDelegate {}
 
-protocol RouteMapViewControllerDelegate: class {
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
-    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
-    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-    func navigationMapView(_ mapView: NavigationMapView, didTap route: Route)
-    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
-    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
-    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
-    
-    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
-    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
-    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
-    func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
-    
-    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
-    
-    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
-}
+//protocol RouteMapViewControllerDelegate: class {
+//    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+//    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+//    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+//    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+//    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+//    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
+//    func navigationMapView(_ mapView: NavigationMapView, didTap route: Route)
+//    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+//    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+//    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
+//
+//    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
+//    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
+//    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
+//    func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+//
+//    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
+//
+//    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+//}
+
