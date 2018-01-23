@@ -46,6 +46,9 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "No rating set.";
+
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tryk for at nulstille anmeldelse.";
 
@@ -54,6 +57,9 @@
 
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "%ld star(s) set.";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "Report Problem";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Beregner ny rute…";
