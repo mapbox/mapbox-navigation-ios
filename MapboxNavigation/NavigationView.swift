@@ -147,7 +147,10 @@ open class NavigationView: UIView {
     }
     
     func setupContainers() {
-        let containers: [(UIView, UIView)] = [(instructionsBannerContentView, instructionsBannerView), (bottomBannerContentView, bottomBannerView)]
+        let containers: [(UIView, UIView)] = [
+            (instructionsBannerContentView, instructionsBannerView),
+            (bottomBannerContentView, bottomBannerView)
+        ]
         containers.forEach { $0.addSubview($1) }
     }
     
@@ -155,14 +158,16 @@ open class NavigationView: UIView {
         setupStackViews()
         setupContainers()
         
-        let subviews: [UIView] = [instructionsBannerContentView,
-                        informationStackView,
-                        floatingStackView,
-                        separatorView,
-                        resumeButton,
-                        wayNameLabel,
-                        rerouteReportButton,
-                        bottomBannerContentView]
+        let subviews: [UIView] = [
+            instructionsBannerContentView,
+            informationStackView,
+            floatingStackView,
+            separatorView,
+            resumeButton,
+            wayNameLabel,
+            rerouteReportButton,
+            bottomBannerContentView
+        ]
         
         subviews.forEach(addSubview(_:))
     }
