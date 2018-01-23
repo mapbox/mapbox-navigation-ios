@@ -1,11 +1,22 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 0.13.0
+## v0.13.0 (January 22, 2018)
+
+### Packaging
+
+* Upgraded to MapboxDirections.swift [v0.16.0](https://github.com/mapbox/MapboxDirections.swift/releases/tag/v0.16.0), which makes `ManeuverType`, `ManeuverDirection`, and `TransportType` non-optional. (#1040)
+* Added Danish and Hebrew localizations. (#1031, #1043)
+
+### User location
 
 * Removed `RouteControllerDelegate.routeController(_:shouldIncrementLegWhenArrivingAtWaypoint:)` and `NavigationViewControllerDelegate.navigationViewController(_:shouldIncrementLegWhenArrivingAtWaypoint:)`. `RouteControllerDelegate.routeController(_:didArriveAt:)` and `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` now return a Boolean that determines whether the route controller automatically advances to the next leg of the route. (#1038)
 * Fixed an issue where `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was called twice at the end of the route. (#1038)
-* Added a Danish localization. (#1031)
-* Added a partial Hebrew localization. (#1043)
+* Improved the reliability of user location tracking when several location updates arrive simultaneously. (#1021)
+
+### User interface
+
+* Removed the `WayNameView` class in favor of `WayNameLabel` and renamed the `LanesContainerView` class to `LanesView`. (#981 )
+* Added a `NavigationMapView.tracksUserCourse` property for enabling course tracking mode when using the map view independently of `NavigationViewController`. (#1015)
 
 ## v0.12.2 (January 12, 2018)
 
