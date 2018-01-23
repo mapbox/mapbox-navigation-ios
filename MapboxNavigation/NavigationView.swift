@@ -39,9 +39,9 @@ import MapboxDirections
 open class NavigationView: UIView {
     
     private struct Images {
-        static let overview = #imageLiteral(resourceName: "overview")
-        static let volumeUp = #imageLiteral(resourceName: "volume_up")
-        static let feedback = #imageLiteral(resourceName: "feedback")
+        static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!
+        static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!
+        static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!
     }
     
     private static let rerouteReportTitle = NSLocalizedString("REROUTE_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title on button that appears when a reroute occurs")
