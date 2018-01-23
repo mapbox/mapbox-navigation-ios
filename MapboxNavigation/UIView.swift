@@ -38,9 +38,9 @@ extension UIView {
         rippleLayer.startAnimation()
     }
     
-    class func fromNib<T : UIView>() -> T? {
-        let nibName = String(describing: T.self)
-        return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? T
+    class func fromNib<ViewType : UIView>() -> ViewType? {
+        let nibName = String(describing: ViewType.self)
+        return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? ViewType
     }
     
     func pinInSuperview() {
@@ -51,8 +51,8 @@ extension UIView {
         rightAnchor.constraint(equalTo: superview.rightAnchor).isActive = true
     }
 
-    class func forAutoLayout<T: UIView>() -> T {
-        let view = T.init(frame: .zero)
+    class func forAutoLayout<ViewType: UIView>() -> ViewType {
+        let view = ViewType.init(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
