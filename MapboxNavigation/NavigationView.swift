@@ -51,6 +51,8 @@ open class NavigationView: UIView {
     lazy var mapView: NavigationMapView = {
         let map: NavigationMapView = .forAutoLayout()
         map.delegate = delegate
+        map.navigationMapDelegate = delegate
+        map.courseTrackingDelegate = delegate
         return map
     }()
     
@@ -112,6 +114,8 @@ open class NavigationView: UIView {
     var delegate: NavigationViewDelegate? {
         didSet {
             mapView.delegate = delegate
+            mapView.navigationMapDelegate = delegate
+            mapView.courseTrackingDelegate = delegate
             instructionsBannerView.delegate = delegate
             statusView.delegate = delegate
         }
@@ -171,6 +175,6 @@ open class NavigationView: UIView {
     }
 }
 
-protocol NavigationViewDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate {}
+protocol NavigationViewDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate {}
 
 
