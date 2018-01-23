@@ -6,7 +6,7 @@
 "dEY-t6-Ect.text" = "Нажмите и удерживайте, чтобы выбрать пункт назначения";
 
 /* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
-"iiq-Gf-SKY.normalTitle" = "Имитирование местоположения";
+"iiq-Gf-SKY.normalTitle" = "Моделирование маршрута";
 
 /* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
 "nMe-Tl-a1N.normalTitle" = "Начать";

@@ -1,9 +1,13 @@
 
-/* Class = "UIButton"; normalTitle = "Resume"; ObjectID = "5HY-QD-dBq"; */
-"5HY-QD-dBq.normalTitle" = "Возобновить";
+/* Class = "UIButton"; normalTitle = "Report Problem"; ObjectID = "I8f-iR-MZm"; */
+"I8f-iR-MZm.normalTitle" = "Сообщить о проблеме";
 
-/* Class = "UILabel"; text = "Rerouting"; ObjectID = "bUX-dR-1V6"; */
-"bUX-dR-1V6.text" = "Перестройка маршрута";
+/* Class = "UILabel"; text = "Rate your trip"; ObjectID = "W5U-cV-cDO"; */
+"W5U-cV-cDO.text" = "Оцените Вашу поездку";
 
-/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "l2B-fb-Dkb"; */
-"l2B-fb-Dkb.normalTitle" = "Отмена";
+/* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
+"upm-fg-ffn.text" = "Благодарим за отзыв!";
+
+/* Class = "UILabel"; text = "Report Problem"; ObjectID = "xTH-eK-F5H"; */
+"xTH-eK-F5H.text" = "Сообщить о проблеме";
+
