@@ -1,0 +1,81 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "סגור";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "סיים ניווט";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "הגעת";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "איך אנחנו יכולים להשתפר?";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "לא ניתן להשמיע את ההוראה";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "דרך מהירה יותר נמצאה";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "דרך\nמשובשת";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "הוראות\nמבולבלות";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "בעיה אחרת\nבמפה";
+
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "יציאה\nלא קיימת";
+
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "דרך\nלא קיימת";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "לא\nמורשה";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "דיווח\nתנועה";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "דרך\nסגורה";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ ו %2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "לא דורג.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "הקש כדי לאפס את הדירוג.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "קבע דירוג של  %ld כוכבים";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = " דורג ב%ld כוכב(ים)";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "דווח על בעיה";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "מחשב מסלול מחדש...";
+
+/* Button title for resume tracking */
+"RESUME" = "חזור";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "הדמה ניווט ב %dx";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@ דרך, %2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ ואז %2$@";
+
+/* Inform user about weak GPS signal */
+"WEAK_GPS" = "אות GPS חלש";
+
