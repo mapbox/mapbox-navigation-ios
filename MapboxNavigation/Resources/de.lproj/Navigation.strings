@@ -1,9 +1,13 @@
 
-/* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
-"UpZ-gr-OKM.text" = "Routenneuberechnung…";
+/* Class = "UIButton"; normalTitle = "Report Problem"; ObjectID = "I8f-iR-MZm"; */
+"I8f-iR-MZm.normalTitle" = "Problem melden";
+
+/* Class = "UILabel"; text = "Rate your trip"; ObjectID = "W5U-cV-cDO"; */
+"W5U-cV-cDO.text" = "Bewerte deine Reise";
 
 /* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
 "upm-fg-ffn.text" = "Danke für deine Nachricht!";
 
-/* Class = "UILabel"; text = "Recording Audio"; ObjectID = "xTH-eK-F5H"; */
-"xTH-eK-F5H.text" = "Audio aufzeichnen";
+/* Class = "UILabel"; text = "Report Problem"; ObjectID = "xTH-eK-F5H"; */
+"xTH-eK-F5H.text" = "Problem melden";
+
