@@ -62,6 +62,9 @@ open class DismissButton: Button { }
 /// :nodoc:
 @objc(MBFloatingButton)
 open class FloatingButton: Button {
+    
+    static let buttonSize = CGSize(width: 50, height: 50)
+    
     var constrainedSize: CGSize? {
         didSet {
             guard let size = constrainedSize else {
@@ -72,6 +75,16 @@ open class FloatingButton: Button {
             widthAnchor.constraint(equalToConstant: size.width).isActive = true
             heightAnchor.constraint(equalToConstant: size.height).isActive = true
         }
+    }
+    
+    class func rounded<T: FloatingButton>(image: UIImage, size: CGSize = FloatingButton.buttonSize) -> T {
+        let button = T.init(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.constrainedSize = size
+        button.backgroundColor = .white
+        button.setImage(image, for: .normal)
+        button.applyDefaultCornerRadiusShadow(cornerRadius: size.width / 2)
+        return button
     }
 }
 
@@ -142,7 +155,7 @@ public class ResumeButton: UIControl {
         super.init(coder: aDecoder)
         commonInit()
     }
-    
+
     public override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         commonInit()
@@ -415,6 +428,7 @@ public class SeparatorView: UIView { }
 @objc(MBStylableButton)
 open class StylableButton: UIButton {
     
+
     // Sets the font on the button’s titleLabel
     @objc dynamic open var textFont: UIFont = UIFont.systemFont(ofSize: 20, weight: .medium) {
         didSet {

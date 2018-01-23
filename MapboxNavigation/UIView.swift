@@ -50,6 +50,12 @@ extension UIView {
         bottomAnchor.constraint(equalTo: superview.bottomAnchor).isActive = true
         rightAnchor.constraint(equalTo: superview.rightAnchor).isActive = true
     }
+
+    class func forAutoLayout<T: UIView>() -> T {
+        let view = T.init(frame: .zero)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
     
     var safeTopAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {

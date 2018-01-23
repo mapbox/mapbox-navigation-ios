@@ -38,26 +38,89 @@ import MapboxDirections
 @objc(MBNavigationView)
 open class NavigationView: UIView {
     
-    weak var mapView: NavigationMapView!
-    weak var wayNameLabel: WayNameLabel!
-    weak var bottomBannerView: BottomBannerView!
-    weak var bottomBannerContentView: BottomBannerContentView!
-    weak var instructionsBannerView: InstructionsBannerView!
-    weak var instructionsBannerContentView: InstructionsBannerContentView!
-    weak var lanesView: LanesView!
-    weak var nextBannerView: NextBannerView!
-    weak var statusView: StatusView!
-    weak var resumeButton: ResumeButton!
-    // Vertically laid-out stack view below the instructions banner consisting of StatusView, NextBannerView, and LanesView.
-    weak var informationStackView: UIStackView!
-    // Vertically laid-out stack view below the information stack view ontop of the map view, docked
-    // to the top right, consisting of Overview, Mute, and Report button.
-    weak var floatingStackView: UIStackView!
-    weak var overviewButton: FloatingButton!
-    weak var muteButton: FloatingButton!
-    weak var reportButton: FloatingButton!
-    weak var rerouteReportButton: ReportButton!
-    weak var separatorView: SeparatorView!
+    private struct Images {
+        static let overview = #imageLiteral(resourceName: "overview")
+        static let volumeUp = #imageLiteral(resourceName: "volume_up")
+        static let feedback = #imageLiteral(resourceName: "feedback")
+    }
+    
+    private static let rerouteReportTitle = NSLocalizedString("REROUTE_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title on button that appears when a reroute occurs")
+    
+    static let buttonSize = CGSize(width: 50, height: 50)
+    
+    lazy var mapView: NavigationMapView = {
+        let map: NavigationMapView = .forAutoLayout()
+        map.delegate = delegate
+        return map
+    }()
+    
+    lazy var instructionsBannerContentView: InstructionsBannerContentView = .forAutoLayout()
+    
+    lazy var instructionsBannerView: InstructionsBannerView = {
+        let banner: InstructionsBannerView = .forAutoLayout()
+        banner.delegate = delegate
+        return banner
+    }()
+    
+    lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
+    
+    lazy var floatingStackView: UIStackView = {
+        let stack = UIStackView(orientation: .vertical, autoLayout: true)
+        stack.distribution = .equalSpacing
+        stack.spacing = 8
+        return stack
+    }()
+    
+    lazy var overivewButton = FloatingButton.rounded(image: Images.overview)
+    lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp)
+    lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
+    
+    lazy var separatorView: SeparatorView = .forAutoLayout()
+    lazy var lanesView: LanesView = .forAutoLayout()
+    lazy var nextBannerView: NextBannerView = .forAutoLayout()
+    lazy var statusView: StatusView = {
+        let status: StatusView = .forAutoLayout()
+        status.delegate = delegate
+        return status
+    }()
+    
+    lazy var resumeButton: ResumeButton = {
+        let button: ResumeButton = .forAutoLayout()
+        button.backgroundColor = .white
+        return button
+    }()
+    
+    lazy var wayNameLabel: WayNameLabel = {
+        let label: WayNameLabel = .forAutoLayout()
+        label.clipsToBounds = true
+        label.layer.borderWidth = 1.0 / UIScreen.main.scale
+        return label
+    }()
+    
+    lazy var rerouteReportButton: ReportButton = {
+        let button: ReportButton = .forAutoLayout()
+        button.applyDefaultCornerRadiusShadow(cornerRadius: 4)
+        button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        button.setTitle(NavigationView.rerouteReportTitle, for: .normal)
+        return button
+    }()
+    
+    lazy var bottomBannerContentView: BottomBannerContentView = .forAutoLayout()
+    lazy var bottomBannerView: BottomBannerView = .forAutoLayout()
+    
+
+    var delegate: NavigationViewDelegate? {
+        didSet {
+            mapView.delegate = delegate
+            instructionsBannerView.delegate = delegate
+            statusView.delegate = delegate
+        }
+    }
+    
+    convenience init(delegate: NavigationViewDelegate) {
+        self.init(frame: .zero)
+        self.delegate = delegate
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -74,19 +137,40 @@ open class NavigationView: UIView {
         setupConstraints()
     }
     
+    func setupStackViews() {
+        informationStackView.addArrangedSubviews([instructionsBannerView, lanesView, nextBannerView, statusView])
+        floatingStackView.addArrangedSubviews([overivewButton, muteButton, reportButton])
+    }
+    
+    func setupContainers() {
+        let containers: [(UIView, UIView)] = [(instructionsBannerContentView, instructionsBannerView), (bottomBannerContentView, bottomBannerView)]
+        containers.forEach { $0.addSubview($1) }
+    }
+    
+    func setupViews() {
+        setupStackViews()
+        setupContainers()
+        
+        let subviews: [UIView] = [instructionsBannerContentView,
+                        informationStackView,
+                        floatingStackView,
+                        separatorView,
+                        resumeButton,
+                        wayNameLabel,
+                        rerouteReportButton,
+                        bottomBannerContentView]
+        
+        subviews.forEach(addSubview(_:))
+    }
+    
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        
         DayStyle().apply()
-        
-        mapView.prepareForInterfaceBuilder()
-        instructionsBannerView.prepareForInterfaceBuilder()
-        lanesView.prepareForInterfaceBuilder()
-        bottomBannerView.prepareForInterfaceBuilder()
-        nextBannerView.prepareForInterfaceBuilder()
-        
+        [mapView, instructionsBannerView, lanesView, bottomBannerView, nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
         wayNameLabel.text = "Street Label"
     }
 }
+
+protocol NavigationViewDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate {}
 
 

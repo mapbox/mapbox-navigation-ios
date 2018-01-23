@@ -9,21 +9,22 @@ class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
 
-class RouteMapViewController: UIViewController {
-    @IBOutlet weak var mapView: NavigationMapView!
-    @IBOutlet weak var buttonStack: UIStackView!
-    @IBOutlet weak var overviewButton: Button!
-    @IBOutlet weak var reportButton: Button!
-    @IBOutlet weak var rerouteReportButton: ReportButton!
-    @IBOutlet weak var recenterButton: ResumeButton!
-    @IBOutlet weak var muteButton: Button!
-    @IBOutlet weak var wayNameLabel: WayNameLabel!
-    @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
-    @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
-    @IBOutlet weak var nextBannerView: NextBannerView!
-    @IBOutlet weak var bottomBannerView: BottomBannerView!
-    @IBOutlet weak var statusView: StatusView!
-    @IBOutlet weak var lanesView: LanesView!
+class RouteMapViewController: UIViewController, NavigationViewDelegate {
+//    @IBOutlet weak var mapView: NavigationMapView!
+//    @IBOutlet weak var buttonStack: UIStackView!
+//    @IBOutlet weak var overviewButton: Button!
+//    @IBOutlet weak var reportButton: Button!
+//    @IBOutlet weak var rerouteReportButton: ReportButton!
+//    @IBOutlet weak var recenterButton: ResumeButton!
+//    @IBOutlet weak var muteButton: Button!
+//    @IBOutlet weak var wayNameLabel: WayNameLabel!
+//    @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
+//    @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
+//    @IBOutlet weak var nextBannerView: NextBannerView!
+//    @IBOutlet weak var bottomBannerView: BottomBannerView!
+//    @IBOutlet weak var statusView: StatusView!
+//    @IBOutlet weak var lanesView: LanesView!
+    var navView: NavigationView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteContainerView: UIView!
     @IBOutlet weak var endOfRouteShowConstraint: NSLayoutConstraint!
@@ -99,34 +100,39 @@ class RouteMapViewController: UIViewController {
      */
     var annotatesSpokenInstructions = false
 
+    override func loadView() {
+        let nav = NavigationView(delegate: self)
+        self.view = nav
+        self.navView = nav
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         
-        mapView.tracksUserCourse = true
-        mapView.delegate = self
-        mapView.navigationMapDelegate = self
-        mapView.courseTrackingDelegate = self
-        mapView.contentInset = contentInsets
-        
-        rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
-        rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
-        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
-        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
-        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
-        
-        wayNameLabel.clipsToBounds = true
-        wayNameLabel.layer.borderWidth = 1.0 / UIScreen.main.scale
-        wayNameLabel.applyDefaultCornerRadiusShadow()
-        lanesView.isHidden = true
-        statusView.isHidden = true
-        statusView.delegate = self
-        nextBannerView.isHidden = true
-        isInOverviewMode = false
-        instructionsBannerView.delegate = self
-        bottomBannerView.delegate = self
+//        mapView.tracksUserCourse = true
+//        mapView.delegate = self
+//        mapView.navigationMapDelegate = self
+//        mapView.courseTrackingDelegate = self
+//        mapView.contentInset = contentInsets
+//
+//        rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
+//        rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
+//        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
+//        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
+//        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
+//
+//        wayNameLabel.clipsToBounds = true
+//        wayNameLabel.layer.borderWidth = 1.0 / UIScreen.main.scale
+//        wayNameLabel.applyDefaultCornerRadiusShadow()
+//        lanesView.isHidden = true
+//        statusView.isHidden = true
+//        statusView.delegate = self
+//        nextBannerView.isHidden = true
+//        isInOverviewMode = false
+//        instructionsBannerView.delegate = self
+//        bottomBannerView.delegate = self
         resumeNotifications()
     }
     
