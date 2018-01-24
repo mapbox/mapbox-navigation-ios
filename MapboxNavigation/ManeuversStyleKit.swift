@@ -1,7 +1,7 @@
 import UIKit
 
 @objc(MBManeuversStyleKit)
-public class ManeuversStyleKit : NSObject {
+public class ManeuversStyleKit: NSObject {
 
     //// Drawing Methods
 
@@ -15,8 +15,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -26,8 +24,6 @@ public class ManeuversStyleKit : NSObject {
         context.saveGState()
         context.translateBy(x: x, y: (y + 1))
         context.scaleBy(x: scale, y: scale)
-
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -54,7 +50,6 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezierPath.fill()
 
-
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
         bezier2Path.move(to: CGPoint(x: -7.5, y: 15))
@@ -65,8 +60,6 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setStroke()
         bezier2Path.lineWidth = 4
         bezier2Path.stroke()
-
-
 
         context.restoreGState()
         
@@ -83,8 +76,6 @@ public class ManeuversStyleKit : NSObject {
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 32, height: 32), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
-
-
 
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
@@ -137,8 +128,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -148,8 +137,6 @@ public class ManeuversStyleKit : NSObject {
         context.saveGState()
         context.translateBy(x: (x + 1), y: (y + 1))
         context.scaleBy(x: scale, y: scale)
-
-
 
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
@@ -161,7 +148,6 @@ public class ManeuversStyleKit : NSObject {
         bezier3Path.lineWidth = 4
         bezier3Path.lineJoinStyle = .round
         bezier3Path.stroke()
-
 
         //// Bezier 4 Drawing
         let bezier4Path = UIBezierPath()
@@ -188,10 +174,7 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier4Path.fill()
 
-
         //// Clip Drawing
-
-
 
         context.restoreGState()
         
@@ -208,8 +191,6 @@ public class ManeuversStyleKit : NSObject {
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 32, height: 32), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
-
-
 
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
@@ -260,8 +241,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -271,8 +250,6 @@ public class ManeuversStyleKit : NSObject {
         context.saveGState()
         context.translateBy(x: x, y: y)
         context.scaleBy(x: scale, y: scale)
-
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -299,7 +276,6 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezierPath.fill()
 
-
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
         bezier3Path.move(to: CGPoint(x: -11.12, y: -4))
@@ -317,8 +293,6 @@ public class ManeuversStyleKit : NSObject {
         bezier3Path.lineWidth = 4
         bezier3Path.stroke()
 
-
-
         context.restoreGState()
         
         context.restoreGState()
@@ -335,8 +309,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -347,8 +319,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: x, y: (y + 1))
         context.scaleBy(x: scale, y: scale)
 
-
-
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
         bezierPath.move(to: CGPoint(x: 0.06, y: 6.6))
@@ -357,7 +327,6 @@ public class ManeuversStyleKit : NSObject {
         bezierPath.lineWidth = 4
         bezierPath.lineJoinStyle = .round
         bezierPath.stroke()
-
 
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
@@ -381,19 +350,15 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier2Path.fill()
 
-
         //// Oval Drawing
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: -3, y: -16.6, width: 6.1, height: 6.1))
         primaryColor.setFill()
         ovalPath.fill()
 
-
         //// Rectangle Drawing
         let rectanglePath = UIBezierPath(rect: CGRect(x: -2, y: 3.62, width: 4, height: 1.95))
         primaryColor.setFill()
         rectanglePath.fill()
-
-
 
         context.restoreGState()
         
@@ -410,8 +375,6 @@ public class ManeuversStyleKit : NSObject {
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 32, height: 32), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
-
-
 
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
@@ -449,8 +412,6 @@ public class ManeuversStyleKit : NSObject {
         let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 32, height: 32), target: targetFrame)
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
-
-
 
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
@@ -497,8 +458,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -508,8 +467,6 @@ public class ManeuversStyleKit : NSObject {
         context.saveGState()
         context.translateBy(x: x, y: (y + 1))
         context.scaleBy(x: scale, y: scale)
-
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -524,7 +481,6 @@ public class ManeuversStyleKit : NSObject {
         bezierPath.lineJoinStyle = .round
         bezierPath.stroke()
 
-
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
         bezier2Path.move(to: CGPoint(x: -8.06, y: 15))
@@ -537,7 +493,6 @@ public class ManeuversStyleKit : NSObject {
         bezier2Path.lineWidth = 4
         bezier2Path.lineJoinStyle = .round
         bezier2Path.stroke()
-
 
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
@@ -564,8 +519,6 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier3Path.fill()
 
-
-
         context.restoreGState()
         
         context.restoreGState()
@@ -582,8 +535,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -593,8 +544,6 @@ public class ManeuversStyleKit : NSObject {
         context.saveGState()
         context.translateBy(x: (x + 2.99260816186), y: y)
         context.scaleBy(x: scale, y: scale)
-
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -609,7 +558,6 @@ public class ManeuversStyleKit : NSObject {
         bezierPath.lineJoinStyle = .round
         bezierPath.stroke()
 
-
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
         bezier2Path.move(to: CGPoint(x: 2.23, y: -2.2))
@@ -620,7 +568,6 @@ public class ManeuversStyleKit : NSObject {
         bezier2Path.lineWidth = 4
         bezier2Path.lineJoinStyle = .round
         bezier2Path.stroke()
-
 
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
@@ -647,8 +594,6 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier3Path.fill()
 
-
-
         context.restoreGState()
         
         context.restoreGState()
@@ -665,8 +610,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -676,8 +619,6 @@ public class ManeuversStyleKit : NSObject {
         context.saveGState()
         context.translateBy(x: (x + 3.38000011444), y: y)
         context.scaleBy(x: scale, y: scale)
-
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -689,7 +630,6 @@ public class ManeuversStyleKit : NSObject {
         bezierPath.lineJoinStyle = .round
         bezierPath.stroke()
 
-
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
         bezier2Path.move(to: CGPoint(x: -0.81, y: -4.4))
@@ -700,7 +640,6 @@ public class ManeuversStyleKit : NSObject {
         bezier2Path.lineWidth = 4
         bezier2Path.lineJoinStyle = .round
         bezier2Path.stroke()
-
 
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
@@ -727,8 +666,6 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier3Path.fill()
 
-
-
         context.restoreGState()
         
         context.restoreGState()
@@ -745,8 +682,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -757,8 +692,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: x, y: y)
         context.scaleBy(x: scale, y: scale)
 
-
-
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
         bezierPath.move(to: CGPoint(x: -0.99, y: 5.6))
@@ -767,7 +700,6 @@ public class ManeuversStyleKit : NSObject {
         bezierPath.lineWidth = 4
         bezierPath.lineJoinStyle = .round
         bezierPath.stroke()
-
 
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
@@ -791,19 +723,15 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier2Path.fill()
 
-
         //// Oval Drawing
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: 2.95, y: -15.6, width: 6.1, height: 6.1))
         primaryColor.setFill()
         ovalPath.fill()
 
-
         //// Rectangle Drawing
         let rectanglePath = UIBezierPath(rect: CGRect(x: -3.05, y: 2.63, width: 4, height: 1.95))
         primaryColor.setFill()
         rectanglePath.fill()
-
-
 
         context.restoreGState()
         
@@ -821,8 +749,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let roundabout_arrow_height: CGFloat = scale * cos((roundabout_angle - 180) * CGFloat.pi/180) * 20
@@ -835,8 +761,6 @@ public class ManeuversStyleKit : NSObject {
         context.saveGState()
         context.translateBy(x: (roundabout_x - 0.00234436950684), y: (roundabout_y - 0.995999313354))
         context.scaleBy(x: scale, y: scale)
-
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -855,13 +779,11 @@ public class ManeuversStyleKit : NSObject {
         bezierPath.lineJoinStyle = .round
         bezierPath.stroke()
 
-
         //// Rectangle 2 Drawing
         let rectangle2Path = UIBezierPath(roundedRect: CGRect(x: -1.97, y: 5.5, width: 4, height: 12), byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 1, height: 1))
         rectangle2Path.close()
         primaryColor.setFill()
         rectangle2Path.fill()
-
 
         //// Group
         //// Bezier 2 Drawing
@@ -896,9 +818,6 @@ public class ManeuversStyleKit : NSObject {
 
         context.restoreGState()
 
-
-
-
         //// Bezier 3 Drawing
         context.saveGState()
         context.translateBy(x: 1, y: 2)
@@ -926,8 +845,6 @@ public class ManeuversStyleKit : NSObject {
 
         context.restoreGState()
 
-
-
         context.restoreGState()
         
         context.restoreGState()
@@ -944,8 +861,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
         context.scaleBy(x: resizedFrame.width / 32, y: resizedFrame.height / 32)
 
-
-
         //// Variable Declarations
         let scale: CGFloat = min(size.width / 32.0, size.height / 32.0)
         let x: CGFloat = size.width / 2.0
@@ -956,8 +871,6 @@ public class ManeuversStyleKit : NSObject {
         context.translateBy(x: x, y: y)
         context.scaleBy(x: scale, y: scale)
 
-
-
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
         bezierPath.move(to: CGPoint(x: 0.06, y: 6.6))
@@ -966,7 +879,6 @@ public class ManeuversStyleKit : NSObject {
         bezierPath.lineWidth = 4
         bezierPath.lineJoinStyle = .round
         bezierPath.stroke()
-
 
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
@@ -990,12 +902,10 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier2Path.fill()
 
-
         //// Rectangle Drawing
         let rectanglePath = UIBezierPath(rect: CGRect(x: -2, y: 3.62, width: 4, height: 1.95))
         primaryColor.setFill()
         rectanglePath.fill()
-
 
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
@@ -1017,16 +927,11 @@ public class ManeuversStyleKit : NSObject {
         primaryColor.setFill()
         bezier3Path.fill()
 
-
-
         context.restoreGState()
         
         context.restoreGState()
 
     }
-
-
-
 
     @objc(ManeuversStyleKitResizingBehavior)
     public enum ResizingBehavior: Int {

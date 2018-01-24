@@ -8,7 +8,6 @@ import Turf
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
-
 class RouteMapViewController: UIViewController {
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var buttonStack: UIStackView!
@@ -376,7 +375,6 @@ class RouteMapViewController: UIViewController {
         //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
         let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
         
-        
         //If the user is on a motorway, not exiting, and their segment is sufficently long, the map should zoom out to the motorway altitude.
         //otherwise, zoom in if it's the last instruction on the step.
         let currentStepIsMotorway = currentStep.isMotorway
@@ -522,7 +520,7 @@ class RouteMapViewController: UIViewController {
             self.lanesView.isHidden = true
         }, completion: nil)
     }
-    //MARK: End Of Route
+    // MARK: End Of Route
     
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         view.layoutIfNeeded() //flush layout queue
@@ -533,7 +531,6 @@ class RouteMapViewController: UIViewController {
         endOfRouteContainerView.isHidden = false
         endOfRouteHideConstraint.isActive = false
         endOfRouteShowConstraint.isActive = true
-       
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()
@@ -601,7 +598,7 @@ class RouteMapViewController: UIViewController {
     }
 }
 
-//MARK: - UIContentContainer
+// MARK: - UIContentContainer
 
 extension RouteMapViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
@@ -729,7 +726,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
                 let featurePolyline = Polyline(featureCoordinates)
                 let slicedLine = Polyline(stepCoordinates).sliced(from: closestCoordinate)
                 
-                let lookAheadDistance:CLLocationDistance = 10
+                let lookAheadDistance: CLLocationDistance = 10
                 guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
                 guard let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
                 guard let reversedPoint = Polyline(featureCoordinates.reversed()).sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
@@ -895,7 +892,7 @@ extension RouteMapViewController: BottomBannerViewDelegate {
     }
 }
 
-//MARK: - Keyboard Handling
+// MARK: - Keyboard Handling
 
 extension RouteMapViewController {
     fileprivate func subscribeToKeyboardNotifications() {
@@ -919,7 +916,6 @@ extension RouteMapViewController {
         } else {
             endOfRouteShowConstraint.constant = -1 * keyboardHeight
         }
-        
         
         let opts = UIViewAnimationOptions(curve: options.curve)
         UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: view.layoutIfNeeded, completion: nil)

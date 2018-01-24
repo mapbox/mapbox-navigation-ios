@@ -1,7 +1,7 @@
 import UIKit
 
 @objc(MBStyleKitMarker)
-public class StyleKitMarker : NSObject {
+public class StyleKitMarker: NSObject {
 
     //// Drawing Methods
 
@@ -20,7 +20,6 @@ public class StyleKitMarker : NSObject {
 
         context.restoreGState()
 
-
         //// Group 2
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
@@ -35,7 +34,6 @@ public class StyleKitMarker : NSObject {
         pinColor.setFill()
         bezier2Path.fill()
 
-
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
         bezier3Path.move(to: CGPoint(x: 18.04, y: 43.43))
@@ -48,7 +46,6 @@ public class StyleKitMarker : NSObject {
         strokeColor.setStroke()
         bezier3Path.lineWidth = 3
         bezier3Path.stroke()
-
 
         //// Oval Drawing
         let ovalPath = UIBezierPath(ovalIn: CGRect(x: 12.5, y: 12.16, width: 14, height: 14))

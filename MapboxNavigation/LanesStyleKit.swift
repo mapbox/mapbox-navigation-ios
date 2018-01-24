@@ -1,7 +1,7 @@
 import UIKit
 
 @objc(MBLanesStyleKit)
-public class LanesStyleKit : NSObject {
+public class LanesStyleKit: NSObject {
 
     //// Drawing Methods
 
@@ -11,7 +11,6 @@ public class LanesStyleKit : NSObject {
         let rectanglePath = UIBezierPath(rect: CGRect(x: 9, y: 11.5, width: 4, height: 15.5))
         primaryColor.setFill()
         rectanglePath.fill()
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -37,7 +36,6 @@ public class LanesStyleKit : NSObject {
         bezierPath.close()
         primaryColor.setFill()
         bezierPath.fill()
-
 
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
@@ -71,7 +69,6 @@ public class LanesStyleKit : NSObject {
         bezier2Path.usesEvenOddFillRule = true
         primaryColor.setFill()
         bezier2Path.fill()
-
 
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
@@ -120,7 +117,6 @@ public class LanesStyleKit : NSObject {
         secondaryColor.setFill()
         bezier2Path.fill()
 
-
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
         bezier3Path.move(to: CGPoint(x: 11.03, y: 27))
@@ -132,12 +128,10 @@ public class LanesStyleKit : NSObject {
         bezier3Path.lineWidth = 4
         bezier3Path.stroke()
 
-
         //// Rectangle Drawing
         let rectanglePath = UIBezierPath(rect: CGRect(x: 9, y: 11, width: 4, height: 16))
         primaryColor.setFill()
         rectanglePath.fill()
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -192,7 +186,6 @@ public class LanesStyleKit : NSObject {
         primaryColor.setFill()
         bezierPath.fill()
 
-
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
         bezier2Path.move(to: CGPoint(x: 9, y: 27))
@@ -210,7 +203,6 @@ public class LanesStyleKit : NSObject {
         let rectanglePath = UIBezierPath(rect: CGRect(x: 9, y: 11, width: 4, height: 16))
         secondaryColor.setFill()
         rectanglePath.fill()
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -236,7 +228,6 @@ public class LanesStyleKit : NSObject {
         bezierPath.close()
         secondaryColor.setFill()
         bezierPath.fill()
-
 
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
@@ -271,7 +262,6 @@ public class LanesStyleKit : NSObject {
         primaryColor.setFill()
         bezier2Path.fill()
 
-
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
         bezier3Path.move(to: CGPoint(x: 11.03, y: 27))
@@ -290,7 +280,6 @@ public class LanesStyleKit : NSObject {
         let rectanglePath = UIBezierPath(rect: CGRect(x: 13, y: 11, width: 4, height: 16))
         primaryColor.setFill()
         rectanglePath.fill()
-
 
         //// Bezier Drawing
         let bezierPath = UIBezierPath()
@@ -339,7 +328,6 @@ public class LanesStyleKit : NSObject {
         bezierPath.lineWidth = 4
         bezierPath.stroke()
 
-
         //// Bezier 2 Drawing
         let bezier2Path = UIBezierPath()
         bezier2Path.move(to: CGPoint(x: 21.02, y: 18.05))
@@ -377,8 +365,6 @@ public class LanesStyleKit : NSObject {
         context.translateBy(x: 21.78, y: 10.24)
         context.scaleBy(x: scale, y: scale)
 
-
-
         //// Bezier 3 Drawing
         let bezier3Path = UIBezierPath()
         bezier3Path.move(to: CGPoint(x: -5.33, y: -0.49))
@@ -389,7 +375,6 @@ public class LanesStyleKit : NSObject {
         bezier3Path.lineWidth = 4
         bezier3Path.lineJoinStyle = .round
         bezier3Path.stroke()
-
 
         //// Bezier Drawing
         context.saveGState()
@@ -429,8 +414,6 @@ public class LanesStyleKit : NSObject {
         bezierPath.fill()
 
         context.restoreGState()
-
-
 
         context.restoreGState()
     }

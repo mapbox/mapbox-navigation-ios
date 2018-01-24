@@ -6,11 +6,11 @@ typealias RatingClosure = (Int) -> Void //rating
 /*@IBDesignable*/
 class RatingControl: UIStackView {
     
-    //MARK: Constants
+    // MARK: Constants
     static let defaultSize = CGSize(width: 32.0, height: 32.0)
     private let starTemplate = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
     
-    //MARK: Properties
+    // MARK: Properties
     private var stars = [UIButton]()
     
     var didChangeRating: RatingClosure?
@@ -45,7 +45,7 @@ class RatingControl: UIStackView {
         }
     }
     
-    //MARK: Initializers
+    // MARK: Initializers
     public override init(frame: CGRect) {
         super.init(frame: frame)
         configureStars()
@@ -56,7 +56,7 @@ class RatingControl: UIStackView {
         configureStars()
     }
     
-    //MARK: Private Functions
+    // MARK: Private Functions
     private func configureStars() {
         removeStars()
         addStars()
@@ -119,7 +119,6 @@ class RatingControl: UIStackView {
         
         button.accessibilityHint = NSLocalizedString("RATING_ACCESSIBILITY_RESET", bundle: .mapboxNavigation, value: "Tap to reset the rating to zero.", comment: "Rating Reset To Zero Accessability Hint")
     }
-    
     
     private func addButtonSizeConstraints(to view: UIView) {
         view.widthAnchor.constraint(equalToConstant: starSize.width).isActive = true

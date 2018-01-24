@@ -59,7 +59,7 @@ public class ReplayLocationManager: NavigationLocationManager {
         delegate?.locationManager?(self, didUpdateLocations: [location])
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
         
-        if currentIndex < locations.count - 1  {
+        if currentIndex < locations.count - 1 {
             let nextLocation = locations[currentIndex+1]
             let interval = nextLocation.timestamp.timeIntervalSince(location.timestamp) / TimeInterval(speedMultiplier)
             let intervalSinceStart = Date().timeIntervalSince(startDate)+interval

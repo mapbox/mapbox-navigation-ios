@@ -5,7 +5,6 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
-
 /**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
  */
@@ -129,7 +128,6 @@ open class RouteController: NSObject {
      */
     @objc public var isDeadReckoningEnabled = false
 
-
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerOpportunisticReroutingInterval`.
      */
@@ -174,7 +172,7 @@ open class RouteController: NSObject {
     /// :nodoc: This is used internally when the navigation UI is being used
     public var usesDefaultUserInterface = false
 
-    var sessionState:SessionState
+    var sessionState: SessionState
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
 
     var hasFoundOneQualifiedLocation = false
@@ -730,7 +728,7 @@ extension RouteController: CLLocationManagerDelegate {
         #if TARGET_IPHONE_SIMULATOR
             guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
-            let _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
+            _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
                 
@@ -744,7 +742,7 @@ extension RouteController: CLLocationManagerDelegate {
         #endif
     }
 
-    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->()) {
+    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
         routeTask?.cancel()
 
         let options = routeProgress.route.routeOptions
