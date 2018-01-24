@@ -659,7 +659,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didTap: Route) {
-        delegate?.navigationMapView?(mapView, didTap: route)
+        delegate?.navigationMapView?(mapView, didSelect: route)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
@@ -667,16 +667,17 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return delegate?.navigationMapView?(mapView, imageFor :annotation)
+        return delegate?.mapView?(mapView, imageFor :annotation)
     }
     
     func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return delegate?.navigationMapView(mapView, viewFor: annotation)
+        return delegate?.mapView?(mapView, viewFor: annotation)
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
         guard !endOfRouteShowConstraint.isActive else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
-        return delegate?.mapViewController?(self, mapViewUserAnchorPoint: mapView) ?? .zero
+        return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
+//        return delegate?.mapViewController?(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
     /**
@@ -968,27 +969,11 @@ extension RouteMapViewController: StatusViewDelegate {
         }
     }
 }
-protocol RouteMapViewControllerDelegate: NavigationViewDelegate {}
-
-//protocol RouteMapViewControllerDelegate: class {
-//    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-//    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-//    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
-//    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
-//    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-//    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer?
-//    func navigationMapView(_ mapView: NavigationMapView, didTap route: Route)
-//    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
-//    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
-//    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
-//
-//    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
-//    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
-//    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
-//    func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
-//
-//    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint?
-//
-//    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
-//}
+protocol RouteMapViewControllerDelegate: NavigationViewDelegate {
+        func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
+        func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
+        func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
+        func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+        func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+}
 
