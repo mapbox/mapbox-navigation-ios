@@ -308,11 +308,6 @@ public class NavigationViewController: UIViewController {
                          styles: [Style]? = [DayStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
-        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
-        let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
-        
-        self.mapViewController = mapViewController
-        
         super.init(nibName: nil, bundle: nil)
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
@@ -322,16 +317,17 @@ public class NavigationViewController: UIViewController {
         self.directions = directions
         self.route = route
         
+        let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
+        self.mapViewController = mapViewController
         addChildViewController(mapViewController)
-        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(mapViewController.view)
+        let mapSubview: UIView = mapViewController.view
+        mapSubview.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mapSubview)
         
         self.styleManager = StyleManager(self)
         self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
         mapViewController.view!.pinInSuperview()
-        mapViewController.delegate = self
-        mapViewController.routeController = routeController
         mapViewController.reportButton.isHidden = !showsReportFeedback
         
         if !(route.routeOptions is NavigationRouteOptions) {

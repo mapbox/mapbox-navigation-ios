@@ -105,6 +105,13 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
      */
     var annotatesSpokenInstructions = false
 
+    convenience init(routeController: RouteController, delegate: RouteMapViewControllerDelegate? = nil) {
+        self.init()
+        self.routeController = routeController
+        self.delegate = delegate
+    }
+    
+    
     override func loadView() {
         self.view = NavigationView(delegate: self)
         self.view.pinInSuperview()
