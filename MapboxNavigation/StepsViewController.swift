@@ -197,8 +197,6 @@ extension StepsViewController: UITableViewDataSource {
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
         let step = sections[indexPath.section][indexPath.row]
         
-        cell.instructionsView.maneuverView.step = step
-       
         let currentLeg = routeProgress.route.legs[indexPath.section]
         let previousLeg = indexPath.section > 0 ? routeProgress.route.legs[indexPath.section-1] : nil
         
@@ -207,6 +205,7 @@ extension StepsViewController: UITableViewDataSource {
     }
     
     private func updateInstructionsView(_ view: StepInstructionsView, previous: RouteStep?, current: RouteStep, destination: Waypoint) {
+        view.maneuverView.step = current
         view.distance = previous?.distance
         
         guard let instruction = previous?.instructionsDisplayedAlongStep?.last ?? current.instructionsDisplayedAlongStep?.last else { return }
