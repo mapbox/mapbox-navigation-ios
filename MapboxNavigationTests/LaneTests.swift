@@ -22,13 +22,14 @@ class LaneTests: FBSnapshotTestCase {
     }
     
     func assertLanes(step: RouteStep) {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
-        XCTAssert(controller.view != nil)
+        let rect = CGRect(origin: .zero, size: .iPhone6Plus)
+        let navigationView = NavigationView(frame: rect)
         
-        controller.updateLaneViews(step: step, durationRemaining: 20)
-        controller.showLaneViews(animated: false)
+        navigationView.lanesView.backgroundColor = .white
+        navigationView.lanesView.updateLaneViews(step: step, durationRemaining: 20)
+        navigationView.lanesView.isHidden = false
         
-        FBSnapshotVerifyView(controller.lanesView)
+        FBSnapshotVerifyView(navigationView.lanesView)
     }
     
     func testRightRight() {
@@ -37,9 +38,5 @@ class LaneTests: FBSnapshotTestCase {
     
     func testRightNone() {
         assertLanes(step: steps[1])
-    }
-    
-    func storyboard() -> UIStoryboard {
-        return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
 }

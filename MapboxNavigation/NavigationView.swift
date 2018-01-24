@@ -159,6 +159,7 @@ open class NavigationView: UIView {
         setupContainers()
         
         let subviews: [UIView] = [
+            mapView,
             instructionsBannerContentView,
             informationStackView,
             floatingStackView,

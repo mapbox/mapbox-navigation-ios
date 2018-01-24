@@ -19,7 +19,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     
     var shieldImage: UIImage {
         get {
-            let bundle = Bundle(for: MapboxNavigationTests.self)
+            let bundle = Bundle(for: InstructionsBannerViewTests.self)
             return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
         }
     }

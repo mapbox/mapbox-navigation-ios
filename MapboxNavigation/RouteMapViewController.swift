@@ -28,6 +28,7 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     var mapView: NavigationMapView { return navigationView.mapView }
     var statusView: StatusView { return navigationView.statusView }
     var reportButton: FloatingButton { return navigationView.reportButton }
+    var lanesView: LanesView { return navigationView.lanesView }
     
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var endOfRouteContainerView: UIView!
@@ -105,9 +106,12 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     var annotatesSpokenInstructions = false
 
     override func loadView() {
+        super.loadView()
         self.view = NavigationView(delegate: self)
+        self.view.pinInSuperview()
         mapView.contentInset = contentInsets
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
@@ -498,9 +502,11 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     var contentInsets: UIEdgeInsets {
         var margin: CGFloat = 0.0
         if #available(iOS 11.0, *) { margin = view.safeAreaInsets.bottom }
-        let containerHeight = endOfRouteContainerView.frame.height - margin
-        let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : navigationView.bottomBannerView.bounds.height
-        return UIEdgeInsets(top: navigationView.instructionsBannerContentView.bounds.height, left: 0, bottom: bottom, right: 0)
+        //let containerHeight = endOfRouteContainerView.frame.height - margin
+        //let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : navigationView.bottomBannerView.bounds.height
+        let top = navigationView.instructionsBannerContentView.bounds.height
+        let bottom = navigationView.bottomBannerView.bounds.height
+        return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
     }
     
     func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
