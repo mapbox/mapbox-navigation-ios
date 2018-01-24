@@ -38,7 +38,7 @@ extension UIView {
         rippleLayer.startAnimation()
     }
     
-    class func fromNib<T : UIView>() -> T? {
+    class func fromNib<T: UIView>() -> T? {
         let nibName = String(describing: T.self)
         return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? T
     }
@@ -144,15 +144,15 @@ class RippleLayer: CAReplicatorLayer {
         group.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
         
         let scaleAnimation = CABasicAnimation(keyPath: "transform.scale.xy")
-        scaleAnimation.fromValue = 0.0;
-        scaleAnimation.toValue = 1.0;
+        scaleAnimation.fromValue = 0.0
+        scaleAnimation.toValue = 1.0
         scaleAnimation.duration = duration
         
         let opacityAnimation = CAKeyframeAnimation(keyPath: "opacity")
         opacityAnimation.duration = duration
         let fromAlpha = 1.0
-        opacityAnimation.values = [fromAlpha, (fromAlpha * 0.5), 0];
-        opacityAnimation.keyTimes = [0, 0.2, 1];
+        opacityAnimation.values = [fromAlpha, (fromAlpha * 0.5), 0]
+        opacityAnimation.keyTimes = [0, 0.2, 1]
         
         group.animations = [scaleAnimation, opacityAnimation]
         
@@ -162,7 +162,7 @@ class RippleLayer: CAReplicatorLayer {
 
 extension RippleLayer: CAAnimationDelegate {
     func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        if let count = rippleEffect?.animationKeys()?.count , count > 0 {
+        if let count = rippleEffect?.animationKeys()?.count, count > 0 {
             rippleEffect?.removeAllAnimations()
         }
     }

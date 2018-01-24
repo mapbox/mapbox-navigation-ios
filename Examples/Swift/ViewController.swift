@@ -18,7 +18,7 @@ enum ExampleMode {
 
 class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, VoiceControllerDelegate {
 
-    //MARK: - IBOutlets
+    // MARK: - IBOutlets
     @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var longPressHintView: UIView!
 
@@ -27,7 +27,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     @IBOutlet weak var clearMap: UIButton!
 
-    //MARK: Properties
+    // MARK: Properties
     var waypoints: [Waypoint] = []
     var currentRoute: Route? {
         get {
@@ -65,7 +65,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         print(error.localizedDescription)
     }
 
-
     var exampleMode: ExampleMode?
 
     var locationManager = CLLocationManager()
@@ -78,11 +77,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         })
     }()
 
-    //MARK: - Lifecycle Methods
+    // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
 
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
@@ -127,7 +125,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         DayStyle().apply()
     }
 
-    //MARK: Gesture Recognizer Handlers
+    // MARK: Gesture Recognizer Handlers
 
     @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
         guard sender.state == .began else {
@@ -160,7 +158,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         requestRoute()
     }
 
-    //MARK: - IBActions
+    // MARK: - IBActions
     @IBAction func replay(_ sender: Any) {
         let bundle = Bundle(for: ViewController.self)
         let filePath = bundle.path(forResource: "tunnel", ofType: "json")!
@@ -190,9 +188,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         present(alertController, animated: true, completion: nil)
     }
 
-
-    //MARK: - Public Methods
-    //MARK: Route Requests
+    // MARK: - Public Methods
+    // MARK: Route Requests
     func requestRoute() {
         guard waypoints.count > 0 else { return }
 
@@ -285,7 +282,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         exampleMode = .multipleWaypoints
 
-
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
@@ -293,7 +289,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
 }
 
-//MARK: - NavigationMapViewDelegate
+// MARK: - NavigationMapViewDelegate
 extension ViewController: NavigationMapViewDelegate {
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
         guard let routeOptions = currentRoute?.routeOptions else { return }
@@ -338,7 +334,7 @@ extension ViewController: NavigationMapViewDelegate {
     }
 }
 
-//MARK: WaypointConfirmationViewControllerDelegate
+// MARK: WaypointConfirmationViewControllerDelegate
 extension ViewController: WaypointConfirmationViewControllerDelegate {
     func confirmationControllerDidConfirm(_ confirmationController: WaypointConfirmationViewController) {
         confirmationController.dismiss(animated: true, completion: {
@@ -350,7 +346,7 @@ extension ViewController: WaypointConfirmationViewControllerDelegate {
     }
 }
 
-//MARK: NavigationViewControllerDelegate
+// MARK: NavigationViewControllerDelegate
 extension ViewController: NavigationViewControllerDelegate {
     // By default, when the user arrives at a waypoint, the next leg starts immediately.
     // If you implement this method, return true to preserve this behavior.
@@ -380,7 +376,7 @@ extension ViewController: NavigationViewControllerDelegate {
 /**
  To find more pieces of the UI to customize, checkout DayStyle.swift.
  */
-//MARK: CustomDayStyle
+// MARK: CustomDayStyle
 class CustomDayStyle: DayStyle {
     
     required init() {
@@ -395,8 +391,7 @@ class CustomDayStyle: DayStyle {
     }
 }
 
-
-//MARK: CustomNightStyle
+// MARK: CustomNightStyle
 class CustomNightStyle: NightStyle {
 
     required init() {

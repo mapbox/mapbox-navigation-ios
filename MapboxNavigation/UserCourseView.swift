@@ -139,7 +139,6 @@ class UserPuckStyleKitView: UIView {
         fillColor.setFill()
         path0_fillPath.fill()
         
-        
         //// Group 4
         //// path1_stroke_2x Drawing
         let path1_stroke_2xPath = UIBezierPath()
@@ -170,16 +169,10 @@ class UserPuckStyleKitView: UIView {
         shadowColor.setFill()
         path1_stroke_2xPath.fill()
         
-        
-        
-        
         //// path0_fill 2 Drawing
         let path0_fill2Path = UIBezierPath(ovalIn: CGRect(x: 9, y: 9, width: 57, height: 57))
         circleColor.setFill()
         path0_fill2Path.fill()
-        
-        
-        
         
         //// Page 1
         //// Fill 1

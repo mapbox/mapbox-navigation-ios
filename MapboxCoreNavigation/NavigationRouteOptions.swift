@@ -31,7 +31,6 @@ open class NavigationRouteOptions: RouteOptions {
         includesExitRoundaboutManeuver = true
     }
 
-
     /**
      Initializes a navigation route options object for routes between the given locations and an optional profile identifier optimized for navigation.
 
@@ -41,7 +40,6 @@ open class NavigationRouteOptions: RouteOptions {
     @objc public convenience init(locations: [CLLocation], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
     }
-
 
     /**
      Initializes a route options object for routes between the given geographic coordinates and an optional profile identifier optimized for navigation.

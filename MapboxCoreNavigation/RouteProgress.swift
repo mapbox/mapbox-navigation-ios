@@ -2,7 +2,6 @@ import Foundation
 import MapboxDirections
 import Turf
 
-
 /**
  `RouteProgress` stores the user’s progress along a route.
  */
@@ -24,7 +23,6 @@ open class RouteProgress: NSObject {
         }
     }
 
-
     /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
      */
@@ -39,7 +37,6 @@ open class RouteProgress: NSObject {
         guard let lastLeg = route.legs.last else { return false }
         return currentLeg == lastLeg
     }
- 
     
     /**
      Total distance traveled by user along all legs.
@@ -47,7 +44,6 @@ open class RouteProgress: NSObject {
     @objc public var distanceTraveled: CLLocationDistance {
         return route.legs.prefix(upTo: legIndex).map { $0.distance }.reduce(0, +) + currentLegProgress.distanceTraveled
     }
-    
 
     /**
      Total seconds remaining on all legs.
@@ -55,7 +51,6 @@ open class RouteProgress: NSObject {
     @objc public var durationRemaining: TimeInterval {
         return route.legs.suffix(from: legIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentLegProgress.durationRemaining
     }
-
     
     /**
      Number between 0 and 1 representing how far along the `Route` the user has traveled.
@@ -63,7 +58,6 @@ open class RouteProgress: NSObject {
     @objc public var fractionTraveled: Double {
         return distanceTraveled / route.distance
     }
-
 
     /**
      Total distance remaining in meters along route.
@@ -111,8 +105,6 @@ open class RouteProgress: NSObject {
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         
-        
-        
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
             
@@ -121,7 +113,7 @@ open class RouteProgress: NSObject {
             /// An index into the route’s coordinates and congestionTravelTimesSegmentsByStep that corresponds to a step’s maneuver location.
             var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
             
-            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes  {
+            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
                 
                 for step in leg.steps {
                     guard let coordinates = step.coordinates else { continue }
@@ -161,7 +153,6 @@ open class RouteLegProgress: NSObject {
      */
     @objc public let leg: RouteLeg
     
-    
     /**
      Index representing the current step.
      */
@@ -172,7 +163,6 @@ open class RouteLegProgress: NSObject {
         }
     }
 
-
     /**
      Total distance traveled in meters along current leg.
      */
@@ -180,14 +170,12 @@ open class RouteLegProgress: NSObject {
         return leg.steps.prefix(upTo: stepIndex).map { $0.distance }.reduce(0, +) + currentStepProgress.distanceTraveled
     }
     
-    
     /**
      Duration remaining in seconds on current leg.
      */
     @objc public var durationRemaining: TimeInterval {
         return leg.steps.suffix(from: stepIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
     }
-
 
     /**
      Number between 0 and 1 representing how far along the current leg the user has traveled.
@@ -236,14 +224,12 @@ open class RouteLegProgress: NSObject {
         return leg.steps[stepIndex - 1]
     }
     
-    
     /**
      Returns the current `RouteStep` for the leg the user is on.
      */
     @objc public var currentStep: RouteStep {
         return leg.steps[stepIndex]
     }
-
 
     /**
      Returns the upcoming `RouteStep`.
@@ -269,7 +255,6 @@ open class RouteLegProgress: NSObject {
         return leg.steps[stepIndex + 2]
     }
 
-
     /**
      Return bool whether step provided is the current `RouteStep` the user is on.
      */
@@ -282,7 +267,6 @@ open class RouteLegProgress: NSObject {
      */
     @objc public var currentStepProgress: RouteStepProgress
 
-
     /**
      Intializes a new `RouteLegProgress`.
      
@@ -294,7 +278,6 @@ open class RouteLegProgress: NSObject {
         self.stepIndex = stepIndex
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
-    
     
     /**
      Returns an array of `CLLocationCoordinate2D` of the prior, current and upcoming step geometry.
@@ -345,7 +328,6 @@ open class RouteStepProgress: NSObject {
      */
     @objc public let step: RouteStep
 
-
     /**
      Returns distance user has traveled along current step.
      */
@@ -370,7 +352,6 @@ open class RouteStepProgress: NSObject {
         guard step.distance > 0 else { return 1 }
         return distanceTraveled / step.distance
     }
-
 
     /**
      Number of seconds remaining on current step.
@@ -415,7 +396,6 @@ open class RouteStepProgress: NSObject {
      */
     @objc public var intersectionIndex: Int = 0
     
-    
     /**
      The distance in meters the user is to the next intersection they will pass through.
      */
@@ -424,7 +404,7 @@ open class RouteStepProgress: NSObject {
     /**
      Index into `step.instructionsSpokenAlongStep` representing the current spoken instruction.
      */
-    @objc public var spokenInstructionIndex:Int = 0
+    @objc public var spokenInstructionIndex: Int = 0
     
     /**
      Current Instruction for the user's progress along a step.

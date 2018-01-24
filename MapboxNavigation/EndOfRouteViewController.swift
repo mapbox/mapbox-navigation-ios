@@ -33,7 +33,7 @@ open class EndOfRouteButton: StylableButton {}
 
 class EndOfRouteViewController: UIViewController {
 
-    //MARK: - IBOutlets
+    // MARK: - IBOutlets
     @IBOutlet weak var labelContainer: UIView!
     @IBOutlet weak var staticYouHaveArrived: EndOfRouteStaticLabel!
     @IBOutlet weak var primary: UILabel!
@@ -45,7 +45,7 @@ class EndOfRouteViewController: UIViewController {
     @IBOutlet weak var hideCommentView: NSLayoutConstraint!
     @IBOutlet weak var ratingCommentsSpacing: NSLayoutConstraint!
     
-    //MARK: - Properties
+    // MARK: - Properties
     lazy var placeholder: String = NSLocalizedString("END_OF_ROUTE_TITLE", bundle: .mapboxNavigation, value: "How can we improve?", comment: "Comment Placeholder Text")
     lazy var endNavigation: String = NSLocalizedString("END_NAVIGATION", bundle: .mapboxNavigation, value: "End Navigation", comment: "End Navigation Button Text")
     
@@ -64,7 +64,7 @@ class EndOfRouteViewController: UIViewController {
         }
     }
 
-    //MARK: - Lifecycle Methods
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         clearInterface()
@@ -80,12 +80,12 @@ class EndOfRouteViewController: UIViewController {
         preferredContentSize.height = height(for: .normal)
     }
 
-    //MARK: - IBActions
+    // MARK: - IBActions
     @IBAction func endNavigationPressed(_ sender: Any) {
         dismissView()
     }
     
-    //MARK: - Private Functions
+    // MARK: - Private Functions
     private func styleCommentView() {
         commentView.layer.cornerRadius = 6.0
         commentView.layer.borderColor = UIColor.lightGray.cgColor
@@ -163,7 +163,7 @@ class EndOfRouteViewController: UIViewController {
     }
 }
 
-//MARK: - UITextViewDelegate
+// MARK: - UITextViewDelegate
 extension EndOfRouteViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         guard text.count == 1, text.rangeOfCharacter(from: CharacterSet.newlines) != nil else { return true }
@@ -190,4 +190,3 @@ extension EndOfRouteViewController: UITextViewDelegate {
         }
     }
 }
-

@@ -134,7 +134,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         }
     }
 
-    func getRoute(completion: (()->())? = nil) {
+    func getRoute(completion: (()->Void)? = nil) {
         let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination.coordinate])
         options.includesSteps = true
         options.routeShapeResolution = .full

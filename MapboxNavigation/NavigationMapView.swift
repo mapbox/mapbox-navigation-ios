@@ -22,7 +22,7 @@ let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 @objc(MBNavigationMapView)
 open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
-    //MARK: Class Constants
+    // MARK: Class Constants
     
     /**
      Returns the altitude that the map camera initally defaults to.
@@ -44,7 +44,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     @objc public var tapGestureDistanceThreshold: CGFloat = 50
     
-    //MARK: Instance Properties
+    // MARK: Instance Properties
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
     let routeLayerIdentifier = "routeLayer"
@@ -393,7 +393,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     var routes: [Route]?
     
-    //MARK: TapGestureRecognizer
+    // MARK: TapGestureRecognizer
     
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
@@ -463,7 +463,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return candidates
     }
     
-    //MARK: Feature Addition/Removal
+    // MARK: Feature Addition/Removal
     
     /**
      Adds or updates both the route line and the route line casing
@@ -729,7 +729,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                                                            options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
                 arrowSymbolLayer.iconAllowsOverlap = MGLStyleValue(rawValue: true)
                 
-                
                 let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
                 arrowSymbolLayerCasing.minimumZoomLevel = minimumZoomLevel
                 arrowSymbolLayerCasing.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
@@ -748,7 +747,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
         }
     }
-    
     
     /**
      Removes the step arrow from the map.
@@ -787,7 +785,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    //MARK: Utility Methods
+    // MARK: Utility Methods
     
     func shape(describing route: Route, legIndex: Int?) -> MGLShape? {
         guard let coordinates = route.coordinates else { return nil }
@@ -1015,11 +1013,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 }
 
-//MARK: Extensions
+// MARK: Extensions
 
 extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
     func multiplied(by factor: Double) -> Dictionary {
-        var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
+        var newCameraStop: [Int: MGLStyleValue<NSNumber>] = [:]
         for stop in routeLineWidthAtZoomLevels {
             let f = stop.value as! MGLConstantStyleValue
             let newValue =  f.rawValue.doubleValue * factor
@@ -1033,7 +1031,7 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
 @objc(MBNavigationMapViewDelegate)
-public protocol NavigationMapViewDelegate: class  {
+public protocol NavigationMapViewDelegate: class {
     /**
      Asks the receiver to return an MGLStyleLayer for routes, given an identifier and source.
      This method is invoked when the map view loads and any time routes are added.
@@ -1130,7 +1128,7 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
 }
 
-//MARK: NavigationMapViewCourseTrackingDelegate
+// MARK: NavigationMapViewCourseTrackingDelegate
 /**
  The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
  */

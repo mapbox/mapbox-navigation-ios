@@ -88,5 +88,3 @@ open class NavigationView: UIView {
         wayNameLabel.text = "Street Label"
     }
 }
-
-
