@@ -171,7 +171,7 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: UIViewController, RouteMapViewControllerDelegate {
+public class NavigationViewController: UIViewController {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -429,11 +429,11 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    public func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    public func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
     
@@ -441,23 +441,23 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         delegate?.navigationMapView?(mapView, didTap: route)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
+    public func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
+    public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    public func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    public func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
+    public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }
     
@@ -542,6 +542,30 @@ extension NavigationViewController: RouteControllerDelegate {
             self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg
+    }
+}
+
+extension NavigationViewController: RouteMapViewControllerDelegate {
+    func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
+        let displayValue = 1+min(Int(9 * value), 8)
+        let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."), displayValue)
+        statusView.show(title, showSpinner: false)
+        
+        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
+            locationManager.speedMultiplier = Double(displayValue)
+        }
+    }
+    
+    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        
+    }
+    
+    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
+        
+    }
+    
+    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
+        
     }
 }
 
