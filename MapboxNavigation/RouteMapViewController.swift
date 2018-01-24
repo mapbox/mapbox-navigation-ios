@@ -106,7 +106,6 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
     var annotatesSpokenInstructions = false
 
     override func loadView() {
-        super.loadView()
         self.view = NavigationView(delegate: self)
         self.view.pinInSuperview()
         mapView.contentInset = contentInsets
