@@ -106,6 +106,32 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
+    // write failing test that asserts first location is equal to second location
+    // open tunnel property on route controller
+    // test tunnel property geom to some value along the route
+    // assert the second point inside of tunnel is `routeController.location`
+    
+    func testAnimateThroughTunnel() {
+        route.accessToken = "foo"
+        let firstLocation =  CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123), altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 0, timestamp: Date())
+        let secondLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -123), altitude: 0, horizontalAccuracy: 1000, verticalAccuracy: 0, course: 0, speed: 0, timestamp: Date())
+        let locationManager = ReplayLocationManager(locations: [firstLocation, secondLocation])
+        let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
+        
+        expectation(forNotification: .routeControllerProgressDidChange, object: navigation) { (notification) -> Bool in
+            XCTAssertEqual(notification.userInfo?.count, 1)
+            
+            let location = notification.userInfo![RouteControllerNotificationLocationKey] as? CLLocation
+            return location?.coordinate == secondLocation.coordinate
+        }
+        
+        navigation.resume()
+        
+        waitForExpectations(timeout: waitForInterval) { (error) in
+            XCTAssertNil(error)
+        }
+    }
+    
     func testArrive() {
         route.accessToken = "foo"
         let locations: [CLLocation] = route.coordinates!.map { CLLocation(latitude: $0.latitude, longitude: $0.longitude) }
