@@ -9,21 +9,7 @@ class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
 
-class RouteMapViewController: UIViewController, NavigationViewDelegate {
-//    @IBOutlet weak var mapView: NavigationMapView!
-//    @IBOutlet weak var buttonStack: UIStackView!
-//    @IBOutlet weak var overviewButton: Button!
-//    @IBOutlet weak var reportButton: Button!
-//    @IBOutlet weak var rerouteReportButton: ReportButton!
-//    @IBOutlet weak var recenterButton: ResumeButton!
-//    @IBOutlet weak var muteButton: Button!
-//    @IBOutlet weak var wayNameLabel: WayNameLabel!
-//    @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
-//    @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
-//    @IBOutlet weak var nextBannerView: NextBannerView!
-//    @IBOutlet weak var bottomBannerView: BottomBannerView!
-//    @IBOutlet weak var statusView: StatusView!
-//    @IBOutlet weak var lanesView: LanesView!
+class RouteMapViewController: UIViewController {
     var navigationView: NavigationView { return view as! NavigationView }
     var mapView: NavigationMapView { return navigationView.mapView }
     var statusView: StatusView { return navigationView.statusView }
@@ -70,11 +56,7 @@ class RouteMapViewController: UIViewController, NavigationViewDelegate {
         }
     }
     
-    weak var delegate: RouteMapViewControllerDelegate? {
-        didSet {
-            navigationView.delegate = delegate
-        }
-    }
+    weak var delegate: RouteMapViewControllerDelegate?
     weak var routeController: RouteController! {
         didSet {
             navigationView.statusView.canChangeValue = routeController.locationManager is SimulatedLocationManager
@@ -631,9 +613,27 @@ extension RouteMapViewController {
     }
 }
 
-// MARK: - NavigationMapViewCourseTrackingDelegate
+// MARK: - NavigationViewDelegate
 
-extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
+extension RouteMapViewController: NavigationViewDelegate {
+    // MARK: MGLMapViewDelegate
+    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
+        var userTrackingMode = mapView.userTrackingMode
+        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
+            userTrackingMode = .followWithCourse
+        }
+        if userTrackingMode == .none && !isInOverviewMode {
+            navigationView.wayNameLabel.isHidden = true
+        }
+    }
+    
+    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        // This method is called before the view is added to a window
+        // (if the style is cached) preventing UIAppearance to apply the style.
+        showRouteIfNeeded()
+    }
+    
+    // MARK: NavigationMapViewCourseTrackingDelegate
     func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
         navigationView.resumeButton.isHidden = true
         mapView.logoView.isHidden = false
@@ -643,12 +643,34 @@ extension RouteMapViewController: NavigationMapViewCourseTrackingDelegate {
         navigationView.resumeButton.isHidden = false
         mapView.logoView.isHidden = true
     }
-}
-
-// MARK: NavigationMapViewDelegate
-
-extension RouteMapViewController: NavigationMapViewDelegate {
     
+    //MARK: InstructionsBannerViewDelegate
+    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        removePreviewInstructions()
+        
+        guard let controller = stepsViewController else {
+            let controller = StepsViewController(routeProgress: routeController.routeProgress)
+            controller.delegate = self
+            addChildViewController(controller)
+            view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerContentView)
+            
+            controller.view.topAnchor.constraint(equalTo: navigationView.instructionsBannerView.bottomAnchor).isActive = true
+            controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+            controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            
+            controller.didMove(toParentViewController: self)
+            controller.dropDownAnimation()
+            
+            stepsViewController = controller
+            return
+        }
+        
+        stepsViewController = nil
+        controller.dismiss {}
+    }
+    
+    //MARK: NavigationMapViewDelegate
     func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
@@ -789,26 +811,6 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         removeTimer()
         updateETATimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(updateETA), userInfo: nil, repeats: true)
     }
-}
-
-// MARK: MGLMapViewDelegate
-
-extension RouteMapViewController: MGLMapViewDelegate {
-    func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
-        var userTrackingMode = mapView.userTrackingMode
-        if let mapView = mapView as? NavigationMapView, mapView.tracksUserCourse {
-            userTrackingMode = .followWithCourse
-        }
-        if userTrackingMode == .none && !isInOverviewMode {
-            navigationView.wayNameLabel.isHidden = true
-        }
-    }
-
-    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        // This method is called before the view is added to a window
-        // (if the style is cached) preventing UIAppearance to apply the style.
-        showRouteIfNeeded()
-    }
     
     func showRouteIfNeeded() {
         guard isViewLoaded && view.window != nil else { return }
@@ -823,36 +825,6 @@ extension RouteMapViewController: MGLMapViewDelegate {
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
-    }
-}
-
-// MARK: InstructionsBannerViewDelegate
-
-extension RouteMapViewController: InstructionsBannerViewDelegate {
-    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        
-        removePreviewInstructions()
-        
-        guard let controller = stepsViewController else {
-            let controller = StepsViewController(routeProgress: routeController.routeProgress)
-            controller.delegate = self
-            addChildViewController(controller)
-            view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerContentView)
-            
-            controller.view.topAnchor.constraint(equalTo: navigationView.instructionsBannerView.bottomAnchor).isActive = true
-            controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-            controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-            
-            controller.didMove(toParentViewController: self)
-            controller.dropDownAnimation()
-            
-            stepsViewController = controller
-            return
-        }
-        
-        stepsViewController = nil
-        controller.dismiss {}
     }
 }
 
@@ -905,7 +877,15 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         }
     }
     
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double) { }
+    func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
+        let displayValue = 1+min(Int(9 * value), 8)
+        let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."), displayValue)
+        statusView.show(title, showSpinner: false)
+        
+        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
+            locationManager.speedMultiplier = Double(displayValue)
+        }
+    }
 }
 
 // MARK: BottomBannerViewDelegate
@@ -972,12 +952,13 @@ fileprivate extension UIViewAnimationOptions {
         }
     }
 }
+protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate {
 
-protocol RouteMapViewControllerDelegate: NavigationViewDelegate {
-        func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
-        func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
-        func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
-        func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
-        func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+    func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
+    func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
+    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
+    func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
 }
+
 

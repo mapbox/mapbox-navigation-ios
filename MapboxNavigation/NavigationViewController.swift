@@ -424,7 +424,10 @@ public class NavigationViewController: UIViewController {
         UIApplication.shared.applicationIconBadgeNumber = 1
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
-    
+}
+
+//MARK: - RouteMapViewControllerDelegate
+extension NavigationViewController: RouteMapViewControllerDelegate {
     public func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
@@ -494,6 +497,7 @@ public class NavigationViewController: UIViewController {
     }
 }
 
+//MARK: - RouteControllerDelegate
 extension NavigationViewController: RouteControllerDelegate {
     @objc public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
         return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
@@ -541,29 +545,6 @@ extension NavigationViewController: RouteControllerDelegate {
     }
 }
 
-extension NavigationViewController: RouteMapViewControllerDelegate {
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
-        let displayValue = 1+min(Int(9 * value), 8)
-        let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."), displayValue)
-        statusView.show(title, showSpinner: false)
-        
-        if let locationManager = routeController.locationManager as? SimulatedLocationManager {
-            locationManager.speedMultiplier = Double(displayValue)
-        }
-    }
-    
-    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        
-    }
-    
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
-        
-    }
-    
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
-        
-    }
-}
 
 extension NavigationViewController: StyleManagerDelegate {
     
