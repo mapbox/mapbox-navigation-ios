@@ -163,3 +163,8 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
  The number of seconds remaining on the final step of a leg before the user is considered "arrived".
  */
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
+
+/**
+ The minimum speed value for path animation in a tunnel.
+ */
+public var RouteControllerMinimumSpeedForTunnelAnimation: CLLocationSpeed = 13.4112

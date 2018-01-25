@@ -370,7 +370,7 @@ open class RouteController: NSObject {
         guard let pointBehindClosest = nearByPolyline.closestCoordinate(to: pointBehind) else { return nil }
         guard let pointAhead = slicedLineInFront.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
         guard let pointAheadClosest = nearByPolyline.closestCoordinate(to: pointAhead) else { return nil }
-
+        
         // Get direction of these points
         let pointBehindDirection = pointBehindClosest.coordinate.direction(to: closest.coordinate)
         let pointAheadDirection = closest.coordinate.direction(to: pointAheadClosest.coordinate)
@@ -522,8 +522,54 @@ extension RouteController: CLLocationManagerDelegate {
         self.locationManager(self.locationManager, didUpdateLocations: [interpolatedLocation])
     }
 
+    fileprivate func shouldAnimateTunnel(for location: CLLocation, currentCount count: Int, maxCount max: Int) -> TimeInterval? {
+        
+        guard count < max else { return nil }
+        
+        // Mock tunnel
+        let tunnelGeom = Polyline([CLLocationCoordinate2D]())
+        
+        guard location.speed > RouteControllerMinimumSpeedForTunnelAnimation else { return nil }
+        
+        /**
+         * If the user is traveling at (expected) speed
+         * (and?) there is no congestion in the tunnel
+         * (and?) the tunnel is relatively short
+         Animate the puck through the tunnel.
+         */
+        
+        guard let closestCoordinate = tunnelGeom.closestCoordinate(to: location.coordinate), closestCoordinate.distance < 50 else { return nil }
+        
+        guard let lastCoordinate = tunnelGeom.coordinates.last else { return nil }
+        let tunnelSlice = tunnelGeom.sliced(from: closestCoordinate.coordinate, to: lastCoordinate)
+        
+        
+        let currentLocationIndex = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
+        let tunnelEndIndex = tunnelSlice.coordinates.count
+        let congestionTimesforTunnel = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex][currentLocationIndex..<tunnelEndIndex]
+        
+        guard let firstCongestionTime = congestionTimesforTunnel.first else { return nil }
+        
+        let hasIdenticalCongestions = congestionTimesforTunnel.contains { $0.0 == firstCongestionTime.0 }
+        if hasIdenticalCongestions {
+            let tunnelTravelTime = congestionTimesforTunnel.reduce(0, { (result, congestionTimeInfo) -> TimeInterval in
+                let (_ , timeInterval) = congestionTimeInfo
+                return result + timeInterval
+            })
+            return tunnelTravelTime
+        }
+
+        return nil
+    }
+    
+    var tunnelLength: CLLocationDistance {
+        return 500
+    }
+    
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let filteredLocations = locations.filter { $0.isQualified }
+        
+        
         
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
