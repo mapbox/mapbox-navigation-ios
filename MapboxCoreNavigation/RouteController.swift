@@ -325,12 +325,18 @@ open class RouteController: NSObject {
     }
 
     /**
+     -> THIS IS THE SNAPPED LOCATION.
+     
      The most recently received user location, snapped to the route line.
 
      This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
      */
     @objc public var location: CLLocation? {
+        
         guard let location = rawLocation else { return nil }
+        
+        // check if location is bad
+        // if so, find appropriate location
 
         var nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
 
@@ -568,6 +574,9 @@ extension RouteController: CLLocationManagerDelegate {
     
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let filteredLocations = locations.filter { $0.isQualified }
+        
+        
+        // In the future, we will use the number of sectond returned from shouldAnimateTunnel()
         
         
         
