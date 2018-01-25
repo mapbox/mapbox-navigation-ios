@@ -119,6 +119,12 @@ public class PollyVoiceController: RouteVoiceController {
             input.voiceId = .giorgio
         case ("nl", _):
             input.voiceId = .lotte
+        case ("pl", _):
+            input.voiceId = .ewa
+        case ("pt", "PT"):
+            input.voiceId = .ines
+        case ("pt", "BR"):
+            input.voiceId = .vitoria
         case ("ro", _):
             input.voiceId = .carmen
         case ("ru", _):
