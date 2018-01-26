@@ -1,7 +1,6 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
-import SDWebImage
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -14,32 +13,16 @@ let directions = Directions(accessToken: bogusToken)
 let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: RouteOptions(waypoints: [waypoint1, waypoint2]))
 
 class MapboxNavigationTests: FBSnapshotTestCase {
-    
-    var shieldImage: UIImage {
-        get {
-            let bundle = Bundle(for: MapboxNavigationTests.self)
-            return UIImage(named: "80px-I-280", in: bundle, compatibleWith: nil)!
-        }
-    }
-    
+
     override func setUp() {
         super.setUp()
         recordMode = false
         isDeviceAgnostic = true
-        
-        SDImageCache.shared().store(shieldImage, forKey: "I280")
     }
 
     override func tearDown() {
         super.tearDown()
 
-        SDImageCache.shared().clearMemory()
-
-        let clearDiskSemaphore = DispatchSemaphore(value: 1)
-        SDImageCache.shared().clearDisk {
-            clearDiskSemaphore.signal()
-        }
-        clearDiskSemaphore.wait()
     }
 
     func storyboard() -> UIStoryboard {

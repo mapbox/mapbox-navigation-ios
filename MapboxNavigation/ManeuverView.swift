@@ -1,7 +1,6 @@
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
-import SDWebImage
 import Turf
 
 /// :nodoc:
