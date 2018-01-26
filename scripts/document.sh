@@ -29,7 +29,7 @@ BASE_URL="https://www.mapbox.com/mapbox-navigation-ios"
 
 # Link to directions documentation
 DIRECTIONS_VERSION="0.16.0"
-DIRECTIONS_SYMBOLS="Directions|Route|RouteStep|RouteLeg|RouteOptions|Waypoint"
+DIRECTIONS_SYMBOLS="Directions|Intersection|Lane|Route|RouteLeg|RouteOptions|RouteStep|SpokenInstruction|VisualInstruction|VisualInstructionComponent|Waypoint"
 
 rm -rf ${OUTPUT}
 mkdir -p ${OUTPUT}
