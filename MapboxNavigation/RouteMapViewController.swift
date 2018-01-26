@@ -24,6 +24,14 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var bannerHideConstraint: NSLayoutConstraint!
     @IBOutlet weak var bannerShowConstraint: NSLayoutConstraint!
     @IBOutlet weak var bannerContainerShowConstraint: NSLayoutConstraint!
+    
+    private struct Actions {
+        static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
+        static let mute: Selector = #selector(RouteMapViewController.toggleMute(_:))
+        static let feedback: Selector = #selector(RouteMapViewController.feedback(_:))
+        static let rerouteFeedback: Selector = #selector(RouteMapViewController.rerouteFeedback(_:))
+        static let recenter: Selector = #selector(RouteMapViewController.recenter(_:))
+    }
 
     var route: Route { return routeController.routeProgress.route }
     var previousStep: RouteStep?
@@ -106,28 +114,11 @@ class RouteMapViewController: UIViewController {
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         
-//        mapView.tracksUserCourse = true
-//        mapView.delegate = self
-//        mapView.navigationMapDelegate = self
-//        mapView.courseTrackingDelegate = self
-//        mapView.contentInset = contentInsets
-//
-//        rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
-//        rerouteReportButton.applyDefaultCornerRadiusShadow(cornerRadius: 4)
-//        overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
-//        reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
-//        muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
-//
-//        wayNameLabel.clipsToBounds = true
-//        wayNameLabel.layer.borderWidth = 1.0 / UIScreen.main.scale
-//        wayNameLabel.applyDefaultCornerRadiusShadow()
-//        lanesView.isHidden = true
-//        statusView.isHidden = true
-//        statusView.delegate = self
-//        nextBannerView.isHidden = true
-//        isInOverviewMode = false
-//        instructionsBannerView.delegate = self
-//        bottomBannerView.delegate = self
+        navigationView.overviewButton.addTarget(self, action: Actions.overview, for: .touchUpInside)
+        navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)
+        navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
+        navigationView.rerouteReportButton.addTarget(self, action: Actions.rerouteFeedback, for: .touchUpInside)
+        navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
     }
     
@@ -189,7 +180,7 @@ class RouteMapViewController: UIViewController {
         unsubscribeFromKeyboardNotifications()
     }
 
-    @IBAction func recenter(_ sender: AnyObject) {
+    @objc func recenter(_ sender: AnyObject) {
         mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
@@ -215,26 +206,26 @@ class RouteMapViewController: UIViewController {
         }
     }
 
-    @IBAction func toggleOverview(_ sender: Any) {
+    @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         updateVisibleBounds()
         isInOverviewMode = true
     }
     
-    @IBAction func toggleMute(_ sender: UIButton) {
+    @objc func toggleMute(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
 
         let muted = sender.isSelected
         NavigationSettings.shared.voiceMuted = muted
     }
     
-    @IBAction func rerouteFeedback(_ sender: Any) {
+    @objc func rerouteFeedback(_ sender: Any) {
         showFeedback(source: .reroute)
         navigationView.rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
-    @IBAction func feedback(_ sender: Any) {
+    @objc func feedback(_ sender: Any) {
         showFeedback()
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
@@ -333,8 +324,7 @@ class RouteMapViewController: UIViewController {
     @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         hideLaneViews()
-        navigationView.statusView.show(title, showSpinner: true)
-        navigationView.statusView.hide(delay: 3, animated: true)
+        showStatus(title: title, withSpinner: true, for: 3)
     }
     
     @objc func didReroute(notification: NSNotification) {
@@ -352,8 +342,7 @@ class RouteMapViewController: UIViewController {
         
         if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            navigationView.statusView.show(title, showSpinner: true)
-            navigationView.statusView.hide(delay: 5, animated: true)
+            showStatus(title: title, withSpinner: true, for: 5)
         }
     }
 
@@ -387,6 +376,12 @@ class RouteMapViewController: UIViewController {
         } else if currentInstruction == currentStep.lastInstruction {
             setCamera(altitude: defaultAltitude)
         }
+    }
+    
+    private func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {
+        statusView.show(title, showSpinner: spin, interactive: interactive)
+        guard time < .infinity else { return }
+        statusView.hide(delay: time, animated: animated)
     }
     
     private func setCamera(altitude: Double) {
@@ -616,6 +611,12 @@ extension RouteMapViewController {
 // MARK: - NavigationViewDelegate
 
 extension RouteMapViewController: NavigationViewDelegate {
+    // MARK: NavigationViewDelegate
+    
+    func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
+        delegate?.mapViewControllerDidCancelNavigation(self)
+    }
+    
     // MARK: MGLMapViewDelegate
     func mapView(_ mapView: MGLMapView, regionDidChangeAnimated animated: Bool) {
         var userTrackingMode = mapView.userTrackingMode
@@ -712,7 +713,8 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        guard !endOfRouteShowConstraint.isActive else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
+        //FIXME: Reenable this.
+//        guard false && !endOfRouteShowConstraint.isActive else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
         return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
     }
     
@@ -880,7 +882,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     func statusView(_ statusView: StatusView, valueChangedTo value: Double) {
         let displayValue = 1+min(Int(9 * value), 8)
         let title = String.localizedStringWithFormat(NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled."), displayValue)
-        statusView.show(title, showSpinner: false)
+        showStatus(title: title, for: .infinity, interactive: true)
         
         if let locationManager = routeController.locationManager as? SimulatedLocationManager {
             locationManager.speedMultiplier = Double(displayValue)

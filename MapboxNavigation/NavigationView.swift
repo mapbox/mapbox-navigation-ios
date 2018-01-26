@@ -41,7 +41,12 @@ open class NavigationView: UIView {
     private struct Images {
         static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!
         static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!
+        static let volumeOff =  UIImage(named: "volume_off", in: .mapboxNavigation, compatibleWith: nil)!
         static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!
+    }
+    
+    private struct Actions {
+        static let cancelButton: Selector = #selector(NavigationView.cancelButtonTapped(_:))
     }
     
     private static let rerouteReportTitle = NSLocalizedString("REROUTE_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title on button that appears when a reroute occurs")
@@ -74,7 +79,7 @@ open class NavigationView: UIView {
     }()
     
     lazy var overviewButton = FloatingButton.rounded(image: Images.overview)
-    lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp)
+    lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
     lazy var separatorView: SeparatorView = .forAutoLayout()
@@ -96,6 +101,7 @@ open class NavigationView: UIView {
         let label: WayNameLabel = .forAutoLayout()
         label.clipsToBounds = true
         label.layer.borderWidth = 1.0 / UIScreen.main.scale
+        label.backgroundColor = WayNameLabel.defaultBackgroundColor
         return label
     }()
     
@@ -104,26 +110,28 @@ open class NavigationView: UIView {
         button.applyDefaultCornerRadiusShadow(cornerRadius: 4)
         button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         button.setTitle(NavigationView.rerouteReportTitle, for: .normal)
+        button.isHidden = true
         return button
     }()
     
     lazy var bottomBannerContentView: BottomBannerContentView = .forAutoLayout()
-    lazy var bottomBannerView: BottomBannerView = .forAutoLayout()
+    lazy var bottomBannerView: BottomBannerView = {
+        let view: BottomBannerView = .forAutoLayout()
+        view.cancelButton.addTarget(self, action: Actions.cancelButton, for: .touchUpInside)
+        return view
+        }()
     
 
     var delegate: NavigationViewDelegate? {
         didSet {
-            mapView.delegate = delegate
-            mapView.navigationMapDelegate = delegate
-            mapView.courseTrackingDelegate = delegate
-            instructionsBannerView.delegate = delegate
-            statusView.delegate = delegate
+            updateDelegates()
         }
     }
     
     convenience init(delegate: NavigationViewDelegate) {
         self.init(frame: .zero)
         self.delegate = delegate
+        updateDelegates() //this needs to be called because didSet's do not fire in init contexts.
     }
     
     override init(frame: CGRect) {
@@ -179,8 +187,22 @@ open class NavigationView: UIView {
         [mapView, instructionsBannerView, lanesView, bottomBannerView, nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
         wayNameLabel.text = "Street Label"
     }
+    
+    @objc func cancelButtonTapped(_ sender: CancelButton) {
+        delegate?.navigationView(self, didTapCancelButton: bottomBannerView.cancelButton)
+    }
+    
+    private func updateDelegates() {
+        mapView.delegate = delegate
+        mapView.navigationMapDelegate = delegate
+        mapView.courseTrackingDelegate = delegate
+        instructionsBannerView.delegate = delegate
+        statusView.delegate = delegate
+    }
 }
 
-protocol NavigationViewDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate {}
+protocol NavigationViewDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate {
+    func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton)
+}
 
 

@@ -77,12 +77,13 @@ open class FloatingButton: Button {
         }
     }
     
-    class func rounded<T: FloatingButton>(image: UIImage, size: CGSize = FloatingButton.buttonSize) -> T {
+    class func rounded<T: FloatingButton>(image: UIImage, selectedImage: UIImage? = nil, size: CGSize = FloatingButton.buttonSize) -> T {
         let button = T.init(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
         button.backgroundColor = .white
         button.setImage(image, for: .normal)
+        if let selected = selectedImage { button.setImage(selected, for: .selected) }
         button.applyDefaultCornerRadiusShadow(cornerRadius: size.width / 2)
         return button
     }
@@ -317,6 +318,9 @@ open class SubtitleLabel: StylableLabel { }
 @objc(MBWayNameLabel)
 @IBDesignable
 open class WayNameLabel: StylableLabel {
+    
+    static let defaultBackgroundColor = UIColor.white.withAlphaComponent(2.0/3.0)
+    
     
     /// :nodoc:
     open var textInsets: UIEdgeInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)

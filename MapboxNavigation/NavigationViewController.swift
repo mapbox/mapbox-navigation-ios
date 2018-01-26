@@ -354,7 +354,8 @@ public class NavigationViewController: UIViewController {
         
         if routeController.locationManager is SimulatedLocationManager {
             let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
-            mapViewController?.statusView.show(String.localizedStringWithFormat(format, 1), showSpinner: false)
+            let localized = String.localizedStringWithFormat(format, 1)
+            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
         }
     }
     
@@ -532,7 +533,7 @@ extension NavigationViewController: RouteControllerDelegate {
     
     @objc public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
         let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
-        mapViewController?.statusView.show(title, showSpinner: false)
+        mapViewController?.statusView.show(title, showSpinner: false, interactive: false)
     }
     
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
