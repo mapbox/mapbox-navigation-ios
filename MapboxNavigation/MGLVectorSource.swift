@@ -4,7 +4,7 @@ import Mapbox
 // https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview
 let mapboxStreetsLanguages = Set(["ar", "de", "en", "es", "fr", "pt", "ru", "zh", "zh-Hans"])
 
-extension MGLVectorSource {
+extension MGLVectorTileSource {
     var isMapboxStreets: Bool {
         guard let configurationURL = configurationURL else {
             return false
