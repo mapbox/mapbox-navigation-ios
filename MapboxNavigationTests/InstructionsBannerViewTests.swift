@@ -1,7 +1,6 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
-import SDWebImage
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -16,10 +15,6 @@ func instructionsView() -> InstructionsBannerView {
     return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
 }
 
-func resetImageCache(_ cache: SDImageCache) {
-    cache.clearMemory()
-}
-
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     let shieldURL1 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-41@3x.png")!
@@ -32,8 +27,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
     }
 
-    let imageCache = SDImageCache.shared()
-    let imageDownloader = SDWebImageDownloader.shared()
+    let imageRepository: ImageRepository = ImageRepository.shared
 
     lazy var instructions = {
         return [
@@ -46,16 +40,17 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        VisualInstructionComponent.disableDiskCache()
-        resetImageCache(self.imageCache)
+        ImageRepository.disableDiskCache()
+
+        imageRepository.resetImageCache()
         TestImageDownloadOperation.resetAll()
-        imageDownloader.setOperationClass(TestImageDownloadOperation.self)
+        imageRepository.imageDownloader.setOperationClass(TestImageDownloadOperation.self)
     }
 
     override func tearDown() {
         super.tearDown()
 
-        imageDownloader.setOperationClass(nil)
+        imageRepository.imageDownloader.setOperationClass(nil)
     }
 
     func testDelimiterIsShownWhenShieldsNotLoaded() {
@@ -73,8 +68,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
             let bundle = Bundle(for: MapboxNavigationTests.self)
             return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
         }
-        imageCache.store(shieldImage(), forKey: instruction1.shieldKey(), toDisk: false)
-        imageCache.store(shieldImage(), forKey: instruction2.shieldKey(), toDisk: false)
+
+        imageRepository.storeImage(shieldImage(), forKey: instruction1.shieldKey(), toDisk: false)
+        imageRepository.storeImage(shieldImage(), forKey: instruction2.shieldKey(), toDisk: false)
 
         let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
@@ -83,7 +79,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
         //explicitly reset the cache
-        resetImageCache(self.imageCache)
+        imageRepository.resetImageCache()
     }
 
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
@@ -107,7 +103,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let operation: TestImageDownloadOperation = TestImageDownloadOperation.currentOperationForURL(component.imageURL!)!
         operation.completedBlock!(shieldImage, nil, nil, true)
 
-        XCTAssertNotNil(imageCache.imageFromCache(forKey: component.shieldKey()!))
+        XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
     }
 
 }
@@ -115,7 +111,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
     let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
-    let imageCache = SDImageCache.shared()
+    let imageRepository: ImageRepository = ImageRepository.shared
 
     var shieldImage: UIImage {
         get {
@@ -130,13 +126,13 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
         let instruction = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL)
         let shieldKey = instruction.shieldKey()
-        imageCache.store(shieldImage, forKey: shieldKey, toDisk: false)
+        imageRepository.storeImage(shieldImage, forKey: shieldKey, toDisk: false)
     }
 
     override func tearDown() {
         super.tearDown()
 
-        resetImageCache(imageCache)
+        imageRepository.resetImageCache()
     }
 
     func testSinglelinePrimary() {
