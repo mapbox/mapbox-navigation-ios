@@ -523,18 +523,31 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         let filteredLocations = locations.filter { $0.isQualified }
         
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
         }
         
-        guard let location = filteredLocations.last else {
-            if let lastLocation = locations.last, hasFoundOneQualifiedLocation {
+        var potentialLocation: CLLocation?
+        
+        // `filteredLocations` contains qualified locations
+        if let lastFiltered = filteredLocations.last {
+            potentialLocation = lastFiltered
+        // `filteredLocations` does not contain good locations and we have found at least one good location previously.
+        } else if hasFoundOneQualifiedLocation {
+            if let lastLocation = locations.last {
                 delegate?.routeController?(self, didDiscard: lastLocation)
+                return
             }
-            return
+        // This case handles the first location.
+        // This location is not a good location, but we need the rest of the UI to update and at least show something.
+        } else if let lastLocation = locations.last {
+            potentialLocation = lastLocation
         }
+        
+        guard let location = potentialLocation else { return }
         
         self.rawLocation = location
         sessionState.pastLocations.push(location)
