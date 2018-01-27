@@ -1,0 +1,163 @@
+{
+    "routes": [
+        {
+            "geometry": "op}iGyvil@\\jARhAX|CBhDa@zOPfCv@rD",
+            "legs": [
+                {
+                    "summary": "Boulevard du Larvotto, Bretelle",
+                    "weight": 47.8,
+                    "duration": 47.7,
+                    "steps": [
+                        {
+                            "intersections": [
+                                {
+                                    "out": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        237
+                                    ],
+                                    "location": [
+                                        7.427808,
+                                        43.737843
+                                    ]
+                                },
+                                {
+                                    "classes": [
+                                        "tunnel"
+                                    ],
+                                    "out": 1,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        60,
+                                        240
+                                    ],
+                                    "location": [
+                                        7.427433,
+                                        43.737691
+                                    ]
+                                },
+                                {
+                                    "classes": [
+                                        "tunnel"
+                                    ],
+                                    "out": 1,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        75,
+                                        255
+                                    ],
+                                    "location": [
+                                        7.426481,
+                                        43.737489
+                                    ]
+                                },
+                                {
+                                    "out": 1,
+                                    "in": 0,
+                                    "entry": [
+                                        false,
+                                        true,
+                                        true
+                                    ],
+                                    "bearings": [
+                                        90,
+                                        270,
+                                        285
+                                    ],
+                                    "location": [
+                                        7.423793,
+                                        43.737556
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": "op}iGyvil@?BNb@Lb@Jb@Fd@Fd@Fd@Bf@Dh@@h@@h@@h@Aj@Ah@UzG?P?N?\\AVA\\E~@?^@b@BZBXBXBRF`@h^F^J^H\\FR",
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 237,
+                                "bearing_before": 0,
+                                "location": [
+                                    7.427808,
+                                    43.737843
+                                ],
+                                "type": "depart",
+                                "instruction": "Head southwest on Boulevard du Larvotto"
+                            },
+                            "weight": 47.8,
+                            "duration": 47.7,
+                            "name": "Boulevard du Larvotto",
+                            "distance": 552.8
+                        },
+                        {
+                            "intersections": [
+                                {
+                                    "in": 0,
+                                    "entry": [
+                                        true
+                                    ],
+                                    "bearings": [
+                                        62
+                                    ],
+                                    "location": [
+                                        7.421138,
+                                        43.737239
+                                    ]
+                                }
+                            ],
+                            "driving_side": "right",
+                            "geometry": "wl}iGcmhl@",
+                            "mode": "driving",
+                            "maneuver": {
+                                "bearing_after": 0,
+                                "bearing_before": 242,
+                                "location": [
+                                    7.421138,
+                                    43.737239
+                                ],
+                                "type": "arrive",
+                                "instruction": "You have arrived at your destination"
+                            },
+                            "weight": 0,
+                            "duration": 0,
+                            "name": "Boulevard du Larvotto",
+                            "distance": 0
+                        }
+                    ],
+                    "distance": 552.8
+                }
+            ],
+            "weight_name": "routability",
+            "weight": 47.8,
+            "duration": 47.7,
+            "distance": 552.8
+        }
+    ],
+    "waypoints": [
+        {
+            "name": "Boulevard du Larvotto",
+            "location": [
+                7.427808,
+                43.737843
+            ]
+        },
+        {
+            "name": "Boulevard du Larvotto",
+            "location": [
+                7.421138,
+                43.737239
+            ]
+        }
+    ],
+    "code": "Ok",
+    "uuid": "cjcuyppz1000q48pbnarnv6vt"
+}
