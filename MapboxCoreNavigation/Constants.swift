@@ -168,3 +168,9 @@ public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
  The minimum speed value for path animation in a tunnel.
  */
 public var RouteControllerMinimumSpeedForTunnelAnimation: CLLocationSpeed = 13.4112
+
+/**
+ The mimimum distance to tunnel to start animation.
+ */
+public var RouteControllerMinimumDistanceForTunnelAnimation: CLLocationDistance = 50
+

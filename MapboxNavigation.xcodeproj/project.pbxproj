@@ -175,6 +175,9 @@
 		C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800E1EFBCDAD006DBF2E /* Date.swift */; };
 		C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */; };
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
+		CC8E82BF201BDA6D0065C9F5 /* routeWithRoadClasses.json in Resources */ = {isa = PBXBuildFile; fileRef = CC8E82BE201BDA6C0065C9F5 /* routeWithRoadClasses.json */; };
+		CC8E82C1201BE8D60065C9F5 /* TunnelAnimationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8E82C0201BE8D60065C9F5 /* TunnelAnimationCoordinator.swift */; };
+		CC8E82C3201BFAFF0065C9F5 /* TunnelAnimationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8E82C2201BFAFF0065C9F5 /* TunnelAnimationCoordinatorTests.swift */; };
 		DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
@@ -485,6 +488,9 @@
 		C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomViewController.swift; sourceTree = "<group>"; };
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouteOptions.swift; sourceTree = "<group>"; };
+		CC8E82BE201BDA6C0065C9F5 /* routeWithRoadClasses.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithRoadClasses.json; sourceTree = "<group>"; };
+		CC8E82C0201BE8D60065C9F5 /* TunnelAnimationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAnimationCoordinator.swift; sourceTree = "<group>"; };
+		CC8E82C2201BFAFF0065C9F5 /* TunnelAnimationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAnimationCoordinatorTests.swift; sourceTree = "<group>"; };
 		DA1811FD20128B0900C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Main.strings; sourceTree = "<group>"; };
 		DA1811FE20128B0900C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA18120120128B7B00C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -886,11 +892,12 @@
 		C52D09CF1DEF5E5F00BE3C5C /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */,
+				C52D09CD1DEF5E5100BE3C5C /* route.json */,
+				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
+				CC8E82BE201BDA6C0065C9F5 /* routeWithRoadClasses.json */,
 				35718BE41EF316BA00AFA3D1 /* tunnel.json */,
 				35718BE31EF316BA00AFA3D1 /* tunnel.route */,
-				C52D09CD1DEF5E5100BE3C5C /* route.json */,
-				DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */,
-				C5387A9C1F8FDB13000D2E93 /* routeWithInstructions.json */,
 			);
 			name = Fixtures;
 			sourceTree = "<group>";
@@ -969,6 +976,7 @@
 				C5ADFBFB1DDCC9AD0011824B /* RouteProgress.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */,
+				CC8E82C0201BE8D60065C9F5 /* TunnelAnimationCoordinator.swift */,
 			);
 			path = MapboxCoreNavigation;
 			sourceTree = "<group>";
@@ -983,6 +991,7 @@
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
 				359574A91F28CCBB00838209 /* LocationTests.swift */,
+				CC8E82C2201BFAFF0065C9F5 /* TunnelAnimationCoordinatorTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -1352,6 +1361,7 @@
 			files = (
 				C5387A9D1F8FDB13000D2E93 /* routeWithInstructions.json in Resources */,
 				DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */,
+				CC8E82BF201BDA6D0065C9F5 /* routeWithRoadClasses.json in Resources */,
 				35718BE71EF3194200AFA3D1 /* tunnel.json in Resources */,
 				C52D09CE1DEF5E5100BE3C5C /* route.json in Resources */,
 				35718BE81EF3194500AFA3D1 /* tunnel.route in Resources */,
@@ -1592,6 +1602,7 @@
 				35B839491E2E3D5D0045A868 /* MBRouteController.m in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
+				CC8E82C1201BE8D60065C9F5 /* TunnelAnimationCoordinator.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
@@ -1611,6 +1622,7 @@
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
+				CC8E82C3201BFAFF0065C9F5 /* TunnelAnimationCoordinatorTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
 				C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */,
 			);

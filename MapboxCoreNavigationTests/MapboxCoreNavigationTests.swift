@@ -10,6 +10,10 @@ let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, l
 let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
 let route = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
 
+let responseWithRoadClasses = Fixture.JSONFromFileNamed(name: "routeWithRoadClasses")
+let jsonRouteWithRoadClasses = (response["routes"] as! [AnyObject]).first as! [String : Any]
+let routeWithTunnel = Route(json: jsonRouteWithRoadClasses, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+
 let waitForInterval: TimeInterval = 5
 
 
@@ -119,7 +123,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)
         
         expectation(forNotification: .routeControllerProgressDidChange, object: navigation) { (notification) -> Bool in
-            XCTAssertEqual(notification.userInfo?.count, 1)
+            XCTAssertEqual(notification.userInfo?.count, 3)
             
             let location = notification.userInfo![RouteControllerNotificationLocationKey] as? CLLocation
             return location?.coordinate == secondLocation.coordinate

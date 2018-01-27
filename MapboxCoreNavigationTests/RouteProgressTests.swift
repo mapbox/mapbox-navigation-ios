@@ -33,6 +33,12 @@ class RouteProgressTests: XCTestCase {
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.step.description, "Head south on Taylor Street")
     }
     
+    func testRouteStepContainsTunnel() {
+        let routeProgress = RouteProgress(route: routeWithTunnel)
+        let routeCurrentStep = routeProgress.route.legs[0].steps[0]
+        XCTAssertTrue(routeCurrentStep.containsTunnel)
+    }
+    
     func testNextRouteStepProgress() {
         let routeProgress = RouteProgress(route: route)
         routeProgress.currentLegProgress.stepIndex = 1
