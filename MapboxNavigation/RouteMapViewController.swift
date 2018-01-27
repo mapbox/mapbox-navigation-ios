@@ -19,6 +19,15 @@ class RouteMapViewController: UIViewController {
     
     lazy var endOfRouteViewController = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation).instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController
     
+    lazy var feedbackViewController: FeedbackViewController = {
+        let controller = FeedbackViewController.loadFromStoryboard()
+        let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
+        controller.sections = sections
+        
+        controller.modalPresentationStyle = .custom
+        controller.transitioningDelegate = controller
+        return controller
+    }()
     
     
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
@@ -232,29 +241,11 @@ class RouteMapViewController: UIViewController {
     func showFeedback(source: FeedbackSource = .user) {
         guard let parent = parent else { return }
     
-        let controller = FeedbackViewController.loadFromStoryboard()
-        let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
-        controller.sections = sections
-        let feedbackId = routeController.recordFeedback()
+        let controller = feedbackViewController
+        let defaults = defaultFeedbackHandlers() //this is done every time to refresh the feedbackId
+        controller.sendFeedbackHandler = defaults.send
+        controller.dismissFeedbackHandler = defaults.dismiss
         
-        controller.sendFeedbackHandler = { [weak self] (item) in
-            guard let strongSelf = self else { return }
-            strongSelf.delegate?.mapViewController(strongSelf, didSend: feedbackId, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(feedbackId: feedbackId, type: item.feedbackType, source: source, description: nil)
-            strongSelf.dismiss(animated: true) {
-                DialogViewController.present(on: parent)
-            }
-        }
-        
-        controller.dismissFeedbackHandler = { [weak self] in
-            guard let strongSelf = self else { return }
-            strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
-            strongSelf.routeController.cancelFeedback(feedbackId: feedbackId)
-            strongSelf.dismiss(animated: true, completion: nil)
-        }
-        
-        controller.modalPresentationStyle = .custom
-        controller.transitioningDelegate = controller
         parent.present(controller, animated: true, completion: nil)
     }
     
@@ -479,6 +470,35 @@ class RouteMapViewController: UIViewController {
         UIView.defaultAnimation(0.3, animations: {
             self.navigationView.nextBannerView.isHidden = true
         }, completion: nil)
+    }
+    
+    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
+        let identifier = routeController.recordFeedback()
+        let send = defaultSendFeedbackHandler(feedbackId: identifier)
+        let dismiss = defaultDismissFeedbackHandler(feedbackId: identifier)
+        
+        return (send, dismiss)
+    }
+    
+    func defaultSendFeedbackHandler(source: FeedbackSource = .user, feedbackId identifier: String) -> FeedbackViewController.SendFeedbackHandler {
+        return { [weak self] (item) in
+            guard let strongSelf = self, let parent = strongSelf.parent else { return }
+        
+            strongSelf.delegate?.mapViewController(strongSelf, didSend: identifier, feedbackType: item.feedbackType)
+            strongSelf.routeController.updateFeedback(feedbackId: identifier, type: item.feedbackType, source: source, description: nil)
+            strongSelf.dismiss(animated: true) {
+                DialogViewController.present(on: parent)
+            }
+        }
+    }
+    
+    func defaultDismissFeedbackHandler(feedbackId identifier: String) -> (() -> Void) {
+        return { [weak self ] in
+            guard let strongSelf = self else { return }
+            strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
+            strongSelf.routeController.cancelFeedback(feedbackId: identifier)
+            strongSelf.dismiss(animated: true, completion: nil)
+        }
     }
     
     var contentInsets: UIEdgeInsets {
