@@ -43,6 +43,19 @@ extension UIView {
         return Bundle.main.loadNibNamed(nibName, owner: nil, options: nil)?[0] as? ViewType
     }
     
+    func constraints(affecting view: UIView?) -> [NSLayoutConstraint]? {
+        guard let view = view else { return nil }
+        return constraints.filter { constraint in
+            if let first = constraint.firstItem as? UIView, first == view {
+                return true
+            }
+            if let second = constraint.secondItem as? UIView, second == view {
+                return true
+            }
+            return false
+        }
+    }
+    
     func pinInSuperview() {
         guard let superview = superview else { return }
         topAnchor.constraint(equalTo: superview.topAnchor).isActive = true

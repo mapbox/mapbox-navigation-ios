@@ -10,20 +10,18 @@ class ArrowStrokePolyline: ArrowFillPolyline {}
 
 
 class RouteMapViewController: UIViewController {
+    
     var navigationView: NavigationView { return view as! NavigationView }
     var mapView: NavigationMapView { return navigationView.mapView }
     var statusView: StatusView { return navigationView.statusView }
     var reportButton: FloatingButton { return navigationView.reportButton }
     var lanesView: LanesView { return navigationView.lanesView }
     
+    lazy var endOfRouteViewController = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation).instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController
+    
+    
+    
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
-    @IBOutlet weak var endOfRouteContainerView: UIView!
-    @IBOutlet weak var endOfRouteShowConstraint: NSLayoutConstraint!
-    @IBOutlet weak var endOfRouteHideConstraint: NSLayoutConstraint!
-    @IBOutlet weak var endOfRouteHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bannerHideConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bannerShowConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bannerContainerShowConstraint: NSLayoutConstraint!
     
     private struct Actions {
         static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
@@ -39,11 +37,10 @@ class RouteMapViewController: UIViewController {
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
-    var endOfRouteViewController: EndOfRouteViewController?
     private lazy var geocoder: CLGeocoder = CLGeocoder()
     var destination: Waypoint? {
         didSet {
-            endOfRouteViewController?.destination = destination
+            endOfRouteViewController.destination = destination
         }
     }
     
@@ -150,6 +147,8 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
+        
+        embedEndOfRoute()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -522,16 +521,25 @@ class RouteMapViewController: UIViewController {
     }
     //MARK: End Of Route
     
+    func embedEndOfRoute() {
+        let endOfRoute = endOfRouteViewController
+        addChildViewController(endOfRoute)
+        navigationView.endOfRouteView = endOfRoute.view
+        navigationView.constrainEndOfRoute()
+        endOfRoute.didMove(toParentViewController: self)
+    }
+    
+    
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
-        view.layoutIfNeeded() //flush layout queue
+        navigationView.endOfRouteView?.isHidden = false
+
+        endOfRouteViewController.destination = destination
         
-        bannerShowConstraint.isActive = false
-        bannerContainerShowConstraint.isActive = false
-        bannerHideConstraint.isActive = true
-        endOfRouteContainerView.isHidden = false
-        endOfRouteHideConstraint.isActive = false
-        endOfRouteShowConstraint.isActive = true
-       
+        view.layoutIfNeeded() //flush layout queue
+        NSLayoutConstraint.deactivate(navigationView.bannerShowConstraints)
+        NSLayoutConstraint.activate(navigationView.bannerHideConstraints)
+        navigationView.endOfRouteHideConstraint?.isActive = false
+        navigationView.endOfRouteShowConstraint?.isActive = true
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
         mapView.setNeedsUpdateConstraints()
@@ -552,8 +560,8 @@ class RouteMapViewController: UIViewController {
     
     func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         view.layoutIfNeeded() //flush layout queue
-        endOfRouteHideConstraint.isActive = true
-        endOfRouteShowConstraint.isActive = false
+        navigationView.endOfRouteHideConstraint?.isActive = true
+        navigationView.endOfRouteShowConstraint?.isActive = false
         view.clipsToBounds = true
         
         mapView.enableFrameByFrameCourseViewTracking(for: duration)
@@ -564,7 +572,7 @@ class RouteMapViewController: UIViewController {
             self.navigationView.floatingStackView.alpha = 1.0
         }
         
-        let complete: (Bool) -> Void = { self.endOfRouteContainerView.isHidden = true; completion?($0)}
+        let complete: (Bool) -> Void = { self.navigationView.endOfRouteView?.isHidden = true; completion?($0)}
         let noAnimation = { animate() ; complete(true) }
 
         guard duration > 0.0 else { return noAnimation() }
@@ -602,7 +610,7 @@ class RouteMapViewController: UIViewController {
 
 extension RouteMapViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
-        endOfRouteHeightConstraint.constant = container.preferredContentSize.height
+        navigationView.endOfRouteHeightConstraint?.constant = container.preferredContentSize.height
         
         UIView.animate(withDuration: 0.3, animations: view.layoutIfNeeded)
     }
@@ -918,9 +926,9 @@ extension RouteMapViewController {
         let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).size.height
 
         if #available(iOS 11.0, *) {
-            endOfRouteShowConstraint.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
+            navigationView.endOfRouteShowConstraint?.constant = -1 * (keyboardHeight - view.safeAreaInsets.bottom) //subtract the safe area, which is part of the keyboard's frame
         } else {
-            endOfRouteShowConstraint.constant = -1 * keyboardHeight
+            navigationView.endOfRouteShowConstraint?.constant = -1 * keyboardHeight
         }
         
         
@@ -934,7 +942,7 @@ extension RouteMapViewController {
         let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
                        curve: UIViewAnimationOptions(curve: curve!))
         
-        endOfRouteShowConstraint.constant = 0
+        navigationView.endOfRouteShowConstraint?.constant = 0
 
         UIView.animate(withDuration: options.duration, delay: 0, options: options.curve, animations: view.layoutIfNeeded, completion: nil)
     }

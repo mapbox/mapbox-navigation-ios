@@ -38,6 +38,21 @@ import MapboxDirections
 @objc(MBNavigationView)
 open class NavigationView: UIView {
     
+    lazy var bannerShowConstraints: [NSLayoutConstraint] = [
+        self.instructionsBannerView.topAnchor.constraint(equalTo: self.safeTopAnchor),
+        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)]
+    
+    lazy var bannerHideConstraints: [NSLayoutConstraint] = [
+        self.instructionsBannerView.bottomAnchor.constraint(equalTo: self.topAnchor),
+        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
+    ]
+    
+    lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
+    
+    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
+    
+    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: 260)
+    
     private struct Images {
         static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!
         static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!
@@ -58,6 +73,9 @@ open class NavigationView: UIView {
         map.delegate = delegate
         map.navigationMapDelegate = delegate
         map.courseTrackingDelegate = delegate
+        map.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
+        map.showsUserLocation = true
+        
         return map
     }()
     
@@ -127,6 +145,20 @@ open class NavigationView: UIView {
             updateDelegates()
         }
     }
+    
+    var endOfRouteView: UIView? {
+        didSet {
+            if let active: [NSLayoutConstraint] = constraints(affecting: oldValue) {
+                NSLayoutConstraint.deactivate(active)
+            }
+            
+            oldValue?.removeFromSuperview()
+            if let eor = endOfRouteView { addSubview(eor) }
+            endOfRouteView?.translatesAutoresizingMaskIntoConstraints = false
+        }
+    }
+    
+    //MARK: - Initializers
     
     convenience init(delegate: NavigationViewDelegate) {
         self.init(frame: .zero)

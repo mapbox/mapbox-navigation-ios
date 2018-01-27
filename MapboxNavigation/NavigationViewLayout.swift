@@ -7,16 +7,15 @@ extension NavigationView {
         mapView.bottomAnchor.constraint(equalTo: bottomBannerContentView.topAnchor).isActive = true
         mapView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
-        instructionsBannerContentView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         instructionsBannerContentView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         instructionsBannerContentView.bottomAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
         instructionsBannerContentView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
-        instructionsBannerView.topAnchor.constraint(equalTo: safeTopAnchor).isActive = true
         instructionsBannerView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         instructionsBannerView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         instructionsBannerView.heightAnchor.constraint(equalToConstant: 96).isActive = true
         
+        NSLayoutConstraint.activate(bannerShowConstraints)
         separatorView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
         separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
@@ -47,6 +46,16 @@ extension NavigationView {
         
         wayNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         wayNameLabel.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+    }
+
+    func constrainEndOfRoute() {
+        self.endOfRouteHideConstraint?.isActive = true
+        
+        endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        self.endOfRouteHeightConstraint?.isActive = true
+        
     }
 }
 
