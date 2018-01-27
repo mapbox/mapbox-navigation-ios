@@ -21,8 +21,11 @@ class RouteMapViewController: UIViewController {
     
     lazy var feedbackViewController: FeedbackViewController = {
         let controller = FeedbackViewController.loadFromStoryboard()
-        let sections: [FeedbackSection] = [[.turnNotAllowed, .closure, .reportTraffic], [.confusingInstructions, .generalMapError, .badRoute]]
-        controller.sections = sections
+        
+        controller.sections = [
+            [.turnNotAllowed, .closure, .reportTraffic],
+            [.confusingInstructions, .generalMapError, .badRoute]
+        ]
         
         controller.modalPresentationStyle = .custom
         controller.transitioningDelegate = controller
