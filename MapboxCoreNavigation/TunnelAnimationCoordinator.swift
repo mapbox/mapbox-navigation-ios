@@ -33,7 +33,13 @@ public struct TunnelAnimationCoordinator {
         return tunnelTravelTime
     }
     
-    public func congestions(for routeProgress: RouteProgress, start startIndex: Int, end endIndex: Int) -> [RouteProgress.TimedCongestionLevel] {
+    public func congestions(for routeProgress: RouteProgress, start startIndex: Int, end endIndex: Int) -> [RouteProgress.TimedCongestionLevel]? {
+        let congestionTravelTimesSegmentsByStep = routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex]
+        
+        guard startIndex > -1 && endIndex < congestionTravelTimesSegmentsByStep.count else {
+            return nil
+        }
+        
         return Array(routeProgress.congestionTravelTimesSegmentsByStep[routeProgress.legIndex][routeProgress.currentLegProgress.stepIndex][startIndex..<endIndex])
     }
 

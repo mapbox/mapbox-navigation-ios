@@ -555,7 +555,10 @@ extension RouteController: CLLocationManagerDelegate {
         let tunnelEndIndex = tunnelSlice.coordinates.count
         let congestions = animationCoordinator.congestions(for: routeProgress, start: currentLocationIndex, end: tunnelEndIndex)
         
-        return animationCoordinator.containsIdenticalCongestions(for: congestions)
+        if let congestions = congestions {
+           return animationCoordinator.containsIdenticalCongestions(for: congestions)
+        }
+        return false
     }
     
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -573,13 +576,8 @@ extension RouteController: CLLocationManagerDelegate {
             // Mock tunnel
             let tunnelGeom = Polyline([CLLocationCoordinate2D]()) /// Simulate a location
             guard let closestCoordinate = tunnelGeom.closestCoordinate(to: currentLocation.coordinate), let lastCoordinate = tunnelGeom.coordinates.last else { return }
-            let tunnelSlice = tunnelGeom.sliced(from: closestCoordinate.coordinate, to: lastCoordinate)
-            
-            let animationCoordinator = TunnelAnimationCoordinator(tunnelGeom)
-            let startIndex = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
-            let endIndex = tunnelSlice.coordinates.count
-            let congestions = animationCoordinator.congestions(for: routeProgress, start: startIndex, end: endIndex)
-            let animationDistance = tunnelSlice.distance() // animationCoordinator.totalTravelTime(for: congestions) // TimeInterval
+
+            let animationDistance = tunnelGeom.sliced(from: closestCoordinate.coordinate, to: lastCoordinate).distance()
             
             // Find coordinates infront of user at a fixed distance
             guard let coordinates = routeProgress.route.coordinates else { return }
