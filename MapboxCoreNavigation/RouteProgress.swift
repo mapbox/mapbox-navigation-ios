@@ -406,6 +406,11 @@ open class RouteStepProgress: NSObject {
      */
     @objc public var spokenInstructionIndex: Int = 0
     
+    @objc public var remainingSpokenInstructions: [SpokenInstruction]? {
+        guard let instructions = step.instructionsSpokenAlongStep else { return nil }
+        return Array(instructions.suffix(from: spokenInstructionIndex))
+    }
+    
     /**
      Current Instruction for the user's progress along a step.
      */
