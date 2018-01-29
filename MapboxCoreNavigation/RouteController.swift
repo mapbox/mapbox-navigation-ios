@@ -859,8 +859,8 @@ extension RouteController: CLLocationManagerDelegate {
             return
         }
 
-        for voiceInstruction in spokenInstructions.enumerated() {
-            if userSnapToStepDistanceFromManeuver <= voiceInstruction.element.distanceAlongStep {
+        for voiceInstruction in spokenInstructions {
+            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep {
 
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
