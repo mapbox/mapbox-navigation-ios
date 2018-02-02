@@ -1,14 +1,30 @@
 import Foundation
 import SDWebImage
 
+protocol ImageDownloader {
+    func downloadImage(with url: URL?, options: SDWebImageDownloaderOptions, progress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: SDWebImageDownloaderCompletedBlock?) -> SDWebImageDownloadToken?
+    func setOperationClass(_ klass: AnyClass?)
+}
+
+protocol ImageCache {
+    func store(_ image: UIImage?, forKey key: String?, toDisk: Bool, completion completionBlock: SDWebImageNoParamsBlock?)
+    func imageFromCache(forKey: String?) -> UIImage?
+    func clearMemory()
+    func clearDisk(onCompletion completion: (() -> Void)?)
+}
+
+extension SDImageCache: ImageCache {}
+
+extension SDWebImageDownloader: ImageDownloader {}
+
 class ImageRepository {
 
     public static let shared = ImageRepository()
 
     static var useDiskCache = true
 
-    let imageCache = SDImageCache.shared()
-    let imageDownloader = SDWebImageDownloader.shared()
+    let imageCache: ImageCache = SDImageCache.shared()
+    let imageDownloader: ImageDownloader = SDWebImageDownloader.shared()
 
     func resetImageCache() {
         imageCache.clearMemory()
@@ -20,8 +36,7 @@ class ImageRepository {
     }
 
     func storeImage(_ image: UIImage, forKey key: String?, toDisk: Bool = true) {
-        imageCache.store(image, forKey: key, toDisk: toDisk)
-        imageCache.store(image, forKey: key, toDisk: toDisk)
+        imageCache.store(image, forKey: key, toDisk: toDisk, completion: nil)
     }
 
     func cachedImageForKey(_ key: String) -> UIImage? {
@@ -29,7 +44,7 @@ class ImageRepository {
     }
 
     func downloadImageWithURL(_ imageURL: URL, cacheKey: String, completion: @escaping (UIImage?) -> Void) {
-        imageDownloader.downloadImage(with: imageURL, options: [], progress: nil, completed: { [weak self] (image, data, error, successful) in
+        let _ = imageDownloader.downloadImage(with: imageURL, options: [], progress: nil, completed: { [weak self] (image, data, error, successful) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)
                 return
