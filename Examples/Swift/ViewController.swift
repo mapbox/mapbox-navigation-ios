@@ -19,15 +19,16 @@ enum ExampleMode {
 class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, VoiceControllerDelegate {
 
     // MARK: - IBOutlets
-    @IBOutlet weak var mapView: NavigationMapView!
     @IBOutlet weak var longPressHintView: UIView!
 
     @IBOutlet weak var simulationButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
-
+    @IBOutlet weak var bottomBar: UIView!
+    
     @IBOutlet weak var clearMap: UIButton!
 
     // MARK: Properties
+    var mapView: NavigationMapView?
     var waypoints: [Waypoint] = []
     var currentRoute: Route? {
         get {
@@ -46,8 +47,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             guard let routes = routes,
                   let current = routes.first else { mapView?.removeRoutes(); return }
 
-            mapView.showRoutes(routes)
-            mapView.showWaypoints(current)
+            mapView?.showRoutes(routes)
+            mapView?.showWaypoints(current)
         }
     }
 
@@ -55,7 +56,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
         guard let current = routes.first else { return }
-        self?.mapView.removeWaypoints()
+        self?.mapView?.removeWaypoints()
         self?.routes = routes
         self?.waypoints = current.routeOptions.waypoints
     }
@@ -86,13 +87,11 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         locationManager.requestWhenInUseAuthorization()
 
         automaticallyAdjustsScrollViewInsets = false
-        mapView.delegate = self
-        mapView.navigationMapDelegate = self
-
-        mapView.userTrackingMode = .follow
 
         simulationButton.isSelected = true
         startButton.isEnabled = false
+        
+        setupMapView()
 
         alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
@@ -127,13 +126,15 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     // MARK: Gesture Recognizer Handlers
 
-    @IBAction func didLongPress(_ sender: UILongPressGestureRecognizer) {
-        guard sender.state == .began else {
+    @objc func didLongPress(tap: UILongPressGestureRecognizer) {
+        guard tap.state == .began else {
             return
         }
 
         clearMap.isHidden = false
         longPressHintView.isHidden = true
+        
+        guard let mapView = mapView else { return }
 
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {
             mapView.removeAnnotation(annotation)
@@ -146,7 +147,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             multipleStopsAction.isEnabled = false
         }
 
-        let coordinates = mapView.convert(sender.location(in: mapView), toCoordinateFrom: mapView)
+        let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
         let waypoint = Waypoint(coordinate: coordinates)
         waypoint.coordinateAccuracy = -1
         waypoints.append(waypoint)
@@ -178,8 +179,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     @IBAction func clearMapPressed(_ sender: Any) {
         clearMap.isHidden = true
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
+        mapView?.removeRoutes()
+        mapView?.removeWaypoints()
         waypoints.removeAll()
         multipleStopsAction.isEnabled = false
     }
@@ -192,6 +193,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: Route Requests
     func requestRoute() {
         guard waypoints.count > 0 else { return }
+        guard let mapView = mapView else { return }
 
         let userWaypoint = Waypoint(location: mapView.userLocation!.location!, heading: mapView.userLocation?.heading, name: "user")
         waypoints.insert(userWaypoint, at: 0)
@@ -222,7 +224,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
-        present(navigationViewController, animated: true, completion: nil)
+        presentAndRemoveMapview(navigationViewController)
     }
     
     func startNavigation(styles: [Style]) {
@@ -233,7 +235,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
         
-        present(navigationViewController, animated: true, completion: nil)
+        presentAndRemoveMapview(navigationViewController)
     }
 
     // MARK: Custom Navigation UI
@@ -267,7 +269,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
-        present(navigationViewController, animated: true, completion: nil)
+        presentAndRemoveMapview(navigationViewController)
     }
 
     func navigationLocationManager() -> NavigationLocationManager {
@@ -285,7 +287,40 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
-        present(navigationViewController, animated: true, completion: nil)
+        presentAndRemoveMapview(navigationViewController)
+    }
+    
+    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
+        present(navigationViewController, animated: true) {
+            self.mapView?.removeFromSuperview()
+            self.mapView = nil
+        }
+    }
+    
+    func setupMapView() {
+        guard mapView == nil else { return }
+        mapView = NavigationMapView(frame: view.bounds)
+        
+        mapView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView!.delegate = self
+        mapView!.navigationMapDelegate = self
+        mapView!.userTrackingMode = .follow
+        
+        view.insertSubview(mapView!, belowSubview: bottomBar)
+        
+        let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
+        for recognizer in mapView!.gestureRecognizers! where recognizer is UILongPressGestureRecognizer {
+            singleTap.require(toFail: recognizer)
+        }
+        mapView!.addGestureRecognizer(singleTap)
+    }
+    
+    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        if let routes = routes, let coords = currentRoute?.coordinates, let coordCounts = currentRoute?.coordinateCount {
+            mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: coordCounts).overlayBounds, animated: false)
+            self.mapView?.showRoutes(routes)
+            self.mapView?.showWaypoints(currentRoute!)
+        }
     }
 }
 
@@ -369,6 +404,7 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController) {
+        setupMapView()
         navigationViewController.dismiss(animated: true, completion: nil)
     }
 }
