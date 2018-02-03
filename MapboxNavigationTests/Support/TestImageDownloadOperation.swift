@@ -3,7 +3,7 @@ import SDWebImage
 
 class TestImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterface {
 
-    private static var operationsForURLs: [URL : TestImageDownloadOperation] = [:]
+    private static var operations: [URL : TestImageDownloadOperation] = [:]
 
     private(set) var request: URLRequest?
     weak private var session: URLSession?
@@ -19,15 +19,15 @@ class TestImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterf
 
         super.init()
 
-        TestImageDownloadOperation.operationsForURLs[request!.url!] = self
+        TestImageDownloadOperation.operations[request!.url!] = self
     }
 
-    static func resetAll() {
-        operationsForURLs.removeAll()
+    static func reset() {
+        operations.removeAll()
     }
 
-    static func currentOperationForURL(_ URL: URL) -> TestImageDownloadOperation? {
-        return operationsForURLs[URL]
+    static func operationForURL(_ URL: URL) -> TestImageDownloadOperation? {
+        return operations[URL]
     }
 
     func addHandlers(forProgress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: SDWebImageDownloaderCompletedBlock?) -> Any? {

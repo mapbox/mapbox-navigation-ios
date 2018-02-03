@@ -40,10 +40,10 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        ImageRepository.disableDiskCache()
-
+        imageRepository.disableDiskCache()
         imageRepository.resetImageCache()
-        TestImageDownloadOperation.resetAll()
+
+        TestImageDownloadOperation.reset()
         imageRepository.imageDownloader.setOperationClass(TestImageDownloadOperation.self)
     }
 
@@ -100,7 +100,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
-        let operation: TestImageDownloadOperation = TestImageDownloadOperation.currentOperationForURL(component.imageURL!)!
+        let operation: TestImageDownloadOperation = TestImageDownloadOperation.operationForURL(component.imageURL!)!
         operation.completedBlock!(shieldImage, nil, nil, true)
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))

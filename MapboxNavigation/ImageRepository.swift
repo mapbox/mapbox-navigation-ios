@@ -21,10 +21,10 @@ class ImageRepository {
 
     public static let shared = ImageRepository()
 
-    static var useDiskCache = true
-
     let imageCache: ImageCache = SDImageCache.shared()
     let imageDownloader: ImageDownloader = SDWebImageDownloader.shared()
+    
+    var useDiskCache = true
 
     func resetImageCache() {
         imageCache.clearMemory()
@@ -50,14 +50,13 @@ class ImageRepository {
                 return
             }
 
-            strongSelf.imageCache.store(image, forKey: cacheKey, toDisk: ImageRepository.useDiskCache, completion: {
+            strongSelf.imageCache.store(image, forKey: cacheKey, toDisk: strongSelf.useDiskCache, completion: {
                 completion(image)
             })
         })
     }
 
-    static func disableDiskCache() {
+    func disableDiskCache() {
         useDiskCache = false
     }
-
 }
