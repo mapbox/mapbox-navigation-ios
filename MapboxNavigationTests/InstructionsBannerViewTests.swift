@@ -15,17 +15,17 @@ func instructionsView() -> InstructionsBannerView {
     return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
 }
 
+var shieldImage: UIImage {
+    get {
+        let bundle = Bundle(for: MapboxNavigationTests.self)
+        return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
+    }
+}
+
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     let shieldURL1 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-41@3x.png")!
     let shieldURL2 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-94@3x.png")!
-
-    var shieldImage: UIImage {
-        get {
-            let bundle = Bundle(for: MapboxNavigationTests.self)
-            return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
-        }
-    }
 
     let imageRepository: ImageRepository = ImageRepository.shared
 
@@ -64,13 +64,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         //prime the cache to simulate images having already been loaded
         let instruction1 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL1)
         let instruction2 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL2)
-        let shieldImage:() -> (UIImage) = {
-            let bundle = Bundle(for: MapboxNavigationTests.self)
-            return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
-        }
 
-        imageRepository.storeImage(shieldImage(), forKey: instruction1.shieldKey(), toDisk: false)
-        imageRepository.storeImage(shieldImage(), forKey: instruction2.shieldKey(), toDisk: false)
+        imageRepository.storeImage(shieldImage, forKey: instruction1.shieldKey(), toDisk: false)
+        imageRepository.storeImage(shieldImage, forKey: instruction2.shieldKey(), toDisk: false)
 
         let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
@@ -112,13 +108,6 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
     let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
     let imageRepository: ImageRepository = ImageRepository.shared
-
-    var shieldImage: UIImage {
-        get {
-            let bundle = Bundle(for: MapboxNavigationTests.self)
-            return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
-        }
-    }
 
     override func setUp() {
         super.setUp()

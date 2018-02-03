@@ -53,12 +53,13 @@ class InstructionPresenter {
             return
         }
 
+        //TODO: seems like this should be happening inside imageWithURL:
         if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
             completion(cachedImage)
             return
         }
 
-        imageRepository.downloadImageWithURL(imageURL, cacheKey: shieldKey, completion: { (image) in
+        imageRepository.imageWithURL(imageURL, cacheKey: shieldKey, completion: { (image) in
             completion(image)
         })
     }

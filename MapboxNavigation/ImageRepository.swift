@@ -43,7 +43,7 @@ class ImageRepository {
         return imageCache.imageFromCache(forKey: key)
     }
 
-    func downloadImageWithURL(_ imageURL: URL, cacheKey: String, completion: @escaping (UIImage?) -> Void) {
+    func imageWithURL(_ imageURL: URL, cacheKey: String, completion: @escaping (UIImage?) -> Void) {
         let _ = imageDownloader.downloadImage(with: imageURL, options: [], progress: nil, completed: { [weak self] (image, data, error, successful) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)
