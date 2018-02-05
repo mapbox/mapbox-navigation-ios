@@ -167,7 +167,7 @@ open class RouteLegProgress: NSObject {
      The remaining steps for user to complete.
      */
     @objc public var remainingSteps: [RouteStep] {
-        return Array(leg.steps.suffix(from: stepIndex))
+        return Array(leg.steps.suffix(from: stepIndex + 1))
     }
 
     /**
@@ -181,7 +181,7 @@ open class RouteLegProgress: NSObject {
      Duration remaining in seconds on current leg.
      */
     @objc public var durationRemaining: TimeInterval {
-        return leg.steps.suffix(from: stepIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
+        return remainingSteps.map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
     }
 
     /**
