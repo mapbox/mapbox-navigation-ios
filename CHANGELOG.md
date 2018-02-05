@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixes a bug where the `spokenInstructionIndex` was incremented beyond the number of instructions for a step. (#1080)
+
 ## v0.13.0 (January 22, 2018)
 
 ### Packaging
