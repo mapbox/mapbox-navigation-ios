@@ -162,6 +162,13 @@ open class RouteLegProgress: NSObject {
             currentStepProgress = RouteStepProgress(step: currentStep)
         }
     }
+    
+    /**
+     The reemaining steps for user to complete.
+     */
+    @objc public var remainingSteps: [RouteStep] {
+        return Array(leg.steps.suffix(from: stepIndex))
+    }
 
     /**
      Total distance traveled in meters along current leg.
