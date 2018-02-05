@@ -7,3 +7,4 @@ FOUNDATION_EXPORT double MapboxNavigationVersionNumber;
 FOUNDATION_EXPORT const unsigned char MapboxNavigationVersionString[];
 
 #import "MGLMapView+MGLNavigationAdditions.h"
+#import "OfflineServiceBridge.h"
