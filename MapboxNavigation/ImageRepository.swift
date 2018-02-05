@@ -19,12 +19,23 @@ extension SDWebImageDownloader: ImageDownloader {}
 
 class ImageRepository {
 
-    public static let shared = ImageRepository()
+    public var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
+        didSet {
+            imageDownloader = SDWebImageDownloader(sessionConfiguration: sessionConfiguration)
+        }
+    }
 
-    let imageCache: ImageCache = SDImageCache.shared()
-    let imageDownloader: ImageDownloader = SDWebImageDownloader.shared()
-    
+    public static let shared = ImageRepository.init(withDownloader: SDWebImageDownloader.shared(), cache: SDImageCache.shared())
+
+    let imageCache: ImageCache
+    fileprivate(set) var imageDownloader: ImageDownloader
+
     var useDiskCache = true
+
+    required init(withDownloader downloader: ImageDownloader, cache: ImageCache) {
+        imageDownloader = downloader
+        imageCache = cache
+    }
 
     func resetImageCache() {
         imageCache.clearMemory()
@@ -44,6 +55,11 @@ class ImageRepository {
     }
 
     func imageWithURL(_ imageURL: URL, cacheKey: String, completion: @escaping (UIImage?) -> Void) {
+        if let cachedImage = cachedImageForKey(cacheKey) {
+            completion(cachedImage)
+            return
+        }
+
         let _ = imageDownloader.downloadImage(with: imageURL, options: [], progress: nil, completed: { [weak self] (image, data, error, successful) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)

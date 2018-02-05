@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166224442025699600EA4824 /* ImageRepositoryTests.swift */; };
+		1662244720256C0700EA4824 /* TestImageLoadingURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1662244620256C0700EA4824 /* TestImageLoadingURLProtocol.swift */; };
 		16E3625C201265D600DF0592 /* TestImageDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D621E5F6ADB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D601E5F6ADB0090E733 /* Base.lproj */; };
@@ -117,7 +119,7 @@
 		35D825FC1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */; };
 		35D825FE1E6A2EC60088F83B /* MapboxNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		35DA85791FC45787004092EC /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DA85781FC45787004092EC /* StatusView.swift */; };
-		35DC585D1FABC61100B5A956 /* InstructionsBannerViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC585C1FABC61100B5A956 /* InstructionsBannerViewTests.swift */; };
+		35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */; };
 		35DC9D8D1F431E59001ECD64 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = C52D09CD1DEF5E5100BE3C5C /* route.json */; };
 		35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */ = {isa = PBXBuildFile; fileRef = 35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */; };
 		35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesView.swift */; };
@@ -308,6 +310,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		166224442025699600EA4824 /* ImageRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepositoryTests.swift; sourceTree = "<group>"; };
+		1662244620256C0700EA4824 /* TestImageLoadingURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageLoadingURLProtocol.swift; sourceTree = "<group>"; };
 		16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageDownloadOperation.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -429,7 +433,7 @@
 		35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGLMapView+MGLNavigationAdditions.m"; sourceTree = "<group>"; };
 		35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapboxNavigation.h; sourceTree = "<group>"; };
 		35DA85781FC45787004092EC /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
-		35DC585C1FABC61100B5A956 /* InstructionsBannerViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerViewTests.swift; sourceTree = "<group>"; };
+		35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerViewIntegrationTests.swift; sourceTree = "<group>"; };
 		35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-lanes.json"; sourceTree = "<group>"; };
 		35DC9D901F4323AA001ECD64 /* LanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesView.swift; sourceTree = "<group>"; };
 		35E407671F5625FF00EFC814 /* StyleKitMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleKitMarker.swift; sourceTree = "<group>"; };
@@ -668,6 +672,7 @@
 			isa = PBXGroup;
 			children = (
 				16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */,
+				1662244620256C0700EA4824 /* TestImageLoadingURLProtocol.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -825,7 +830,8 @@
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
 				16E3625A2012656C00DF0592 /* Support */,
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
-				35DC585C1FABC61100B5A956 /* InstructionsBannerViewTests.swift */,
+				166224442025699600EA4824 /* ImageRepositoryTests.swift */,
+				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
@@ -1589,9 +1595,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35DC585D1FABC61100B5A956 /* InstructionsBannerViewTests.swift in Sources */,
+				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
+				1662244720256C0700EA4824 /* TestImageLoadingURLProtocol.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
 				3540514F1F73F3F300ED572D /* TurnArrowTests.swift in Sources */,
+				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				16E3625C201265D600DF0592 /* TestImageDownloadOperation.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */,

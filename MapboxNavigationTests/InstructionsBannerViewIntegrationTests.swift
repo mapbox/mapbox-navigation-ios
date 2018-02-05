@@ -27,7 +27,11 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     let shieldURL1 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-41@3x.png")!
     let shieldURL2 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-94@3x.png")!
 
-    let imageRepository: ImageRepository = ImageRepository.shared
+    lazy var imageRepository: ImageRepository = {
+        let repo = ImageRepository.shared
+        repo.sessionConfiguration = URLSessionConfiguration.default
+        return repo
+    }()
 
     lazy var instructions = {
         return [
