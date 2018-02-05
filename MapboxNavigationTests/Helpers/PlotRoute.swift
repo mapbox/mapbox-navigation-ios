@@ -9,7 +9,9 @@ import MapboxNavigation
 let dotSize = CGSize(width: 15, height: 15)
 
 extension UIColor {
-    class var route: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
+    fileprivate class var route: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
+    fileprivate class var rawLocation: UIColor { get { return #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1) } }
+    fileprivate class var snappedLocation: UIColor { get { return #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1) } }
 }
 
 class PlotRoute: UIView {
@@ -64,7 +66,7 @@ class PlotRoute: UIView {
         // Draw raw locations
         for location in locations {
             let point = mapView!.convert(location.coordinate, toPointTo: self).center(dotSize)
-            drawDot(at: point, color: .red)
+            drawDot(at: point, color: .rawLocation)
             drawCourseIndicator(at: point, course: location.course)
             drawCourseText(at: point, course: location.course)
         }
@@ -77,7 +79,7 @@ class PlotRoute: UIView {
             routeController.rawLocation = location
             if let location = routeController.location {
                 let point = mapView!.convert(location.coordinate, toPointTo: self).center(dotSize)
-                drawDot(at: point, color: .green)
+                drawDot(at: point, color: .snappedLocation)
                 drawCourseIndicator(at: point, course: location.course)
                 drawCourseText(at: point, course: location.course)
             } else {
