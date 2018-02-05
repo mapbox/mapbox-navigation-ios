@@ -80,8 +80,6 @@
 		354A01ED1E6626EF00D765C2 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		354BD4F51E6637D500AE1344 /* AWSPolly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354BD4F11E6634C500AE1344 /* AWSPolly.framework */; };
 		354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */ = {isa = PBXBuildFile; fileRef = 354D9F871EF2FE900006FAA8 /* tunnel.json */; };
-		3550A1C91F89782100B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.json in Resources */ = {isa = PBXBuildFile; fileRef = 3550A1C81F89782000B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.json */; };
-		3550A1CB1F89785100B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.route.json in Resources */ = {isa = PBXBuildFile; fileRef = 3550A1CA1F89785100B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.route.json */; };
 		3550A1CE1F897BDE00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.json in Resources */ = {isa = PBXBuildFile; fileRef = 3550A1CC1F897BDD00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.json */; };
 		3550A1CF1F897BDE00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.route.json in Resources */ = {isa = PBXBuildFile; fileRef = 3550A1CD1F897BDD00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.route.json */; };
 		355D20DC1EF30A6D0012B1E0 /* tunnel.route in Resources */ = {isa = PBXBuildFile; fileRef = 355D20DB1EF30A6D0012B1E0 /* tunnel.route */; };
@@ -383,8 +381,6 @@
 		354BD4F11E6634C500AE1344 /* AWSPolly.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSPolly.framework; path = Carthage/Build/iOS/AWSPolly.framework; sourceTree = "<group>"; };
 		354BD4F61E6638E800AE1344 /* AWSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSCore.framework; path = Carthage/Build/iOS/AWSCore.framework; sourceTree = "<group>"; };
 		354D9F871EF2FE900006FAA8 /* tunnel.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = tunnel.json; sourceTree = "<group>"; };
-		3550A1C81F89782000B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "38512A3B-032C-452D-95EA-06C845B64780.json"; sourceTree = "<group>"; };
-		3550A1CA1F89785100B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "38512A3B-032C-452D-95EA-06C845B64780.route.json"; sourceTree = "<group>"; };
 		3550A1CC1F897BDD00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "7E2DC0D0-50E9-406F-857C-77FDE0A14B67.json"; sourceTree = "<group>"; };
 		3550A1CD1F897BDD00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "7E2DC0D0-50E9-406F-857C-77FDE0A14B67.route.json"; sourceTree = "<group>"; };
 		355D20DB1EF30A6D0012B1E0 /* tunnel.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = tunnel.route; sourceTree = "<group>"; };
@@ -817,10 +813,8 @@
 			children = (
 				3550A1CC1F897BDD00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.json */,
 				3550A1CD1F897BDD00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.route.json */,
-				3550A1C81F89782000B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.json */,
 				3560B81F1F8C56730078AA19 /* SIMPLE_SNAP.json */,
 				35924BA51F86C1AA009C1493 /* SIMPLE_SNAP.route.json */,
-				3550A1CA1F89785100B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.route.json */,
 			);
 			path = ControlRoutes;
 			sourceTree = "<group>";
@@ -1368,11 +1362,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3550A1C91F89782100B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.json in Resources */,
 				351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */,
 				35924BA61F86C1AA009C1493 /* SIMPLE_SNAP.route.json in Resources */,
 				3550A1CF1F897BDE00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.route.json in Resources */,
-				3550A1CB1F89785100B4C0B1 /* 38512A3B-032C-452D-95EA-06C845B64780.route.json in Resources */,
 				3560B8201F8C56740078AA19 /* SIMPLE_SNAP.json in Resources */,
 				3550A1CE1F897BDE00B4C0B1 /* 7E2DC0D0-50E9-406F-857C-77FDE0A14B67.json in Resources */,
 				3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */,
