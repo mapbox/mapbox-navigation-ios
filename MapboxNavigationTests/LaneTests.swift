@@ -10,11 +10,13 @@ class LaneTests: FBSnapshotTestCase {
     let route = Fixture.route(from: "route-for-lane-testing", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
     
     var steps: [RouteStep]!
+    var routeProgress: RouteProgress!
     
     override func setUp() {
         super.setUp()
         let routeController = RouteController(along: route, directions: directions)
         steps = routeController.routeProgress.currentLeg.steps
+        routeProgress = routeController.routeProgress
         
         route.accessToken = bogusToken
         recordMode = false
@@ -25,8 +27,8 @@ class LaneTests: FBSnapshotTestCase {
         let controller = storyboard().instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
         XCTAssert(controller.view != nil)
         
-        controller.updateLaneViews(step: step, durationRemaining: 20)
-        controller.showLaneViews(animated: false)
+        controller.lanesView.update(for: routeProgress)
+        controller.lanesView.show(animated: false)
         
         FBSnapshotVerifyView(controller.lanesView)
     }

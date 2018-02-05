@@ -25,7 +25,7 @@ class TurnArrowTests: FBSnapshotTestCase {
         let maneuverView = ManeuverView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
         maneuverView.backgroundColor = .white
         let stepWithStraightRoundabout = steps[1]
-        maneuverView.step = stepWithStraightRoundabout
+//        maneuverView.step = stepWithStraightRoundabout
         FBSnapshotVerifyView(maneuverView)
     }
 }

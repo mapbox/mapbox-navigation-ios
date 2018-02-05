@@ -71,7 +71,8 @@ open class BaseInstructionsBannerView: UIControl {
         delegate?.didTapInstructionsBanner(self)
     }
     
-    func set(_ primaryInstruction: [VisualInstructionComponent]?, secondaryInstruction: [VisualInstructionComponent]?) {
+    func set(_ instruction: VisualInstruction) {
+        let secondaryInstruction = instruction.secondaryTextComponents
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
@@ -80,8 +81,9 @@ open class BaseInstructionsBannerView: UIControl {
             baselineAlignInstructions()
         }
         
-        primaryLabel.instruction = primaryInstruction
+        primaryLabel.instruction = instruction.primaryTextComponents
         secondaryLabel.instruction = secondaryInstruction
+        maneuverView.visualInstruction = instruction
     }
     
     override open func prepareForInterfaceBuilder() {
@@ -91,5 +93,18 @@ open class BaseInstructionsBannerView: UIControl {
         primaryLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Primary text label", imageURL: nil)]
         
         distance = 100
+    }
+    
+    /**
+     Updates the instructions banner for a given `RouteProgress`.
+     */
+    public func update(for routeProgress: RouteProgress) {
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let distanceRemaining = stepProgress.distanceRemaining
+        
+        guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
+        
+        set(visualInstruction)
+        distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
 }
