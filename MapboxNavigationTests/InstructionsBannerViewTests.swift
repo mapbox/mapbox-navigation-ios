@@ -37,6 +37,10 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
     }
     
+    func makeVisualInstruction(primaryInstruction: [VisualInstructionComponent], secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstruction {
+        return VisualInstruction(distanceAlongStep: 482.803, primaryText: "Instruction", primaryTextComponents: primaryInstruction, secondaryText: "Instruction", secondaryTextComponents: secondaryInstruction, maneuverType: .turn, maneuverDirection: .right, drivingSide: .right)
+    }
+    
     func testSinglelinePrimary() {
         let view = instructionsView()
         styleInstructionsView(view)
@@ -50,7 +54,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .destination, text: "Chicago", imageURL: nil)
         ]
         
-        view.set(instructions, secondaryInstruction: nil)
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -67,7 +71,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .destination, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil)
         ]
 
-        view.set(instructions, secondaryInstruction: nil)
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
     
         verifyView(view, size: view.bounds.size)
     }
@@ -85,7 +89,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
         
-        view.set(primary, secondaryInstruction: secondary)
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
 
         verifyView(view, size: view.bounds.size)
     }
@@ -102,7 +106,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .destination, text: "Mountain View Test", imageURL: nil)]
 
-        view.set(primary, secondaryInstruction: secondary)
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
         
         verifyView(view, size: view.bounds.size)
     }
@@ -126,7 +130,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
         
-        instructionsBannerView.set(primary, secondaryInstruction: secondary)
+        instructionsBannerView.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
 
         
         let primaryThen = [

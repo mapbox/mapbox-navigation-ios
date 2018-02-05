@@ -65,7 +65,11 @@ public class LanesView: UIView {
         separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     
-    func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
+    func update(for routeProgress: RouteProgress) {
+        guard let step = routeProgress.currentLegProgress.upComingStep else { return }
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint else { return }
+        let durationRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
+        
         clearLaneViews()
         
         if let allLanes = step.intersections?.first?.approachLanes,
@@ -80,6 +84,30 @@ public class LanesView: UIView {
                 stackView.addArrangedSubview(laneView)
             }
         }
+        
+        if stackView.arrangedSubviews.count > 0 {
+            show()
+        } else {
+            hide()
+        }
+    }
+    
+    public func show(animated: Bool = true) {
+        guard isHidden == true else { return }
+        if animated {
+            UIView.defaultAnimation(0.3, animations: {
+                self.isHidden = false
+            }, completion: nil)
+        } else {
+            self.isHidden = false
+        }
+    }
+    
+    public func hide() {
+        guard isHidden == false else { return }
+        UIView.defaultAnimation(0.3, animations: {
+            self.isHidden = true
+        }, completion: nil)
     }
     
     fileprivate func clearLaneViews() {
@@ -88,4 +116,5 @@ public class LanesView: UIView {
             $0.removeFromSuperview()
         }
     }
+    
 }
