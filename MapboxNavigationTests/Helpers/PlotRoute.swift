@@ -118,12 +118,12 @@ extension UIView {
         let textStyle = NSMutableParagraphStyle()
         textStyle.alignment = .left
         
-        let attributes: [String: Any] = [
-            NSFontAttributeName: UIFont.systemFont(ofSize: 7, weight: UIFontWeightMedium),
-            NSForegroundColorAttributeName: UIColor.white,
-            NSParagraphStyleAttributeName: textStyle,
-            NSStrokeColorAttributeName: UIColor.black,
-            NSStrokeWidthAttributeName: -1
+        let attributes: [NSAttributedStringKey: Any] = [
+            .font: UIFont.systemFont(ofSize: 7, weight: .medium),
+            .foregroundColor: UIColor.white,
+            .paragraphStyle: textStyle,
+            .strokeColor: UIColor.black,
+            .strokeWidth: -1
         ]
         
         let height: CGFloat = text.boundingRect(with: CGSize(width: textRect.width, height: CGFloat.infinity),
@@ -147,12 +147,6 @@ extension MGLCoordinateBounds {
 extension CGSize {
     fileprivate var radius: CGFloat {
         return width / 2
-    }
-}
-
-extension CLLocationDirection {
-    fileprivate func toRadians() -> CGFloat {
-        return CGFloat(self * .pi / 180.0)
     }
 }
 
