@@ -164,7 +164,7 @@ open class RouteLegProgress: NSObject {
     }
     
     /**
-     The reemaining steps for user to complete.
+     The remaining steps for user to complete.
      */
     @objc public var remainingSteps: [RouteStep] {
         return Array(leg.steps.suffix(from: stepIndex))
