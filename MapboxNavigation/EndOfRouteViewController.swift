@@ -78,6 +78,7 @@ class EndOfRouteViewController: UIViewController {
         super.viewWillDisappear(animated)
         view.roundCorners([.topLeft, .topRight])
         preferredContentSize.height = height(for: .normal)
+        updateInterface()
     }
 
     //MARK: - IBActions

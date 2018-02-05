@@ -119,6 +119,13 @@ class RouteMapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        endOfRouteViewController.dismiss = { [weak self] (stars, comment) in
+            guard let rating = self?.rating(for: stars) else { return }
+            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
+            self?.dismiss(animated: true, completion: nil)
+        }
+        
         automaticallyAdjustsScrollViewInsets = false
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
@@ -556,8 +563,6 @@ class RouteMapViewController: UIViewController {
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
         navigationView.endOfRouteView?.isHidden = false
 
-        endOfRouteViewController.destination = destination
-        
         view.layoutIfNeeded() //flush layout queue
         NSLayoutConstraint.deactivate(navigationView.bannerShowConstraints)
         NSLayoutConstraint.activate(navigationView.bannerHideConstraints)
@@ -602,17 +607,6 @@ class RouteMapViewController: UIViewController {
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: complete)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let endOfRouteVC = segue.destination as? EndOfRouteViewController else { return }
-        
-        endOfRouteVC.dismiss = { [weak self] (stars, comment) in
-            guard let rating = self?.rating(for: stars) else { return }
-            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
-            self?.dismiss(animated: true, completion: nil)
-        }
-        endOfRouteViewController = endOfRouteVC
-    }
-
     fileprivate func rating(for stars: Int) -> Int {
         assert(stars >= 0 && stars <= 5)
         guard stars > 0 else { return MMEEventsManager.unrated } //zero stars means this was unrated.

@@ -319,6 +319,7 @@ public class NavigationViewController: UIViewController {
         
         let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
         self.mapViewController = mapViewController
+        mapViewController.destination = route.legs.last?.destination
         addChildViewController(mapViewController)
         let mapSubview: UIView = mapViewController.view
         mapSubview.translatesAutoresizingMaskIntoConstraints = false
