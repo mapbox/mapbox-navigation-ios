@@ -818,7 +818,8 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     func updateRouteStepProgress(for location: CLLocation) {
-
+        guard routeProgress.currentLegProgress.remainingSteps.count > 0 else { return }
+        
         let userSnapToStepDistanceFromManeuver = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!).distance(from: location.coordinate)
         var courseMatchesManeuverFinalHeading = false
 
