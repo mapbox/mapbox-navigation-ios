@@ -97,7 +97,9 @@ class RouteMapViewController: UIViewController {
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
     var annotatesSpokenInstructions = false
-
+    
+    var overheadInsets: UIEdgeInsets!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
@@ -127,6 +129,8 @@ class RouteMapViewController: UIViewController {
         instructionsBannerView.delegate = self
         bottomBannerView?.delegate = self
         resumeNotifications()
+        
+        overheadInsets = UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
     }
     
     deinit {
@@ -215,7 +219,9 @@ class RouteMapViewController: UIViewController {
 
     @IBAction func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        updateVisibleBounds()
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            mapView.enableOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+        }
         isInOverviewMode = true
     }
     
@@ -312,7 +318,9 @@ class RouteMapViewController: UIViewController {
         }
 
         if isInOverviewMode {
-            updateVisibleBounds()
+            if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+                mapView.enableOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+            }
         } else {
             mapView.tracksUserCourse = true
             wayNameLabel.isHidden = true
@@ -430,7 +438,9 @@ class RouteMapViewController: UIViewController {
             return
         }
 
-        updateVisibleBounds()
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            mapView.enableOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+        }
     }
     
     func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {

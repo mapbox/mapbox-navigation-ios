@@ -1015,6 +1015,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             style.addLayer(symbol)
         }
     }
+    
+    @objc public func enableOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
+        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+        
+        tracksUserCourse = false
+        let camera = self.camera
+        camera.pitch = 0
+        camera.heading = 0
+        self.camera = camera
+        
+        // Don't keep zooming in
+        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > 200 else { return }
+        
+        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+    }
 }
 
 // MARK: Extensions
