@@ -14,12 +14,17 @@ class ImageRepositoryTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        self.continueAfterFailure = false
 
         //TODO: the URLSession needs to be created with this config, and thus needs to be injected. Lazy var above is WIP.
         URLProtocol.registerClass(TestImageLoadingURLProtocol.self)
         TestImageLoadingURLProtocol.reset()
 
-        repository.resetImageCache()
+        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
+        repository.resetImageCache {
+            clearImageCacheExpectation.fulfill()
+        }
+        self.wait(for: [clearImageCacheExpectation], timeout: 1)
     }
 
     func test_imageWithURL_downloadsImageWhenNotCached() {

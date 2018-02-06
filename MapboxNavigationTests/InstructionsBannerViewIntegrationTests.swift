@@ -45,7 +45,12 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         super.setUp()
 
         imageRepository.disableDiskCache()
-        imageRepository.resetImageCache()
+        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
+        imageRepository.resetImageCache {
+            clearImageCacheExpectation.fulfill()
+        }
+        self.wait(for: [clearImageCacheExpectation], timeout: 1)
+
 
         TestImageDownloadOperation.reset()
         imageRepository.imageDownloader.setOperationClass(TestImageDownloadOperation.self)
@@ -79,7 +84,11 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
         //explicitly reset the cache
-        imageRepository.resetImageCache()
+        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
+        imageRepository.resetImageCache {
+            clearImageCacheExpectation.fulfill()
+        }
+        self.wait(for: [clearImageCacheExpectation], timeout: 1)
     }
 
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
@@ -125,7 +134,11 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     override func tearDown() {
         super.tearDown()
 
-        imageRepository.resetImageCache()
+        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
+        imageRepository.resetImageCache {
+            clearImageCacheExpectation.fulfill()
+        }
+        self.wait(for: [clearImageCacheExpectation], timeout: 1)
     }
 
     func testSinglelinePrimary() {

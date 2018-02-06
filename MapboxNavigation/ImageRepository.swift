@@ -1,21 +1,25 @@
 import Foundation
 import SDWebImage
 
-protocol ImageDownloader {
-    func downloadImage(with url: URL?, options: SDWebImageDownloaderOptions, progress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: SDWebImageDownloaderCompletedBlock?) -> SDWebImageDownloadToken?
+typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?, Bool) -> Void
+
+protocol ReentrantImageDownloader {
+    func downloadImage(with url: URL?, options: SDWebImageDownloaderOptions, progress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: ImageDownloadCompletionBlock?) -> SDWebImageDownloadToken?
     func setOperationClass(_ klass: AnyClass?)
 }
 
-protocol ImageCache {
-    func store(_ image: UIImage?, forKey key: String?, toDisk: Bool, completion completionBlock: SDWebImageNoParamsBlock?)
+typealias NoArgBlock = () -> Void
+
+protocol BimodalImageCache {
+    func store(_ image: UIImage?, forKey key: String?, toDisk: Bool, completion completionBlock: NoArgBlock?)
     func imageFromCache(forKey: String?) -> UIImage?
     func clearMemory()
     func clearDisk(onCompletion completion: (() -> Void)?)
 }
 
-extension SDImageCache: ImageCache {}
+extension SDImageCache: BimodalImageCache {}
 
-extension SDWebImageDownloader: ImageDownloader {}
+extension SDWebImageDownloader: ReentrantImageDownloader {}
 
 class ImageRepository {
 
@@ -27,23 +31,19 @@ class ImageRepository {
 
     public static let shared = ImageRepository.init(withDownloader: SDWebImageDownloader.shared(), cache: SDImageCache.shared())
 
-    let imageCache: ImageCache
-    fileprivate(set) var imageDownloader: ImageDownloader
+    let imageCache: BimodalImageCache
+    fileprivate(set) var imageDownloader: ReentrantImageDownloader
 
     var useDiskCache = true
 
-    required init(withDownloader downloader: ImageDownloader, cache: ImageCache) {
+    required init(withDownloader downloader: ReentrantImageDownloader, cache: BimodalImageCache) {
         imageDownloader = downloader
         imageCache = cache
     }
 
-    func resetImageCache() {
+    func resetImageCache(_ completion: NoArgBlock?) {
         imageCache.clearMemory()
-        let semaphore = DispatchSemaphore(value: 1)
-        imageCache.clearDisk {
-            semaphore.signal()
-        }
-        let _ = semaphore.wait(timeout: .distantFuture)
+        imageCache.clearDisk(onCompletion: completion)
     }
 
     func storeImage(_ image: UIImage, forKey key: String?, toDisk: Bool = true) {

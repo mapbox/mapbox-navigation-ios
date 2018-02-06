@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 166224442025699600EA4824 /* ImageRepositoryTests.swift */; };
 		1662244720256C0700EA4824 /* TestImageLoadingURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1662244620256C0700EA4824 /* TestImageLoadingURLProtocol.swift */; };
+		1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1662244A2029059C00EA4824 /* ImageCacheTests.swift */; };
 		16E3625C201265D600DF0592 /* TestImageDownloadOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D621E5F6ADB0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D601E5F6ADB0090E733 /* Base.lproj */; };
@@ -128,6 +129,7 @@
 		35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */; };
 		35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F520BF1FB482A200FC9C37 /* NextBannerView.swift */; };
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
+		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
 		3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */; };
 		3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938BE5468824787100228 /* ImageRepository.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
@@ -312,6 +314,7 @@
 /* Begin PBXFileReference section */
 		166224442025699600EA4824 /* ImageRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRepositoryTests.swift; sourceTree = "<group>"; };
 		1662244620256C0700EA4824 /* TestImageLoadingURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageLoadingURLProtocol.swift; sourceTree = "<group>"; };
+		1662244A2029059C00EA4824 /* ImageCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheTests.swift; sourceTree = "<group>"; };
 		16E3625B201265D600DF0592 /* TestImageDownloadOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageDownloadOperation.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -441,6 +444,7 @@
 		35F520BF1FB482A200FC9C37 /* NextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBannerView.swift; sourceTree = "<group>"; };
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
 		3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionPresenter.swift; sourceTree = "<group>"; };
+		3EA938479CF48D7AD1B6369B /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		3EA938BE5468824787100228 /* ImageRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
@@ -717,6 +721,7 @@
 				C5D1C9931FB236900067C619 /* ErrorCode.swift */,
 				35CB1E121F97DD740011CC44 /* FeedbackItem.swift */,
 				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
+				3EA938479CF48D7AD1B6369B /* ImageCache.swift */,
 				3EA938BE5468824787100228 /* ImageRepository.swift */,
 				3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */,
 				35D825FD1E6A2EC60088F83B /* MapboxNavigation.h */,
@@ -830,6 +835,7 @@
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
 				16E3625A2012656C00DF0592 /* Support */,
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
+				1662244A2029059C00EA4824 /* ImageCacheTests.swift */,
 				166224442025699600EA4824 /* ImageRepositoryTests.swift */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
@@ -1550,6 +1556,7 @@
 				C5D1C9941FB236900067C619 /* ErrorCode.swift in Sources */,
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
+				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1601,6 +1608,7 @@
 				3540514F1F73F3F300ED572D /* TurnArrowTests.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				16E3625C201265D600DF0592 /* TestImageDownloadOperation.swift in Sources */,
+				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */,
 				352690491ECC843700E387BD /* Fixture.swift in Sources */,
