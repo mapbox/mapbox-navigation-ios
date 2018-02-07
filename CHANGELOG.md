@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v0.14.0 (February 7, 2018)
+## v0.13.1 (February 7, 2018)
 
 ### Core Navigation
 
