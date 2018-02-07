@@ -674,11 +674,14 @@ extension RouteMapViewController: NavigationViewDelegate {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         removePreviewInstructions()
         
-        guard let controller = stepsViewController else {
+        if let controller = stepsViewController {
+            stepsViewController = nil
+            controller.dismiss()
+        } else {
             let controller = StepsViewController(routeProgress: routeController.routeProgress)
             controller.delegate = self
             addChildViewController(controller)
-            view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerContentView)
+            view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerView)
             
             controller.view.topAnchor.constraint(equalTo: navigationView.instructionsBannerView.bottomAnchor).isActive = true
             controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
@@ -691,9 +694,6 @@ extension RouteMapViewController: NavigationViewDelegate {
             stepsViewController = controller
             return
         }
-        
-        stepsViewController = nil
-        controller.dismiss {}
     }
     
     //MARK: NavigationMapViewDelegate
