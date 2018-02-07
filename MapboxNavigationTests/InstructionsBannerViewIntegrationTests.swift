@@ -74,8 +74,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let instruction1 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL1)
         let instruction2 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL2)
 
-        imageRepository.storeImage(shieldImage, forKey: instruction1.shieldKey(), toDisk: false)
-        imageRepository.storeImage(shieldImage, forKey: instruction2.shieldKey(), toDisk: false)
+        imageRepository.storeImage(shieldImage, forKey: instruction1.shieldKey()!, toDisk: false)
+        imageRepository.storeImage(shieldImage, forKey: instruction2.shieldKey()!, toDisk: false)
 
         let view = instructionsView()
         view.set(instructions, secondaryInstruction: nil)
@@ -127,7 +127,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         recordMode = false
 
         let instruction = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL)
-        let shieldKey = instruction.shieldKey()
+        let shieldKey = instruction.shieldKey()!
         imageRepository.storeImage(shieldImage, forKey: shieldKey, toDisk: false)
     }
 

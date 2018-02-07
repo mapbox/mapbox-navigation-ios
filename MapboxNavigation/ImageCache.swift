@@ -29,11 +29,8 @@ class ImageCache: BimodalImageCache {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func store(_ image: UIImage?, forKey key: String?, toDisk: Bool, completion: NoArgBlock?) {
-        guard let image = image else {
-            return
-        }
-        let key = cacheKeyForKey(key!)
+    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: NoArgBlock?) {
+        let key = cacheKeyForKey(key)
 
         memoryCache.setObject(image, forKey: key as NSString, cost: cacheCostForImage(image))
 

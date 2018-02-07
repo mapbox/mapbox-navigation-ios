@@ -11,13 +11,17 @@ protocol ReentrantImageDownloader {
 typealias NoArgBlock = () -> Void
 
 protocol BimodalImageCache {
-    func store(_ image: UIImage?, forKey key: String?, toDisk: Bool, completion completionBlock: NoArgBlock?)
+    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: NoArgBlock?)
     func imageFromCache(forKey: String?) -> UIImage?
     func clearMemory()
     func clearDisk(onCompletion completion: (() -> Void)?)
 }
 
-extension SDImageCache: BimodalImageCache {}
+extension SDImageCache: BimodalImageCache {
+    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: NoArgBlock?) {
+        store(image, forKey: key, toDisk: toDisk, completion: completionBlock)
+    }
+}
 
 extension SDWebImageDownloader: ReentrantImageDownloader {}
 
@@ -46,7 +50,7 @@ class ImageRepository {
         imageCache.clearDisk(onCompletion: completion)
     }
 
-    func storeImage(_ image: UIImage, forKey key: String?, toDisk: Bool = true) {
+    func storeImage(_ image: UIImage, forKey key: String, toDisk: Bool = true) {
         imageCache.store(image, forKey: key, toDisk: toDisk, completion: nil)
     }
 
