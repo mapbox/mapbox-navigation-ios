@@ -40,6 +40,9 @@ extension UIView {
 @objc(MBUserPuckCourseView)
 public class UserPuckCourseView: UIView, UserCourseView {
     
+    /**
+     Transforms the location of the user puck.
+     */
     public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
