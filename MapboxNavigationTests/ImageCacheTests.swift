@@ -18,14 +18,11 @@ class ImageCacheTests: XCTestCase {
         self.wait(for: [expectation], timeout: 1)
     }
 
-    override func tearDown() {
-
-        super.tearDown()
-    }
+    let imageKey = "imageKey"
 
     func storeImageInMemory() {
         let expectation = self.expectation(description: "Storing image in memory cache")
-        cache.store(shieldImage, forKey: "shieldKey", toDisk: false) {
+        cache.store(shieldImage, forKey: imageKey, toDisk: false) {
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: 1)
@@ -33,16 +30,28 @@ class ImageCacheTests: XCTestCase {
 
     func storeImageOnDisk() {
         let expectation = self.expectation(description: "Storing image in disk cache")
-        cache.store(shieldImage, forKey: "shieldKey", toDisk: true) {
+        cache.store(shieldImage, forKey: imageKey, toDisk: true) {
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: 1)
     }
 
+    func testUsingURLStringAsCacheKey() {
+        let cacheKeyURLString = "https://zombo.com/lulz/shieldKey.xyz"
+        let expectation = self.expectation(description: "Storing image in disk cache")
+        cache.store(shieldImage, forKey: cacheKeyURLString, toDisk: true) {
+            expectation.fulfill()
+        }
+        self.wait(for: [expectation], timeout: 1)
+
+        let returnedImage = cache.imageFromCache(forKey: cacheKeyURLString)
+        XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
+    }
+
     func testStoringImageInMemoryOnly() {
         storeImageInMemory()
 
-        let returnedImage = cache.imageFromCache(forKey: "shieldKey")
+        let returnedImage = cache.imageFromCache(forKey: imageKey)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
     }
 
@@ -51,7 +60,7 @@ class ImageCacheTests: XCTestCase {
 
         cache.clearMemory()
 
-        XCTAssertNil(cache.imageFromCache(forKey: "shieldKey"))
+        XCTAssertNil(cache.imageFromCache(forKey: imageKey))
 
         storeImageOnDisk()
 
@@ -63,23 +72,27 @@ class ImageCacheTests: XCTestCase {
         }
         self.wait(for: [expectation], timeout: 1)
 
-        XCTAssertNil(cache.imageFromCache(forKey: "shieldKey"))
+        XCTAssertNil(cache.imageFromCache(forKey: imageKey))
     }
 
     func testStoringImageOnDisk() {
         storeImageOnDisk()
 
-        var returnedImage = cache.imageFromCache(forKey: "shieldKey")
+        var returnedImage = cache.imageFromCache(forKey: imageKey)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
 
         cache.clearMemory()
 
-        returnedImage = cache.imageFromCache(forKey: "shieldKey")
+        returnedImage = cache.imageFromCache(forKey: imageKey)
         XCTAssertNotNil(returnedImage)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
     }
 
     func testClearingMemoryCacheOnMemoryWarning() {
+        storeImageInMemory()
 
+        NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
+
+        XCTAssertNil(cache.imageFromCache(forKey: imageKey))
     }
 }

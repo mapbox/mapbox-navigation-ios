@@ -20,17 +20,20 @@ class ImageCache: BimodalImageCache {
             fileManager = FileManager()
         }
 
-        //TODO: register for UIApplicationDidReceiveMemoryWarningNotification and clear memory cache
+        NotificationCenter.default.addObserver(forName: .UIApplicationDidReceiveMemoryWarning, object: nil, queue: nil) { [unowned self] (notif) in
+            self.clearMemory()
+        }
     }
 
     deinit {
-        // TODO: un-register for memory notifications
+        NotificationCenter.default.removeObserver(self)
     }
 
     func store(_ image: UIImage?, forKey key: String?, toDisk: Bool, completion: NoArgBlock?) {
-        guard let image = image, let key = key else {
+        guard let image = image else {
             return
         }
+        let key = cacheKeyForKey(key!)
 
         memoryCache.setObject(image, forKey: key as NSString, cost: cacheCostForImage(image))
 
@@ -63,11 +66,13 @@ class ImageCache: BimodalImageCache {
     }
 
     private func cachePathWithKey(_ key: String) -> String {
-        return cacheURLWithKey(key).absoluteString
+        let cacheKey = cacheKeyForKey(key)
+        return cacheURLWithKey(cacheKey).absoluteString
     }
 
     private func cacheURLWithKey(_ key: String) -> URL {
-        return diskCacheURL.appendingPathComponent(key)
+        let cacheKey = cacheKeyForKey(key)
+        return diskCacheURL.appendingPathComponent(cacheKey)
     }
 
     func imageFromCache(forKey key: String?) -> UIImage? {
@@ -99,8 +104,15 @@ class ImageCache: BimodalImageCache {
         }
     }
 
+    private func cacheKeyForKey(_ key: String) -> String {
+        if let keyAsURL = URL(string: key) {
+            return keyAsURL.lastPathComponent
+        }
+        return key
+    }
+
     private func imageFromMemoryCache(forKey key: String?) -> UIImage? {
-        guard let key = key as NSString! else {
+        guard let key = cacheKeyForKey(key!) as NSString! else {
             return nil
         }
         return memoryCache.object(forKey: key)

@@ -32,7 +32,13 @@ class TestImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterf
 
     func addHandlers(forProgress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: SDWebImageDownloaderCompletedBlock?) -> Any? {
         self.progressBlock = progressBlock
-        self.completedBlock = completedBlock
+        if let completedBlock = completedBlock {
+            self.completedBlock = { (image: UIImage?, data: Data?, error: Error?, success: Bool) in
+                completedBlock(image, data, error, success)
+                // Sadly we need to tick the run loop here to deal with the fact that the underlying implementations hop between queues. This has a similar effect to using XCTestCase's async expectations.
+                RunLoop.current.run(until: Date())
+            }
+        }
 
         return nil
     }
