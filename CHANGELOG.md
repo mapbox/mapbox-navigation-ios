@@ -9,7 +9,7 @@
 ### User Interface
 
 * Added support for spoken instructions in Danish. (#1041)
-* Updated translations for Russian, Swedish, Spanish, Vietnamese, Hebrew, Ukrainian, and German. (#1064)
+* Updated translations for Russian, Swedish, Spanish, Vietnamese, Hebrew, Ukrainian, and German. (#1064) (#1089)
 
 ## v0.13.0 (January 22, 2018)
 
