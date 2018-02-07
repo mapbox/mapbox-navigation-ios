@@ -1,8 +1,15 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.13.1 (February 7, 2018)
+
+### Core Navigation
 
 * Fixes a bug where the `spokenInstructionIndex` was incremented beyond the number of instructions for a step. (#1080)
+
+### User Interface
+
+* Added support for spoken instructions in Danish. (#1041)
+* Updated translations for Russian, Swedish, Spanish, Vietnamese, Hebrew, Ukrainian, and German. (#1064)
 
 ## v0.13.0 (January 22, 2018)
 
@@ -114,7 +121,7 @@ Beginning with this release, the navigation SDK and Core Navigation are written 
 
 ### Packaging
 
-* Reverts a change that used AWS's repo for the Polly dependency. This will help with build times when using Carthage. #859 
+* Reverts a change that used AWS's repo for the Polly dependency. This will help with build times when using Carthage. #859
 * Updates Polly dependency to v2.6.5 #859
 
 ### Views
@@ -125,7 +132,7 @@ Beginning with this release, the navigation SDK and Core Navigation are written 
 
 ### Map
 
-* `MGLMapView init(frame:styleURL:)` is exposed again on `NavigationMapView`. #850 
+* `MGLMapView init(frame:styleURL:)` is exposed again on `NavigationMapView`. #850
 
 ### User location tracking
 
@@ -194,9 +201,9 @@ Beginning with this release, the navigation SDK and Core Navigation are written 
 ## v0.8.3 (October 9, 2017)
 
 * Pins the dependency `Solar` to v2.0.0. This should fix some build issues. #693
-* Increases the width of the upcoming maneuver arrow. #671 
-* Improved user location snapping. #679 
-* Improves simulation mode by using more accurate speeds. #683 
+* Increases the width of the upcoming maneuver arrow. #671
+* Improved user location snapping. #679
+* Improves simulation mode by using more accurate speeds. #683
 * Adopted [Turf](https://github.com/mapbox/turf-swift). The `wrap(_:min:max:)` function has been removed; use Turf’s `CLLocationDirection.wrap(min:max:)` instead. #653
 * Defaulted to `kCLLocationAccuracyBestForNavigation` for location accuracy. #670
 
