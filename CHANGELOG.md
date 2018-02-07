@@ -5,6 +5,7 @@
 ### Core Navigation
 
 * Fixes a bug where the `spokenInstructionIndex` was incremented beyond the number of instructions for a step. (#1080)
+* Fixed a bug that crashed when navigating beyond the final waypoint. (#1087)
 
 ### User Interface
 
