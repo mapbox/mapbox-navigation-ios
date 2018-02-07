@@ -317,9 +317,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }, completion: nil)
         
         if let userCourseView = userCourseView as? UserCourseView {
-            userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            if let customTransformation = userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse) {
+                customTransformation
+            } else {
+                self.userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            }
         } else {
-            userCourseView?.updateCourseView(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
         }
     }
     

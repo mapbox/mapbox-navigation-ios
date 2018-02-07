@@ -9,7 +9,11 @@ let ArrowSize = PuckSize * 0.6
  A view that represents the user’s location and course on a `NavigationMapView`.
  */
 @objc(MBUserCourseView)
-public protocol UserCourseView {
+public protocol UserCourseView where Self: UIView {
+    @objc optional var location: CLLocation { get set }
+    @objc optional var direction: CLLocationDegrees { get set }
+    @objc optional var pitch: CLLocationDegrees { get set }
+    
     /**
      Updates the view to reflect the given location and other camera properties.
      */
@@ -17,16 +21,13 @@ public protocol UserCourseView {
 }
 
 extension UIView {
-    func updateCourseView(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
+    func applyDefaultUserPuckTransformation(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
-            let scale: CGFloat = tracksUserCourse ? 1 : 0.5
-            var t = CGAffineTransform.identity
-            t = t.rotated(by: -CGFloat(angle.toRadians()))
-            t = t.scaledBy(x: scale, y: scale)
-            self.layer.setAffineTransform(t)
+            self.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
             var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(CLLocationDegrees(pitch).toRadians()), 1.0, 0, 0)
+            transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
         }, completion: nil)
@@ -37,7 +38,25 @@ extension UIView {
  A view representing the user’s location on screen.
  */
 @objc(MBUserPuckCourseView)
-public class UserPuckCourseView: UIView {
+public class UserPuckCourseView: UIView, UserCourseView {
+    
+    /**
+     Transforms the location of the user puck.
+     */
+    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
+        let duration: TimeInterval = animated ? 1 : 0
+        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
+            
+            let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
+            self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
+            
+            var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(CLLocationDegrees(pitch).toRadians()), 1.0, 0, 0)
+            transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
+            transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
+            self.layer.sublayerTransform = transform
+            
+        }, completion: nil)
+    }
     
     // Sets the color on the user puck
     @objc public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
@@ -77,30 +96,6 @@ public class UserPuckCourseView: UIView {
         backgroundColor = .clear
         puckView.backgroundColor = .clear
         addSubview(puckView)
-    }
-    
-    var location: CLLocation?
-    
-    var pitch: CLLocationDegrees = 0
-    
-    var direction: CLLocationDirection = 0
-    
-    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
-        self.location = location
-        self.direction = direction
-        self.pitch = CLLocationDegrees(pitch)
-        let duration: TimeInterval = animated ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            
-            let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
-            self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-            
-            var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(self.pitch.toRadians()), 1.0, 0, 0)
-            transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
-            transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
-            self.layer.sublayerTransform = transform
-            
-        }, completion: nil)
     }
 }
 
