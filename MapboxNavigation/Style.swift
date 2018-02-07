@@ -81,7 +81,6 @@ open class FloatingButton: Button {
         let button = T.init(type: .custom)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
-        button.backgroundColor = .white
         button.setImage(image, for: .normal)
         if let selected = selectedImage { button.setImage(selected, for: .selected) }
         button.applyDefaultCornerRadiusShadow(cornerRadius: size.width / 2)
