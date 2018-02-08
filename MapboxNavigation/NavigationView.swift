@@ -73,7 +73,6 @@ open class NavigationView: UIView {
         map.delegate = delegate
         map.navigationMapDelegate = delegate
         map.courseTrackingDelegate = delegate
-        map.styleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")
         map.showsUserLocation = true
         
         return map

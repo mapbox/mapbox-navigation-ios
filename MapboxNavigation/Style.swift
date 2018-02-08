@@ -337,7 +337,7 @@ open class WayNameLabel: StylableLabel {
         }
     }
     
-    @objc open override var backgroundColor: UIColor? {
+    @objc dynamic open override var backgroundColor: UIColor? {
         didSet {
             setNeedsDisplay()
         }
