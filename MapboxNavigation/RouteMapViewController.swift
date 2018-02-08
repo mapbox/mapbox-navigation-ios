@@ -103,10 +103,11 @@ class RouteMapViewController: UIViewController {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
         
-        instructionsBannerViewModel = InstructionsBannerViewModel{ [unowned self] (state) in
+        instructionsBannerViewModel = InstructionsBannerViewModel { [unowned self] (viewModel, state) in
             self.instructionsBannerView.usesTwoLinesOfInstructions = state.usesTwoLinesOfInstructions
             self.instructionsBannerView.maneuverView.step = state.maneuverViewStep
-            self.instructionsBannerView.distanceLabel.attributedText = state.attributedDistanceString
+            let distanceLabel = self.instructionsBannerView.distanceLabel!
+            distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: distanceLabel)
             self.instructionsBannerView.primaryLabel.instruction = state.primaryInstruction
             self.instructionsBannerView.secondaryLabel.instruction = state.secondaryInstruction
         }
@@ -309,7 +310,7 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         updateETA()
         
-        instructionsBannerViewModel.update(for: routeController.routeProgress, distanceLabel: instructionsBannerView.distanceLabel)
+        instructionsBannerViewModel.update(for: routeController.routeProgress)
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -414,7 +415,7 @@ class RouteMapViewController: UIViewController {
         
         let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
         
-        instructionsBannerViewModel.update(for: routeProgress, distanceLabel: instructionsBannerView.distanceLabel)
+        instructionsBannerViewModel.update(for: routeProgress)
         
         if let upComingStep = routeProgress.currentLegProgress?.upComingStep, !routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             updateLaneViews(step: upComingStep, durationRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)

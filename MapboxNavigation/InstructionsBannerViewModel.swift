@@ -4,18 +4,18 @@ import MapboxCoreNavigation
 
 class InstructionsBannerState {
     var maneuverViewStep: RouteStep?
-    var attributedDistanceString: NSAttributedString?
+    var distanceRemaining: CLLocationDistance?
     var primaryInstruction: [VisualInstructionComponent]?
     var secondaryInstruction: [VisualInstructionComponent]?
     var usesTwoLinesOfInstructions: Bool = true
     
     init(maneuverViewStep: RouteStep?,
-         attributedDistanceString: NSAttributedString? = nil,
+         distanceRemaining: CLLocationDistance? = nil,
          primaryInstruction: [VisualInstructionComponent]?,
          secondaryInstruction: [VisualInstructionComponent]?,
          usesTwoLinesOfInstructions: Bool = false) {
         self.maneuverViewStep = maneuverViewStep
-        self.attributedDistanceString = attributedDistanceString
+        self.distanceRemaining = distanceRemaining
         self.primaryInstruction = primaryInstruction
         self.secondaryInstruction = secondaryInstruction
         self.usesTwoLinesOfInstructions = usesTwoLinesOfInstructions
@@ -23,33 +23,35 @@ class InstructionsBannerState {
 }
 
 class InstructionsBannerViewModel {
-    typealias InstructionsCallback = ((InstructionsBannerState) -> Void)
+    typealias InstructionsCallback = ((_ viewModel: InstructionsBannerViewModel, _ state: InstructionsBannerState) -> Void)
     var callback: InstructionsCallback
-    var state: InstructionsBannerState { didSet { callback(state) } }
+    var state: InstructionsBannerState { didSet { callback(self, state) } }
     private let distanceFormatter = DistanceFormatter(approximate: true)
     
     init(callback: @escaping InstructionsCallback) {
         self.state = InstructionsBannerState(maneuverViewStep: nil, primaryInstruction: nil, secondaryInstruction: nil)
         self.callback = callback
-        self.callback(state)
+        self.callback(self, state)
     }
     
     /**
      Updates the instructions banner’s view model for a given `RouteProgress`.
      */
-    public func update(for routeProgress: RouteProgress, distanceLabel: DistanceLabel) {
+    public func update(for routeProgress: RouteProgress) {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
-        let distance = distanceRemaining > 5 ? distanceRemaining : 0
-        let attributedDistanceString = distanceFormatter.attributedDistanceString(from: distance, for: distanceLabel)
         let visualInstructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last
         let usesTwoLinesOfInstructions = visualInstructions?.secondaryTextComponents == nil
         
         state = InstructionsBannerState(maneuverViewStep: routeProgress.currentLegProgress.upComingStep,
-                                        attributedDistanceString: attributedDistanceString,
+                                        distanceRemaining: distanceRemaining > 5 ? distanceRemaining : 0,
                                         primaryInstruction: visualInstructions?.primaryTextComponents,
                                         secondaryInstruction: visualInstructions?.secondaryTextComponents,
                                         usesTwoLinesOfInstructions: usesTwoLinesOfInstructions)
+    }
+    
+    public func attributedDistanceString(from distance: CLLocationDistance?, for distanceLabel: DistanceLabel) -> NSAttributedString? {
+        return distanceFormatter.attributedDistanceString(from: distance, for: distanceLabel)
     }
 }
 

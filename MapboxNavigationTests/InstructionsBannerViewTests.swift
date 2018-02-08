@@ -48,14 +48,13 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .destination, text: "Chicago", imageURL: nil)
         ]
         
-        let viewModel = InstructionsBannerViewModel { (state) in
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
             view.primaryLabel.instruction = state.primaryInstruction
-            view.distanceLabel.attributedText = state.attributedDistanceString
+            view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
             view.maneuverView.isStart = true
         }
         
-        let distanceString = distanceFormatter.attributedDistanceString(from: 482, for: view.distanceLabel)
-        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, attributedDistanceString: distanceString, primaryInstruction: instructions, secondaryInstruction: nil)
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: instructions, secondaryInstruction: nil)
         
         verifyView(view, size: view.bounds.size)
     }
@@ -69,15 +68,14 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .destination, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil)
         ]
         
-        let viewModel = InstructionsBannerViewModel { (state) in
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
             view.usesTwoLinesOfInstructions = state.usesTwoLinesOfInstructions
             view.primaryLabel.instruction = state.primaryInstruction
-            view.distanceLabel.attributedText = state.attributedDistanceString
+            view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
             view.maneuverView.isStart = true
         }
         
-        let distanceString = distanceFormatter.attributedDistanceString(from: 482, for: view.distanceLabel)
-        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, attributedDistanceString: distanceString, primaryInstruction: instructions, secondaryInstruction: nil, usesTwoLinesOfInstructions: true)
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: instructions, secondaryInstruction: nil, usesTwoLinesOfInstructions: true)
         
         verifyView(view, size: view.bounds.size)
     }
