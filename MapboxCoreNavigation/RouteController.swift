@@ -40,9 +40,10 @@ public protocol RouteControllerDelegate: class {
 
      - parameter routeController: The route controller that discarded the location.
      - parameter location: The location that was discarded
+     - return: If `true`, the location is discarded and the `RouteController` will not consider it. If `false`, the location will not be thrown out.
      */
     @objc(routeController:didDiscardLocation:)
-    optional func routeController(_ routeController: RouteController, didDiscard location: CLLocation)
+    optional func routeController(_ routeController: RouteController, didDiscard location: CLLocation) -> Bool
 
     /**
      Called immediately after the route controller receives a new route.
@@ -537,8 +538,7 @@ extension RouteController: CLLocationManagerDelegate {
             potentialLocation = lastFiltered
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
-            if let lastLocation = locations.last {
-                delegate?.routeController?(self, didDiscard: lastLocation)
+            if let lastLocation = locations.last, delegate?.routeController?(self, didDiscard: lastLocation) ?? true {
                 return
             }
         // This case handles the first location.
