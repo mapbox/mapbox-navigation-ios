@@ -3,5 +3,5 @@ github "mapbox/MapboxDirections.swift" ~> 0.16.0
 github "mapbox/turf-swift" ~> 0.0.3
 github "rs/SDWebImage" ~> 4.3
 github "frederoni/aws-sdk-ios" ~> 2.6
-github "mapbox/mapbox-telemetry-ios" ~> 0.3
+github "mapbox/mapbox-events-ios" ~> 0.3
 github "ceeK/Solar" ~> 2.1.0
