@@ -26,26 +26,13 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
-    fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
-    
-    var distance: CLLocationDistance? {
+    var usesTwoLinesOfInstructions: Bool = false {
         didSet {
-            distanceLabel.unitRange = nil
-            distanceLabel.valueRange = nil
-            distanceLabel.distanceString = nil
-            
-            if let distance = distance {
-                let distanceString = distanceFormatter.string(from: distance)
-                let distanceUnit = distanceFormatter.unitString(fromValue: distance, unit: distanceFormatter.unit)
-                guard let unitRange = distanceString.range(of: distanceUnit) else { return }
-                let distanceValue = distanceString.replacingOccurrences(of: distanceUnit, with: "")
-                guard let valueRange = distanceString.range(of: distanceValue) else { return }
-
-                distanceLabel.unitRange = unitRange
-                distanceLabel.valueRange = valueRange
-                distanceLabel.distanceString = distanceString
+            primaryLabel.numberOfLines = usesTwoLinesOfInstructions ? 2 : 1
+            if usesTwoLinesOfInstructions {
+                baselineAlignInstructions()
             } else {
-                distanceLabel.text = nil
+                centerYAlignInstructions()
             }
         }
     }
@@ -71,25 +58,11 @@ open class BaseInstructionsBannerView: UIControl {
         delegate?.didTapInstructionsBanner(self)
     }
     
-    func set(_ primaryInstruction: [VisualInstructionComponent]?, secondaryInstruction: [VisualInstructionComponent]?) {
-        primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
-        
-        if secondaryInstruction == nil {
-            centerYAlignInstructions()
-        } else {
-            baselineAlignInstructions()
-        }
-        
-        primaryLabel.instruction = primaryInstruction
-        secondaryLabel.instruction = secondaryInstruction
-    }
-    
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        
         primaryLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Primary text label", imageURL: nil)]
-        
-        distance = 100
+        //distance = 100
     }
 }
+
