@@ -98,7 +98,9 @@ class RouteMapViewController: UIViewController {
      */
     var annotatesSpokenInstructions = false
     
-    var overheadInsets: UIEdgeInsets!
+    var overheadInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView?.bounds.height ?? 40, right: 20)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,8 +131,6 @@ class RouteMapViewController: UIViewController {
         instructionsBannerView.delegate = self
         bottomBannerView?.delegate = self
         resumeNotifications()
-        
-        overheadInsets = UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
     }
     
     deinit {
