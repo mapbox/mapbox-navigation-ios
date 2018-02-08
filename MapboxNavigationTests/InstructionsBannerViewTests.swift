@@ -69,38 +69,38 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         ]
         
         let viewModel = InstructionsBannerViewModel { (viewModel, state) in
-            view.usesTwoLinesOfInstructions = state.usesTwoLinesOfInstructions
             view.primaryLabel.instruction = state.primaryInstruction
+            view.secondaryLabel.instruction = state.secondaryInstruction
             view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
             view.maneuverView.isStart = true
         }
         
-        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: instructions, secondaryInstruction: nil, usesTwoLinesOfInstructions: true)
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: instructions, secondaryInstruction: nil)
         
         verifyView(view, size: view.bounds.size)
     }
     
-//    func testSinglelinePrimaryAndSecondary() {
-//        let view = instructionsView()
-//        styleInstructionsView(view)
-//
-//        let primary = [
-//            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL),
-//            VisualInstructionComponent(type: .destination, text: "South", imageURL: nil)
-//        ]
-//        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
-//
-//        let viewModel = InstructionsBannerViewModel { (state) in
-//            view.usesTwoLinesOfInstructions = state.usesTwoLinesOfInstructions
-//            view.primaryLabel.instruction = state.primaryInstruction
-//            view.secondaryLabel.instruction = state.secondaryInstruction
-//        }
-//
-//        let distanceString = distanceFormatter.attributedDistanceString(from: 482, for: view.distanceLabel)
-//        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, attributedDistanceString: distanceString, primaryInstruction: primary, secondaryInstruction: secondary)
-//
-//        verifyView(view, size: view.bounds.size)
-//    }
+    func testSinglelinePrimaryAndSecondary() {
+        let view = instructionsView()
+        styleInstructionsView(view)
+
+        let primary = [
+            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL),
+            VisualInstructionComponent(type: .destination, text: "South", imageURL: nil)
+        ]
+        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
+
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
+            view.maneuverView.isStart = true
+            view.primaryLabel.instruction = state.primaryInstruction
+            view.secondaryLabel.instruction = state.secondaryInstruction
+            view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
+        }
+
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: primary, secondaryInstruction: secondary)
+
+        verifyView(view, size: view.bounds.size)
+    }
 //
 //    func testPrimaryShieldAndSecondary() {
 //        let view = instructionsView()

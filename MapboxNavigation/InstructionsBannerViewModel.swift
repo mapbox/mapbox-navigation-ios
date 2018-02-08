@@ -7,18 +7,12 @@ class InstructionsBannerState {
     var distanceRemaining: CLLocationDistance?
     var primaryInstruction: [VisualInstructionComponent]?
     var secondaryInstruction: [VisualInstructionComponent]?
-    var usesTwoLinesOfInstructions: Bool = true
     
-    init(maneuverViewStep: RouteStep?,
-         distanceRemaining: CLLocationDistance? = nil,
-         primaryInstruction: [VisualInstructionComponent]?,
-         secondaryInstruction: [VisualInstructionComponent]?,
-         usesTwoLinesOfInstructions: Bool = false) {
+    init(maneuverViewStep: RouteStep?, distanceRemaining: CLLocationDistance? = nil, primaryInstruction: [VisualInstructionComponent]?, secondaryInstruction: [VisualInstructionComponent]?) {
         self.maneuverViewStep = maneuverViewStep
         self.distanceRemaining = distanceRemaining
         self.primaryInstruction = primaryInstruction
         self.secondaryInstruction = secondaryInstruction
-        self.usesTwoLinesOfInstructions = usesTwoLinesOfInstructions
     }
 }
 
@@ -41,13 +35,11 @@ class InstructionsBannerViewModel {
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         let visualInstructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last
-        let usesTwoLinesOfInstructions = visualInstructions?.secondaryTextComponents == nil
         
         state = InstructionsBannerState(maneuverViewStep: routeProgress.currentLegProgress.upComingStep,
                                         distanceRemaining: distanceRemaining > 5 ? distanceRemaining : 0,
                                         primaryInstruction: visualInstructions?.primaryTextComponents,
-                                        secondaryInstruction: visualInstructions?.secondaryTextComponents,
-                                        usesTwoLinesOfInstructions: usesTwoLinesOfInstructions)
+                                        secondaryInstruction: visualInstructions?.secondaryTextComponents)
     }
     
     public func attributedDistanceString(from distance: CLLocationDistance?, for distanceLabel: DistanceLabel) -> NSAttributedString? {

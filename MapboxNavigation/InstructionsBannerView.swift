@@ -16,7 +16,7 @@ open class BaseInstructionsBannerView: UIControl {
     
     weak var maneuverView: ManeuverView!
     weak var primaryLabel: PrimaryLabel!
-    weak var secondaryLabel: SecondaryLabel!
+    @objc dynamic weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
     weak var dividerView: UIView!
     weak var _separatorView: UIView!
@@ -26,16 +26,7 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
-    var usesTwoLinesOfInstructions: Bool = false {
-        didSet {
-            primaryLabel.numberOfLines = usesTwoLinesOfInstructions ? 2 : 1
-            if usesTwoLinesOfInstructions {
-                baselineAlignInstructions()
-            } else {
-                centerYAlignInstructions()
-            }
-        }
-    }
+    private var alignmentObserver: NSKeyValueObservation?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,6 +43,16 @@ open class BaseInstructionsBannerView: UIControl {
         setupLayout()
         centerYAlignInstructions()
         setupAvailableBounds()
+        
+        alignmentObserver = secondaryLabel.observe(\.instruction) { [unowned self] (label, change) in
+            if label.instruction == nil {
+                self.primaryLabel.numberOfLines = 2
+                self.centerYAlignInstructions()
+            } else {
+                self.primaryLabel.numberOfLines = 1
+                self.baselineAlignInstructions()
+            }
+        }
     }
     
     @IBAction func tappedInstructionsBanner(_ sender: Any) {

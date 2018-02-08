@@ -104,7 +104,6 @@ class RouteMapViewController: UIViewController {
         automaticallyAdjustsScrollViewInsets = false
         
         instructionsBannerViewModel = InstructionsBannerViewModel { [unowned self] (viewModel, state) in
-            self.instructionsBannerView.usesTwoLinesOfInstructions = state.usesTwoLinesOfInstructions
             self.instructionsBannerView.maneuverView.step = state.maneuverViewStep
             let distanceLabel = self.instructionsBannerView.distanceLabel!
             distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: distanceLabel)
