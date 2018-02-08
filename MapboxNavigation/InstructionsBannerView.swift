@@ -62,7 +62,7 @@ open class BaseInstructionsBannerView: UIControl {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
         primaryLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Primary text label", imageURL: nil)]
-        //distance = 100
+        distanceLabel.attributedText = DistanceFormatter(approximate: true).attributedDistanceString(from: 100, for: distanceLabel)
     }
 }
 
