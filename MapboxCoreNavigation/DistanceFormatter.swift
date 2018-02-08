@@ -13,6 +13,10 @@ extension CLLocationDistance {
         return self * .feetPerMeter
     }
     
+    var yards: CLLocationDistance {
+        return feet / 3
+    }
+    
     var kilometers: CLLocationDistance {
         return self / 1000
     }
@@ -86,12 +90,6 @@ public class DistanceFormatter: LengthFormatter {
      The user’s `Locale` is used here to set the units.
     */
     @objc public func string(from distance: CLLocationDistance) -> String {
-        // British roads are measured in miles, yards, and feet. Simulate this idiosyncrasy using the U.S. locale.
-        let localeIdentifier = numberFormatter.locale.identifier
-        if localeIdentifier == "en-GB" || localeIdentifier == "en_GB" {
-            numberFormatter.locale = Locale(identifier: "en-US")
-        }
-        
         numberFormatter.positivePrefix = ""
         numberFormatter.positiveSuffix = ""
         numberFormatter.decimalSeparator = nonFractionalLengthFormatter.numberFormatter.decimalSeparator
@@ -124,16 +122,29 @@ public class DistanceFormatter: LengthFormatter {
                 formattedDistance = string(fromValue: roundedDistance, unit: unit)
             }
         } else {
-            if unit == .yard {
+            if numberFormatter.locale.identifier == "en-GB" {
                 if distance.miles >= 0.1 {
                     unit = .mile
                     formattedDistance = string(fromValue: distance.miles, unit: unit)
-                } else {
+                } else if distance.yards < 10 {
                     unit = .foot
                     formattedDistance = string(fromValue: distance.feet, unit: unit)
+                } else {
+                    unit = .yard
+                    formattedDistance = string(fromValue: distance.yards, unit: unit)
                 }
             } else {
-                formattedDistance = super.string(fromMeters: distance)
+                if unit == .yard {
+                    if distance.miles >= 0.1 {
+                        unit = .mile
+                        formattedDistance = string(fromValue: distance.miles, unit: unit)
+                    } else {
+                        unit = .foot
+                        formattedDistance = string(fromValue: distance.feet, unit: unit)
+                    }
+                } else {
+                    formattedDistance = super.string(fromMeters: distance)
+                }
             }
         }
         

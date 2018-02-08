@@ -36,11 +36,12 @@ public class NavigationSettings: NSObject {
     
     var usesMetric: Bool {
         get {
-            if distanceUnit == .kilometer {
+            switch distanceUnit {
+            case .kilometer:
                 return true
-            } else if distanceUnit == .mile {
+            case .mile:
                 return false
-            } else {
+            default:
                 return Locale.current.usesMetric
             }
         }

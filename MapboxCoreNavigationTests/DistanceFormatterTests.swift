@@ -67,6 +67,9 @@ class DistanceFormatterTests: XCTestCase {
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
         
         assertDistance(0,               displayed: "0 ft")
+        assertDistance(6.096,           displayed: "20 ft")
+        assertDistance(9.144,           displayed: "10 yd")
+        assertDistance(22.86,           displayed: "25 yd")
         assertDistance(oneMile/2,       displayed: "0.5 mi")
         assertDistance(oneMile,         displayed: "1 mi")
         assertDistance(oneMile*2.5,     displayed: "2.5 mi")
