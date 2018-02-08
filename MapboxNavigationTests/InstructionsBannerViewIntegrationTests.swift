@@ -51,7 +51,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
         self.wait(for: [clearImageCacheExpectation], timeout: 1)
 
-
         TestImageDownloadOperation.reset()
         imageRepository.imageDownloader.setOperationClass(TestImageDownloadOperation.self)
     }

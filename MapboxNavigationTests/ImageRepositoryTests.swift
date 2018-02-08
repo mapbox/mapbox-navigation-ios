@@ -24,7 +24,7 @@ class ImageRepositoryTests: XCTestCase {
         repository.resetImageCache {
             clearImageCacheExpectation.fulfill()
         }
-        self.wait(for: [clearImageCacheExpectation], timeout: 1)
+        wait(for: [clearImageCacheExpectation], timeout: 1)
     }
 
     func test_imageWithURL_downloadsImageWhenNotCached() {
@@ -41,7 +41,7 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             asyncExpectation.fulfill()
         }
-        self.wait(for: [asyncExpectation], timeout: 1)
+        wait(for: [asyncExpectation], timeout: 1)
 
         XCTAssertTrue(TestImageLoadingURLProtocol.hasRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
@@ -62,7 +62,7 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             asyncExpectation.fulfill()
         }
-        self.wait(for: [asyncExpectation], timeout: 1)
+        wait(for: [asyncExpectation], timeout: 1)
 
         XCTAssertFalse(TestImageLoadingURLProtocol.hasRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)

@@ -1,29 +1,35 @@
 import Foundation
 import SDWebImage
 
-typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?, Bool) -> Void
-
-protocol ReentrantImageDownloader {
-    func downloadImage(with url: URL?, options: SDWebImageDownloaderOptions, progress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: ImageDownloadCompletionBlock?) -> SDWebImageDownloadToken?
-    func setOperationClass(_ klass: AnyClass?)
-}
-
 typealias NoArgBlock = () -> Void
 
 protocol BimodalImageCache {
     func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: NoArgBlock?)
     func imageFromCache(forKey: String?) -> UIImage?
     func clearMemory()
-    func clearDisk(onCompletion completion: (() -> Void)?)
+    func clearDisk(completion: NoArgBlock?)
 }
 
 extension SDImageCache: BimodalImageCache {
     func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: NoArgBlock?) {
         store(image, forKey: key, toDisk: toDisk, completion: completionBlock)
     }
+
+    func clearDisk(completion: NoArgBlock?) {
+        clearDisk(onCompletion: completion)
+    }
 }
 
-extension SDWebImageDownloader: ReentrantImageDownloader {}
+extension SDWebImageDownloader: ReentrantImageDownloader {
+    func setOperationClass(_ klass: AnyClass) {
+        setOperationClass(klass)
+    }
+
+    func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {
+        let options: SDWebImageDownloaderOptions = SDWebImageDownloaderOptions(rawValue: 0)
+        downloadImage(with: url, options: options, progress: nil, completed: completion)
+    }
+}
 
 class ImageRepository {
 
@@ -47,7 +53,7 @@ class ImageRepository {
 
     func resetImageCache(_ completion: NoArgBlock?) {
         imageCache.clearMemory()
-        imageCache.clearDisk(onCompletion: completion)
+        imageCache.clearDisk(completion: completion)
     }
 
     func storeImage(_ image: UIImage, forKey key: String, toDisk: Bool = true) {
@@ -64,7 +70,7 @@ class ImageRepository {
             return
         }
 
-        let _ = imageDownloader.downloadImage(with: imageURL, options: [], progress: nil, completed: { [weak self] (image, data, error, successful) in
+        let _ = imageDownloader.downloadImage(with: imageURL, completion: { [weak self] (image, data, error, successful) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)
                 return

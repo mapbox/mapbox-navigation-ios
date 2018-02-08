@@ -83,7 +83,7 @@ class ImageCache: BimodalImageCache {
         memoryCache.removeAllObjects()
     }
 
-    func clearDisk(onCompletion completion: NoArgBlock?) {
+    func clearDisk(completion: NoArgBlock?) {
         self.diskAccessQueue.async {
             do {
                 try self.fileManager!.removeItem(at: self.diskCacheURL)
