@@ -1,5 +1,4 @@
 import Foundation
-import SDWebImage
 
 typealias NoArgBlock = () -> Void
 
@@ -10,32 +9,11 @@ protocol BimodalImageCache {
     func clearDisk(completion: NoArgBlock?)
 }
 
-extension SDImageCache: BimodalImageCache {
-    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion completionBlock: NoArgBlock?) {
-        store(image, forKey: key, toDisk: toDisk, completion: completionBlock)
-    }
-
-    func clearDisk(completion: NoArgBlock?) {
-        clearDisk(onCompletion: completion)
-    }
-}
-
-extension SDWebImageDownloader: ReentrantImageDownloader {
-    func setOperationClass(_ klass: AnyClass) {
-        setOperationClass(klass)
-    }
-
-    func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {
-        let options: SDWebImageDownloaderOptions = SDWebImageDownloaderOptions(rawValue: 0)
-        downloadImage(with: url, options: options, progress: nil, completed: completion)
-    }
-}
-
 class ImageRepository {
 
     public var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
         didSet {
-            imageDownloader = SDWebImageDownloader(sessionConfiguration: sessionConfiguration)
+            imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
     }
 

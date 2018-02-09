@@ -1,25 +1,23 @@
 import Foundation
-import SDWebImage
+@testable import MapboxNavigation
 
-class TestImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterface {
+class TestImageDownloadOperation: Operation, ImageDownload {
 
-    private static var operations: [URL : TestImageDownloadOperation] = [:]
+    private static var operations: [URL: TestImageDownloadOperation] = [:]
 
     private(set) var request: URLRequest?
     weak private var session: URLSession?
-    private(set) var options: SDWebImageDownloaderOptions
 
-    private(set) var progressBlock: SDWebImageDownloaderProgressBlock?
-    private(set) var completedBlock: SDWebImageDownloaderCompletedBlock?
+    //TODO: operations can have multiple completions and no progressBlock
+    private var completionBlocks: Array<ImageDownloadCompletionBlock> = []
 
-    required init(request: URLRequest?, in session: URLSession?, options: SDWebImageDownloaderOptions) {
+    required init(request: URLRequest, in session: URLSession) {
         self.request = request
         self.session = session
-        self.options = options
 
         super.init()
 
-        TestImageDownloadOperation.operations[request!.url!] = self
+        TestImageDownloadOperation.operations[request.url!] = self
     }
 
     static func reset() {
@@ -30,17 +28,13 @@ class TestImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterf
         return operations[URL]
     }
 
-    func addHandlers(forProgress progressBlock: SDWebImageDownloaderProgressBlock?, completed completedBlock: SDWebImageDownloaderCompletedBlock?) -> Any? {
-        self.progressBlock = progressBlock
-        if let completedBlock = completedBlock {
-            self.completedBlock = { (image: UIImage?, data: Data?, error: Error?, success: Bool) in
-                completedBlock(image, data, error, success)
-                // Sadly we need to tick the run loop here to deal with the fact that the underlying implementations hop between queues. This has a similar effect to using XCTestCase's async expectations.
-                RunLoop.current.run(until: Date())
-            }
+    func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock) {
+        let wrappedCompletion = { (image: UIImage?, data: Data?, error: Error?, success: Bool) in
+            completion(image, data, error, success)
+            // Sadly we need to tick the run loop here to deal with the fact that the underlying implementations hop between queues. This has a similar effect to using XCTestCase's async expectations.
+            RunLoop.current.run(until: Date())
         }
-
-        return nil
+        self.completionBlocks.append(wrappedCompletion)
     }
 
     func shouldDecompressImages() -> Bool {
@@ -55,5 +49,11 @@ class TestImageDownloadOperation: Operation, SDWebImageDownloaderOperationInterf
     }
 
     func setCredential(_ value: URLCredential?) {
+    }
+
+    func fireAllCompletionsWith(_ image: UIImage, data: Data?, error: Error?, success: Bool) {
+        completionBlocks.forEach { completion in
+            completion(image, data, error, success)
+        }
     }
 }

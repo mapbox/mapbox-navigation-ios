@@ -4,12 +4,12 @@ typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?, Bool) -> Void
 
 protocol ReentrantImageDownloader {
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) -> Void
-    func setOperationClass(_ klass: AnyClass?)
+    func setOperationType(_ operationType: ImageDownload.Type?)
 }
 
 class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegate {
     private var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default
-    private var operationClass: AnyClass = ImageDownloadOperation.self
+    private var operationType: ImageDownload.Type = ImageDownloadOperation.self
 
     private var queue: OperationQueue
     lazy private var urlSession: URLSession = {
@@ -38,7 +38,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         if operations[url] != nil {
             operation = operations[url]
         } else {
-            operation = ImageDownloadOperation.init(request: request, in: self.urlSession)
+            operation = operationType.init(request: request, in: self.urlSession)
             self.operations[url] = operation
             if let operation = operation as? Operation {
                 self.queue.addOperation(operation)
@@ -56,11 +56,11 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         return request
     }
 
-    func setOperationClass(_ klass: AnyClass?) {
-        if let klass = klass {
-            operationClass = klass
+    func setOperationType(_ operationType: ImageDownload.Type?) {
+        if let operationType = operationType {
+            self.operationType = operationType
         } else {
-            operationClass = ImageDownloadOperation.self
+            self.operationType = ImageDownloadOperation.self
         }
     }
 

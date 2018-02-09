@@ -52,13 +52,13 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         self.wait(for: [clearImageCacheExpectation], timeout: 1)
 
         TestImageDownloadOperation.reset()
-        imageRepository.imageDownloader.setOperationClass(TestImageDownloadOperation.self)
+        imageRepository.imageDownloader.setOperationType(TestImageDownloadOperation.self)
     }
 
     override func tearDown() {
         super.tearDown()
 
-        imageRepository.imageDownloader.setOperationClass(nil)
+        imageRepository.imageDownloader.setOperationType(nil)
     }
 
     func testDelimiterIsShownWhenShieldsNotLoaded() {
@@ -109,7 +109,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
         let operation: TestImageDownloadOperation = TestImageDownloadOperation.operationForURL(component.imageURL!)!
-        operation.completedBlock!(shieldImage, UIImagePNGRepresentation(shieldImage), nil, true)
+        operation.fireAllCompletionsWith(shieldImage, data: UIImagePNGRepresentation(shieldImage), error: nil, success: true)
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
     }
