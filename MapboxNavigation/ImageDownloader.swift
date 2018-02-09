@@ -71,9 +71,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             completionHandler(.cancel)
             return
         }
-        if operation.responds(to: #function) {
-            operation.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
-        }
+        operation.urlSession?(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -81,9 +79,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             // ?
             return
         }
-        if operation.responds(to: #function) {
-            operation.urlSession!(session, dataTask: dataTask, didReceive: data)
-        }
+        operation.urlSession?(session, dataTask: dataTask, didReceive: data)
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
@@ -91,9 +87,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             // ?
             return
         }
-        if operation.responds(to: #function) {
-            operation.urlSession!(session, task: task, didCompleteWithError: error)
-        }
+        operation.urlSession?(session, task: task, didCompleteWithError: error)
         operations[url] = nil
     }
 
