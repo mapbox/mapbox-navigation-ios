@@ -6,10 +6,11 @@ class ImageCache: BimodalImageCache {
     let diskCacheURL: URL = {
         let fileManager = FileManager.default
         let basePath = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
-        return basePath.appendingPathComponent("com.mapbox.directions.downloadedImages")
+        let identifier = Bundle.mapboxNavigation.bundleIdentifier!
+        return basePath.appendingPathComponent(identifier + ".downloadedImages")
     }()
 
-    let diskAccessQueue = DispatchQueue(label: "com.mapbox.directions.diskAccess")
+    let diskAccessQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".diskAccess")
     var fileManager: FileManager?
 
     init() {
