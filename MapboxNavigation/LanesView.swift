@@ -2,7 +2,6 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
-
 /// :nodoc:
 @IBDesignable
 @objc(MBLanesView)

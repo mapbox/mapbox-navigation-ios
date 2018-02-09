@@ -20,13 +20,12 @@ public class NavigationSettings: NSObject {
      
      This volume is relative to the system’s volume where 1.0 is same volume as the system.
     */
-    @objc public dynamic var voiceVolume    : Float     = 1.0
+    @objc public dynamic var voiceVolume: Float     = 1.0
     
     /**
      Indicates whether the voice controller should be muted or not.
      */
-    @objc public dynamic var voiceMuted     : Bool      = false
-    
+    @objc public dynamic var voiceMuted: Bool      = false
     
     public static let shared = NavigationSettings()
     
@@ -58,7 +57,7 @@ public class NavigationSettings: NSObject {
         }
     }
     
-    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         var found = false
         
         for property in properties {

@@ -5,7 +5,6 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
-
 /**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
  */
@@ -129,7 +128,6 @@ open class RouteController: NSObject {
      */
     @objc public var isDeadReckoningEnabled = false
 
-
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerOpportunisticReroutingInterval`.
      */
@@ -174,7 +172,7 @@ open class RouteController: NSObject {
     /// :nodoc: This is used internally when the navigation UI is being used
     public var usesDefaultUserInterface = false
 
-    var sessionState:SessionState
+    var sessionState: SessionState
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
 
     var hasFoundOneQualifiedLocation = false
@@ -525,18 +523,31 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         let filteredLocations = locations.filter { $0.isQualified }
         
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
         }
         
-        guard let location = filteredLocations.last else {
-            if let lastLocation = locations.last, hasFoundOneQualifiedLocation {
+        var potentialLocation: CLLocation?
+        
+        // `filteredLocations` contains qualified locations
+        if let lastFiltered = filteredLocations.last {
+            potentialLocation = lastFiltered
+        // `filteredLocations` does not contain good locations and we have found at least one good location previously.
+        } else if hasFoundOneQualifiedLocation {
+            if let lastLocation = locations.last {
                 delegate?.routeController?(self, didDiscard: lastLocation)
+                return
             }
-            return
+        // This case handles the first location.
+        // This location is not a good location, but we need the rest of the UI to update and at least show something.
+        } else if let lastLocation = locations.last {
+            potentialLocation = lastLocation
         }
+        
+        guard let location = potentialLocation else { return }
         
         self.rawLocation = location
         sessionState.pastLocations.push(location)
@@ -730,7 +741,7 @@ extension RouteController: CLLocationManagerDelegate {
         #if TARGET_IPHONE_SIMULATOR
             guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
-            let _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
+            _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
                 
@@ -744,7 +755,7 @@ extension RouteController: CLLocationManagerDelegate {
         #endif
     }
 
-    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->()) {
+    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
         routeTask?.cancel()
 
         let options = routeProgress.route.routeOptions
@@ -807,7 +818,8 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     func updateRouteStepProgress(for location: CLLocation) {
-
+        guard routeProgress.currentLegProgress.remainingSteps.count > 0 else { return }
+        
         let userSnapToStepDistanceFromManeuver = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!).distance(from: location.coordinate)
         var courseMatchesManeuverFinalHeading = false
 
@@ -843,13 +855,13 @@ extension RouteController: CLLocationManagerDelegate {
 
         routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
 
-        guard let spokenInstructions = routeProgress.currentLegProgress.currentStep.instructionsSpokenAlongStep else {
+        guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else {
             print("The directions request was made without `includesVoiceInstructions` enabled. This will prevent users from getting voice instructions. It's recommended to make your directions request via `NavigationRouteOptions()`.")
             return
         }
 
-        for (voiceInstructionIndex, voiceInstruction) in spokenInstructions.enumerated() {
-            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex {
+        for voiceInstruction in spokenInstructions {
+            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep {
 
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress

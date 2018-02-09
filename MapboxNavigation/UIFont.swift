@@ -2,7 +2,7 @@ import UIKit
 
 extension UIFont {
     
-    var fontSizeMultiplier : CGFloat {
+    var fontSizeMultiplier: CGFloat {
         get {
             switch UIApplication.shared.preferredContentSizeCategory {
             case UIContentSizeCategory.accessibilityExtraExtraExtraLarge: return 23 / 16
@@ -37,7 +37,7 @@ extension UIFont {
     
     func with(fontFamily: String?) -> UIFont {
         guard let fontFamily = fontFamily else { return self }
-        let weight = (fontDescriptor.object(forKey: .traits) as! [String:Any])[UIFontDescriptor.TraitKey.weight.rawValue]
+        let weight = (fontDescriptor.object(forKey: .traits) as! [String: Any])[UIFontDescriptor.TraitKey.weight.rawValue]
         let descriptor = UIFontDescriptor(name: fontName, size: pointSize).withFamily(fontFamily).addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: weight]])
         return UIFont(descriptor: descriptor, size: pointSize)
     }

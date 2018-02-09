@@ -1,11 +1,36 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## 0.13.0
+## v0.13.1 (February 7, 2018)
+
+### Core Navigation
+
+* Fixes a bug where the `spokenInstructionIndex` was incremented beyond the number of instructions for a step. (#1080)
+* Fixed a bug that crashed when navigating beyond the final waypoint. (#1087)
+
+### User Interface
+
+* Added support for spoken instructions in Danish. (#1041)
+* Updated translations for Russian, Swedish, Spanish, Vietnamese, Hebrew, Ukrainian, and German. (#1064)
+* Fixed a bug that prevented the user puck from laying flat when rotating the map. (#1090)
+* Updated translations for Russian, Swedish, Spanish, Vietnamese, Hebrew, Ukrainian, and German. (#1064) (#1089)
+
+## v0.13.0 (January 22, 2018)
+
+### Packaging
+
+* Upgraded to MapboxDirections.swift [v0.16.0](https://github.com/mapbox/MapboxDirections.swift/releases/tag/v0.16.0), which makes `ManeuverType`, `ManeuverDirection`, and `TransportType` non-optional. (#1040)
+* Added Danish and Hebrew localizations. (#1031, #1043)
+
+### User location
 
 * Removed `RouteControllerDelegate.routeController(_:shouldIncrementLegWhenArrivingAtWaypoint:)` and `NavigationViewControllerDelegate.navigationViewController(_:shouldIncrementLegWhenArrivingAtWaypoint:)`. `RouteControllerDelegate.routeController(_:didArriveAt:)` and `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` now return a Boolean that determines whether the route controller automatically advances to the next leg of the route. (#1038)
 * Fixed an issue where `NavigationViewControllerDelegate.navigationViewController(_:didArriveAt:)` was called twice at the end of the route. (#1038)
-* Added a Danish localization. (#1031)
-* Added a partial Hebrew localization. (#1043)
+* Improved the reliability of user location tracking when several location updates arrive simultaneously. (#1021)
+
+### User interface
+
+* Removed the `WayNameView` class in favor of `WayNameLabel` and renamed the `LanesContainerView` class to `LanesView`. (#981 )
+* Added a `NavigationMapView.tracksUserCourse` property for enabling course tracking mode when using the map view independently of `NavigationViewController`. (#1015)
 
 ## v0.12.2 (January 12, 2018)
 
@@ -99,7 +124,7 @@ Beginning with this release, the navigation SDK and Core Navigation are written 
 
 ### Packaging
 
-* Reverts a change that used AWS's repo for the Polly dependency. This will help with build times when using Carthage. #859 
+* Reverts a change that used AWS's repo for the Polly dependency. This will help with build times when using Carthage. #859
 * Updates Polly dependency to v2.6.5 #859
 
 ### Views
@@ -110,7 +135,7 @@ Beginning with this release, the navigation SDK and Core Navigation are written 
 
 ### Map
 
-* `MGLMapView init(frame:styleURL:)` is exposed again on `NavigationMapView`. #850 
+* `MGLMapView init(frame:styleURL:)` is exposed again on `NavigationMapView`. #850
 
 ### User location tracking
 
@@ -179,9 +204,9 @@ Beginning with this release, the navigation SDK and Core Navigation are written 
 ## v0.8.3 (October 9, 2017)
 
 * Pins the dependency `Solar` to v2.0.0. This should fix some build issues. #693
-* Increases the width of the upcoming maneuver arrow. #671 
-* Improved user location snapping. #679 
-* Improves simulation mode by using more accurate speeds. #683 
+* Increases the width of the upcoming maneuver arrow. #671
+* Improved user location snapping. #679
+* Improves simulation mode by using more accurate speeds. #683
 * Adopted [Turf](https://github.com/mapbox/turf-swift). The `wrap(_:min:max:)` function has been removed; use Turf’s `CLLocationDirection.wrap(min:max:)` instead. #653
 * Defaulted to `kCLLocationAccuracyBestForNavigation` for location accuracy. #670
 

@@ -41,6 +41,10 @@ To add any type, constant, or member to the SDK’s public interface:
 1. Provide full documentation comments. We use [jazzy](https://github.com/realm/jazzy/) to produce the documentation found [on the website for this SDK](http://mapbox.com/mapbox-navigation-ios/navigation/). Many developers also rely on Xcode’s Quick Help feature, which supports a subset of Markdown.
 1. _(Optional.)_ Add the type or constant’s name to the relevant category in the `custom_categories` section of [the jazzy configuration file](./docs/jazzy.yml). This is required for classes and protocols and also recommended for any other type that is strongly associated with a particular class or protocol. If you leave out this step, the symbol will appear in an “Other” section in the generated HTML documentation’s table of contents.
 
+## Adding image assets
+
+Image assets are designed in a [PaintCode](http://paintcodeapp.com/) document managed in the [navigation-ui-resources](https://github.com/mapbox/navigation-ui-resources/) repository. After changes to that repository are merged, export the PaintCode drawings as Swift source code and add or replace files in the [MapboxNavigation](https://github.com/mapbox/mapbox-navigation-ios/tree/master/MapboxNavigation/) folder.
+
 ## Adding user-facing text
 
 To add or update text that the user may see in the navigation SDK:

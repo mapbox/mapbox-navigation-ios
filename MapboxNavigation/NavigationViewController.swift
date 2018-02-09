@@ -11,7 +11,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
      */
-    @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController : NavigationViewController)
+    @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -23,7 +23,7 @@ public protocol NavigationViewControllerDelegate {
      - parameter waypoint: The waypoint that the user has arrived at.
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -196,7 +196,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
     @objc public var destination: MGLAnnotation!
     
-    
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
@@ -263,7 +262,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
             showsEndOfRouteFeedback = showsReportFeedback
         }
     }
-    
     
     /**
     Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`

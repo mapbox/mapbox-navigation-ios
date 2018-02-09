@@ -34,7 +34,7 @@ extension CLLocation {
      
      - parameter dictionary: A dictionary representation of the location.
      */
-    public convenience init(dictionary: [String:Any]) {
+    public convenience init(dictionary: [String: Any]) {
         let latitude = dictionary["latitude"] as? CLLocationDegrees ?? dictionary["lat"] as? CLLocationDegrees ?? 0
         let longitude = dictionary["longitude"] as? CLLocationDegrees ?? dictionary["lon"] as? CLLocationDegrees ?? dictionary["lng"] as? CLLocationDegrees ?? 0
         let altitude = dictionary["altitude"] as! CLLocationDistance

@@ -158,4 +158,3 @@ extension NavigationView {
         wayNameLabel.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
     }
 }
-

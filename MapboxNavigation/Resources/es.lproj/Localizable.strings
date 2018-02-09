@@ -46,6 +46,9 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "No hay calificación.";
+
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Tocar para volver la calificación a cero.";
 
@@ -54,6 +57,9 @@
 
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Ha calificado %li estrella(s).";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "Reportar un problema";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Reenrutando…";
