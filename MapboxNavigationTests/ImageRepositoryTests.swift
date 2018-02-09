@@ -43,7 +43,6 @@ class ImageRepositoryTests: XCTestCase {
         }
         wait(for: [asyncExpectation], timeout: 1)
 
-        XCTAssertTrue(TestImageLoadingURLProtocol.hasRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
         // round-trip through UIImagePNGRepresentation results in changes in data due to metadata stripping, thus direct image comparison is not always possible.
         XCTAssertTrue((imageReturned?.isKind(of: UIImage.self))!)

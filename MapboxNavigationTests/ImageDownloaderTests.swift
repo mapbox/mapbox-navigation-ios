@@ -14,12 +14,17 @@ class ImageDownloaderTests: XCTestCase {
         return ImageDownloader(sessionConfiguration: sessionConfig)
     }()
 
+    let imageURL = URL(string: "https://zombo.com/lulz/selfie.png")!
+
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
 
         URLProtocol.registerClass(TestImageLoadingURLProtocol.self)
         TestImageLoadingURLProtocol.reset()
+
+        let originalImageData = UIImagePNGRepresentation(shieldImage)!
+        TestImageLoadingURLProtocol.registerData(originalImageData, forURL: imageURL)
     }
 
     override func tearDown() {
@@ -29,10 +34,6 @@ class ImageDownloaderTests: XCTestCase {
     }
 
     func testDownloadingAnImage() {
-        let originalImageData = UIImagePNGRepresentation(shieldImage)!
-        let imageURL = URL(string: "https://zombo.com/lulz/selfie.png")!
-        TestImageLoadingURLProtocol.registerData(originalImageData, forURL: imageURL)
-
         var imageReturned: UIImage?
         var dataReturned: Data?
         var errorReturned: Error?
@@ -56,15 +57,46 @@ class ImageDownloaderTests: XCTestCase {
         XCTAssertNil(errorReturned)
     }
 
-//    func testDownloadingSameImageWhileInProgressAddsCallbacks() {
-//
-//    }
+    func testDownloadingSameImageWhileInProgressAddsCallbacksWithoutAddingAnotherRequest() {
+        let firstDownload = self.expectation(description: "First Image Download")
+        let secondDownload = self.expectation(description: "Second Image Download")
+        var firstCallbackCalled = false
+        var secondCallbackCalled = false
+        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+            firstCallbackCalled = true
+            firstDownload.fulfill()
+        }
+        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+            secondCallbackCalled = true
+            secondDownload.fulfill()
+        }
+        wait(for: [firstDownload, secondDownload], timeout: 1)
 
-//    func testDownloadingImageAgainAfterFirstDownloadCompletes() {
-//
-//    }
+        //These flags might seem redundant, but it's good to be explicit sometimes
+        XCTAssertTrue(firstCallbackCalled)
+        XCTAssertTrue(secondCallbackCalled)
+    }
 
-//    func testIgnoresURLCache() {
-//
-//    }
+    func testDownloadingImageAgainAfterFirstDownloadCompletes() {
+        let firstDownload = self.expectation(description: "First Image Download")
+        var firstCallbackCalled = false
+        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+            firstCallbackCalled = true
+            firstDownload.fulfill()
+        }
+        wait(for: [firstDownload], timeout: 1)
+
+        let secondDownload = self.expectation(description: "Second Image Download")
+        var secondCallbackCalled = false
+        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+            secondCallbackCalled = true
+            secondDownload.fulfill()
+        }
+        wait(for: [secondDownload], timeout: 1)
+
+        //These flags might seem redundant, but it's good to be explicit sometimes
+        XCTAssertTrue(firstCallbackCalled)
+        XCTAssertTrue(secondCallbackCalled)
+    }
+
 }

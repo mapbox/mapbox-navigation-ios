@@ -20,13 +20,6 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
 
     private var operations: [URL: ImageDownload] = [:]
 
-    private var dataTask: URLSessionDataTask?
-
-    //TODO: placeholder/WIP
-    private var data: [URL : Data] = [:]
-
-    private var completions: [URL : ImageDownloadCompletionBlock] = [:]
-
     override init() {
         self.queue = OperationQueue()
         self.queue.maxConcurrentOperationCount = 6
@@ -41,16 +34,19 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
 
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {
         let request: URLRequest = urlRequestWithURL(url)
-//        let operation = ImageDownloadOperation.init(request: request, in: self.urlSession)
-//        if completion != nil {
-//            operation.addCompletion(completion!)
-//        }
-//        self.operations[url] = operation
-//        self.queue.addOperation(operation)
-
-        self.completions[url] = completion
-        self.dataTask = urlSession.dataTask(with: request)
-        self.dataTask?.resume()
+        var operation: ImageDownload?
+        if operations[url] != nil {
+            operation = operations[url]
+        } else {
+            operation = ImageDownloadOperation.init(request: request, in: self.urlSession)
+            self.operations[url] = operation
+            if let operation = operation as? Operation {
+                self.queue.addOperation(operation)
+            }
+        }
+        if completion != nil {
+            operation?.addCompletion(completion!)
+        }
     }
 
     private func urlRequestWithURL(_ url: URL) -> URLRequest {
@@ -69,47 +65,30 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     }
 
     // MARK: URLSessionDataDelegate
-    // TODO: implement URLSessionDataDelegate callbacks to forward to operation for URL.
+
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        guard let response: HTTPURLResponse = response as? HTTPURLResponse else {
+        guard let response: HTTPURLResponse = response as? HTTPURLResponse, let url = response.url, let operation: ImageDownload = operations[url] else {
             completionHandler(.cancel)
             return
         }
-        if response.statusCode < 400 && response.statusCode != 304 {
-            self.data[dataTask.originalRequest!.url!] = Data()
-            completionHandler(.allow)
-        }
+        operation.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        guard let url = dataTask.originalRequest?.url else {
+        guard let url = dataTask.originalRequest?.url, let operation: ImageDownload = operations[url] else {
+            // ?
             return
         }
-        if var localData: Data = self.data[url] {
-            let bytes = [UInt8](data)
-            localData.append(bytes, count: bytes.count)
-            self.data[url] = localData
-        }
+        operation.urlSession!(session, dataTask: dataTask, didReceive: data)
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard error == nil else {
-            NSLog("================> %@", String(describing: error))
-            //TODO: wrap error (this is likely a client-side error)
-//            completion(nil, nil, error, false)
+        guard let url = task.originalRequest?.url, let operation: ImageDownload = operations[url] else {
+            // ?
             return
         }
-        guard let url = task.originalRequest?.url else {
-            NSLog("================> URL not found: \(String(describing: task.originalRequest))")
-            //TODO: create an error object (this is likely never to be needed however)
-//            completion(nil, nil, nil, false)
-            return
-        }
-        if let completion: ImageDownloadCompletionBlock = completions[url], let data = self.data[url] {
-            let image = UIImage.init(data: data)
-            completion(image, data, error, true)
-        }
+        operation.urlSession!(session, task: task, didCompleteWithError: error)
+        operations[url] = nil
     }
-
 
 }

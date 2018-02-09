@@ -1,9 +1,10 @@
 import UIKit
+import XCTest
 
 class TestImageLoadingURLProtocol: URLProtocol {
 
-    private static var responseData: [URL : Data] = [:]
-    private static var requests: [URL : URLRequest] = [:]
+    private static var responseData: [URL: Data] = [:]
+    private static var requests: [URL: URLRequest] = [:]
 
     override class func canInit(with request: URLRequest) -> Bool {
         return responseData.keys.contains(request.url!)
@@ -23,23 +24,36 @@ class TestImageLoadingURLProtocol: URLProtocol {
     }
 
     override func startLoading() {
-        // retrieve fake response (image) for request
-        guard let data = TestImageLoadingURLProtocol.responseData[request.url!], let image: UIImage = UIImage(data: data), let client = client else {
-            NSLog("========> No valid image data found for url: \(String(describing: request.url))")
+        guard let url = request.url else {
+            XCTFail("Somehow the request doesn't have a URL")
             return
         }
 
-        TestImageLoadingURLProtocol.requests[request.url!] = request
+        // retrieve fake response (image) for request
+        //TODO: we don't need an image here, just the data
+        guard let data = TestImageLoadingURLProtocol.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
+            XCTFail("No valid image data found for url: \(url)")
+            return
+        }
 
-        // init an NSHTTPURLResponse
-        let response = HTTPURLResponse.init(url: request.url!, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+        // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
+        if let _ = TestImageLoadingURLProtocol.requests[url] {
+//            XCTAssertNotEqual(existingRequest, self.request)
+            XCTFail("There should only be one request in flight at a time per resource")
+//            return
+        } else {
+            TestImageLoadingURLProtocol.requests[url] = request
+        }
+
+        // send an NSHTTPURLResponse to the client
+        let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
         client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
         client.urlProtocol(self, didLoad: UIImagePNGRepresentation(image)!)
         client.urlProtocolDidFinishLoading(self)
     }
 
     override func stopLoading() {
-        // ?
+        TestImageLoadingURLProtocol.requests[request.url!] = nil
     }
 
     class func registerData(_ data: Data, forURL url: URL) {
