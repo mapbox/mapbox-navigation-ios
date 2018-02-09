@@ -39,7 +39,7 @@ class ImageRepository {
         }
     }
 
-    public static let shared = ImageRepository.init(withDownloader: SDWebImageDownloader.shared(), cache: ImageCache())
+    public static let shared = ImageRepository.init(withDownloader: ImageDownloader(), cache: ImageCache())
 
     let imageCache: BimodalImageCache
     fileprivate(set) var imageDownloader: ReentrantImageDownloader
