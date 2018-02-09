@@ -72,10 +72,18 @@ open class MapboxVoiceController: RouteVoiceController {
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {
             voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
         }
+        
         audioTask?.cancel()
         audioPlayer?.stop()
         
         assert(routeProgress != nil, "routeProgress should not be nil.")
+        
+        
+        
+        guard let _ = routeProgress!.route.speechLocale else {
+            speakWithDefaultSpeechSynthesizer(instruction, error: nil)
+            return
+        }
         
         let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
         lastSpokenInstruction = modifiedInstruction
@@ -93,10 +101,12 @@ open class MapboxVoiceController: RouteVoiceController {
      
      This method should be used in cases where `fetch(instruction:)` or `play(_:)` fails.
      */
-    @objc open func speakWithDefaultSpeechSynthesizer(_ instruction: SpokenInstruction, error: Error) {
+    @objc open func speakWithDefaultSpeechSynthesizer(_ instruction: SpokenInstruction, error: Error?) {
         audioTask?.cancel()
         
-        voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+        if let error = error {
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+        }
         
         guard let audioPlayer = audioPlayer else {
             super.speak(instruction)
@@ -147,7 +157,7 @@ open class MapboxVoiceController: RouteVoiceController {
             options.locale = locale
         }
         
-        if let locale = routeProgress?.route.spokenLocale {
+        if let locale = routeProgress?.route.speechLocale {
             options.locale = locale
         }
         
