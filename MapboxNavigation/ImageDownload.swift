@@ -3,7 +3,7 @@ import Foundation
 enum DownloadError: Error {
     case serverError
     case clientError
-    case noImage
+    case noImageData
 }
 
 protocol ImageDownload: URLSessionDataDelegate {
@@ -141,7 +141,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
             fireAllCompletions(image, data: data, error: nil)
         } else {
             // TODO: test no image data returned
-            fireAllCompletions(nil, data: incomingData, error: DownloadError.noImage)
+            fireAllCompletions(nil, data: incomingData, error: DownloadError.noImageData)
         }
     }
 

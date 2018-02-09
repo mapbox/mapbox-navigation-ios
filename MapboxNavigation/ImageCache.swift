@@ -44,8 +44,13 @@ class ImageCache: BimodalImageCache {
         }
 
         if toDisk == true {
+            guard let fileManager = fileManager else {
+                dispatchCompletion()
+                return
+            }
+            let cacheURL = diskCacheURL
             diskAccessQueue.async {
-                self.createCacheDirIfNeeded()
+                self.createCacheDirIfNeeded(cacheURL, fileManager: fileManager)
 
                 let data = UIImagePNGRepresentation(image)
                 let cacheURL = self.cacheURLWithKey(key)
@@ -82,7 +87,7 @@ class ImageCache: BimodalImageCache {
         }
 
         if let image = imageFromDiskCache(forKey: key) {
-            //TODO: test and extract helper method
+            //TODO: add test
             storeImageInMemoryCache(image, forKey: key!)
             return image
         }
@@ -95,14 +100,18 @@ class ImageCache: BimodalImageCache {
     }
 
     func clearDisk(completion: NoArgBlock?) {
+        guard let fileManager = fileManager else {
+            return
+        }
+        let cacheURL = self.diskCacheURL
         self.diskAccessQueue.async {
             do {
-                try self.fileManager!.removeItem(at: self.diskCacheURL)
+                try fileManager.removeItem(at: cacheURL)
             } catch {
-                NSLog("================> Failed to remove cache dir: \(self.diskCacheURL)")
+                NSLog("================> Failed to remove cache dir: \(cacheURL)")
             }
 
-            self.createCacheDirIfNeeded()
+            self.createCacheDirIfNeeded(cacheURL, fileManager: fileManager)
 
             if let completion = completion {
                 DispatchQueue.main.async {
@@ -120,18 +129,21 @@ class ImageCache: BimodalImageCache {
     }
 
     private func imageFromMemoryCache(forKey key: String?) -> UIImage? {
-        guard let key = cacheKeyForKey(key!) as NSString! else {
+        guard let key = key, let cacheKey = cacheKeyForKey(key) as NSString! else {
             return nil
         }
-        return memoryCache.object(forKey: key)
+        return memoryCache.object(forKey: cacheKey)
     }
 
     private func imageFromDiskCache(forKey key: String?) -> UIImage? {
+        guard let key = key else {
+            return nil
+        }
         do {
-            let data = try Data.init(contentsOf: self.cacheURLWithKey(key!))
+            let data = try Data.init(contentsOf: cacheURLWithKey(key))
             return UIImage.init(data: data)
         } catch {
-            NSLog("================> Failed to load data at URL: \(self.cacheURLWithKey(key!))")
+            NSLog("================> Failed to load data at URL: \(cacheURLWithKey(key))")
             return nil
         }
     }
@@ -140,13 +152,13 @@ class ImageCache: BimodalImageCache {
         return Int(image.size.height * image.size.width * image.scale * image.scale);
     }
 
-    private func createCacheDirIfNeeded() {
-        if fileManager!.fileExists(atPath: diskCacheURL.absoluteString) == false {
+    private func createCacheDirIfNeeded(_ url: URL, fileManager: FileManager) {
+        if fileManager.fileExists(atPath: url.absoluteString) == false {
             do {
-                try self.fileManager!.createDirectory(at: self.diskCacheURL, withIntermediateDirectories: true, attributes: nil)
+                try fileManager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
             } catch {
                 // TODO: unsure of the best strategy to catch/handle this case at the moment
-                NSLog("================> Failed to create directory: \(diskCacheURL)")
+                NSLog("================> Failed to create directory: \(url)")
             }
         }
     }

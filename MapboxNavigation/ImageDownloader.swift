@@ -34,9 +34,9 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
 
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {
         let request: URLRequest = urlRequestWithURL(url)
-        var operation: ImageDownload?
+        var operation: ImageDownload
         if operations[url] != nil {
-            operation = operations[url]
+            operation = operations[url]!
         } else {
             operation = operationType.init(request: request, in: self.urlSession)
             self.operations[url] = operation
@@ -45,7 +45,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             }
         }
         if completion != nil {
-            operation?.addCompletion(completion!)
+            operation.addCompletion(completion!)
         }
     }
 
@@ -71,7 +71,9 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             completionHandler(.cancel)
             return
         }
-        operation.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
+        if operation.responds(to: #function) {
+            operation.urlSession!(session, dataTask: dataTask, didReceive: response, completionHandler: completionHandler)
+        }
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -79,7 +81,9 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             // ?
             return
         }
-        operation.urlSession!(session, dataTask: dataTask, didReceive: data)
+        if operation.responds(to: #function) {
+            operation.urlSession!(session, dataTask: dataTask, didReceive: data)
+        }
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
@@ -87,7 +91,9 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             // ?
             return
         }
-        operation.urlSession!(session, task: task, didCompleteWithError: error)
+        if operation.responds(to: #function) {
+            operation.urlSession!(session, task: task, didCompleteWithError: error)
+        }
         operations[url] = nil
     }
 
