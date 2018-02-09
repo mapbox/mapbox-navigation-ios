@@ -33,7 +33,7 @@ class ImageCache: BimodalImageCache {
     func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: NoArgBlock?) {
         let key = cacheKeyForKey(key)
 
-        memoryCache.setObject(image, forKey: key as NSString, cost: cacheCostForImage(image))
+        storeImageInMemoryCache(image, forKey: key)
 
         let dispatchCompletion = {
             if let completion = completion {
@@ -62,6 +62,10 @@ class ImageCache: BimodalImageCache {
         }
     }
 
+    private func storeImageInMemoryCache(_ image: UIImage, forKey key: String) {
+        memoryCache.setObject(image, forKey: key as NSString, cost: cacheCostForImage(image))
+    }
+
     private func cachePathWithKey(_ key: String) -> String {
         let cacheKey = cacheKeyForKey(key)
         return cacheURLWithKey(cacheKey).absoluteString
@@ -79,7 +83,7 @@ class ImageCache: BimodalImageCache {
 
         if let image = imageFromDiskCache(forKey: key) {
             //TODO: test and extract helper method
-            memoryCache.setObject(image, forKey: key! as NSString, cost: cacheCostForImage(image))
+            storeImageInMemoryCache(image, forKey: key!)
             return image
         }
 

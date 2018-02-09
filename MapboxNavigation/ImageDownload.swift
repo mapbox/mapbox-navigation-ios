@@ -79,7 +79,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
             _finished = true
         }
 
-        // fire callbacks (with error?)?
+        //TODO: should we fire callbacks with error here, or assume not since canceling is usually intentional?
     }
 
     override func start() {
