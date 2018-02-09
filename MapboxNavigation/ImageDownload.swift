@@ -1,5 +1,11 @@
 import Foundation
 
+enum DownloadError: Error {
+    case serverError
+    case clientError
+    case noImage
+}
+
 protocol ImageDownload: URLSessionDataDelegate {
     init(request: URLRequest, in session: URLSession)
     func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock)
@@ -62,6 +68,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
         if let dataTask = dataTask {
             dataTask.cancel()
             self.dataTask = nil
+            self.incomingData = nil
         }
 
         if isExecuting {
@@ -72,9 +79,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
             _finished = true
         }
 
-        // drop any image data?
-        // drop any callbacks?
-        // or are we disposed of at this point?
+        // fire callbacks (with error?)?
     }
 
     override func start() {
@@ -99,8 +104,6 @@ class ImageDownloadOperation: Operation, ImageDownload {
 
     }
 
-    //TODO: ensure completion block(s) is/are called on main queue
-
     // MARK: URLSessionDataDelegate
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
@@ -108,11 +111,13 @@ class ImageDownloadOperation: Operation, ImageDownload {
             completionHandler(.cancel)
             return
         }
-        if response.statusCode < 400 && response.statusCode != 304 {
+        if response.statusCode < 400 {
             self.incomingData = Data()
             completionHandler(.allow)
         } else {
-            //TODO: sad path handling
+            //TODO: test sad path handling
+            fireAllCompletions(nil, data: nil, error: DownloadError.serverError)
+            completionHandler(.cancel)
         }
     }
 
@@ -127,19 +132,24 @@ class ImageDownloadOperation: Operation, ImageDownload {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         guard error == nil else {
             NSLog("================> %@", String(describing: error))
-            //TODO: wrap error (this is likely a client-side error)
-            //            completion(nil, nil, error, false)
+            //TODO: test client-side error
+            fireAllCompletions(nil, data: nil, error: DownloadError.clientError)
             return
         }
 
-        if let data = incomingData, let image = UIImage.init(data: data) {
-            for completion in completionBlocks {
-                completion(image, data, error, true)
-            }
+        if let data = incomingData, let image = UIImage(data: data) {
+            fireAllCompletions(image, data: data, error: nil)
         } else {
-            // data was not an image. Create or wrap inbound error.
+            // TODO: test no image data returned
+            fireAllCompletions(nil, data: incomingData, error: DownloadError.noImage)
         }
-
     }
 
+    private func fireAllCompletions(_ image: UIImage?, data: Data?, error: Error?) {
+        for completion in completionBlocks {
+            DispatchQueue.main.async {
+                completion(image, data, error)
+            }
+        }
+    }
 }

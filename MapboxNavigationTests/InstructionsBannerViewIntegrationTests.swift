@@ -109,7 +109,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
         let operation: TestImageDownloadOperation = TestImageDownloadOperation.operationForURL(component.imageURL!)!
-        operation.fireAllCompletionsWith(shieldImage, data: UIImagePNGRepresentation(shieldImage), error: nil, success: true)
+        operation.fireAllCompletions(shieldImage, data: UIImagePNGRepresentation(shieldImage), error: nil)
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
     }

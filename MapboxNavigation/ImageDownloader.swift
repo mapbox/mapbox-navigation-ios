@@ -1,6 +1,6 @@
 import Foundation
 
-typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?, Bool) -> Void
+typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?) -> Void
 
 protocol ReentrantImageDownloader {
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) -> Void

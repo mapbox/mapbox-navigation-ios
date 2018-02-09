@@ -16,7 +16,6 @@ class ImageRepositoryTests: XCTestCase {
         super.setUp()
         self.continueAfterFailure = false
 
-        //TODO: the URLSession needs to be created with this config, and thus needs to be injected. Lazy var above is WIP.
         URLProtocol.registerClass(TestImageLoadingURLProtocol.self)
         TestImageLoadingURLProtocol.reset()
 

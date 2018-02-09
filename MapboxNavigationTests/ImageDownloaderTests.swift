@@ -37,19 +37,16 @@ class ImageDownloaderTests: XCTestCase {
         var imageReturned: UIImage?
         var dataReturned: Data?
         var errorReturned: Error?
-        var downloadSuccess = false
 
         let async = self.expectation(description: "Image Download")
-        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+        downloader.downloadImage(with: imageURL) { (image, data, error) in
             imageReturned = image
             dataReturned = data
             errorReturned = error
-            downloadSuccess = success
             async.fulfill()
         }
         wait(for: [async], timeout: 1)
 
-        XCTAssertTrue(downloadSuccess)
         XCTAssertNotNil(imageReturned)
         XCTAssertTrue(imageReturned!.isKind(of: UIImage.self))
         XCTAssertNotNil(dataReturned)
@@ -62,11 +59,11 @@ class ImageDownloaderTests: XCTestCase {
         let secondDownload = self.expectation(description: "Second Image Download")
         var firstCallbackCalled = false
         var secondCallbackCalled = false
-        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+        downloader.downloadImage(with: imageURL) { (image, data, error) in
             firstCallbackCalled = true
             firstDownload.fulfill()
         }
-        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+        downloader.downloadImage(with: imageURL) { (image, data, error) in
             secondCallbackCalled = true
             secondDownload.fulfill()
         }
@@ -80,7 +77,7 @@ class ImageDownloaderTests: XCTestCase {
     func testDownloadingImageAgainAfterFirstDownloadCompletes() {
         let firstDownload = self.expectation(description: "First Image Download")
         var firstCallbackCalled = false
-        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+        downloader.downloadImage(with: imageURL) { (image, data, error) in
             firstCallbackCalled = true
             firstDownload.fulfill()
         }
@@ -88,7 +85,7 @@ class ImageDownloaderTests: XCTestCase {
 
         let secondDownload = self.expectation(description: "Second Image Download")
         var secondCallbackCalled = false
-        downloader.downloadImage(with: imageURL) { (image, data, error, success) in
+        downloader.downloadImage(with: imageURL) { (image, data, error) in
             secondCallbackCalled = true
             secondDownload.fulfill()
         }

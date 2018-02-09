@@ -48,7 +48,7 @@ class ImageRepository {
             return
         }
 
-        let _ = imageDownloader.downloadImage(with: imageURL, completion: { [weak self] (image, data, error, successful) in
+        let _ = imageDownloader.downloadImage(with: imageURL, completion: { [weak self] (image, data, error) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)
                 return

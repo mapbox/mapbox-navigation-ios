@@ -54,7 +54,6 @@ class ImageCache: BimodalImageCache {
                     try data?.write(to: cacheURL)
                 } catch {
                     NSLog("================> Failed to write data to URL \(cacheURL)")
-                    dispatchCompletion()
                 }
                 dispatchCompletion()
             }
@@ -77,7 +76,14 @@ class ImageCache: BimodalImageCache {
         if let image = imageFromMemoryCache(forKey: key) {
             return image
         }
-        return imageFromDiskCache(forKey: key)
+
+        if let image = imageFromDiskCache(forKey: key) {
+            //TODO: test and extract helper method
+            memoryCache.setObject(image, forKey: key! as NSString, cost: cacheCostForImage(image))
+            return image
+        }
+
+        return nil
     }
 
     func clearMemory() {
@@ -119,7 +125,6 @@ class ImageCache: BimodalImageCache {
     private func imageFromDiskCache(forKey key: String?) -> UIImage? {
         do {
             let data = try Data.init(contentsOf: self.cacheURLWithKey(key!))
-            //TODO: store in memory cache
             return UIImage.init(data: data)
         } catch {
             NSLog("================> Failed to load data at URL: \(self.cacheURLWithKey(key!))")
