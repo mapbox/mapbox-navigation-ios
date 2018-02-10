@@ -71,17 +71,25 @@ open class BaseInstructionsBannerView: UIControl {
         delegate?.didTapInstructionsBanner(self)
     }
     
-    func set(_ primaryInstruction: [VisualInstructionComponent]?, secondaryInstruction: [VisualInstructionComponent]?) {
-        primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
+    func set(_ instructions: VisualInstruction, distanceRemaining: CLLocationDistance?, drivingSide: DrivingSide) {
+        primaryLabel.numberOfLines = instructions.secondaryTextComponents == nil ? 2 : 1
         
-        if secondaryInstruction == nil {
+        if instructions.secondaryTextComponents == nil {
             centerYAlignInstructions()
         } else {
             baselineAlignInstructions()
         }
         
-        primaryLabel.instruction = primaryInstruction
-        secondaryLabel.instruction = secondaryInstruction
+        primaryLabel.instruction = instructions.primaryTextComponents
+        secondaryLabel.instruction = instructions.secondaryTextComponents
+        
+        if let distanceRemaining = distanceRemaining {
+            distance = distanceRemaining > 5 ? distanceRemaining : 0
+        } else {
+            distance = nil
+        }
+        
+        maneuverView.set(instructions.maneuverDirection, maneuverType: instructions.maneuverType, drivingSide: drivingSide)
     }
     
     override open func prepareForInterfaceBuilder() {

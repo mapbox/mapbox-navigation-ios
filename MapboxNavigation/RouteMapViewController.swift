@@ -439,13 +439,10 @@ class RouteMapViewController: UIViewController {
         
         guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
         
-        instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
-        instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
-        instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
+        instructionsBannerView.set(visualInstruction, distanceRemaining: distanceRemaining, drivingSide: stepProgress.step.drivingSide)
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
-    
         guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
             let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
             lanesView.isHidden
@@ -466,7 +463,6 @@ class RouteMapViewController: UIViewController {
             return
         }
         
-        nextBannerView.maneuverView.step = nextStep
         nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
         showNextBanner()
     }
@@ -868,9 +864,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
-        instructionsView.maneuverView.step = maneuverStep
-        instructionsView.distance = distance
+        instructionsView.set(instructions, distanceRemaining: distance, drivingSide: maneuverStep.drivingSide)
         
         instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor
         
