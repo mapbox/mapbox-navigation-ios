@@ -367,6 +367,14 @@ extension ViewController: NavigationMapViewDelegate {
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
         return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
     }
+    
+    // By default, the routeController will attempt to filter out bad locations.
+    // If however you would like to filter these locations in,
+    // you can conditionally return a Bool here according to your own heuristics.
+    // See CLLocation.swift `isQualified` for what makes a location update unqualified.
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
+        return true
+    }
 }
 
 // MARK: WaypointConfirmationViewControllerDelegate

@@ -163,3 +163,8 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
  The number of seconds remaining on the final step of a leg before the user is considered "arrived".
  */
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
+
+/**
+ The minium distance remaining on a route before overhead zooming is stopped.
+ */
+public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistance = 200

@@ -46,7 +46,7 @@ Pod::Spec.new do |s|
   s.dependency "MapboxDirections.swift", "~> 0.16.0"
   s.dependency "Mapbox-iOS-SDK", "~> 3.6"
   s.dependency "SDWebImage", "~> 4.1"
-  s.dependency "MapboxMobileEvents", "~> 0.2"
+  s.dependency "MapboxMobileEvents", "~> 0.3"
   s.dependency "Solar", "~> 2.1"
   s.dependency "Turf", "~> 0.0.4"
   s.dependency "MapboxSpeech", "~> 0.0.1"
