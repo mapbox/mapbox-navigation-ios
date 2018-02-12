@@ -1030,7 +1030,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.camera = camera
         
         // Don't keep zooming in
-        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > 200 else { return }
+        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
         
         setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
     }

@@ -282,26 +282,6 @@ class RouteMapViewController: UIViewController {
         mapView.setContentInset(contentInsets, animated: true)
         mapView.setNeedsUpdateConstraints()
     }
-    
-    func updateVisibleBounds() {
-        guard let userLocation = routeController.locationManager.location?.coordinate else { return }
-        guard let bottomHeight = bottomBannerView?.bounds.height else { return }
-        
-        let overviewContentInset = UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomHeight, right: 20)
-        let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
-        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
-        
-        mapView.tracksUserCourse = false
-        let camera = mapView.camera
-        camera.pitch = 0
-        camera.heading = 0
-        mapView.camera = camera
-        
-        // Don't keep zooming in
-        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > 200 else { return }
-        
-        mapView.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: overviewContentInset, animated: true)
-    }
 
     func notifyDidReroute(route: Route) {
         updateETA()
