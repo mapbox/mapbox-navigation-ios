@@ -267,7 +267,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     public weak var navigationMapDelegate: NavigationMapViewDelegate?
-    weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate!
+    public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate!
     
     open override var showsUserLocation: Bool {
         get {
@@ -358,9 +358,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 enableFrameByFrameCourseViewTracking(for: 3)
                 altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
-                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
+                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
             } else {
-                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse(self)
+                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
             
             if let location = userLocationForCourseTracking {
@@ -1134,18 +1134,21 @@ public protocol NavigationMapViewDelegate: class  {
 /**
  The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
  */
-protocol NavigationMapViewCourseTrackingDelegate: class {
+@objc(MBNavigationMapViewCourseTrackingDelegate)
+public protocol NavigationMapViewCourseTrackingDelegate: class {
     /**
      Tells the receiver that the map is now tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: The NavigationMapView.
      */
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
+    @objc(navigationMapViewDidStartTrackingCourse:)
+    optional func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
     
     /**
      Tells the receiver that `tracksUserCourse` was set to false, signifying that the map is no longer tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: The NavigationMapView.
      */
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
+    @objc(navigationMapViewDidStopTrackingCourse:)
+    optional func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
 }
