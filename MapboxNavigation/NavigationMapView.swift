@@ -385,7 +385,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     @objc public var userCourseView: UIView? {
         didSet {
+            oldValue?.removeFromSuperview()
             if let userCourseView = userCourseView {
+                if let location = userLocationForCourseTracking {
+                    updateCourseTracking(location: location, animated: false)
+                } else {
+                    userCourseView.center = userAnchorPoint
+                }
                 addSubview(userCourseView)
             }
         }
