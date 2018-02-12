@@ -50,7 +50,6 @@ class ImageDownloaderTests: XCTestCase {
         XCTAssertNotNil(imageReturned)
         XCTAssertTrue(imageReturned!.isKind(of: UIImage.self))
         XCTAssertNotNil(dataReturned)
-        XCTAssertEqual(dataReturned!, UIImagePNGRepresentation(imageReturned!))
         XCTAssertNil(errorReturned)
     }
 

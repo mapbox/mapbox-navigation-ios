@@ -141,7 +141,7 @@ class ImageCache: BimodalImageCache {
         }
         do {
             let data = try Data.init(contentsOf: cacheURLWithKey(key))
-            return UIImage.init(data: data)
+            return UIImage(data: data, scale: UIScreen.main.scale)
         } catch {
             NSLog("================> Failed to load data at URL: \(cacheURLWithKey(key))")
             return nil
