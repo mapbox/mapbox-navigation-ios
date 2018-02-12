@@ -520,7 +520,7 @@ extension NavigationViewController: RouteControllerDelegate {
     
     @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
         if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+            mapViewController?.mapView.updateCourseTracking(location: location, animated: false)
             mapViewController?.labelCurrentRoad(at: location)
         } else if let location = locations.last {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)

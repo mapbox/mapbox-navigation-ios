@@ -119,7 +119,7 @@ class RouteMapViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        mapView.tracksUserCourse = true
         endOfRouteViewController.dismiss = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
             self?.routeController.setEndOfRoute(rating: rating, comment: comment)
@@ -151,7 +151,6 @@ class RouteMapViewController: UIViewController {
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
         
-        mapView.tracksUserCourse = true
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
 
         if let camera = pendingCamera {
