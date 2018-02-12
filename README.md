@@ -166,6 +166,9 @@ This library relies heavily on notifications for letting the developer know when
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
 
+
+## Building your own custom navigation UI
+
 Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
 
 ## Language support
