@@ -44,6 +44,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     @objc public var tapGestureDistanceThreshold: CGFloat = 50
     
+    /**
+     The object that acts as the navigation delegate of the map view.
+     */
+    public weak var navigationMapDelegate: NavigationMapViewDelegate?
+    
+    /**
+     The object that acts as the course tracking delegate of the map view.
+     */
+    public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
+    
     // MARK: Instance Properties
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
@@ -265,9 +275,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return style?.layer(withIdentifier: routeLayerIdentifier) != nil
         }
     }
-    
-    public weak var navigationMapDelegate: NavigationMapViewDelegate?
-    public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate!
     
     open override var showsUserLocation: Bool {
         get {
