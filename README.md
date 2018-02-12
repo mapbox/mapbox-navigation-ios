@@ -135,30 +135,6 @@ NavigationViewController(for: route, styles: [CustomStyle()])
 * `navigationViewController:didRerouteAlongRoute:`: Fired as soon as the SDK receives a new route.
 * `navigationViewController:didFailToRerouteWithError:`: Fired when SDK receives an error instead of a new route.
 
-## Building your own custom navigation UI
-
-If you need additional flexibility, you can use the following building blocks to build your own custom navigation UI:
-
-* [Interactive map SDK for iOS](https://www.mapbox.com/ios-sdk/) and [macOS](https://mapbox.github.io/mapbox-gl-native/macos/)
-* [Mapbox Studio](https://www.mapbox.com/studio/)
-  * Design custom maps with live traffic overlays
-* [MapboxDirections.swift](https://github.com/mapbox/MapboxDirections.swift) (also compatible with macOS, tvOS, and watchOS)
-  * Automotive, cycling, and walking directions
-  * Traffic-influenced driving directions
-* Mapbox Core Navigation (`MapboxCoreNavigation` module) (also compatible with watchOS)
-  * Route controller
-    * Progress calculations
-    * Location snapping
-  * Guidance notifications
-    * Current progress along a route
-    * Departure and arrival notifications
-    * Upcoming maneuver notifications
-    * Rerouting notifications
-  * Geometry functions
-  * Distance formatter
-* [OSRM Text Instructions for Swift](https://github.com/Project-OSRM/osrm-text-instructions.swift/) (also compatible with macOS, tvOS, and watchOS)
-  * Localized guidance instructions
-
 ### Route Controller
 
 `RouteController` is given a route. Internally `RouteController` matches the user's current location to the route while looking at 3 principle pieces:
@@ -189,6 +165,9 @@ This library relies heavily on notifications for letting the developer know when
 
 * Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
   * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
+
+
+## Building your own custom navigation UI
 
 Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
 
