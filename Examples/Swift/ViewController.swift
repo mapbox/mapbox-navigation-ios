@@ -372,7 +372,7 @@ extension ViewController: NavigationMapViewDelegate {
     // If however you would like to filter these locations in,
     // you can conditionally return a Bool here according to your own heuristics.
     // See CLLocation.swift `isQualified` for what makes a location update unqualified.
-    func navigationViewController(_ navigationViewController: NavigationViewController, didDiscard location: CLLocation) -> Bool {
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldUpdateTo location: CLLocation) -> Bool {
         return true
     }
 }

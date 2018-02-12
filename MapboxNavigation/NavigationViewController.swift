@@ -165,15 +165,15 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
-     Called when a location has been discarded for being inaccurate.
+     Called when a location has been idenetified as unqualified to navigate on.
      
      See `CLLocation.isQualified` for more information about what qualifies a location.
      
      - parameter navigationViewController: The navigation view controller that discarded the location.
-     - parameter location: The location that was discarded
+     - parameter location: The location that will be discarded.
      - return: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      */
-    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, didDiscard location: CLLocation) -> Bool
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldUpdateTo location: CLLocation) -> Bool
 }
 
 /**
@@ -539,16 +539,16 @@ extension NavigationViewController: RouteControllerDelegate {
         }
     }
     
-    @objc public func routeController(_ routeController: RouteController, didDiscard location: CLLocation)  -> Bool {
+    @objc public func routeController(_ routeController: RouteController, shouldUpdateTo location: CLLocation)  -> Bool {
         func showWeakGPS() {
             let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
             mapViewController?.statusView.show(title, showSpinner: false)
         }
         
-        if let didDiscardIsImplemented = delegate?.navigationViewController?(self, didDiscard: location), didDiscardIsImplemented {
+        if let shouldUpdateToIsImplemented = delegate?.navigationViewController?(self, shouldUpdateTo: location), shouldUpdateToIsImplemented {
             showWeakGPS() // Implmeneted and true
             return true
-        } else if delegate?.navigationViewController?(self, didDiscard: location) == nil {
+        } else if delegate?.navigationViewController?(self, shouldUpdateTo: location) == nil {
             showWeakGPS() // Unimplemented, default to always showing if called.
             return true
         }
