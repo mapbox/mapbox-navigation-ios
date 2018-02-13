@@ -43,6 +43,7 @@ struct EventDetails {
     var totalLegCount: Int
     var currentStepIndex: Int
     var totalStepCount: Int
+    var maneuverHash: String
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -119,6 +120,9 @@ struct EventDetails {
         totalLegCount = routeController.routeProgress.route.legs.count
         currentStepIndex = routeController.routeProgress.currentLegProgress.stepIndex
         totalStepCount = routeController.routeProgress.currentLeg.steps.count
+        
+        let maneuver = routeController.routeProgress.currentLegProgress.upComingStep ?? routeController.routeProgress.currentLegProgress.currentStep
+        maneuverHash = "\(maneuver.names?.joined(separator: ",") ?? "")-\(maneuver.destinations?.joined(separator: ",") ?? "")-\(maneuver.codes?.joined(separator: ",") ?? "")-\(maneuver.initialHeading ?? 0)-\(maneuver.finalHeading ?? 0)"
     }
     
     var eventDictionary: [String: Any] {
@@ -184,6 +188,8 @@ struct EventDetails {
         modifiedEventDictionary["totalLegCount"] = totalLegCount
         modifiedEventDictionary["currentStepIndex"] = currentStepIndex
         modifiedEventDictionary["totalStepCount"] = totalStepCount
+        
+        modifiedEventDictionary["maneuverHash"] = maneuverHash
 
         return modifiedEventDictionary
     }
