@@ -6,11 +6,11 @@ typealias RatingClosure = (Int) -> Void //rating
 /*@IBDesignable*/
 class RatingControl: UIStackView {
     
-    //MARK: Constants
+    // MARK: Constants
     static let defaultSize = CGSize(width: 32.0, height: 32.0)
     private let starTemplate = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)
     
-    //MARK: Properties
+    // MARK: Properties
     private var stars = [UIButton]()
     
     var didChangeRating: RatingClosure?
@@ -45,7 +45,7 @@ class RatingControl: UIStackView {
         }
     }
     
-    //MARK: Initializers
+    // MARK: Initializers
     public override init(frame: CGRect) {
         super.init(frame: frame)
         configureStars()
@@ -56,7 +56,7 @@ class RatingControl: UIStackView {
         configureStars()
     }
     
-    //MARK: Private Functions
+    // MARK: Private Functions
     private func configureStars() {
         removeStars()
         addStars()
@@ -70,10 +70,9 @@ class RatingControl: UIStackView {
             button.adjustsImageWhenHighlighted = false
             addButtonSizeConstraints(to: button)
             
-            let setRatingNumber = NSNumber(value: index + 1)
-            let setRatingString = NumberFormatter.localizedString(from: setRatingNumber, number: .none)
-            let localizedString = NSLocalizedString("RATING_ACCESSIBILITY_SET", bundle: .mapboxNavigation, value: "Set %@ star rating", comment: "Accessibility Star Label")
-            button.accessibilityLabel = String.localizedStringWithFormat(localizedString, setRatingString)
+            let setRatingNumber = index + 1
+            let localizedString = NSLocalizedString("RATING_ACCESSIBILITY_SET", bundle: .mapboxNavigation, value: "Set %ld-star rating", comment: "Format for accessibility label of button for setting a rating; 1 = number of stars")
+            button.accessibilityLabel = String.localizedStringWithFormat(localizedString, setRatingNumber)
             
             button.addTarget(self, action: #selector(RatingControl.ratingButtonTapped(button:)), for: .touchUpInside)
             
@@ -106,14 +105,10 @@ class RatingControl: UIStackView {
         setAccessibilityHint(for: button, at: index)
         
         let value: String
-        
-        switch rating {
-        case 0:
-            value = NSLocalizedString("NO_RATING", bundle: .mapboxNavigation, value: "No rating set.", comment: "No Rating Set")
-        case 1:
-            value = NSLocalizedString("RATING_1_STAR", bundle: .mapboxNavigation, value: "1 star set.", comment: "One Star Set")
-        default:
-            value = String.localizedStringWithFormat(NSLocalizedString("RATING_STARS_FORMAT", bundle: .mapboxNavigation, value: "%li stars set.", comment: "Format for rating stars set"), rating)
+        if rating == 0 {
+            value = NSLocalizedString("NO_RATING", bundle: .mapboxNavigation, value: "No rating set.", comment: "Accessibility value of label indicating the absence of a rating")
+        } else {
+            value = String.localizedStringWithFormat(NSLocalizedString("RATING_STARS_FORMAT", bundle: .mapboxNavigation, value: "%ld star(s) set.", comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars"), rating)
         }
         
         button.accessibilityValue = value
@@ -124,7 +119,6 @@ class RatingControl: UIStackView {
         
         button.accessibilityHint = NSLocalizedString("RATING_ACCESSIBILITY_RESET", bundle: .mapboxNavigation, value: "Tap to reset the rating to zero.", comment: "Rating Reset To Zero Accessability Hint")
     }
-    
     
     private func addButtonSizeConstraints(to view: UIView) {
         view.widthAnchor.constraint(equalToConstant: starSize.width).isActive = true

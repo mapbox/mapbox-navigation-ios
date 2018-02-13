@@ -9,6 +9,12 @@ file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
 source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
 
+[mapbox-navigation-ios.localizablestringsdict]
+file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.stringsdict
+source_file = MapboxNavigation/Resources/en.lproj/Localizable.stringsdict
+source_lang = en
+type = STRINGSDICT
+
 [mapbox-navigation-ios.LocalizableCoreStrings]
 file_filter = MapboxCoreNavigation/Resources/<lang>.lproj/Localizable.strings
 source_file = MapboxCoreNavigation/Resources/Base.lproj/Localizable.strings

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>abbreviations</key>
+    <string>&quot;город&quot;, &quot;г.&quot;
+&quot;деревня&quot;, &quot;д.&quot;
+&quot;озеро&quot;, &quot;о.&quot;
+&quot;посёлок&quot;, &quot;п.&quot;
+&quot;река&quot;, &quot;р.&quot;
+&quot;станция&quot;, &quot;ст.&quot;
+</string>
+    <key>classifications</key>
+    <string>&quot;бульвар&quot;, &quot;б.&quot;
+&quot;набережная&quot;, &quot;наб.&quot;
+&quot;переулок&quot;, &quot;пер.&quot;
+&quot;площадь&quot;, &quot;пл.&quot;
+&quot;проезд&quot;, &quot;пр-д&quot;
+&quot;проспект&quot;, &quot;пр.&quot;
+&quot;тупик&quot;, &quot;туп.&quot;
+&quot;улица&quot;, &quot;ул.&quot;
+&quot;шоссе&quot;, &quot;ш.&quot;
+</string>
+    <key>directions</key>
+    <string>&quot;восток&quot;, &quot;В&quot;
+&quot;северо-восток&quot;, &quot;СВ&quot;
+&quot;юг&quot;, &quot;Ю&quot;
+&quot;северо-запад&quot;, &quot;СЗ&quot;
+&quot;север&quot;, &quot;С&quot;
+&quot;юго-восток&quot;, &quot;ЮВ&quot;
+&quot;юго-запад&quot;, &quot;ЮЗ&quot;
+&quot;запад&quot;, &quot;З&quot;
+</string>
+  </dict>
+</plist>

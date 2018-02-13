@@ -1,4 +1,5 @@
 import UIKit
+import MapboxDirections
 
 /// :nodoc:
 @objc(MBNextInstructionLabel)
@@ -51,7 +52,7 @@ open class NextBannerView: UIView {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
-        instructionLabel.text = "San Jose"
+        instructionLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Next step", imageURL: nil)]
     }
     
     func setupLayout() {

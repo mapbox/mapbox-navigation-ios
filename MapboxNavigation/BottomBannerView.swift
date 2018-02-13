@@ -70,7 +70,6 @@ open class BottomBannerView: UIView {
     
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        dividerView.backgroundColor = .red
         timeRemainingLabel.text = "22 min"
         distanceRemainingLabel.text = "4 mi"
         arrivalTimeLabel.text = "10:09"
@@ -133,5 +132,3 @@ open class BottomBannerView: UIView {
         }
     }
 }
-
-

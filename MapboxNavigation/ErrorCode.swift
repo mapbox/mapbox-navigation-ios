@@ -15,9 +15,9 @@ public enum SpokenInstructionErrorCode: Int {
     case audioPlayerFailedToPlay
     
     /**
-     The response did not include data
+     The response did not include data.
      */
-    case emptyAwsResponse
+    case emptyMapboxSpeechResponse
 }
 
 /**

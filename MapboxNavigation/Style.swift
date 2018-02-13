@@ -61,11 +61,19 @@ open class DismissButton: Button { }
 
 /// :nodoc:
 @objc(MBFloatingButton)
-open class FloatingButton: Button { }
-
-/// :nodoc:
-@objc(MBLanesView)
-public class LanesView: UIView { }
+open class FloatingButton: Button {
+    var constrainedSize: CGSize? {
+        didSet {
+            guard let size = constrainedSize else {
+                widthAnchor.constraint(equalToConstant: 0).isActive = false
+                heightAnchor.constraint(equalToConstant: 0).isActive = false
+                return
+            }
+            widthAnchor.constraint(equalToConstant: size.width).isActive = true
+            heightAnchor.constraint(equalToConstant: size.height).isActive = true
+        }
+    }
+}
 
 /// :nodoc:
 @objc(MBReportButton)
@@ -162,7 +170,7 @@ public class ResumeButton: UIControl {
 
 /// :nodoc:
 @objc(MBStylableLabel)
-open class StylableLabel : UILabel {
+open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
     @objc dynamic open var normalTextColor: UIColor = .black {
         didSet {
@@ -191,12 +199,10 @@ open class StylableTextView: UITextView {
 /// :nodoc:
 @objc(MBDistanceLabel)
 open class DistanceLabel: StylableLabel {
-    @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
-    {
+    @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1) {
         didSet { update() }
     }
-    @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
-    {
+    @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1) {
         didSet { update() }
     }
     @objc dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium) {
@@ -294,16 +300,37 @@ open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBWayNameLabel)
-open class WayNameLabel: StylableLabel { }
-
-/// :nodoc:
-@objc(MBWayNameView)
-open class WayNameView: UIView {
+@IBDesignable
+open class WayNameLabel: StylableLabel {
+    
+    /// :nodoc:
+    open var textInsets: UIEdgeInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
+    
+    open override var intrinsicContentSize: CGSize {
+        var size = super.intrinsicContentSize
+        size.height += textInsets.top + textInsets.bottom
+        size.width += textInsets.left + textInsets.right
+        return size
+    }
     
     @objc dynamic public var borderColor: UIColor = .white {
         didSet {
             layer.borderColor = borderColor.cgColor
         }
+    }
+    
+    @objc open override var backgroundColor: UIColor? {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
+    override open func drawText(in rect: CGRect) {
+        backgroundColor?.setFill()
+        clipsToBounds = true
+        let ctx = UIGraphicsGetCurrentContext()
+        ctx?.fill(rect)
+        super.drawText(in: UIEdgeInsetsInsetRect(rect, textInsets))
     }
     
     open override func layoutSubviews() {
@@ -442,9 +469,6 @@ open class InstructionsBannerContentView: UIView { }
 /// :nodoc:
 @objc(MBBottomBannerContentView)
 open class BottomBannerContentView: UIView { }
-
-
-
 
 /// :nodoc:
 @objc(MBMarkerView)

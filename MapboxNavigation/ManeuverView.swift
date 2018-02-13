@@ -52,6 +52,11 @@ public class ManeuverView: UIView {
         transform = CGAffineTransform.identity
         let resizing: ManeuversStyleKit.ResizingBehavior = .aspectFit
         
+        #if TARGET_INTERFACE_BUILDER
+            ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
+            return
+        #endif
+        
         guard let step = step else {
             if isStart {
                 ManeuversStyleKit.drawStarting(frame: bounds, resizing: resizing, primaryColor: primaryColor)
@@ -62,9 +67,9 @@ public class ManeuverView: UIView {
         }
         
         var flip: Bool = false
-        let type: ManeuverType = step.maneuverType ?? .turn
+        let type: ManeuverType = step.maneuverType != .none ? step.maneuverType : .turn
         let angle = ((step.finalHeading ?? 0) - (step.initialHeading ?? 0)).wrap(min: -180, max: 180)
-        let direction: ManeuverDirection = step.maneuverDirection ?? ManeuverDirection(angle: Int(angle))
+        let direction: ManeuverDirection = step.maneuverDirection != .none ? step.maneuverDirection : ManeuverDirection(angle: Int(angle))
 
         switch type {
         case .merge:

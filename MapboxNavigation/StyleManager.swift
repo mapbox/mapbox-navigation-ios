@@ -70,7 +70,7 @@ open class StyleManager: NSObject {
     func resetTimeOfDayTimer() {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
         
-        guard automaticallyAdjustsStyleForTimeOfDay else { return }
+        guard automaticallyAdjustsStyleForTimeOfDay && styles.count > 1 else { return }
         guard let location = delegate?.locationFor(styleManager: self) else { return }
         
         guard let solar = Solar(date: date, coordinate: location.coordinate),

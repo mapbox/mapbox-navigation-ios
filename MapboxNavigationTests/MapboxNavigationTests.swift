@@ -46,7 +46,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         controller.updateLaneViews(step: stepWithLanes, durationRemaining: 20)
         controller.showLaneViews(animated: false)
         
-        FBSnapshotVerifyView(controller.laneViewsContainerView)
+        FBSnapshotVerifyView(controller.lanesView)
     }
 }
 

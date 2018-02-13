@@ -1,0 +1,81 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Luk";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "Stop navigation";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Du er ankommet";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Hvad kan vi gøre bedre?";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Instruktionen kunne ikke læses op";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Hurtigere rute fundet";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Dårlig \nRute";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Uklar\nInstruktion";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Andre\nKort problemer";
+
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Manglende\nAfkørsel";
+
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Manglende\nVej";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Ikke\nTilladt";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Anmeld\nKø";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "Lukket\nVej";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ og %2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "No rating set.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tryk for at nulstille anmeldelse.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Set %ld-star rating";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld star(s) set.";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "Report Problem";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Beregner ny rute…";
+
+/* Button title for resume tracking */
+"RESUME" = "Genoptag";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Simulerer navigation ved %d×";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, via %2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ og %2$@";
+
+/* Inform user about weak GPS signal */
+"WEAK_GPS" = "Svagt GPS signal";
+

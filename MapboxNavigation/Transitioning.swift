@@ -5,8 +5,8 @@ class Interactor: UIPercentDrivenInteractiveTransition {
     var shouldFinish = false
 }
 
-class DismissAnimator : NSObject { }
-extension DismissAnimator : UIViewControllerAnimatedTransitioning {
+class DismissAnimator: NSObject { }
+extension DismissAnimator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
@@ -30,7 +30,7 @@ extension DismissAnimator : UIViewControllerAnimatedTransitioning {
     }
 }
 
-class PresentAnimator : NSObject { }
+class PresentAnimator: NSObject { }
 
 extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {

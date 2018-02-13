@@ -1,3 +1,4 @@
+
 import Foundation
 import AVFoundation
 import MapboxDirections
@@ -15,7 +16,7 @@ extension NSAttributedString {
                 phoneticString.append(NSAttributedString(string: " "))
             }
             phoneticString.append(NSAttributedString(string: word, attributes: [
-                NSAttributedStringKey(rawValue: AVSpeechSynthesisIPANotationAttribute): phoneticWord,
+                NSAttributedStringKey(rawValue: AVSpeechSynthesisIPANotationAttribute): phoneticWord
             ]))
         }
         return phoneticString
@@ -60,40 +61,34 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      */
     @objc public var isEnabled: Bool = true
     
-    
     /**
      Volume of announcements.
      */
     @objc public var volume: Float = 1.0
-    
     
     /**
      SSML option which controls at which speed Polly instructions are read.
      */
     @objc public var instructionVoiceSpeedRate = 1.08
     
-    
     /**
      SSML option that specifies the voice loudness.
      */
     @objc public var instructionVoiceVolume = "default"
     
-    
     /**
      If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
      */
     @objc public var playRerouteSound = true
-
     
     /**
      Sound to play prior to reroute. Inherits volume level from `volume`.
      */
     @objc public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
     
-    
     /**
      Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
-    */
+     */
     @objc public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
@@ -104,8 +99,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     var lastSpokenInstruction: SpokenInstruction?
     var routeProgress: RouteProgress?
     
-    var volumeToken: NSKeyValueObservation? = nil
-    var muteToken: NSKeyValueObservation? = nil
+    var volumeToken: NSKeyValueObservation?
+    var muteToken: NSKeyValueObservation?
     
     /**
      Default initializer for `RouteVoiceController`.
@@ -190,7 +185,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
         try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
     }
-
+    
     func duckAudio() throws {
         try validateDuckingOptions()
         try AVAudioSession.sharedInstance().setActive(true)

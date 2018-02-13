@@ -28,8 +28,8 @@ THEME=${JAZZY_THEME:-$DEFAULT_THEME}
 BASE_URL="https://www.mapbox.com/mapbox-navigation-ios"
 
 # Link to directions documentation
-DIRECTIONS_VERSION="0.15.1"
-DIRECTIONS_SYMBOLS="Directions|Route|RouteStep|RouteLeg|RouteOptions|Waypoint"
+DIRECTIONS_VERSION="0.16.0"
+DIRECTIONS_SYMBOLS="Directions|Intersection|Lane|Route|RouteLeg|RouteOptions|RouteStep|SpokenInstruction|VisualInstruction|VisualInstructionComponent|Waypoint"
 
 rm -rf ${OUTPUT}
 mkdir -p ${OUTPUT}
@@ -42,7 +42,7 @@ jazzy \
     --sdk iphonesimulator \
     --module-version ${SHORT_VERSION} \
     --github-file-prefix "https://github.com/mapbox/mapbox-navigation-ios/tree/${BRANCH}" \
-    --documentation=docs/{guides,examples}/*.md \
+    --documentation="docs/{guides,examples}/*.md" \
     --root-url "${BASE_URL}/navigation/${RELEASE_VERSION}/" \
     --theme ${THEME} \
     --output ${OUTPUT}

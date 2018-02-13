@@ -10,6 +10,8 @@ import MapboxDirections
 
 class CustomStyleUIElements: UIViewController {
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         let origin = CLLocationCoordinate2DMake(37.77440680146262, -122.43539772352648)
         let destination = CLLocationCoordinate2DMake(37.76556957793795, -122.42409811526268)
         let options = NavigationRouteOptions(coordinates: [origin, destination])
@@ -98,9 +100,8 @@ class CustomDayStyle: DayStyle {
         TimeRemainingLabel.appearance().textColor = lightGrayColor
         TimeRemainingLabel.appearance().trafficLowColor = darkBackgroundColor
         TimeRemainingLabel.appearance().trafficUnknownColor = darkGrayColor
-        WayNameLabel.appearance().backgroundColor = .clear
         WayNameLabel.appearance().textColor = blueColor
-        WayNameView.appearance().backgroundColor = secondaryBackgroundColor
+        WayNameLabel.appearance().backgroundColor = secondaryBackgroundColor
     }
 }
 

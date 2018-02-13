@@ -285,7 +285,7 @@ extension AVAudioSession {
         return "unknown"
     }
     
-    func isOutputBluetooth() -> Bool{
+    func isOutputBluetooth() -> Bool {
         for output in currentRoute.outputs {
             if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
                 return true
@@ -294,7 +294,7 @@ extension AVAudioSession {
         return false
     }
     
-    func isOutputHeadphones() -> Bool{
+    func isOutputHeadphones() -> Bool {
         for output in currentRoute.outputs {
             if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
                 return true
@@ -303,7 +303,7 @@ extension AVAudioSession {
         return false
     }
     
-    func isOutputSpeaker() -> Bool{
+    func isOutputSpeaker() -> Bool {
         for output in currentRoute.outputs {
             if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
                 return true
@@ -334,17 +334,17 @@ extension RouteLegProgress {
         get {
             return [
                 "upcomingInstruction": upComingStep?.instructions ?? NSNull(),
-                "upcomingType": upComingStep?.maneuverType?.description ?? NSNull(),
-                "upcomingModifier": upComingStep?.maneuverDirection?.description ?? NSNull(),
+                "upcomingType": upComingStep?.maneuverType.description ?? NSNull(),
+                "upcomingModifier": upComingStep?.maneuverDirection.description ?? NSNull(),
                 "upcomingName": upComingStep?.names?.joined(separator: ";") ?? NSNull(),
                 "previousInstruction": currentStep.instructions,
-                "previousType": currentStep.maneuverType?.description ?? NSNull(),
-                "previousModifier": currentStep.maneuverDirection?.description ?? NSNull(),
+                "previousType": currentStep.maneuverType.description,
+                "previousModifier": currentStep.maneuverDirection.description,
                 "previousName": currentStep.names?.joined(separator: ";") ?? NSNull(),
                 "distance": Int(currentStep.distance),
                 "duration": Int(currentStep.expectedTravelTime),
                 "distanceRemaining": Int(currentStepProgress.distanceRemaining),
-                "durationRemaining": Int(currentStepProgress.durationRemaining),
+                "durationRemaining": Int(currentStepProgress.durationRemaining)
             ]
         }
     }
@@ -412,4 +412,3 @@ class RerouteEvent: CoreFeedbackEvent {
         }
     }
 }
-

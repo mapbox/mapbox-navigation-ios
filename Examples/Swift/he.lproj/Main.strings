@@ -1,0 +1,15 @@
+
+/* Class = "UIButton"; normalTitle = "Continue to next destination"; ObjectID = "1vl-kS-fBt"; */
+"1vl-kS-fBt.normalTitle" = "המשך ליעד הבא";
+
+/* Class = "UILabel"; text = "Long press to select a destination"; ObjectID = "dEY-t6-Ect"; */
+"dEY-t6-Ect.text" = "לחץ לחיצה ארוכה כדי לבחור יעד";
+
+/* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
+"iiq-Gf-SKY.normalTitle" = "הדמה מיקום";
+
+/* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
+"nMe-Tl-a1N.normalTitle" = "התחל ניווט";
+
+/* Class = "UINavigationItem"; title = "Mapbox Navigation"; ObjectID = "zxr-0T-HBr"; */
+"zxr-0T-HBr.title" = "Mapbox Navigation";

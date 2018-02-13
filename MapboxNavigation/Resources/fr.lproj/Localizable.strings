@@ -1,0 +1,75 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "Fermer";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "Terminer la navigation";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Vous êtes arrivé";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Comment pouvons-nous nous améliorer ?";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "Impossible de lire les instructions audiblement.";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "Itinéraire plus rapide trouvé";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "Mauvais \nitinéraire";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "Instruction \nconfusive";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "Autre \nproblème de carte";
+
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "Sortie \nmanquante";
+
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "Route \nmanquante";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "Non \nautorisé";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "Signaler \nle trafic";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "Route \nfermée";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ et %2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "< %@";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Taper pour remettre à zéro l’évaluation.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Évaluer à %ld étoile(s)";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "Évalué à %ld étoile(s).";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "Recalcul d’itinéraire…";
+
+/* Button title for resume tracking */
+"RESUME" = "Reprendre";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "Simulation de navigation à %d×";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, par %2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ et %2$@";
+
+/* Inform user about weak GPS signal */
+"WEAK_GPS" = "Signal GPS faible";
+

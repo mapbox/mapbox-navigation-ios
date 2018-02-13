@@ -8,15 +8,10 @@ extension RouteStep {
             finalHeading = leftFinalHeading == rightFinalHeading
         }
         
-        var maneuverType = false
-        if let leftType = left.maneuverType, let rightType = right.maneuverType {
-            maneuverType = leftType == rightType
-        }
-        
+        let maneuverType = left.maneuverType == right.maneuverType
         let maneuverLocation = left.maneuverLocation == right.maneuverLocation
         
         return maneuverLocation && maneuverType && finalHeading
-        
     }
     
     /**
