@@ -69,12 +69,21 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let arrowLayerStrokeIdentifier = "arrowStrokeLayer"
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
-    let currentLegAttribute = "isCurrentLeg"
     let instructionSource = "instructionSource"
     let instructionLabel = "instructionLabel"
     let instructionCircle = "instructionCircle"
     let alternateSourceIdentifier = "alternateSource"
     let alternateLayerIdentifier = "alternateLayer"
+    
+    /**
+     Attribute name for the route line that is used for identifying whether a RouteLeg is the current active leg.
+     */
+    public let currentLegAttribute = "isCurrentLeg"
+    
+    /**
+     Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
+     */
+    public let congestionAttributeName = "congestion"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
