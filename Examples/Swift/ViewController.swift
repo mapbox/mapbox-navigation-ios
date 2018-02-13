@@ -124,6 +124,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         super.viewWillAppear(animated)
 
         // Reset the navigation styling to the defaults
+        DayStyle().apply()
     }
 
     //MARK: Gesture Recognizer Handlers
