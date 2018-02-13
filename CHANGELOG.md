@@ -3,6 +3,7 @@
 ## master
 
 * Exposes `setOverheadCameraView(from:along:for:)` which is useful for fitting the camera to an overhead view for the remaining route coordinates.
+* Exposes `PollyVoiceController.speak(_:)` which would allow custom subclass of PollyVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
 
 ## v0.13.1 (February 7, 2018)
 
@@ -10,6 +11,7 @@
 
 * Fixes a bug where the `spokenInstructionIndex` was incremented beyond the number of instructions for a step. (#1080)
 * Fixed a bug that crashed when navigating beyond the final waypoint. (#1087)
+* Added `NavigationSettings.distanceUnit` to let a user override the default unit of measurement for the device’s region setting. (#1055)
 
 ### User Interface
 
