@@ -154,6 +154,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         resumeNotifications()
     }
     
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        //If the map is in tracking mode, make sure we update the camera after the layout pass.
+        if (tracksUserCourse) { updateCourseTracking(location: userLocationForCourseTracking, animated: false) }
+    }
+    
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
         

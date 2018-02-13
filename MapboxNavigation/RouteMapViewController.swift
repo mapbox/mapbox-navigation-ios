@@ -151,8 +151,8 @@ class RouteMapViewController: UIViewController {
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         mapView.compassView.isHidden = true
         
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
-
+        mapView.tracksUserCourse = true
+        
         if let camera = pendingCamera {
             mapView.camera = camera
         } else if let location = routeController.location, location.course > 0 {
