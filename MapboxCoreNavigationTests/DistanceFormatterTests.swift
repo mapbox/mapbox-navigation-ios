@@ -2,7 +2,7 @@ import XCTest
 import CoreLocation
 @testable import MapboxCoreNavigation
 
-let oneMile: CLLocationDistance = metersPerMile
+let oneMile: CLLocationDistance = .metersPerMile
 let oneFeet: CLLocationDistance = 0.3048
 
 class DistanceFormatterTests: XCTestCase {

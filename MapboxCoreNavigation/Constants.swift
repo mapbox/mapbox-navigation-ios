@@ -123,11 +123,6 @@ public var NavigationMetricsDebugLoggingEnabled = "MBNavigationMetricsDebugLoggi
 public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 
 /**
- Approximately the number of meters in a mile.
- */
-let milesToMeters = 1609.34
-
-/**
  The minimum speed value before the user's actual location can be considered over the snapped location.
  */
 public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 3
