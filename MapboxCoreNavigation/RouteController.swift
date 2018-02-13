@@ -384,19 +384,8 @@ open class RouteController: NSObject {
             let finalHeading = upcomingStep.finalHeading,
             let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             
-            // Calculate if angle is sharp
-            let inAngle: CLLocationDegrees = initialHeading.toRadians()
-            let outAngle: CLLocationDegrees = finalHeading.toRadians()
-            
-            let inX = sin(inAngle)
-            let inY = cos(inAngle)
-            let outX = sin(outAngle)
-            let outY = cos(outAngle)
-            
-            let turnAngle = acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
-            
             // The max here is 180. The closer it is to 180, the sharper the turn.
-            if turnAngle > 180 - RouteControllerMaxManipulatedCourseAngle {
+            if calculateAbsoluteTurnAngle(angleIn: initialHeading, angleOut: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
                 nearByCoordinates = coordinates
             }
         }
@@ -436,20 +425,36 @@ open class RouteController: NSObject {
         
         let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
         
+        
         var userCourse = calculatedCourseForLocationOnStep
         var userCoordinate = closest.coordinate
-        
-        if location.course >= 0 && location.speed >= RouteControllerMinimumSpeedForLocationSnapping {
-            if calculatedCourseForLocationOnStep.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle && location.horizontalAccuracy < 20 {
-                userCourse = location.course
-                
-                if closest.distance > RouteControllerUserLocationSnappingDistance && location.horizontalAccuracy < 20 {
-                    userCoordinate =  location.coordinate
-                }
-            }
+        if checkForUnsnapped(location: location, given: calculatedCourseForLocationOnStep) {
+            userCourse = location.course
+            userCoordinate = location.coordinate
         }
-
+        
         return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
+    }
+    
+    func calculateAbsoluteTurnAngle(angleIn: CLLocationDirection, angleOut: CLLocationDirection) -> CLLocationDirection {
+        let inAngle = angleIn.toRadians()
+        let outAngle = angleOut.toRadians()
+        
+        let inX = sin(inAngle)
+        let inY = cos(inAngle)
+        let outX = sin(outAngle)
+        let outY = cos(outAngle)
+        
+        return acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
+    }
+    
+    func checkForUnsnapped(location: CLLocation, given snappedCourse: CLLocationDirection) -> Bool {
+        if location.course >= 0 && location.speed >= RouteControllerMinimumSpeedForLocationSnapping &&
+            snappedCourse.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle &&
+            location.horizontalAccuracy < 20 {
+                return true
+        }
+        return false
     }
 
     /**
