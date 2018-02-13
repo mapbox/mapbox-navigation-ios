@@ -4,7 +4,7 @@ import AVFoundation
 import MapboxMobileEvents
 
 let SecondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
-let EventVersion = 6
+let EventVersion = 7
 
 struct EventDetails {
     var originalRequestIdentifier: String?
