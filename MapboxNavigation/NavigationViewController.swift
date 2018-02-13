@@ -11,7 +11,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
      */
-    @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController : NavigationViewController)
+    @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -23,7 +23,7 @@ public protocol NavigationViewControllerDelegate {
      - parameter waypoint: The waypoint that the user has arrived at.
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
-    @objc optional func navigationViewController(_ navigationViewController : NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
 
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -163,6 +163,17 @@ public protocol NavigationViewControllerDelegate {
      Returns the center point of the user course view in screen coordinates relative to the map view.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
+    
+    /**
+     Called when a location has been idenetified as unqualified to navigate on.
+     
+     See `CLLocation.isQualified` for more information about what qualifies a location.
+     
+     - parameter navigationViewController: The navigation view controller that discarded the location.
+     - parameter location: The location that will be discarded.
+     - return: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
 }
 
 /**
@@ -186,6 +197,7 @@ public class NavigationViewController: UIViewController {
             } else {
                 routeController.routeProgress = RouteProgress(route: route)
             }
+            NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
             mapViewController?.notifyDidReroute(route: route)
         }
     }
@@ -195,7 +207,6 @@ public class NavigationViewController: UIViewController {
     */
     @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
     @objc public var destination: MGLAnnotation!
-    
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
@@ -222,7 +233,7 @@ public class NavigationViewController: UIViewController {
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = RouteVoiceController()
+    @objc public var voiceController: RouteVoiceController? = MapboxVoiceController()
     
     /**
      Provides all routing logic for the user.
@@ -263,7 +274,6 @@ public class NavigationViewController: UIViewController {
             showsEndOfRouteFeedback = showsReportFeedback
         }
     }
-    
     
     /**
     Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
@@ -316,6 +326,7 @@ public class NavigationViewController: UIViewController {
         
         self.directions = directions
         self.route = route
+        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
         self.mapViewController = mapViewController
@@ -532,9 +543,16 @@ extension NavigationViewController: RouteControllerDelegate {
         }
     }
     
-    @objc public func routeController(_ routeController: RouteController, didDiscard location: CLLocation) {
-        let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
-        mapViewController?.statusView.show(title, showSpinner: false, interactive: false)
+    @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
+        let shouldDiscard = delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
+        
+        if shouldDiscard {
+            let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
+            mapViewController?.statusView.show(title, showSpinner: false)
+            return true
+        }
+        
+        return false
     }
     
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {

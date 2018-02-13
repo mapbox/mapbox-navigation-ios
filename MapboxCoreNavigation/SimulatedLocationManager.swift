@@ -137,13 +137,11 @@ public class SimulatedLocationManager: NavigationLocationManager {
             currentSpeed = distance / time
         }
         // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
-        else if coordinatesNearby.count >= 10
-        {
+        else if coordinatesNearby.count >= 10 {
             currentSpeed = minimumSpeed
         }
         // Maximum speed if we are a safe distance from the closest coordinate
-        else if distance >= safeDistance
-        {
+        else if distance >= safeDistance {
             currentSpeed = maximumSpeed
         }
         // Base speed on previous or upcoming turn penalty
@@ -183,7 +181,7 @@ extension CLLocation {
 extension Array where Element : Hashable {
     fileprivate struct OptionalSubscript {
         var elements: [Element]
-        subscript (index: Int)  -> Element? {
+        subscript (index: Int) -> Element? {
             return index < elements.count ? elements[index] : nil
         }
     }

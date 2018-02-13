@@ -8,7 +8,6 @@ import Turf
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
 
-
 class RouteMapViewController: UIViewController {
     
     var navigationView: NavigationView { return view as! NavigationView }
@@ -100,6 +99,11 @@ class RouteMapViewController: UIViewController {
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
     var annotatesSpokenInstructions = false
+    
+    var overheadInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: navigationView.bottomBannerView.bounds.height, right: 20)
+    }
+    
 
     convenience init(routeController: RouteController, delegate: RouteMapViewControllerDelegate? = nil) {
         self.init()
@@ -222,7 +226,9 @@ class RouteMapViewController: UIViewController {
 
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        updateVisibleBounds()
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+        }
         isInOverviewMode = true
     }
     
@@ -265,25 +271,6 @@ class RouteMapViewController: UIViewController {
         mapView.setContentInset(contentInsets, animated: true)
         mapView.setNeedsUpdateConstraints()
     }
-    
-    func updateVisibleBounds() {
-        guard let userLocation = routeController.locationManager.location?.coordinate else { return }
-        
-        let overviewContentInset = UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: navigationView.bottomBannerView.bounds.height, right: 20)
-        let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
-        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
-        
-        mapView.tracksUserCourse = false
-        let camera = mapView.camera
-        camera.pitch = 0
-        camera.heading = 0
-        mapView.camera = camera
-        
-        // Don't keep zooming in
-        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > 200 else { return }
-        
-        mapView.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: overviewContentInset, animated: true)
-    }
 
     func notifyDidReroute(route: Route) {
         updateETA()
@@ -300,7 +287,9 @@ class RouteMapViewController: UIViewController {
         }
 
         if isInOverviewMode {
-            updateVisibleBounds()
+            if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+            }
         } else {
             mapView.tracksUserCourse = true
             navigationView.wayNameLabel.isHidden = true
@@ -362,7 +351,6 @@ class RouteMapViewController: UIViewController {
         //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
         let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
         
-        
         //If the user is on a motorway, not exiting, and their segment is sufficently long, the map should zoom out to the motorway altitude.
         //otherwise, zoom in if it's the last instruction on the step.
         let currentStepIsMotorway = currentStep.isMotorway
@@ -423,7 +411,9 @@ class RouteMapViewController: UIViewController {
             return
         }
 
-        updateVisibleBounds()
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+        }
     }
     
     func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
@@ -449,7 +439,7 @@ class RouteMapViewController: UIViewController {
         
         // If the followon step is short and the user is near the end of the current step, show the nextBanner.
         guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            upcomingStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
                 hideNextBanner()
                 return
         }
@@ -510,8 +500,6 @@ class RouteMapViewController: UIViewController {
     var contentInsets: UIEdgeInsets {
         var margin: CGFloat = 0.0
         if #available(iOS 11.0, *) { margin = view.safeAreaInsets.bottom }
-        //let containerHeight = endOfRouteContainerView.frame.height - margin
-        //let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : navigationView.bottomBannerView.bounds.height
         let top = navigationView.instructionsBannerContentView.bounds.height
         let bottom = navigationView.bottomBannerView.bounds.height
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
@@ -545,7 +533,7 @@ class RouteMapViewController: UIViewController {
             self.navigationView.lanesView.isHidden = true
         }, completion: nil)
     }
-    //MARK: End Of Route
+    // MARK: End Of Route
     
     func embedEndOfRoute() {
         let endOfRoute = endOfRouteViewController
@@ -619,7 +607,7 @@ class RouteMapViewController: UIViewController {
     }
 }
 
-//MARK: - UIContentContainer
+// MARK: - UIContentContainer
 
 extension RouteMapViewController {
     override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
@@ -794,7 +782,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                 let featurePolyline = Polyline(featureCoordinates)
                 let slicedLine = Polyline(stepCoordinates).sliced(from: closestCoordinate)
                 
-                let lookAheadDistance:CLLocationDistance = 10
+                let lookAheadDistance: CLLocationDistance = 10
                 guard let pointAheadFeature = featurePolyline.sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
                 guard let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
                 guard let reversedPoint = Polyline(featureCoordinates.reversed()).sliced(from: closestCoordinate).coordinateFromStart(distance: lookAheadDistance) else { continue }
@@ -919,7 +907,7 @@ extension RouteMapViewController: BottomBannerViewDelegate {
     }
 }
 
-//MARK: - Keyboard Handling
+// MARK: - Keyboard Handling
 
 extension RouteMapViewController {
     fileprivate func subscribeToKeyboardNotifications() {
@@ -943,7 +931,6 @@ extension RouteMapViewController {
         } else {
             navigationView.endOfRouteShowConstraint?.constant = -1 * keyboardHeight
         }
-        
         
         let opts = UIViewAnimationOptions(curve: options.curve)
         UIView.animate(withDuration: options.duration, delay: 0, options: opts, animations: view.layoutIfNeeded, completion: nil)

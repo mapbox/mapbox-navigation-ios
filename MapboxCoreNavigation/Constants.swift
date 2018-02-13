@@ -103,12 +103,12 @@ public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 /**
  When calculating whether or not the user is on the route, we look where the user will be given their speed and this variable.
  */
-public var RouteControllerDeadReckoningTimeInterval:TimeInterval = 1.0
+public var RouteControllerDeadReckoningTimeInterval: TimeInterval = 1.0
 
 /**
  Maximum angle the user puck will be rotated when snapping the user's course to the route line.
  */
-public var RouteControllerMaxManipulatedCourseAngle:CLLocationDirection = 25
+public var RouteControllerMaxManipulatedCourseAngle: CLLocationDirection = 25
 
 /**
  :nodoc This is used internally for debugging metrics
@@ -121,11 +121,6 @@ public var NavigationMetricsDebugLoggingEnabled = "MBNavigationMetricsDebugLoggi
  A multiplier of `1.2` gives us a buffer of 3 seconds, enough time insert a new instruction.
  */
 public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
-
-/**
- Approximately the number of meters in a mile.
- */
-let milesToMeters = 1609.34
 
 /**
  The minimum speed value before the user's actual location can be considered over the snapped location.
@@ -163,3 +158,8 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
  The number of seconds remaining on the final step of a leg before the user is considered "arrived".
  */
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
+
+/**
+ The minium distance remaining on a route before overhead zooming is stopped.
+ */
+public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistance = 200

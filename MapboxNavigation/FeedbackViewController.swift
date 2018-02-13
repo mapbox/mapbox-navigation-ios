@@ -2,7 +2,6 @@ import UIKit
 import MapboxCoreNavigation
 import AVFoundation
 
-
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         abortAutodismiss()
@@ -22,10 +21,10 @@ typealias FeedbackSection = [FeedbackItem]
 
 class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     
-    typealias SendFeedbackHandler = (FeedbackItem) -> ()
+    typealias SendFeedbackHandler = (FeedbackItem) -> Void
     
     var sendFeedbackHandler: SendFeedbackHandler?
-    var dismissFeedbackHandler: (() -> ())?
+    var dismissFeedbackHandler: (() -> Void)?
     var sections = [FeedbackSection]()
     var activeFeedbackItem: FeedbackItem?
     
@@ -181,4 +180,3 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         }
     }
 }
-

@@ -21,7 +21,7 @@ open class StepsViewController: UIViewController {
     weak var dismissButton: DismissButton!
     weak var delegate: StepsViewControllerDelegate?
     
-    typealias CompletionHandler = () -> ()
+    typealias CompletionHandler = () -> Void
     
     let cellId = "StepTableViewCellId"
     var routeProgress: RouteProgress!

@@ -1,6 +1,15 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Stäng";
 
+/* End Navigation Button Text */
+"END_NAVIGATION" = "Avsluta Navigering";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "Du har anlänt";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "Hur kan vi förbättra?";
+
 /* Error message when the SDK is unable to read a spoken instruction. */
 "FAILED_INSTRUCTION" = "Misslyckades med att läsa upp instruktioner";
 
@@ -36,6 +45,21 @@
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "Ingen betygsättning.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "Tryck för att återställa betyget till noll.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "Ange ett %ld-stjärnigt betyg";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld star(s) set.";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "Rapportera Problem";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Uppdaterar rutt…";

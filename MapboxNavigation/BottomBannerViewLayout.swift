@@ -92,4 +92,3 @@ extension BottomBannerView {
         verticalRegularConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass != .compact }
     }
 }
-

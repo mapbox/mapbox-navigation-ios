@@ -35,7 +35,6 @@ extension UIFont {
     fileprivate class var defaultSecondaryText: UIFont { get { return UIFont.systemFont(ofSize: 16) } }
 }
 
-
 /**
  `DefaultStyle` is default style for Mapbox Navigation SDK.
  */

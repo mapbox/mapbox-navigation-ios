@@ -183,7 +183,7 @@ public class ResumeButton: UIControl {
 
 /// :nodoc:
 @objc(MBStylableLabel)
-open class StylableLabel : UILabel {
+open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
     @objc dynamic open var normalTextColor: UIColor = .black {
         didSet {
@@ -212,12 +212,10 @@ open class StylableTextView: UITextView {
 /// :nodoc:
 @objc(MBDistanceLabel)
 open class DistanceLabel: StylableLabel {
-    @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
-    {
+    @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1) {
         didSet { update() }
     }
-    @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
-    {
+    @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1) {
         didSet { update() }
     }
     @objc dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium) {
@@ -488,9 +486,6 @@ open class InstructionsBannerContentView: UIView { }
 /// :nodoc:
 @objc(MBBottomBannerContentView)
 open class BottomBannerContentView: UIView { }
-
-
-
 
 /// :nodoc:
 @objc(MBMarkerView)

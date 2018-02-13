@@ -15,4 +15,3 @@ extension NSError {
         self.init(domain: MBErrorDomain, code: code.rawValue, userInfo: userInfo)
     }
 }
-

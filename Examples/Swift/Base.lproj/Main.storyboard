@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="aCx-td-5El">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="aCx-td-5El">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,17 +22,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3N-JT-loC" customClass="MBNavigationMapView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="styleURL__" value="mapbox://styles/mapbox/navigation-preview-day-v2"/>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="Tey-e2-Fxu" appends="YES" id="gi9-4K-f5d"/>
-                                </connections>
-                            </view>
                             <view alpha="0.69999999999999996" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tfo-Ic-OqD">
                                 <rect key="frame" x="16" y="578" width="343" height="30"/>
                                 <subviews>
@@ -84,14 +74,10 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="A3N-JT-loC" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="BVa-uD-YOz"/>
                             <constraint firstAttribute="trailing" secondItem="tgD-cs-dAn" secondAttribute="trailing" id="Fgp-Hc-0OK"/>
-                            <constraint firstItem="A3N-JT-loC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="UoZ-PE-6rl"/>
-                            <constraint firstAttribute="trailing" secondItem="A3N-JT-loC" secondAttribute="trailing" id="a1N-bP-ay4"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="tgD-cs-dAn" secondAttribute="bottom" id="dZs-zT-gb0"/>
                             <constraint firstItem="Tfo-Ic-OqD" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="eEd-cM-pFc"/>
                             <constraint firstItem="tgD-cs-dAn" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="fio-xr-zWS"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="A3N-JT-loC" secondAttribute="bottom" id="iAW-RV-9er"/>
                             <constraint firstItem="tgD-cs-dAn" firstAttribute="top" secondItem="Tfo-Ic-OqD" secondAttribute="bottom" constant="15" id="sdu-md-ykj"/>
                             <constraint firstAttribute="trailing" secondItem="Tfo-Ic-OqD" secondAttribute="trailing" constant="16" id="veQ-GA-9Zk"/>
                         </constraints>
@@ -109,19 +95,15 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="bottomBar" destination="tgD-cs-dAn" id="bIA-KH-Xa9"/>
                         <outlet property="clearMap" destination="6ux-mK-LQF" id="9M7-CK-q1M"/>
                         <outlet property="longPressHintView" destination="Tfo-Ic-OqD" id="gYu-YW-6FX"/>
-                        <outlet property="mapView" destination="A3N-JT-loC" id="iZS-hq-X5f"/>
                         <outlet property="simulationButton" destination="iiq-Gf-SKY" id="DHR-zB-Mwv"/>
                         <outlet property="startButton" destination="nMe-Tl-a1N" id="tCJ-tk-vph"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Tey-e2-Fxu">
-                    <connections>
-                        <action selector="didLongPress:" destination="BYZ-38-t0r" id="NHG-Kd-gSa"/>
-                    </connections>
-                </pongPressGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Tey-e2-Fxu"/>
             </objects>
             <point key="canvasLocation" x="10" y="35"/>
         </scene>
@@ -130,7 +112,7 @@
             <objects>
                 <navigationController id="aCx-td-5El" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="RVz-Wl-lF8">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -222,7 +204,7 @@
                                         </attributedString>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="200m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="Lhw-bj-ZZ7">
-                                        <rect key="frame" x="92" y="24" width="58" height="24"/>
+                                        <rect key="frame" x="92" y="24" width="57" height="24"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>

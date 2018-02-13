@@ -1,5 +1,6 @@
 import UIKit
 import MapboxCoreNavigation
+import MapboxNavigation
 import Mapbox
 import CoreLocation
 import AVFoundation
@@ -15,6 +16,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     lazy var speechSynth = AVSpeechSynthesizer()
     var userRoute: Route?
     var simulateLocation = false
+    let voiceController = MapboxVoiceController()
     
     @IBOutlet var mapView: MGLMapView!
     @IBOutlet weak var arrowView: UILabel!
@@ -58,7 +60,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     }
 
     func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(shouldSpeak(_:)), name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerWillReroute, object: nil)
     }
@@ -71,17 +72,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
 
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         addRouteToMap()
-    }
-
-    // When an instruction should be given
-    @objc func shouldSpeak(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        
-        guard let text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text else { return }
-
-        let utterance = AVSpeechUtterance(string: text)
-        speechSynth.delegate = self
-        speechSynth.speak(utterance)
     }
 
     // Notifications sent on all location updates
@@ -134,7 +124,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         }
     }
 
-    func getRoute(completion: (()->())? = nil) {
+    func getRoute(completion: (()->Void)? = nil) {
         let options = RouteOptions(coordinates: [mapView.userLocation!.coordinate, destination.coordinate])
         options.includesSteps = true
         options.routeShapeResolution = .full

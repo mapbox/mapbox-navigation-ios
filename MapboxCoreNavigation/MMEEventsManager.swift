@@ -283,7 +283,7 @@ extension AVAudioSession {
         return "unknown"
     }
     
-    func isOutputBluetooth() -> Bool{
+    func isOutputBluetooth() -> Bool {
         for output in currentRoute.outputs {
             if [AVAudioSessionPortBluetoothA2DP, AVAudioSessionPortBluetoothLE].contains(output.portType) {
                 return true
@@ -292,7 +292,7 @@ extension AVAudioSession {
         return false
     }
     
-    func isOutputHeadphones() -> Bool{
+    func isOutputHeadphones() -> Bool {
         for output in currentRoute.outputs {
             if [AVAudioSessionPortHeadphones, AVAudioSessionPortAirPlay, AVAudioSessionPortHDMI, AVAudioSessionPortLineOut].contains(output.portType) {
                 return true
@@ -301,7 +301,7 @@ extension AVAudioSession {
         return false
     }
     
-    func isOutputSpeaker() -> Bool{
+    func isOutputSpeaker() -> Bool {
         for output in currentRoute.outputs {
             if [AVAudioSessionPortBuiltInSpeaker, AVAudioSessionPortBuiltInReceiver].contains(output.portType) {
                 return true
@@ -342,7 +342,7 @@ extension RouteLegProgress {
                 "distance": Int(currentStep.distance),
                 "duration": Int(currentStep.expectedTravelTime),
                 "distanceRemaining": Int(currentStepProgress.distanceRemaining),
-                "durationRemaining": Int(currentStepProgress.durationRemaining),
+                "durationRemaining": Int(currentStepProgress.durationRemaining)
             ]
         }
     }
@@ -410,4 +410,3 @@ class RerouteEvent: CoreFeedbackEvent {
         }
     }
 }
-

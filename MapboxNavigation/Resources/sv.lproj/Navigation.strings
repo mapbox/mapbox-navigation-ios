@@ -2,6 +2,9 @@
 /* Class = "UIButton"; normalTitle = "Report Problem"; ObjectID = "I8f-iR-MZm"; */
 "I8f-iR-MZm.normalTitle" = "Rapportera Problem";
 
+/* Class = "UILabel"; text = "Rate your trip"; ObjectID = "W5U-cV-cDO"; */
+"W5U-cV-cDO.text" = "Betygsätt din resa";
+
 /* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
 "upm-fg-ffn.text" = "Tack för din feedback!";
 

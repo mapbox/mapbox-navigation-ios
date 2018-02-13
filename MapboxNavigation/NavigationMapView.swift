@@ -22,7 +22,7 @@ let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 @objc(MBNavigationMapView)
 open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
-    //MARK: Class Constants
+    // MARK: Class Constants
     
     struct FrameIntervalOptions {
         fileprivate static let durationUntilNextManeuver: TimeInterval = 7
@@ -77,12 +77,21 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let arrowLayerStrokeIdentifier = "arrowStrokeLayer"
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
-    let currentLegAttribute = "isCurrentLeg"
     let instructionSource = "instructionSource"
     let instructionLabel = "instructionLabel"
     let instructionCircle = "instructionCircle"
     let alternateSourceIdentifier = "alternateSource"
     let alternateLayerIdentifier = "alternateLayer"
+    
+    /**
+     Attribute name for the route line that is used for identifying whether a RouteLeg is the current active leg.
+     */
+    public let currentLegAttribute = "isCurrentLeg"
+    
+    /**
+     Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
+     */
+    public let congestionAttribute = "congestion"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -199,7 +208,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
         }
     }
-    
+
     /**
      A `UIView` used to indicate the user’s location and course on the map.
      
@@ -373,9 +382,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }, completion: nil)
         
         if let userCourseView = userCourseView as? UserCourseView {
-            userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            if let customTransformation = userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse) {
+                customTransformation
+            } else {
+                self.userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            }
         } else {
-            userCourseView?.updateCourseView(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
         }
     }
     
@@ -430,7 +443,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    //MARK: Feature Addition/Removal
+    // MARK: Feature Addition/Removal
     
     /**
      Adds or updates both the route line and the route line casing
@@ -696,7 +709,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                                                            options: [.defaultValue : MGLConstantStyleValue<NSNumber>(rawValue: 0.2)])
                 arrowSymbolLayer.iconAllowsOverlap = MGLStyleValue(rawValue: true)
                 
-                
                 let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
                 arrowSymbolLayerCasing.minimumZoomLevel = minimumZoomLevel
                 arrowSymbolLayerCasing.iconImageName = MGLStyleValue(rawValue: "triangle-tip-navigation")
@@ -715,7 +727,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
         }
     }
-    
     
     /**
      Removes the step arrow from the map.
@@ -754,7 +765,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    //MARK: Utility Methods
+    // MARK: Utility Methods
     
     /** Modifies the gesture recognizers to also disable course tracking. */
     func makeGestureRecognizersRespectCourseTracking() {
@@ -866,7 +877,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             let lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-                polyline.attributes["congestion"] = String(describing: congestionSegment.1)
+                polyline.attributes[congestionAttribute] = String(describing: congestionSegment.1)
                 if let legIndex = legIndex {
                     polyline.attributes[currentLegAttribute] = index == legIndex
                 } else {
@@ -969,7 +980,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             "moderate": MGLStyleValue(rawValue: trafficModerateColor),
             "heavy": MGLStyleValue(rawValue: trafficHeavyColor),
             "severe": MGLStyleValue(rawValue: trafficSevereColor)
-            ], attributeName: "congestion", options: [.defaultValue: MGLStyleValue(rawValue: trafficUnknownColor)])
+            ], attributeName: congestionAttribute, options: [.defaultValue: MGLStyleValue(rawValue: trafficUnknownColor)])
         
         line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
             true: MGLStyleValue(rawValue: 1),
@@ -1045,13 +1056,32 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             style.addLayer(symbol)
         }
     }
+    
+    /**
+     Sets the camera directly over a series of coordinates.
+     */
+    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
+        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+        
+        tracksUserCourse = false
+        let camera = self.camera
+        camera.pitch = 0
+        camera.heading = 0
+        self.camera = camera
+        
+        // Don't keep zooming in
+        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
+        
+        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+    }
 }
 
 //MARK: - Extensions
 
 extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
     func multiplied(by factor: Double) -> Dictionary {
-        var newCameraStop:[Int:MGLStyleValue<NSNumber>] = [:]
+        var newCameraStop: [Int: MGLStyleValue<NSNumber>] = [:]
         for stop in routeLineWidthAtZoomLevels {
             let f = stop.value as! MGLConstantStyleValue
             let newValue =  f.rawValue.doubleValue * factor
@@ -1065,7 +1095,7 @@ extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
 @objc(MBNavigationMapViewDelegate)
-public protocol NavigationMapViewDelegate: class  {
+public protocol NavigationMapViewDelegate: class {
     /**
      Asks the receiver to return an MGLStyleLayer for routes, given an identifier and source.
      This method is invoked when the map view loads and any time routes are added.
@@ -1162,7 +1192,7 @@ public protocol NavigationMapViewDelegate: class  {
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
 }
 
-//MARK: NavigationMapViewCourseTrackingDelegate
+// MARK: NavigationMapViewCourseTrackingDelegate
 /**
  The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
  */
