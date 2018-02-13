@@ -152,6 +152,7 @@
 		C53C196D1F38EA25008DB406 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = C53C196F1F38EA25008DB406 /* Localizable.strings */; };
 		C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C54C655220336F2600D338E0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C655120336F2600D338E0 /* Constants.swift */; };
 		C561735B1F182113005954F6 /* RouteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561735A1F182113005954F6 /* RouteStep.swift */; };
 		C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57491DE1FACC42F006F97BC /* CGPoint.swift */; };
 		C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
@@ -463,6 +464,7 @@
 		C53C19771F38EAE4008DB406 /* ca */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C53C197A1F38EAEA008DB406 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
+		C54C655120336F2600D338E0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C561735A1F182113005954F6 /* RouteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStep.swift; sourceTree = "<group>"; };
 		C57491DE1FACC42F006F97BC /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGPoint.swift; path = ../MapboxNavigation/CGPoint.swift; sourceTree = "<group>"; };
 		C57607B01F4CC97D00C27423 /* Solar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Solar.framework; path = Carthage/Build/iOS/Solar.framework; sourceTree = "<group>"; };
@@ -712,6 +714,7 @@
 				C5D1C9931FB236900067C619 /* ErrorCode.swift */,
 				353AA55F1FCEF583009F0384 /* StyleManager.swift */,
 				359D1B271FFE70D30052FA42 /* NavigationView.swift */,
+				C54C655120336F2600D338E0 /* Constants.swift */,
 			);
 			path = MapboxNavigation;
 			sourceTree = "<group>";
@@ -1480,6 +1483,7 @@
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
 				35D428291FA0B61F00176028 /* InstructionsBannerViewLayout.swift in Sources */,
 				351A40161F0291D100E6D378 /* PollyVoiceController.swift in Sources */,
+				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
 				353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */,
 				C5000A931EC25C6E00563EA9 /* Abbreviations.swift in Sources */,
 				C58822001FB0F0D7008B0A2D /* Error.swift in Sources */,
