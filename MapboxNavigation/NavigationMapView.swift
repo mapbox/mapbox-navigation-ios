@@ -44,6 +44,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     @objc public var tapGestureDistanceThreshold: CGFloat = 50
     
+    /**
+     The object that acts as the navigation delegate of the map view.
+     */
+    public weak var navigationMapDelegate: NavigationMapViewDelegate?
+    
+    /**
+     The object that acts as the course tracking delegate of the map view.
+     */
+    public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
+    
     // MARK: Instance Properties
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
@@ -59,12 +69,21 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let arrowLayerStrokeIdentifier = "arrowStrokeLayer"
     let arrowCasingSymbolLayerIdentifier = "arrowCasingSymbolLayer"
     let arrowSymbolSourceIdentifier = "arrowSymbolSource"
-    let currentLegAttribute = "isCurrentLeg"
     let instructionSource = "instructionSource"
     let instructionLabel = "instructionLabel"
     let instructionCircle = "instructionCircle"
     let alternateSourceIdentifier = "alternateSource"
     let alternateLayerIdentifier = "alternateLayer"
+    
+    /**
+     Attribute name for the route line that is used for identifying whether a RouteLeg is the current active leg.
+     */
+    public let currentLegAttribute = "isCurrentLeg"
+    
+    /**
+     Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
+     */
+    public let congestionAttribute = "congestion"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -266,9 +285,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    public weak var navigationMapDelegate: NavigationMapViewDelegate?
-    weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate!
-    
     open override var showsUserLocation: Bool {
         get {
             if tracksUserCourse || userLocationForCourseTracking != nil {
@@ -317,9 +333,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }, completion: nil)
         
         if let userCourseView = userCourseView as? UserCourseView {
-            userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            if let customTransformation = userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse) {
+                customTransformation
+            } else {
+                self.userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            }
         } else {
-            userCourseView?.updateCourseView(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
+            userCourseView?.applyDefaultUserPuckTransformation(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
         }
     }
     
@@ -355,12 +375,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     open var tracksUserCourse: Bool = false {
         didSet {
             if tracksUserCourse {
-                enableFrameByFrameCourseViewTracking(for: 3)
+                enableFrameByFrameCourseViewTracking(for: 2)
                 altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
-                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
+                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
             } else {
-                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse(self)
+                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
             
             if let location = userLocationForCourseTracking {
@@ -385,7 +405,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     @objc public var userCourseView: UIView? {
         didSet {
+            oldValue?.removeFromSuperview()
             if let userCourseView = userCourseView {
+                if let location = userLocationForCourseTracking {
+                    updateCourseTracking(location: location, animated: false)
+                } else {
+                    userCourseView.center = userAnchorPoint
+                }
                 addSubview(userCourseView)
             }
         }
@@ -832,7 +858,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             let lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-                polyline.attributes["congestion"] = String(describing: congestionSegment.1)
+                polyline.attributes[congestionAttribute] = String(describing: congestionSegment.1)
                 if let legIndex = legIndex {
                     polyline.attributes[currentLegAttribute] = index == legIndex
                 } else {
@@ -935,7 +961,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             "moderate": MGLStyleValue(rawValue: trafficModerateColor),
             "heavy": MGLStyleValue(rawValue: trafficHeavyColor),
             "severe": MGLStyleValue(rawValue: trafficSevereColor)
-            ], attributeName: "congestion", options: [.defaultValue: MGLStyleValue(rawValue: trafficUnknownColor)])
+            ], attributeName: congestionAttribute, options: [.defaultValue: MGLStyleValue(rawValue: trafficUnknownColor)])
         
         line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
             true: MGLStyleValue(rawValue: 1),
@@ -1010,6 +1036,25 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             style.addLayer(circle)
             style.addLayer(symbol)
         }
+    }
+    
+    /**
+     Sets the camera directly over a series of coordinates.
+     */
+    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
+        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+        
+        tracksUserCourse = false
+        let camera = self.camera
+        camera.pitch = 0
+        camera.heading = 0
+        self.camera = camera
+        
+        // Don't keep zooming in
+        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
+        
+        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
     }
 }
 
@@ -1132,18 +1177,21 @@ public protocol NavigationMapViewDelegate: class {
 /**
  The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
  */
-protocol NavigationMapViewCourseTrackingDelegate: class {
+@objc(MBNavigationMapViewCourseTrackingDelegate)
+public protocol NavigationMapViewCourseTrackingDelegate: class {
     /**
      Tells the receiver that the map is now tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: The NavigationMapView.
      */
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
+    @objc(navigationMapViewDidStartTrackingCourse:)
+    optional func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
     
     /**
      Tells the receiver that `tracksUserCourse` was set to false, signifying that the map is no longer tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse
      - parameter mapView: The NavigationMapView.
      */
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
+    @objc(navigationMapViewDidStopTrackingCourse:)
+    optional func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
 }

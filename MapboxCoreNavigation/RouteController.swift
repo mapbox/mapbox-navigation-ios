@@ -34,16 +34,18 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
     
     /**
-     Called when a location has been discarded for being inaccurate.
-     
+     Called when a location has been idenetified as unqualified to navigate on.
+
      See `CLLocation.isQualified` for more information about what qualifies a location.
      
      - parameter routeController: The route controller that discarded the location.
-     - parameter location: The location that was discarded
+     - parameter location: The location that will be discarded.
+     - return: If `true`, the location is discarded and the `RouteController` will not consider it. If `false`, the location will not be thrown out.
      */
-    @objc(routeController:didDiscardLocation:)
-    optional func routeController(_ routeController: RouteController, didDiscard location: CLLocation)
-    
+
+    @objc(routeController:shouldDiscardLocation:)
+    optional func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation) -> Bool
+
     /**
      Called immediately after the route controller receives a new route.
      
@@ -569,21 +571,22 @@ extension RouteController: CLLocationManagerDelegate {
             hasFoundOneQualifiedLocation = true
         }
         
-        // In the future, we will use the number of sections returned from shouldAnimateTunnel()
-        if simulatedLocation == nil, let currentLocation = filteredLocations.first,
-           shouldAnimateTunnel(for: currentLocation, invalidLocationCount: &invalidLocationCount, maxFailedAttempts: 3) {
-            
+         // In the future, we will use the number of sections returned from shouldAnimateTunnel()
+
+        if simulatedLocation == nil, let currentLocation = filteredLocations.first, shouldAnimateTunnel(for: currentLocation, invalidLocationCount: &invalidLocationCount, maxFailedAttempts: 3) {
             // Mock tunnel
             let tunnelGeom = Polyline([CLLocationCoordinate2D]()) /// Simulate a location
+            
             guard let closestCoordinate = tunnelGeom.closestCoordinate(to: currentLocation.coordinate), let lastCoordinate = tunnelGeom.coordinates.last else { return }
-
+            
             let animationDistance = tunnelGeom.sliced(from: closestCoordinate.coordinate, to: lastCoordinate).distance()
             
             // Find coordinates infront of user at a fixed distance
             guard let coordinates = routeProgress.route.coordinates else { return }
             let nearByPolyline = Polyline(coordinates)
-
+            
             guard let interpolatedCoordinate = nearByPolyline.coordinateFromStart(distance: routeProgress.distanceTraveled+animationDistance) else { return }
+
             var lastUserLocationInTunnel = currentLocation.coordinate
             var delay = 1.1
             
@@ -591,11 +594,11 @@ extension RouteController: CLLocationManagerDelegate {
             let tunnelSegmentsCount = Int(floor(Double(animationDistance / 5)))
             
             for _ in 0..<tunnelSegmentsCount {
-
+                
                 if let upcomingCoordinate = nearByPolyline.coordinateFromStart(distance: routeProgress.distanceTraveled+(animationDistance*2)) {
                     course = interpolatedCoordinate.direction(to: upcomingCoordinate)
                 }
-
+                
                 let tunnelSegment = nearByPolyline.trimmed(from: lastUserLocationInTunnel, distance: 10)
                 let interpolatedLocation = CLLocation(coordinate: lastUserLocationInTunnel,
                                                       altitude: currentLocation.altitude,
@@ -607,18 +610,31 @@ extension RouteController: CLLocationManagerDelegate {
                 
                 simulatedLocation = interpolatedLocation
                 perform(#selector(interpolateLocation), with: nil, afterDelay: delay)
-//                Timer.scheduledTimer(timeInterval: delay, target: self, selector: #selector(interpolateLocation), userInfo: nil, repeats: false)
+                //                Timer.scheduledTimer(timeInterval: delay, target: self, selector: #selector(interpolateLocation), userInfo: nil, repeats: false)
                 delay += 1
                 lastUserLocationInTunnel = tunnelSegment.coordinates.last!
             }
         }
+
+        var potentialLocation: CLLocation?
         
-        guard let location = simulatedLocation ?? filteredLocations.last else {
-            if let lastLocation = locations.last, hasFoundOneQualifiedLocation {
-                delegate?.routeController?(self, didDiscard: lastLocation)
+        // `filteredLocations` contains qualified locations
+        if let lastFiltered = filteredLocations.last {
+            potentialLocation = lastFiltered
+        // `filteredLocations` does not contain good locations and we have found at least one good location previously.
+        } else if hasFoundOneQualifiedLocation {
+            if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
+                return
             }
-            return
+        // This case handles the first location.
+        // This location is not a good location, but we need the rest of the UI to update and at least show something.
+        } else if let lastLocation = locations.last {
+            potentialLocation = lastLocation
+        } else if let lastLocation = simulatedLocation {
+            potentialLocation = lastLocation
         }
+        
+        guard let location = potentialLocation else { return }
         
         self.rawLocation = location
         sessionState.pastLocations.push(location)
@@ -889,6 +905,8 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func updateRouteStepProgress(for location: CLLocation) {
+
+        guard routeProgress.currentLegProgress.remainingSteps.count > 0 else { return }
         
         let userSnapToStepDistanceFromManeuver = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!).distance(from: location.coordinate)
         var courseMatchesManeuverFinalHeading = false
@@ -924,15 +942,15 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
-        
-        guard let spokenInstructions = routeProgress.currentLegProgress.currentStep.instructionsSpokenAlongStep else {
+
+        guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else {
             print("The directions request was made without `includesVoiceInstructions` enabled. This will prevent users from getting voice instructions. It's recommended to make your directions request via `NavigationRouteOptions()`.")
             return
         }
-        
-        for (voiceInstructionIndex, voiceInstruction) in spokenInstructions.enumerated() {
-            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep && voiceInstructionIndex >= routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex {
-                
+
+        for voiceInstruction in spokenInstructions {
+            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep {
+
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
                     ])

@@ -165,6 +165,11 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
 
 /**
+ The minium distance remaining on a route before overhead zooming is stopped.
+ */
+public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistance = 200
+
+/**
  The minimum speed value for path animation in a tunnel.
  */
 public var RouteControllerMinimumSpeedForTunnelAnimation: CLLocationSpeed = 13.4112

@@ -20,7 +20,7 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     @IBOutlet weak var nextBannerView: NextBannerView!
-    @IBOutlet weak var bottomBannerView: BottomBannerView!
+    @IBOutlet weak var bottomBannerView: BottomBannerView?
     @IBOutlet weak var statusView: StatusView!
     @IBOutlet weak var lanesView: LanesView!
     @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
@@ -97,7 +97,11 @@ class RouteMapViewController: UIViewController {
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
      */
     var annotatesSpokenInstructions = false
-
+    
+    var overheadInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView?.bounds.height ?? 40, right: 20)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
@@ -125,7 +129,7 @@ class RouteMapViewController: UIViewController {
         nextBannerView.isHidden = true
         isInOverviewMode = false
         instructionsBannerView.delegate = self
-        bottomBannerView.delegate = self
+        bottomBannerView?.delegate = self
         resumeNotifications()
     }
     
@@ -215,7 +219,9 @@ class RouteMapViewController: UIViewController {
 
     @IBAction func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        updateVisibleBounds()
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+        }
         isInOverviewMode = true
     }
     
@@ -276,25 +282,6 @@ class RouteMapViewController: UIViewController {
         mapView.setContentInset(contentInsets, animated: true)
         mapView.setNeedsUpdateConstraints()
     }
-    
-    func updateVisibleBounds() {
-        guard let userLocation = routeController.locationManager.location?.coordinate else { return }
-        
-        let overviewContentInset = UIEdgeInsets(top: instructionsBannerView.bounds.height, left: 20, bottom: bottomBannerView.bounds.height, right: 20)
-        let slicedLine = Polyline(routeController.routeProgress.route.coordinates!).sliced(from: userLocation, to: routeController.routeProgress.route.coordinates!.last).coordinates
-        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
-        
-        mapView.tracksUserCourse = false
-        let camera = mapView.camera
-        camera.pitch = 0
-        camera.heading = 0
-        mapView.camera = camera
-        
-        // Don't keep zooming in
-        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > 200 else { return }
-        
-        mapView.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: overviewContentInset, animated: true)
-    }
 
     func notifyDidReroute(route: Route) {
         updateETA()
@@ -311,7 +298,9 @@ class RouteMapViewController: UIViewController {
         }
 
         if isInOverviewMode {
-            updateVisibleBounds()
+            if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+            }
         } else {
             mapView.tracksUserCourse = true
             wayNameLabel.isHidden = true
@@ -429,7 +418,9 @@ class RouteMapViewController: UIViewController {
             return
         }
 
-        updateVisibleBounds()
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+        }
     }
     
     func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
@@ -455,7 +446,7 @@ class RouteMapViewController: UIViewController {
         
         // If the followon step is short and the user is near the end of the current step, show the nextBanner.
         guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            upcomingStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
                 hideNextBanner()
                 return
         }
@@ -488,7 +479,7 @@ class RouteMapViewController: UIViewController {
         var margin: CGFloat = 0.0
         if #available(iOS 11.0, *) { margin = view.safeAreaInsets.bottom }
         let containerHeight = endOfRouteContainerView.frame.height - margin
-        let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : bottomBannerView.bounds.height
+        let bottom = self.endOfRouteShowConstraint.isActive ? containerHeight : bottomBannerView?.bounds.height ?? 40
         return UIEdgeInsets(top: instructionsBannerContainerView.bounds.height, left: 0, bottom: bottom, right: 0)
     }
     
@@ -759,7 +750,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     
     @objc func updateETA() {
         guard isViewLoaded else { return }
-        bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
+        bottomBannerView?.updateETA(routeProgress: routeController.routeProgress)
     }
     
     func resetETATimer() {

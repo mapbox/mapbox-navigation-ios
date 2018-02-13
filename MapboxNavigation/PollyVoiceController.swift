@@ -97,6 +97,8 @@ public class PollyVoiceController: RouteVoiceController {
         }
         
         switch (langCode, countryCode) {
+        case ("da", _):
+            input.voiceId = .naja
         case ("de", _):
             input.voiceId = .marlene
         case ("en", "CA"):
@@ -146,7 +148,7 @@ public class PollyVoiceController: RouteVoiceController {
         return input
     }
     
-    public override func speak(_ instruction: SpokenInstruction) {
+    open override func speak(_ instruction: SpokenInstruction) {
         assert(routeProgress != nil, "routeProgress should not be nil.")
         
         if let audioPlayer = audioPlayer, audioPlayer.isPlaying, let lastSpokenInstruction = lastSpokenInstruction {

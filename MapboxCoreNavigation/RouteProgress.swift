@@ -162,6 +162,13 @@ open class RouteLegProgress: NSObject {
             currentStepProgress = RouteStepProgress(step: currentStep)
         }
     }
+    
+    /**
+     The remaining steps for user to complete.
+     */
+    @objc public var remainingSteps: [RouteStep] {
+        return Array(leg.steps.suffix(from: stepIndex + 1))
+    }
 
     /**
      Total distance traveled in meters along current leg.
@@ -174,7 +181,7 @@ open class RouteLegProgress: NSObject {
      Duration remaining in seconds on current leg.
      */
     @objc public var durationRemaining: TimeInterval {
-        return leg.steps.suffix(from: stepIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
+        return remainingSteps.map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
     }
 
     /**
@@ -405,6 +412,15 @@ open class RouteStepProgress: NSObject {
      Index into `step.instructionsSpokenAlongStep` representing the current spoken instruction.
      */
     @objc public var spokenInstructionIndex: Int = 0
+    
+    
+    /**
+     An `Array` of remaining `SpokenInstruction` for a step.
+     */
+    @objc public var remainingSpokenInstructions: [SpokenInstruction]? {
+        guard let instructions = step.instructionsSpokenAlongStep else { return nil }
+        return Array(instructions.suffix(from: spokenInstructionIndex))
+    }
     
     /**
      Current Instruction for the user's progress along a step.
