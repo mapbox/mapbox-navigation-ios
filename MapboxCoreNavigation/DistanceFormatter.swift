@@ -1,18 +1,16 @@
 import CoreLocation
 
-let metersPerMile: CLLocationDistance = 1_609.344
-let secondsPerHour = 60.0 * 60.0
-let yardsPerMile = 1_760.0
-let feetPerMile = yardsPerMile * 3.0
-let feetPerMeter = 3.28084
-
 extension CLLocationDistance {
+    
+    static let metersPerMile: CLLocationDistance = 1_609.344
+    static let feetPerMeter: CLLocationDistance = 3.28084
+    
     var miles: CLLocationDistance {
-        return self / metersPerMile
+        return self / .metersPerMile
     }
     
     var feet: CLLocationDistance {
-        return self * feetPerMeter
+        return self * .feetPerMeter
     }
     
     var kilometers: CLLocationDistance {
