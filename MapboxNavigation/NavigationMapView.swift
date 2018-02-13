@@ -83,7 +83,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
      */
-    public let congestionAttributeName = "congestion"
+    public let congestionAttribute = "congestion"
 
     let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
         10: MGLStyleValue(rawValue: 8),
@@ -858,7 +858,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             let lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-                polyline.attributes[congestionAttributeName] = String(describing: congestionSegment.1)
+                polyline.attributes[congestionAttribute] = String(describing: congestionSegment.1)
                 if let legIndex = legIndex {
                     polyline.attributes[currentLegAttribute] = index == legIndex
                 } else {
@@ -961,7 +961,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             "moderate": MGLStyleValue(rawValue: trafficModerateColor),
             "heavy": MGLStyleValue(rawValue: trafficHeavyColor),
             "severe": MGLStyleValue(rawValue: trafficSevereColor)
-            ], attributeName: congestionAttributeName, options: [.defaultValue: MGLStyleValue(rawValue: trafficUnknownColor)])
+            ], attributeName: congestionAttribute, options: [.defaultValue: MGLStyleValue(rawValue: trafficUnknownColor)])
         
         line.lineOpacity = MGLStyleValue(interpolationMode: .categorical, sourceStops: [
             true: MGLStyleValue(rawValue: 1),
