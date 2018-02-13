@@ -39,6 +39,7 @@ class RouteMapViewController: UIViewController {
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
     var endOfRouteViewController: EndOfRouteViewController?
+    var instructionsBannerViewModel: InstructionsBannerViewModel!
     private lazy var geocoder: CLGeocoder = CLGeocoder()
     var destination: Waypoint? {
         didSet {
@@ -105,6 +106,14 @@ class RouteMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         automaticallyAdjustsScrollViewInsets = false
+        
+        instructionsBannerViewModel = InstructionsBannerViewModel { [unowned self] (viewModel, state) in
+            self.instructionsBannerView.maneuverView.step = state.maneuverViewStep
+            let distanceLabel = self.instructionsBannerView.distanceLabel!
+            distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: distanceLabel)
+            self.instructionsBannerView.primaryLabel.instruction = state.primaryInstruction
+            self.instructionsBannerView.secondaryLabel.instruction = state.secondaryInstruction
+        }
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         
@@ -286,9 +295,7 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         updateETA()
         
-        if let location = routeController.location {
-            updateInstructions(routeProgress: routeController.routeProgress, location: location, secondsRemaining: 0)
-        }
+        instructionsBannerViewModel.update(for: routeController.routeProgress)
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -395,12 +402,13 @@ class RouteMapViewController: UIViewController {
         
         let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
         
+        instructionsBannerViewModel.update(for: routeProgress)
+        
         if let upComingStep = routeProgress.currentLegProgress?.upComingStep, !routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             updateLaneViews(step: upComingStep, durationRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
         }
         
         previousStep = step
-        updateInstructions(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         updateNextBanner(routeProgress: routeProgress)
         
         if currentLegIndexMapped != routeProgress.legIndex {
@@ -421,17 +429,6 @@ class RouteMapViewController: UIViewController {
         if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
             mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
         }
-    }
-    
-    func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
-        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-        let distanceRemaining = stepProgress.distanceRemaining
-        
-        guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
-        
-        instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
-        instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
-        instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
     }
     
     func updateNextBanner(routeProgress: RouteProgress) {
@@ -833,7 +830,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         
         viewController.dismiss {
             guard let stepBefore = self.routeController.routeProgress.currentLegProgress.stepBefore(step) else { return }
-            self.addPreviewInstructions(step: stepBefore, maneuverStep: step, distance: cell.instructionsView.distance)
+            //TODO: self.addPreviewInstructions(step: stepBefore, maneuverStep: step, distance: cell.instructionsView.distance)
             self.stepsViewController = nil
         }
         
@@ -858,9 +855,9 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
+        // TODO: instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
         instructionsView.maneuverView.step = maneuverStep
-        instructionsView.distance = distance
+        // TODO: instructionsView.distance = distance
         
         instructionsBannerContainerView.backgroundColor = instructionsView.backgroundColor
         

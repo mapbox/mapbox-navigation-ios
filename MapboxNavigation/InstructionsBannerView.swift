@@ -16,7 +16,7 @@ open class BaseInstructionsBannerView: UIControl {
     
     weak var maneuverView: ManeuverView!
     weak var primaryLabel: PrimaryLabel!
-    weak var secondaryLabel: SecondaryLabel!
+    @objc dynamic weak var secondaryLabel: SecondaryLabel!
     weak var distanceLabel: DistanceLabel!
     weak var dividerView: UIView!
     weak var _separatorView: UIView!
@@ -26,29 +26,7 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
-    fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
-    
-    var distance: CLLocationDistance? {
-        didSet {
-            distanceLabel.unitRange = nil
-            distanceLabel.valueRange = nil
-            distanceLabel.distanceString = nil
-            
-            if let distance = distance {
-                let distanceString = distanceFormatter.string(from: distance)
-                let distanceUnit = distanceFormatter.unitString(fromValue: distance, unit: distanceFormatter.unit)
-                guard let unitRange = distanceString.range(of: distanceUnit) else { return }
-                let distanceValue = distanceString.replacingOccurrences(of: distanceUnit, with: "")
-                guard let valueRange = distanceString.range(of: distanceValue) else { return }
-
-                distanceLabel.unitRange = unitRange
-                distanceLabel.valueRange = valueRange
-                distanceLabel.distanceString = distanceString
-            } else {
-                distanceLabel.text = nil
-            }
-        }
-    }
+    private var alignmentObserver: NSKeyValueObservation?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -65,31 +43,27 @@ open class BaseInstructionsBannerView: UIControl {
         setupLayout()
         centerYAlignInstructions()
         setupAvailableBounds()
+        
+        alignmentObserver = secondaryLabel.observe(\.instruction) { [unowned self] (label, change) in
+            if label.instruction == nil {
+                self.primaryLabel.numberOfLines = 2
+                self.centerYAlignInstructions()
+            } else {
+                self.primaryLabel.numberOfLines = 1
+                self.baselineAlignInstructions()
+            }
+        }
     }
     
     @IBAction func tappedInstructionsBanner(_ sender: Any) {
         delegate?.didTapInstructionsBanner(self)
     }
     
-    func set(_ primaryInstruction: [VisualInstructionComponent]?, secondaryInstruction: [VisualInstructionComponent]?) {
-        primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
-        
-        if secondaryInstruction == nil {
-            centerYAlignInstructions()
-        } else {
-            baselineAlignInstructions()
-        }
-        
-        primaryLabel.instruction = primaryInstruction
-        secondaryLabel.instruction = secondaryInstruction
-    }
-    
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        
         primaryLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Primary text label", imageURL: nil)]
-        
-        distance = 100
+        distanceLabel.attributedText = DistanceFormatter(approximate: true).attributedDistanceString(from: 100, for: distanceLabel)
     }
 }
+

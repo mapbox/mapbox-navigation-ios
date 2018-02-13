@@ -199,59 +199,10 @@ open class StylableTextView: UITextView {
 /// :nodoc:
 @objc(MBDistanceLabel)
 open class DistanceLabel: StylableLabel {
-    @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1) {
-        didSet { update() }
-    }
-    @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1) {
-        didSet { update() }
-    }
-    @objc dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium) {
-        didSet { update() }
-    }
-    @objc dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: .medium) {
-        didSet { update() }
-    }
-    
-    var valueRange: Range<String.Index>? {
-        didSet {
-            update()
-        }
-    }
-    
-    var unitRange: Range<String.Index>? {
-        didSet {
-            update()
-        }
-    }
-    
-    var distanceString: String? {
-        didSet {
-            update()
-        }
-    }
-    
-    fileprivate func update() {
-        guard let valueRange = valueRange, let unitRange = unitRange, let distanceString = distanceString else {
-            return
-        }
-
-        let valueAttributes: [NSAttributedStringKey: Any] = [.foregroundColor: valueTextColor, .font: valueFont]
-        let unitAttributes: [NSAttributedStringKey: Any] = [.foregroundColor: unitTextColor, .font: unitFont]
-
-        let valueSubstring = distanceString[valueRange].trimmingCharacters(in: .whitespaces)
-        let unitSubstring = distanceString[unitRange].trimmingCharacters(in: .whitespaces)
-        let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
-        let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
-
-        let startsWithUnit = unitRange.lowerBound == distanceString.wholeRange.lowerBound
-        let attributedString = NSMutableAttributedString()
-
-        attributedString.append(startsWithUnit ? unitAttributedString : valueAttributedString)
-        attributedString.append(NSAttributedString(string: "\u{200A}", attributes: unitAttributes))
-        attributedString.append(startsWithUnit ? valueAttributedString : unitAttributedString)
-
-        attributedText = attributedString
-    }
+    @objc dynamic public var valueTextColor: UIColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+    @objc dynamic public var unitTextColor: UIColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
+    @objc dynamic public var valueFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium) //{
+    @objc dynamic public var unitFont: UIFont = UIFont.systemFont(ofSize: 11, weight: .medium)
 }
 
 /// :nodoc:

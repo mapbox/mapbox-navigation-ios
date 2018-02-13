@@ -9,7 +9,7 @@ open class InstructionLabel: StylableLabel {
     var availableBounds: AvailableBoundsHandler!
     var shieldHeight: CGFloat = 30
     
-    var instruction: [VisualInstructionComponent]? {
+    @objc dynamic var instruction: [VisualInstructionComponent]? {
         didSet {
             constructInstructions()
         }

@@ -16,6 +16,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     let bannerHeight: CGFloat = 96
     
     let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
+    let distanceFormatter = DistanceFormatter(approximate: true)
     
     var shieldImage: UIImage {
         get {
@@ -34,15 +35,13 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     }
     
     func instructionsView() -> InstructionsBannerView {
-        return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
+        let view = InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
+        styleInstructionsView(view)
+        return view
     }
     
     func testSinglelinePrimary() {
         let view = instructionsView()
-        styleInstructionsView(view)
-        
-        view.maneuverView.isStart = true
-        view.distance = 482
         
         let instructions = [
             VisualInstructionComponent(type: .destination, text: "US 45", imageURL: nil),
@@ -50,63 +49,76 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .destination, text: "Chicago", imageURL: nil)
         ]
         
-        view.set(instructions, secondaryInstruction: nil)
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
+            view.primaryLabel.instruction = state.primaryInstruction
+            view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
+            view.maneuverView.isStart = true
+        }
+        
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: instructions, secondaryInstruction: nil)
         
         verifyView(view, size: view.bounds.size)
     }
     
     func testMultilinePrimary() {
         let view = instructionsView()
-        styleInstructionsView(view)
-
-        view.maneuverView.isStart = true
-        view.distance = 482
 
         let instructions = [
             VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(type: .destination, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil)
         ]
-
-        view.set(instructions, secondaryInstruction: nil)
-    
+        
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
+            view.primaryLabel.instruction = state.primaryInstruction
+            view.secondaryLabel.instruction = state.secondaryInstruction
+            view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
+            view.maneuverView.isStart = true
+        }
+        
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: instructions, secondaryInstruction: nil)
+        
         verifyView(view, size: view.bounds.size)
     }
     
     func testSinglelinePrimaryAndSecondary() {
         let view = instructionsView()
-        styleInstructionsView(view)
 
-        view.maneuverView.isStart = true
-        view.distance = 482
-        
         let primary = [
             VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL),
             VisualInstructionComponent(type: .destination, text: "South", imageURL: nil)
         ]
         let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
-        
-        view.set(primary, secondaryInstruction: secondary)
+
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
+            view.maneuverView.isStart = true
+            view.primaryLabel.instruction = state.primaryInstruction
+            view.secondaryLabel.instruction = state.secondaryInstruction
+            view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
+        }
+
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: primary, secondaryInstruction: secondary)
 
         verifyView(view, size: view.bounds.size)
     }
-    
+
     func testPrimaryShieldAndSecondary() {
         let view = instructionsView()
-        styleInstructionsView(view)
-
-        view.maneuverView.isStart = true
-        view.distance = 482
         
         let primary = [
             VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL)
         ]
         let secondary = [VisualInstructionComponent(type: .destination, text: "Mountain View Test", imageURL: nil)]
-
-        view.set(primary, secondaryInstruction: secondary)
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
+            view.maneuverView.isStart = true
+            view.primaryLabel.instruction = state.primaryInstruction
+            view.secondaryLabel.instruction = state.secondaryInstruction
+            view.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: view.distanceLabel)
+        }
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: primary, secondaryInstruction: secondary)
         
         verifyView(view, size: view.bounds.size)
     }
-    
+
     func testInstructionsAndNextInstructions() {
         let view = UIView()
         view.backgroundColor = .white
@@ -118,25 +130,27 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.addSubview(nextBannerView)
         view.frame = CGRect(origin: .zero, size: CGSize(width: nextBannerViewFrame.width, height: nextBannerViewFrame.maxY))
 
-        instructionsBannerView.maneuverView.isStart = true
-        instructionsBannerView.distance = 482
-        
         let primary = [
             VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL)
         ]
         let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
-        
-        instructionsBannerView.set(primary, secondaryInstruction: secondary)
 
-        
+        let viewModel = InstructionsBannerViewModel { (viewModel, state) in
+            instructionsBannerView.maneuverView.isStart = true
+            instructionsBannerView.primaryLabel.instruction = state.primaryInstruction
+            instructionsBannerView.secondaryLabel.instruction = state.secondaryInstruction
+            instructionsBannerView.distanceLabel.attributedText = viewModel.attributedDistanceString(from: state.distanceRemaining, for: instructionsBannerView.distanceLabel)
+        }
+        viewModel.state = InstructionsBannerState(maneuverViewStep: nil, distanceRemaining: 482, primaryInstruction: primary, secondaryInstruction: secondary)
+
         let primaryThen = [
             VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL)
         ]
-        
+
         nextBannerView.instructionLabel.instruction = primaryThen
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
-        
+
         verifyView(view, size: view.bounds.size)
     }
 }
