@@ -39,6 +39,10 @@ struct EventDetails {
     var locationEngine: CLLocationManager.Type?
     var percentTimeInPortrait: Int
     var percentTimeInForeground: Int
+    var currentLegIndex: Int
+    var totalLegCount: Int
+    var currentStepIndex: Int
+    var totalStepCount: Int
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -111,6 +115,10 @@ struct EventDetails {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
         percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
+        currentLegIndex = routeController.routeProgress.legIndex
+        totalLegCount = routeController.routeProgress.route.legs.count
+        currentStepIndex = routeController.routeProgress.currentLegProgress.stepIndex
+        totalStepCount = routeController.routeProgress.currentLeg.steps.count
     }
     
     var eventDictionary: [String: Any] {
@@ -171,6 +179,11 @@ struct EventDetails {
         
         modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait
         modifiedEventDictionary["percentTimeInForeground"] = percentTimeInForeground
+        
+        modifiedEventDictionary["currentLegIndex"] = currentLegIndex
+        modifiedEventDictionary["totalLegCount"] = totalLegCount
+        modifiedEventDictionary["currentStepIndex"] = currentStepIndex
+        modifiedEventDictionary["totalStepCount"] = totalStepCount
 
         return modifiedEventDictionary
     }
@@ -192,8 +205,6 @@ extension MMEEventsManager {
     func navigationArriveEvent(routeController: RouteController) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationArrive
-        eventDictionary["totalDestinationWaypoints"] = routeController.routeProgress.route.legs.count
-        eventDictionary["remainingDestinationWaypoints"] = routeController.routeProgress.remainingWaypoints.count
         return eventDictionary
     }
     

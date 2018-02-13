@@ -184,6 +184,7 @@ open class RouteController: NSObject {
         didSet {
             if oldValue != previousArrivalWaypoint {
                 sessionState.arrivalTimestamp = nil
+                sessionState.departureTimestamp = nil
             }
         }
     }
