@@ -102,9 +102,9 @@ public class StatusView: UIView {
         }
         
         guard isHidden == true else { return }
+        self.isHidden = false
         
         UIView.defaultAnimation(0.3, animations: {
-            self.isHidden = false
             self.textLabel.alpha = 1
             self.superview?.layoutIfNeeded()
         }, completion: nil)
@@ -116,10 +116,10 @@ public class StatusView: UIView {
             guard isHidden == false else { return }
             
             UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.isHidden = true
                 self.textLabel.alpha = 0
                 self.superview?.layoutIfNeeded()
             }, completion: { (completed) in
+                self.isHidden = true
                 self.activityIndicatorView.stopAnimating()
             })
         } else {

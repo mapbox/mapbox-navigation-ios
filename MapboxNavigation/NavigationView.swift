@@ -183,6 +183,7 @@ open class NavigationView: UIView {
     }
     
     func setupStackViews() {
+        statusView.isHidden = true
         informationStackView.addArrangedSubviews([instructionsBannerView, lanesView, nextBannerView, statusView])
         floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
     }
