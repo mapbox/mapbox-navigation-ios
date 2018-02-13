@@ -53,6 +53,8 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: 260)
     
+    lazy var rerouteFeedbackTopConstraint: NSLayoutConstraint = self.rerouteReportButton.topAnchor.constraint(equalTo: self.informationStackView.bottomAnchor, constant: 10)
+    
     private struct Images {
         static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
         static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)

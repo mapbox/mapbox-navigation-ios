@@ -32,9 +32,6 @@ class RouteMapViewController: UIViewController {
         return controller
     }()
     
-    
-    @IBOutlet weak var rerouteFeedbackTopConstraint: NSLayoutConstraint!
-    
     private struct Actions {
         static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
         static let mute: Selector = #selector(RouteMapViewController.toggleMute(_:))
@@ -238,7 +235,7 @@ class RouteMapViewController: UIViewController {
     
     @objc func rerouteFeedback(_ sender: Any) {
         showFeedback(source: .reroute)
-        navigationView.rerouteReportButton.slideUp(constraint: rerouteFeedbackTopConstraint)
+        navigationView.rerouteReportButton.slideUp(constraint: navigationView.rerouteFeedbackTopConstraint)
         delegate?.mapViewControllerDidOpenFeedback(self)
     }
     
@@ -334,7 +331,7 @@ class RouteMapViewController: UIViewController {
             
             if !navigationView.reportButton.isHidden {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                    self.navigationView.rerouteReportButton.slideDown(constraint: self.rerouteFeedbackTopConstraint, interval: 5)
+                    self.navigationView.rerouteReportButton.slideDown(constraint: self.navigationView.rerouteFeedbackTopConstraint, interval: 5)
                 })
             }
         }
