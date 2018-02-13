@@ -24,6 +24,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     //MARK: Class Constants
     
+    struct FrameIntervalOptions {
+        fileprivate static let durationUntilNextManeuver: TimeInterval = 7
+        fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
+        fileprivate static let defaultFramesPerSecond: Int = 60
+        fileprivate static let pluggedInFramesPerSecond: Int = 30
+        fileprivate static let decreasedFramesPerSecond: Int = 5
+    }
+    
     /**
      Returns the altitude that the map camera initally defaults to.
      */
@@ -54,7 +62,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
-    // MARK: Instance Properties
+    // MARK: - Instance Properties
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
     let routeLayerIdentifier = "routeLayer"
@@ -97,14 +105,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var isPluggedIn: Bool = false
     var batteryStateObservation: NSKeyValueObservation?
     var altitude: CLLocationDistance = defaultAltitude
-    
-    struct FrameIntervalOptions {
-        fileprivate static let durationUntilNextManeuver: TimeInterval = 7
-        fileprivate static let durationSincePreviousManeuver: TimeInterval = 3
-        fileprivate static let defaultFramesPerSecond: Int = 60
-        fileprivate static let pluggedInFramesPerSecond: Int = 30
-        fileprivate static let decreasedFramesPerSecond: Int = 5
-    }
+    var routes: [Route]?
     
     fileprivate var preferredFramesPerSecond: Int = 60 {
         didSet {
@@ -115,18 +116,112 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
         }
     }
+    
+    var shouldPositionCourseViewFrameByFrame = false {
+        didSet {
+            if shouldPositionCourseViewFrameByFrame {
+                preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
+            }
+        }
+    }
+    
+    var showsRoute: Bool {
+        get {
+            return style?.layer(withIdentifier: routeLayerIdentifier) != nil
+        }
+    }
+    
+    open override var showsUserLocation: Bool {
+        get {
+            if tracksUserCourse || userLocationForCourseTracking != nil {
+                return !(userCourseView?.isHidden ?? true)
+            }
+            return super.showsUserLocation
+        }
+        set {
+            if tracksUserCourse || userLocationForCourseTracking != nil {
+                super.showsUserLocation = false
+                
+                if userCourseView == nil {
+                    userCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: CGSize(width: 75, height: 75)))
+                }
+                userCourseView?.isHidden = !newValue
+            } else {
+                userCourseView?.isHidden = true
+                super.showsUserLocation = newValue
+            }
+        }
+    }
+    
+    
+    /**
+     Center point of the user course view in screen coordinates relative to the map view.
+     - seealso: NavigationMapViewDelegate.navigationMapViewUserAnchorPoint(_:)
+     */
+    var userAnchorPoint: CGPoint {
+        if let anchorPoint = navigationMapDelegate?.navigationMapViewUserAnchorPoint?(self), anchorPoint != .zero {
+            return anchorPoint
+        }
+        
+        let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
+        let courseViewWidth = userCourseView?.frame.width ?? 0
+        let courseViewHeight = userCourseView?.frame.height ?? 0
+        let edgePadding = UIEdgeInsets(top: 50 + courseViewHeight / 2,
+                                       left: 50 + courseViewWidth / 2,
+                                       bottom: 50 + courseViewHeight / 2,
+                                       right: 50 + courseViewWidth / 2)
+        return CGPoint(x: max(min(contentFrame.midX,
+                                  contentFrame.maxX - edgePadding.right),
+                              contentFrame.minX + edgePadding.left),
+                       y: max(max(min(contentFrame.minY + contentFrame.height * 0.8,
+                                      contentFrame.maxY - edgePadding.bottom),
+                                  contentFrame.minY + edgePadding.top),
+                              contentFrame.minY + contentFrame.height * 0.5))
+    }
+    
+    /**
+     Determines whether the map should follow the user location and rotate when the course changes.
+     - seealso: NavigationMapViewCourseTrackingDelegate
+     */
+    open var tracksUserCourse: Bool = false {
+        didSet {
+            if tracksUserCourse {
+                enableFrameByFrameCourseViewTracking(for: 2)
+                altitude = NavigationMapView.defaultAltitude
+                showsUserLocation = true
+                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
+            } else {
+                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
+            }
+            
+            if let location = userLocationForCourseTracking {
+                updateCourseTracking(location: location, animated: true)
+            }
+        }
+    }
+    
+    /**
+     A `UIView` used to indicate the user’s location and course on the map.
+     
+     If the view conforms to `UserCourseView`, its `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
+     */
+    @objc public var userCourseView: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let userCourseView = userCourseView {
+                if let location = userLocationForCourseTracking {
+                    updateCourseTracking(location: location, animated: false)
+                } else {
+                    userCourseView.center = userAnchorPoint
+                }
+                addSubview(userCourseView)
+            }
+        }
+    }
+    
     private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
     
-    open override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        
-        let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .center
-        imageView.backgroundColor = .gray
-        imageView.frame = bounds
-        addSubview(imageView)
-    }
+    //MARK: - Initalizers
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -154,12 +249,48 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         resumeNotifications()
     }
     
+    deinit {
+        suspendNotifications()
+    }
+    
+    //MARK: - Overrides
+    
+    open override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        
+        let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .center
+        imageView.backgroundColor = .gray
+        imageView.frame = bounds
+        addSubview(imageView)
+    }
+    
     open override func layoutSubviews() {
         super.layoutSubviews()
         
         //If the map is in tracking mode, make sure we update the camera after the layout pass.
         if (tracksUserCourse) { updateCourseTracking(location: userLocationForCourseTracking, animated: false) }
     }
+    
+    open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
+        if tracksUserCourse {
+            return userAnchorPoint
+        } else {
+            return super.anchorPoint(forGesture: gesture)
+        }
+    }
+    
+    open override func mapViewDidFinishRenderingFrameFullyRendered(_ fullyRendered: Bool) {
+        super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
+        
+        guard shouldPositionCourseViewFrameByFrame else { return }
+        guard let location = userLocationForCourseTracking else { return }
+        
+        userCourseView?.center = convert(location.coordinate, toPointTo: self)
+    }
+    
+    // MARK: - Notifications
     
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
@@ -200,71 +331,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    /** Modifies the gesture recognizers to also disable course tracking. */
-    func makeGestureRecognizersRespectCourseTracking() {
-        for gestureRecognizer in gestureRecognizers ?? []
-            where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
-                gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
-        }
-    }
     
-    func makeGestureRecognizersUpdateCourseView() {
-        for gestureRecognizer in gestureRecognizers ?? [] {
-            gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
-        }
-    }
-    
-    open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
-        if tracksUserCourse {
-            return userAnchorPoint
-        } else {
-            return super.anchorPoint(forGesture: gesture)
-        }
-    }
-    
-    deinit {
-        suspendNotifications()
-    }
-    
-    @objc func updateCourseView(_ sender: UIGestureRecognizer) {
-        preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
-        
-        if sender.state == .ended {
-            altitude = self.camera.altitude
-            enableFrameByFrameCourseViewTracking(for: 2)
-        }
-        
-        // Capture altitude for double tap and two finger tap after animation finishes
-        if sender is UITapGestureRecognizer, sender.state == .ended {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                self.altitude = self.camera.altitude
-            })
-        }
-        
-        if let pan = sender as? UIPanGestureRecognizer {
-            if sender.state == .ended || sender.state == .cancelled {
-                let velocity = pan.velocity(in: self)
-                let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
-                if didFling {
-                    enableFrameByFrameCourseViewTracking(for: 1)
-                }
-            }
-        }
-        
-        if sender.state == .changed {
-            guard let location = userLocationForCourseTracking else { return }
-            userCourseView?.layer.removeAllAnimations()
-            userCourseView?.center = convert(location.coordinate, toPointTo: self)
-        }
-    }
-    
-    var shouldPositionCourseViewFrameByFrame = false {
-        didSet {
-            if shouldPositionCourseViewFrameByFrame {
-                preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
-            }
-        }
-    }
+
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
     func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
@@ -273,36 +341,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         shouldPositionCourseViewFrameByFrame = true
     }
     
+    //MARK: - User Tracking
+    
     @objc fileprivate func disableFrameByFramePositioning() {
         shouldPositionCourseViewFrameByFrame = false
-    }
-    
-    var showsRoute: Bool {
-        get {
-            return style?.layer(withIdentifier: routeLayerIdentifier) != nil
-        }
-    }
-    
-    open override var showsUserLocation: Bool {
-        get {
-            if tracksUserCourse || userLocationForCourseTracking != nil {
-                return !(userCourseView?.isHidden ?? true)
-            }
-            return super.showsUserLocation
-        }
-        set {
-            if tracksUserCourse || userLocationForCourseTracking != nil {
-                super.showsUserLocation = false
-                
-                if userCourseView == nil {
-                    userCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: CGSize(width: 75, height: 75)))
-                }
-                userCourseView?.isHidden = !newValue
-            } else {
-                userCourseView?.isHidden = true
-                super.showsUserLocation = newValue
-            }
-        }
     }
     
     @objc private func disableUserCourseTracking() {
@@ -337,83 +379,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    /**
-     Center point of the user course view in screen coordinates relative to the map view.
-     - seealso: NavigationMapViewDelegate.navigationMapViewUserAnchorPoint(_:)
-     */
-    var userAnchorPoint: CGPoint {
-        if let anchorPoint = navigationMapDelegate?.navigationMapViewUserAnchorPoint?(self), anchorPoint != .zero {
-            return anchorPoint
-        }
-        
-        let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
-        let courseViewWidth = userCourseView?.frame.width ?? 0
-        let courseViewHeight = userCourseView?.frame.height ?? 0
-        let edgePadding = UIEdgeInsets(top: 50 + courseViewHeight / 2,
-                                       left: 50 + courseViewWidth / 2,
-                                       bottom: 50 + courseViewHeight / 2,
-                                       right: 50 + courseViewWidth / 2)
-        return CGPoint(x: max(min(contentFrame.midX,
-                              contentFrame.maxX - edgePadding.right),
-                              contentFrame.minX + edgePadding.left),
-                       y: max(max(min(contentFrame.minY + contentFrame.height * 0.8,
-                                      contentFrame.maxY - edgePadding.bottom),
-                                  contentFrame.minY + edgePadding.top),
-                              contentFrame.minY + contentFrame.height * 0.5))
-    }
-    
-    /**
-     Determines whether the map should follow the user location and rotate when the course changes.
-     - seealso: NavigationMapViewCourseTrackingDelegate
-     */
-    open var tracksUserCourse: Bool = false {
-        didSet {
-            if tracksUserCourse {
-                enableFrameByFrameCourseViewTracking(for: 2)
-                altitude = NavigationMapView.defaultAltitude
-                showsUserLocation = true
-                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
-            } else {
-                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
-            }
-            
-            if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
-            }
-        }
-    }
-    
-    open override func mapViewDidFinishRenderingFrameFullyRendered(_ fullyRendered: Bool) {
-        super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
-        
-        guard shouldPositionCourseViewFrameByFrame else { return }
-        guard let location = userLocationForCourseTracking else { return }
-        
-        userCourseView?.center = convert(location.coordinate, toPointTo: self)
-    }
-    
-    /**
-     A `UIView` used to indicate the user’s location and course on the map.
-     
-     If the view conforms to `UserCourseView`, its `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
-     */
-    @objc public var userCourseView: UIView? {
-        didSet {
-            oldValue?.removeFromSuperview()
-            if let userCourseView = userCourseView {
-                if let location = userLocationForCourseTracking {
-                    updateCourseTracking(location: location, animated: false)
-                } else {
-                    userCourseView.center = userAnchorPoint
-                }
-                addSubview(userCourseView)
-            }
-        }
-    }
-    
-    var routes: [Route]?
-    
-    //MARK: TapGestureRecognizer
+    //MARK: -  Gesture Recognizers
     
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
@@ -432,55 +398,36 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
     }
     
-    //TODO: Change to point-based distance calculation
-    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
-        let tapCoordinate = convert(point, toCoordinateFrom: self)
-        let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
-        guard multipointRoutes.count > 0 else { return nil }
-        let waypoints = multipointRoutes.flatMap({$0.routeOptions.waypoints})
+    @objc func updateCourseView(_ sender: UIGestureRecognizer) {
+        preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
         
-        //lets sort the array in order of closest to tap
-        let closest = waypoints.sorted { (left, right) -> Bool in
-            let leftDistance = left.coordinate.distance(to: tapCoordinate)
-            let rightDistance = right.coordinate.distance(to: tapCoordinate)
-            return leftDistance < rightDistance
+        if sender.state == .ended {
+            altitude = self.camera.altitude
+            enableFrameByFrameCourseViewTracking(for: 2)
         }
         
-        //lets filter to see which ones are under threshold
-        let candidates = closest.filter({
-            let coordinatePoint = self.convert($0.coordinate, toPointTo: self)
-            return coordinatePoint.distance(to: point) < tapGestureDistanceThreshold
-        })
-        
-        return candidates
-    }
-    
-    private func routes(closeTo point: CGPoint) -> [Route]? {
-        let tapCoordinate = convert(point, toCoordinateFrom: self)
-        
-        //do we have routes? If so, filter routes with at least 2 coordinates.
-        guard let routes = routes?.filter({ $0.coordinates?.count ?? 0 > 1 }) else { return nil }
-        
-        //Sort routes by closest distance to tap gesture.
-        let closest = routes.sorted { (left, right) -> Bool in
-            
-            //existance has been assured through use of filter.
-            let leftLine = Polyline(left.coordinates!)
-            let rightLine = Polyline(right.coordinates!)
-            let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.distance
-            let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.distance
-            
-            return leftDistance < rightDistance
+        // Capture altitude for double tap and two finger tap after animation finishes
+        if sender is UITapGestureRecognizer, sender.state == .ended {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                self.altitude = self.camera.altitude
+            })
         }
         
-        //filter closest coordinates by which ones are under threshold.
-        let candidates = closest.filter {
-            let closestCoordinate = Polyline($0.coordinates!).closestCoordinate(to: tapCoordinate)!.coordinate
-            let closestPoint = self.convert(closestCoordinate, toPointTo: self)
-            
-            return closestPoint.distance(to: point) < tapGestureDistanceThreshold
+        if let pan = sender as? UIPanGestureRecognizer {
+            if sender.state == .ended || sender.state == .cancelled {
+                let velocity = pan.velocity(in: self)
+                let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
+                if didFling {
+                    enableFrameByFrameCourseViewTracking(for: 1)
+                }
+            }
         }
-        return candidates
+        
+        if sender.state == .changed {
+            guard let location = userLocationForCourseTracking else { return }
+            userCourseView?.layer.removeAllAnimations()
+            userCourseView?.center = convert(location.coordinate, toPointTo: self)
+        }
     }
     
     //MARK: Feature Addition/Removal
@@ -809,6 +756,71 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     //MARK: Utility Methods
     
+    /** Modifies the gesture recognizers to also disable course tracking. */
+    func makeGestureRecognizersRespectCourseTracking() {
+        for gestureRecognizer in gestureRecognizers ?? []
+            where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
+                gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
+        }
+    }
+    
+    func makeGestureRecognizersUpdateCourseView() {
+        for gestureRecognizer in gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
+        }
+    }
+    
+    //TODO: Change to point-based distance calculation
+    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
+        let tapCoordinate = convert(point, toCoordinateFrom: self)
+        let multipointRoutes = routes.filter { $0.routeOptions.waypoints.count >= 3}
+        guard multipointRoutes.count > 0 else { return nil }
+        let waypoints = multipointRoutes.flatMap({$0.routeOptions.waypoints})
+        
+        //lets sort the array in order of closest to tap
+        let closest = waypoints.sorted { (left, right) -> Bool in
+            let leftDistance = left.coordinate.distance(to: tapCoordinate)
+            let rightDistance = right.coordinate.distance(to: tapCoordinate)
+            return leftDistance < rightDistance
+        }
+        
+        //lets filter to see which ones are under threshold
+        let candidates = closest.filter({
+            let coordinatePoint = self.convert($0.coordinate, toPointTo: self)
+            return coordinatePoint.distance(to: point) < tapGestureDistanceThreshold
+        })
+        
+        return candidates
+    }
+    
+    private func routes(closeTo point: CGPoint) -> [Route]? {
+        let tapCoordinate = convert(point, toCoordinateFrom: self)
+        
+        //do we have routes? If so, filter routes with at least 2 coordinates.
+        guard let routes = routes?.filter({ $0.coordinates?.count ?? 0 > 1 }) else { return nil }
+        
+        //Sort routes by closest distance to tap gesture.
+        let closest = routes.sorted { (left, right) -> Bool in
+            
+            //existance has been assured through use of filter.
+            let leftLine = Polyline(left.coordinates!)
+            let rightLine = Polyline(right.coordinates!)
+            let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.distance
+            let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.distance
+            
+            return leftDistance < rightDistance
+        }
+        
+        //filter closest coordinates by which ones are under threshold.
+        let candidates = closest.filter {
+            let closestCoordinate = Polyline($0.coordinates!).closestCoordinate(to: tapCoordinate)!.coordinate
+            let closestPoint = self.convert(closestCoordinate, toPointTo: self)
+            
+            return closestPoint.distance(to: point) < tapGestureDistanceThreshold
+        }
+        return candidates
+    }
+    
     func shape(describing route: Route, legIndex: Int?) -> MGLShape? {
         guard let coordinates = route.coordinates else { return nil }
         
@@ -1035,7 +1047,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 }
 
-//MARK: Extensions
+//MARK: - Extensions
 
 extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
     func multiplied(by factor: Double) -> Dictionary {
