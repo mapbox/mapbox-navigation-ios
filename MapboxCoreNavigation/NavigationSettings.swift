@@ -1,6 +1,11 @@
 import Foundation
 
 extension Notification.Name {
+    /**
+     Posted when something changes in the shared `NavigationSettings` object.
+     
+     The user info dictionary indicates which keys and values changed.
+     */
     public static let navigationSettingsDidChange = MBNavigationSettingsDidChange
 }
 
