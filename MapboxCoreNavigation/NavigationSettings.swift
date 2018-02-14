@@ -1,10 +1,7 @@
 import Foundation
 
 extension Notification.Name {
-    /**
-     Emitted when something changed in the `NavigationSettings`.
-     */
-    public static let navigationSettingsDidChange = Notification.Name(MBNavigationSettingsDidChange)
+    public static let navigationSettingsDidChange = MBNavigationSettingsDidChange
 }
 
 /**

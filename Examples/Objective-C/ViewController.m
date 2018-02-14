@@ -51,15 +51,15 @@
 }
 
 - (void)resumeNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerDidPassSpokenInstructionPoint object:_navigation];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerNotificationProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillReroute object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerProgressDidChangeNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillRerouteNotification object:_navigation];
 }
 
 - (void)suspendNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerDidPassSpokenInstructionPoint object:_navigation];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerNotificationProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillReroute object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerProgressDidChangeNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillRerouteNotification object:_navigation];
 }
 
 - (void)alertLevelDidChange:(NSNotification *)notification {

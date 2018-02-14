@@ -1,23 +1,24 @@
 #import "MBRouteController.h"
 
+const NSNotificationName MBRouteControllerProgressDidChangeNotification  = @"RouteControllerProgressDidChange";
+const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNotification  = @"RouteControllerDidPassSpokenInstructionPoint";
+const NSNotificationName MBRouteControllerWillRerouteNotification                    = @"RouteControllerWillReroute";
+const NSNotificationName MBRouteControllerDidRerouteNotification                     = @"RouteControllerDidReroute";
+const NSNotificationName MBRouteControllerDidFailToRerouteNotification               = @"RouteControllerDidFailToReroute";
 
-NSString *const MBRouteControllerProgressDidChangeNotificationProgressKey               = @"progress";
-NSString *const MBRouteControllerProgressDidChangeNotificationLocationKey               = @"location";
-NSString *const MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = @"seconds";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerProgressDidChangeNotificationProgressKey               = @"progress";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerProgressDidChangeNotificationLocationKey               = @"location";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = @"seconds";
 
-NSString *const MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey          = @"progress";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey          = @"progress";
 
-NSString *const MBRouteControllerNotificationLocationKey    = @"location";
-NSString *const MBRouteControllerNotificationRouteKey       = @"route";
-NSString *const MBRouteControllerNotificationErrorKey       = @"error";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificationLocationKey    = @"location";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificationRouteKey       = @"route";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificationErrorKey       = @"error";
 
-NSString *const MBRouteControllerNotificationProgressDidChange  = @"RouteControllerProgressDidChange";
-NSString *const MBRouteControllerDidPassSpokenInstructionPoint  = @"RouteControllerDidPassSpokenInstructionPoint";
-NSString *const MBRouteControllerWillReroute                    = @"RouteControllerWillReroute";
-NSString *const MBRouteControllerDidReroute                     = @"RouteControllerDidReroute";
-NSString *const MBRouteControllerDidFailToReroute               = @"RouteControllerDidFailToReroute";
-NSString *const MBRouteControllerDidFindFasterRouteKey          = @"RouteControllerDidFindFasterRoute";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerDidFindFasterRouteKey          = @"RouteControllerDidFindFasterRoute";
+
 NSString *const MBErrorDomain = @"ErrorDomain";
 NSString *const MBSpokenInstructionErrorCodeKey = @"MBSpokenInstructionErrorCode";
 
-NSString *const MBNavigationSettingsDidChange = @"MBNavigationSettingsDidChange";
+NSString *const MBNavigationSettingsDidChangeNotification = @"MBNavigationSettingsDidChange";
