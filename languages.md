@@ -6,12 +6,19 @@ The Mapbox Navigation SDK’s user interface automatically matches your applicat
 
 Distances, travel times, and arrival times are displayed according to the system language and region settings by default, regardless of the application’s language. By default, the measurement system also matches the system region, which may not necessarily be the same region in which the user is traveling.
 
-The turn banner names the upcoming road or ramp destination in the local or national language. In some regions, the name may be given in multiple languages or scripts.
+The turn banner names the upcoming road or ramp destination in the local or national language. In some regions, the name may be given in multiple languages or scripts. A label near the bottom bar displays the current road name in the local language as well.
 
-By default, the map displays the Mapbox Navigation Guidance Day v2 and Navigation Guidance Night v2 styles, which labels roads in English wherever possible, falling back to the local language. A label near the bottom bar displays the current road name in the same language as the map. To force the labels into any of the eight other languages supported by the [Mapbox Streets source](https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview), falling back to the local language, use the following code:
+By default, the map inside `NavigationViewController` displays road labels in the local language, while points of interest and places are displayed in the system’s preferred language, if that language is one of the eight supported by the [Mapbox Streets source](https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview). The user can set the system’s preferred
+language in Settings, General Settings, Language & Region.
+
+A standalone `NavigationMapView` labels roads, points of interest, and places in the language specified by the current style. (The default Mapbox Navigation Guidance Day v2 style specifies English.) To match the behavior of the map inside `NavigationViewController`, call the `NavigationMapView.localizeLabels()` method from within `MGLMapViewDelegate.mapView(_:didFinishLoading:)`:
 
 ```swift
-navigationViewController.mapView?.style?.localizesLabels = true
+func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+    if let mapView = mapView as? NavigationMapView {
+        mapView.localizeLabels()
+    }
+}
 ```
 
 ## Spoken instructions
