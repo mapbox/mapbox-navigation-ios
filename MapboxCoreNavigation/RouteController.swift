@@ -444,7 +444,7 @@ open class RouteController: NSObject {
         // User is at the beginning of the route, there is no closest point behind the user.
         if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
             averageRelativeAngle = relativeAnglepointAhead
-            // User is at the end of the route, there is no closest point in front of the user.
+        // User is at the end of the route, there is no closest point in front of the user.
         } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
             averageRelativeAngle = relativeAnglepointBehind
         } else {
