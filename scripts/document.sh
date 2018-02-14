@@ -20,7 +20,8 @@ OUTPUT=${OUTPUT:-documentation}
 
 BRANCH=$( git describe --tags --match=v*.*.* --abbrev=0 )
 SHORT_VERSION=$( echo ${BRANCH} | sed 's/^v//' )
-RELEASE_VERSION=$( echo ${SHORT_VERSION} | sed -e 's/^v//' -e 's/-.*//' )
+RELEASE_VERSION=$( echo ${SHORT_VERSION} | sed -e 's/-.*//' )
+MINOR_VERSION=$( echo ${SHORT_VERSION} | grep -Eo '^\d+\.\d+' )
 
 DEFAULT_THEME="docs/theme"
 THEME=${JAZZY_THEME:-$DEFAULT_THEME}
@@ -36,12 +37,22 @@ mkdir -p ${OUTPUT}
 
 cp -r docs/img "${OUTPUT}"
 
+rm -rf /tmp/mbnavigation
+mkdir -p /tmp/mbnavigation/
+README=/tmp/mbnavigation/README.md
+cp docs/cover.md "${README}"
+perl -pi -e "s/\\$\\{MINOR_VERSION\\}/${MINOR_VERSION}/" "${README}"
+# http://stackoverflow.com/a/4858011/4585461
+echo "## Changes in version ${RELEASE_VERSION}" >> "${README}"
+sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.md >> "${README}"
+
 jazzy \
     --podspec MapboxNavigation-Documentation.podspec \
     --config docs/jazzy.yml \
     --sdk iphonesimulator \
     --module-version ${SHORT_VERSION} \
     --github-file-prefix "https://github.com/mapbox/mapbox-navigation-ios/tree/${BRANCH}" \
+    --readme ${README} \
     --documentation="docs/{guides,examples}/*.md" \
     --root-url "${BASE_URL}/navigation/${RELEASE_VERSION}/" \
     --theme ${THEME} \
