@@ -48,19 +48,3 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         FBSnapshotVerifyView(controller.lanesView)
     }
 }
-
-
-
-extension CLLocationCoordinate2D {
-    static var unionSquare: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: 37.786902, longitude: -122.407668)
-    }
-    
-    static var goldenGatePark: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: 37.770935, longitude: -122.479346)
-    }
-    
-    static var bernalHeights: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: 37.739912, longitude: -122.420100)
-    }
-}
