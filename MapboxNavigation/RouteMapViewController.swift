@@ -285,7 +285,7 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         updateETA()
         
-        instructionsBannerView.update(for: routeController.routeProgress)
+        instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress)
         lanesView.update(for: routeController.routeProgress)
         if lanesView.isHidden {
             nextBannerView.update(for: routeController.routeProgress)
@@ -395,7 +395,7 @@ class RouteMapViewController: UIViewController {
         updateETA()
         
         lanesView.update(for: routeProgress)
-        instructionsBannerView.update(for: routeProgress)
+        instructionsBannerView.update(for: routeProgress.currentLegProgress)
         if lanesView.isHidden {
             nextBannerView.update(for: routeProgress)
         }
