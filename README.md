@@ -17,7 +17,7 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 - Traffic avoidance
 - Maneuver announcements
 - Text instructions
-- Text to speech support via AVSpeechSynthesizer or Amazon Polly
+- Text to speech via Amazon Polly - no AWS key needed
 - Automatic rerouting
 - Snap to route
 

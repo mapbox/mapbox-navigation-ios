@@ -197,6 +197,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
             } else {
                 routeController.routeProgress = RouteProgress(route: route)
             }
+            NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
             mapViewController?.notifyDidReroute(route: route)
         }
     }
@@ -232,7 +233,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = RouteVoiceController()
+    @objc public var voiceController: RouteVoiceController? = MapboxVoiceController()
     
     /**
      Provides all routing logic for the user.
@@ -330,6 +331,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         
         self.directions = directions
         self.route = route
+        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
         addChildViewController(mapViewController)
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
