@@ -54,7 +54,6 @@ open class BottomBannerView: UIView {
     }
     
     func commonInit() {
-        distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         dateFormatter.timeStyle = .short
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
         dateComponentsFormatter.unitsStyle = .abbreviated

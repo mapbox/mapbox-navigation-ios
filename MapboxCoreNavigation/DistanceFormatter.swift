@@ -41,6 +41,7 @@ public class DistanceFormatter: LengthFormatter {
     @objc public init(approximate: Bool = false) {
         self.approx = approximate
         super.init()
+        self.numberFormatter.locale = .nationalizedCurrent
     }
     
     public required init?(coder decoder: NSCoder) {
