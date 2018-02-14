@@ -145,28 +145,6 @@ NavigationViewController(for: route, styles: [CustomStyle()])
 
 The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via notifications.
 
-### Guidance Notifications
-
-This library relies heavily on notifications for letting the developer know when events have occurred.
-
-#### `.routeControllerProgressDidChange`
-
-* Emitted when the user moves along the route. Notification contains 3 keys:
-  * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
-  * `RouteControllerProgressDidChangeNotificationLocationKey` - `CLLocation` - Current location
-  * `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey` - `Double` - Given users speed and location, this is the number of seconds left to the end of the step
-
-#### `.routeControllerDidPassSpokenInstructionPoint`
-
-* Emitted when user passes a point where instructions should be spoken. This indicates the user should be notified about the upcoming maneuver. You can find the instruction narrative in the `RouteProgress` object. Notification contains 1 key:
-  * `RouteControllerDidPassSpokenInstructionPointRouteProgressKey` - `RouteProgress` - Current progress along route
-
-#### `.routeControllerShouldReroute`
-
-* Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
-  * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
-
-
 ## Building your own custom navigation UI
 
 Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
