@@ -13,18 +13,18 @@ open class InstructionLabel: StylableLabel {
         didSet {
             guard let instruction = instruction else {
                 text = nil
+                instructionPresenter = nil
                 return
             }
-            instructionPresenter.instruction = instruction
-            attributedText = instructionPresenter.attributedTextForLabel(self)
+            let presenter = InstructionPresenter()
+            presenter.instruction = instruction
+            attributedText = presenter.attributedTextForLabel(self)
+            presenter.onShieldDownload = { [weak self] (attributedText: NSAttributedString) in
+                self?.attributedText = attributedText
+            }
+            instructionPresenter = presenter
         }
     }
 
-    private lazy var instructionPresenter: InstructionPresenter = {
-        let presenter = InstructionPresenter()
-        presenter.onShieldDownload = { [unowned self] (attributedText: NSAttributedString) in
-            self.attributedText = attributedText
-        }
-        return presenter
-    }()
+    private var instructionPresenter: InstructionPresenter?
 }

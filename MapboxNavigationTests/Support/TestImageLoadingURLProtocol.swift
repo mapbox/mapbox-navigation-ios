@@ -29,8 +29,7 @@ class TestImageLoadingURLProtocol: URLProtocol {
             return
         }
 
-        // retrieve fake response (image) for request
-        //TODO: we don't need an image here, just the data
+        // retrieve fake response (image) for request; ensure it is an image
         guard let data = TestImageLoadingURLProtocol.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
             XCTFail("No valid image data found for url: \(url)")
             return
@@ -38,9 +37,7 @@ class TestImageLoadingURLProtocol: URLProtocol {
 
         // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
         if let _ = TestImageLoadingURLProtocol.requests[url] {
-//            XCTAssertNotEqual(existingRequest, self.request)
             XCTFail("There should only be one request in flight at a time per resource")
-//            return
         } else {
             TestImageLoadingURLProtocol.requests[url] = request
         }

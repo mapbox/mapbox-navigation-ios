@@ -8,7 +8,6 @@ class TestImageDownloadOperation: Operation, ImageDownload {
     private(set) var request: URLRequest?
     weak private var session: URLSession?
 
-    //TODO: operations can have multiple completions and no progressBlock
     private var completionBlocks: Array<ImageDownloadCompletionBlock> = []
 
     required init(request: URLRequest, in session: URLSession) {

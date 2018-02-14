@@ -54,6 +54,12 @@ class ImageRepository {
                 return
             }
 
+            guard error == nil else {
+                NSLog("================> Image Download Failed: \(error!)")
+                completion(image)
+                return
+            }
+
             strongSelf.imageCache.store(image, forKey: cacheKey, toDisk: strongSelf.useDiskCache, completion: {
                 completion(image)
             })
