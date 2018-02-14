@@ -1,50 +1,63 @@
 #import <Foundation/Foundation.h>
 
 /**
- Posted when `RouteController` receives a user location update representing movement along the expected route.
+ Posted when `MBRouteController` receives a user location update representing movement along the expected route.
  
- The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.progressDidChangeNotificationProgressKey`, `RouteControllerNotificationUserInfoKey.progressDidChangeNotificationLocationKey`, and `RouteControllerNotificationUserInfoKey.progressDidChangeNotificationSecondsRemainingOnStepKey`.
+ The user info dictionary contains the keys `MBRouteControllerProgressDidChangeNotificationProgressKey`, `MBRouteControllerProgressDidChangeNotificationLocationKey`, and `MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey`.
+ 
+ :nodoc:
  */
 extern const NSNotificationName MBRouteControllerProgressDidChangeNotification;
 
 /**
- Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
+ Posted after the user diverges from the expected route, just before `MBRouteController` attempts to calculate a new route.
  
- The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
+ The user info dictionary contains the key `MBRouteControllerNotificationLocationKey`.
+ 
+ :nodoc:
  */
 extern const NSNotificationName MBRouteControllerWillRerouteNotification;
 
 /**
- Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
+ Posted when `MBRouteController` obtains a new route in response to the user diverging from a previous route.
  
- The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.didFindFasterRouteKey`.
+ The user info dictionary contains the keys `MBRouteControllerNotificationLocationKey` and `MBRouteControllerDidFindFasterRouteKey`.
+ 
+ :nodoc:
  */
 extern const NSNotificationName MBRouteControllerDidRerouteNotification;
 
 /**
- Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
+ Posted when `MBRouteController` fails to reroute the user after the user diverges from the expected route.
  
- The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.errorKey`.
+ The user info dictionary contains the key `MBRouteControllerNotificationErrorKey`.
+ 
+ :nodoc:
  */
 extern const NSNotificationName MBRouteControllerDidFailToRerouteNotification;
 
 /**
- Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
+ Posted when `MBRouteController` detects that the user has passed an ideal point for saying an instruction aloud.
  
- The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.didPassSpokenInstructionPointRouteProgressKey`.
+ The user info dictionary contains the key `MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey`.
+ 
+ :nodoc:
  */
 extern const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNotification;
 
 /**
- Posted when something changes in the shared `NavigationSettings` object.
+ Posted when something changes in the shared `MBNavigationSettings` object.
  
  The user info dictionary indicates which keys and values changed.
+ 
+ :nodoc:
  */
 extern const NSNotificationName MBNavigationSettingsDidChangeNotification;
 
 /**
- Keys in the user info dictionaries of various notifications posted by instances
- of `RouteController`.
+ Keys in the user info dictionaries of various notifications posted by instances of `MBRouteController`.
+ 
+ :nodoc:
  */
 typedef NSString *MBRouteControllerNotificationUserInfoKey NS_EXTENSIBLE_STRING_ENUM;
 
