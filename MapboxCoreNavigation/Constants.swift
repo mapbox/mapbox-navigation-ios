@@ -59,7 +59,7 @@ public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 /**
  The minimum speed value before the user's actual location can be considered over the snapped location.
  */
-public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 2
+public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 3
 
 /**
  The minimum distance threshold used for giving a "Continue" type instructions.
