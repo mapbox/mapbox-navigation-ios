@@ -1,6 +1,6 @@
 # [Mapbox Navigation SDK for iOS](https://github.com/mapbox/mapbox-navigation-ios/)
 
-<img alt="Mapbox Navigation SDK" src="./img/navigation.png" width="50%" style="margin: auto;display: block;" />
+<img alt="Mapbox Navigation SDK" src="./img/navigation.png" width="272" style="margin: auto;display: block;" />
 
 The Mapbox Navigation SDK gives you all the tools you need to add turn-by-turn navigation to your application. It takes just a few minutes to drop a full-fledged turn-by-turn navigation view controller into your application. Or use the Core Navigation framework directly to build something truly custom.
 
