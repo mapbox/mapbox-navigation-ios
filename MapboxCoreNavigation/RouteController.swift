@@ -385,24 +385,52 @@ open class RouteController: NSObject {
             let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             
             // The max here is 180. The closer it is to 180, the sharper the turn.
-            if calculateAbsoluteTurnAngle(angleIn: initialHeading, angleOut: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
+            if turnAngleStraightness(angleIn: initialHeading, angleOut: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
                 nearByCoordinates = coordinates
             }
         }
         
-        let nearByPolyline = Polyline(nearByCoordinates)
-
         guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: location.coordinate) else { return nil }
-
-        let slicedLineBehind = Polyline(nearByCoordinates.reversed()).sliced(from: closest.coordinate, to: nearByCoordinates.reversed().last)
-        let slicedLineInFront = Polyline(nearByCoordinates).sliced(from: closest.coordinate, to: nearByCoordinates.last)
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(from: location, along: nearByCoordinates) else { return nil }
+        
+        var userCourse = calculatedCourseForLocationOnStep
+        var userCoordinate = closest.coordinate
+        if shouldAllowUnsapped(location: location, given: calculatedCourseForLocationOnStep) {
+            userCourse = location.course
+            userCoordinate = location.coordinate
+        }
+        
+        return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
+    }
+    
+    func turnAngleStraightness(angleIn: CLLocationDirection, angleOut: CLLocationDirection) -> CLLocationDirection {
+        let inAngle = angleIn.toRadians()
+        let outAngle = angleOut.toRadians()
+        let inX = sin(inAngle)
+        let inY = cos(inAngle)
+        let outX = sin(outAngle)
+        let outY = cos(outAngle)
+        
+        return acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
+    }
+    
+    /**
+     Given a location and a series of coordinates, compute what the course should be for a the location.
+     */
+    func interpolatedCourse(from location: CLLocation, along coordinates: [CLLocationCoordinate2D]) -> CLLocationDirection? {
+        let nearByPolyline = Polyline(coordinates)
+        
+        guard let closest = Polyline(coordinates).closestCoordinate(to: location.coordinate) else { return nil }
+        
+        let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
+        let slicedLineInFront = Polyline(coordinates).sliced(from: closest.coordinate, to: coordinates.last)
         let userDistanceBuffer: CLLocationDistance = max(location.speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
-
+        
         guard let pointBehind = slicedLineBehind.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
         guard let pointBehindClosest = nearByPolyline.closestCoordinate(to: pointBehind) else { return nil }
         guard let pointAhead = slicedLineInFront.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
         guard let pointAheadClosest = nearByPolyline.closestCoordinate(to: pointAhead) else { return nil }
-
+        
         // Get direction of these points
         let pointBehindDirection = pointBehindClosest.coordinate.direction(to: closest.coordinate)
         let pointAheadDirection = closest.coordinate.direction(to: pointAheadClosest.coordinate)
@@ -416,40 +444,22 @@ open class RouteController: NSObject {
         // User is at the beginning of the route, there is no closest point behind the user.
         if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
             averageRelativeAngle = relativeAnglepointAhead
-        // User is at the end of the route, there is no closest point in front of the user.
+            // User is at the end of the route, there is no closest point in front of the user.
         } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
             averageRelativeAngle = relativeAnglepointBehind
         } else {
             averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
         }
         
-        let calculatedCourseForLocationOnStep = (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
-        
-        
-        var userCourse = calculatedCourseForLocationOnStep
-        var userCoordinate = closest.coordinate
-        if checkForUnsnapped(location: location, given: calculatedCourseForLocationOnStep) {
-            userCourse = location.course
-            userCoordinate = location.coordinate
-        }
-        
-        return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
+        return (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
     }
     
-    func calculateAbsoluteTurnAngle(angleIn: CLLocationDirection, angleOut: CLLocationDirection) -> CLLocationDirection {
-        let inAngle = angleIn.toRadians()
-        let outAngle = angleOut.toRadians()
-        
-        let inX = sin(inAngle)
-        let inY = cos(inAngle)
-        let outX = sin(outAngle)
-        let outY = cos(outAngle)
-        
-        return acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
-    }
-    
-    func checkForUnsnapped(location: CLLocation, given snappedCourse: CLLocationDirection) -> Bool {
-        if location.course >= 0 && location.speed >= RouteControllerMinimumSpeedForLocationSnapping &&
+    /**
+     Determines if the a location is qualified enough to allow the user puck to become unsnapped.
+     */
+    func shouldAllowUnsapped(location: CLLocation, given snappedCourse: CLLocationDirection) -> Bool {
+        if location.course >= 0 &&
+            location.speed >= RouteControllerMinimumSpeedForLocationSnapping &&
             snappedCourse.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle &&
             location.horizontalAccuracy < 20 {
                 return true
