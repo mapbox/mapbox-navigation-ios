@@ -41,6 +41,7 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         
         route.accessToken = bogusToken
         let routeController = RouteController(along: route, directions: directions)
+        routeController.advanceStepIndex(to: 7)
         controller.lanesView.update(for: routeController.routeProgress)
         controller.lanesView.show()
         
