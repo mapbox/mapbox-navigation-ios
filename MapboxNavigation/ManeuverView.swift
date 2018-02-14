@@ -67,8 +67,10 @@ public class ManeuverView: UIView {
         }
         
         var flip: Bool = false
-        let type = visualInstruction.maneuverType != .none ? visualInstruction.maneuverType : .turn
-        let direction = visualInstruction.maneuverDirection != .none ? visualInstruction.maneuverDirection : .straightAhead
+        guard let maneuverType = visualInstruction.primaryTextComponents.first?.maneuverType else { return }
+        guard let maneuverDirection = visualInstruction.primaryTextComponents.first?.maneuverDirection else { return }
+        let type = maneuverType != .none ? maneuverType : .turn
+        let direction = maneuverDirection != .none ? maneuverDirection : .straightAhead
 
         switch type {
         case .merge:
