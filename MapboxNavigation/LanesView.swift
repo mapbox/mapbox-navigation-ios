@@ -65,10 +65,10 @@ public class LanesView: UIView {
         separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     
-    func update(for routeProgress: RouteProgress) {
-        guard let step = routeProgress.currentLegProgress.upComingStep else { return }
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint else { return }
-        let durationRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
+    func update(for currentLegProgress: RouteLegProgress) {
+        guard let step = currentLegProgress.upComingStep else { return }
+        guard !currentLegProgress.userHasArrivedAtWaypoint else { return }
+        let durationRemaining = currentLegProgress.currentStepProgress.durationRemaining
         
         clearLaneViews()
         

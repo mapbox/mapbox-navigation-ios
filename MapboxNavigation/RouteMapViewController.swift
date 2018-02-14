@@ -286,7 +286,7 @@ class RouteMapViewController: UIViewController {
         updateETA()
         
         instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress)
-        lanesView.update(for: routeController.routeProgress)
+        lanesView.update(for: routeController.routeProgress.currentLegProgress)
         if lanesView.isHidden {
             nextBannerView.update(for: routeController.routeProgress)
         }
@@ -394,7 +394,7 @@ class RouteMapViewController: UIViewController {
         
         updateETA()
         
-        lanesView.update(for: routeProgress)
+        lanesView.update(for: routeProgress.currentLegProgress)
         instructionsBannerView.update(for: routeProgress.currentLegProgress)
         if lanesView.isHidden {
             nextBannerView.update(for: routeProgress)
