@@ -240,7 +240,11 @@ public class NavigationViewController: UIViewController {
 
      See `RouteController` for more information.
      */
-    @objc public var routeController: RouteController!
+    @objc public var routeController: RouteController! {
+        didSet {
+            mapViewController?.routeController = routeController
+        }
+    }
     
     /**
      The main map view displayed inside the view controller.

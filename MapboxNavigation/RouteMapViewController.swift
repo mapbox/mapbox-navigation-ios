@@ -70,7 +70,7 @@ class RouteMapViewController: UIViewController {
     }
     
     weak var delegate: RouteMapViewControllerDelegate?
-    weak var routeController: RouteController! {
+    var routeController: RouteController! {
         didSet {
             navigationView.statusView.canChangeValue = routeController.locationManager is SimulatedLocationManager
             guard let destination = route.legs.last?.destination else { return }
