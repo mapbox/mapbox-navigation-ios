@@ -19,6 +19,7 @@ class DistanceFormatterTests: XCTestCase {
     }
     
     func testDistanceFormatters_US() {
+        NavigationSettings.shared.distanceUnit = .mile
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-US")
         
         assertDistance(0,               displayed: "0 ft")
@@ -39,6 +40,7 @@ class DistanceFormatterTests: XCTestCase {
     }
     
     func testDistanceFormatters_DE() {
+        NavigationSettings.shared.distanceUnit = .kilometer
         distanceFormatter.numberFormatter.locale = Locale(identifier: "de-DE")
         
         assertDistance(0,       displayed: "0 m")
@@ -61,9 +63,13 @@ class DistanceFormatterTests: XCTestCase {
     }
     
     func testDistanceFormatters_GB() {
+        NavigationSettings.shared.distanceUnit = .mile
         distanceFormatter.numberFormatter.locale = Locale(identifier: "en-GB")
         
         assertDistance(0,               displayed: "0 ft")
+        assertDistance(6.096,           displayed: "20 ft")
+        assertDistance(9.144,           displayed: "10 yd")
+        assertDistance(22.86,           displayed: "25 yd")
         assertDistance(oneMile/2,       displayed: "0.5 mi")
         assertDistance(oneMile,         displayed: "1 mi")
         assertDistance(oneMile*2.5,     displayed: "2.5 mi")

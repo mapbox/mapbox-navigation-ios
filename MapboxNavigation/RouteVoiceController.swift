@@ -1,3 +1,4 @@
+
 import Foundation
 import AVFoundation
 import MapboxDirections
@@ -87,7 +88,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     /**
      Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
-    */
+     */
     @objc public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
@@ -184,7 +185,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
         try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
     }
-
+    
     func duckAudio() throws {
         try validateDuckingOptions()
         try AVAudioSession.sharedInstance().setActive(true)
