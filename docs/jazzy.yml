@@ -14,6 +14,7 @@ custom_categories:
   - name: Guides
     children:
       - Storyboards
+      - Localization and Internationalization
   - name: Examples
     children:
       - Basic

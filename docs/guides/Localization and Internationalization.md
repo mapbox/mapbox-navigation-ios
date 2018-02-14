@@ -1,4 +1,6 @@
-# Languages
+# Localization and Internationalization
+
+The Mapbox Navigation SDK supports over a dozen major languages as well as some other locale settings. For a seamless user experience, the SDK’s default behavior matches the standard iOS behavior as much as possible, but several customization options are also available for specialized use cases.
 
 ## User interface
 
@@ -56,7 +58,7 @@ The upcoming road or ramp destination is named according to the local or nationa
 
 ## Contributing
 
-See the [contributing guide](./CONTRIBUTING.md#adding-or-updating-a-localization) for instructions on adding a new localization or improving an existing localization.
+See the [contributing guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/CONTRIBUTING.md#adding-or-updating-a-localization) for instructions on adding a new localization or improving an existing localization.
 
 [osrmti]: https://github.com/Project-OSRM/osrm-text-instructions/
 [iossynth]: https://developer.apple.com/documentation/avfoundation/speech_synthesis
