@@ -2,81 +2,14 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-/**
- Key used for accessing the `RouteProgress` object from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerProgressDidChangeNotificationProgressKey = MBRouteControllerProgressDidChangeNotificationProgressKey
-
-/**
- Key used for accessing the `CLLocation` object from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerProgressDidChangeNotificationLocationKey = MBRouteControllerProgressDidChangeNotificationLocationKey
-
-/**
- Key used for accessing the number of seconds left on a step (Double) from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey
-
-/**
- Key used for accessing the user's current `CLLocation` from a `RouteControllerWillReroute` notification's `userInfo` dictionary.
- */
-public let RouteControllerNotificationLocationKey = MBRouteControllerNotificationLocationKey
-
-/**
- Key used for accessing the newly rerouted `Route` from a `RouteControllerDidReroute` notification's `userInfo` dictionary.
- */
-public let RouteControllerNotificationRouteKey = MBRouteControllerNotificationRouteKey
-
-/**
- Key used for accessing the error from a `RouteControllerDidFailToReroute` notification's `userInfo` dictionary.
- */
-public let RouteControllerNotificationErrorKey = MBRouteControllerNotificationErrorKey
-
-/**
- Key used for accessing a `Bool` as to whether the reroute occurced because a faster route was found.
- */
-public let RouteControllerDidFindFasterRouteKey = MBRouteControllerDidFindFasterRouteKey
-
-/**
- Key for accessing the `RouteProgress` key emitted when `RouteControllerDidPassSpokenInstructionPoint` is fired.
- */
-public let RouteControllerDidPassSpokenInstructionPointRouteProgressKey = MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey
+public typealias RouteControllerNotificationUserInfoKey = MBRouteControllerNotificationUserInfoKey
 
 extension Notification.Name {
-    /**
-     Emitted after the user has gone off-route but the `RouteController` failed to reroute.
-     
-     The user info dictionary contains the key `RouteControllerNotificationErrorKey`.
-     */
-    public static let routeControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
-    
-    /**
-     Emitted when the user has gone off-route and the `RouteController` is about to reroute.
-     
-     The user info dictionary contains the key `RouteControllerNotificationLocationKey`.
-     */
-    public static let routeControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
-    
-    /**
-     Emitted after the user has gone off-route and the `RouteController` rerouted.
-     
-     The user info dictionary contains the keys `RouteControllerNotificationLocationKey` and `RouteControllerDidFindFasterRouteKey`.
-     */
-    public static let routeControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
-    
-    /**
-     Emitted when the user moves along the route.
-     
-     The user info dictionary contains the keys `RouteControllerProgressDidChangeNotificationProgressKey`, `RouteControllerProgressDidChangeNotificationLocationKey`, and `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey`.
-     */
-    public static let routeControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
-    
-    /**
-     Emitted when the user passes an ideal point for saying an instruction aloud.
-     
-     The user info dictionary contains the key `RouteControllerDidPassSpokenInstructionPointRouteProgressKey`.
-     */
-    public static let routeControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
+    public static let routeControllerDidFailToReroute = MBRouteControllerDidFailToReroute
+    public static let routeControllerWillReroute = MBRouteControllerWillReroute
+    public static let routeControllerDidReroute = MBRouteControllerDidReroute
+    public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
+    public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
 }
 
 /**

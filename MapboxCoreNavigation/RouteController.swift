@@ -151,11 +151,11 @@ open class RouteController: NSObject {
                 sessionState.currentRoute = routeProgress.route
             }
 
-            var userInfo = [String: Any]()
+            var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
             if let location = locationManager.location {
-                userInfo[MBRouteControllerNotificationLocationKey] = location
+                userInfo[.locationKey] = location
             }
-            userInfo[RouteControllerDidFindFasterRouteKey] = didFindFasterRoute
+            userInfo[.didFindFasterRouteKey] = didFindFasterRoute
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
@@ -481,7 +481,7 @@ extension RouteController {
     }
     
     @objc func didReroute(notification: NSNotification) {
-        if let didFindFasterRoute = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool, didFindFasterRoute {
+        if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.didFindFasterRouteKey] as? Bool, didFindFasterRoute {
             _ = enqueueFoundFasterRouteEvent()
         }
         
@@ -572,9 +572,9 @@ extension RouteController: CLLocationManagerDelegate {
             if distanceTraveled != currentStepProgress.distanceTraveled {
                 currentStepProgress.distanceTraveled = distanceTraveled
                 NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                    RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
-                    RouteControllerProgressDidChangeNotificationLocationKey: location,
-                    RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
+                    RouteControllerNotificationUserInfoKey.progressDidChangeNotificationProgressKey: routeProgress,
+                    RouteControllerNotificationUserInfoKey.progressDidChangeNotificationLocationKey: location,
+                    RouteControllerNotificationUserInfoKey.progressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
                     ])
             }
         }
@@ -689,8 +689,8 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
                 strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
-                    RouteControllerDidFindFasterRouteKey: true
-                    ]))
+                    RouteControllerNotificationUserInfoKey.didFindFasterRouteKey: true
+                ]))
                 strongSelf.didFindFasterRoute = false
             }
         }
@@ -711,8 +711,8 @@ extension RouteController: CLLocationManagerDelegate {
 
         delegate?.routeController?(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            MBRouteControllerNotificationLocationKey: location
-            ])
+            RouteControllerNotificationUserInfoKey.locationKey: location
+        ])
 
         self.lastRerouteLocation = location
 
@@ -724,8 +724,8 @@ extension RouteController: CLLocationManagerDelegate {
             if let error = error {
                 strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                    MBRouteControllerNotificationErrorKey: error
-                    ])
+                    RouteControllerNotificationUserInfoKey.errorKey: error
+                ])
             }
 
             guard let route = route else { return }
@@ -863,8 +863,8 @@ extension RouteController: CLLocationManagerDelegate {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep {
 
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
-                    ])
+                    RouteControllerNotificationUserInfoKey.didPassSpokenInstructionPointRouteProgressKey: routeProgress
+                ])
 
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
                 return
