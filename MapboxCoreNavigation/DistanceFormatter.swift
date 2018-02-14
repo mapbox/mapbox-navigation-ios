@@ -57,6 +57,8 @@ public class DistanceFormatter: LengthFormatter {
     func maximumFractionDigits(for distance: CLLocationDistance) -> Int {
         if NavigationSettings.shared.usesMetric {
             return distance < 3_000 ? 1 : 0
+        } else if numberFormatter.locale.identifier == "en-GB" {
+            return 0.1...3 ~= distance.miles ? 1 : 0
         } else {
             return distance.miles < 3 ? 1 : 0
         }
