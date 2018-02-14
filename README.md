@@ -4,9 +4,9 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![CocoaPods](https://img.shields.io/cocoapods/v/MapboxNavigation.svg)](https://cocoapods.org/pods/MapboxNavigation/)
 
-<img alt="Mapbox Navigation SDK" src="https://github.com/mapbox/mapbox-navigation-ios/raw/master/docs/img/navigation.png" width="50%" style="margin: auto;display: block;" />
+<img alt="Mapbox Navigation SDK" src="./img/navigation.png" width="272" align="center" />
 
-Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your apps.
+Mapbox Navigation gives you all the tools you need to add turn-by-turn navigation to your application.
 
 Get up and running in a few minutes with our drop-in turn-by-turn navigation `NavigationViewController`, or build a completely custom turn-by-turn navigation app with our core components for routing and navigation.
 
@@ -23,25 +23,30 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## [Documentation](https://www.mapbox.com/mapbox-navigation-ios/navigation/)
 
-## Requirements:
-* \>= Xcode 9
-* Swift 4. If you'd like to use Swift 3.2, the last supported release is v0.10.1.
+## Requirements
+
+The Mapbox Navigation SDK and Core Navigation are compatible with applications written in Swift 4 or Objective-C in Xcode 9.0. The Mapbox Navigation framework runs on iOS 9.0 and above, while the Core Navigation framework runs on iOS 8.0 and above.
+
+The last release compatible with Swift 3.2 was v0.10.1.
 
 ## Installation
 
+### Using CocoaPods
+
 To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
-1. Specify the following dependency in your Podfile:
+1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
    pod 'MapboxNavigation', '~> 0.13'
    ```
-1. Run `pod install` and open the resulting Xcode workspace.
 
-Note, you may need to run `pod repo update` before `pod install` if your Cocoapods sources haven't been updated in a while.
+1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
 
-Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
+### Using Carthage
 
-1. Specify the following dependency in your Cartfile:
+Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/Carthage/Carthage/):
+
+1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#binary-only-frameworks) with the following dependency:
    ```cartfile
    github "mapbox/mapbox-navigation-ios" ~> 0.13
    ```
@@ -50,20 +55,16 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embedded Frameworks should include MapboxNavigation.framework and MapboxCoreNavigation.framework.
 
+## Configuration
 
+1. Mapbox APIs and vector tiles require a Mapbox account and API access token. In the project editor, select the application target, then go to the Info tab. Under the “Custom iOS Target Properties” section, set `MGLMapboxAccessToken` to your access token. You can obtain an access token from the [Mapbox account page](https://www.mapbox.com/account/access-tokens/).
 
-### Running the example project
+1. In order for the SDK to track the user’s location as they move along the route, set `NSLocationWhenInUseUsageDescription` to:
+   > Shows your location on the map and helps improve OpenStreetMap.
 
-1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
-1. Run `carthage update --platform ios` to build just the iOS dependencies.
-1. Open `MapboxNavigation.xcodeproj`.
-1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
-1. Open the Info.plist for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`. (Alternatively, if you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
-1. Build and run the `Example-Swift` or `Example-Objective-C` target.
+1. Users expect the SDK to continue to track the user’s location and deliver audible instructions even while a different application is visible or the device is locked. Go to the Capabilities tab. Under the Background Modes section, enable “Audio, AirPlay, and Picture in Picture” and “Location updates”. (Alternatively, add the `audio` and `location` values to the `UIBackgroundModes` array in the Info tab.)
 
-## Usage
-
-**[API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/)**
+Now import the relevant modules and present a new `NavigationViewController`. You can also [push to a navigation view controller from within a storyboard](./docs/guides/Storyboards.md) if your application’s UI is laid out in Interface Builder.
 
 ```swift
 import MapboxDirections
@@ -81,26 +82,28 @@ Directions.shared.calculate(options) { (waypoints, routes, error) in
     guard let route = routes?.first else { return }
 
     let viewController = NavigationViewController(for: route)
-    self.present(viewController, animated: true, completion: nil)
+    present(viewController, animated: true, completion: nil)
 }
 ```
 
-**The [example app](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Examples/Swift/ViewController.swift) is also a great resource for referencing various APIs.**
+Consult the [API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/) for further details.
 
-## More Examples
+## Examples
 
-Looking for more examples and use cases on how to the Mapbox Navigation SDK? Check out our example repository, [mapbox/navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples).
+The [API reference](https://www.mapbox.com/mapbox-navigation-ios/navigation/) includes example code for accomplishing common tasks. You can run these examples as part of the [navigation-ios-examples](https://github.com/mapbox/navigation-ios-examples) project.
 
-#### Required Info.plist Keys
-Mapbox Navigation requires a few additions to your `Info.plist`. Be sure to sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
+This repository also contains [Swift and Objective-C testbeds](https://github.com/mapbox/mapbox-navigation-ios/blob/master/Examples/) that exercise a variety of navigation SDK features:
 
-1. Add a `MGLMapboxAccessToken` key and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/)
-1. Add a `NSLocationWhenInUseUsageDescription` key if you haven't already
-1. If you need voice guidance while your app is in the background, you'll also need to add the `audio` and `location` value to the `UIBackgroundModes` array. You can also do this by navigating to the `Capabilities` tab -> `Background Modes` and enabling the following:
-    - `Audio, AirPlay, and Picture in Picture`
-    - `Location updates`
+1. Clone the repository or download the [.zip file](https://github.com/mapbox/mapbox-navigation-ios/archive/master.zip)
+1. Run `carthage update --platform ios` to build just the iOS dependencies.
+1. Open `MapboxNavigation.xcodeproj`.
+1. Sign up or log in to your Mapbox account and grab a [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/).
+1. Open the Info.plist for either `Example-Swift` or `Example-Objective-C` and paste your [Mapbox Access Token](https://www.mapbox.com/studio/account/tokens/) into `MGLMapboxAccessToken`. (Alternatively, if you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
+1. Build and run the `Example-Swift` or `Example-Objective-C` target.
 
-#### Styling
+## Customization
+
+### Styling
 
 You can customize the appearance in order to blend in with the rest of your app. Checkout [`DayStyle.swift`](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/DayStyle.swift) for all styleable elements.
 
@@ -126,7 +129,7 @@ then initialize `NavigationViewController` with your style or styles:
 NavigationViewController(for: route, styles: [CustomStyle()])
 ```
 
-#### NavigationViewController Delegate Methods
+### `NavigationViewControllerDelegate` methods
 
 * `navigationViewController:didArriveAtDestination:`: Fired when the user arrives at their destination. You are responsible for dismissing the UI.
 * `navigationViewControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI.
@@ -135,7 +138,7 @@ NavigationViewController(for: route, styles: [CustomStyle()])
 * `navigationViewController:didRerouteAlongRoute:`: Fired as soon as the SDK receives a new route.
 * `navigationViewController:didFailToRerouteWithError:`: Fired when SDK receives an error instead of a new route.
 
-### Route Controller
+### `RouteController`
 
 `RouteController` is given a route. Internally `RouteController` matches the user's current location to the route while looking at 3 principle pieces:
 
@@ -145,29 +148,7 @@ NavigationViewController(for: route, styles: [CustomStyle()])
 
 The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via notifications.
 
-### Guidance Notifications
-
-This library relies heavily on notifications for letting the developer know when events have occurred.
-
-#### `.routeControllerProgressDidChange`
-
-* Emitted when the user moves along the route. Notification contains 3 keys:
-  * `RouteControllerProgressDidChangeNotificationProgressKey` - `RouteProgress` - Current progress along route
-  * `RouteControllerProgressDidChangeNotificationLocationKey` - `CLLocation` - Current location
-  * `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey` - `Double` - Given users speed and location, this is the number of seconds left to the end of the step
-
-#### `.routeControllerDidPassSpokenInstructionPoint`
-
-* Emitted when user passes a point where instructions should be spoken. This indicates the user should be notified about the upcoming maneuver. You can find the instruction narrative in the `RouteProgress` object. Notification contains 1 key:
-  * `RouteControllerDidPassSpokenInstructionPointRouteProgressKey` - `RouteProgress` - Current progress along route
-
-#### `.routeControllerShouldReroute`
-
-* Emitted when the user is off the route and should be rerouted. Notification contains 1 key:
-  * `RouteControllerNotificationShouldRerouteKey` - `CLLocation` - Last location of user
-
-
-## Building your own custom navigation UI
+### Building your own custom navigation UI
 
 Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
 

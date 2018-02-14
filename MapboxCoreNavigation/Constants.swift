@@ -45,25 +45,36 @@ public let RouteControllerDidPassSpokenInstructionPointRouteProgressKey = MBRout
 extension Notification.Name {
     /**
      Emitted after the user has gone off-route but the `RouteController` failed to reroute.
+     
+     The user info dictionary contains the key `RouteControllerNotificationErrorKey`.
      */
     public static let routeControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
+    
     /**
      Emitted when the user has gone off-route and the `RouteController` is about to reroute.
+     
+     The user info dictionary contains the key `RouteControllerNotificationLocationKey`.
      */
     public static let routeControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
     
     /**
      Emitted after the user has gone off-route and the `RouteController` rerouted.
+     
+     The user info dictionary contains the keys `RouteControllerNotificationLocationKey` and `RouteControllerDidFindFasterRouteKey`.
      */
     public static let routeControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
     
     /**
      Emitted when the user moves along the route.
+     
+     The user info dictionary contains the keys `RouteControllerProgressDidChangeNotificationProgressKey`, `RouteControllerProgressDidChangeNotificationLocationKey`, and `RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey`.
      */
     public static let routeControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
     
     /**
      Emitted when the user passes an ideal point for saying an instruction aloud.
+     
+     The user info dictionary contains the key `RouteControllerDidPassSpokenInstructionPointRouteProgressKey`.
      */
     public static let routeControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
 }
