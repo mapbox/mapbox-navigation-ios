@@ -7,7 +7,6 @@ import MapboxDirections
 
 class ManeuverViewTests: FBSnapshotTestCase {
     
-    let route = Fixture.route(from: "route-with-straight-roundabout", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 59.215, longitude: 17.6334)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 59.2164, longitude: 17.6353))])
     let maneuverView = ManeuverView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
     
     override func setUp() {
@@ -16,6 +15,10 @@ class ManeuverViewTests: FBSnapshotTestCase {
         route.accessToken = bogusToken
         recordMode = false
         isDeviceAgnostic = false
+        usesDrawViewHierarchyInRect = true
+        
+        let window = UIWindow(frame: maneuverView.bounds)
+        window.addSubview(maneuverView)
     }
     
     func maneuverInstruction(_ maneuverType: ManeuverType, _ maneuverDirection: ManeuverDirection, _ drivingSide: DrivingSide) -> VisualInstruction {
@@ -24,9 +27,8 @@ class ManeuverViewTests: FBSnapshotTestCase {
     }
     
     func testStraightRoundabout() {
-        let instruction = maneuverInstruction(.takeRoundabout, .straightAhead, .right)
-        maneuverView.visualInstruction = instruction
-        FBSnapshotVerifyView(maneuverView)
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .straightAhead, .right)
+        FBSnapshotVerifyLayer(maneuverView.layer)
     }
 }
 
