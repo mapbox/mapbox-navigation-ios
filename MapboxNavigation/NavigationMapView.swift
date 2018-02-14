@@ -1226,7 +1226,7 @@ public protocol NavigationMapViewDelegate: class {
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the waypoint.
      - parameter mapView: The NavigationMapView.
-     - parameter waypoint: The waypoint that the sender is asking about.
+     - parameter waypoints: The waypoints to be displayed on the map.
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
     @objc(navigationMapView:shapeDescribingWaypoints:)
