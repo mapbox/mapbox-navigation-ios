@@ -49,7 +49,7 @@
 		353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */; };
 		353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353EC9D61FB09708002EB0AB /* StepsViewController.swift */; };
 		3540514D1F73F3BB00ED572D /* route-with-straight-roundabout.json in Resources */ = {isa = PBXBuildFile; fileRef = 3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */; };
-		3540514F1F73F3F300ED572D /* TurnArrowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3540514E1F73F3F300ED572D /* TurnArrowTests.swift */; };
+		3540514F1F73F3F300ED572D /* ManeuverViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */; };
 		354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
 		354A01BF1E6625D100D765C2 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; };
 		354A01C21E66265100D765C2 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35A1D3651E6624EF00A48FE8 /* Mapbox.framework */; };
@@ -368,7 +368,7 @@
 		353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedLocationManager.swift; sourceTree = "<group>"; };
 		353EC9D61FB09708002EB0AB /* StepsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewController.swift; sourceTree = "<group>"; };
 		3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-straight-roundabout.json"; sourceTree = "<group>"; };
-		3540514E1F73F3F300ED572D /* TurnArrowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TurnArrowTests.swift; sourceTree = "<group>"; };
+		3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManeuverViewTests.swift; sourceTree = "<group>"; };
 		354A01B81E66256600D765C2 /* MapboxDirections.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxDirections.framework; path = Carthage/Build/iOS/MapboxDirections.framework; sourceTree = "<group>"; };
 		354A01BC1E66259600D765C2 /* Polyline.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Polyline.framework; path = Carthage/Build/iOS/Polyline.framework; sourceTree = "<group>"; };
 		354A01BE1E6625A900D765C2 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
@@ -815,7 +815,7 @@
 				355DB5731EFA73410091BFB7 /* Fixtures */,
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
-				3540514E1F73F3F300ED572D /* TurnArrowTests.swift */,
+				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewTests.swift */,
@@ -1585,7 +1585,7 @@
 			files = (
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
-				3540514F1F73F3F300ED572D /* TurnArrowTests.swift in Sources */,
+				3540514F1F73F3F300ED572D /* ManeuverViewTests.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				35B711D21E5E7AD2001EDA8D /* MapboxNavigationTests.swift in Sources */,
 				352690491ECC843700E387BD /* Fixture.swift in Sources */,
