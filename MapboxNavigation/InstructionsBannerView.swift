@@ -98,11 +98,11 @@ open class BaseInstructionsBannerView: UIControl {
     /**
      Updates the instructions banner for a given `RouteProgress`.
      */
-    public func update(for routeProgress: RouteProgress) {
-        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+    public func update(for currentLegProgress: RouteLegProgress) {
+        let stepProgress = currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
-        guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
+        guard let visualInstruction = currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
         
         set(visualInstruction)
         distance = distanceRemaining > 5 ? distanceRemaining : 0
