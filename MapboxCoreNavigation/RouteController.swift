@@ -385,7 +385,7 @@ open class RouteController: NSObject {
             let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
             
             // The max here is 180. The closer it is to 180, the sharper the turn.
-            if turnAngleStraightness(angleIn: initialHeading, angleOut: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
+            if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
                 nearByCoordinates = coordinates
             }
         }
@@ -395,23 +395,12 @@ open class RouteController: NSObject {
         
         var userCourse = calculatedCourseForLocationOnStep
         var userCoordinate = closest.coordinate
-        if shouldAllowUnsapped(location: location, given: calculatedCourseForLocationOnStep) {
+        if shouldSnap(location, facing: calculatedCourseForLocationOnStep) {
             userCourse = location.course
             userCoordinate = location.coordinate
         }
         
         return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
-    }
-    
-    func turnAngleStraightness(angleIn: CLLocationDirection, angleOut: CLLocationDirection) -> CLLocationDirection {
-        let inAngle = angleIn.toRadians()
-        let outAngle = angleOut.toRadians()
-        let inX = sin(inAngle)
-        let inY = cos(inAngle)
-        let outX = sin(outAngle)
-        let outY = cos(outAngle)
-        
-        return acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
     }
     
     /**
@@ -457,14 +446,14 @@ open class RouteController: NSObject {
     /**
      Determines if the a location is qualified enough to allow the user puck to become unsnapped.
      */
-    func shouldAllowUnsapped(location: CLLocation, given snappedCourse: CLLocationDirection) -> Bool {
+    func shouldSnap(_ location: CLLocation, facing snappedCourse: CLLocationDirection) -> Bool {
         if location.course >= 0 &&
             location.speed >= RouteControllerMinimumSpeedForLocationSnapping &&
             snappedCourse.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle &&
             location.horizontalAccuracy < 20 {
-                return true
+                return false
         }
-        return false
+        return true
     }
 
     /**
