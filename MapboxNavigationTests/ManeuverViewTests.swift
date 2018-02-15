@@ -22,7 +22,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
     }
     
     func maneuverInstruction(_ maneuverType: ManeuverType, _ maneuverDirection: ManeuverDirection, _ drivingSide: DrivingSide) -> VisualInstruction {
-        let primaryInstruction = VisualInstructionComponent(type: .delimiter, text: "", imageURL: nil, maneuverType: .none, maneuverDirection: .none) // Placeholder
+        let primaryInstruction = VisualInstructionComponent(type: .delimiter, text: "", imageURL: nil, maneuverType: maneuverType, maneuverDirection: maneuverDirection) // Placeholder
         return VisualInstruction(distanceAlongStep: 0, primaryText: "", primaryTextComponents: [primaryInstruction], secondaryText: nil, secondaryTextComponents: nil, drivingSide: drivingSide)
     }
     
