@@ -632,28 +632,29 @@ extension RouteController: CLLocationManagerDelegate {
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
         guard !isCloseToCurrentStep else { return true }
-
+        
         // Check to see if the user is moving away from the maneuver.
         // Here, we store an array of distances. If the current distance is greater than the last distance,
         // add it to the array. If the array grows larger than x, reroute the user.
-        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return false }
-        let userDistanceToManeuver = Polyline(coordinates).distance(from: location.coordinate)
+        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
+            let userDistanceToManeuver = Polyline(coordinates).distance(from: location.coordinate)
+            
+            // If the location updates have been backtracking for a certain amount of time and over a certain distance, the user most likely turned around or made a wrong turn and need a new route.
+            if recentDistancesFromManeuver.count > RouteControllerMinimumNumberLocationUpdatesBackwards && recentDistancesFromManeuver.last! - recentDistancesFromManeuver.first! > RouteControllerMinimumBacktrackingDistanceForRerouting {
+                return false
+            }
+            
+            if recentDistancesFromManeuver.isEmpty {
+                recentDistancesFromManeuver.append(userDistanceToManeuver)
+            } else if let lastDistance = recentDistancesFromManeuver.last, userDistanceToManeuver > lastDistance {
+                recentDistancesFromManeuver.append(userDistanceToManeuver)
+            } else {
+                // If we get a descending distance, reset the counter
+                recentDistancesFromManeuver.removeAll()
+            }
+        }
         
-        // If the location updates have been backtracking for a certain amount of time and over a certain distance, the user most likely turned around or made a wrong turn and need a new route.
-        if recentDistancesFromManeuver.count > RouteControllerMinimumNumberLocationUpdatesBackwards && recentDistancesFromManeuver.last! - recentDistancesFromManeuver.first! > RouteControllerMinimumBacktrackingDistanceForRerouting {
-            return false
-        }
-
-        if recentDistancesFromManeuver.isEmpty {
-            recentDistancesFromManeuver.append(userDistanceToManeuver)
-        } else if let lastDistance = recentDistancesFromManeuver.last, userDistanceToManeuver > lastDistance {
-            recentDistancesFromManeuver.append(userDistanceToManeuver)
-        } else {
-            // If we get a descending distance, reset the counter
-            recentDistancesFromManeuver.removeAll()
-        }
-
-        // Check and see if the user is near a future step but not the current step.
+        // Check and see if the user is near a future step.
         guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
             return false
         }
