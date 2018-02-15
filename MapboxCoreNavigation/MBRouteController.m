@@ -19,4 +19,3 @@ const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificationErro
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerDidFindFasterRouteKey          = @"RouteControllerDidFindFasterRoute";
 
 NSString *const MBErrorDomain = @"ErrorDomain";
-NSString *const MBSpokenInstructionErrorCodeKey = @"MBSpokenInstructionErrorCode";

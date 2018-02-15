@@ -91,13 +91,3 @@ extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificat
  A key in the user info dictionary of a `Notification.Name.RouteControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` opportunistically rerouted the user onto a faster route.
  */
 extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerDidFindFasterRouteKey;
-
-/**
- Constant representing the domain in which errors created in this library will live under.
- */
-extern NSString *const MBErrorDomain;
-
-/**
- Key used for constructing errors when spoken instructions fail.
- */
-extern NSString *const MBSpokenInstructionErrorCodeKey;
