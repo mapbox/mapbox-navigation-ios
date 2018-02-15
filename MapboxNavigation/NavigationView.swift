@@ -112,7 +112,6 @@ open class NavigationView: UIView {
     
     lazy var resumeButton: ResumeButton = {
         let button: ResumeButton = .forAutoLayout()
-        button.backgroundColor = .white
         return button
     }()
     
