@@ -583,12 +583,14 @@ extension RouteController: CLLocationManagerDelegate {
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
-        updateSpokenInstructionProgress(for: location)
+        
         
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
         }
+        
+        updateSpokenInstructionProgress(for: location)
 
         // Check for faster route given users current location
         guard reroutesOpportunistically else { return }
