@@ -51,7 +51,7 @@
 }
 
 - (void)resumeNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassSpokenInstructionPoint:) name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerProgressDidChangeNotification object:_navigation];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillRerouteNotification object:_navigation];
 }
@@ -62,7 +62,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillRerouteNotification object:_navigation];
 }
 
-- (void)alertLevelDidChange:(NSNotification *)notification {
+- (void)didPassSpokenInstructionPoint:(NSNotification *)notification {
     MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerRouteProgressKey];
     NSString *text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction.text;
     
@@ -73,7 +73,7 @@
     // If you are using MapboxCoreNavigation,
     // this would be a good time to update UI elements.
     // You can grab the current routeProgress like:
-    // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+    // let routeProgress = notification.userInfo![RouteControllerRouteProgressKey] as! RouteProgress
 }
 
 - (void)willReroute:(NSNotification *)notification {
