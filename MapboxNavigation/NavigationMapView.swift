@@ -994,6 +994,75 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return lineCasing
     }
     
+    /**
+     Attempts to localize road labels into the local language and other labels
+     into the system’s preferred language.
+     
+     When this property is enabled, the style automatically modifies the `text`
+     property of any symbol style layer whose source is the
+     <a href="https://www.mapbox.com/vector-tiles/mapbox-streets-v7/#overview">Mapbox
+     Streets source</a>. On iOS, the user can set the system’s preferred
+     language in Settings, General Settings, Language & Region.
+     
+     Unlike the `MGLStyle.localizesLabels` property, this method localizes road
+     labels into the local language, regardless of the system’s preferred
+     language, in an effort to match road signage. The turn banner always
+     displays road names and exit destinations in the local language, so you
+     should call this method in the
+     `MGLMapViewDelegate.mapView(_:didFinishLoading:)` method of any delegate of
+     a standalone `NavigationMapView`. The map view embedded in
+     `NavigationViewController` is localized automatically, so you do not need
+     to call this method on the value of `NavigationViewController.mapView`.
+     */
+    @objc public func localizeLabels() {
+        guard let style = style else {
+            return
+        }
+        
+        let streetsSourceIdentifiers = style.sources.flatMap {
+            $0 as? MGLVectorSource
+        }.filter {
+            $0.isMapboxStreets
+        }.map {
+            $0.identifier
+        }
+        
+        for layer in style.layers where layer is MGLSymbolStyleLayer {
+            let layer = layer as! MGLSymbolStyleLayer
+            guard let sourceIdentifier = layer.sourceIdentifier,
+                streetsSourceIdentifiers.contains(sourceIdentifier) else {
+                continue
+            }
+            
+            let token: String
+            if layer.sourceLayerIdentifier == "road_label" {
+                token = "{name}"
+            } else if let language = MGLVectorSource.preferredMapboxStreetsLanguage {
+                token = "{name_\(language)}"
+            } else {
+                token = "{name}"
+            }
+            
+            if let value = layer.text as? MGLConstantStyleValue<NSString>, value.rawValue.contains("{name") {
+                layer.text = MGLStyleValue(rawValue: token as NSString)
+            } else if let function = layer.text as? MGLCameraStyleFunction<NSString> {
+                var localizedStops = function.stops
+                var hasName = false
+                for (zoomLevel, value) in localizedStops {
+                    let value = value as! MGLConstantStyleValue<NSString>
+                    if value.rawValue.contains("{name") {
+                        hasName = true
+                        localizedStops[zoomLevel] = MGLStyleValue(rawValue: token as NSString)
+                    }
+                }
+                if hasName {
+                    function.stops = localizedStops
+                    layer.text = function
+                }
+            }
+        }
+    }
+    
     @objc public func showVoiceInstructionsOnMap(route: Route) {
         guard let style = style else {
             return
