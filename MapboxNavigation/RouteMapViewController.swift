@@ -652,6 +652,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     
     func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
         navigationView.resumeButton.isHidden = false
+        navigationView.wayNameLabel.isHidden = true
         mapView.logoView.isHidden = true
     }
     
