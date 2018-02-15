@@ -91,8 +91,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         simulationButton.isSelected = true
         startButton.isEnabled = false
         
-        setupMapView()
-
         alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
             self.startBasicNavigation()
@@ -120,8 +118,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        //Reload the mapView.
+        setupMapView()
+
         // Reset the navigation styling to the defaults
         DayStyle().apply()
+        
     }
 
     // MARK: Gesture Recognizer Handlers
@@ -298,21 +300,32 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     func setupMapView() {
-        guard mapView == nil else { return }
-        mapView = NavigationMapView(frame: view.bounds)
+        guard self.mapView == nil else { return }
+        let mapView = NavigationMapView(frame: view.bounds)
+        self.mapView = mapView
         
-        mapView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        mapView!.delegate = self
-        mapView!.navigationMapDelegate = self
-        mapView!.userTrackingMode = .follow
+        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        mapView.delegate = self
+        mapView.navigationMapDelegate = self
+        mapView.userTrackingMode = .follow
+        let bottomPadding = (view.frame.height + view.frame.origin.y) - bottomBar.frame.origin.y
         
-        view.insertSubview(mapView!, belowSubview: bottomBar)
+        var topPadding: CGFloat = 0.0
+        if #available(iOS 11.0, *) {
+            topPadding = view.safeAreaInsets.top
+        } else if let navCon = navigationController {
+            topPadding = navCon.navigationBar.frame.size.height
+        }
+        mapView.contentInset = UIEdgeInsets(top: topPadding + 25, left: 25, bottom: bottomPadding + 25, right: 25)
+        
+        view.insertSubview(mapView, belowSubview: bottomBar)
         
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
-        for recognizer in mapView!.gestureRecognizers! where recognizer is UILongPressGestureRecognizer {
+        for recognizer in mapView.gestureRecognizers! where recognizer is UILongPressGestureRecognizer {
             singleTap.require(toFail: recognizer)
         }
-        mapView!.addGestureRecognizer(singleTap)
+        mapView.addGestureRecognizer(singleTap)
+    
     }
     
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
@@ -414,7 +427,6 @@ extension ViewController: NavigationViewControllerDelegate {
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController) {
-        setupMapView()
         navigationViewController.dismiss(animated: true, completion: nil)
     }
 }
