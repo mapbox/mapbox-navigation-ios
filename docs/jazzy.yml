@@ -33,6 +33,7 @@ custom_categories:
       - RouteProgress
       - RouteLegProgress
       - RouteStepProgress
+      - RouteControllerNotificationUserInfoKey
   - name: Maps
     children:
       - NavigationMapView
@@ -48,22 +49,6 @@ custom_categories:
     children:
       - DistanceFormatter
       - RouteStepFormatter
-  - name: Notifications
-    children:
-      - AlertLevel
-      - RouteControllerAlertLevelDidChange
-      - RouteControllerAlertLevelDidChangeNotificationDistanceToEndOfManeuverKey
-      - RouteControllerAlertLevelDidChangeNotificationRouteProgressKey
-      - RouteControllerDidFailToReroute
-      - RouteControllerDidReroute
-      - RouteControllerNotificationErrorKey
-      - RouteControllerNotificationLocationKey
-      - RouteControllerNotificationRouteKey
-      - RouteControllerProgressDidChange
-      - RouteControllerProgressDidChangeNotificationLocationKey
-      - RouteControllerProgressDidChangeNotificationProgressKey
-      - RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey
-      - RouteControllerWillReroute
   - name: UI Components
     children:
       - RouteTableViewController
