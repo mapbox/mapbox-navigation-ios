@@ -63,7 +63,7 @@
 }
 
 - (void)alertLevelDidChange:(NSNotification *)notification {
-    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerProgressDidChangeNotificationProgressKey];
+    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerRouteProgressKey];
     NSString *text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction.text;
     
     [self.speechSynth speakUtterance:[AVSpeechUtterance speechUtteranceWithString:text]];

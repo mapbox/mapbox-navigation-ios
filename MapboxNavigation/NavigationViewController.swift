@@ -394,9 +394,9 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     @objc func progressDidChange(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.didPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.progressDidChangeNotificationLocationKey] as! CLLocation
-        let secondsRemaining = notification.userInfo![RouteControllerNotificationUserInfoKey.progressDidChangeNotificationSecondsRemainingOnStepKey] as! TimeInterval
+        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
+        let secondsRemaining = notification.userInfo![RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey] as! TimeInterval
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         
@@ -404,7 +404,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
     
     @objc func didPassInstructionPoint(notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.didPassSpokenInstructionPointRouteProgressKey] as! RouteProgress
+        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         
         mapViewController?.updateMapOverlays(for: routeProgress)
         mapViewController?.updateCameraAltitude(for: routeProgress)

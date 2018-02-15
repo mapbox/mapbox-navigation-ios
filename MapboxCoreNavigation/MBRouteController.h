@@ -3,7 +3,7 @@
 /**
  Posted when `MBRouteController` receives a user location update representing movement along the expected route.
  
- The user info dictionary contains the keys `MBRouteControllerProgressDidChangeNotificationProgressKey`, `MBRouteControllerProgressDidChangeNotificationLocationKey`, and `MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey`.
+ The user info dictionary contains the keys `MBRouteControllerRouteProgressKey`, `MBRouteControllerLocationKey`, and `MBRouteControllerEstimatedTimeUntilManeuverKey`.
  
  :nodoc:
  */
@@ -12,7 +12,7 @@ extern const NSNotificationName MBRouteControllerProgressDidChangeNotification;
 /**
  Posted after the user diverges from the expected route, just before `MBRouteController` attempts to calculate a new route.
  
- The user info dictionary contains the key `MBRouteControllerNotificationLocationKey`.
+ The user info dictionary contains the key `MBRouteControllerLocationKey`.
  
  :nodoc:
  */
@@ -21,7 +21,7 @@ extern const NSNotificationName MBRouteControllerWillRerouteNotification;
 /**
  Posted when `MBRouteController` obtains a new route in response to the user diverging from a previous route.
  
- The user info dictionary contains the keys `MBRouteControllerNotificationLocationKey` and `MBRouteControllerDidFindFasterRouteKey`.
+ The user info dictionary contains the keys `MBRouteControllerLocationKey` and `MBRouteControllerIsOpportunisticKey`.
  
  :nodoc:
  */
@@ -30,7 +30,7 @@ extern const NSNotificationName MBRouteControllerDidRerouteNotification;
 /**
  Posted when `MBRouteController` fails to reroute the user after the user diverges from the expected route.
  
- The user info dictionary contains the key `MBRouteControllerNotificationErrorKey`.
+ The user info dictionary contains the key `MBRouteControllerRoutingErrorKey`.
  
  :nodoc:
  */
@@ -39,7 +39,7 @@ extern const NSNotificationName MBRouteControllerDidFailToRerouteNotification;
 /**
  Posted when `MBRouteController` detects that the user has passed an ideal point for saying an instruction aloud.
  
- The user info dictionary contains the key `MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey`.
+ The user info dictionary contains the key `MBRouteControllerRouteProgressKey`.
  
  :nodoc:
  */
@@ -53,41 +53,26 @@ extern const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNo
 typedef NSString *MBRouteControllerNotificationUserInfoKey NS_EXTENSIBLE_STRING_ENUM;
 
 /**
- A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
+ A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
  */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerProgressDidChangeNotificationProgressKey;
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerRouteProgressKey;
 
 /**
- A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` notification. The corresponding value is a `CLLocation` object representing the current user location.
+ A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current user location.
  */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerProgressDidChangeNotificationLocationKey;
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerLocationKey;
 
 /**
- A key in the user info dictionary of a `Notification.Name.RouteControllerProgressDidChange` notification. The corresponding value is an `NSNumber` instance containing a double value indicating the number of seconds left on the current step.
+ A key in the user info dictionary of a `Notification.Name.RouteControllerProgressDidChange` notification. The corresponding value is an `NSNumber` instance containing a double value indicating the estimated time remaining, in seconds, until the user reaches the next maneuver point.
  */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey;
-
-/**
- A key in the user info dictionary of a `Notification.Name.RouteControllerDidPassSpokenInstructionPoint` notification. The corresponding value is a `RouteProgress` object representing the current route progress.
- */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey;
-
-/**
- A key in the user info dictionary of a `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current user location.
- */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificationLocationKey;
-
-/**
- A key in the user info dictionary of a `Notification.Name.RouteControllerDidReroute` notification. The corresponding value is a `Route` object representing the new route.
- */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificationRouteKey;
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerEstimatedTimeUntilManeuverKey;
 
 /**
  A key in the user info dictionary of a `Notification.Name.RouteControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.
  */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerNotificationErrorKey;
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerRoutingErrorKey;
 
 /**
  A key in the user info dictionary of a `Notification.Name.RouteControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` opportunistically rerouted the user onto a faster route.
  */
-extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerDidFindFasterRouteKey;
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsOpportunisticKey;
