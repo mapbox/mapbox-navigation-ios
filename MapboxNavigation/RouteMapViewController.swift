@@ -498,8 +498,6 @@ class RouteMapViewController: UIViewController {
     }
     
     var contentInsets: UIEdgeInsets {
-        var margin: CGFloat = 0.0
-        if #available(iOS 11.0, *) { margin = view.safeAreaInsets.bottom }
         let top = navigationView.instructionsBannerContentView.bounds.height
         let bottom = navigationView.bottomBannerView.bounds.height
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
