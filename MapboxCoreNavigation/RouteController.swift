@@ -185,6 +185,8 @@ open class RouteController: NSObject {
     
     var invalidLocationCount = 0
     
+    var tunnelDistanceCovered: CLLocationDistance = 0
+    
     /**
      Intializes a new `RouteController`.
      
@@ -339,7 +341,7 @@ open class RouteController: NSObject {
      */
     @objc public var location: CLLocation? {
         
-        guard let location = simulatedLocation ?? rawLocation else { return nil }
+        guard let location = rawLocation else { return nil }
         
         // check if location is bad
         // if so, find appropriate location
@@ -509,7 +511,7 @@ extension RouteController: CLLocationManagerDelegate {
     
     @objc func interpolateLocation() {
 
-        guard let location = simulatedLocation ?? locationManager.lastKnownLocation else { return }
+        guard let location = locationManager.lastKnownLocation else { return }
         guard let coordinates = routeProgress.route.coordinates else { return }
         let polyline = Polyline(coordinates)
         
@@ -542,26 +544,51 @@ extension RouteController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.currentStep.containsTunnel else { return false } /// Route Step Contains Tunnel
         guard invalidCoordinatesCount < maxInvalidCoordinatesCount else { return false } /// Check number of invalid coordinates received
         
-        let animationCoordinator = TunnelAnimationCoordinator()
-        guard animationCoordinator.isWithinMinimumSpeed(location.speed) else { return false } /// Navigation speed within accepted speed in tunnel
-        
-        // @TODO: Update invalid location count.
-        // Dependencies: Need to detect invalid coordinates and update count.
-        let tunnelGeom = Polyline([CLLocationCoordinate2D]()) /// Simulate a location
-        guard let closestCoordinate = tunnelGeom.closestCoordinate(to: location.coordinate), closestCoordinate.distance < RouteControllerMinimumDistanceForTunnelAnimation else { return false } /// Closest coordinate within a 50 meters distance in a tunnel
-        
-        guard let lastCoordinate = tunnelGeom.coordinates.last else { return false } /// Valid coordinate from our tunnel geometry
-        let tunnelSlice = tunnelGeom.sliced(from: closestCoordinate.coordinate, to: lastCoordinate)
-        
-        let currentLocationIndex = Int(floor((Double(routeProgress.currentLegProgress.currentStepProgress.step.coordinateCount)) * routeProgress.currentLegProgress.currentStepProgress.fractionTraveled))
-        let tunnelEndIndex = tunnelSlice.coordinates.count
-        let congestions = animationCoordinator.congestions(for: routeProgress, start: currentLocationIndex, end: tunnelEndIndex)
-        
-        if let congestions = congestions {
-           return animationCoordinator.containsIdenticalCongestions(for: congestions)
-        }
-        return false
+        // let animationCoordinator = TunnelAnimationCoordinator()
+        // guard animationCoordinator.isWithinMinimumSpeed(location.speed) else { return false }
+
+        return true
     }
+    
+    @objc public func simulateTunnelNavigation() {
+
+        guard let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSice else { return }
+        
+        /** Simulated navigation constants */
+        let verticalAccuracy: CLLocationAccuracy = 10
+        let horizontalAccuracy: CLLocationAccuracy = 40
+        let tunnelTraveltime: Double = 200.0
+        
+        /***
+         Required data for simulated navigation
+         - Retrieve tunnel distance
+         - Specify tunnel travel time (20 seconds)
+         - Specify look ahead coordinate
+         */
+        guard let distance = routeProgress.currentLegProgress.currentStep.tunnelDistance, let tunnelEntryCoordinate = tunnelSlice.coordinates.first, let tunnelExitCoordinate = tunnelSlice.coordinates.last else {
+            return
+        }
+        
+        tunnelDistanceCovered = distance // TODO: rename to segmentDist
+        // let tunnelCoordinates = tunnelSlice.coordinates
+        let currentSpeed = tunnelDistanceCovered / tunnelTraveltime
+        
+        let tunnelExitLocation = CLLocation(coordinate: tunnelExitCoordinate,
+                                  altitude: 0,
+                                  horizontalAccuracy: horizontalAccuracy,
+                                  verticalAccuracy: verticalAccuracy,
+                                  course: tunnelEntryCoordinate.direction(to: tunnelExitCoordinate).wrap(min: 0, max: 360),
+                                  speed: currentSpeed,
+                                  timestamp: Date())
+        
+        simulatedLocation = tunnelExitLocation
+        invalidLocationCount = 4 // Navigation through tunnel depicts series of invalid coordinate counts (TODO)
+
+        print("tunnel location: \(tunnelExitLocation.description)")
+        delegate?.routeController?(self, didUpdate: [tunnelExitLocation])
+    }
+    
+    
     
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
@@ -570,56 +597,29 @@ extension RouteController: CLLocationManagerDelegate {
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
         }
-        
-         // In the future, we will use the number of sections returned from shouldAnimateTunnel()
 
-        if simulatedLocation == nil, let currentLocation = filteredLocations.first, shouldAnimateTunnel(for: currentLocation, invalidLocationCount: &invalidLocationCount, maxFailedAttempts: 3) {
-            // Mock tunnel
-            let tunnelGeom = Polyline([CLLocationCoordinate2D]()) /// Simulate a location
+        // In the future, we will use the number of sections returned from shouldAnimateTunnel()
+        if simulatedLocation == nil, let currentLocation = filteredLocations.first,
+            shouldAnimateTunnel(for: currentLocation, invalidLocationCount: &invalidLocationCount, maxFailedAttempts: 3) {
             
-            guard let closestCoordinate = tunnelGeom.closestCoordinate(to: currentLocation.coordinate), let lastCoordinate = tunnelGeom.coordinates.last else { return }
-            
-            let animationDistance = tunnelGeom.sliced(from: closestCoordinate.coordinate, to: lastCoordinate).distance()
-            
-            // Find coordinates infront of user at a fixed distance
-            guard let coordinates = routeProgress.route.coordinates else { return }
-            let nearByPolyline = Polyline(coordinates)
-            
-            guard let interpolatedCoordinate = nearByPolyline.coordinateFromStart(distance: routeProgress.distanceTraveled+animationDistance) else { return }
-
-            var lastUserLocationInTunnel = currentLocation.coordinate
-            var delay = 1.1
-            
-            var course = currentLocation.course
-            let tunnelSegmentsCount = Int(floor(Double(animationDistance / 5)))
-            
-            for _ in 0..<tunnelSegmentsCount {
-                
-                if let upcomingCoordinate = nearByPolyline.coordinateFromStart(distance: routeProgress.distanceTraveled+(animationDistance*2)) {
-                    course = interpolatedCoordinate.direction(to: upcomingCoordinate)
-                }
-                
-                let tunnelSegment = nearByPolyline.trimmed(from: lastUserLocationInTunnel, distance: 10)
-                let interpolatedLocation = CLLocation(coordinate: lastUserLocationInTunnel,
-                                                      altitude: currentLocation.altitude,
-                                                      horizontalAccuracy: currentLocation.horizontalAccuracy,
-                                                      verticalAccuracy: currentLocation.verticalAccuracy,
-                                                      course: course,
-                                                      speed: currentLocation.speed,
-                                                      timestamp: Date())
-                
-                simulatedLocation = interpolatedLocation
-                perform(#selector(interpolateLocation), with: nil, afterDelay: delay)
-                //                Timer.scheduledTimer(timeInterval: delay, target: self, selector: #selector(interpolateLocation), userInfo: nil, repeats: false)
-                delay += 1
-                lastUserLocationInTunnel = tunnelSegment.coordinates.last!
-            }
+            // Trigger navigation simulation through tunnel
+            simulateTunnelNavigation()
+            /***
+             // Future work: Simulate navigation with congestions and time intervals
+             for coordinate in tunnelSlice.coordinates {
+             let interpolatedLocation = CLLocation(coordinate: coordinate, altitude: currentLocation.altitude, horizontalAccuracy: currentLocation.horizontalAccuracy, verticalAccuracy: currentLocation.verticalAccuracy, course: currentLocation.course, speed: currentLocation.speed, timestamp: currentLocation.timestamp)
+             }
+             ***/
         }
-
-        var potentialLocation: CLLocation?
         
+        var potentialLocation: CLLocation?
+
+        if let tunnelLocation = simulatedLocation {
+            potentialLocation = tunnelLocation
+        } else
         // `filteredLocations` contains qualified locations
         if let lastFiltered = filteredLocations.last {
+            
             potentialLocation = lastFiltered
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
@@ -630,11 +630,11 @@ extension RouteController: CLLocationManagerDelegate {
         // This location is not a good location, but we need the rest of the UI to update and at least show something.
         } else if let lastLocation = locations.last {
             potentialLocation = lastLocation
-        } else if let lastLocation = simulatedLocation {
-            potentialLocation = lastLocation
         }
         
         guard let location = potentialLocation else { return }
+        
+        print("current route location: \(location)")
         
         self.rawLocation = location
         sessionState.pastLocations.push(location)
@@ -683,6 +683,8 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
+        
+        simulatedLocation = nil
     }
     
     func updateRouteLegProgress(for location: CLLocation) {

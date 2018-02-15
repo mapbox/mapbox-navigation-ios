@@ -1,4 +1,5 @@
 import MapboxDirections
+import Turf
 
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
@@ -51,4 +52,28 @@ extension RouteStep {
         }
         return false
     }
+
+    /**
+     Returns a tunnel slice for the current route step coordinates
+     */
+    var tunnelSice: Polyline? {
+        guard let coordinates = coordinates, let intersections = intersections, containsTunnel else { return nil }
+        for i in 0..<(intersections.count) where intersections.count > 1 {
+            if intersections[i].outletRoadClasses == .tunnel {
+                return Polyline(coordinates).sliced(from: intersections[i].location, to: intersections[i+1].location)
+            }
+        }
+        return nil
+    }
+    
+    var tunnelDistance: CLLocationDistance? {
+        guard let intersections = intersections, containsTunnel else { return nil }
+        for i in 0..<(intersections.count) where intersections.count > 1 {
+            if intersections[i].outletRoadClasses == .tunnel {
+                return intersections[i].location.distance(to: intersections[i+1].location)
+            }
+        }
+        return nil
+    }
+    
 }
