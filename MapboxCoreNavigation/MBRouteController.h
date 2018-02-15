@@ -46,15 +46,6 @@ extern const NSNotificationName MBRouteControllerDidFailToRerouteNotification;
 extern const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNotification;
 
 /**
- Posted when something changes in the shared `MBNavigationSettings` object.
- 
- The user info dictionary indicates which keys and values changed.
- 
- :nodoc:
- */
-extern const NSNotificationName MBNavigationSettingsDidChangeNotification;
-
-/**
  Keys in the user info dictionaries of various notifications posted by instances of `MBRouteController`.
  
  :nodoc:
