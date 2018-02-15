@@ -531,15 +531,9 @@ extension RouteController: CLLocationManagerDelegate {
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
+        locations.forEach { sessionState.pastLocations.push($0) }
+        
         let filteredLocations = locations.filter { $0.isQualified }
-        
-        // Always update no matter if location is bad
-        if let lastLocation = filteredLocations.last {
-            sessionState.pastLocations.push(lastLocation)
-        } else if let lastLocation = locations.last {
-            sessionState.pastLocations.push(lastLocation)
-        }
-        
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
         }

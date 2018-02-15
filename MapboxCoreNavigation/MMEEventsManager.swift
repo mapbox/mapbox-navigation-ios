@@ -17,7 +17,7 @@ struct EventDetails {
     var geometry: Polyline?
     var distance: CLLocationDistance?
     var estimatedDuration: TimeInterval?
-    var stepCount: Int?
+    var stepCountRemaining: Int?
     var created: Date
     var startTimestamp: Date?
     var sdkIdentifier: String
@@ -39,11 +39,12 @@ struct EventDetails {
     var locationEngine: CLLocationManager.Type?
     var percentTimeInPortrait: Int
     var percentTimeInForeground: Int
-    var currentLegIndex: Int
-    var totalLegCount: Int
-    var currentStepIndex: Int
+    
+    var stepIndex: Int
+    var stepCount: Int
+    var legIndex: Int
+    var legCount: Int
     var totalStepCount: Int
-    var maneuverHash: String
     
     init(routeController: RouteController, session: SessionState) {
         created = Date()
@@ -79,7 +80,7 @@ struct EventDetails {
             self.geometry = Polyline(coordinates: geometry)
             distance = round(session.currentRoute.distance)
             estimatedDuration = round(session.currentRoute.expectedTravelTime)
-            stepCount = session.currentRoute.legs.map({$0.steps.count}).reduce(0, +)
+            stepCountRemaining = session.currentRoute.legs.map({$0.steps.count}).reduce(0, +)
         }
         
         distanceCompleted = round(session.totalDistanceCompleted + routeController.routeProgress.distanceTraveled)
@@ -116,13 +117,12 @@ struct EventDetails {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
         percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
-        currentLegIndex = routeController.routeProgress.legIndex
-        totalLegCount = routeController.routeProgress.route.legs.count
-        currentStepIndex = routeController.routeProgress.currentLegProgress.stepIndex
-        totalStepCount = routeController.routeProgress.currentLeg.steps.count
         
-        let maneuver = routeController.routeProgress.currentLegProgress.upComingStep ?? routeController.routeProgress.currentLegProgress.currentStep
-        maneuverHash = "\(maneuver.names?.joined(separator: ",") ?? "")-\(maneuver.destinations?.joined(separator: ",") ?? "")-\(maneuver.codes?.joined(separator: ",") ?? "")-\(maneuver.initialHeading ?? 0)-\(maneuver.finalHeading ?? 0)"
+        stepIndex = routeController.routeProgress.currentLegProgress.stepIndex
+        stepCount = routeController.routeProgress.currentLeg.steps.count
+        legIndex = routeController.routeProgress.legIndex
+        legCount = routeController.routeProgress.route.legs.count
+        totalStepCount = routeController.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
     }
     
     var eventDictionary: [String: Any] {
@@ -161,7 +161,7 @@ struct EventDetails {
         modifiedEventDictionary["geometry"] = geometry?.encodedPolyline
         modifiedEventDictionary["estimatedDistance"] = distance
         modifiedEventDictionary["estimatedDuration"] = estimatedDuration
-        modifiedEventDictionary["stepCount"] = stepCount
+        modifiedEventDictionary["stepCountRemaining"] = stepCountRemaining
 
         modifiedEventDictionary["distanceCompleted"] = distanceCompleted
         modifiedEventDictionary["distanceRemaining"] = distanceRemaining
@@ -184,12 +184,11 @@ struct EventDetails {
         modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait
         modifiedEventDictionary["percentTimeInForeground"] = percentTimeInForeground
         
-        modifiedEventDictionary["currentLegIndex"] = currentLegIndex
-        modifiedEventDictionary["totalLegCount"] = totalLegCount
-        modifiedEventDictionary["currentStepIndex"] = currentStepIndex
+        modifiedEventDictionary["stepIndex"] = stepIndex
+        modifiedEventDictionary["stepCount"] = totalStepCount
+        modifiedEventDictionary["legIndex"] = legIndex
+        modifiedEventDictionary["legCount"] = legCount
         modifiedEventDictionary["totalStepCount"] = totalStepCount
-        
-        modifiedEventDictionary["maneuverHash"] = maneuverHash
 
         return modifiedEventDictionary
     }
