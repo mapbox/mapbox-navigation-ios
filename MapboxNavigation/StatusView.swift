@@ -8,7 +8,6 @@ protocol StatusViewDelegate: class {
 @IBDesignable
 @objc(MBStatusView)
 public class StatusView: UIView {
-    static let defaultBackgroundColor = UIColor.black.withAlphaComponent(2.0/3.0)
     
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
@@ -33,7 +32,6 @@ public class StatusView: UIView {
     }
     
     func commonInit() {
-        backgroundColor = StatusView.defaultBackgroundColor
         
         let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
