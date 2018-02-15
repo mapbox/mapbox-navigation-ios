@@ -1,7 +1,12 @@
+
 import Foundation
 import AVFoundation
 import MapboxDirections
 import MapboxCoreNavigation
+
+extension ErrorUserInfoKey {
+    static let spokenInstructionErrorCode = MBSpokenInstructionErrorCodeKey
+}
 
 extension NSAttributedString {
     @available(iOS 10.0, *)
@@ -87,7 +92,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     /**
      Buffer time between announcements. After an announcement is given any announcement given within this `TimeInterval` will be suppressed.
-    */
+     */
     @objc public var bufferBetweenAnnouncements: TimeInterval = 3
     
     /**
@@ -146,7 +151,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     @objc func didReroute(notification: NSNotification) {
         // Play reroute sound when a faster route is found
-        if notification.userInfo?[RouteControllerDidFindFasterRouteKey] as! Bool {
+        if notification.userInfo?[RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
@@ -184,7 +189,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
         try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
     }
-
+    
     func duckAudio() throws {
         try validateDuckingOptions()
         try AVAudioSession.sharedInstance().setActive(true)
@@ -197,7 +202,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard !NavigationSettings.shared.voiceMuted else { return }
         
-        routeProgress = notification.userInfo![RouteControllerDidPassSpokenInstructionPointRouteProgressKey] as? RouteProgress
+        routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
         assert(routeProgress != nil, "routeProgress should not be nil.")
         
         guard let instruction = routeProgress!.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }

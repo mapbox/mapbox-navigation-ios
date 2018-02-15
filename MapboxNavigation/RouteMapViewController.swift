@@ -337,7 +337,7 @@ class RouteMapViewController: UIViewController {
             }
         }
         
-        if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
+        if notification.userInfo![RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             statusView.show(title, showSpinner: true)
             statusView.hide(delay: 5, animated: true)
@@ -776,17 +776,18 @@ extension RouteMapViewController: MGLMapViewDelegate {
         // This method is called before the view is added to a window
         // (if the style is cached) preventing UIAppearance to apply the style.
         showRouteIfNeeded()
+        
+        self.mapView.localizeLabels()
     }
     
     func showRouteIfNeeded() {
         guard isViewLoaded && view.window != nil else { return }
-        let map = mapView as NavigationMapView
-        guard !map.showsRoute else { return }
-        map.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
-        map.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        guard !mapView.showsRoute else { return }
+        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        mapView.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         
         if routeController.routeProgress.currentLegProgress.stepIndex + 1 <= routeController.routeProgress.currentLegProgress.leg.steps.count {
-            map.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+            mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         }
         
         if annotatesSpokenInstructions {

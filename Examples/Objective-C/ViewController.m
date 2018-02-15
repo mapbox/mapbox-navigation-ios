@@ -51,19 +51,19 @@
 }
 
 - (void)resumeNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(alertLevelDidChange:) name:MBRouteControllerDidPassSpokenInstructionPoint object:_navigation];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerNotificationProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillReroute object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didPassSpokenInstructionPoint:) name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(progressDidChange:) name:MBRouteControllerProgressDidChangeNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willReroute:) name:MBRouteControllerWillRerouteNotification object:_navigation];
 }
 
 - (void)suspendNotifications {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerDidPassSpokenInstructionPoint object:_navigation];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerNotificationProgressDidChange object:_navigation];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillReroute object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerDidPassSpokenInstructionPointNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerProgressDidChangeNotification object:_navigation];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MBRouteControllerWillRerouteNotification object:_navigation];
 }
 
-- (void)alertLevelDidChange:(NSNotification *)notification {
-    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerProgressDidChangeNotificationProgressKey];
+- (void)didPassSpokenInstructionPoint:(NSNotification *)notification {
+    MBRouteProgress *routeProgress = (MBRouteProgress *)notification.userInfo[MBRouteControllerRouteProgressKey];
     NSString *text = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction.text;
     
     [self.speechSynth speakUtterance:[AVSpeechUtterance speechUtteranceWithString:text]];
@@ -73,7 +73,7 @@
     // If you are using MapboxCoreNavigation,
     // this would be a good time to update UI elements.
     // You can grab the current routeProgress like:
-    // let routeProgress = notification.userInfo![RouteControllerAlertLevelDidChangeNotificationRouteProgressKey] as! RouteProgress
+    // let routeProgress = notification.userInfo![RouteControllerRouteProgressKey] as! RouteProgress
 }
 
 - (void)willReroute:(NSNotification *)notification {
