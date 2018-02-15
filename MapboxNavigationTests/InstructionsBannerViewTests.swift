@@ -28,7 +28,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        let instruction = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL)
+        let instruction = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
         let shieldKey = instruction.shieldKey()
         SDImageCache.shared().store(shieldImage, forKey: shieldKey)
     }
@@ -38,7 +38,7 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
     }
     
     func makeVisualInstruction(primaryInstruction: [VisualInstructionComponent], secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstruction {
-        return VisualInstruction(distanceAlongStep: 482.803, primaryText: "Instruction", primaryTextComponents: primaryInstruction, secondaryText: "Instruction", secondaryTextComponents: secondaryInstruction, maneuverType: .turn, maneuverDirection: .right, drivingSide: .right)
+        return VisualInstruction(distanceAlongStep: 482.803, primaryText: "Instruction", primaryTextComponents: primaryInstruction, secondaryText: "Instruction", secondaryTextComponents: secondaryInstruction, drivingSide: .right)
     }
     
     func testSinglelinePrimary() {
@@ -49,9 +49,9 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let instructions = [
-            VisualInstructionComponent(type: .destination, text: "US 45", imageURL: nil),
-            VisualInstructionComponent(type: .destination, text: "/", imageURL: nil),
-            VisualInstructionComponent(type: .destination, text: "Chicago", imageURL: nil)
+            VisualInstructionComponent(type: .destination, text: "US 45", imageURL: nil, maneuverType: .turn, maneuverDirection: .right),
+            VisualInstructionComponent(type: .destination, text: "/", imageURL: nil, maneuverType: .turn, maneuverDirection: .right),
+            VisualInstructionComponent(type: .destination, text: "Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)
         ]
         
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
@@ -67,8 +67,8 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
 
         let instructions = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL),
-            VisualInstructionComponent(type: .destination, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil)
+            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right),
+            VisualInstructionComponent(type: .destination, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)
         ]
 
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
@@ -84,10 +84,10 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL),
-            VisualInstructionComponent(type: .destination, text: "South", imageURL: nil)
+            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right),
+            VisualInstructionComponent(type: .destination, text: "South", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)
         ]
-        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
+        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)]
         
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
 
@@ -102,9 +102,9 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL)
+            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
         ]
-        let secondary = [VisualInstructionComponent(type: .destination, text: "Mountain View Test", imageURL: nil)]
+        let secondary = [VisualInstructionComponent(type: .destination, text: "Mountain View Test", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)]
 
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
         
@@ -126,15 +126,15 @@ class InstructionsBannerViewTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL)
+            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
         ]
-        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil)]
+        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)]
         
         instructionsBannerView.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
 
         
         let primaryThen = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL)
+            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
         ]
         
         nextBannerView.instructionLabel.instruction = primaryThen
