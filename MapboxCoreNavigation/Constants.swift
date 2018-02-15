@@ -3,72 +3,6 @@ import CoreLocation
 import MapboxDirections
 
 /**
- Key used for accessing the `RouteProgress` object from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerProgressDidChangeNotificationProgressKey = MBRouteControllerProgressDidChangeNotificationProgressKey
-
-/**
- Key used for accessing the `CLLocation` object from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerProgressDidChangeNotificationLocationKey = MBRouteControllerProgressDidChangeNotificationLocationKey
-
-/**
- Key used for accessing the number of seconds left on a step (Double) from a `RouteControllerProgressDidChange` notification's `userInfo` dictionary.
- */
-public let RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey = MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey
-
-/**
- Key used for accessing the user's current `CLLocation` from a `RouteControllerWillReroute` notification's `userInfo` dictionary.
- */
-public let RouteControllerNotificationLocationKey = MBRouteControllerNotificationLocationKey
-
-/**
- Key used for accessing the newly rerouted `Route` from a `RouteControllerDidReroute` notification's `userInfo` dictionary.
- */
-public let RouteControllerNotificationRouteKey = MBRouteControllerNotificationRouteKey
-
-/**
- Key used for accessing the error from a `RouteControllerDidFailToReroute` notification's `userInfo` dictionary.
- */
-public let RouteControllerNotificationErrorKey = MBRouteControllerNotificationErrorKey
-
-/**
- Key used for accessing a `Bool` as to whether the reroute occurced because a faster route was found.
- */
-public let RouteControllerDidFindFasterRouteKey = MBRouteControllerDidFindFasterRouteKey
-
-/**
- Key for accessing the `RouteProgress` key emitted when `RouteControllerDidPassSpokenInstructionPoint` is fired.
- */
-public let RouteControllerDidPassSpokenInstructionPointRouteProgressKey = MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey
-
-extension Notification.Name {
-    /**
-     Emitted after the user has gone off-route but the `RouteController` failed to reroute.
-     */
-    public static let routeControllerDidFailToReroute = Notification.Name(MBRouteControllerDidFailToReroute)
-    /**
-     Emitted when the user has gone off-route and the `RouteController` is about to reroute.
-     */
-    public static let routeControllerWillReroute = Notification.Name(MBRouteControllerWillReroute)
-    
-    /**
-     Emitted after the user has gone off-route and the `RouteController` rerouted.
-     */
-    public static let routeControllerDidReroute = Notification.Name(MBRouteControllerDidReroute)
-    
-    /**
-     Emitted when the user moves along the route.
-     */
-    public static let routeControllerProgressDidChange = Notification.Name(MBRouteControllerNotificationProgressDidChange)
-    
-    /**
-     Emitted when the user passes an ideal point for saying an instruction aloud.
-     */
-    public static let routeControllerDidPassSpokenInstructionPoint = Notification.Name(MBRouteControllerDidPassSpokenInstructionPoint)
-}
-
-/**
  Maximum number of meters the user can travel away from step before `RouteControllerShouldReroute` is emitted.
  */
 public var RouteControllerMaximumDistanceBeforeRecalculating: CLLocationDistance = 50
@@ -158,8 +92,3 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
  The number of seconds remaining on the final step of a leg before the user is considered "arrived".
  */
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
-
-/**
- The minium distance remaining on a route before overhead zooming is stopped.
- */
-public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistance = 200
