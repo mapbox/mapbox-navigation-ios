@@ -6,6 +6,49 @@ import MapboxMobileEvents
 import Turf
 
 /**
+ Keys in the user info dictionaries of various notifications posted by instances
+ of `RouteController`.
+ */
+public typealias RouteControllerNotificationUserInfoKey = MBRouteControllerNotificationUserInfoKey
+
+extension Notification.Name {
+    /**
+     Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.errorKey`.
+     */
+    public static let routeControllerDidFailToReroute = MBRouteControllerDidFailToReroute
+    
+    /**
+     Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
+     */
+    public static let routeControllerWillReroute = MBRouteControllerWillReroute
+    
+    /**
+     Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
+     
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isOpportunisticKey`.
+     */
+    public static let routeControllerDidReroute = MBRouteControllerDidReroute
+    
+    /**
+     Posted when `RouteController` receives a user location update representing movement along the expected route.
+     
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey`.
+     */
+    public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
+    
+    /**
+     Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
+     
+     The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
+     */
+    public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
+}
+
+/**
  The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
  */
 @objc(MBRouteControllerDelegate)
@@ -87,7 +130,6 @@ public protocol RouteControllerDelegate: class {
      - postcondition: If you return false, you must manually advance to the next leg: obtain the value of the `routeProgress` property, then increment the `RouteProgress.legIndex` property.
      - parameter routeController: The route controller that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the controller has arrived at.
-     - parameter finalDestination: A boolean flag that signals that the waypoint is the final destination.
      - returns: True to advance to the next leg, if any, or false to remain on the completed leg.
     */
     @objc(routeController:didArriveAtWaypoint:)
@@ -152,11 +194,11 @@ open class RouteController: NSObject {
                 sessionState.currentRoute = routeProgress.route
             }
 
-            var userInfo = [String: Any]()
+            var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
             if let location = locationManager.location {
-                userInfo[MBRouteControllerNotificationLocationKey] = location
+                userInfo[.locationKey] = location
             }
-            userInfo[RouteControllerDidFindFasterRouteKey] = didFindFasterRoute
+            userInfo[.isOpportunisticKey] = didFindFasterRoute
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
@@ -482,7 +524,7 @@ extension RouteController {
     }
     
     @objc func didReroute(notification: NSNotification) {
-        if let didFindFasterRoute = notification.userInfo?[RouteControllerDidFindFasterRouteKey] as? Bool, didFindFasterRoute {
+        if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isOpportunisticKey] as? Bool, didFindFasterRoute {
             _ = enqueueFoundFasterRouteEvent()
         }
         
@@ -573,9 +615,9 @@ extension RouteController: CLLocationManagerDelegate {
             if distanceTraveled != currentStepProgress.distanceTraveled {
                 currentStepProgress.distanceTraveled = distanceTraveled
                 NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                    RouteControllerProgressDidChangeNotificationProgressKey: routeProgress,
-                    RouteControllerProgressDidChangeNotificationLocationKey: location,
-                    RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey: secondsToEndOfStep
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+                    RouteControllerNotificationUserInfoKey.locationKey: location,
+                    RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey: secondsToEndOfStep
                     ])
             }
         }
@@ -693,8 +735,8 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
                 strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
-                    RouteControllerDidFindFasterRouteKey: true
-                    ]))
+                    RouteControllerNotificationUserInfoKey.isOpportunisticKey: true
+                ]))
                 strongSelf.didFindFasterRoute = false
             }
         }
@@ -715,8 +757,8 @@ extension RouteController: CLLocationManagerDelegate {
 
         delegate?.routeController?(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            MBRouteControllerNotificationLocationKey: location
-            ])
+            RouteControllerNotificationUserInfoKey.locationKey: location
+        ])
 
         self.lastRerouteLocation = location
 
@@ -728,8 +770,8 @@ extension RouteController: CLLocationManagerDelegate {
             if let error = error {
                 strongSelf.delegate?.routeController?(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                    MBRouteControllerNotificationErrorKey: error
-                    ])
+                    RouteControllerNotificationUserInfoKey.routingErrorKey: error
+                ])
             }
 
             guard let route = route else { return }
@@ -868,9 +910,9 @@ extension RouteController: CLLocationManagerDelegate {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep {
                 
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
-                    MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey: routeProgress
-                    ])
-                
+                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
+                ])
+
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
                 return
             }
