@@ -12,6 +12,14 @@ open class NextBannerView: UIView {
     
     weak var maneuverView: ManeuverView!
     weak var instructionLabel: NextInstructionLabel!
+    @objc open dynamic var textColor: UIColor {
+        get {
+            return instructionLabel.textColor
+        }
+        set {
+            instructionLabel.textColor = newValue
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
