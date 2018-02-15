@@ -223,6 +223,12 @@ open class RouteController: NSObject {
     var recentDistancesFromManeuver: [CLLocationDistance] = []
     
     var previousArrivalWaypoint: Waypoint?
+    
+    var userSnapToStepDistanceFromManeuver: CLLocationDistance? {
+        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
+        guard let coordinate = location?.coordinate else { return nil }
+        return Polyline(coordinates).distance(from: coordinate)
+    }
 
     /**
      Intializes a new `RouteController`.
@@ -603,7 +609,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        let userSnapToStepDistanceFromManeuver = polyline.distance(from: location.coordinate)
+        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
@@ -866,7 +872,7 @@ extension RouteController: CLLocationManagerDelegate {
     func updateRouteStepProgress(for location: CLLocation) {
         guard routeProgress.currentLegProgress.remainingSteps.count > 0 else { return }
         
-        let userSnapToStepDistanceFromManeuver = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!).distance(from: location.coordinate)
+        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         var courseMatchesManeuverFinalHeading = false
 
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
@@ -903,8 +909,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func updateSpokenInstructionProgress(for location: CLLocation) {
-        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
-        let userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: location.coordinate)
+        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
         
         for voiceInstruction in spokenInstructions {
