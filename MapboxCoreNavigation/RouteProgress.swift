@@ -301,10 +301,8 @@ open class RouteLegProgress: NSObject {
     typealias StepIndexDistance = (index: Int, distance: CLLocationDistance)
     
     func closestStep(to coordinate: CLLocationCoordinate2D) -> StepIndexDistance? {
-        guard stepIndex + 1 < leg.steps.endIndex else { return nil }
-        
         var currentClosest: StepIndexDistance?
-        let remainingSteps = leg.steps.suffix(from: stepIndex + 1)
+        let remainingSteps = leg.steps.suffix(from: stepIndex)
         
         for (currentStepIndex, step) in remainingSteps.enumerated() {
             guard let coords = step.coordinates else { continue }

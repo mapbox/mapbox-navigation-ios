@@ -697,7 +697,8 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         // Check and see if the user is near a future step.
-        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
+        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate),
+            nearestStep.index != routeProgress.currentLegProgress.stepIndex else {
             return false
         }
         
