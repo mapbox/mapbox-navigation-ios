@@ -641,6 +641,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         // This method is called before the view is added to a window
         // (if the style is cached) preventing UIAppearance to apply the style.
         showRouteIfNeeded()
+        self.mapView.localizeLabels()
     }
     
     // MARK: NavigationMapViewCourseTrackingDelegate

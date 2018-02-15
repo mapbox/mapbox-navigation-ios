@@ -87,7 +87,6 @@ public protocol RouteControllerDelegate: class {
      - postcondition: If you return false, you must manually advance to the next leg: obtain the value of the `routeProgress` property, then increment the `RouteProgress.legIndex` property.
      - parameter routeController: The route controller that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the controller has arrived at.
-     - parameter finalDestination: A boolean flag that signals that the waypoint is the final destination.
      - returns: True to advance to the next leg, if any, or false to remain on the completed leg.
     */
     @objc(routeController:didArriveAtWaypoint:)

@@ -20,7 +20,7 @@ When reporting a bug in the navigation SDK itself, please indicate:
 
 ## Building the SDK
 
-To build this SDK, you need Xcode 9 and [Carthage](https://github.com/Carthage/Carthage/) v0.19.0 or above:
+To build this SDK, you need Xcode 9 and [Carthage](https://github.com/Carthage/Carthage/):
 
 1. Run `carthage bootstrap --platform iOS --cache-builds`.
 1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme.
