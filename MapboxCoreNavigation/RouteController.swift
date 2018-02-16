@@ -355,8 +355,10 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation? {
         didSet {
-            guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
-            guard let coordinate = rawLocation?.coordinate else { return }
+            guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
+                userSnapToStepDistanceFromManeuver = nil
+                return
+            }
             userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
         }
     }
