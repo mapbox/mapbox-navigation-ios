@@ -223,6 +223,8 @@ open class RouteController: NSObject {
     var recentDistancesFromManeuver: [CLLocationDistance] = []
     
     var previousArrivalWaypoint: Waypoint?
+    
+    var userSnapToStepDistanceFromManeuver: CLLocationDistance?
 
     /**
      Intializes a new `RouteController`.
@@ -351,7 +353,15 @@ open class RouteController: NSObject {
      
      This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    var rawLocation: CLLocation?
+    var rawLocation: CLLocation? {
+        didSet {
+            guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
+                userSnapToStepDistanceFromManeuver = nil
+                return
+            }
+            userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
+        }
+    }
 
     @objc public var reroutingTolerance: CLLocationDistance {
         guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }
@@ -607,7 +617,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        let userSnapToStepDistanceFromManeuver = polyline.distance(from: location.coordinate)
+        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
@@ -630,10 +640,13 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
         
+        
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
         }
+        
+        updateSpokenInstructionProgress(for: location)
 
         // Check for faster route given users current location
         guard reroutesOpportunistically else { return }
@@ -675,7 +688,7 @@ extension RouteController: CLLocationManagerDelegate {
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
         guard !isCloseToCurrentStep else { return true }
-
+        
         // Check to see if the user is moving away from the maneuver.
         // Here, we store an array of distances. If the current distance is greater than the last distance,
         // add it to the array. If the array grows larger than x, reroute the user.
@@ -686,7 +699,7 @@ extension RouteController: CLLocationManagerDelegate {
             if recentDistancesFromManeuver.count > RouteControllerMinimumNumberLocationUpdatesBackwards && recentDistancesFromManeuver.last! - recentDistancesFromManeuver.first! > RouteControllerMinimumBacktrackingDistanceForRerouting {
                 return false
             }
-
+            
             if recentDistancesFromManeuver.isEmpty {
                 recentDistancesFromManeuver.append(userDistanceToManeuver)
             } else if let lastDistance = recentDistancesFromManeuver.last, userDistanceToManeuver > lastDistance {
@@ -696,9 +709,10 @@ extension RouteController: CLLocationManagerDelegate {
                 recentDistancesFromManeuver.removeAll()
             }
         }
-
+        
         // Check and see if the user is near a future step.
-        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
+        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate),
+            nearestStep.index != routeProgress.currentLegProgress.stepIndex else {
             return false
         }
         
@@ -866,7 +880,7 @@ extension RouteController: CLLocationManagerDelegate {
     func updateRouteStepProgress(for location: CLLocation) {
         guard routeProgress.currentLegProgress.remainingSteps.count > 0 else { return }
         
-        let userSnapToStepDistanceFromManeuver = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!).distance(from: location.coordinate)
+        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         var courseMatchesManeuverFinalHeading = false
 
         // Bearings need to normalized so when the `finalHeading` is 359 and the user heading is 1,
@@ -900,15 +914,15 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
-
-        guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else {
-            print("The directions request was made without `includesVoiceInstructions` enabled. This will prevent users from getting voice instructions. It's recommended to make your directions request via `NavigationRouteOptions()`.")
-            return
-        }
-
+    }
+    
+    func updateSpokenInstructionProgress(for location: CLLocation) {
+        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
+        guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
+        
         for voiceInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep {
-
+                
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
                 ])
