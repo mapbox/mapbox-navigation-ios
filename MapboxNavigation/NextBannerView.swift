@@ -3,7 +3,16 @@ import MapboxDirections
 
 /// :nodoc:
 @objc(MBNextInstructionLabel)
-open class NextInstructionLabel: InstructionLabel { }
+open class NextInstructionLabel: InstructionLabel {
+    @objc open dynamic var appearanceTextColor: UIColor {
+        get {
+            return textColor
+        }
+        set {
+            textColor = newValue
+        }
+    }
+}
 
 /// :nodoc:
 @IBDesignable
@@ -12,14 +21,6 @@ open class NextBannerView: UIView {
     
     weak var maneuverView: ManeuverView!
     weak var instructionLabel: NextInstructionLabel!
-    @objc open dynamic var textColor: UIColor {
-        get {
-            return instructionLabel.textColor
-        }
-        set {
-            instructionLabel.textColor = newValue
-        }
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
