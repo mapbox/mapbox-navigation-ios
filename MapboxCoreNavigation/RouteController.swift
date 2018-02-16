@@ -395,7 +395,7 @@ open class RouteController: NSObject {
         
         var userCourse = calculatedCourseForLocationOnStep
         var userCoordinate = closest.coordinate
-        if shouldSnap(location, facing: calculatedCourseForLocationOnStep) {
+        if shouldSnap(location, toRouteWith: calculatedCourseForLocationOnStep) {
             userCourse = location.course
             userCoordinate = location.coordinate
         }
@@ -409,10 +409,10 @@ open class RouteController: NSObject {
     func interpolatedCourse(from location: CLLocation, along coordinates: [CLLocationCoordinate2D]) -> CLLocationDirection? {
         let nearByPolyline = Polyline(coordinates)
         
-        guard let closest = Polyline(coordinates).closestCoordinate(to: location.coordinate) else { return nil }
+        guard let closest = nearByPolyline.closestCoordinate(to: location.coordinate) else { return nil }
         
         let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
-        let slicedLineInFront = Polyline(coordinates).sliced(from: closest.coordinate, to: coordinates.last)
+        let slicedLineInFront = nearByPolyline.sliced(from: closest.coordinate, to: coordinates.last)
         let userDistanceBuffer: CLLocationDistance = max(location.speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
         
         guard let pointBehind = slicedLineBehind.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
@@ -446,10 +446,10 @@ open class RouteController: NSObject {
     /**
      Determines if the a location is qualified enough to allow the user puck to become unsnapped.
      */
-    func shouldSnap(_ location: CLLocation, facing snappedCourse: CLLocationDirection) -> Bool {
+    func shouldSnap(_ location: CLLocation, toRouteWith course: CLLocationDirection) -> Bool {
         if location.course >= 0 &&
             location.speed >= RouteControllerMinimumSpeedForLocationSnapping &&
-            snappedCourse.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle &&
+            course.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle &&
             location.horizontalAccuracy < 20 {
                 return false
         }
