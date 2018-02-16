@@ -224,11 +224,7 @@ open class RouteController: NSObject {
     
     var previousArrivalWaypoint: Waypoint?
     
-    var userSnapToStepDistanceFromManeuver: CLLocationDistance? {
-        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return nil }
-        guard let coordinate = location?.coordinate else { return nil }
-        return Polyline(coordinates).distance(from: coordinate)
-    }
+    var userSnapToStepDistanceFromManeuver: CLLocationDistance?
 
     /**
      Intializes a new `RouteController`.
@@ -357,7 +353,13 @@ open class RouteController: NSObject {
      
      This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
-    var rawLocation: CLLocation?
+    var rawLocation: CLLocation? {
+        didSet {
+            guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
+            guard let coordinate = rawLocation?.coordinate else { return }
+            userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
+        }
+    }
 
     @objc public var reroutingTolerance: CLLocationDistance {
         guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }
