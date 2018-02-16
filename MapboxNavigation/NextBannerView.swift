@@ -3,16 +3,7 @@ import MapboxDirections
 
 /// :nodoc:
 @objc(MBNextInstructionLabel)
-open class NextInstructionLabel: InstructionLabel {
-    @objc open dynamic var appearanceTextColor: UIColor {
-        get {
-            return textColor
-        }
-        set {
-            textColor = newValue
-        }
-    }
-}
+open class NextInstructionLabel: InstructionLabel { }
 
 /// :nodoc:
 @IBDesignable

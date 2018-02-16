@@ -316,9 +316,6 @@ open class SubtitleLabel: StylableLabel { }
 @IBDesignable
 open class WayNameLabel: StylableLabel {
     
-    static let defaultBackgroundColor = UIColor.white.withAlphaComponent(2.0/3.0)
-    
-    
     /// :nodoc:
     open var textInsets: UIEdgeInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
     

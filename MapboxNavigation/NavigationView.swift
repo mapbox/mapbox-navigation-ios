@@ -119,7 +119,6 @@ open class NavigationView: UIView {
         let label: WayNameLabel = .forAutoLayout()
         label.clipsToBounds = true
         label.layer.borderWidth = 1.0 / UIScreen.main.scale
-        label.backgroundColor = WayNameLabel.defaultBackgroundColor
         return label
     }()
     
