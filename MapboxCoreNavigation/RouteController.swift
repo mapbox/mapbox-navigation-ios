@@ -405,7 +405,7 @@ open class RouteController: NSObject {
         
         var userCourse = calculatedCourseForLocationOnStep
         var userCoordinate = closest.coordinate
-        if shouldSnap(location, toRouteWith: calculatedCourseForLocationOnStep) {
+        if !shouldSnap(location, toRouteWith: calculatedCourseForLocationOnStep) {
             userCourse = location.course
             userCoordinate = location.coordinate
         }
