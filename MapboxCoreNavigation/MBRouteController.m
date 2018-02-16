@@ -8,7 +8,6 @@ const NSNotificationName MBRouteControllerDidFailToRerouteNotification          
 
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerRouteProgressKey              = @"progress";
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerLocationKey                   = @"location";
-const MBRouteControllerNotificationUserInfoKey MBRouteControllerEstimatedTimeUntilManeuverKey = @"seconds";
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerRoutingErrorKey               = @"error";
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsOpportunisticKey            = @"RouteControllerDidFindFasterRoute";
 

@@ -36,7 +36,7 @@ extension Notification.Name {
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey` and `RouteControllerNotificationUserInfoKey.locationKey`.
      */
     public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
     
@@ -617,8 +617,6 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
-        let secondsToEndOfStep = userSnapToStepDistanceFromManeuver / location.speed
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
@@ -626,20 +624,16 @@ extension RouteController: CLLocationManagerDelegate {
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
             let distanceTraveled = currentStep.distance - remainingDistance
-            if distanceTraveled != currentStepProgress.distanceTraveled {
-                currentStepProgress.distanceTraveled = distanceTraveled
-                NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                    RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                    RouteControllerNotificationUserInfoKey.locationKey: location,
-                    RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey: secondsToEndOfStep
-                    ])
-            }
+            currentStepProgress.distanceTraveled = distanceTraveled
+            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
+                RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+                RouteControllerNotificationUserInfoKey.locationKey: location
+                ])
         }
         
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
-        
         
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
