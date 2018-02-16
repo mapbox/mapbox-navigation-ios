@@ -2,9 +2,9 @@ import Foundation
 import CoreLocation
 
 extension CLLocationDirection {
-    func clockwiseDifference(from toDirection: CLLocationDirection) -> CLLocationDirection {
+    func clockwiseDifference(from otherDirection: CLLocationDirection) -> CLLocationDirection {
         let inAngle = toRadians()
-        let outAngle = toDirection.toRadians()
+        let outAngle = otherDirection.toRadians()
         let inX = sin(inAngle)
         let inY = cos(inAngle)
         let outX = sin(outAngle)
