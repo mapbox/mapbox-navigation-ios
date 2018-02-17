@@ -681,7 +681,6 @@ extension RouteController: CLLocationManagerDelegate {
         //   - Distance to tunnel entrance must be less than tunnel distance.
         //   - Distance to tunnel exit must also be less than tunnel distance.
         if (tunnelDistance - distanceToExit) > 0 && distanceToEntrance <= tunnelDistance && distanceToExit <= tunnelDistance {
-            print("tunnel distance: \(tunnelDistance); entryDist: \(distanceToEntrance); exitDist: \(distanceToExit)")
             delegate?.routeController?(self, didEnterTunnelAt: location)
         } else {
             delegate?.routeController?(self, didEnterTunnelAt: nil)
