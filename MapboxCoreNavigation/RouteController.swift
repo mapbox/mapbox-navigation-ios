@@ -138,10 +138,10 @@ public protocol RouteControllerDelegate: class {
     /**
      Called when a location is detected within a tunnel.
      
-     Implement this method to enable dark mode when a commuter enters a tunnel and invoke `styleManager.resetTimeOfDayTimer()` upon exit.
+     Implement this method to enable dark mode when a commuter enters a tunnel.
      
      - parameter routeController: The route controller that detects the location within a tunnel route.
-     - parameter location: The location that fails within the identified tunnel's entrance and exit route.
+     - parameter location: The location that falls within the identified tunnel.
      */
     @objc(routeController:didEnterTunnelAt:)
     optional func routeController(_ routeController: RouteController, didEnterTunnelAt location: CLLocation?)
