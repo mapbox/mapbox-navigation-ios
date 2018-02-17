@@ -561,6 +561,16 @@ extension NavigationViewController: RouteControllerDelegate {
         }
         return advancesToNextLeg
     }
+    
+    @objc public func routeController(_ routeController: RouteController, didEnterTunnelAt location: CLLocation?) {
+        let styleOptions = [DayStyle(), NightStyle()]
+        if let _ = location {
+            self.styleManager.styles = [styleOptions[1]]
+        } else {
+            self.styleManager.styles = styleOptions
+            self.styleManager.resetTimeOfDayTimer()
+        }
+    }
 }
 
 extension NavigationViewController: StyleManagerDelegate {

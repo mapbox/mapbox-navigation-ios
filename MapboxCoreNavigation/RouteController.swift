@@ -77,7 +77,7 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
 
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Called when a location has been identified as unqualified to navigate on.
 
      See `CLLocation.isQualified` for more information about what qualifies a location.
 
@@ -134,6 +134,17 @@ public protocol RouteControllerDelegate: class {
     */
     @objc(routeController:didArriveAtWaypoint:)
     optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool
+    
+    /**
+     Called when a location is detected within a tunnel.
+     
+     Implement this method to enable dark mode when a commuter enters a tunnel and invoke `styleManager.resetTimeOfDayTimer()` upon exit.
+     
+     - parameter routeController: The route controller that detects the location within a tunnel route.
+     - parameter location: The location that fails within the identified tunnel's entrance and exit route.
+     */
+    @objc(routeController:didEnterTunnelAt:)
+    optional func routeController(_ routeController: RouteController, didEnterTunnelAt location: CLLocation?)
 }
 
 /**
@@ -635,6 +646,10 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
         
+        if routeProgress.currentLegProgress.currentStep.containsTunnel {
+            detectRouteStepInTunnel(for: location)
+        }
+        
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
@@ -649,6 +664,23 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
+    }
+    
+    func detectRouteStepInTunnel(for location: CLLocation) {
+        guard let tunnelDistance = routeProgress.currentLegProgress.currentStep.tunnelDistance, let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSlice else { return }
+        guard let tunnelStartCoordinate = tunnelSlice.coordinates.first, let tunnelEndCoordinate = tunnelSlice.coordinates.last else { return }
+        
+        // Calculated distances from current location to tunnel entrance and exit
+        let currentLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let distanceToEntrance = currentLocation.distance(to: tunnelStartCoordinate)
+        let distanceToExit = currentLocation.distance(to: tunnelEndCoordinate)
+        
+        // Identify any location that lies within the tunnel route.
+        if distanceToExit <= tunnelDistance && (tunnelDistance - distanceToEntrance) > 0 {
+            delegate?.routeController?(self, didEnterTunnelAt: location)
+        } else {
+            delegate?.routeController?(self, didEnterTunnelAt: nil)
+        }
     }
     
     func updateRouteLegProgress(for location: CLLocation) {
