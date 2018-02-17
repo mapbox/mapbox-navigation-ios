@@ -563,11 +563,10 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     @objc public func routeController(_ routeController: RouteController, didEnterTunnelAt location: CLLocation?) {
-        let styleOptions = [DayStyle(), NightStyle()]
         if let _ = location {
-            self.styleManager.styles = [styleOptions[1]]
+            self.styleManager.applyStyle(DayStyle())
         } else {
-            self.styleManager.styles = styleOptions
+            self.styleManager.applyStyle()
         }
     }
 }

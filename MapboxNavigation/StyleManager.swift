@@ -96,13 +96,20 @@ open class StyleManager: NSObject {
         resetTimeOfDayTimer()
     }
     
-    func applyStyle() {
+    func applyStyle(_ newStyle: Style? = nil) {
         guard let location = delegate?.locationFor(styleManager: self) else {
             // We can't calculate sunset or sunrise w/o a location so just apply the first style
             if let style = styles.first {
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }
+            return
+        }
+        
+        // Custom style usage
+        if let customStyle = newStyle {
+            customStyle.apply()
+            delegate?.styleManager?(self, didApply: customStyle)
             return
         }
         
