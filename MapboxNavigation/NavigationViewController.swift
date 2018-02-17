@@ -568,7 +568,6 @@ extension NavigationViewController: RouteControllerDelegate {
             self.styleManager.styles = [styleOptions[1]]
         } else {
             self.styleManager.styles = styleOptions
-            self.styleManager.resetTimeOfDayTimer()
         }
     }
 }
