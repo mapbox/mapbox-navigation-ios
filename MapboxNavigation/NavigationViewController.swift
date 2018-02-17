@@ -396,7 +396,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     @objc func progressDidChange(notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
-        let secondsRemaining = notification.userInfo![RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey] as! TimeInterval
+        let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         
