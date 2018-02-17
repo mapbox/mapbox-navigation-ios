@@ -148,7 +148,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         }
 
         let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
-//        var coordinates = CLLocationCoordinate2D(latitude: 37.797733880268666, longitude: -122.4103707075119) // custom end of tunnel co
         let waypoint = Waypoint(coordinate: coordinates)
         waypoint.coordinateAccuracy = -1
         waypoints.append(waypoint)
