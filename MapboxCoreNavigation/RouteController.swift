@@ -77,7 +77,7 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
     
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Called when a location has been identified as unqualified to navigate on.
 
      See `CLLocation.isQualified` for more information about what qualifies a location.
      
@@ -135,6 +135,17 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:didArriveAtWaypoint:)
     optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool
+    
+    /**
+     Called when a location is detected within a tunnel.
+     
+     Implement this method to enable dark mode when a commuter enters a tunnel and invoke `styleManager.resetTimeOfDayTimer()` upon exit.
+     
+     - parameter routeController: The route controller that detects the location within a tunnel route.
+     - parameter location: The location that fails within the identified tunnel's entrance and exit route.
+     */
+    @objc(routeController:didEnterTunnelAt:)
+    optional func routeController(_ routeController: RouteController, didEnterTunnelAt location: CLLocation?)
 }
 
 /**
@@ -359,8 +370,6 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation?
     
-    var simulatedLocation: CLLocation?
-    
     @objc public var reroutingTolerance: CLLocationDistance {
         guard let intersections = routeProgress.currentLegProgress.currentStepProgress.intersectionsIncludingUpcomingManeuverIntersection else { return RouteControllerMaximumDistanceBeforeRecalculating }
         guard let userLocation = rawLocation else { return RouteControllerMaximumDistanceBeforeRecalculating }
@@ -579,60 +588,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         self.locationManager(self.locationManager, didUpdateLocations: [interpolatedLocation])
     }
-    
-    // Mark - Tunnel Navigation Documentation
-    // Github Link: https://github.com/mapbox/mapbox-navigation-ios/issues/629
-    func shouldAnimateTunnel(for location: CLLocation, invalidLocationCount invalidCoordinatesCount: inout Int, maxFailedAttempts maxInvalidCoordinatesCount: Int) -> Bool {
 
-        guard routeProgress.currentLegProgress.currentStep.containsTunnel else { return false } /// Route Step Contains Tunnel
-        guard invalidCoordinatesCount < maxInvalidCoordinatesCount else { return false } /// Check number of invalid coordinates received
-        
-        // let animationCoordinator = TunnelAnimationCoordinator()
-        // guard animationCoordinator.isWithinMinimumSpeed(location.speed) else { return false }
-
-        return true
-    }
-    
-    @objc public func simulateTunnelNavigation() {
-
-        guard let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSice else { return }
-        
-        /** Simulated navigation constants */
-        let verticalAccuracy: CLLocationAccuracy = 10
-        let horizontalAccuracy: CLLocationAccuracy = 40
-        let tunnelTraveltime: Double = 200.0
-        
-        /***
-         Required data for simulated navigation
-         - Retrieve tunnel distance
-         - Specify tunnel travel time (20 seconds)
-         - Specify look ahead coordinate
-         */
-        guard let distance = routeProgress.currentLegProgress.currentStep.tunnelDistance, let tunnelEntryCoordinate = tunnelSlice.coordinates.first, let tunnelExitCoordinate = tunnelSlice.coordinates.last else {
-            return
-        }
-        
-        tunnelDistanceCovered = distance // TODO: rename to segmentDist
-        // let tunnelCoordinates = tunnelSlice.coordinates
-        let currentSpeed = tunnelDistanceCovered / tunnelTraveltime
-        
-        let tunnelExitLocation = CLLocation(coordinate: tunnelExitCoordinate,
-                                  altitude: 0,
-                                  horizontalAccuracy: horizontalAccuracy,
-                                  verticalAccuracy: verticalAccuracy,
-                                  course: tunnelEntryCoordinate.direction(to: tunnelExitCoordinate).wrap(min: 0, max: 360),
-                                  speed: currentSpeed,
-                                  timestamp: Date())
-        
-        simulatedLocation = tunnelExitLocation
-        invalidLocationCount = 4 // Navigation through tunnel depicts series of invalid coordinate counts (TODO)
-
-        print("tunnel location: \(tunnelExitLocation.description)")
-        delegate?.routeController?(self, didUpdate: [tunnelExitLocation])
-    }
-    
-    
-    
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let filteredLocations = locations.filter { $0.isQualified }
@@ -640,26 +596,9 @@ extension RouteController: CLLocationManagerDelegate {
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
         }
-
-        // In the future, we will use the number of sections returned from shouldAnimateTunnel()
-        if simulatedLocation == nil, let currentLocation = filteredLocations.first,
-            shouldAnimateTunnel(for: currentLocation, invalidLocationCount: &invalidLocationCount, maxFailedAttempts: 3) {
-            
-            // Trigger navigation simulation through tunnel
-            simulateTunnelNavigation()
-            /***
-             // Future work: Simulate navigation with congestions and time intervals
-             for coordinate in tunnelSlice.coordinates {
-             let interpolatedLocation = CLLocation(coordinate: coordinate, altitude: currentLocation.altitude, horizontalAccuracy: currentLocation.horizontalAccuracy, verticalAccuracy: currentLocation.verticalAccuracy, course: currentLocation.course, speed: currentLocation.speed, timestamp: currentLocation.timestamp)
-             }
-             ***/
-        }
         
         var potentialLocation: CLLocation?
 
-        if let tunnelLocation = simulatedLocation {
-            potentialLocation = tunnelLocation
-        } else
         // `filteredLocations` contains qualified locations
         if let lastFiltered = filteredLocations.last {
             
@@ -676,8 +615,6 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         guard let location = potentialLocation else { return }
-        
-        print("current route location: \(location)")
         
         self.rawLocation = location
         sessionState.pastLocations.push(location)
@@ -714,6 +651,10 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
         
+        if routeProgress.currentLegProgress.currentStep.containsTunnel {
+            detectRouteStepInTunnel(for: location)
+        }
+
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
@@ -726,8 +667,24 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
+
+    }
+    
+    func detectRouteStepInTunnel(for location: CLLocation) {
+        guard let tunnelDistance = routeProgress.currentLegProgress.currentStep.tunnelDistance, let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSlice else { return }
+        guard let tunnelStartCoordinate = tunnelSlice.coordinates.first, let tunnelEndCoordinate = tunnelSlice.coordinates.last else { return }
+
+        // Calculated distances from current location to tunnel entrance and exit
+        let currentLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let distanceToEntrance = currentLocation.distance(to: tunnelStartCoordinate)
+        let distanceToExit = currentLocation.distance(to: tunnelEndCoordinate)
         
-        simulatedLocation = nil
+        // Identify any location that lies within the tunnel route.
+        if distanceToExit <= tunnelDistance && (tunnelDistance - distanceToEntrance) > 0 {
+            delegate?.routeController?(self, didEnterTunnelAt: location)
+        } else {
+            delegate?.routeController?(self, didEnterTunnelAt: nil)
+        }
     }
     
     func updateRouteLegProgress(for location: CLLocation) {

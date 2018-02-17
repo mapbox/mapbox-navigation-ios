@@ -56,7 +56,7 @@ extension RouteStep {
     /**
      Returns a tunnel slice for the current route step coordinates
      */
-    var tunnelSice: Polyline? {
+    var tunnelSlice: Polyline? {
         guard let coordinates = coordinates, let intersections = intersections, containsTunnel else { return nil }
         for i in 0..<(intersections.count) where intersections.count > 1 {
             if intersections[i].outletRoadClasses == .tunnel {
@@ -66,6 +66,9 @@ extension RouteStep {
         return nil
     }
     
+    /**
+     Returns the distance of a tunnel slice for the current route step
+     */
     var tunnelDistance: CLLocationDistance? {
         guard let intersections = intersections, containsTunnel else { return nil }
         for i in 0..<(intersections.count) where intersections.count > 1 {

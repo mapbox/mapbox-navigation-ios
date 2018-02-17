@@ -88,7 +88,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         automaticallyAdjustsScrollViewInsets = false
 
-        simulationButton.isSelected = false
+        simulationButton.isSelected = true
         startButton.isEnabled = false
         
         setupMapView()
