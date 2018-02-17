@@ -675,8 +675,13 @@ extension RouteController: CLLocationManagerDelegate {
         let distanceToEntrance = currentLocation.distance(to: tunnelStartCoordinate)
         let distanceToExit = currentLocation.distance(to: tunnelEndCoordinate)
         
-        // Identify any location that lies within the tunnel route.
-        if distanceToExit <= tunnelDistance && (tunnelDistance - distanceToEntrance) > 0 {
+        // Capute any location which lies within the tunnel route.
+        // Pre-conditions:
+        //   - Current location to exit must be greater than zero meters.
+        //   - Distance to tunnel entrance must be less than tunnel distance.
+        //   - Distance to tunnel exit must also be less than tunnel distance.
+        if (tunnelDistance - distanceToExit) > 0 && distanceToEntrance <= tunnelDistance && distanceToExit <= tunnelDistance {
+            print("tunnel distance: \(tunnelDistance); entryDist: \(distanceToEntrance); exitDist: \(distanceToExit)")
             delegate?.routeController?(self, didEnterTunnelAt: location)
         } else {
             delegate?.routeController?(self, didEnterTunnelAt: nil)
