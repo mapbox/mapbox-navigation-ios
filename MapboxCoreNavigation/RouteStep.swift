@@ -70,7 +70,7 @@ extension RouteStep {
     }
     
     /**
-     Returns the entry and exit intersection bounds of the tunnel on the current route step
+     Returns the entry and exit intersections of the tunnel on the current route step
      */
     var tunnelIntersection: (entry: Intersection, exit: Intersection)? {
         guard let intersections = intersections, containsTunnel else { return nil }
