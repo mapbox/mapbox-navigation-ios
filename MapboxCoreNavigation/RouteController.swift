@@ -676,8 +676,7 @@ extension RouteController: CLLocationManagerDelegate {
         // Pre-conditions:
         //   - Current location to exit must be greater than zero meters.
         //   - Distance to tunnel entrance must be less than tunnel distance.
-        //   - Distance to tunnel exit must also be less than tunnel distance.
-        if (tunnelDistance - distanceToExit) > 0 && distanceToEntrance <= tunnelDistance && distanceToExit <= tunnelDistance {
+        if (tunnelDistance - distanceToExit) > 0 && distanceToEntrance <= tunnelDistance {
             delegate?.didEnterTunnel?(true)
         } else {
             delegate?.didEnterTunnel?(false)

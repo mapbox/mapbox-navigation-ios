@@ -57,8 +57,8 @@ extension RouteStep {
      Returns a tunnel slice for the current route step coordinates
      */
     var tunnelSlice: Polyline? {
-        guard let coordinates = coordinates, let tunnelIntersection = tunnelIntersectionBounds else { return nil }
-        return Polyline(coordinates).sliced(from: tunnelIntersection.entry.location, to: tunnelIntersection.exit.location)
+        guard let coordinates = coordinates, let intersectionBounds = tunnelIntersectionBounds else { return nil }
+        return Polyline(coordinates).sliced(from: intersectionBounds.entry.location, to: intersectionBounds.exit.location)
     }
     
     /**
