@@ -562,8 +562,8 @@ extension NavigationViewController: RouteControllerDelegate {
         return advancesToNextLeg
     }
     
-    @objc public func routeController(_ routeController: RouteController, didEnterTunnelAt location: CLLocation?) {
-        if let _ = location {
+    @objc public func didEnterTunnel(_ darkModeEnabled: Bool) {
+        if darkModeEnabled {
             self.styleManager.applyStyle(NightStyle())
         } else {
             self.styleManager.applyStyle()

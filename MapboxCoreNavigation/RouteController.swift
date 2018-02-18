@@ -136,15 +136,14 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when a location is detected within a tunnel.
+     Called when a tunnel is detected on a route step.
      
      Implement this method to enable dark mode when a commuter enters a tunnel.
      
-     - parameter routeController: The route controller that detects the location within a tunnel route.
-     - parameter location: The location that falls within the identified tunnel.
+     - parameter darkModeEnabled: The darkModeEnabled flag determines whether a `DarkStyle` should apply.
      */
-    @objc(routeController:didEnterTunnelAt:)
-    optional func routeController(_ routeController: RouteController, didEnterTunnelAt location: CLLocation?)
+    @objc(didEnterTunnel:)
+    optional func didEnterTunnel(_ darkModeEnabled: Bool)
 }
 
 /**
@@ -679,9 +678,9 @@ extension RouteController: CLLocationManagerDelegate {
         //   - Distance to tunnel entrance must be less than tunnel distance.
         //   - Distance to tunnel exit must also be less than tunnel distance.
         if (tunnelDistance - distanceToExit) > 0 && distanceToEntrance <= tunnelDistance && distanceToExit <= tunnelDistance {
-            delegate?.routeController?(self, didEnterTunnelAt: location)
+            delegate?.didEnterTunnel?(true)
         } else {
-            delegate?.routeController?(self, didEnterTunnelAt: nil)
+            delegate?.didEnterTunnel?(false)
         }
     }
     
