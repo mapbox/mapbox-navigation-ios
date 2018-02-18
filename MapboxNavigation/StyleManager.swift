@@ -107,7 +107,7 @@ open class StyleManager: NSObject {
         }
         
         // Custom style usage
-        if let customStyle = newStyle {
+        if let customStyle = newStyle, styles.count == 1, !styles.contains(customStyle) {
             customStyle.apply()
             delegate?.styleManager?(self, didApply: customStyle)
             return

@@ -645,10 +645,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
-        
-        if routeProgress.currentLegProgress.currentStep.containsTunnel {
-            detectRouteStepInTunnel(for: location)
-        }
+        detectRouteStepInTunnel(for: location)
         
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
@@ -667,6 +664,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func detectRouteStepInTunnel(for location: CLLocation) {
+        guard routeProgress.currentLegProgress.currentStep.containsTunnel else { return }
         guard let tunnelDistance = routeProgress.currentLegProgress.currentStep.tunnelDistance, let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSlice else { return }
         guard let tunnelStartCoordinate = tunnelSlice.coordinates.first, let tunnelEndCoordinate = tunnelSlice.coordinates.last else { return }
         
