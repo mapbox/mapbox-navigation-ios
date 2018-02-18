@@ -106,6 +106,7 @@ open class StyleManager: NSObject {
                 style.apply()
                 currentStyleType = styleType
                 delegate?.styleManager?(self, didApply: style)
+                break
             }
         }
     }
