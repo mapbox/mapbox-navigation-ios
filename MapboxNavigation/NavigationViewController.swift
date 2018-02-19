@@ -562,11 +562,11 @@ extension NavigationViewController: RouteControllerDelegate {
         return advancesToNextLeg
     }
     
-    @objc public func didEnterTunnel(_ darkModeEnabled: Bool) {
-        if darkModeEnabled {
+    @objc public func routeController(_ routeController: RouteController, didEnterTunnel: Bool) {
+        if didEnterTunnel {
             self.styleManager.applyStyle(type:.nightStyle)
         } else {
-            self.styleManager.resetTimeOfDayTimer()
+            self.styleManager.timeOfDayChanged()
         }
     }
 }
