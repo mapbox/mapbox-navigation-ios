@@ -7,6 +7,7 @@
 * Exposes `setOverheadCameraView(from:along:for:)` which is useful for fitting the camera to an overhead view for the remaining route coordinates.
 * Exposes `PollyVoiceController.speak(_:)` which would allow custom subclass of PollyVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
 * Added a `NavigationMapView.localizeLabels()` method that should be called within `MGLMapViewDelegate.mapView(_:didFinishLoading:)` for standalone `NavigationMapView`s to ensure that map labels are in the correct language. (#1111)
+* Changed the heuristics needed for a the users location to unsnap from the route line. (#1110)
 
 ## v0.13.1 (February 7, 2018)
 
