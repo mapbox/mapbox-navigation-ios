@@ -6,7 +6,7 @@ typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 /**
  Line width base values used at zoom levels.
  */
-public let MBRoutelineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
+public let MBRouteLineWidthByZoomLevel: [Int: MGLStyleValue<NSNumber>] = [
     10: MGLStyleValue(rawValue: 8),
     13: MGLStyleValue(rawValue: 9),
     16: MGLStyleValue(rawValue: 11),
