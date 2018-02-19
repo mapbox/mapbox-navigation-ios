@@ -73,13 +73,11 @@ open class NextBannerView: UIView {
     }
     
     func shouldShowNextBanner(for routeProgress: RouteProgress) -> Bool {
-        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep, let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep) else {
-            return false
-        }
+        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep else { return false }
         
-        // If the followon step is short and the user is near the end of the current step, show the nextBanner.
-        guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            upcomingStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
+        let durationForNext = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
+
+        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= durationForNext, upcomingStep.expectedTravelTime <= durationForNext else {
                 return false
         }
         
