@@ -64,16 +64,28 @@ open class DismissButton: Button { }
 open class FloatingButton: Button {
     
     static let buttonSize = CGSize(width: 50, height: 50)
+    static let sizeConstraintPriority = UILayoutPriority(999.0) //Don't fight with the stack view (superview) when it tries to hide buttons.
     
+    lazy var widthConstraint: NSLayoutConstraint = {
+        let constraint = self.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width)
+        constraint.priority = FloatingButton.sizeConstraintPriority
+        return constraint
+    }()
+    lazy var heightConstraint: NSLayoutConstraint = {
+        let constraint = self.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height)
+        constraint.priority = FloatingButton.sizeConstraintPriority
+        return constraint
+    }()
+        
     var constrainedSize: CGSize? {
         didSet {
             guard let size = constrainedSize else {
-                widthAnchor.constraint(equalToConstant: 0).isActive = false
-                heightAnchor.constraint(equalToConstant: 0).isActive = false
+                NSLayoutConstraint.deactivate([widthConstraint, heightConstraint])
                 return
             }
-            widthAnchor.constraint(equalToConstant: size.width).isActive = true
-            heightAnchor.constraint(equalToConstant: size.height).isActive = true
+            widthConstraint.constant = size.width
+            heightConstraint.constant = size.height
+            NSLayoutConstraint.activate([widthConstraint, heightConstraint])
         }
     }
     
