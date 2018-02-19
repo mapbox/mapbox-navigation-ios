@@ -15,6 +15,8 @@ class RouteMapViewController: UIViewController {
     var statusView: StatusView { return navigationView.statusView }
     var reportButton: FloatingButton { return navigationView.reportButton }
     var lanesView: LanesView { return navigationView.lanesView }
+    var nextBannerView: NextBannerView { return navigationView.nextBannerView }
+    var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
     
     lazy var endOfRouteViewController = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation).instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController
     
@@ -40,7 +42,6 @@ class RouteMapViewController: UIViewController {
     }
 
     var route: Route { return routeController.routeProgress.route }
-    var previousStep: RouteStep?
     var updateETATimer: Timer?
     var previewInstructionsView: StepInstructionsView?
     var lastTimeUserRerouted: Date?
@@ -275,8 +276,10 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         updateETA()
         
-        if let location = routeController.location {
-            updateInstructions(routeProgress: routeController.routeProgress, location: location, secondsRemaining: 0)
+        instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress)
+        lanesView.update(for: routeController.routeProgress.currentLegProgress)
+        if lanesView.isHidden {
+            nextBannerView.update(for: routeController.routeProgress)
         }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
@@ -308,7 +311,7 @@ class RouteMapViewController: UIViewController {
     
     @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
-        hideLaneViews()
+        lanesView.hide()
         showStatus(title: title, withSpinner: true, for: 3)
     }
     
@@ -325,7 +328,7 @@ class RouteMapViewController: UIViewController {
             }
         }
         
-        if notification.userInfo![RouteControllerDidFindFasterRouteKey] as! Bool {
+        if notification.userInfo![RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             showStatus(title: title, withSpinner: true, for: 5)
         }
@@ -386,15 +389,11 @@ class RouteMapViewController: UIViewController {
         
         updateETA()
         
-        let step = routeProgress.currentLegProgress.upComingStep ?? routeProgress.currentLegProgress.currentStep
-        
-        if let upComingStep = routeProgress.currentLegProgress?.upComingStep, !routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            updateLaneViews(step: upComingStep, durationRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
+        lanesView.update(for: routeProgress.currentLegProgress)
+        instructionsBannerView.update(for: routeProgress.currentLegProgress)
+        if lanesView.isHidden {
+            nextBannerView.update(for: routeProgress)
         }
-        
-        previousStep = step
-        updateInstructions(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        updateNextBanner(routeProgress: routeProgress)
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -416,59 +415,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-    func updateInstructions(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
-        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-        let distanceRemaining = stepProgress.distanceRemaining
-        
-        guard let visualInstruction = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
-        
-        navigationView.instructionsBannerView.set(visualInstruction.primaryTextComponents, secondaryInstruction: visualInstruction.secondaryTextComponents)
-        navigationView.instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
-        navigationView.instructionsBannerView.maneuverView.step = routeProgress.currentLegProgress.upComingStep
-    }
-    
-    func updateNextBanner(routeProgress: RouteProgress) {
-    
-        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep,
-            let nextStep = routeProgress.currentLegProgress.stepAfter(upcomingStep),
-            navigationView.lanesView.isHidden
-            else {
-                hideNextBanner()
-                return
-        }
-        
-        // If the followon step is short and the user is near the end of the current step, show the nextBanner.
-        guard nextStep.expectedTravelTime <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier,
-            routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier else {
-                hideNextBanner()
-                return
-        }
-        
-        guard let instructions = upcomingStep.instructionsDisplayedAlongStep?.last else {
-            hideNextBanner()
-            return
-        }
-        
-        navigationView.nextBannerView.maneuverView.step = nextStep
-        navigationView.nextBannerView.instructionLabel.instruction = instructions.primaryTextComponents
-        showNextBanner()
-    }
-    
-    func showNextBanner() {
-        guard navigationView.nextBannerView.isHidden else { return }
-        UIView.defaultAnimation(0.3, animations: {
-            self.navigationView.nextBannerView.isHidden = false
-        }, completion: nil)
-    }
-    
-    func hideNextBanner() {
-        guard !navigationView.nextBannerView.isHidden else { return }
-        UIView.defaultAnimation(0.3, animations: {
-            self.navigationView.nextBannerView.isHidden = true
-        }, completion: nil)
-    }
-    
-    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
+func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
         let identifier = routeController.recordFeedback()
         let send = defaultSendFeedbackHandler(feedbackId: identifier)
         let dismiss = defaultDismissFeedbackHandler(feedbackId: identifier)
@@ -503,34 +450,6 @@ class RouteMapViewController: UIViewController {
         return UIEdgeInsets(top: top, left: 0, bottom: bottom, right: 0)
     }
     
-    func updateLaneViews(step: RouteStep, durationRemaining: TimeInterval) {
-        navigationView.lanesView.updateLaneViews(step: step, durationRemaining: durationRemaining)
-        
-        if navigationView.lanesView.stackView.arrangedSubviews.count > 0 {
-            showLaneViews()
-        } else {
-            hideLaneViews()
-        }
-    }
-    
-    func showLaneViews(animated: Bool = true) {
-        hideNextBanner()
-        guard navigationView.lanesView.isHidden == true else { return }
-        if animated {
-            UIView.defaultAnimation(0.3, animations: {
-                self.navigationView.lanesView.isHidden = false
-            }, completion: nil)
-        } else {
-            self.navigationView.lanesView.isHidden = false
-        }
-    }
-    
-    func hideLaneViews() {
-        guard navigationView.lanesView.isHidden == false else { return }
-        UIView.defaultAnimation(0.3, animations: {
-            self.navigationView.lanesView.isHidden = true
-        }, completion: nil)
-    }
     // MARK: End Of Route
     
     func embedEndOfRoute() {
@@ -872,8 +791,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let instructionsView = StepInstructionsView(frame: navigationView.instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(instructions.primaryTextComponents, secondaryInstruction: instructions.secondaryTextComponents)
-        instructionsView.maneuverView.step = maneuverStep
+        instructionsView.set(instructions)
         instructionsView.distance = distance
         
         navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor

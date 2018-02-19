@@ -76,8 +76,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
 
     // Notifications sent on all location updates
     @objc func progressDidChange(_ notification: NSNotification) {
-        let routeProgress = notification.userInfo![RouteControllerProgressDidChangeNotificationProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerProgressDidChangeNotificationLocationKey] as! CLLocation
+        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         updateRouteProgress(routeProgress: routeProgress)
         mapView.locationManager(routeController.locationManager, didUpdateLocations: [location])
     }
