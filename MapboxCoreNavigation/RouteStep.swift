@@ -62,14 +62,6 @@ extension RouteStep {
     }
     
     /**
-     Returns the distance of a tunnel slice for the current route step
-     */
-    var tunnelDistance: CLLocationDistance? {
-        guard let tunnelSlice = tunnelSlice else { return nil }
-        return tunnelSlice.distance()
-    }
-    
-    /**
      Returns the entry and exit intersection bounds of the tunnel on the current route step
      */
     var tunnelIntersectionBounds: (entry: Intersection, exit: Intersection)? {

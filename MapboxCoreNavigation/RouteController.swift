@@ -664,14 +664,14 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func detectRouteStepInTunnel(for location: CLLocation) {
-        guard routeProgress.currentLegProgress.currentStep.containsTunnel else { return }
-        guard let tunnelDistance = routeProgress.currentLegProgress.currentStep.tunnelDistance, let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSlice else { return }
+        guard routeProgress.currentLegProgress.currentStep.containsTunnel, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
+        guard let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSlice else { return }
         guard let tunnelStartCoordinate = tunnelSlice.coordinates.first, let tunnelEndCoordinate = tunnelSlice.coordinates.last else { return }
         
         // Calculated distances from current location to tunnel entrance and exit
-        let currentLocation = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        let distanceToEntrance = currentLocation.distance(to: tunnelStartCoordinate)
-        let distanceToExit = currentLocation.distance(to: tunnelEndCoordinate)
+        let tunnelDistance = tunnelSlice.distance()
+        let distanceToEntrance = Polyline(coordinates).distance(from: tunnelStartCoordinate, to: location.coordinate)
+        let distanceToExit = Polyline(coordinates).distance(from: location.coordinate, to: tunnelEndCoordinate)
 
         if distanceToEntrance <= tunnelDistance && distanceToExit <= tunnelDistance {
             delegate?.routeController?(self, didEnterTunnel: true)
