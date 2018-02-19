@@ -131,14 +131,7 @@ open class StyleManager: NSObject {
         }
         
         let styleTypeForTimeOfDay = styleType(for: location)
-        
-        for style in styles {
-            if style.styleType == styleTypeForTimeOfDay {
-                style.apply()
-                currentStyleType = style.styleType
-                delegate?.styleManager?(self, didApply: style)
-            }
-        }
+        applyStyle(type: styleTypeForTimeOfDay)
     }
     
     func styleType(for location: CLLocation) -> StyleType {
