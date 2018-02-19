@@ -670,7 +670,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         // Calculated distances from current location to tunnel entrance and exit
         let tunnelDistance = tunnelSlice.distance()
-        let distanceToEntrance = Polyline(coordinates).distance(from: tunnelStartCoordinate, to: location.coordinate)
+        let distanceToEntrance = Polyline(coordinates).distance(from: location.coordinate, to: tunnelStartCoordinate)
         let distanceToExit = Polyline(coordinates).distance(from: location.coordinate, to: tunnelEndCoordinate)
 
         if distanceToEntrance <= tunnelDistance && distanceToExit <= tunnelDistance {
