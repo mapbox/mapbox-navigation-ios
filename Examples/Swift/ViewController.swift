@@ -121,8 +121,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         //Reload the mapView.
         setupMapView()
 
-        // Reset the navigation styling to the defaults
-        DayStyle().apply()
+        // Reset the navigation styling to the defaults if we are returning from a presentation.
+        if (presentedViewController != nil) {
+            DayStyle().apply()
+        }
         
     }
 
