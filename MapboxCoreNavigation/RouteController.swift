@@ -141,7 +141,7 @@ public protocol RouteControllerDelegate: class {
      Implement this method to determine when a commuter enters and exits a tunnel.
      
      - parameter routeController: The route controller that has entered a tunnel.
-     - parameter didEnterTunnel: The didEnterTunnel flag indicates a tunnel has been detected on a route step.
+     - parameter didEnterTunnel: The didEnterTunnel flag indicates the route step is located in a tunnel.
      */
     @objc(routeController:didEnterTunnel:)
     optional func routeController(_ routeController: RouteController, didEnterTunnel: Bool)
