@@ -74,6 +74,20 @@ public class DistanceFormatter: LengthFormatter {
                 return 50
             }
             return distance < 3_000 ? 0 : 0.5
+        } else if numberFormatter.locale.identifier == "en-GB" {
+            if unit == .yard {
+                if distance.miles >= 0.1 {
+                    return 0
+                } else if distance.yards < 20 {
+                    return 10
+                } else if distance.yards < 100 {
+                    return 25
+                } else {
+                    return 50
+                }
+            } else {
+                return 0.1
+            }
         } else {
             if unit == .yard {
                 if distance.miles >= 0.1 {
@@ -129,11 +143,9 @@ public class DistanceFormatter: LengthFormatter {
                 if distance.miles >= 0.1 {
                     unit = .mile
                     formattedDistance = string(fromValue: distance.miles, unit: unit)
-                } else if distance.yards < 10 {
-                    unit = .foot
-                    formattedDistance = string(fromValue: distance.feet, unit: unit)
                 } else {
                     unit = .yard
+                    numberFormatter.roundingIncrement = roundingIncrement(for: distance, unit: unit) as NSNumber
                     formattedDistance = string(fromValue: distance.yards, unit: unit)
                 }
             } else {
