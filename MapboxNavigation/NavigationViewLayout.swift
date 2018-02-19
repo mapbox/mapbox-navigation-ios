@@ -39,7 +39,6 @@ extension NavigationView {
         bottomBannerContentView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         bottomBannerContentView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor).isActive = true
         
-        bottomBannerView.heightAnchor.constraint(equalToConstant: 80).isActive = true
         bottomBannerView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         bottomBannerView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         bottomBannerView.bottomAnchor.constraint(equalTo: safeBottomAnchor).isActive = true
