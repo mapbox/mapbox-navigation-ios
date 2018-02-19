@@ -76,7 +76,7 @@ extension RouteStep {
         guard let intersections = intersections, containsTunnel else { return nil }
         for i in 0..<(intersections.count) where intersections.count > 1 {
             if intersections[i].outletRoadClasses == .tunnel {
-                return (entry: intersections[i], exit: intersections[i+1])
+                return i < (intersections.count - 1) ? (entry: intersections[i], exit: intersections[i+1]) : nil
             }
         }
         return nil
