@@ -139,7 +139,7 @@ open class NavigationView: UIView {
         }()
     
 
-    var delegate: NavigationViewDelegate? {
+    weak var delegate: NavigationViewDelegate? {
         didSet {
             updateDelegates()
         }
