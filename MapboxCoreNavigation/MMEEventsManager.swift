@@ -80,7 +80,7 @@ struct EventDetails {
             self.geometry = Polyline(coordinates: geometry)
             distance = round(session.currentRoute.distance)
             estimatedDuration = round(session.currentRoute.expectedTravelTime)
-            stepCountRemaining = session.currentRoute.legs.map({$0.steps.count}).reduce(0, +)
+            stepCountRemaining = session.currentRoute.legs.map {$0.steps.count}.reduce(0, +)
         }
         
         distanceCompleted = round(session.totalDistanceCompleted + routeController.routeProgress.distanceTraveled)
