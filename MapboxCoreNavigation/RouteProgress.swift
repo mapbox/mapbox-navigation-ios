@@ -409,10 +409,22 @@ open class RouteStepProgress: NSObject {
     public var userDistanceToUpcomingIntersection: CLLocationDistance?
     
     /**
+     Index into `step.instructionsDisplayedAlongStep` representing the current visual instruction for the step.
+     */
+    @objc public var visualInstructionIndex: Int = 0
+    
+    /**
+     An `Array` of remaining `VisualInstruction` for a step.
+     */
+    @objc public var remainingVisualInstructions: [VisualInstruction]? {
+        guard let visualInstructions = step.instructionsDisplayedAlongStep else { return nil }
+        return Array(visualInstructions.suffix(from: visualInstructionIndex))
+    }
+    
+    /**
      Index into `step.instructionsSpokenAlongStep` representing the current spoken instruction.
      */
     @objc public var spokenInstructionIndex: Int = 0
-    
     
     /**
      An `Array` of remaining `SpokenInstruction` for a step.
