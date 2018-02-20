@@ -4,7 +4,9 @@ import MapboxDirections
 typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 
 /**
- Line width base values used at zoom levels.
+ A stop dictionary representing the default line widths of the route line by zoom level when `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` is undefined.
+ 
+ You may use this constant in your implementation of `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` if you want to keep the default line widths but customize other aspects of the route line.
  */
 public let MBRouteLineWidthByZoomLevel: [Int: MGLStyleValue<NSNumber>] = [
     10: MGLStyleValue(rawValue: 8),
