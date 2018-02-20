@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxDirections.swift", "~> 0.17"
-  s.dependency "Mapbox-iOS-SDK", "~> 3.6"
+  s.dependency "Mapbox-iOS-SDK", "~> 3.7"
   s.dependency "MapboxMobileEvents", "~> 0.3"
   s.dependency "Solar", "~> 2.1"
   s.dependency "Turf", "~> 0.0.4"
