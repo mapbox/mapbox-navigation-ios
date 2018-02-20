@@ -55,7 +55,6 @@ class ImageRepository {
             }
 
             guard error == nil else {
-                NSLog("================> Image Download Failed: \(error!)")
                 completion(image)
                 return
             }

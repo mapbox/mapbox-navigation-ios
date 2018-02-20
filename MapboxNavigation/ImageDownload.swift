@@ -48,6 +48,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
     private var dataTask: URLSessionDataTask?
     private var incomingData: Data?
     private var completionBlocks: Array<ImageDownloadCompletionBlock> = []
+    private let barrierQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloadCompletionBarrierQueue", attributes: .concurrent)
 
     required init(request: URLRequest, in session: URLSession) {
         self.request = request
@@ -55,7 +56,9 @@ class ImageDownloadOperation: Operation, ImageDownload {
     }
 
     func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock) {
-        completionBlocks.append(completion)
+        barrierQueue.async {
+            self.completionBlocks.append(completion)
+        }
     }
 
     override func cancel() {
@@ -67,8 +70,8 @@ class ImageDownloadOperation: Operation, ImageDownload {
 
         if let dataTask = dataTask {
             dataTask.cancel()
+            incomingData = nil
             self.dataTask = nil
-            self.incomingData = nil
         }
 
         if isExecuting {
@@ -79,7 +82,9 @@ class ImageDownloadOperation: Operation, ImageDownload {
             _finished = true
         }
 
-        //TODO: should we fire callbacks with error here, or assume not since canceling is usually intentional?
+        barrierQueue.async {
+            self.completionBlocks.removeAll()
+        }
     }
 
     override func start() {
@@ -143,12 +148,20 @@ class ImageDownloadOperation: Operation, ImageDownload {
             // TODO: test no image data returned
             fireAllCompletions(nil, data: incomingData, error: DownloadError.noImageData)
         }
+        _finished = true
+        _executing = false
+        dataTask = nil
+        barrierQueue.async {
+            self.completionBlocks.removeAll()
+        }
     }
 
     private func fireAllCompletions(_ image: UIImage?, data: Data?, error: Error?) {
-        for completion in completionBlocks {
-            DispatchQueue.main.async {
-                completion(image, data, error)
+        barrierQueue.sync {
+            for completion in completionBlocks {
+                DispatchQueue.main.async {
+                    completion(image, data, error)
+                }
             }
         }
     }

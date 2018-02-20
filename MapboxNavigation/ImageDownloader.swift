@@ -44,8 +44,8 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
                 self.queue.addOperation(operation)
             }
         }
-        if completion != nil {
-            operation.addCompletion(completion!)
+        if let completion = completion {
+            operation.addCompletion(completion)
         }
     }
 

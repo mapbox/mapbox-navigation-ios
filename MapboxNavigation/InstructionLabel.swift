@@ -16,8 +16,7 @@ open class InstructionLabel: StylableLabel {
                 instructionPresenter = nil
                 return
             }
-            let presenter = InstructionPresenter()
-            presenter.instruction = instruction
+            let presenter = InstructionPresenter(instruction, label: self)
             attributedText = presenter.attributedTextForLabel(self)
             presenter.onShieldDownload = { [weak self] (attributedText: NSAttributedString) in
                 self?.attributedText = attributedText

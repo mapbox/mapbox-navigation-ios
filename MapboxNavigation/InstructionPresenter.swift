@@ -2,7 +2,13 @@ import UIKit
 import MapboxDirections
 
 class InstructionPresenter {
-    var instruction: [VisualInstructionComponent]?
+    private let instruction: [VisualInstructionComponent]
+    private weak var label: InstructionLabel?
+
+    required init(_ instruction: [VisualInstructionComponent], label: InstructionLabel) {
+        self.instruction = instruction
+        self.label = label
+    }
 
     typealias ShieldDownloadCompletion = (NSAttributedString) -> ()
     var onShieldDownload: ShieldDownloadCompletion?
@@ -10,10 +16,6 @@ class InstructionPresenter {
     private let imageRepository = ImageRepository.shared
 
     func attributedTextForLabel(_ label: InstructionLabel) -> NSAttributedString {
-        guard let instruction = instruction else {
-            return NSAttributedString()
-        }
-
         let string = NSMutableAttributedString()
 
         for component in instruction {
@@ -60,7 +62,7 @@ class InstructionPresenter {
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
-        for component in instruction! {
+        for component in instruction {
             guard let key = component.shieldKey() else {
                 continue
             }
