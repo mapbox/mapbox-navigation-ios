@@ -42,7 +42,6 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
   s.module_name = "MapboxNavigation"
-  s.swift_version = "4.0"
 
   s.dependency "MapboxDirections.swift", "~> 0.17"
   s.dependency "Mapbox-iOS-SDK", "~> 3.6"
@@ -51,5 +50,16 @@ Pod::Spec.new do |s|
   s.dependency "Solar", "~> 2.1"
   s.dependency "Turf", "~> 0.0.4"
   s.dependency "MapboxSpeech", "~> 0.0.1"
+
+  # The CocoaPods podspec spec is not backwards compatible, so, when they add new parameters
+  # (like `swift_version` in 1.4.0), older versions of CocoaPods blow up in confusion.
+  # Specifying a `cocoapods_version >= 1.4.0` does nothing to solve the problem, as Ruby
+  # interprets unknown parameters as low-level syntax errors.
+  #
+  # Instead, we're forced to use Ruby's built-in semver comparison before declaring parameters
+  # added in recent CocoaPods releases.
+  if Version.new(Pod::VERSION) >= Version.new("1.4.0")
+    s.swift_version = "4.0"
+  end
 
 end
