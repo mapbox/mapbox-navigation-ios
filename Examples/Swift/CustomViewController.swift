@@ -15,25 +15,25 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     let textDistanceFormatter = DistanceFormatter(approximate: true)
     var userRoute: Route?
     var simulateLocation = false
-    
+
     // Start voice instructions
     let voiceController = MapboxVoiceController()
-    
+
     @IBOutlet var mapView: MGLMapView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         mapView.delegate = self
 
         textDistanceFormatter.numberFormatter.maximumFractionDigits = 0
-        
+
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
-        
+
         routeController = RouteController(along: userRoute!, directions: directions, locationManager: locationManager)
-        
+
         mapView.userLocationVerticalAlignment = .center
         mapView.userTrackingMode = .followWithCourse
 
@@ -42,10 +42,10 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         // Start navigation
         routeController.resume()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         // Disable the map view's default location manager if we're simulating locations
         if simulateLocation {
             mapView.locationManager.stopUpdatingHeading()
@@ -77,7 +77,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         instructionsBannerView.update(for: routeProgress.currentLegProgress)
-        
+
         mapView.locationManager(routeController.locationManager, didUpdateLocations: [location])
     }
 
