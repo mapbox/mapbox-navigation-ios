@@ -322,7 +322,7 @@ class RouteMapViewController: UIViewController {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
         statusView.show(title, showSpinner: true)
-        statusView.hide(delay: 3, animated: true)
+        statusView.hide(delay: 1.5, animated: true)
     }
     
     @objc func didReroute(notification: NSNotification) {
@@ -341,7 +341,7 @@ class RouteMapViewController: UIViewController {
         if notification.userInfo![RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             statusView.show(title, showSpinner: true)
-            statusView.hide(delay: 5, animated: true)
+            statusView.hide(delay: 3, animated: true)
         }
     }
 

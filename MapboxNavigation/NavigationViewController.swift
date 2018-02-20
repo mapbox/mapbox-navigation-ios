@@ -537,7 +537,7 @@ extension NavigationViewController: RouteControllerDelegate {
         }
     
         if !(routeController.locationManager is SimulatedLocationManager) {
-            mapViewController?.statusView.hide(delay: 3, animated: true)
+            mapViewController?.statusView.hide(delay: 1.5, animated: true)
         }
     }
     
