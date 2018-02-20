@@ -4,6 +4,9 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
+let bogusToken = "pk.feedCafeDeadBeefBadeBede"
+let directions = Directions(accessToken: bogusToken)
+
 
 class LaneTests: FBSnapshotTestCase {
 
