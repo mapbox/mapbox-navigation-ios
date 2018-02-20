@@ -98,9 +98,7 @@ public class StatusView: UIView {
             activityIndicatorView.stopAnimating()
         }
         
-        if isCurrentlyVisible != nil, isCurrentlyVisible == true {
-            return
-        }
+        guard isCurrentlyVisible != true else { return }
         
         guard isHidden == true else { return }
         
