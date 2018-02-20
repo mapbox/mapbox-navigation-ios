@@ -17,7 +17,6 @@ struct EventDetails {
     var geometry: Polyline?
     var distance: CLLocationDistance?
     var estimatedDuration: TimeInterval?
-    var stepCountRemaining: Int?
     var created: Date
     var startTimestamp: Date?
     var sdkIdentifier: String
@@ -80,7 +79,6 @@ struct EventDetails {
             self.geometry = Polyline(coordinates: geometry)
             distance = round(session.currentRoute.distance)
             estimatedDuration = round(session.currentRoute.expectedTravelTime)
-            stepCountRemaining = session.currentRoute.legs.map {$0.steps.count}.reduce(0, +)
         }
         
         distanceCompleted = round(session.totalDistanceCompleted + routeController.routeProgress.distanceTraveled)
@@ -161,7 +159,6 @@ struct EventDetails {
         modifiedEventDictionary["geometry"] = geometry?.encodedPolyline
         modifiedEventDictionary["estimatedDistance"] = distance
         modifiedEventDictionary["estimatedDuration"] = estimatedDuration
-        modifiedEventDictionary["stepCountRemaining"] = stepCountRemaining
 
         modifiedEventDictionary["distanceCompleted"] = distanceCompleted
         modifiedEventDictionary["distanceRemaining"] = distanceRemaining
