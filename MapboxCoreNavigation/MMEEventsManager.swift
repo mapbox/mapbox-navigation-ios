@@ -185,7 +185,7 @@ struct EventDetails {
         modifiedEventDictionary["percentTimeInForeground"] = percentTimeInForeground
         
         modifiedEventDictionary["stepIndex"] = stepIndex
-        modifiedEventDictionary["stepCount"] = totalStepCount
+        modifiedEventDictionary["stepCount"] = stepCount
         modifiedEventDictionary["legIndex"] = legIndex
         modifiedEventDictionary["legCount"] = legCount
         modifiedEventDictionary["totalStepCount"] = totalStepCount
