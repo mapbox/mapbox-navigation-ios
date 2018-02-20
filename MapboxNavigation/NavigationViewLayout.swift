@@ -2,9 +2,9 @@ import UIKit
 
 extension NavigationView {
     func setupConstraints() {
-        mapView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+        mapView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         mapView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        mapView.bottomAnchor.constraint(equalTo: bottomBannerContentView.topAnchor).isActive = true
+        mapView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         mapView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
         instructionsBannerContentView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
