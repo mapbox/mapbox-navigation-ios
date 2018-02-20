@@ -163,6 +163,11 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
             return
         }
         
+        do {
+            try mixAudio()
+        } catch {
+            voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+        }
         rerouteSoundPlayer.volume = volume
         rerouteSoundPlayer.play()
     }
@@ -183,15 +188,15 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         }
     }
     
-    func validateDuckingOptions() throws {
-        let category = AVAudioSessionCategoryPlayback
+    func duckAudio() throws {
         let categoryOptions: AVAudioSessionCategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
         try AVAudioSession.sharedInstance().setMode(AVAudioSessionModeSpokenAudio)
-        try AVAudioSession.sharedInstance().setCategory(category, with: categoryOptions)
+        try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: categoryOptions)
+        try AVAudioSession.sharedInstance().setActive(true)
     }
     
-    func duckAudio() throws {
-        try validateDuckingOptions()
+    func mixAudio() throws {
+        try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient)
         try AVAudioSession.sharedInstance().setActive(true)
     }
     
