@@ -35,7 +35,6 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var reportIssueLabel: UILabel!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
-    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var progressBar: ProgressBar!
     
     var draggableHeight: CGFloat {
@@ -53,10 +52,17 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
+        flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
-        progressBar.progress = 1
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        progressBar.progress = 1
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -142,7 +148,7 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = floor(collectionView.bounds.width / 3)
-        return CGSize(width: width, height: width+5)
+        return CGSize(width: width, height: width+20)
     }
 }
 

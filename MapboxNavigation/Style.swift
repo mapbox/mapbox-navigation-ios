@@ -387,8 +387,12 @@ public class ProgressBar: UIView {
         }
     }
     
+    override open var description: String {
+        return super.description + "; progress = \(progress)"
+    }
+    
     func setProgress(_ progress: CGFloat, animated: Bool) {
-        UIView.defaultAnimation(0.5, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveLinear, animations: {
             self.progress = progress
         }, completion: nil)
     }

@@ -472,7 +472,6 @@ Label  </string>
                         <viewLayoutGuide key="safeArea" id="f9N-IM-pmq"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="500"/>
                     <connections>
                         <outlet property="collectionView" destination="Sne-Dn-jdt" id="WOk-me-goX"/>
                         <outlet property="flowLayout" destination="unA-43-4hX" id="Mcf-1x-Dzk"/>
