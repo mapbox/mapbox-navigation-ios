@@ -666,7 +666,7 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     @objc func updateETA() {
-        guard isViewLoaded else { return }
+        guard isViewLoaded, routeController != nil else { return }
         bottomBannerView?.updateETA(routeProgress: routeController.routeProgress)
     }
     
