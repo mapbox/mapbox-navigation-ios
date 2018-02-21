@@ -562,12 +562,12 @@ extension NavigationViewController: RouteControllerDelegate {
         return advancesToNextLeg
     }
     
-    @objc public func routeController(_ routeController: RouteController, didEnterTunnel: Bool) {
-        if didEnterTunnel {
-            self.styleManager.applyStyle(type:.nightStyle)
-        } else {
-            self.styleManager.timeOfDayChanged()
-        }
+    @objc public func routeControllerDidEnterTunnel(_ routeController: RouteController) {
+        self.styleManager.applyStyle(type:.nightStyle)
+    }
+    
+    @objc public func routeControllerDidExitTunnel(_ routeController: RouteController) {
+        self.styleManager.timeOfDayChanged()
     }
 }
 

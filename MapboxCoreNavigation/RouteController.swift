@@ -136,15 +136,20 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when a tunnel is detected on a route step.
+     Called when the route controller enters a tunnel.
      
-     Implement this method to determine when a commuter enters and exits a tunnel.
-     
-     - parameter routeController: The route controller that has entered a tunnel.
-     - parameter didEnterTunnel: The didEnterTunnel flag indicates the route step is located in a tunnel.
+     - parameter routeController: The route controller that has entered the tunnel.
      */
-    @objc(routeController:didEnterTunnel:)
-    optional func routeController(_ routeController: RouteController, didEnterTunnel: Bool)
+    @objc(routeControllerDidEnterTunnel:)
+    optional func routeControllerDidEnterTunnel(_ routeController: RouteController)
+    
+    /**
+     Called when the route controller leaves a tunnel.
+     
+     - parameter routeController: The route controller that has left the tunnel.
+     */
+    @objc(routeControllerDidExitTunnel:)
+    optional func routeControllerDidExitTunnel(_ routeController: RouteController)
 }
 
 /**
@@ -674,9 +679,9 @@ extension RouteController: CLLocationManagerDelegate {
         let distanceToExit = Polyline(coordinates).distance(from: location.coordinate, to: tunnelEndCoordinate)
 
         if distanceToEntrance <= tunnelDistance && distanceToExit <= tunnelDistance {
-            delegate?.routeController?(self, didEnterTunnel: true)
+            delegate?.routeControllerDidEnterTunnel?(self)
         } else {
-            delegate?.routeController?(self, didEnterTunnel: false)
+            delegate?.routeControllerDidExitTunnel?(self)
         }
     }
     
