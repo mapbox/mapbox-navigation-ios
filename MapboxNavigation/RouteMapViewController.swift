@@ -579,6 +579,17 @@ extension RouteMapViewController: NavigationMapViewDelegate {
         return delegate?.mapViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
+    func navigationMapViewDidTapPuck(_ sender: UIView) {
+        guard !NavigationSettings.shared.voiceMuted, let parent = parent as? NavigationViewController else { return }
+
+        let routeProgress = routeController.routeProgress
+        if let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
+            parent.voiceController?.speak(currentInstruction)
+        } else if let lastInstruction = routeProgress.currentLegProgress.currentStep.lastInstruction {
+            parent.voiceController?.speak(lastInstruction)
+        }
+    }
+    
     /**
      Updates the current road name label to reflect the road on which the user is currently traveling.
      

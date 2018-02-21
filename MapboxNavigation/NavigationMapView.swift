@@ -386,6 +386,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
+            
+            if let userCourseView = userCourseView as? UserPuckCourseView, userCourseView.delegate == nil {
+                userCourseView.delegate = self
+            }
         }
     }
     
@@ -1129,6 +1133,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
 // MARK: Extensions
 
+extension NavigationMapView: UserCourseViewDelegate {
+    @objc func didTapPuck(_ sender: UIView) {
+        navigationMapDelegate?.navigationMapViewDidTapPuck?(sender)
+    }
+}
+
 extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
     func multiplied(by factor: Double) -> Dictionary {
         var newCameraStop: [Int: MGLStyleValue<NSNumber>] = [:]
@@ -1240,6 +1250,15 @@ public protocol NavigationMapViewDelegate: class {
     */
     @objc(navigationMapViewUserAnchorPoint:)
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
+    
+    
+    /**
+     Tells the receiver the puck was tapped, given a sender.
+     This method is invoked when the puck on the map view is tapped.
+     - parameter sender: The sender that responded to the tap action.
+     */
+    @objc(navigationMapViewDidTapPuck:)
+    optional func navigationMapViewDidTapPuck(_ sender: UIView)
 }
 
 // MARK: NavigationMapViewCourseTrackingDelegate
