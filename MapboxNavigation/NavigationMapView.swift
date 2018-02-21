@@ -1134,7 +1134,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 // MARK: Extensions
 
 extension NavigationMapView: UserCourseViewDelegate {
-    @objc func didTapPuck(_ sender: UIView) {
+    func didTapPuck(_ sender: UIView) {
         navigationMapDelegate?.navigationMapViewDidTapPuck?(sender)
     }
 }
