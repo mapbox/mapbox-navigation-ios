@@ -56,13 +56,19 @@ extension UIView {
         }
     }
     
-    func pinInSuperview() {
+    func pinInSuperview(respectingMargins margins: Bool = false) {
         guard let superview = superview else { return }
-        topAnchor.constraint(equalTo: superview.topAnchor).isActive = true
-        leftAnchor.constraint(equalTo: superview.leftAnchor).isActive = true
-        bottomAnchor.constraint(equalTo: superview.bottomAnchor).isActive = true
-        rightAnchor.constraint(equalTo: superview.rightAnchor).isActive = true
+        let guide: Anchorable = (margins) ? superview.layoutMarginsGuide : superview
+        
+        let constraints = [
+            topAnchor.constraint(equalTo: guide.topAnchor),
+            leftAnchor.constraint(equalTo: guide.leftAnchor),
+            bottomAnchor.constraint(equalTo: guide.bottomAnchor),
+            rightAnchor.constraint(equalTo: guide.rightAnchor)
+        ]
+        NSLayoutConstraint.activate(constraints)
     }
+    
 
     class func forAutoLayout<ViewType: UIView>() -> ViewType {
         let view = ViewType.init(frame: .zero)
@@ -186,3 +192,14 @@ extension RippleLayer: CAAnimationDelegate {
         }
     }
 }
+
+protocol Anchorable {
+    var topAnchor: NSLayoutYAxisAnchor { get }
+    var bottomAnchor: NSLayoutYAxisAnchor { get }
+    var leftAnchor: NSLayoutXAxisAnchor { get }
+    var rightAnchor: NSLayoutXAxisAnchor { get }
+}
+
+extension UIView: Anchorable {}
+extension UILayoutGuide: Anchorable {}
+

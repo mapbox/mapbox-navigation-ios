@@ -115,11 +115,11 @@ open class NavigationView: UIView {
         return button
     }()
     
-    lazy var wayNameLabel: WayNameLabel = {
-        let label: WayNameLabel = .forAutoLayout()
-        label.clipsToBounds = true
-        label.layer.borderWidth = 1.0 / UIScreen.main.scale
-        return label
+    lazy var wayNameView: WayNameView = {
+        let view: WayNameView = .forAutoLayout()
+        view.clipsToBounds = true
+        view.layer.borderWidth = 1.0 / UIScreen.main.scale
+        return view
     }()
     
     lazy var rerouteReportButton: ReportButton = {
@@ -205,7 +205,7 @@ open class NavigationView: UIView {
             floatingStackView,
             separatorView,
             resumeButton,
-            wayNameLabel,
+            wayNameView,
             rerouteReportButton,
             bottomBannerContentView
         ]
@@ -217,7 +217,7 @@ open class NavigationView: UIView {
         super.prepareForInterfaceBuilder()
         DayStyle().apply()
         [mapView, instructionsBannerView, lanesView, bottomBannerView, nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
-        wayNameLabel.text = "Street Label"
+        wayNameView.text = "Street Label"
     }
     
     @objc func cancelButtonTapped(_ sender: CancelButton) {

@@ -124,10 +124,10 @@ open class DayStyle: Style {
         TimeRemainingLabel.appearance().trafficSevereColor = #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0)
         TimeRemainingLabel.appearance().trafficUnknownColor = .defaultPrimaryText
         UserPuckCourseView.appearance().puckColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1)
-        WayNameLabel.appearance().font = UIFont.systemFont(ofSize:20, weight: .medium).adjustedFont
+        WayNameLabel.appearance().normalFont = UIFont.systemFont(ofSize:20, weight: .medium).adjustedFont
         WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
-        WayNameLabel.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
-        WayNameLabel.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
+        WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
+        WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
         EndOfRouteTitleLabel.appearance().normalTextColor = .black
         EndOfRouteTitleLabel.appearance().normalFont = .systemFont(ofSize: 36.0)
         EndOfRouteContentView.appearance().backgroundColor = .white
@@ -200,9 +200,7 @@ open class NightStyle: DayStyle {
         StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         TimeRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.9213390946, green: 0.9254172444, blue: 0.9335884452, alpha: 1)
-        WayNameLabel.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
-        WayNameLabel.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
+        WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         EndOfRouteContentView.appearance().backgroundColor = backgroundColor
         RatingControl.appearance().selectedColor = #colorLiteral(red: 0.9803059896, green: 0.9978019022, blue: 1, alpha: 1)
         RatingControl.appearance().normalColor = #colorLiteral(red: 0.149668334, green: 0.1680230035, blue: 0.1472480238, alpha: 1)

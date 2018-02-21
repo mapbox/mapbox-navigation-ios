@@ -85,7 +85,7 @@ class RouteMapViewController: UIViewController {
             if isInOverviewMode {
                 navigationView.overviewButton.isHidden = true
                 navigationView.resumeButton.isHidden = false
-                navigationView.wayNameLabel.isHidden = true
+                navigationView.wayNameView.isHidden = true
                 mapView.logoView.isHidden = true
             } else {
                 navigationView.overviewButton.isHidden = false
@@ -295,7 +295,7 @@ class RouteMapViewController: UIViewController {
             }
         } else {
             mapView.tracksUserCourse = true
-            navigationView.wayNameLabel.isHidden = true
+            navigationView.wayNameView.isHidden = true
         }
         
         stepsViewController?.dismiss {
@@ -550,7 +550,7 @@ extension RouteMapViewController: NavigationViewDelegate {
             userTrackingMode = .followWithCourse
         }
         if userTrackingMode == .none && !isInOverviewMode {
-            navigationView.wayNameLabel.isHidden = true
+            navigationView.wayNameView.isHidden = true
         }
     }
     
@@ -569,7 +569,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     
     func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
         navigationView.resumeButton.isHidden = false
-        navigationView.wayNameLabel.isHidden = true
+        navigationView.wayNameView.isHidden = true
         mapView.logoView.isHidden = true
     }
     
@@ -725,10 +725,10 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
         
         if smallestLabelDistance < 5 && currentName != nil {
-            navigationView.wayNameLabel.text = currentName
-            navigationView.wayNameLabel.isHidden = false
+            navigationView.wayNameView.text = currentName
+            navigationView.wayNameView.isHidden = false
         } else {
-            navigationView.wayNameLabel.isHidden = true
+            navigationView.wayNameView.isHidden = true
         }
     }
     

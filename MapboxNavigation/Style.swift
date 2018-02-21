@@ -324,38 +324,47 @@ open class TitleLabel: StylableLabel { }
 open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
-@objc(MBWayNameLabel)
-@IBDesignable
-open class WayNameLabel: StylableLabel {
+@objc(MBWayNameView)
+open class WayNameView: UIView {
     
-    /// :nodoc:
-    open var textInsets: UIEdgeInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
+    private static let textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
     
-    open override var intrinsicContentSize: CGSize {
-        var size = super.intrinsicContentSize
-        size.height += textInsets.top + textInsets.bottom
-        size.width += textInsets.left + textInsets.right
-        return size
-    }
+    lazy var label: WayNameLabel = .forAutoLayout()
     
-    @objc dynamic public var borderColor: UIColor = .white {
-        didSet {
-            layer.borderColor = borderColor.cgColor
+    var text: String? {
+        get {
+            return label.text
+        }
+        set {
+            label.text = newValue
         }
     }
     
-    @objc dynamic open override var backgroundColor: UIColor? {
-        didSet {
-            setNeedsDisplay()
+    @objc dynamic public var borderColor: UIColor? {
+        get {
+            guard let color = layer.borderColor else { return nil }
+            return UIColor(cgColor: color)
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
         }
     }
     
-    override open func drawText(in rect: CGRect) {
-        backgroundColor?.setFill()
-        clipsToBounds = true
-        let ctx = UIGraphicsGetCurrentContext()
-        ctx?.fill(rect)
-        super.drawText(in: UIEdgeInsetsInsetRect(rect, textInsets))
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    
+    func commonInit() {
+        addSubview(label)
+        layoutMargins = WayNameView.textInsets
+        label.pinInSuperview(respectingMargins: true)
     }
     
     open override func layoutSubviews() {
@@ -363,6 +372,10 @@ open class WayNameLabel: StylableLabel {
         layer.cornerRadius = bounds.midY
     }
 }
+
+/// :nodoc:
+@objc(MBWayNameLabel)
+open class WayNameLabel: StylableLabel {}
 
 /// :nodoc:
 @objc(MBProgressBar)

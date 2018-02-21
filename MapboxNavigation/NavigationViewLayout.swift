@@ -43,8 +43,8 @@ extension NavigationView {
         bottomBannerView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         bottomBannerView.bottomAnchor.constraint(equalTo: safeBottomAnchor).isActive = true
         
-        wayNameLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wayNameLabel.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        wayNameView.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
     }
 
     func constrainEndOfRoute() {
