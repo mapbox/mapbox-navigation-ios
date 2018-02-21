@@ -65,11 +65,9 @@ extension RouteStep {
      Returns the entry and exit intersection bounds of the tunnel on the current route step
      */
     var tunnelIntersectionBounds: (entry: Intersection, exit: Intersection)? {
-        guard let intersections = intersections, containsTunnel else { return nil }
-        for i in 0..<(intersections.count - 1) where intersections.count > 1 {
-            if intersections[i].outletRoadClasses == .tunnel {
-                return (entry: intersections[i], exit: intersections[i+1])
-            }
+        guard let intersections = intersections, intersections.count > 1, containsTunnel else { return nil }
+        if let entryIndex = intersections.dropLast().index(where: { $0.outletRoadClasses?.contains(.tunnel) ?? false }) {
+            return (entry: intersections[entryIndex], exit: intersections[intersections.index(after: entryIndex)])
         }
         return nil
     }
