@@ -507,8 +507,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
     }
     
-    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint? {
-        return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
+    public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+        return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
