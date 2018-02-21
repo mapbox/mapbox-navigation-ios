@@ -1,4 +1,4 @@
-[## Changes to the Mapbox Navigation SDK for iOS
+## Changes to the Mapbox Navigation SDK for iOS
 
 ## master
 
