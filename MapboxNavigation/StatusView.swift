@@ -100,7 +100,8 @@ public class StatusView: UIView {
             self.isHidden = false
             self.textLabel.alpha = 1
             self.superview?.layoutIfNeeded()
-        }, completion:{ _ in 
+        }, completion:{ _ in
+            guard showSpinner else { return }
             self.activityIndicatorView.startAnimating()
         })
     }
