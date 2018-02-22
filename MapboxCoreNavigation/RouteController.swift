@@ -669,20 +669,34 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func detectRouteStepInTunnel(for location: CLLocation) {
-        guard routeProgress.currentLegProgress.currentStep.containsTunnel, let stepCoordinates = routeProgress.currentLegProgress.currentStep.coordinates, let startLocation = stepCoordinates.first  else { return }
-        guard let tunnelSlice = routeProgress.currentLegProgress.currentStep.tunnelSlice else { return }
-        guard let tunnelStartCoordinate = tunnelSlice.coordinates.first, let tunnelEndCoordinate = tunnelSlice.coordinates.last else { return }
-        
-        // Calculated distances from current location to tunnel entrance and exit
-        let distanceTraveled = routeProgress.distanceTraveled
-        let distanceToEntrance = Polyline(stepCoordinates).distance(from: startLocation, to: tunnelStartCoordinate)
-        let distanceToExit = Polyline(stepCoordinates).distance(from: startLocation, to: tunnelEndCoordinate)
 
-        if distanceToEntrance <= distanceTraveled && distanceTraveled <= distanceToExit {
+        guard let intersectionBounds = routeProgress.currentLegProgress.currentStep.tunnelIntersectionsBounds, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
+        
+        if hasEnteredTunnel(intersectionBounds, coordinates: coordinates) {
             delegate?.routeControllerDidEnterTunnel?(self)
         } else {
             delegate?.routeControllerDidExitTunnel?(self)
         }
+    }
+    
+    fileprivate func hasEnteredTunnel(_ intersectionBounds: [IntersectionBounds], coordinates: [CLLocationCoordinate2D]) -> Bool {
+        
+        guard let startLocation = coordinates.first else { return false }
+        
+        let distanceTraveled = routeProgress.distanceTraveled
+        
+        for bounds in intersectionBounds {
+            let tunnelStartCoordinate = bounds.entry.location
+            let tunnelEndCoordinate = bounds.exit.location
+            
+            let distanceToEntrance = Polyline(coordinates).distance(from: startLocation, to: tunnelStartCoordinate)
+            let distanceToExit = Polyline(coordinates).distance(from: startLocation, to: tunnelEndCoordinate)
+            
+            if distanceToEntrance <= distanceTraveled && distanceTraveled <= distanceToExit {
+                return true
+            }
+        }
+        return false
     }
     
     func updateRouteLegProgress(for location: CLLocation) {

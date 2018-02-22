@@ -1,6 +1,8 @@
 import MapboxDirections
 import Turf
 
+public typealias IntersectionBounds = (entry: Intersection, exit: Intersection)
+
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
         
@@ -54,21 +56,16 @@ extension RouteStep {
     }
     
     /**
-     Returns a tunnel slice for the current route step coordinates
+     Returns an array of the entry and exit intersection bounds of the tunnel on the current route step
      */
-    var tunnelSlice: Polyline? {
-        guard let coordinates = coordinates, let intersectionBounds = tunnelIntersectionBounds else { return nil }
-        return Polyline(coordinates).sliced(from: intersectionBounds.entry.location, to: intersectionBounds.exit.location)
-    }
-    
-    /**
-     Returns the entry and exit intersection bounds of the tunnel on the current route step
-     */
-    var tunnelIntersectionBounds: (entry: Intersection, exit: Intersection)? {
+    var tunnelIntersectionsBounds: [IntersectionBounds]? {
         guard let intersections = intersections, intersections.count > 1, containsTunnel else { return nil }
-        if let entryIndex = intersections.dropLast().index(where: { $0.outletRoadClasses?.contains(.tunnel) ?? false }) {
-            return (entry: intersections[entryIndex], exit: intersections[intersections.index(after: entryIndex)])
+        var intersectionBounds = [(entry: Intersection, exit: Intersection)]()
+        for i in 0..<intersections.count {
+            if let outletRoadClasses = intersections[i].outletRoadClasses, outletRoadClasses.contains(.tunnel) && i < intersections.count - 1 {
+                intersectionBounds.append((entry: intersections[i], exit: intersections[i+1]))
+            }
         }
-        return nil
+        return intersectionBounds
     }
 }
