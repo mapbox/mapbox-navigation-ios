@@ -92,3 +92,13 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
  The number of seconds remaining on the final step of a leg before the user is considered "arrived".
  */
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
+
+/**
+ Minimum number of consecutive incorrect course updates before rerouting occurs.
+ */
+public var RouteControllerMinNumberOfInCorrectCourses: Int = 3
+
+/**
+ Given a location update, the `horizontalAccuracy` is used to figure out how many consective location updates to wait before rerouting due to consecutive incorrect course updates.
+ */
+public var RouteControllerIncorrectCourseMultiplier: Int = 4
