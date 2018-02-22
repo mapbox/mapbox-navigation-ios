@@ -10,8 +10,9 @@
 * Renamed notification names associated with `RouteController` in Objective-C code. [#1122](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 * The user info keys of `RouteController`-related notifications have been renamed and are now members of the `RouteControllerNotificationUserInfoKey` struct in Swift and the `MBRouteControllerNotificationUserInfoKey` extensible enumeration in Objective-C. [#1122](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 
-Here is reference for the new notification names:
-
+<details>
+<summary>Here is reference for the new notification names:</summary>
+<br>
 <table>
 <thead>
 <tr>
@@ -76,9 +77,9 @@ Here is reference for the new notification names:
 </tr>
 <tr>
 <td><code>RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</code></td>
-<td><code>RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey</code></td>
+<td>🚮 (removed)</td>
 <td><code>MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</code></td>
-<td><code>MBRouteControllerEstimatedTimeUntilManeuverKey</code></td>
+<td>🚮 (removed)</td>
 </tr>
 <tr>
 <td><code>RouteControllerNotificationLocationKey</code></td>
@@ -112,6 +113,7 @@ Here is reference for the new notification names:
 </tr>
 </tbody>
 </table>
+</details>
 
 ## Core Navigation
 
