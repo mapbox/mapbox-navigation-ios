@@ -96,11 +96,14 @@ public class StatusView: UIView {
         if (!showSpinner) { activityIndicatorView.stopAnimating() }
         guard isHidden == true else { return }
         
-        UIView.defaultAnimation(0.3, animations: {
+        let show = {
             self.isHidden = false
             self.textLabel.alpha = 1
+            if (showSpinner) { self.activityIndicatorView.isHidden = false }
             self.superview?.layoutIfNeeded()
-        }, completion:{ _ in
+        }
+        
+        UIView.defaultAnimation(0.3, animations:show, completion:{ _ in
             guard showSpinner else { return }
             self.activityIndicatorView.startAnimating()
         })
@@ -108,10 +111,10 @@ public class StatusView: UIView {
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
         
-        let payload = {
-            self.textLabel.alpha = 0
+        let hide = {
             self.isHidden = true
-            self.superview?.layoutIfNeeded()
+            self.textLabel.alpha = 0
+            self.activityIndicatorView.isHidden = true
         }
         
         let animate = {
@@ -120,10 +123,10 @@ public class StatusView: UIView {
             let fireTime = DispatchTime.now() + delay
             DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
                 self.activityIndicatorView.stopAnimating()
-                UIView.defaultAnimation(0.3, delay: 0, animations: payload, completion: nil)
+                UIView.defaultAnimation(0.3, delay: 0, animations: hide, completion: nil)
             })
         }
         
-        animated ? animate() : payload()
+        animated ? animate() : hide()
     }
 }
