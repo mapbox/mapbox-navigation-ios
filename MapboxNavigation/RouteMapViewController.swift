@@ -641,7 +641,8 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        guard !(navigationView.endOfRouteShowConstraint?.isActive ?? false) else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
+        let endOfRouteTime = (navigationView.endOfRouteView != nil && navigationView.endOfRouteShowConstraint!.isActive == true)
+        guard !endOfRouteTime else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
         return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
     }
     

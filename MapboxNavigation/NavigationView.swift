@@ -43,7 +43,7 @@ open class NavigationView: UIView {
         self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)]
     
     lazy var bannerHideConstraints: [NSLayoutConstraint] = [
-        self.instructionsBannerView.bottomAnchor.constraint(equalTo: self.topAnchor),
+        self.informationStackView.bottomAnchor.constraint(equalTo: self.topAnchor),
         self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
     ]
     
