@@ -1103,6 +1103,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
 }
 
+// MARK: Extensions
+
+extension NavigationMapView: UserCourseViewDelegate {
+    func didTapPuck(_ sender: UIView) {
+        navigationMapDelegate?.navigationMapViewDidTapPuck?(sender)
+    }
+}
+
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
