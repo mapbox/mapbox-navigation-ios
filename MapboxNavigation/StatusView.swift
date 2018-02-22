@@ -30,6 +30,8 @@ public class StatusView: UIView {
         commonInit()
     }
     
+    var isCurrentlyVisible: Bool?
+    
     func commonInit() {
         let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -96,13 +98,17 @@ public class StatusView: UIView {
             activityIndicatorView.stopAnimating()
         }
         
+        guard isCurrentlyVisible != true else { return }
+        
         guard isHidden == true else { return }
         
         UIView.defaultAnimation(0.3, animations: {
             self.isHidden = false
             self.textLabel.alpha = 1
             self.superview?.layoutIfNeeded()
-        }, completion: nil)
+        }, completion: { (completed) in
+            self.isCurrentlyVisible = true
+        })
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
@@ -116,10 +122,12 @@ public class StatusView: UIView {
                 self.superview?.layoutIfNeeded()
             }, completion: { (completed) in
                 self.activityIndicatorView.stopAnimating()
+                self.isCurrentlyVisible = false
             })
         } else {
             activityIndicatorView.stopAnimating()
             isHidden = true
+            isCurrentlyVisible = false
         }
     }
 }
