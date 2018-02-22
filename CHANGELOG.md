@@ -131,7 +131,7 @@
 
 ## Voice Guidance
 
-* Exposes `RouteVoiceController.speak(_:)` which would allow custom subclass of PollyVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
+* Exposes `RouteVoiceController.speak(_:)` which would allow custom subclass of MapboxVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
 
 
 ## v0.13.1 (February 7, 2018)
