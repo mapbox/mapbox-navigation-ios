@@ -93,36 +93,36 @@ public class StatusView: UIView {
         canChangeValue = interactive
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
-        if showSpinner {
-            activityIndicatorView.startAnimating()
-        } else {
-            activityIndicatorView.stopAnimating()
-        }
-        
+        if (!showSpinner) { activityIndicatorView.stopAnimating() }
         guard isHidden == true else { return }
-        self.isHidden = false
         
         UIView.defaultAnimation(0.3, animations: {
+            self.isHidden = false
             self.textLabel.alpha = 1
             self.superview?.layoutIfNeeded()
-        }, completion: nil)
+        }, completion:{ _ in 
+            self.activityIndicatorView.startAnimating()
+        })
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
         
-        if animated {
-            guard isHidden == false else { return }
-            
-            UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.textLabel.alpha = 0
-                self.superview?.layoutIfNeeded()
-            }, completion: { (completed) in
-                self.isHidden = true
-                self.activityIndicatorView.stopAnimating()
-            })
-        } else {
-            activityIndicatorView.stopAnimating()
-            isHidden = true
+        let payload = {
+            self.textLabel.alpha = 0
+            self.isHidden = true
+            self.superview?.layoutIfNeeded()
         }
+        
+        let animate = {
+            guard self.isHidden == false else { return }
+            
+            let fireTime = DispatchTime.now() + delay
+            DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
+                self.activityIndicatorView.stopAnimating()
+                UIView.defaultAnimation(0.3, delay: 0, animations: payload, completion: nil)
+            })
+        }
+        
+        animated ? animate() : payload()
     }
 }

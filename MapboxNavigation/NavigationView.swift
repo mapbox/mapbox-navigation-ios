@@ -182,8 +182,20 @@ open class NavigationView: UIView {
     
     func setupStackViews() {
         statusView.isHidden = true
-        informationStackView.addArrangedSubviews([instructionsBannerView, lanesView, nextBannerView, statusView])
+    
+        setupInformationStackView()
         floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
+    }
+    
+    func setupInformationStackView() {
+        let informationChildren: [UIView] = [instructionsBannerView, lanesView, nextBannerView, statusView]
+        informationStackView.addArrangedSubviews(informationChildren)
+        
+        let constraints = informationChildren.flatMap { (view) -> [NSLayoutConstraint] in
+            return [view.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor),
+                    view.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor)]
+        }
+        NSLayoutConstraint.activate(constraints)
     }
     
     func setupContainers() {
