@@ -1,7 +1,7 @@
 import MapboxDirections
 import Turf
 
-public typealias IntersectionBounds = (entry: Intersection, exit: Intersection)
+typealias IntersectionBounds = (entry: Intersection, exit: Intersection)
 
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
@@ -60,7 +60,7 @@ extension RouteStep {
      */
     var tunnelIntersectionsBounds: [IntersectionBounds]? {
         guard let intersections = intersections, intersections.count > 1, containsTunnel else { return nil }
-        var intersectionBounds = [(entry: Intersection, exit: Intersection)]()
+        var intersectionBounds = [IntersectionBounds]()
         for i in 0..<intersections.count {
             if let outletRoadClasses = intersections[i].outletRoadClasses, outletRoadClasses.contains(.tunnel) && i < intersections.count - 1 {
                 intersectionBounds.append((entry: intersections[i], exit: intersections[i+1]))
