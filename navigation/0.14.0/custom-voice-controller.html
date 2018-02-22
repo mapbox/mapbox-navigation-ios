@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Other Protocols  Reference</title>
+    <title>Custom Voice Controller  Reference</title>
     <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="css/highlight.css" />
     <meta charset="utf-8">
@@ -10,8 +10,8 @@
     <link rel='shortcut icon' href='https://www.mapbox.com/img/favicon.ico' type='image/x-icon' />
 
     <style type="text/css">
-      .nav-group-name[data-name="Other Protocols"] > .small-heading,
-      .nav-group-task[data-name="Other Protocols"] {
+      .nav-group-name[data-name="Custom Voice Controller"] > .small-heading,
+      .nav-group-task[data-name="Custom Voice Controller"] {
         background-color: #f5f8fc;
         font-family: "Open Sans Bold";
         border-left: 3px solid #3a68d8;
@@ -40,7 +40,7 @@
   <body>
 
 
-    <a title="Other Protocols  Reference"></a>
+    <a title="Custom Voice Controller  Reference"></a>
 
     <header class="header-container">
       <div class="limiter">
@@ -76,7 +76,7 @@
       <div class="limiter">
         <a class="breadcrumb" href="index.html">Mapbox Navigation SDK for iOS Reference</a>
         <img class="carat" src="img/carat.png" />
-        Other Protocols  Reference
+        Custom Voice Controller  Reference
       </div>
     </div>
 
@@ -384,167 +384,84 @@
 
         <section class="section">
           <div class="section-content">
-            <a href="#/Other Protocols"><h1 id="Other Protocols">Other Protocols<span class="anchor-icon" /></h1></a>
-            <p>The following protocols are available globally.</p>
+            
+            <p><em>Source available <a href="https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation-Examples/Examples/Custom-Voice-Controller.swift">here</a></em></p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">Foundation</span>
+<span class="kd">import</span> <span class="kt">UIKit</span>
+<span class="kd">import</span> <span class="kt">MapboxCoreNavigation</span>
+<span class="kd">import</span> <span class="kt">MapboxNavigation</span>
+<span class="kd">import</span> <span class="kt">MapboxDirections</span>
+<span class="kd">import</span> <span class="kt">AVFoundation</span>
+
+<span class="kd">class</span> <span class="kt">CustomVoiceControllerUI</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">voiceController</span><span class="p">:</span> <span class="kt">CustomVoiceController</span><span class="p">?</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+        <span class="n">voiceController</span> <span class="o">=</span> <span class="kt">CustomVoiceController</span><span class="p">()</span>
+
+        <span class="k">let</span> <span class="nv">origin</span> <span class="o">=</span> <span class="kt">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mf">37.77440680146262</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.43539772352648</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">destination</span> <span class="o">=</span> <span class="kt">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="mf">37.76556957793795</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.42409811526268</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">NavigationRouteOptions</span><span class="p">(</span><span class="nv">coordinates</span><span class="p">:</span> <span class="p">[</span><span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">])</span>
+
+        <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.17.0/Classes/Directions.html">Directions</a></span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">calculate</span><span class="p">(</span><span class="n">options</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">waypoints</span><span class="p">,</span> <span class="n">routes</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+            <span class="k">guard</span> <span class="k">let</span> <span class="nv">route</span> <span class="o">=</span> <span class="n">routes</span><span class="p">?</span><span class="o">.</span><span class="n">first</span><span class="p">,</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">nil</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="o">!.</span><span class="n">localizedDescription</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+
+            <span class="k">let</span> <span class="nv">navigationController</span> <span class="o">=</span> <span class="kt">NavigationViewController</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">route</span><span class="p">)</span>
+            <span class="n">navigationController</span><span class="o">.</span><span class="n">voiceController</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">voiceController</span>
+
+            <span class="c1">// This allows the developer to simulate the route.</span>
+            <span class="c1">// Note: If copying and pasting this code in your own project,</span>
+            <span class="c1">// comment out `simulationIsEnabled` as it is defined elsewhere in this project.</span>
+            <span class="k">if</span> <span class="n">simulationIsEnabled</span> <span class="p">{</span>
+                <span class="n">navigationController</span><span class="o">.</span><span class="n">routeController</span><span class="o">.</span><span class="n">locationManager</span> <span class="o">=</span> <span class="kt">SimulatedLocationManager</span><span class="p">(</span><span class="nv">route</span><span class="p">:</span> <span class="n">route</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="k">self</span><span class="o">.</span><span class="nf">present</span><span class="p">(</span><span class="n">navigationController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewWillDisappear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewWillDisappear</span><span class="p">(</span><span class="n">animated</span><span class="p">)</span>
+        <span class="n">voiceController</span> <span class="o">=</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">CustomVoiceController</span><span class="p">:</span> <span class="kt">MapboxVoiceController</span> <span class="p">{</span>
+
+    <span class="c1">// You will need audio files for as many or few cases as you'd like to handle</span>
+    <span class="c1">// This example just covers left, right and straight.</span>
+    <span class="k">let</span> <span class="nv">turnLeft</span> <span class="o">=</span> <span class="kt">NSDataAsset</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"turnleft"</span><span class="p">)</span><span class="o">!.</span><span class="n">data</span>
+    <span class="k">let</span> <span class="nv">turnRight</span> <span class="o">=</span> <span class="kt">NSDataAsset</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"turnright"</span><span class="p">)</span><span class="o">!.</span><span class="n">data</span>
+    <span class="k">let</span> <span class="nv">straight</span> <span class="o">=</span> <span class="kt">NSDataAsset</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"continuestraight"</span><span class="p">)</span><span class="o">!.</span><span class="n">data</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">didPassSpokenInstructionPoint</span><span class="p">(</span><span class="nv">notification</span><span class="p">:</span> <span class="kt">NSNotification</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">routeProgress</span> <span class="o">=</span> <span class="n">notification</span><span class="o">.</span><span class="n">userInfo</span><span class="o">!</span><span class="p">[</span><span class="kt">RouteControllerNotificationUserInfoKey</span><span class="o">.</span><span class="n">routeProgressKey</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">RouteProgress</span>
+        <span class="k">let</span> <span class="nv">soundForInstruction</span> <span class="o">=</span> <span class="nf">audio</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="n">routeProgress</span><span class="o">.</span><span class="n">currentLegProgress</span><span class="o">.</span><span class="n">currentStep</span><span class="p">)</span>
+        <span class="nf">play</span><span class="p">(</span><span class="n">soundForInstruction</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">audio</span><span class="p">(</span><span class="k">for</span> <span class="nv">step</span><span class="p">:</span> <span class="kt"><a href="https://www.mapbox.com/mapbox-navigation-ios/directions/0.17.0/Classes/RouteStep.html">RouteStep</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Data</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="n">step</span><span class="o">.</span><span class="n">maneuverDirection</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">left</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">turnLeft</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">right</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">turnRight</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">straight</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
 
           </div>
         </section>
 
-        <section class="section">
-          <div class="section-content">
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/NavigationMapViewCourseTrackingDelegate"></a>
-                <a name="//apple_ref/swift/Section/NavigationMapViewCourseTrackingDelegate" class="dashAnchor"></a>
-                <a href="#/NavigationMapViewCourseTrackingDelegate">
-                  <h3 id="NavigationMapViewCourseTrackingDelegate" class="section-name">NavigationMapViewCourseTrackingDelegate<span class="anchor-icon" /></h3>
-                </a>
-              </div>
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@MapboxNavigation@objc(pl)MBNavigationMapViewCourseTrackingDelegate"></a>
-                    <a name="//apple_ref/swift/Protocol/NavigationMapViewCourseTrackingDelegate" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@MapboxNavigation@objc(pl)MBNavigationMapViewCourseTrackingDelegate"><span class="token-name">NavigationMapViewCourseTrackingDelegate</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>The <code>NavigationMapViewCourseTrackingDelegate</code> provides methods for responding to the <code><a href="Classes/NavigationMapView.html">NavigationMapView</a></code> starting or stopping course tracking.</p>
-
-                        <a href="Protocols/NavigationMapViewCourseTrackingDelegate.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language keyline-blue">
-                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">NavigationMapViewCourseTrackingDelegate</span><span class="p">:</span> <span class="kd">class</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.14.0/MapboxNavigation/NavigationMapView.swift#L1208-L1224">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@MapboxNavigation@objc(pl)MBVoiceControllerDelegate"></a>
-                    <a name="//apple_ref/swift/Protocol/VoiceControllerDelegate" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@MapboxNavigation@objc(pl)MBVoiceControllerDelegate"><span class="token-name">VoiceControllerDelegate</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>The <code>VoiceControllerDelegate</code> protocol defines methods that allow an object to respond to significant events related to spoken instructions.</p>
-
-                        <a href="Protocols/VoiceControllerDelegate.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language keyline-blue">
-                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">VoiceControllerDelegate</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.14.0/MapboxNavigation/RouteVoiceController.swift#L267-L296">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@MapboxNavigation@objc(pl)MBStyleManagerDelegate"></a>
-                    <a name="//apple_ref/swift/Protocol/StyleManagerDelegate" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@MapboxNavigation@objc(pl)MBStyleManagerDelegate"><span class="token-name">StyleManagerDelegate</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>The <code>StyleManagerDelegate</code> protocol defines a set of methods used for controlling the style.</p>
-
-                        <a href="Protocols/StyleManagerDelegate.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language keyline-blue">
-                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">StyleManagerDelegate</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.14.0/MapboxNavigation/StyleManager.swift#L8-L23">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@MapboxNavigation@objc(pl)MBUserCourseView"></a>
-                    <a name="//apple_ref/swift/Protocol/UserCourseView" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@MapboxNavigation@objc(pl)MBUserCourseView"><span class="token-name">UserCourseView</span><span class="token-icon" /></a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <section class="section">
-                      <div class="abstract">
-                        <p>A view that represents the user’s location and course on a <code><a href="Classes/NavigationMapView.html">NavigationMapView</a></code>.</p>
-
-                        <a href="Protocols/UserCourseView.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language keyline-blue">
-                          <p  style="background: rgba(65, 131, 196, 0.15);" class="aside-title text-blue">Swift</p>
-                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">UserCourseView</span> <span class="k">where</span> <span class="k">Self</span><span class="p">:</span> <span class="kt">UIView</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="show-on-github">
-                        <a href="https://github.com/mapbox/mapbox-navigation-ios/tree/v0.14.0/MapboxNavigation/UserCourseView.swift#L12-L21">
-                          <img style="margin-bottom: 1px;" class="show-on-github-icon" src="img/github.svg"/>
-                          View Source on GitHub
-                        </a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </section>
 
       </article>
     </div>
