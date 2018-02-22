@@ -220,7 +220,7 @@ open class RouteController: NSObject {
 
     var hasFoundOneQualifiedLocation = false
 
-    var movmentsAwayFromRoute = 0
+    var movementsAwayFromRoute = 0
     
     var previousArrivalWaypoint: Waypoint? {
         didSet {
@@ -547,7 +547,7 @@ extension RouteController {
             lastReroute?.update(newRoute: routeProgress.route)
         }
         
-        movmentsAwayFromRoute = 0
+        movementsAwayFromRoute = 0
     }
 }
 
@@ -673,19 +673,19 @@ extension RouteController: CLLocationManagerDelegate {
     /**
      Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
      */
-    func isCourseIsOnRoute(_ location: CLLocation) -> Bool {
+    func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
         
         guard let calculatedCourseForLocationOnStep = interpolatedCourse(from: location, along: nearByCoordinates) else { return true }
         
         let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / 4)
         
-        if movmentsAwayFromRoute >= max(3, maxUpdatesAwayFromRouteGivenAccuracy)  {
+        if movementsAwayFromRoute >= max(3, maxUpdatesAwayFromRouteGivenAccuracy)  {
             return false
         } else if shouldSnap(location, toRouteWith: calculatedCourseForLocationOnStep) {
-            movmentsAwayFromRoute = 0
+            movementsAwayFromRoute = 0
         } else {
-            movmentsAwayFromRoute += 1
+            movementsAwayFromRoute += 1
         }
         
         return true
@@ -705,7 +705,7 @@ extension RouteController: CLLocationManagerDelegate {
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
-        guard !isCloseToCurrentStep || !isCourseIsOnRoute(location) else { return true }
+        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
         
         // Check and see if the user is near a future step.
         guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate),
