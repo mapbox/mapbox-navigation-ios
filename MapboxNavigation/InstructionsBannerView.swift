@@ -71,8 +71,8 @@ open class BaseInstructionsBannerView: UIControl {
         delegate?.didTapInstructionsBanner(self)
     }
     
-    func set(_ instruction: VisualInstruction) {
-        let secondaryInstruction = instruction.secondaryTextComponents
+    func set(_ instruction: VisualInstruction?) {
+        let secondaryInstruction = instruction?.secondaryTextComponents
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
@@ -81,7 +81,7 @@ open class BaseInstructionsBannerView: UIControl {
             baselineAlignInstructions()
         }
         
-        primaryLabel.instruction = instruction.primaryTextComponents
+        primaryLabel.instruction = instruction?.primaryTextComponents
         secondaryLabel.instruction = secondaryInstruction
         maneuverView.visualInstruction = instruction
     }

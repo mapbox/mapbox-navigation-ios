@@ -222,7 +222,14 @@ open class RouteController: NSObject {
 
     var recentDistancesFromManeuver: [CLLocationDistance] = []
     
-    var previousArrivalWaypoint: Waypoint?
+    var previousArrivalWaypoint: Waypoint? {
+        didSet {
+            if oldValue != previousArrivalWaypoint {
+                sessionState.arrivalTimestamp = nil
+                sessionState.departureTimestamp = nil
+            }
+        }
+    }
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
 
@@ -519,8 +526,7 @@ extension RouteController {
             sendDepartEvent()
         }
         
-        if let _ = routeProgress.route.legs.last?.destination,
-            sessionState.arrivalTimestamp == nil,
+        if sessionState.arrivalTimestamp == nil,
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
@@ -581,7 +587,10 @@ extension RouteController: CLLocationManagerDelegate {
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        let filteredLocations = locations.filter { $0.isQualified }
+        let filteredLocations = locations.filter {
+            sessionState.pastLocations.push($0)
+            return $0.isQualified
+        }
         
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
@@ -606,7 +615,6 @@ extension RouteController: CLLocationManagerDelegate {
         guard let location = potentialLocation else { return }
         
         self.rawLocation = location
-        sessionState.pastLocations.push(location)
 
         delegate?.routeController?(self, didUpdate: [location])
 

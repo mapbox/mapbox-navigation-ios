@@ -4,16 +4,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 
-typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
-
-let routeLineWidthAtZoomLevels: [Int: MGLStyleValue<NSNumber>] = [
-    10: MGLStyleValue(rawValue: 8),
-    13: MGLStyleValue(rawValue: 9),
-    16: MGLStyleValue(rawValue: 11),
-    19: MGLStyleValue(rawValue: 22),
-    22: MGLStyleValue(rawValue: 28)
-]
-
 let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
 /**
@@ -1150,7 +1140,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
     func multiplied(by factor: Double) -> Dictionary {
         var newCameraStop: [Int: MGLStyleValue<NSNumber>] = [:]
-        for stop in routeLineWidthAtZoomLevels {
+        for stop in MBRouteLineWidthByZoomLevel {
             let f = stop.value as! MGLConstantStyleValue
             let newValue =  f.rawValue.doubleValue * factor
             newCameraStop[stop.key] = MGLStyleValue<NSNumber>(rawValue: NSNumber(value:newValue))

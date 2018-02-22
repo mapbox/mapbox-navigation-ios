@@ -306,6 +306,11 @@ open class StepTableViewCell: UITableViewCell {
         separatorView.bottomAnchor.constraint(equalTo: instructionsView.bottomAnchor).isActive = true
         separatorView.rightAnchor.constraint(equalTo: rightAnchor, constant: -18).isActive = true
     }
+
+    open override func prepareForReuse() {
+        super.prepareForReuse()
+        instructionsView.set(nil)
+    }
 }
 
 extension Array where Element == RouteStep {

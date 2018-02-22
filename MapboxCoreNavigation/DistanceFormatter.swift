@@ -5,20 +5,69 @@ extension CLLocationDistance {
     static let metersPerMile: CLLocationDistance = 1_609.344
     static let feetPerMeter: CLLocationDistance = 3.28084
     
+    // Returns the distance converted to miles
     var miles: CLLocationDistance {
         return self / .metersPerMile
     }
     
+    // Returns the distance converted to feet
     var feet: CLLocationDistance {
         return self * .feetPerMeter
     }
     
+    // Returns the distance converted to yards
     var yards: CLLocationDistance {
         return feet / 3
     }
     
+    // Returns the distance converted to kilometers
     var kilometers: CLLocationDistance {
         return self / 1000
+    }
+    
+    // Returns the distance in meters converted from miles
+    func inMiles() -> Double {
+        return self * .metersPerMile
+    }
+    
+    // Returns the distance in meters converted from yards
+    func inYards() -> Double {
+        return self * .feetPerMeter / 3
+    }
+}
+
+struct RoundingTable {
+    struct Threshold {
+        let maximumDistance: CLLocationDistance
+        let roundingIncrement: Double
+        let unit: LengthFormatter.Unit
+        let maximumFractionDigits: Int
+        
+        func localizedDistanceString(for distance: CLLocationDistance, using formatter: DistanceFormatter) -> String {
+            switch unit {
+            case .mile:
+                return formatter.string(fromValue: distance.miles, unit: unit)
+            case .foot:
+                return formatter.string(fromValue: distance.feet, unit: unit)
+            case .yard:
+                return formatter.string(fromValue: distance.yards, unit: unit)
+            case .kilometer:
+                return formatter.string(fromValue: distance.kilometers, unit: unit)
+            default:
+                return formatter.string(fromValue: distance, unit: unit)
+            }
+        }
+    }
+    
+    let thresholds: [Threshold]
+    
+    func threshold(for distance: CLLocationDistance) -> Threshold {
+        for threshold in thresholds {
+            if distance < threshold.maximumDistance {
+                return threshold
+            }
+        }
+        return thresholds.last!
     }
 }
 
@@ -32,6 +81,29 @@ public class DistanceFormatter: LengthFormatter {
     
     /// Indicates the most recently used unit
     public private(set) var unit: LengthFormatter.Unit = .millimeter
+
+    // Rounding tables for metric, imperial, and UK measurement systems. The last threshold is used as a default.
+    lazy var roundingTableMetric: RoundingTable = {
+        return RoundingTable(thresholds: [.init(maximumDistance: 25, roundingIncrement: 5, unit: .meter, maximumFractionDigits: 0),
+                                          .init(maximumDistance: 100, roundingIncrement: 25, unit: .meter, maximumFractionDigits: 0),
+                                          .init(maximumDistance: 1_000, roundingIncrement: 50, unit: .meter, maximumFractionDigits: 0),
+                                          .init(maximumDistance: 3_000, roundingIncrement: 0, unit: .kilometer, maximumFractionDigits: 1),
+                                          .init(maximumDistance: 5_000, roundingIncrement: 0, unit: .kilometer, maximumFractionDigits: 0)])
+    }()
+    
+    lazy var roundingTableUK: RoundingTable = {
+        return RoundingTable(thresholds: [.init(maximumDistance: 20.inYards(), roundingIncrement: 10, unit: .yard, maximumFractionDigits: 0),
+                                          .init(maximumDistance: 100.inYards(), roundingIncrement: 25, unit: .yard, maximumFractionDigits: 0),
+                                          .init(maximumDistance: 0.1.inMiles(), roundingIncrement: 50, unit: .yard, maximumFractionDigits: 1),
+                                          .init(maximumDistance: 3.inMiles(), roundingIncrement: 0.1, unit: .mile, maximumFractionDigits: 1),
+                                          .init(maximumDistance: 5.inMiles(), roundingIncrement: 0, unit: .mile, maximumFractionDigits: 0)])
+    }()
+    
+    lazy var roundingTableImperial: RoundingTable = {
+        return RoundingTable(thresholds: [.init(maximumDistance: 0.1.inMiles(), roundingIncrement: 50, unit: .foot, maximumFractionDigits: 0),
+                                          .init(maximumDistance: 3.inMiles(), roundingIncrement: 0.1, unit: .mile, maximumFractionDigits: 1),
+                                          .init(maximumDistance: 5.inMiles(), roundingIncrement: 0, unit: .mile, maximumFractionDigits: 0)])
+    }()
     
     /**
      Intializes a new `DistanceFormatter`.
@@ -54,36 +126,13 @@ public class DistanceFormatter: LengthFormatter {
         aCoder.encode(approx, forKey: "approximate")
     }
     
-    func maximumFractionDigits(for distance: CLLocationDistance) -> Int {
+    func threshold(for distance: CLLocationDistance) -> RoundingTable.Threshold {
         if NavigationSettings.shared.usesMetric {
-            return distance < 3_000 ? 1 : 0
+            return roundingTableMetric.threshold(for: distance)
         } else if numberFormatter.locale.identifier == "en-GB" {
-            return 0.1...3 ~= distance.miles ? 1 : 0
+            return roundingTableUK.threshold(for: distance)
         } else {
-            return distance.miles < 3 ? 1 : 0
-        }
-    }
-    
-    func roundingIncrement(for distance: CLLocationDistance, unit: LengthFormatter.Unit) -> Double {
-        if NavigationSettings.shared.usesMetric {
-            if distance < 25 {
-                return 5
-            } else if distance < 100 {
-                return 25
-            } else if distance < 1_000 {
-                return 50
-            }
-            return distance < 3_000 ? 0 : 0.5
-        } else {
-            if unit == .yard {
-                if distance.miles >= 0.1 {
-                    return 0
-                } else {
-                    return 50
-                }
-            } else {
-                return 0.1
-            }
+            return roundingTableImperial.threshold(for: distance)
         }
     }
     
@@ -98,59 +147,18 @@ public class DistanceFormatter: LengthFormatter {
         numberFormatter.decimalSeparator = nonFractionalLengthFormatter.numberFormatter.decimalSeparator
         numberFormatter.alwaysShowsDecimalSeparator = nonFractionalLengthFormatter.numberFormatter.alwaysShowsDecimalSeparator
         numberFormatter.usesSignificantDigits = false
-        numberFormatter.maximumFractionDigits = maximumFractionDigits(for: distance)
-        
-        unitString(fromMeters: distance, usedUnit: &unit)
-        
-        numberFormatter.roundingIncrement = roundingIncrement(for: distance, unit: unit) as NSNumber
-        
-        return formattedDistance(distance, modify: &unit)
+        return formattedDistance(distance)
     }
     
     @objc public override func string(fromMeters numberInMeters: Double) -> String {
         return self.string(from: numberInMeters)
     }
     
-    func formattedDistance(_ distance: CLLocationDistance, modify unit: inout LengthFormatter.Unit) -> String {
-        var formattedDistance: String
-        if NavigationSettings.shared.usesMetric {
-            let roundedDistance: CLLocationDistance = numberFormatter.number(from: numberFormatter.string(from: distance as NSNumber)!)?.doubleValue ?? distance
-            numberFormatter.roundingIncrement = roundingIncrement(for: roundedDistance, unit: unit) as NSNumber
-            
-            if roundedDistance >= 1000 {
-                unit = .kilometer
-                formattedDistance = string(fromValue: roundedDistance.kilometers, unit: unit)
-            } else {
-                unit = .meter
-                formattedDistance = string(fromValue: roundedDistance, unit: unit)
-            }
-        } else {
-            if numberFormatter.locale.identifier == "en-GB" {
-                if distance.miles >= 0.1 {
-                    unit = .mile
-                    formattedDistance = string(fromValue: distance.miles, unit: unit)
-                } else if distance.yards < 10 {
-                    unit = .foot
-                    formattedDistance = string(fromValue: distance.feet, unit: unit)
-                } else {
-                    unit = .yard
-                    formattedDistance = string(fromValue: distance.yards, unit: unit)
-                }
-            } else {
-                if unit == .yard {
-                    if distance.miles >= 0.1 {
-                        unit = .mile
-                        formattedDistance = string(fromValue: distance.miles, unit: unit)
-                    } else {
-                        unit = .foot
-                        formattedDistance = string(fromValue: distance.feet, unit: unit)
-                    }
-                } else {
-                    formattedDistance = super.string(fromMeters: distance)
-                }
-            }
-        }
-        
-        return formattedDistance
+    func formattedDistance(_ distance: CLLocationDistance) -> String {
+        let threshold = self.threshold(for: distance)
+        numberFormatter.maximumFractionDigits = threshold.maximumFractionDigits
+        numberFormatter.roundingIncrement = threshold.roundingIncrement as NSNumber
+        unit = threshold.unit
+        return threshold.localizedDistanceString(for: distance, using: self)
     }
 }
