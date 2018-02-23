@@ -41,7 +41,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     var draggableHeight: CGFloat {
         // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
-        let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(collectionView.numberOfRows)
+        let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom + view.safeArea.bottom) * CGFloat(collectionView.numberOfRows)
         let collectionViewHeight = flowLayout.itemSize.height * CGFloat(collectionView.numberOfRows) + padding
         let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
         return fullHeight
