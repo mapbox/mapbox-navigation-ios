@@ -18,6 +18,9 @@ enum ExampleMode {
 
 class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, VoiceControllerDelegate {
 
+    // MARK: - Class Constants
+    static let mapInsets = UIEdgeInsets(top: 25, left: 25, bottom: 25, right: 25)
+    
     // MARK: - IBOutlets
     @IBOutlet weak var longPressHintView: UIView!
 
@@ -318,7 +321,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         } else if let navCon = navigationController {
             topPadding = navCon.navigationBar.frame.size.height
         }
-        mapView.contentInset = UIEdgeInsets(top: topPadding + 25, left: 25, bottom: bottomPadding + 25, right: 25)
+        
+        let subviewMask = UIEdgeInsets(top: topPadding, left: 0, bottom: bottomPadding, right: 0)
+        mapView.contentInset = ViewController.mapInsets + subviewMask
         
         view.insertSubview(mapView, belowSubview: bottomBar)
         
