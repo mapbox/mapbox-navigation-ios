@@ -269,7 +269,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         super.layoutSubviews()
         
         //If the map is in tracking mode, make sure we update the camera after the layout pass.
-        if (tracksUserCourse) { updateCourseTracking(location: userLocationForCourseTracking, animated: false) }
+        if (tracksUserCourse) {
+            updateCourseTracking(location: userLocationForCourseTracking, animated: false)
+        }
     }
     
     open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
