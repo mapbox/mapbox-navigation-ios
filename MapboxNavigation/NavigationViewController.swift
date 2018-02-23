@@ -543,10 +543,6 @@ extension NavigationViewController: RouteControllerDelegate {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
             mapViewController?.labelCurrentRoad(at: location)
         }
-    
-        if !(routeController.locationManager is SimulatedLocationManager) {
-            mapViewController?.statusView.hide(delay: 3, animated: true)
-        }
     }
     
     @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {

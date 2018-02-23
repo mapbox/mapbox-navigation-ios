@@ -312,14 +312,14 @@ class RouteMapViewController: UIViewController {
     @objc func willReroute(notification: NSNotification) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
-        showStatus(title: title, withSpinner: true, for: 3)
+        statusView.show(title, showSpinner: true)
     }
     
     @objc func didReroute(notification: NSNotification) {
         guard self.isViewLoaded else { return }
         
         if !(routeController.locationManager is SimulatedLocationManager) {
-            navigationView.statusView.hide(delay: 0.5, animated: true)
+            statusView.hide(delay: 2, animated: true)
             
             if !navigationView.reportButton.isHidden {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
@@ -330,7 +330,7 @@ class RouteMapViewController: UIViewController {
         
         if notification.userInfo![RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            showStatus(title: title, withSpinner: true, for: 5)
+            showStatus(title: title, withSpinner: true, for: 3)
         }
     }
 
@@ -733,7 +733,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     @objc func updateETA() {
-        guard isViewLoaded else { return }
+        guard isViewLoaded, routeController != nil else { return }
         navigationView.bottomBannerView.updateETA(routeProgress: routeController.routeProgress)
     }
     

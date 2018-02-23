@@ -32,7 +32,6 @@ public class StatusView: UIView {
     }
     
     func commonInit() {
-        
         let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(activityIndicatorView)
@@ -94,6 +93,9 @@ public class StatusView: UIView {
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
         if (!showSpinner) { activityIndicatorView.stopAnimating() }
+
+        guard isCurrentlyVisible != true else { return }
+        
         guard isHidden == true else { return }
         
         let show = {
@@ -104,6 +106,7 @@ public class StatusView: UIView {
         }
         
         UIView.defaultAnimation(0.3, animations:show, completion:{ _ in
+            self.isCurrentlyVisible = true
             guard showSpinner else { return }
             self.activityIndicatorView.startAnimating()
         })
@@ -123,7 +126,9 @@ public class StatusView: UIView {
             let fireTime = DispatchTime.now() + delay
             DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
                 self.activityIndicatorView.stopAnimating()
-                UIView.defaultAnimation(0.3, delay: 0, animations: hide, completion: nil)
+                UIView.defaultAnimation(0.3, delay: 0, animations: hide, completion: { _ in
+                    self.isCurrentlyVisible = false
+                })
             })
         }
         
