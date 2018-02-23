@@ -14,6 +14,7 @@ public class StatusView: UIView {
     weak var delegate: StatusViewDelegate?
     var panStartPoint: CGPoint?
     
+    var isCurrentlyVisible: Bool = false
     var canChangeValue = false
     var value: Double = 0 {
         didSet {
@@ -94,10 +95,8 @@ public class StatusView: UIView {
         activityIndicatorView.hidesWhenStopped = true
         if (!showSpinner) { activityIndicatorView.stopAnimating() }
 
-        guard isCurrentlyVisible != true else { return }
-        
-        guard isHidden == true else { return }
-        
+        guard isCurrentlyVisible == false, isHidden == true else { return }
+                
         let show = {
             self.isHidden = false
             self.textLabel.alpha = 1
