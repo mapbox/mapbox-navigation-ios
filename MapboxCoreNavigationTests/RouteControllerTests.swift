@@ -56,4 +56,16 @@ class RouteControllerTests: XCTestCase {
         let initialHeadingOnFirstStep = navigation.routeProgress.currentLegProgress.currentStepProgress.step.finalHeading!
         XCTAssertTrue(calculatedCourse - initialHeadingOnFirstStep < 1, "At the beginning of the route, the final heading of the departure step should be very similar to the caclulated course of the first location update.")
     }
+    
+    func testShouldSnap() {
+        let navigation = setup.routeController
+        let firstLocation = setup.firstLocation
+        let initialHeadingOnFirstStep = navigation.routeProgress.currentLegProgress.currentStepProgress.step.finalHeading!
+        
+        XCTAssertTrue(navigation.shouldSnap(firstLocation, toRouteWith: initialHeadingOnFirstStep), "Should snap")
+        
+        let differentCourseAndAccurateLocation = CLLocation(coordinate: firstLocation.coordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 10, timestamp: Date())
+        
+        XCTAssertFalse(navigation.shouldSnap(differentCourseAndAccurateLocation, toRouteWith: initialHeadingOnFirstStep), "Should not snap when user course is different, the location is accurate and moving")
+    }
 }
