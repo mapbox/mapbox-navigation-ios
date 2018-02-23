@@ -328,9 +328,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         view.insertSubview(mapView, belowSubview: bottomBar)
         
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
-        for recognizer in mapView.gestureRecognizers! where recognizer is UILongPressGestureRecognizer {
-            singleTap.require(toFail: recognizer)
-        }
+        mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
     
     }
