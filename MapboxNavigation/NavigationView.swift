@@ -63,14 +63,14 @@ open class NavigationView: UIView {
     
     lazy var rerouteFeedbackTopConstraint: NSLayoutConstraint = self.rerouteReportButton.topAnchor.constraint(equalTo: self.informationStackView.bottomAnchor, constant: Constants.feedbackTopConstraintPadding)
     
-    private struct Images {
+    private enum Images {
         static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
         static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
         static let volumeOff =  UIImage(named: "volume_off", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
         static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     }
     
-    private struct Actions {
+    private enum Actions {
         static let cancelButton: Selector = #selector(NavigationView.cancelButtonTapped(_:))
     }
     
