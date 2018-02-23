@@ -17,7 +17,7 @@ func instructionsView() -> InstructionsBannerView {
 
 var shieldImage: UIImage {
     get {
-        let bundle = Bundle(for: MapboxNavigationTests.self)
+        let bundle = Bundle(for: InstructionsBannerViewIntegrationTests.self)
         return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
     }
 }
