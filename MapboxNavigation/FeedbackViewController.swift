@@ -28,9 +28,11 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     var sections = [FeedbackSection]()
     var activeFeedbackItem: FeedbackItem?
     
-    let cellReuseIdentifier = "collectionViewCellId"
+    static let cellReuseIdentifier = "collectionViewCellId"
+    static let autoDismissInterval: TimeInterval = 10
+    static let verticalCellPadding: CGFloat = 20.0
+    
     let interactor = Interactor()
-    let autoDismissInterval: TimeInterval = 10
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var reportIssueLabel: UILabel!
@@ -68,7 +70,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: autoDismissInterval) {
+        UIView.animate(withDuration: FeedbackViewController.autoDismissInterval) {
             self.progressBar.progress = 0
         }
         
@@ -77,7 +79,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     func enableAutoDismiss() {
         abortAutodismiss()
-        perform(#selector(dismissFeedback), with: nil, afterDelay: autoDismissInterval)
+        perform(#selector(dismissFeedback), with: nil, afterDelay: FeedbackViewController.autoDismissInterval)
     }
     
     func presentError(_ message: String) {
@@ -113,7 +115,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
 
 extension FeedbackViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! FeedbackCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackViewController.cellReuseIdentifier, for: indexPath) as! FeedbackCollectionViewCell
         let item = sections[indexPath.section][indexPath.row]
         
         cell.titleLabel.text = item.title
@@ -148,7 +150,7 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = floor(collectionView.bounds.width / 3)
-        return CGSize(width: width, height: width+20)
+        return CGSize(width: width, height: width + FeedbackViewController.verticalCellPadding)
     }
 }
 
