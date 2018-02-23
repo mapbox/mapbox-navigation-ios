@@ -38,6 +38,14 @@ import MapboxDirections
 @objc(MBNavigationView)
 open class NavigationView: UIView {
     
+    private enum Constants {
+        static let endOfRouteHeight: CGFloat = 260.0
+        static let feedbackTopConstraintPadding: CGFloat = 10.0
+        static let buttonSize: CGSize = 50.0
+        static let buttonSpacing: CGFloat = 8.0
+        static let rerouteReportTitle = NSLocalizedString("REROUTE_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title on button that appears when a reroute occurs")
+    }
+    
     lazy var bannerShowConstraints: [NSLayoutConstraint] = [
         self.instructionsBannerView.topAnchor.constraint(equalTo: self.safeTopAnchor),
         self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)]
@@ -51,9 +59,9 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
     
-    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: 260)
+    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
-    lazy var rerouteFeedbackTopConstraint: NSLayoutConstraint = self.rerouteReportButton.topAnchor.constraint(equalTo: self.informationStackView.bottomAnchor, constant: 10)
+    lazy var rerouteFeedbackTopConstraint: NSLayoutConstraint = self.rerouteReportButton.topAnchor.constraint(equalTo: self.informationStackView.bottomAnchor, constant: Constants.feedbackTopConstraintPadding)
     
     private struct Images {
         static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
@@ -65,10 +73,6 @@ open class NavigationView: UIView {
     private struct Actions {
         static let cancelButton: Selector = #selector(NavigationView.cancelButtonTapped(_:))
     }
-    
-    private static let rerouteReportTitle = NSLocalizedString("REROUTE_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title on button that appears when a reroute occurs")
-    
-    static let buttonSize = CGSize(width: 50, height: 50)
     
     lazy var mapView: NavigationMapView = {
         let map: NavigationMapView = .forAutoLayout()
@@ -93,7 +97,7 @@ open class NavigationView: UIView {
     lazy var floatingStackView: UIStackView = {
         let stack = UIStackView(orientation: .vertical, autoLayout: true)
         stack.distribution = .equalSpacing
-        stack.spacing = 8
+        stack.spacing = Constants.buttonSpacing
         return stack
     }()
     
@@ -124,9 +128,7 @@ open class NavigationView: UIView {
     
     lazy var rerouteReportButton: ReportButton = {
         let button: ReportButton = .forAutoLayout()
-        button.applyDefaultCornerRadiusShadow(cornerRadius: 4)
-        button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        button.setTitle(NavigationView.rerouteReportTitle, for: .normal)
+        button.setTitle(Constants.rerouteReportTitle, for: .normal)
         button.isHidden = true
         return button
     }()
@@ -223,6 +225,7 @@ open class NavigationView: UIView {
         ]
         
         subviews.forEach(addSubview(_:))
+//        statusView.hide(delay: 0, animated: false)
     }
     
     open override func prepareForInterfaceBuilder() {

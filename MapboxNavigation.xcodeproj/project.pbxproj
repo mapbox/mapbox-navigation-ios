@@ -136,6 +136,7 @@
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
+		8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F720409A890098CBF8 /* CGSize.swift */; };
 		8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D391CE11FD71E78006BB91F /* Waypoint.swift */; };
 		8DB45E90201698EB001EA6A3 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB45E8F201698EB001EA6A3 /* UIStackView.swift */; };
 		8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB63A391FBBCA2200928389 /* RatingControl.swift */; };
@@ -455,6 +456,7 @@
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
+		8D24A2F720409A890098CBF8 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
 		8D391CE11FD71E78006BB91F /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
 		8DB45E8F201698EB001EA6A3 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		8DB63A391FBBCA2200928389 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
@@ -895,6 +897,7 @@
 				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
 				C58159001EA6D02700FC6C3D /* MGLVectorSource.swift */,
 				351BEBF01E5BCC63006FE110 /* UIView.swift */,
+				8D24A2F720409A890098CBF8 /* CGSize.swift */,
 				8DB45E8F201698EB001EA6A3 /* UIStackView.swift */,
 				35CF34B01F0A733200C2692E /* UIFont.swift */,
 				35B7837D1F9547B300291F9A /* Transitioning.swift */,
@@ -1562,6 +1565,7 @@
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				C51DF8671F38C337006C6A15 /* Date.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
+				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
 				35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */,
 				35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */,
 				353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */,

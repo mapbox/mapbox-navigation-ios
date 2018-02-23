@@ -9,3 +9,12 @@ public extension UIEdgeInsets {
                             right: left.right + right.right )
     }
 }
+
+extension UIEdgeInsets: ExpressibleByFloatLiteral {
+    public typealias FloatLiteralType = Double
+    
+    public init(floatLiteral value: FloatLiteralType) {
+        let padding = CGFloat(value)
+        self.init(top: padding, left: padding, bottom: padding, right: padding)
+    }
+}

@@ -104,18 +104,34 @@ open class FloatingButton: Button {
 @objc(MBReportButton)
 public class ReportButton: Button {
     
-    let padding: CGFloat = 10
-    let downConstant: CGFloat = 10
+    static let padding: CGFloat = 10
+    static let downConstant: CGFloat = 10
+    static let defaultInsets: UIEdgeInsets = 10.0
+    static let defaultCornerRadius: CGFloat = 4.0
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        contentEdgeInsets = ReportButton.defaultInsets
+        applyDefaultCornerRadiusShadow(cornerRadius: ReportButton.defaultCornerRadius)
+    }
     
     var upConstant: CGFloat {
-        return -bounds.height-(padding * 2)
+        return -bounds.height-(ReportButton.padding * 2)
     }
     
     func slideDown(constraint: NSLayoutConstraint, interval: TimeInterval) {
         guard isHidden == true else { return }
         
         isHidden = false
-        constraint.constant = downConstant
+        constraint.constant = ReportButton.downConstant
         setNeedsUpdateConstraints()
         UIView.defaultAnimation(0.5, animations: {
             self.superview?.layoutIfNeeded()
