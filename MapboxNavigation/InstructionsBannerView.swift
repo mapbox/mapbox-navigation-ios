@@ -105,7 +105,7 @@ open class BaseInstructionsBannerView: UIControl {
         guard let visualInstructions = stepProgress.remainingVisualInstructions else { return }
         
         for visualInstruction in visualInstructions {
-            if stepProgress.distanceRemaining <= visualInstruction.distanceAlongStep {
+            if stepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || stepProgress.visualInstructionIndex == 0 {
                 
                 set(visualInstruction)
                 
