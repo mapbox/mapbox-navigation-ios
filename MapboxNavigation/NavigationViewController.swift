@@ -543,6 +543,7 @@ extension NavigationViewController: RouteControllerDelegate {
         if shouldDiscard {
             let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
             mapViewController?.statusView.show(title, showSpinner: false)
+            mapViewController?.statusView.hide(delay: 3, animated: true)
             return true
         }
         
