@@ -5,10 +5,6 @@ import Mapbox
 let PuckSize: CGFloat = 45
 let ArrowSize = PuckSize * 0.6
 
-protocol UserCourseViewDelegate: class {
-    func didTapPuck(_ sender: UIView)
-}
-
 /**
  A view that represents the user’s location and course on a `NavigationMapView`.
  */
@@ -43,8 +39,6 @@ extension UIView {
  */
 @objc(MBUserPuckCourseView)
 public class UserPuckCourseView: UIView, UserCourseView {
-    
-    weak var delegate: UserCourseViewDelegate?
     
     /**
      Transforms the location of the user puck.
@@ -103,12 +97,6 @@ public class UserPuckCourseView: UIView, UserCourseView {
         puckView.backgroundColor = .clear
         addSubview(puckView)
     }
-    
-    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        delegate?.didTapPuck(self)
-    }
-
 }
 
 class UserPuckStyleKitView: UIView {

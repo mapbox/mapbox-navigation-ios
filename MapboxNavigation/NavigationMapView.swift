@@ -358,10 +358,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
-            
-            if let userCourseView = userCourseView as? UserPuckCourseView, userCourseView.delegate == nil {
-                userCourseView.delegate = self
-            }
         }
     }
     
@@ -1105,12 +1101,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
 // MARK: Extensions
 
-extension NavigationMapView: UserCourseViewDelegate {
-    func didTapPuck(_ sender: UIView) {
-        navigationMapDelegate?.navigationMapViewDidTapPuck?(sender)
-    }
-}
-
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
@@ -1210,15 +1200,6 @@ public protocol NavigationMapViewDelegate: class {
     */
     @objc(navigationMapViewUserAnchorPoint:)
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
-    
-    
-    /**
-     Tells the receiver the puck was tapped, given a sender.
-     This method is invoked when the puck on the map view is tapped.
-     - parameter sender: The sender that responded to the tap action.
-     */
-    @objc(navigationMapViewDidTapPuck:)
-    optional func navigationMapViewDidTapPuck(_ sender: UIView)
 }
 
 // MARK: NavigationMapViewCourseTrackingDelegate
