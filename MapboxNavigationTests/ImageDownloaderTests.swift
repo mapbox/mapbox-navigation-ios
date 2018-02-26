@@ -47,6 +47,10 @@ class ImageDownloaderTests: XCTestCase {
         }
         wait(for: [async], timeout: 1)
 
+        // The ImageDownloader is meant to be used with an external caching mechanism
+        let request = TestImageLoadingURLProtocol.pastRequestForURL(imageURL)!
+        XCTAssertEqual(request.cachePolicy, .reloadIgnoringCacheData)
+
         XCTAssertNotNil(imageReturned)
         XCTAssertTrue(imageReturned!.isKind(of: UIImage.self))
         XCTAssertNotNil(dataReturned)

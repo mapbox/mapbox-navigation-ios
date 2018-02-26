@@ -62,7 +62,7 @@ class ImageRepositoryTests: XCTestCase {
         }
         wait(for: [asyncExpectation], timeout: 1)
 
-        XCTAssertFalse(TestImageLoadingURLProtocol.hasRequestForURL(fakeURL))
+        XCTAssertNil(TestImageLoadingURLProtocol.pastRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
     }
 
