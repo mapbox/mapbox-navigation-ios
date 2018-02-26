@@ -1,8 +1,6 @@
 import MapboxDirections
 import Turf
 
-typealias IntersectionBounds = (entry: Intersection, exit: Intersection)
-
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
         
@@ -56,16 +54,34 @@ extension RouteStep {
     }
     
     /**
-     Returns an array of the entry and exit intersection bounds of the tunnel on the current route step
+     Returns an array of the tunnel intersection bounds on the current route step.
      */
-    var tunnelIntersectionsBounds: [IntersectionBounds]? {
-        guard let intersections = intersections, intersections.count > 1, containsTunnel else { return nil }
+    var tunnelIntersectionBounds: [IntersectionBounds]? {
+        guard let coordinates = coordinates, let intersections = intersections, containsTunnel else { return nil }
         var intersectionBounds = [IntersectionBounds]()
         for i in 0..<intersections.count {
             if let outletRoadClasses = intersections[i].outletRoadClasses, outletRoadClasses.contains(.tunnel) && i < intersections.count - 1 {
-                intersectionBounds.append((entry: intersections[i], exit: intersections[i+1]))
+                let bounds = IntersectionBounds(intersections[i], intersections[i+1], coordinates)
+                intersectionBounds.append(bounds)
             }
         }
         return intersectionBounds
+    }
+    
+}
+
+public struct IntersectionBounds {
+    let entry: Intersection
+    let exit: Intersection
+    let polyline: Polyline
+    let distanceToEntry: CLLocationDistance
+    let distanceToExit: CLLocationDistance
+    
+    public init(_ entry: Intersection, _ exit: Intersection, _ coordinates: [CLLocationCoordinate2D]) {
+        self.entry = entry
+        self.exit = exit
+        polyline = Polyline(coordinates)
+        distanceToEntry = polyline.distance(from: coordinates.first, to: entry.location)
+        distanceToExit = polyline.distance(from: coordinates.first, to: exit.location)
     }
 }

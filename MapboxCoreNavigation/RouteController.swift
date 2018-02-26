@@ -677,7 +677,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func detectRouteStepInTunnel(for location: CLLocation) {
-        guard let intersectionBounds = routeProgress.currentLegProgress.currentStep.tunnelIntersectionsBounds, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
+        guard let intersectionBounds = routeProgress.currentLegProgress.currentStep.tunnelIntersectionBounds, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
         
         if hasEnteredTunnel(intersectionBounds, coordinates: coordinates) {
             delegate?.routeControllerDidEnterTunnel?(self)
@@ -687,14 +687,9 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func hasEnteredTunnel(_ intersectionBounds: [IntersectionBounds], coordinates: [CLLocationCoordinate2D]) -> Bool {
-        guard let startLocation = coordinates.first else { return false }
-        
         let distanceTraveled = routeProgress.distanceTraveled
         for bounds in intersectionBounds {
-            let distanceToTunnelEntrance = Polyline(coordinates).distance(from: startLocation, to: bounds.entry.location)
-            let distanceToTunnelExit = Polyline(coordinates).distance(from: startLocation, to: bounds.exit.location)
-            
-            if distanceToTunnelEntrance <= distanceTraveled && distanceTraveled <= distanceToTunnelExit {
+            if bounds.distanceToEntry <= distanceTraveled && distanceTraveled <= bounds.distanceToExit {
                 return true
             }
         }
