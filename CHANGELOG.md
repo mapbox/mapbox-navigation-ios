@@ -1,5 +1,10 @@
 ## Changes to the Mapbox Navigation SDK for iOS
 
+## v0.15.0 (tbd)
+
+#### Breaking Changes
+* `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
+
 ## v0.14.0 (February 22, 2018)
 
 #### Breaking Changes
