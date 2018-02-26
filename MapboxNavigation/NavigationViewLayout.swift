@@ -56,7 +56,7 @@ extension NavigationView {
         previewDirectionsButton.translatesAutoresizingMaskIntoConstraints = false
         previewDirectionsButton.constrainedSize = buttonSize
         previewDirectionsButton.backgroundColor = .white
-        previewDirectionsButton.setImage(UIImage(named: "feedback_routing", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        previewDirectionsButton.setImage(UIImage(named: "preview_directions", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
         previewDirectionsButton.applyDefaultCornerRadiusShadow(cornerRadius: buttonSize.width / 2)
         floatingStackView.addArrangedSubview(previewDirectionsButton)
         self.previewDirectionsButton = previewDirectionsButton
