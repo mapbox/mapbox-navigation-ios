@@ -399,6 +399,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
+        mapViewController?.mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
         
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }

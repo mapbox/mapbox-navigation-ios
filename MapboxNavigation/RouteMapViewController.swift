@@ -401,7 +401,6 @@ class RouteMapViewController: UIViewController {
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
         }
