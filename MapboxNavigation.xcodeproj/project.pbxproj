@@ -172,6 +172,7 @@
 		C5A6B2DE1F4DE57E004260EA /* Solar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; };
 		C5A6B2DF1F4DE57E004260EA /* Solar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C57607B01F4CC97D00C27423 /* Solar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A7EC5B1FD610A80008B9BA /* VisualInstructionComponent.swift */; };
+		C5ABB50E20408D2C00AFA92C /* RouteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ABB50D20408D2C00AFA92C /* RouteControllerTests.swift */; };
 		C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBD71DDCC7840011824B /* MapboxCoreNavigationTests.swift */; };
 		C5C94C1B1DDCD22B0097296A /* MapboxCoreNavigation.h in Headers */ = {isa = PBXBuildFile; fileRef = C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C5C94C1C1DDCD2340097296A /* RouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5ADFBF91DDCC9580011824B /* RouteController.swift */; };
@@ -490,6 +491,7 @@
 		C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleType.swift; sourceTree = "<group>"; };
 		C5A7EC5B1FD610A80008B9BA /* VisualInstructionComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstructionComponent.swift; sourceTree = "<group>"; };
 		C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxSpeech.framework; path = Carthage/Build/iOS/MapboxSpeech.framework; sourceTree = "<group>"; };
+		C5ABB50D20408D2C00AFA92C /* RouteControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteControllerTests.swift; sourceTree = "<group>"; };
 		C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MapboxCoreNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MapboxCoreNavigation.h; sourceTree = "<group>"; };
 		C5ADFBCD1DDCC7840011824B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1030,6 +1032,7 @@
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
 				359574A91F28CCBB00838209 /* LocationTests.swift */,
+				C5ABB50D20408D2C00AFA92C /* RouteControllerTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -1669,6 +1672,7 @@
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
 				C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */,
+				C5ABB50E20408D2C00AFA92C /* RouteControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1915,7 +1919,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 19;
+				DYLIB_CURRENT_VERSION = 20;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1942,7 +1946,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 19;
+				DYLIB_CURRENT_VERSION = 20;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2185,7 +2189,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2247,7 +2251,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2280,7 +2284,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 19;
+				DYLIB_CURRENT_VERSION = 20;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2307,7 +2311,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 19;
+				DYLIB_CURRENT_VERSION = 20;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

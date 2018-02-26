@@ -22,6 +22,7 @@ custom_categories:
       - Waypoint Arrival Screen
       - Embedded Navigation
       - Advanced
+      - Custom Voice Controller
   - name: Turn-by-turn UI
     children:
       - NavigationViewController
