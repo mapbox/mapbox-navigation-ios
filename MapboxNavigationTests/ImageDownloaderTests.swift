@@ -15,6 +15,7 @@ class ImageDownloaderTests: XCTestCase {
     }()
 
     let imageURL = URL(string: "https://zombo.com/lulz/selfie.png")!
+    let asyncTimeout: TimeInterval = 2.0
 
     override func setUp() {
         super.setUp()
@@ -45,7 +46,7 @@ class ImageDownloaderTests: XCTestCase {
             errorReturned = error
             async.fulfill()
         }
-        wait(for: [async], timeout: 1)
+        wait(for: [async], timeout: asyncTimeout)
 
         // The ImageDownloader is meant to be used with an external caching mechanism
         let request = TestImageLoadingURLProtocol.pastRequestForURL(imageURL)!
@@ -70,7 +71,7 @@ class ImageDownloaderTests: XCTestCase {
             secondCallbackCalled = true
             secondDownload.fulfill()
         }
-        wait(for: [firstDownload, secondDownload], timeout: 1)
+        wait(for: [firstDownload, secondDownload], timeout: asyncTimeout)
 
         //These flags might seem redundant, but it's good to be explicit sometimes
         XCTAssertTrue(firstCallbackCalled)
@@ -84,7 +85,7 @@ class ImageDownloaderTests: XCTestCase {
             firstCallbackCalled = true
             firstDownload.fulfill()
         }
-        wait(for: [firstDownload], timeout: 1)
+        wait(for: [firstDownload], timeout: asyncTimeout)
 
         let secondDownload = self.expectation(description: "Second Image Download")
         var secondCallbackCalled = false
@@ -92,7 +93,7 @@ class ImageDownloaderTests: XCTestCase {
             secondCallbackCalled = true
             secondDownload.fulfill()
         }
-        wait(for: [secondDownload], timeout: 1)
+        wait(for: [secondDownload], timeout: asyncTimeout)
 
         //These flags might seem redundant, but it's good to be explicit sometimes
         XCTAssertTrue(firstCallbackCalled)
