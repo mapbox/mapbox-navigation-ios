@@ -225,7 +225,6 @@ open class NavigationView: UIView {
         ]
         
         subviews.forEach(addSubview(_:))
-//        statusView.hide(delay: 0, animated: false)
     }
     
     open override func prepareForInterfaceBuilder() {
