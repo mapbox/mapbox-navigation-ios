@@ -46,6 +46,7 @@ class RouteMapViewController: UIViewController {
     }
     
     var showsEndOfRoute: Bool = true
+    var updateRouteLineTimer: Timer?
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -130,6 +131,7 @@ class RouteMapViewController: UIViewController {
         instructionsBannerView.delegate = self
         bottomBannerView?.delegate = self
         resumeNotifications()
+        scheduledTimerWithTimeInterval()
     }
     
     deinit {
@@ -189,6 +191,14 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
+    
+    func scheduledTimerWithTimeInterval(){
+        updateRouteLineTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.updateCounting), userInfo: nil, repeats: true)
+    }
+    
+    @objc func updateCounting(){
+        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+    }
 
     @IBAction func recenter(_ sender: AnyObject) {
         mapView.tracksUserCourse = true
@@ -206,6 +216,9 @@ class RouteMapViewController: UIViewController {
     @objc func removeTimer() {
         updateETATimer?.invalidate()
         updateETATimer = nil
+        
+        updateRouteLineTimer?.invalidate()
+        updateRouteLineTimer = nil
     }
     
     func removePreviewInstructions() {
@@ -292,7 +305,6 @@ class RouteMapViewController: UIViewController {
         }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
         
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
