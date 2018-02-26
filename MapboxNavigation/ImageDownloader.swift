@@ -52,7 +52,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     private func urlRequestWithURL(_ url: URL) -> URLRequest {
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = self.headers
-        request.cachePolicy = .reloadIgnoringCacheData //We're using our own caching strategy. TODO: test?
+        request.cachePolicy = .reloadIgnoringCacheData
         return request
     }
 
@@ -76,7 +76,6 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         guard let url = dataTask.originalRequest?.url, let operation: ImageDownload = operations[url] else {
-            // ?
             return
         }
         operation.urlSession?(session, dataTask: dataTask, didReceive: data)
@@ -84,7 +83,6 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         guard let url = task.originalRequest?.url, let operation: ImageDownload = operations[url] else {
-            // ?
             return
         }
         operation.urlSession?(session, task: task, didCompleteWithError: error)
