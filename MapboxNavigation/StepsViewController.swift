@@ -231,14 +231,6 @@ extension StepsViewController: UITableViewDataSource {
         }
     }
     
-    private func updateInstructionsView(_ view: StepInstructionsView, previous: RouteStep?, current: RouteStep, destination: Waypoint) {
-        view.distance = previous?.distance
-        
-        guard let instruction = previous?.instructionsDisplayedAlongStep?.last ?? current.instructionsDisplayedAlongStep?.last else { return }
-        
-        view.set(instruction)
-    }
-    
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
             return nil
