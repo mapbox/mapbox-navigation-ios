@@ -4,7 +4,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 
-let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
 
 /**
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
@@ -52,6 +51,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
+    let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
+
     // MARK: - Instance Properties
     let sourceIdentifier = "routeSource"
     let sourceCasingIdentifier = "routeCasingSource"
