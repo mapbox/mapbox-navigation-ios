@@ -36,25 +36,25 @@ The upcoming road or ramp destination is named according to the local or nationa
 ## Supported languages
 
 | Language   | User interface | [Spoken instructions][osrmti] | Mapbox Voice API | [`AVSpeechSynthesizer`][iossynth]<br>(iOS 11)
-|------------|----------------|-------------------------------|-----------------------|----------------------------------
-| Catalan    | ✅              | ❌                             | ❌                     | ❌
-| Chinese    | ✅ Simplified   | ✅                             | ❌                     | ✅
+|------------|:--------------:|:-----------------------------:|:---------------------:|:--------------------------------:
+| Catalan    | ✅              | —                             | —                     | —
+| Chinese    | ✅ Simplified   | ✅                             | —                     | ✅
 | Danish     | ✅              | ✅                             | ✅                     | ✅
 | Dutch      | ✅              | ✅                             | ✅                     | ✅
 | English    | ✅              | ✅                             | ✅                     | ✅
 | French     | ✅              | ✅                             | ✅                     | ✅
 | German     | ✅              | ✅                             | ✅                     | ✅
-| Hebrew     | ✅              | ✅                             | ❌                     | ✅
-| Hungarian  | ✅              | ❌                             | ❌                     | ✅
+| Hebrew     | ✅              | ✅                             | —                     | ✅
+| Hungarian  | ✅              | —                             | —                     | ✅
 | Italian    | ✅              | ✅                             | ✅                     | ✅
 | Portuguese | ✅              | ✅                             | ✅                     | ✅
-| Polish     | ❌              | ✅                             | ✅                     | ✅
-| Romanian   | ❌              | ✅                             | ✅                     | ✅
+| Polish     | —              | ✅                             | ✅                     | ✅
+| Romanian   | —              | ✅                             | ✅                     | ✅
 | Russian    | ✅              | ✅                             | ✅                     | ✅
 | Spanish    | ✅              | ✅                             | ✅                     | ✅
 | Swedish    | ✅              | ✅                             | ✅                     | ✅
-| Turkish    | ❌              | ✅                             | ✅                     | ✅
-| Vietnamese | ✅              | ✅                             | ❌                     | ❌
+| Turkish    | —              | ✅                             | ✅                     | ✅
+| Vietnamese | ✅              | ✅                             | —                     | —
 
 ## Contributing
 
