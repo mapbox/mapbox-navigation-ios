@@ -1,6 +1,8 @@
 import MapboxDirections
 import Turf
 
+private var tunnelIntersectionBoundsCache = [String: IntersectionBounds]()
+
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
         
@@ -75,8 +77,6 @@ extension RouteStep {
     }
 
 }
-
-private var tunnelIntersectionBoundsCache = [String:IntersectionBounds]()
 
 public struct IntersectionBounds {
     let entry: Intersection
