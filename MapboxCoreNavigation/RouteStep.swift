@@ -60,15 +60,23 @@ extension RouteStep {
         guard let coordinates = coordinates, let intersections = intersections, containsTunnel else { return nil }
         var intersectionBounds = [IntersectionBounds]()
         for i in 0..<intersections.count {
-            if let outletRoadClasses = intersections[i].outletRoadClasses, outletRoadClasses.contains(.tunnel) && i < intersections.count - 1 {
-                let bounds = IntersectionBounds(intersections[i], intersections[i+1], coordinates)
-                intersectionBounds.append(bounds)
+            if let outletRoadClasses = intersections[i].outletRoadClasses, outletRoadClasses.contains(.tunnel) && i + 1 < intersections.endIndex {
+                
+                let tunnelIntersectionBoundKey = "\(intersections[i].location)\(intersections[i+1])"
+                if let tunnelIntersectionBound = tunnelIntersectionBoundsCache[tunnelIntersectionBoundKey] {
+                    intersectionBounds.append(tunnelIntersectionBound)
+                } else {
+                    let bounds = IntersectionBounds(intersections[i], intersections[i+1], coordinates)
+                    tunnelIntersectionBoundsCache[tunnelIntersectionBoundKey] = bounds
+                }
             }
         }
         return intersectionBounds
     }
-    
+
 }
+
+private var tunnelIntersectionBoundsCache = [String:IntersectionBounds]()
 
 public struct IntersectionBounds {
     let entry: Intersection

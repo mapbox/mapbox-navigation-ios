@@ -677,17 +677,17 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func detectRouteStepInTunnel(for location: CLLocation) {
-        guard let intersectionBounds = routeProgress.currentLegProgress.currentStep.tunnelIntersectionBounds, let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return }
+        guard let tunnelIntersectionBounds = routeProgress.currentLegProgress.currentStep.tunnelIntersectionBounds else { return }
         
-        if hasEnteredTunnel(intersectionBounds, coordinates: coordinates) {
+        if hasEnteredTunnel(tunnelIntersectionBounds) {
             delegate?.routeControllerDidEnterTunnel?(self)
         } else {
             delegate?.routeControllerDidExitTunnel?(self)
         }
     }
     
-    func hasEnteredTunnel(_ intersectionBounds: [IntersectionBounds], coordinates: [CLLocationCoordinate2D]) -> Bool {
-        let distanceTraveled = routeProgress.distanceTraveled
+    func hasEnteredTunnel(_ intersectionBounds: [IntersectionBounds]) -> Bool {
+        let distanceTraveled = routeProgress.currentLegProgress.distanceTraveled
         for bounds in intersectionBounds {
             if bounds.distanceToEntry <= distanceTraveled && distanceTraveled <= bounds.distanceToExit {
                 return true
