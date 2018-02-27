@@ -29,7 +29,13 @@ open class StepsViewController: UIViewController {
     typealias StepSection = [RouteStep]
     var sections = [StepSection]()
     
-    convenience init(routeProgress: RouteProgress) {
+    /**
+     Initializes StepsViewController with a RouteProgress object.
+     
+     - parameter routeProgress: The user's current route progress.
+     - SeeAlso: [RouteProgress](https://www.mapbox.com/mapbox-navigation-ios/navigation/0.14.1/Classes/RouteProgress.html)
+     */
+    public convenience init(routeProgress: RouteProgress) {
         self.init()
         self.routeProgress = routeProgress
     }
