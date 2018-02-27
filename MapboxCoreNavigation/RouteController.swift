@@ -678,7 +678,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         guard let calculatedCourseForLocationOnStep = interpolatedCourse(from: location, along: nearByCoordinates) else { return true }
         
-        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / RouteControllerIncorrectCourseMultiplier)
+        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
         
         if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
             return false
