@@ -29,7 +29,7 @@ open class StepsViewController: UIViewController {
     typealias StepSection = [RouteStep]
     var sections = [StepSection]()
     
-    convenience init(routeProgress: RouteProgress) {
+    public convenience init(routeProgress: RouteProgress) {
         self.init()
         self.routeProgress = routeProgress
     }
