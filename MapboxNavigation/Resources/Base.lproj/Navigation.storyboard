@@ -486,7 +486,7 @@ Label  </string>
         <!--End Of Route View Controller-->
         <scene sceneID="D7g-l8-Czc">
             <objects>
-                <viewController storyboardIdentifier="EndOfRouteViewController" id="WD9-Na-hrx" customClass="EndOfRouteViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EndOfRouteViewController" id="WD9-Na-hrx" customClass="MBEndOfRouteViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="IDF-XF-2Ta" userLabel="Root" customClass="MBEndOfRouteContentView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

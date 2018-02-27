@@ -18,7 +18,11 @@ class RouteMapViewController: UIViewController {
     var nextBannerView: NextBannerView { return navigationView.nextBannerView }
     var instructionsBannerView: InstructionsBannerView { return navigationView.instructionsBannerView }
     
-    lazy var endOfRouteViewController = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation).instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController
+    lazy var endOfRouteViewController: EndOfRouteViewController = {
+        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
+        let viewController = storyboard.instantiateViewController(withIdentifier: "EndOfRouteViewController") as! EndOfRouteViewController
+        return viewController
+    }()
     
     lazy var feedbackViewController: FeedbackViewController = {
         let controller = FeedbackViewController.loadFromStoryboard()

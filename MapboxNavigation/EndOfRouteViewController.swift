@@ -31,6 +31,7 @@ open class EndOfRouteCommentView: StylableTextView {}
 @objc(MBEndOfRouteButton)
 open class EndOfRouteButton: StylableButton {}
 
+@objc(MBEndOfRouteViewController)
 class EndOfRouteViewController: UIViewController {
 
     // MARK: - IBOutlets
