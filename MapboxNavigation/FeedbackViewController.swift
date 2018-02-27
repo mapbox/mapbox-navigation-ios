@@ -28,20 +28,21 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     var sections = [FeedbackSection]()
     var activeFeedbackItem: FeedbackItem?
     
-    let cellReuseIdentifier = "collectionViewCellId"
+    static let cellReuseIdentifier = "collectionViewCellId"
+    static let autoDismissInterval: TimeInterval = 10
+    static let verticalCellPadding: CGFloat = 20.0
+    
     let interactor = Interactor()
-    let autoDismissInterval: TimeInterval = 10
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var reportIssueLabel: UILabel!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
-    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var progressBar: ProgressBar!
     
     var draggableHeight: CGFloat {
         // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
         let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(collectionView.numberOfRows)
-        let collectionViewHeight = flowLayout.itemSize.height * CGFloat(collectionView.numberOfRows) + padding
+        let collectionViewHeight = flowLayout.itemSize.height * CGFloat(collectionView.numberOfRows) + padding + view.safeArea.bottom
         let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
         return fullHeight
     }
@@ -53,16 +54,23 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
+        flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
-        progressBar.progress = 1
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        progressBar.progress = 1
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        UIView.animate(withDuration: autoDismissInterval) {
+        UIView.animate(withDuration: FeedbackViewController.autoDismissInterval) {
             self.progressBar.progress = 0
         }
         
@@ -71,7 +79,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     func enableAutoDismiss() {
         abortAutodismiss()
-        perform(#selector(dismissFeedback), with: nil, afterDelay: autoDismissInterval)
+        perform(#selector(dismissFeedback), with: nil, afterDelay: FeedbackViewController.autoDismissInterval)
     }
     
     func presentError(_ message: String) {
@@ -107,7 +115,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
 
 extension FeedbackViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! FeedbackCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackViewController.cellReuseIdentifier, for: indexPath) as! FeedbackCollectionViewCell
         let item = sections[indexPath.section][indexPath.row]
         
         cell.titleLabel.text = item.title
@@ -142,7 +150,7 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = floor(collectionView.bounds.width / 3)
-        return CGSize(width: width, height: width+5)
+        return CGSize(width: width, height: width + FeedbackViewController.verticalCellPadding)
     }
 }
 

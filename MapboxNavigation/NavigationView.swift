@@ -38,26 +38,134 @@ import MapboxDirections
 @objc(MBNavigationView)
 open class NavigationView: UIView {
     
-    weak var mapView: NavigationMapView!
-    weak var wayNameLabel: WayNameLabel!
-    weak var bottomBannerView: BottomBannerView!
-    weak var bottomBannerContentView: BottomBannerContentView!
-    weak var instructionsBannerView: InstructionsBannerView!
-    weak var instructionsBannerContentView: InstructionsBannerContentView!
-    weak var lanesView: LanesView!
-    weak var nextBannerView: NextBannerView!
-    weak var statusView: StatusView!
-    weak var resumeButton: ResumeButton!
-    // Vertically laid-out stack view below the instructions banner consisting of StatusView, NextBannerView, and LanesView.
-    weak var informationStackView: UIStackView!
-    // Vertically laid-out stack view below the information stack view ontop of the map view, docked
-    // to the top right, consisting of Overview, Mute, and Report button.
-    weak var floatingStackView: UIStackView!
-    weak var overviewButton: FloatingButton!
-    weak var muteButton: FloatingButton!
-    weak var reportButton: FloatingButton!
-    weak var rerouteReportButton: ReportButton!
-    weak var separatorView: SeparatorView!
+    private enum Constants {
+        static let endOfRouteHeight: CGFloat = 260.0
+        static let feedbackTopConstraintPadding: CGFloat = 10.0
+        static let buttonSize: CGSize = 50.0
+        static let buttonSpacing: CGFloat = 8.0
+        static let rerouteReportTitle = NSLocalizedString("REROUTE_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title on button that appears when a reroute occurs")
+    }
+    
+    lazy var bannerShowConstraints: [NSLayoutConstraint] = [
+        self.instructionsBannerView.topAnchor.constraint(equalTo: self.safeTopAnchor),
+        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.topAnchor)]
+    
+    lazy var bannerHideConstraints: [NSLayoutConstraint] = [
+        self.informationStackView.bottomAnchor.constraint(equalTo: self.topAnchor),
+        self.instructionsBannerContentView.topAnchor.constraint(equalTo: self.instructionsBannerView.topAnchor)
+    ]
+    
+    lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
+    
+    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
+    
+    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
+    
+    lazy var rerouteFeedbackTopConstraint: NSLayoutConstraint = self.rerouteReportButton.topAnchor.constraint(equalTo: self.informationStackView.bottomAnchor, constant: Constants.feedbackTopConstraintPadding)
+    
+    private enum Images {
+        static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        static let volumeOff =  UIImage(named: "volume_off", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    }
+    
+    private enum Actions {
+        static let cancelButton: Selector = #selector(NavigationView.cancelButtonTapped(_:))
+    }
+    
+    lazy var mapView: NavigationMapView = {
+        let map: NavigationMapView = .forAutoLayout()
+        map.delegate = delegate
+        map.navigationMapDelegate = delegate
+        map.courseTrackingDelegate = delegate
+        map.showsUserLocation = true
+        
+        return map
+    }()
+    
+    lazy var instructionsBannerContentView: InstructionsBannerContentView = .forAutoLayout()
+    
+    lazy var instructionsBannerView: InstructionsBannerView = {
+        let banner: InstructionsBannerView = .forAutoLayout()
+        banner.delegate = delegate
+        return banner
+    }()
+    
+    lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
+    
+    lazy var floatingStackView: UIStackView = {
+        let stack = UIStackView(orientation: .vertical, autoLayout: true)
+        stack.distribution = .equalSpacing
+        stack.spacing = Constants.buttonSpacing
+        return stack
+    }()
+    
+    lazy var overviewButton = FloatingButton.rounded(image: Images.overview)
+    lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
+    lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
+    
+    lazy var separatorView: SeparatorView = .forAutoLayout()
+    lazy var lanesView: LanesView = .forAutoLayout()
+    lazy var nextBannerView: NextBannerView = .forAutoLayout()
+    lazy var statusView: StatusView = {
+        let status: StatusView = .forAutoLayout()
+        status.delegate = delegate
+        return status
+    }()
+    
+    lazy var resumeButton: ResumeButton = {
+        let button: ResumeButton = .forAutoLayout()
+        return button
+    }()
+    
+    lazy var wayNameView: WayNameView = {
+        let view: WayNameView = .forAutoLayout()
+        view.clipsToBounds = true
+        view.layer.borderWidth = 1.0 / UIScreen.main.scale
+        return view
+    }()
+    
+    lazy var rerouteReportButton: ReportButton = {
+        let button: ReportButton = .forAutoLayout()
+        button.setTitle(Constants.rerouteReportTitle, for: .normal)
+        button.isHidden = true
+        return button
+    }()
+    
+    lazy var bottomBannerContentView: BottomBannerContentView = .forAutoLayout()
+    lazy var bottomBannerView: BottomBannerView = {
+        let view: BottomBannerView = .forAutoLayout()
+        view.cancelButton.addTarget(self, action: Actions.cancelButton, for: .touchUpInside)
+        return view
+        }()
+    
+
+    weak var delegate: NavigationViewDelegate? {
+        didSet {
+            updateDelegates()
+        }
+    }
+    
+    var endOfRouteView: UIView? {
+        didSet {
+            if let active: [NSLayoutConstraint] = constraints(affecting: oldValue) {
+                NSLayoutConstraint.deactivate(active)
+            }
+            
+            oldValue?.removeFromSuperview()
+            if let eor = endOfRouteView { addSubview(eor) }
+            endOfRouteView?.translatesAutoresizingMaskIntoConstraints = false
+        }
+    }
+    
+    //MARK: - Initializers
+    
+    convenience init(delegate: NavigationViewDelegate) {
+        self.init(frame: .zero)
+        self.delegate = delegate
+        updateDelegates() //this needs to be called because didSet's do not fire in init contexts.
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -74,17 +182,71 @@ open class NavigationView: UIView {
         setupConstraints()
     }
     
+    func setupStackViews() {
+        statusView.isHidden = true
+    
+        setupInformationStackView()
+        floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
+    }
+    
+    func setupInformationStackView() {
+        let informationChildren: [UIView] = [instructionsBannerView, lanesView, nextBannerView, statusView]
+        informationStackView.addArrangedSubviews(informationChildren)
+        
+        let constraints = informationChildren.flatMap { (view) -> [NSLayoutConstraint] in
+            return [view.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor),
+                    view.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor)]
+        }
+        NSLayoutConstraint.activate(constraints)
+    }
+    
+    func setupContainers() {
+        let containers: [(UIView, UIView)] = [
+            (instructionsBannerContentView, instructionsBannerView),
+            (bottomBannerContentView, bottomBannerView)
+        ]
+        containers.forEach { $0.addSubview($1) }
+    }
+    
+    func setupViews() {
+        setupStackViews()
+        setupContainers()
+        
+        let subviews: [UIView] = [
+            mapView,
+            informationStackView,
+            floatingStackView,
+            separatorView,
+            resumeButton,
+            wayNameView,
+            rerouteReportButton,
+            bottomBannerContentView,
+            instructionsBannerContentView
+        ]
+        
+        subviews.forEach(addSubview(_:))
+    }
+    
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        
         DayStyle().apply()
-        
-        mapView.prepareForInterfaceBuilder()
-        instructionsBannerView.prepareForInterfaceBuilder()
-        lanesView.prepareForInterfaceBuilder()
-        bottomBannerView.prepareForInterfaceBuilder()
-        nextBannerView.prepareForInterfaceBuilder()
-        
-        wayNameLabel.text = "Street Label"
+        [mapView, instructionsBannerView, lanesView, bottomBannerView, nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
+        wayNameView.text = "Street Label"
     }
+    
+    @objc func cancelButtonTapped(_ sender: CancelButton) {
+        delegate?.navigationView(self, didTapCancelButton: bottomBannerView.cancelButton)
+    }
+    
+    private func updateDelegates() {
+        mapView.delegate = delegate
+        mapView.navigationMapDelegate = delegate
+        mapView.courseTrackingDelegate = delegate
+        instructionsBannerView.delegate = delegate
+        statusView.delegate = delegate
+    }
+}
+
+protocol NavigationViewDelegate: NavigationMapViewDelegate, MGLMapViewDelegate, StatusViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate {
+    func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton)
 }

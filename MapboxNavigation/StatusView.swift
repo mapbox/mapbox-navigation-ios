@@ -8,11 +8,13 @@ protocol StatusViewDelegate: class {
 @IBDesignable
 @objc(MBStatusView)
 public class StatusView: UIView {
+    
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
     weak var delegate: StatusViewDelegate?
     var panStartPoint: CGPoint?
     
+    var isCurrentlyVisible: Bool = false
     var canChangeValue = false
     var value: Double = 0 {
         didSet {
@@ -29,8 +31,6 @@ public class StatusView: UIView {
         super.init(coder: aDecoder)
         commonInit()
     }
-    
-    var isCurrentlyVisible: Bool?
     
     func commonInit() {
         let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .white)
@@ -89,45 +89,48 @@ public class StatusView: UIView {
         }
     }
     
-    func show(_ title: String, showSpinner: Bool) {
+    func show(_ title: String, showSpinner: Bool, interactive: Bool = false) {
+        canChangeValue = interactive
         textLabel.text = title
         activityIndicatorView.hidesWhenStopped = true
-        if showSpinner {
-            activityIndicatorView.startAnimating()
-        } else {
-            activityIndicatorView.stopAnimating()
-        }
-        
-        guard isCurrentlyVisible != true else { return }
-        
-        guard isHidden == true else { return }
-        
-        UIView.defaultAnimation(0.3, animations: {
+        if (!showSpinner) { activityIndicatorView.stopAnimating() }
+
+        guard isCurrentlyVisible == false, isHidden == true else { return }
+                
+        let show = {
             self.isHidden = false
             self.textLabel.alpha = 1
+            if (showSpinner) { self.activityIndicatorView.isHidden = false }
             self.superview?.layoutIfNeeded()
-        }, completion: { (completed) in
+        }
+        
+        UIView.defaultAnimation(0.3, animations:show, completion:{ _ in
             self.isCurrentlyVisible = true
+            guard showSpinner else { return }
+            self.activityIndicatorView.startAnimating()
         })
     }
     
     func hide(delay: TimeInterval = 0, animated: Bool = true) {
         
-        if animated {
-            guard isHidden == false else { return }
-            
-            UIView.defaultAnimation(0.3, delay: delay, animations: {
-                self.isHidden = true
-                self.textLabel.alpha = 0
-                self.superview?.layoutIfNeeded()
-            }, completion: { (completed) in
-                self.activityIndicatorView.stopAnimating()
-                self.isCurrentlyVisible = false
-            })
-        } else {
-            activityIndicatorView.stopAnimating()
-            isHidden = true
-            isCurrentlyVisible = false
+        let hide = {
+            self.isHidden = true
+            self.textLabel.alpha = 0
+            self.activityIndicatorView.isHidden = true
         }
+        
+        let animate = {
+            guard self.isHidden == false else { return }
+            
+            let fireTime = DispatchTime.now() + delay
+            DispatchQueue.main.asyncAfter(deadline: fireTime, execute: {
+                self.activityIndicatorView.stopAnimating()
+                UIView.defaultAnimation(0.3, delay: 0, animations: hide, completion: { _ in
+                    self.isCurrentlyVisible = false
+                })
+            })
+        }
+        
+        animated ? animate() : hide()
     }
 }
