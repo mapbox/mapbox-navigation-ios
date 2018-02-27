@@ -545,19 +545,6 @@ extension NavigationViewController: RouteControllerDelegate {
         }
     }
     
-    @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
-        let shouldDiscard = delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
-        
-        if shouldDiscard {
-            let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
-            mapViewController?.statusView.show(title, showSpinner: false)
-            mapViewController?.statusView.hide(delay: 3, animated: true)
-            return true
-        }
-        
-        return false
-    }
-    
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
         let advancesToNextLeg = delegate?.navigationViewController?(self, didArriveAt: waypoint) ?? true
         
