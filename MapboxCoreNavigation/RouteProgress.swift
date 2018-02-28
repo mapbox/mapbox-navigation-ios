@@ -396,7 +396,7 @@ open class RouteStepProgress: NSObject {
      The step must contain `Intersections` for this value not be `nil`.
      */
     @objc public var upcomingIntersection: Intersection? {
-        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersectionIndex + 1 < intersections.endIndex, intersectionIndex >= intersections.startIndex else {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.startIndex..<intersections.endIndex-1 ~= intersectionIndex else {
             return nil
         }
         
@@ -414,7 +414,7 @@ open class RouteStepProgress: NSObject {
      The step must contain `Intersections` for this value not be `nil`.
      */
     @objc public var currentIntersection: Intersection? {
-        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersectionIndex >= intersections.startIndex, intersectionIndex <= intersections.endIndex else {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersections.startIndex..<intersections.endIndex ~= intersectionIndex else {
             return nil
         }
 
