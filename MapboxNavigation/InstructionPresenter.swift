@@ -14,15 +14,28 @@ class InstructionPresenter {
     var onShieldDownload: ShieldDownloadCompletion?
 
     private let imageRepository = ImageRepository.shared
+    
+    var currentPriorityLevel: Int? = nil
 
     func attributedText() -> NSAttributedString {
         guard let label = self.label else {
             return NSAttributedString()
         }
 
-        let string = NSMutableAttributedString()
-
-        for component in instruction {
+        var string: [(Int, NSAttributedString)] = []
+        
+        var i = 0
+        let sortedCompomentsOnAbbreviationPriority = instruction.map { (instruction: VisualInstructionComponent) -> (Int, (VisualInstructionComponent)) in
+            let f = (i, instruction)
+            i += 1
+            return f
+        }.sorted {
+            $0.1.abbreviationPriority < $1.1.abbreviationPriority
+        }
+        
+        for abbreivationPriotiryInstruction in sortedCompomentsOnAbbreviationPriority {
+            let component = abbreivationPriotiryInstruction.1
+            let originalPlaceInComponent = abbreivationPriotiryInstruction.0
             let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
             
@@ -31,12 +44,12 @@ class InstructionPresenter {
 
             if let shieldKey = component.shieldKey() {
                 if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
-                    string.append(NSAttributedString(string: joinChar))
-                    string.append(attributedString(withFont: label.font, shieldImage: cachedImage))
+                    string.append((originalPlaceInComponent, NSAttributedString(string: joinChar)))
+                    string.append((originalPlaceInComponent, attributedString(withFont: label.font, shieldImage: cachedImage)))
                 } else {
                     // Display road code while shield is downloaded
                     if let text = joinCharPlusText {
-                        string.append(NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label)))
+                        string.append((originalPlaceInComponent, NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label))))
                     }
                     shieldImageForComponent(component, height: label.shieldHeight, completion: { [weak self] (image) in
                         guard image != nil else {
@@ -51,11 +64,15 @@ class InstructionPresenter {
                 if component.type == .delimiter && instructionHasDownloadedAllShields() {
                     continue
                 }
-                string.append(NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label)))
+                string.append((originalPlaceInComponent, NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label))))
             }
         }
         
-        return string
+        let finalString = NSMutableAttributedString()
+        string.sorted { $0.0 < $1.0 }.forEach {
+            finalString.append($0.1)
+        }
+        return finalString
     }
 
     private func shieldImageForComponent(_ component: VisualInstructionComponent, height: CGFloat, completion: @escaping (UIImage?) -> Void) {
