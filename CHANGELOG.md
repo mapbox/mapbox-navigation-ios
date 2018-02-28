@@ -119,8 +119,7 @@ Here is reference for the new notification names:
 * Exposes `setOverheadCameraView(from:along:for:)` which is useful for fitting the camera to an overhead view for the remaining route coordinates.
 * Changed the heuristics needed for a the users location to unsnap from the route line. [#1110](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 * Changes `routeController(:didDiscardLocation:)` to `routeController(:shouldDiscardLocation:)`. Now if implemented, developers can choose to keep a location when RouteController deems a location unqualified. [#1095](https://github.com/mapbox/mapbox-navigation-ios/pull/1095/)
-* Added delegate method `routeControllerDidEnterTunnel(_:)` which is useful for detecting when a commuter enters a tunnel. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
-* Added delegate method `routeControllerDidExitTunnel(_:)` which is useful for detecting when a commuter exits a tunnel. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
+* Updates to calculate the distances of a step's intersection(s) which is used to detect the current and upcoming IntersectionIndices.   [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## User Interface
 
@@ -128,6 +127,7 @@ Here is reference for the new notification names:
 * The `/` delimiter is longer shown when a shield is shown on either side of the delimiter. This also removes the dependency SDWebImage. [#1046](https://github.com/mapbox/mapbox-navigation-ios/pull/1046)
 * Exposes constants used for styling the route line. [#1124](https://github.com/mapbox/mapbox-navigation-ios/pull/1124/)
 * Exposes `update(for:)` on `InstructionBannerView`. This is helpful for developers creating a custom user interface. [#1085](https://github.com/mapbox/mapbox-navigation-ios/pull/1085/)
+* Detects if the current intersection contains a tunnel, which allows to set current step style to `.nightStyle` when commuter is in a tunnel. Also, we reset the step style when we advance to the next intersection (i.e. the navigation through the current step tunnel intersection was completed). [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## Voice Guidance
 
