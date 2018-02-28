@@ -651,6 +651,8 @@ extension RouteController: CLLocationManagerDelegate {
             reroute(from: location)
             return
         }
+        
+        updateSpokenInstructionProgress(for: location)
 
         // Check for faster route given users current location
         guard reroutesOpportunistically else { return }
