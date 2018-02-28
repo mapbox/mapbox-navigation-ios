@@ -273,6 +273,11 @@ open class RouteLegProgress: NSObject {
      Returns the progress along the current `RouteStep`.
      */
     @objc public var currentStepProgress: RouteStepProgress
+    
+    /**
+     Returns all the intersection distances on the current step.
+     */
+    var intersectionDistances = [CLLocationDistance]()
 
     /**
      Intializes a new `RouteLegProgress`.

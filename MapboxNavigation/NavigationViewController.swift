@@ -403,7 +403,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
             let classes = currentIntersection.outletRoadClasses {
             if classes.contains(.tunnel) {
-                print("turn on dark mode on intersection index: \(routeProgress.currentLegProgress.currentStepProgress.intersectionIndex)")
                 styleManager.applyStyle(type:.nightStyle)
             } else {
                 styleManager.timeOfDayChanged()

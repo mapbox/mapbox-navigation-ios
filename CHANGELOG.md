@@ -127,7 +127,7 @@ Here is reference for the new notification names:
 * The `/` delimiter is longer shown when a shield is shown on either side of the delimiter. This also removes the dependency SDWebImage. [#1046](https://github.com/mapbox/mapbox-navigation-ios/pull/1046)
 * Exposes constants used for styling the route line. [#1124](https://github.com/mapbox/mapbox-navigation-ios/pull/1124/)
 * Exposes `update(for:)` on `InstructionBannerView`. This is helpful for developers creating a custom user interface. [#1085](https://github.com/mapbox/mapbox-navigation-ios/pull/1085/)
-* Detects if the current intersection contains a tunnel, which allows to set current step style to `.nightStyle` when commuter is in a tunnel. Also, we reset the step style when we advance to the next intersection (i.e. the navigation through the current step tunnel intersection was completed). [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
+* Updates to set current `NavigationViewController.styleManager.applyStyle(type:)`  to `.nightStyle` when the current step intersection contains a tunnel. Also, we reset the step style when we advance to the next intersection (i.e. the navigation through the current step tunnel intersection was completed). [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## Voice Guidance
 

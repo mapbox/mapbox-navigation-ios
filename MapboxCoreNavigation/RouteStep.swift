@@ -1,8 +1,6 @@
 import MapboxDirections
 import Turf
 
-private var routeStepIntersectionDistances = [CLLocationDistance]()
-
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
         
@@ -55,16 +53,4 @@ extension RouteStep {
         return false
     }
 
-    /**
-     Getter/Setter to retrieve and store all intersection distances.
-     */
-    var intersectionDistances: [CLLocationDistance] {
-        set {
-            routeStepIntersectionDistances = newValue
-        }
-        get {
-            return routeStepIntersectionDistances
-        }
-    }
 }
-
