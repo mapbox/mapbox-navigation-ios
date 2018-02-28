@@ -134,22 +134,6 @@ public protocol RouteControllerDelegate: class {
     */
     @objc(routeController:didArriveAtWaypoint:)
     optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool
-    
-    /**
-     Called when the route controller enters a tunnel.
-     
-     - parameter routeController: The route controller that has entered the tunnel.
-     */
-    @objc(routeControllerDidEnterTunnel:)
-    optional func routeControllerDidEnterTunnel(_ routeController: RouteController)
-    
-    /**
-     Called when the route controller leaves a tunnel.
-     
-     - parameter routeController: The route controller that has left the tunnel.
-     */
-    @objc(routeControllerDidExitTunnel:)
-    optional func routeControllerDidExitTunnel(_ routeController: RouteController)
 }
 
 /**
@@ -644,6 +628,10 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
+        let distances = currentStep.intersectionDistances
+        let upcomingIntersectionIndex = distances.index { $0 > currentStepProgress.distanceTraveled } ?? distances.endIndex
+        currentStepProgress.intersectionIndex = distances.index(before: upcomingIntersectionIndex)
+        
         // Notify observers if the step’s remaining distance has changed.
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
@@ -658,14 +646,11 @@ extension RouteController: CLLocationManagerDelegate {
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
-        detectRouteStepInTunnel(for: location)
         
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
         }
-        
-        updateSpokenInstructionProgress(for: location)
 
         // Check for faster route given users current location
         guard reroutesOpportunistically else { return }
@@ -674,26 +659,6 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
-    }
-    
-    func detectRouteStepInTunnel(for location: CLLocation) {
-        guard let tunnelIntersectionBounds = routeProgress.currentLegProgress.currentStep.tunnelIntersectionBounds else { return }
-        
-        if hasEnteredTunnel(tunnelIntersectionBounds) {
-            delegate?.routeControllerDidEnterTunnel?(self)
-        } else {
-            delegate?.routeControllerDidExitTunnel?(self)
-        }
-    }
-    
-    func hasEnteredTunnel(_ intersectionBounds: [IntersectionBounds]) -> Bool {
-        let distanceTraveled = routeProgress.currentLegProgress.distanceTraveled
-        for bounds in intersectionBounds {
-            if bounds.distanceToEntry <= distanceTraveled && distanceTraveled <= bounds.distanceToExit {
-                return true
-            }
-        }
-        return false
     }
     
     func updateRouteLegProgress(for location: CLLocation) {
@@ -978,6 +943,12 @@ extension RouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.stepIndex = forcedStepIndex
         } else {
             routeProgress.currentLegProgress.stepIndex += 1
+        }
+        
+        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
+            let polyline = Polyline(coordinates)
+            let distances = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
+            routeProgress.currentLegProgress.currentStep.intersectionDistances = distances
         }
     }
 }

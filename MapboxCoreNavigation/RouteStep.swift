@@ -1,7 +1,7 @@
 import MapboxDirections
 import Turf
 
-private var tunnelIntersectionBoundsCache = [String: IntersectionBounds]()
+private var routeStepIntersectionDistances = [CLLocationDistance]()
 
 extension RouteStep {
     static func ==(left: RouteStep, right: RouteStep) -> Bool {
@@ -54,42 +54,17 @@ extension RouteStep {
         }
         return false
     }
-    
+
     /**
-     Returns an array of the tunnel intersection bounds on the current route step.
+     Getter/Setter to retrieve and store all intersection distances.
      */
-    var tunnelIntersectionBounds: [IntersectionBounds]? {
-        guard let coordinates = coordinates, let intersections = intersections, containsTunnel else { return nil }
-        var intersectionBounds = [IntersectionBounds]()
-        for i in 0..<intersections.count {
-            if let outletRoadClasses = intersections[i].outletRoadClasses, outletRoadClasses.contains(.tunnel) && i + 1 < intersections.endIndex {
-                
-                let tunnelIntersectionBoundKey = "\(intersections[i].location)\(intersections[i+1])"
-                if let tunnelIntersectionBound = tunnelIntersectionBoundsCache[tunnelIntersectionBoundKey] {
-                    intersectionBounds.append(tunnelIntersectionBound)
-                } else {
-                    let bounds = IntersectionBounds(intersections[i], intersections[i+1], coordinates)
-                    tunnelIntersectionBoundsCache[tunnelIntersectionBoundKey] = bounds
-                }
-            }
+    var intersectionDistances: [CLLocationDistance] {
+        set {
+            routeStepIntersectionDistances = newValue
         }
-        return intersectionBounds
-    }
-
-}
-
-public struct IntersectionBounds {
-    let entry: Intersection
-    let exit: Intersection
-    let polyline: Polyline
-    let distanceToEntry: CLLocationDistance
-    let distanceToExit: CLLocationDistance
-    
-    public init(_ entry: Intersection, _ exit: Intersection, _ coordinates: [CLLocationCoordinate2D]) {
-        self.entry = entry
-        self.exit = exit
-        polyline = Polyline(coordinates)
-        distanceToEntry = polyline.distance(from: coordinates.first, to: entry.location)
-        distanceToExit = polyline.distance(from: coordinates.first, to: exit.location)
+        get {
+            return routeStepIntersectionDistances
+        }
     }
 }
+

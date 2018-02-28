@@ -388,20 +388,33 @@ open class RouteStepProgress: NSObject {
     /**
      The next intersection the user will travel through.
      
-     The step must contains `Intersections` for this value not be `nil`.
+     The step must contain `Intersections` for this value not be `nil`.
      */
     @objc public var upcomingIntersection: Intersection? {
-        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersectionIndex + 1 < intersections.endIndex else {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersectionIndex + 1 < intersections.endIndex, intersectionIndex >= intersections.startIndex else {
             return nil
         }
         
-        return intersections[intersectionIndex]
+        return intersections[intersections.index(after: intersectionIndex)]
     }
     
     /**
      Index representing the current intersection.
      */
     @objc public var intersectionIndex: Int = 0
+    
+    /**
+     The current intersection the user will travel through.
+     
+     The step must contain `Intersections` for this value not be `nil`.
+     */
+    @objc public var currentIntersection: Intersection? {
+        guard let intersections = intersectionsIncludingUpcomingManeuverIntersection, intersectionIndex >= intersections.startIndex, intersectionIndex <= intersections.endIndex else {
+            return nil
+        }
+
+        return intersections[intersectionIndex]
+    }
     
     /**
      The distance in meters the user is to the next intersection they will pass through.

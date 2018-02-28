@@ -400,6 +400,16 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
         
+        if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
+            let classes = currentIntersection.outletRoadClasses {
+            if classes.contains(.tunnel) {
+                print("turn on dark mode on intersection index: \(routeProgress.currentLegProgress.currentStepProgress.intersectionIndex)")
+                styleManager.applyStyle(type:.nightStyle)
+            } else {
+                styleManager.timeOfDayChanged()
+            }
+        }
+        
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }
     
@@ -560,14 +570,6 @@ extension NavigationViewController: RouteControllerDelegate {
             self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg
-    }
-    
-    @objc public func routeControllerDidEnterTunnel(_ routeController: RouteController) {
-        self.styleManager.applyStyle(type:.nightStyle)
-    }
-    
-    @objc public func routeControllerDidExitTunnel(_ routeController: RouteController) {
-        self.styleManager.timeOfDayChanged()
     }
 }
 
