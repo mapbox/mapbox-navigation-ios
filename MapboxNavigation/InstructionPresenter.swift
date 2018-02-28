@@ -25,6 +25,9 @@ class InstructionPresenter {
         for component in instruction {
             let isFirst = component == instruction.first
             let joinChar = !isFirst ? " " : ""
+            
+            let joinCharPlusAbbreviation = component.abbreviation != nil ? joinChar + component.abbreviation! : nil
+            let joinCharPlusText = component.text != nil ? joinChar + component.text! : nil
 
             if let shieldKey = component.shieldKey() {
                 if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
@@ -32,8 +35,8 @@ class InstructionPresenter {
                     string.append(attributedString(withFont: label.font, shieldImage: cachedImage))
                 } else {
                     // Display road code while shield is downloaded
-                    if let text = component.text {
-                        string.append(NSAttributedString(string: joinChar + text, attributes: attributesForLabel(label)))
+                    if let text = joinCharPlusText {
+                        string.append(NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label)))
                     }
                     shieldImageForComponent(component, height: label.shieldHeight, completion: { [weak self] (image) in
                         guard image != nil else {
@@ -44,14 +47,14 @@ class InstructionPresenter {
                         }
                     })
                 }
-            } else if let text = component.text {
+            } else if let text = joinCharPlusText {
                 if component.type == .delimiter && instructionHasDownloadedAllShields() {
                     continue
                 }
-                string.append(NSAttributedString(string: (joinChar + text).abbreviated(toFit: label.availableBounds(), font: label.font), attributes: attributesForLabel(label)))
+                string.append(NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label)))
             }
         }
-
+        
         return string
     }
 
@@ -103,3 +106,4 @@ class ShieldAttachment: NSTextAttachment {
         return CGRect(x: 0, y: font.descender - image.size.height / 2 + mid + 2, width: image.size.width, height: image.size.height).integral
     }
 }
+

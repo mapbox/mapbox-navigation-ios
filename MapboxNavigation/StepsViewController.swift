@@ -201,7 +201,7 @@ extension StepsViewController: UITableViewDataSource {
     }
     
     func instructionForArrivalInstruction(text: String?) -> VisualInstructionComponent {
-        return VisualInstructionComponent(type: .destination, text: text, imageURL: nil, maneuverType: .none, maneuverDirection: .none)
+        return VisualInstructionComponent(type: .text, text: text, imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)
     }
     
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {

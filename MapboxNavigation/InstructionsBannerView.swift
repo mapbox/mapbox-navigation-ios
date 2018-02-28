@@ -63,7 +63,7 @@ open class BaseInstructionsBannerView: UIControl {
     
     func set(_ instruction: VisualInstruction?) {
         let secondaryInstruction = instruction?.secondaryTextComponents
-        primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
+        primaryLabel.numberOfLines = 1
         
         if secondaryInstruction == nil {
             centerYAlignInstructions()
@@ -79,8 +79,7 @@ open class BaseInstructionsBannerView: UIControl {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        
-        primaryLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Primary text label", imageURL: nil, maneuverType: .none, maneuverDirection: .none)]
+        primaryLabel.instruction = [VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
         
         distance = 100
     }
