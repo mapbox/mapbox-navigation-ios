@@ -36,8 +36,15 @@ open class BaseInstructionsBannerView: UIControl {
             
             if let distance = distance {
                 let distanceString = distanceFormatter.string(from: distance)
-                let distanceUnit = distanceFormatter.unitString(fromValue: distance, unit: distanceFormatter.unit)
-                guard let unitRange = distanceString.range(of: distanceUnit) else { return }
+                var distanceUnit = distanceFormatter.unitString(fromValue: distance, unit: distanceFormatter.unit)
+                var unitRange = distanceString.range(of: distanceUnit)
+                // In Hebrew, “meters” looks different in the distance string than it does on its own. <rdar://problem/38028709>
+                // Fall back on splitting the string on whitespace.
+                if unitRange == nil, let spaceRange = distanceString.rangeOfCharacter(from: .whitespaces) {
+                    unitRange = spaceRange.upperBound..<distanceString.endIndex
+                    distanceUnit = String(distanceString[unitRange!])
+                }
+                guard unitRange != nil else { return }
                 let distanceValue = distanceString.replacingOccurrences(of: distanceUnit, with: "")
                 guard let valueRange = distanceString.range(of: distanceValue) else { return }
 
