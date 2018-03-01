@@ -73,4 +73,86 @@ extension CLLocation {
         }
         return closestCoordinate.distance < maximumDistance
     }
+    
+    //MARK: - Route Snapping
+    func snapped(to legProgress: RouteLegProgress) -> CLLocation? {
+        var nearByCoordinates = legProgress.nearbyCoordinates
+        
+        // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
+        // Otherwise, we may get false positives from nearby step coordinates
+        if let upcomingStep = legProgress.upComingStep,
+            let initialHeading = upcomingStep.initialHeading,
+            let finalHeading = upcomingStep.finalHeading,
+            let coordinates = legProgress.currentStep.coordinates {
+            
+            // The max here is 180. The closer it is to 180, the sharper the turn.
+            if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
+                nearByCoordinates = coordinates
+            }
+        }
+        
+        guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: coordinate) else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: nearByCoordinates) else { return nil }
+        
+        let userCourse = calculatedCourseForLocationOnStep
+        let userCoordinate = closest.coordinate
+        
+        guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) else { return nil }
+        
+        return CLLocation(coordinate: userCoordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: userCourse, speed: speed, timestamp: timestamp)
+    }
+    
+    
+    /**
+     Given a location and a series of coordinates, compute what the course should be for a the location.
+     */
+    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D]) -> CLLocationDirection? {
+        let nearByPolyline = Polyline(coordinates)
+        
+        guard let closest = nearByPolyline.closestCoordinate(to: coordinate) else { return nil }
+        
+        let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
+        let slicedLineInFront = nearByPolyline.sliced(from: closest.coordinate, to: coordinates.last)
+        let userDistanceBuffer: CLLocationDistance = max(speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
+        
+        guard let pointBehind = slicedLineBehind.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
+        guard let pointBehindClosest = nearByPolyline.closestCoordinate(to: pointBehind) else { return nil }
+        guard let pointAhead = slicedLineInFront.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
+        guard let pointAheadClosest = nearByPolyline.closestCoordinate(to: pointAhead) else { return nil }
+        
+        // Get direction of these points
+        let pointBehindDirection = pointBehindClosest.coordinate.direction(to: closest.coordinate)
+        let pointAheadDirection = closest.coordinate.direction(to: pointAheadClosest.coordinate)
+        let wrappedPointBehind = pointBehindDirection.wrap(min: -180, max: 180)
+        let wrappedPointAhead = pointAheadDirection.wrap(min: -180, max: 180)
+        let wrappedCourse = course.wrap(min: -180, max: 180)
+        let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
+        let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
+        
+        let averageRelativeAngle: Double
+        // User is at the beginning of the route, there is no closest point behind the user.
+        if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
+            averageRelativeAngle = relativeAnglepointAhead
+            // User is at the end of the route, there is no closest point in front of the user.
+        } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
+            averageRelativeAngle = relativeAnglepointBehind
+        } else {
+            averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
+        }
+        
+        return (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
+    }
+    
+    /**
+     Determines if the a location is qualified enough to allow the user puck to become unsnapped.
+     */
+    func shouldSnap(toRouteWith course: CLLocationDirection) -> Bool {
+        if course >= 0 &&
+            speed >= RouteControllerMinimumSpeedForLocationSnapping &&
+            course.differenceBetween(self.course) > RouteControllerMaxManipulatedCourseAngle &&
+            horizontalAccuracy < 20 {
+            return false
+        }
+        return true
+    }
 }
