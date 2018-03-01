@@ -536,7 +536,7 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
-        delegate?.navigationViewController(self, shouldDiscard: location)
+        delegate?.navigationViewController?(self, shouldDiscard: location)
     }
     
     @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
