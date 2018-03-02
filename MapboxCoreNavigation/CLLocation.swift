@@ -75,6 +75,7 @@ extension CLLocation {
     }
     
     //MARK: - Route Snapping
+    
     func snapped(to legProgress: RouteLegProgress) -> CLLocation? {
         var nearByCoordinates = legProgress.nearbyCoordinates
         
@@ -86,7 +87,7 @@ extension CLLocation {
             let coordinates = legProgress.currentStep.coordinates {
             
             // The max here is 180. The closer it is to 180, the sharper the turn.
-            if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
+            if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteSnappingMaxManipulatedCourseAngle {
                 nearByCoordinates = coordinates
             }
         }
@@ -148,8 +149,8 @@ extension CLLocation {
      */
     func shouldSnap(toRouteWith course: CLLocationDirection) -> Bool {
         if course >= 0 &&
-            speed >= RouteControllerMinimumSpeedForLocationSnapping &&
-            course.differenceBetween(self.course) > RouteControllerMaxManipulatedCourseAngle &&
+            speed >= RouteSnappingMinimumSpeed &&
+            course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle &&
             horizontalAccuracy < 20 {
             return false
         }

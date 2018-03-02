@@ -356,9 +356,24 @@ open class RouteController: NSObject {
     }
     
     /**
+     The most recently received user location. Snapped to the route line, if applicable, otherwise raw.
+     - seeAlso: snappedLocation, rawLocation
+     */
+    @objc public var location: CLLocation? {
+        return snappedLocation ?? rawLocation
+    }
+    
+    /**
+     The most recently recieved user location, snapped to the route line, if applicable.
+     - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
+     */
+    var snappedLocation: CLLocation? {
+        return rawLocation?.snapped(to: routeProgress.currentLegProgress)
+    }
+
+    /**
      The most recently received user location.
-     
-     This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
+     - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
     var rawLocation: CLLocation? {
         didSet {
@@ -382,35 +397,6 @@ open class RouteController: NSObject {
             }
         }
         return RouteControllerMaximumDistanceBeforeRecalculating
-    }
-
-    var snappedLocation: CLLocation? {
-        return rawLocation?.snapped(to: routeProgress.currentLegProgress)
-    }
-    /**
-     The most recently received user location, snapped to the route line.
-
-     This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
-     */
-    
-    //TODO: move this into an extension, CLLocation.snapped(to: RouteLegProgress) -> CLLocation
-    @objc public var location: CLLocation? {
-        return snappedLocation ?? rawLocation
-    }
-    
-    
-    
-    /**
-     Determines if the a location is qualified enough to allow the user puck to become unsnapped.
-     */
-    func shouldSnap(_ location: CLLocation, toRouteWith course: CLLocationDirection) -> Bool {
-        if location.course >= 0 &&
-            location.speed >= RouteControllerMinimumSpeedForLocationSnapping &&
-            course.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle &&
-            location.horizontalAccuracy < 20 {
-                return false
-        }
-        return true
     }
 
     /**

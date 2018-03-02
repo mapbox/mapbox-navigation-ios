@@ -42,7 +42,7 @@ public var RouteControllerDeadReckoningTimeInterval: TimeInterval = 1.0
 /**
  Maximum angle the user puck will be rotated when snapping the user's course to the route line.
  */
-public var RouteControllerMaxManipulatedCourseAngle: CLLocationDirection = 25
+public var RouteSnappingMaxManipulatedCourseAngle: CLLocationDirection = 25
 
 /**
  :nodoc This is used internally for debugging metrics
@@ -59,7 +59,7 @@ public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 /**
  The minimum speed value before the user's actual location can be considered over the snapped location.
  */
-public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 3
+public var RouteSnappingMinimumSpeed: CLLocationSpeed = 3
 
 /**
  The minimum distance threshold used for giving a "Continue" type instructions.
