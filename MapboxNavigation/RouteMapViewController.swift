@@ -119,7 +119,7 @@ class RouteMapViewController: UIViewController {
     
     override func loadView() {
         self.view = NavigationView(delegate: self)
-        self.view.pinInSuperview()
+        self.view.frame = parent?.view.bounds ?? UIScreen.main.bounds
         mapView.contentInset = contentInsets
     }
     
