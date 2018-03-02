@@ -105,12 +105,21 @@ open class NavigationView: UIView {
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
     lazy var separatorView: SeparatorView = .forAutoLayout()
-    lazy var lanesView: LanesView = .forAutoLayout()
-    lazy var nextBannerView: NextBannerView = .forAutoLayout()
+    lazy var lanesView: LanesView = {
+        let view: LanesView = .forAutoLayout()
+        view.isHidden = true
+        return view
+    }()
+    lazy var nextBannerView: NextBannerView = {
+        let view: NextBannerView = .forAutoLayout()
+        view.isHidden = true
+        return view
+    }()
     lazy var statusView: StatusView = {
-        let status: StatusView = .forAutoLayout()
-        status.delegate = delegate
-        return status
+        let view: StatusView = .forAutoLayout()
+        view.delegate = delegate
+        view.isHidden = true
+        return view
     }()
     
     lazy var resumeButton: ResumeButton = {
