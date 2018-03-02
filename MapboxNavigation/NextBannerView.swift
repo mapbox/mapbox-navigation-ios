@@ -78,7 +78,7 @@ open class NextBannerView: UIView {
         let durationForNext = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
 
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= durationForNext, upcomingStep.expectedTravelTime <= durationForNext else {
-                return false
+            return false
         }
         
         guard let _ = upcomingStep.instructionsDisplayedAlongStep?.last else { return false }
