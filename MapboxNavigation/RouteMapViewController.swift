@@ -662,6 +662,13 @@ extension RouteMapViewController: NavigationViewDelegate {
                 return
         }
         
+        // Avoid aggressively opting the developer into Mapbox services if they
+        // haven’t provided an access token.
+        guard let _ = MGLAccountManager.accessToken() else {
+            navigationView.wayNameView.isHidden = true
+            return
+        }
+        
         let closestCoordinate = location.coordinate
         let roadLabelLayerIdentifier = "roadLabelLayer"
         var streetsSources = style.sources.flatMap {
