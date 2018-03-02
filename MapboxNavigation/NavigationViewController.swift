@@ -403,14 +403,16 @@ public class NavigationViewController: UIViewController {
         let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        
-        if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
+
+        if let intersectionDistance = routeProgress.currentLegProgress.currentStepProgress.currentIntersectionDistance,
+            intersectionDistance >= RouteProgressMinimumTunnelIntersectionDistance,
+            let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
             let classes = currentIntersection.outletRoadClasses {
-            if classes.contains(.tunnel) {
-                styleManager.applyStyle(type:.nightStyle)
-            } else {
-                styleManager.timeOfDayChanged()
-            }
+                if classes.contains(.tunnel) {
+                    styleManager.applyStyle(type:.nightStyle)
+                } else {
+                    styleManager.timeOfDayChanged()
+                }
         }
         
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)

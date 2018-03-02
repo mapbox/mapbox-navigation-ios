@@ -628,7 +628,7 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
-        let intersectionDistances = routeProgress.currentLegProgress.intersectionDistances
+        let intersectionDistances = routeProgress.currentLegProgress.currentStepProgress.intersectionDistances
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
         currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
         
@@ -950,7 +950,7 @@ extension RouteController: CLLocationManagerDelegate {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
             let polyline = Polyline(coordinates)
             let distances = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
-            routeProgress.currentLegProgress.intersectionDistances = distances
+            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
 }
