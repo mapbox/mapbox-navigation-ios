@@ -45,8 +45,7 @@ open class NextBannerView: UIView {
         
         instructionLabel.availableBounds = {
             let height = ("|" as NSString).size(withAttributes: [.font: self.instructionLabel.font]).height
-            let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(16*2)
-            return CGRect(x: 0, y: 0, width: availableWidth, height: height)
+            return CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
         }
     }
     
@@ -62,14 +61,14 @@ open class NextBannerView: UIView {
         heightConstraint.isActive = true
         
         let midX = BaseInstructionsBannerView.padding + BaseInstructionsBannerView.maneuverViewSize.width / 2
-        maneuverView.centerXAnchor.constraint(equalTo: leftAnchor, constant: midX).isActive = true
+        maneuverView.centerXAnchor.constraint(equalTo: leadingAnchor, constant: midX).isActive = true
         maneuverView.heightAnchor.constraint(equalToConstant: 22).isActive = true
         maneuverView.widthAnchor.constraint(equalToConstant: 22).isActive = true
         maneuverView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        instructionLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 70).isActive = true
+        instructionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70).isActive = true
         instructionLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        instructionLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -16).isActive = true
+        instructionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16).isActive = true
     }
     
     func shouldShowNextBanner(for routeProgress: RouteProgress) -> Bool {
