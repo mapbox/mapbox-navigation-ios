@@ -31,23 +31,12 @@ open class NavigationLocationManager: CLLocationManager {
     override public init() {
         super.init()
         
-        let always = Bundle.main.locationAlwaysUsageDescription
-        let both = Bundle.main.locationAlwaysAndWhenInUseUsageDescription
-        
-        if always != nil || both != nil {
-            requestAlwaysAuthorization()
-        } else {
-            requestWhenInUseAuthorization()
-        }
+        requestWhenInUseAuthorization()
         
         if #available(iOS 9.0, *) {
             if Bundle.main.backgroundModes.contains("location") {
                 allowsBackgroundLocationUpdates = true
             }
-        }
-        
-        if #available(iOS 11.0, *) {
-            showsBackgroundLocationIndicator = true
         }
         
         desiredAccuracy = kCLLocationAccuracyBest
