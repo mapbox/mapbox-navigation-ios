@@ -273,17 +273,24 @@ open class DistanceLabel: StylableLabel {
         // Create a copy of the attributed string that emphasizes the quantity.
         let emphasizedDistanceString = NSMutableAttributedString(attributedString: attributedDistanceString)
         let wholeRange = NSRange(location: 0, length: emphasizedDistanceString.length)
+        var hasQuantity = false
         emphasizedDistanceString.enumerateAttribute(.quantity, in: wholeRange, options: .longestEffectiveRangeNotRequired) { (value, range, stop) in
             let foregroundColor: UIColor
             let font: UIFont
             if let _ = emphasizedDistanceString.attribute(NSAttributedStringKey.quantity, at: range.location, effectiveRange: nil) {
                 foregroundColor = valueTextColor
                 font = valueFont
+                hasQuantity = true
             } else {
                 foregroundColor = unitTextColor
                 font = unitFont
             }
             emphasizedDistanceString.addAttributes([.foregroundColor: foregroundColor, .font: font], range: range)
+        }
+        
+        // As a failsafe, if no quantity was found, emphasize the entire string.
+        if !hasQuantity {
+            emphasizedDistanceString.addAttributes([.foregroundColor: valueTextColor, .font: valueFont], range: wholeRange)
         }
         
         // Replace spaces with hair spaces to economize on horizontal screen
