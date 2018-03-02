@@ -253,45 +253,53 @@ open class DistanceLabel: StylableLabel {
         didSet { update() }
     }
     
-    var valueRange: Range<String.Index>? {
-        didSet {
-            update()
-        }
-    }
-    
-    var unitRange: Range<String.Index>? {
-        didSet {
-            update()
-        }
-    }
-    
-    var distanceString: String? {
+    /**
+     An attributed string indicating the distance along with a unit.
+     
+     - precondition: `NSAttributedStringKey.quantity` should be applied to the
+        numeric quantity.
+     */
+    var attributedDistanceString: NSAttributedString? {
         didSet {
             update()
         }
     }
     
     fileprivate func update() {
-        guard let valueRange = valueRange, let unitRange = unitRange, let distanceString = distanceString else {
+        guard let attributedDistanceString = attributedDistanceString else {
             return
         }
-
-        let valueAttributes: [NSAttributedStringKey: Any] = [.foregroundColor: valueTextColor, .font: valueFont]
-        let unitAttributes: [NSAttributedStringKey: Any] = [.foregroundColor: unitTextColor, .font: unitFont]
-
-        let valueSubstring = distanceString[valueRange].trimmingCharacters(in: .whitespaces)
-        let unitSubstring = distanceString[unitRange].trimmingCharacters(in: .whitespaces)
-        let valueAttributedString = NSAttributedString(string: valueSubstring, attributes: valueAttributes)
-        let unitAttributedString = NSAttributedString(string: unitSubstring, attributes: unitAttributes)
-
-        let startsWithUnit = unitRange.lowerBound == distanceString.wholeRange.lowerBound
-        let attributedString = NSMutableAttributedString()
-
-        attributedString.append(startsWithUnit ? unitAttributedString : valueAttributedString)
-        attributedString.append(NSAttributedString(string: "\u{200A}", attributes: unitAttributes))
-        attributedString.append(startsWithUnit ? valueAttributedString : unitAttributedString)
-
-        attributedText = attributedString
+        
+        // Create a copy of the attributed string that emphasizes the quantity.
+        let emphasizedDistanceString = NSMutableAttributedString(attributedString: attributedDistanceString)
+        let wholeRange = NSRange(location: 0, length: emphasizedDistanceString.length)
+        var hasQuantity = false
+        emphasizedDistanceString.enumerateAttribute(.quantity, in: wholeRange, options: .longestEffectiveRangeNotRequired) { (value, range, stop) in
+            let foregroundColor: UIColor
+            let font: UIFont
+            if let _ = emphasizedDistanceString.attribute(NSAttributedStringKey.quantity, at: range.location, effectiveRange: nil) {
+                foregroundColor = valueTextColor
+                font = valueFont
+                hasQuantity = true
+            } else {
+                foregroundColor = unitTextColor
+                font = unitFont
+            }
+            emphasizedDistanceString.addAttributes([.foregroundColor: foregroundColor, .font: font], range: range)
+        }
+        
+        // As a failsafe, if no quantity was found, emphasize the entire string.
+        if !hasQuantity {
+            emphasizedDistanceString.addAttributes([.foregroundColor: valueTextColor, .font: valueFont], range: wholeRange)
+        }
+        
+        // Replace spaces with hair spaces to economize on horizontal screen
+        // real estate. Formatting the distance with a short style would remove
+        // spaces, but in English it would also denote feet with a prime
+        // mark (′), which is typically used for heights, not distances.
+        emphasizedDistanceString.mutableString.replaceOccurrences(of: " ", with: "\u{200A}", options: [], range: wholeRange)
+        
+        attributedText = emphasizedDistanceString
     }
 }
 
