@@ -535,6 +535,10 @@ extension NavigationViewController: RouteControllerDelegate {
         delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
+    @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
+        return delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
+    }
+    
     @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
         if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
