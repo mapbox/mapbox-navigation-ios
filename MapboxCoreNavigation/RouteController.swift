@@ -561,7 +561,8 @@ extension RouteController: CLLocationManagerDelegate {
             currentStepProgress.distanceTraveled = distanceTraveled
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                RouteControllerNotificationUserInfoKey.locationKey: location
+                RouteControllerNotificationUserInfoKey.locationKey: self.location!, // Idealized location, raw is guaranteed
+                RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw, from line 541
                 ])
         }
         
