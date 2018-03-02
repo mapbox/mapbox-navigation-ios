@@ -43,6 +43,7 @@ public class LanesView: UIView {
         
         let stackView = UIStackView(arrangedSubviews: [])
         stackView.axis = .horizontal
+        stackView.semanticContentAttribute = .spatial
         stackView.spacing = 4
         stackView.distribution = .equalCentering
         stackView.alignment = .center

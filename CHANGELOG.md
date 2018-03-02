@@ -1,6 +1,20 @@
 ## Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.15.0 (tbd)
+
+#### Breaking changes
+* `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
+
+#### User interface
+* `StepsViewController` 's convienence initalizer (`StepsViewController.init(routeProgress:)`) is now public. ([#1167](https://github.com/mapbox/mapbox-navigation-ios/pull/1167))
+* Fixed an issue preventing the distance from appearing in the turn banner when the system language was set to Hebrew and the system region was set to Israel or any other region that uses the metric system. ([#1176](https://github.com/mapbox/mapbox-navigation-ios/pull/1176))
+* The `DistanceFormatter.attributedString(for:)` method is now implemented. It returns an attributed string representation of the distance in which the `NSAttributedStringKey.quantity` attribute is applied to the numeric quantity. ([#1176](https://github.com/mapbox/mapbox-navigation-ios/pull/1176))
+* Fixed an issue in which turn lanes were displayed in the wrong order when the system language was set to Hebrew. ([#1175](https://github.com/mapbox/mapbox-navigation-ios/pull/1175))
+
+#### Other changes
+* Fixed a crash while navigating that affected applications that do not use Mapbox-hosted styles or vector tiles. [#1183](https://github.com/mapbox/mapbox-navigation-ios/pull/1183)
+
+## v0.14.0 (February 22, 2018)
 
 #### Breaking Changes
 
@@ -10,8 +24,9 @@
 * Renamed notification names associated with `RouteController` in Objective-C code. [#1122](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 * The user info keys of `RouteController`-related notifications have been renamed and are now members of the `RouteControllerNotificationUserInfoKey` struct in Swift and the `MBRouteControllerNotificationUserInfoKey` extensible enumeration in Objective-C. [#1122](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 
-Here is reference for the new notification names:
-
+<details>
+<summary>Here is reference for the new notification names:</summary>
+<br>
 <table>
 <thead>
 <tr>
@@ -76,9 +91,9 @@ Here is reference for the new notification names:
 </tr>
 <tr>
 <td><code>RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</code></td>
-<td><code>RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey</code></td>
+<td>🚮 (removed)</td>
 <td><code>MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</code></td>
-<td><code>MBRouteControllerEstimatedTimeUntilManeuverKey</code></td>
+<td>🚮 (removed)</td>
 </tr>
 <tr>
 <td><code>RouteControllerNotificationLocationKey</code></td>
@@ -112,6 +127,7 @@ Here is reference for the new notification names:
 </tr>
 </tbody>
 </table>
+</details>
 
 ## Core Navigation
 
@@ -131,7 +147,7 @@ Here is reference for the new notification names:
 
 ## Voice Guidance
 
-* Exposes `RouteVoiceController.speak(_:)` which would allow custom subclass of PollyVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
+* Exposes `RouteVoiceController.speak(_:)` which would allow custom subclass of MapboxVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
 
 
 ## v0.13.1 (February 7, 2018)

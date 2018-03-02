@@ -12,6 +12,8 @@ class ImageRepositoryTests: XCTestCase {
         return repo
     }()
 
+    let asyncTimeout: TimeInterval = 2.0
+
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
@@ -23,7 +25,7 @@ class ImageRepositoryTests: XCTestCase {
         repository.resetImageCache {
             clearImageCacheExpectation.fulfill()
         }
-        wait(for: [clearImageCacheExpectation], timeout: 1)
+        wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
     }
 
     func test_imageWithURL_downloadsImageWhenNotCached() {
@@ -40,7 +42,7 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             asyncExpectation.fulfill()
         }
-        wait(for: [asyncExpectation], timeout: 1)
+        wait(for: [asyncExpectation], timeout: asyncTimeout)
 
         XCTAssertNotNil(imageReturned)
         // round-trip through UIImagePNGRepresentation results in changes in data due to metadata stripping, thus direct image comparison is not always possible.
@@ -60,9 +62,9 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             asyncExpectation.fulfill()
         }
-        wait(for: [asyncExpectation], timeout: 1)
+        wait(for: [asyncExpectation], timeout: asyncTimeout)
 
-        XCTAssertFalse(TestImageLoadingURLProtocol.hasRequestForURL(fakeURL))
+        XCTAssertNil(TestImageLoadingURLProtocol.pastRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
     }
 

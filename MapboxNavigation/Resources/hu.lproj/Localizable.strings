@@ -1,4 +1,4 @@
-﻿/* Feedback type for Accident */
+/* Feedback type for Accident */
 "FEEDBACK_ACCIDENT" = "Baleset";
 
 /* Feedback type for Closure */
@@ -24,7 +24,3 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Resume";
-
-/* Inform user about weak GPS signal */
-"WEAK_GPS" = "Weak GPS signal";
-

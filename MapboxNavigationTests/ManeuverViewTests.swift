@@ -12,7 +12,6 @@ class ManeuverViewTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         maneuverView.backgroundColor = .white
-        route.accessToken = bogusToken
         recordMode = false
         isDeviceAgnostic = false
         usesDrawViewHierarchyInRect = true

@@ -31,6 +31,7 @@ open class EndOfRouteCommentView: StylableTextView {}
 @objc(MBEndOfRouteButton)
 open class EndOfRouteButton: StylableButton {}
 
+@objc(MBEndOfRouteViewController)
 class EndOfRouteViewController: UIViewController {
 
     // MARK: - IBOutlets
@@ -78,6 +79,7 @@ class EndOfRouteViewController: UIViewController {
         super.viewWillDisappear(animated)
         view.roundCorners([.topLeft, .topRight])
         preferredContentSize.height = height(for: .normal)
+        updateInterface()
     }
 
     // MARK: - IBActions
@@ -137,9 +139,8 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func height(for height: ContainerHeight) -> CGFloat {
-        guard #available(iOS 11.0, *) else { return height.rawValue }
         let window = UIApplication.shared.keyWindow
-        let bottomMargin = window!.safeAreaInsets.bottom
+        let bottomMargin = window!.safeArea.bottom
         return height.rawValue + bottomMargin
     }
     
