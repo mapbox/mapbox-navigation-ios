@@ -6,22 +6,22 @@ extension CLLocationDistance {
     static let feetPerMeter: CLLocationDistance = 3.28084
     
     // Returns the distance converted to miles
-    var miles: CLLocationDistance {
+    var miles: Double {
         return self / .metersPerMile
     }
     
     // Returns the distance converted to feet
-    var feet: CLLocationDistance {
+    var feet: Double {
         return self * .feetPerMeter
     }
     
     // Returns the distance converted to yards
-    var yards: CLLocationDistance {
+    var yards: Double {
         return feet / 3
     }
     
     // Returns the distance converted to kilometers
-    var kilometers: CLLocationDistance {
+    var kilometers: Double {
         return self / 1000
     }
     
@@ -33,6 +33,27 @@ extension CLLocationDistance {
     // Returns the distance in meters converted from yards
     func inYards() -> Double {
         return self * .feetPerMeter / 3
+    }
+    
+    func converted(to unit: LengthFormatter.Unit) -> Double {
+        switch unit {
+        case .millimeter:
+            return self / 1_000
+        case .centimeter:
+            return self / 100
+        case .meter:
+            return self
+        case .kilometer:
+            return kilometers
+        case .inch:
+            return feet / 12
+        case .foot:
+            return feet
+        case .yard:
+            return yards
+        case .mile:
+            return miles
+        }
     }
 }
 
@@ -69,6 +90,10 @@ struct RoundingTable {
         }
         return thresholds.last!
     }
+}
+
+extension NSAttributedStringKey {
+    public static let quantity = NSAttributedStringKey(rawValue: "MBQuantity")
 }
 
 /// Provides appropriately formatted, localized descriptions of linear distances.
@@ -160,5 +185,28 @@ public class DistanceFormatter: LengthFormatter {
         numberFormatter.roundingIncrement = threshold.roundingIncrement as NSNumber
         unit = threshold.unit
         return threshold.localizedDistanceString(for: distance, using: self)
+    }
+    
+    /**
+     Returns an attributed string containing the formatted, converted distance.
+     
+     `NSAttributedStringKey.quantity` is applied to the numeric quantity.
+     */
+    @objc public override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedStringKey : Any]? = nil) -> NSAttributedString? {
+        guard let distance = obj as? CLLocationDistance else {
+            return nil
+        }
+        
+        let string = self.string(from: distance)
+        let attributedString = NSMutableAttributedString(string: string, attributes: attrs)
+        let convertedDistance = distance.converted(to: threshold(for: distance).unit)
+        if let quantityString = numberFormatter.string(from: convertedDistance as NSNumber) {
+            // NSMutableAttributedString methods accept NSRange, not Range.
+            let quantityRange = (string as NSString).range(of: quantityString)
+            if quantityRange.location != NSNotFound {
+                attributedString.addAttribute(.quantity, value: distance as NSNumber, range: quantityRange)
+            }
+        }
+        return attributedString
     }
 }

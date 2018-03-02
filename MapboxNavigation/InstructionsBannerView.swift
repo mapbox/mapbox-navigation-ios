@@ -30,27 +30,10 @@ open class BaseInstructionsBannerView: UIControl {
     
     var distance: CLLocationDistance? {
         didSet {
-            distanceLabel.unitRange = nil
-            distanceLabel.valueRange = nil
-            distanceLabel.distanceString = nil
+            distanceLabel.attributedDistanceString = nil
             
             if let distance = distance {
-                let distanceString = distanceFormatter.string(from: distance)
-                var distanceUnit = distanceFormatter.unitString(fromValue: distance, unit: distanceFormatter.unit)
-                var unitRange = distanceString.range(of: distanceUnit)
-                // In Hebrew, “meters” looks different in the distance string than it does on its own. <rdar://problem/38028709>
-                // Fall back on splitting the string on whitespace.
-                if unitRange == nil, let spaceRange = distanceString.rangeOfCharacter(from: .whitespaces) {
-                    unitRange = spaceRange.upperBound..<distanceString.endIndex
-                    distanceUnit = String(distanceString[unitRange!])
-                }
-                guard unitRange != nil else { return }
-                let distanceValue = distanceString.replacingOccurrences(of: distanceUnit, with: "")
-                guard let valueRange = distanceString.range(of: distanceValue) else { return }
-
-                distanceLabel.unitRange = unitRange
-                distanceLabel.valueRange = valueRange
-                distanceLabel.distanceString = distanceString
+                distanceLabel.attributedDistanceString = distanceFormatter.attributedString(for: distance)
             } else {
                 distanceLabel.text = nil
             }
