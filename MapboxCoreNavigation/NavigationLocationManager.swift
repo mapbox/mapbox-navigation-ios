@@ -42,23 +42,12 @@ open class NavigationLocationManager: CLLocationManager {
         desiredAccuracy = kCLLocationAccuracyBest
         
         #if os(iOS)
-            UIDevice.current.addObserver(self, forKeyPath: "batteryState", options: [.initial, .new], context: nil)
-        #endif
-    }
-    
-    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "batteryState" {
-            let batteryState = UIDevice.current.batteryState
-            isPluggedIn = batteryState == .charging || batteryState == .full
-            
             guard automaticallyUpdatesDesiredAccuracy else { return }
-            desiredAccuracy = isPluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
-        }
-    }
-    
-    deinit {
-        #if os(iOS)
-            UIDevice.current.removeObserver(self, forKeyPath: "batteryState")
+            let _ = UIDevice.current.observe(\.batteryState) { [weak self] (device, changed) in
+                guard let weakSelf = self else { return }
+                weakSelf.isPluggedIn = device.batteryState == .charging || device.batteryState == .full
+                weakSelf.desiredAccuracy = weakSelf.isPluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
+            }
         #endif
     }
 }
