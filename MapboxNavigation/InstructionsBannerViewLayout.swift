@@ -119,13 +119,11 @@ extension BaseInstructionsBannerView {
     func setupAvailableBounds() {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = {
-            let height = ("|" as NSString).size(withAttributes: [.font: self.primaryLabel.font]).height
-            return CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
+            return CGRect(x: 0, y: 0, width: self.bounds.width, height: self.primaryLabel.font.lineHeight)
         }
         
         secondaryLabel.availableBounds = {
-            let height = ("|" as NSString).size(withAttributes: [.font: self.secondaryLabel.font]).height
-            return CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
+            return CGRect(x: 0, y: 0, width: self.bounds.width, height: self.secondaryLabel.font.lineHeight)
         }
     }
 }

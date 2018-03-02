@@ -44,8 +44,7 @@ open class NextBannerView: UIView {
         self.instructionLabel = instructionLabel
         
         instructionLabel.availableBounds = {
-            let height = ("|" as NSString).size(withAttributes: [.font: self.instructionLabel.font]).height
-            return CGRect(x: 0, y: 0, width: self.bounds.width, height: height)
+            return CGRect(x: 0, y: 0, width: self.bounds.width, height: self.instructionLabel.font.lineHeight)
         }
     }
     
