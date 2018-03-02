@@ -22,15 +22,12 @@ class InstructionPresenter {
             return NSAttributedString()
         }
 
-        var string: [(Int, NSAttributedString)] = []
+        var string: [NSAttributedString] = Array(repeating: NSAttributedString(), count: instruction.count)
         
-        var i = 0
-        let sortedCompomentsOnAbbreviationPriority = instruction.map { (instruction: VisualInstructionComponent) -> (Int, (VisualInstructionComponent)) in
-            let f = (i, instruction)
-            i += 1
-            return f
-        }.sorted {
-            $0.1.abbreviationPriority < $1.1.abbreviationPriority
+        let sortedCompomentsOnAbbreviationPriority = instruction.enumerated().map { (index: Int, instruction: VisualInstructionComponent) -> (Int, (VisualInstructionComponent)) in
+            return (index, instruction)
+            }.sorted {
+                $0.1.abbreviationPriority < $1.1.abbreviationPriority
         }
         
         for abbreivationPriotiryInstruction in sortedCompomentsOnAbbreviationPriority {
@@ -44,12 +41,12 @@ class InstructionPresenter {
 
             if let shieldKey = component.shieldKey() {
                 if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
-                    string.append((originalPlaceInComponent, NSAttributedString(string: joinChar)))
-                    string.append((originalPlaceInComponent, attributedString(withFont: label.font, shieldImage: cachedImage)))
+                    string.insert(NSAttributedString(string: joinChar), at: originalPlaceInComponent)
+                    string.insert(attributedString(withFont: label.font, shieldImage: cachedImage), at: originalPlaceInComponent)
                 } else {
                     // Display road code while shield is downloaded
                     if let text = joinCharPlusText {
-                        string.append((originalPlaceInComponent, NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label))))
+                        string.insert(NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label)), at: originalPlaceInComponent)
                     }
                     shieldImageForComponent(component, height: label.shieldHeight, completion: { [weak self] (image) in
                         guard image != nil else {
@@ -64,14 +61,12 @@ class InstructionPresenter {
                 if component.type == .delimiter && instructionHasDownloadedAllShields() {
                     continue
                 }
-                string.append((originalPlaceInComponent, NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label))))
+                string.insert(NSAttributedString(string: (text).abbreviated(toFit: label.availableBounds(), font: label.font, possibleAbbreviation: joinCharPlusAbbreviation), attributes: attributesForLabel(label)), at: originalPlaceInComponent)
             }
         }
         
         let finalString = NSMutableAttributedString()
-        string.sorted { $0.0 < $1.0 }.forEach {
-            finalString.append($0.1)
-        }
+        string.forEach { finalString.append($0) }
         return finalString
     }
 
