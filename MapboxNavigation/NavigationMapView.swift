@@ -1109,14 +1109,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
         tracksUserCourse = false
+        let camera = self.camera
+        camera.pitch = 0
+        camera.heading = 0
+        self.camera = camera
         
         // Don't keep zooming in
         guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
         
-        let camera = cameraThatFitsCoordinateBounds(line.overlayBounds, edgePadding: bounds)
-        camera.pitch = 0
-        camera.heading = 0
-        setCamera(camera, animated: true)
+        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
     }
 }
 
