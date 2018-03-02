@@ -6,7 +6,7 @@
 * `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
 
 #### User Interface
-* `StepsViewController` 's convienence initalizer (`StepsViewController.init(routeProgress:)`) is now public.
+* `StepsViewController` 's convienence initalizer (`StepsViewController.init(routeProgress:)`) is now public. ([#1167](https://github.com/mapbox/mapbox-navigation-ios/pull/1167))
 
 ## v0.14.0 (February 22, 2018)
 
