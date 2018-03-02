@@ -630,7 +630,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         let intersectionDistances = routeProgress.currentLegProgress.intersectionDistances
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
-        currentStepProgress.intersectionIndex = intersectionDistances.index(before: upcomingIntersectionIndex)
+        currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
         
         // Notify observers if the step’s remaining distance has changed.
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
