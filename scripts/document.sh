@@ -29,7 +29,7 @@ THEME=${JAZZY_THEME:-$DEFAULT_THEME}
 BASE_URL="https://www.mapbox.com/mapbox-navigation-ios"
 
 # Link to directions documentation
-DIRECTIONS_VERSION="0.16.1"
+DIRECTIONS_VERSION="0.17.0"
 DIRECTIONS_SYMBOLS="Directions|Intersection|Lane|Route|RouteLeg|RouteOptions|RouteStep|SpokenInstruction|VisualInstruction|VisualInstructionComponent|Waypoint"
 
 rm -rf ${OUTPUT}
