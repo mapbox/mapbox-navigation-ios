@@ -2,11 +2,14 @@
 
 ## v0.15.0 (tbd)
 
-#### Breaking Changes
+#### Breaking changes
 * `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
 
-#### User Interface
+#### User interface
 * `StepsViewController` 's convienence initalizer (`StepsViewController.init(routeProgress:)`) is now public. ([#1167](https://github.com/mapbox/mapbox-navigation-ios/pull/1167))
+
+#### Other changes
+* Fixed a crash while navigating that affected applications that do not use Mapbox-hosted styles or vector tiles. [#1183](https://github.com/mapbox/mapbox-navigation-ios/pull/1183)
 
 ## v0.14.0 (February 22, 2018)
 
