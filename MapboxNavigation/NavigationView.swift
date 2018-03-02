@@ -95,10 +95,10 @@ open class NavigationView: UIView {
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
     
     lazy var floatingStackView: UIStackView = {
-        let stack = UIStackView(orientation: .vertical, autoLayout: true)
-        stack.distribution = .equalSpacing
-        stack.spacing = Constants.buttonSpacing
-        return stack
+        let stackView = UIStackView(orientation: .vertical, autoLayout: true)
+        stackView.distribution = .equalSpacing
+        stackView.spacing = Constants.buttonSpacing
+        return stackView
     }()
     
     lazy var overviewButton = FloatingButton.rounded(image: Images.overview)
@@ -193,11 +193,10 @@ open class NavigationView: UIView {
         let informationChildren: [UIView] = [instructionsBannerView, lanesView, nextBannerView, statusView]
         informationStackView.addArrangedSubviews(informationChildren)
         
-        let constraints = informationChildren.flatMap { (view) -> [NSLayoutConstraint] in
-            return [view.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor),
-                    view.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor)]
+        informationChildren.forEach {
+            $0.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
+            $0.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
         }
-        NSLayoutConstraint.activate(constraints)
     }
     
     func setupContainers() {
