@@ -75,12 +75,11 @@ open class NavigationView: UIView {
     }
     
     lazy var mapView: NavigationMapView = {
-        let map: NavigationMapView = .forAutoLayout()
+        let map: NavigationMapView = .forAutoLayout(frame: self.bounds)
         map.delegate = delegate
         map.navigationMapDelegate = delegate
         map.courseTrackingDelegate = delegate
         map.showsUserLocation = true
-        
         return map
     }()
     

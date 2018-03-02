@@ -70,8 +70,8 @@ extension UIView {
     }
     
 
-    class func forAutoLayout<ViewType: UIView>() -> ViewType {
-        let view = ViewType.init(frame: .zero)
+    class func forAutoLayout<ViewType: UIView>(frame: CGRect = .zero) -> ViewType {
+        let view = ViewType.init(frame: frame)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
