@@ -119,11 +119,25 @@ extension BaseInstructionsBannerView {
     func setupAvailableBounds() {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = {
-            return CGRect(x: 0, y: 0, width: self.bounds.width, height: self.primaryLabel.font.lineHeight)
+            let availableWidth: CGFloat
+            switch UIApplication.shared.userInterfaceLayoutDirection {
+            case .leftToRight:
+                availableWidth = self.bounds.width - self.maneuverView.frame.maxX - 8 * 2
+            case .rightToLeft:
+                availableWidth = self.maneuverView.frame.minX - 8 * 2
+            }
+            return CGRect(x: 0, y: 0, width: availableWidth, height: self.primaryLabel.font.lineHeight)
         }
         
         secondaryLabel.availableBounds = {
-            return CGRect(x: 0, y: 0, width: self.bounds.width, height: self.secondaryLabel.font.lineHeight)
+            let availableWidth: CGFloat
+            switch UIApplication.shared.userInterfaceLayoutDirection {
+            case .leftToRight:
+                availableWidth = self.bounds.width - self.maneuverView.frame.maxX - 8 * 2
+            case .rightToLeft:
+                availableWidth = self.maneuverView.frame.minX - 8 * 2
+            }
+            return CGRect(x: 0, y: 0, width: availableWidth, height: self.secondaryLabel.font.lineHeight)
         }
     }
 }

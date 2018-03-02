@@ -44,7 +44,14 @@ open class NextBannerView: UIView {
         self.instructionLabel = instructionLabel
         
         instructionLabel.availableBounds = {
-            return CGRect(x: 0, y: 0, width: self.bounds.width, height: self.instructionLabel.font.lineHeight)
+            let availableWidth: CGFloat
+            switch UIApplication.shared.userInterfaceLayoutDirection {
+            case .leftToRight:
+                availableWidth = self.bounds.width - self.maneuverView.frame.maxX - 16 * 2
+            case .rightToLeft:
+                availableWidth = self.maneuverView.frame.minX - 16 * 2
+            }
+            return CGRect(x: 0, y: 0, width: availableWidth, height: self.instructionLabel.font.lineHeight)
         }
     }
     
