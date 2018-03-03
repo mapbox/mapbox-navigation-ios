@@ -43,14 +43,9 @@ open class NextBannerView: UIView {
         addSubview(instructionLabel)
         self.instructionLabel = instructionLabel
         
-        instructionLabel.availableBounds = {
-            let availableWidth: CGFloat
-            switch UIApplication.shared.userInterfaceLayoutDirection {
-            case .leftToRight:
-                availableWidth = self.bounds.width - self.maneuverView.frame.maxX - 16 * 2
-            case .rightToLeft:
-                availableWidth = self.maneuverView.frame.minX - 16 * 2
-            }
+        instructionLabel.availableBounds = { [unowned self] in
+            // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
+            let availableWidth = self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.instructionLabel.font.lineHeight)
         }
     }

@@ -118,25 +118,15 @@ extension BaseInstructionsBannerView {
     
     func setupAvailableBounds() {
         // Abbreviate if the instructions do not fit on one line
-        primaryLabel.availableBounds = {
-            let availableWidth: CGFloat
-            switch UIApplication.shared.userInterfaceLayoutDirection {
-            case .leftToRight:
-                availableWidth = self.bounds.width - self.maneuverView.frame.maxX - 8 * 2
-            case .rightToLeft:
-                availableWidth = self.maneuverView.frame.minX - 8 * 2
-            }
+        primaryLabel.availableBounds = { [unowned self] in
+            // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
+            let availableWidth = self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.primaryLabel.font.lineHeight)
         }
         
-        secondaryLabel.availableBounds = {
-            let availableWidth: CGFloat
-            switch UIApplication.shared.userInterfaceLayoutDirection {
-            case .leftToRight:
-                availableWidth = self.bounds.width - self.maneuverView.frame.maxX - 8 * 2
-            case .rightToLeft:
-                availableWidth = self.maneuverView.frame.minX - 8 * 2
-            }
+        secondaryLabel.availableBounds = { [unowned self] in
+            // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
+            let availableWidth = self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.secondaryLabel.font.lineHeight)
         }
     }
