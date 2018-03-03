@@ -36,7 +36,7 @@ extension Notification.Name {
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey` and `RouteControllerNotificationUserInfoKey.locationKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
      */
     public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
     
