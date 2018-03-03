@@ -591,9 +591,9 @@ extension RouteMapViewController: NavigationViewDelegate {
             view.insertSubview(controller.view, belowSubview: navigationView.instructionsBannerContentView)
             
             controller.view.topAnchor.constraint(equalTo: navigationView.instructionsBannerContentView.bottomAnchor).isActive = true
-            controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+            controller.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
             controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            controller.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
             
             controller.didMove(toParentViewController: self)
             controller.dropDownAnimation()
