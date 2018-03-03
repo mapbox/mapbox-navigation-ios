@@ -94,6 +94,6 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
 
 /**
- The minimum distance of a valid tunnel intersection on a given route step.
+ The minimum distance of a tunnel intersection on a given route step.
  */
 public var RouteProgressMinimumTunnelIntersectionDistance: CLLocationDistance = 100
