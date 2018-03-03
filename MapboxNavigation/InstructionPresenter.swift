@@ -26,8 +26,8 @@ class InstructionPresenter {
         
         let sortedCompomentsOnAbbreviationPriority = instruction.enumerated().map { (index: Int, instruction: VisualInstructionComponent) -> (Int, (VisualInstructionComponent)) in
             return (index, instruction)
-            }.sorted {
-                $0.1.abbreviationPriority < $1.1.abbreviationPriority
+        }.sorted {
+            $0.1.abbreviationPriority > $1.1.abbreviationPriority
         }
         
         for abbreivationPriotiryInstruction in sortedCompomentsOnAbbreviationPriority {
