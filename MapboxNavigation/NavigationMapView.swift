@@ -234,6 +234,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     deinit {
         suspendNotifications()
+        batteryStateObservation = nil
     }
     
     //MARK: - Overrides

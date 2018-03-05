@@ -17,6 +17,8 @@ open class NavigationLocationManager: CLLocationManager {
     
     var lastKnownLocation: CLLocation?
     
+    var batteryStateObservation: NSKeyValueObservation?
+    
     /**
      Indicates whether the device is plugged in or not.
      */
@@ -43,11 +45,15 @@ open class NavigationLocationManager: CLLocationManager {
         
         #if os(iOS)
             guard automaticallyUpdatesDesiredAccuracy else { return }
-            let _ = UIDevice.current.observe(\.batteryState) { [weak self] (device, changed) in
+            batteryStateObservation = UIDevice.current.observe(\.batteryState) { [weak self] (device, changed) in
                 guard let weakSelf = self else { return }
                 weakSelf.isPluggedIn = device.batteryState == .charging || device.batteryState == .full
                 weakSelf.desiredAccuracy = weakSelf.isPluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
             }
         #endif
+    }
+    
+    deinit {
+        batteryStateObservation = nil
     }
 }
