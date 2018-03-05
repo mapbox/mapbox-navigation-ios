@@ -51,11 +51,7 @@ class RouteMapViewController: UIViewController {
     var lastTimeUserRerouted: Date?
     var stepsViewController: StepsViewController?
     private lazy var geocoder: CLGeocoder = CLGeocoder()
-    var destination: Waypoint? {
-        didSet {
-            endOfRouteViewController.destination = destination
-        }
-    }
+    var destination: Waypoint?
     
     var showsEndOfRoute: Bool = true
 
@@ -119,18 +115,13 @@ class RouteMapViewController: UIViewController {
     
     override func loadView() {
         self.view = NavigationView(delegate: self)
-        self.view.pinInSuperview()
+        self.view.frame = parent?.view.bounds ?? UIScreen.main.bounds
         mapView.contentInset = contentInsets
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.tracksUserCourse = true
-        endOfRouteViewController.dismiss = { [weak self] (stars, comment) in
-            guard let rating = self?.rating(for: stars) else { return }
-            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
-            self?.dismiss(animated: true, completion: nil)
-        }
         
         automaticallyAdjustsScrollViewInsets = false
         
@@ -171,8 +162,6 @@ class RouteMapViewController: UIViewController {
         } else {
             mapView.setCamera(tiltedCamera, animated: false)
         }
-        
-        embedEndOfRoute()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -462,10 +451,23 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         navigationView.endOfRouteView = endOfRoute.view
         navigationView.constrainEndOfRoute()
         endOfRoute.didMove(toParentViewController: self)
+        
+        endOfRoute.dismissHandler = { [weak self] (stars, comment) in
+            guard let rating = self?.rating(for: stars) else { return }
+            self?.routeController.setEndOfRoute(rating: rating, comment: comment)
+            self?.dismiss(animated: true, completion: nil)
+        }
     }
     
+    func unembedEndOfRoute() {
+        let endOfRoute = endOfRouteViewController
+        endOfRoute.willMove(toParentViewController: nil)
+        endOfRoute.removeFromParentViewController()
+    }
     
     func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
+        embedEndOfRoute()
+        endOfRouteViewController.destination = destination
         navigationView.endOfRouteView?.isHidden = false
 
         view.layoutIfNeeded() //flush layout queue
@@ -505,8 +507,16 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
             self.navigationView.floatingStackView.alpha = 1.0
         }
         
-        let complete: (Bool) -> Void = { self.navigationView.endOfRouteView?.isHidden = true; completion?($0)}
-        let noAnimation = { animate() ; complete(true) }
+        let complete: (Bool) -> Void = {
+            self.navigationView.endOfRouteView?.isHidden = true
+            self.unembedEndOfRoute()
+            completion?($0)
+        }
+        
+        let noAnimation = {
+            animate()
+            complete(true)
+        }
 
         guard duration > 0.0 else { return noAnimation() }
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: complete)
