@@ -75,12 +75,11 @@ open class NavigationView: UIView {
     }
     
     lazy var mapView: NavigationMapView = {
-        let map: NavigationMapView = .forAutoLayout()
+        let map: NavigationMapView = .forAutoLayout(frame: self.bounds)
         map.delegate = delegate
         map.navigationMapDelegate = delegate
         map.courseTrackingDelegate = delegate
         map.showsUserLocation = true
-        
         return map
     }()
     
@@ -106,18 +105,16 @@ open class NavigationView: UIView {
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
     lazy var separatorView: SeparatorView = .forAutoLayout()
-    lazy var lanesView: LanesView = .forAutoLayout()
-    lazy var nextBannerView: NextBannerView = .forAutoLayout()
+    lazy var lanesView: LanesView = .forAutoLayout(hidden: true)
+    lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
     lazy var statusView: StatusView = {
-        let status: StatusView = .forAutoLayout()
-        status.delegate = delegate
-        return status
+        let view: StatusView = .forAutoLayout()
+        view.delegate = delegate
+        view.isHidden = true
+        return view
     }()
     
-    lazy var resumeButton: ResumeButton = {
-        let button: ResumeButton = .forAutoLayout()
-        return button
-    }()
+    lazy var resumeButton: ResumeButton = .forAutoLayout()
     
     lazy var wayNameView: WayNameView = {
         let view: WayNameView = .forAutoLayout()
@@ -183,7 +180,6 @@ open class NavigationView: UIView {
     }
     
     func setupStackViews() {
-        statusView.isHidden = true
     
         setupInformationStackView()
         floatingStackView.addArrangedSubviews([overviewButton, muteButton, reportButton])
