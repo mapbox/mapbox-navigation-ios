@@ -85,8 +85,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
-    var isPluggedIn: Bool = false
-    var batteryStateObservation: NSKeyValueObservation?
     var altitude: CLLocationDistance = defaultAltitude
     var routes: [Route]?
     
@@ -225,16 +223,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
-        batteryStateObservation = UIDevice.current.observe(\.batteryState) { [weak self] (device, changed) in
-            self?.isPluggedIn = device.batteryState == .charging || device.batteryState == .full
-        }
-        
         resumeNotifications()
     }
     
     deinit {
         suspendNotifications()
-        batteryStateObservation = nil
     }
     
     //MARK: - Overrides
@@ -300,8 +293,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
-        
-        guard !isPluggedIn else {
+        guard !UIDevice.current.isPluggedIn else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
             return
         }
