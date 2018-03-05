@@ -48,7 +48,7 @@ class LocationTests: XCTestCase {
         let coordinateAlongFirstStep = firstLocation.coordinate.coordinate(at: 100, facing: initialHeadingOnFirstStep)
         let locationAlongFirstStep = CLLocation(latitude: coordinateAlongFirstStep.latitude, longitude: coordinateAlongFirstStep.longitude)
         guard let snapped = locationAlongFirstStep.snapped(to: progress.currentLegProgress) else {
-            return XCTFail("Location should of snapped to route")
+            return XCTFail("Location should have snapped to route")
         }
         
         
