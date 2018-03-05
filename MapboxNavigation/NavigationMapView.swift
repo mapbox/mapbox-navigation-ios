@@ -352,10 +352,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         }
         
-        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-        }, completion: nil)
-        
         if let userCourseView = userCourseView as? UserCourseView {
             if let customTransformation = userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse) {
                 customTransformation
