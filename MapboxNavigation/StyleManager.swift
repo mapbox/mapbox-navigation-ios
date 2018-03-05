@@ -108,6 +108,8 @@ open class StyleManager: NSObject {
                 delegate?.styleManager?(self, didApply: style)
             }
         }
+        
+        forceRefreshAppearance()
     }
     
     func applyStyle() {
@@ -151,7 +153,10 @@ open class StyleManager: NSObject {
         }
         
         applyStyle()
-        
+        forceRefreshAppearance()
+    }
+    
+    func forceRefreshAppearance() {
         for window in UIApplication.shared.windows {
             for view in window.subviews {
                 view.removeFromSuperview()
