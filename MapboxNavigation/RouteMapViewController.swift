@@ -507,8 +507,16 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
             self.navigationView.floatingStackView.alpha = 1.0
         }
         
-        let complete: (Bool) -> Void = { self.navigationView.endOfRouteView?.isHidden = true; self.unembedEndOfRoute(); completion?($0)}
-        let noAnimation = { animate() ; complete(true) }
+        let complete: (Bool) -> Void = {
+            self.navigationView.endOfRouteView?.isHidden = true
+            self.unembedEndOfRoute()
+            completion?($0)
+        }
+        
+        let noAnimation = {
+            animate()
+            complete(true)
+        }
 
         guard duration > 0.0 else { return noAnimation() }
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: complete)
