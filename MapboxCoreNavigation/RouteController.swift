@@ -356,7 +356,7 @@ open class RouteController: NSObject {
     }
     
     /**
-     The most recently received user location. Snapped to the route line, if applicable, otherwise raw.
+     The idealized user location. Snapped to the route line, if applicable, otherwise raw.
      - seeAlso: snappedLocation, rawLocation
      */
     @objc public var location: CLLocation? {
@@ -364,7 +364,7 @@ open class RouteController: NSObject {
     }
     
     /**
-     The most recently recieved user location, snapped to the route line, if applicable.
+     The raw location, snapped to the current route.
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
@@ -561,8 +561,8 @@ extension RouteController: CLLocationManagerDelegate {
             currentStepProgress.distanceTraveled = distanceTraveled
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                RouteControllerNotificationUserInfoKey.locationKey: self.location!, // Idealized location, raw is guaranteed
-                RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw, from line 541
+                RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
+                RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
         }
         
