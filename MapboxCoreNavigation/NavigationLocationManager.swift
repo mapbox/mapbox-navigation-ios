@@ -21,7 +21,21 @@ open class NavigationLocationManager: CLLocationManager {
      Indicates whether the location manager’s desired accuracy should update
      when the battery state changes.
      */
+    @available(*, deprecated, message: "Manually override desiredAccuracy instead.")
     public var automaticallyUpdatesDesiredAccuracy = true
+    
+    
+    var accuracyOverride: CLLocationAccuracy?
+    
+    override open var desiredAccuracy: CLLocationAccuracy {
+        get {
+            if let override = accuracyOverride { return override }
+            return  UIDevice.current.isPluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
+        }
+        set {
+            accuracyOverride = newValue
+        }
+    }
     
     override public init() {
         super.init()
@@ -33,10 +47,5 @@ open class NavigationLocationManager: CLLocationManager {
                 allowsBackgroundLocationUpdates = true
             }
         }
-        
-        desiredAccuracy = kCLLocationAccuracyBest
-        
-        guard automaticallyUpdatesDesiredAccuracy else { return }
-        desiredAccuracy = UIDevice.current.isPluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
     }
 }
