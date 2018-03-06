@@ -15,7 +15,11 @@ class InstructionPresenter {
 
     private let imageRepository = ImageRepository.shared
 
-    func attributedTextForLabel(_ label: InstructionLabel) -> NSAttributedString {
+    func attributedText() -> NSAttributedString {
+        guard let label = self.label else {
+            return NSAttributedString()
+        }
+
         let string = NSMutableAttributedString()
 
         for component in instruction {
@@ -36,7 +40,7 @@ class InstructionPresenter {
                             return
                         }
                         if let strongSelf = self, let completion = strongSelf.onShieldDownload {
-                            completion(strongSelf.attributedTextForLabel(label))
+                            completion(strongSelf.attributedText())
                         }
                     })
                 }

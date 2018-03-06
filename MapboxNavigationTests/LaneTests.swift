@@ -4,6 +4,9 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
+let bogusToken = "pk.feedCafeDeadBeefBadeBede"
+let directions = Directions(accessToken: bogusToken)
+
 
 class LaneTests: FBSnapshotTestCase {
 
@@ -24,13 +27,13 @@ class LaneTests: FBSnapshotTestCase {
     }
     
     func assertLanes(step: RouteStep) {
-        let controller = storyboard().instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
-        XCTAssert(controller.view != nil)
+        let rect = CGRect(origin: .zero, size: .iPhone6Plus)
+        let navigationView = NavigationView(frame: rect)
         
-        controller.lanesView.update(for: routeProgress.currentLegProgress)
-        controller.lanesView.show(animated: false)
+        navigationView.lanesView.update(for: routeProgress.currentLegProgress)
+        navigationView.lanesView.show(animated: false)
         
-        FBSnapshotVerifyView(controller.lanesView)
+        FBSnapshotVerifyView(navigationView.lanesView)
     }
     
     func testRightRight() {
@@ -39,9 +42,5 @@ class LaneTests: FBSnapshotTestCase {
     
     func testRightNone() {
         assertLanes(step: steps[1])
-    }
-    
-    func storyboard() -> UIStoryboard {
-        return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
 }

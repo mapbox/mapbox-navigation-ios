@@ -17,7 +17,7 @@ func instructionsView() -> InstructionsBannerView {
 
 var shieldImage: UIImage {
     get {
-        let bundle = Bundle(for: MapboxNavigationTests.self)
+        let bundle = Bundle(for: InstructionsBannerViewIntegrationTests.self)
         return UIImage(named: "i-280", in: bundle, compatibleWith: nil)!
     }
 }
@@ -30,6 +30,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     let shieldURL1 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-41@3x.png")!
     let shieldURL2 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-94@3x.png")!
+
+    let asyncTimeout: TimeInterval = 2.0
 
     lazy var imageRepository: ImageRepository = {
         let repo = ImageRepository.shared
@@ -53,7 +55,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         imageRepository.resetImageCache {
             clearImageCacheExpectation.fulfill()
         }
-        self.wait(for: [clearImageCacheExpectation], timeout: 1)
+        self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
 
         TestImageDownloadOperation.reset()
         imageRepository.imageDownloader.setOperationType(TestImageDownloadOperation.self)
@@ -92,7 +94,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         imageRepository.resetImageCache {
             clearImageCacheExpectation.fulfill()
         }
-        self.wait(for: [clearImageCacheExpectation], timeout: 1)
+        self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
     }
 
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
@@ -126,6 +128,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
     let imageRepository: ImageRepository = ImageRepository.shared
 
+    let asyncTimeout: TimeInterval = 2.0
+
     override func setUp() {
         super.setUp()
         recordMode = false
@@ -143,7 +147,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         imageRepository.resetImageCache {
             clearImageCacheExpectation.fulfill()
         }
-        self.wait(for: [clearImageCacheExpectation], timeout: 1)
+        self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
     }
 
     func testSinglelinePrimary() {

@@ -1,13 +1,155 @@
-# Changes to the Mapbox Navigation SDK for iOS
+## Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.15.0 (tbd)
 
-* Renamed notification names associated with `RouteController` in Objective-C code. (#1122)
-* The user info keys of `RouteController`-related notifications have been renamed and are now members of the `RouteControllerNotificationUserInfoKey` struct in Swift and the `MBRouteControllerNotificationUserInfoKey` extensible enumeration in Objective-C. (#1122)
+#### Breaking changes
+* `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
+
+#### User interface
+* `StepsViewController` 's convienence initalizer (`StepsViewController.init(routeProgress:)`) is now public. ([#1167](https://github.com/mapbox/mapbox-navigation-ios/pull/1167))
+* Fixed an issue preventing the distance from appearing in the turn banner when the system language was set to Hebrew and the system region was set to Israel or any other region that uses the metric system. ([#1176](https://github.com/mapbox/mapbox-navigation-ios/pull/1176))
+* Various views and view controllers correctly mirror right-to-left in Hebrew. ([#1182](https://github.com/mapbox/mapbox-navigation-ios/pull/1182))
+
+#### Other changes
+* The `DistanceFormatter.attributedString(for:)` method is now implemented. It returns an attributed string representation of the distance in which the `NSAttributedStringKey.quantity` attribute is applied to the numeric quantity. ([#1176](https://github.com/mapbox/mapbox-navigation-ios/pull/1176))
+* Fixed an issue in which turn lanes were displayed in the wrong order when the system language was set to Hebrew. ([#1175](https://github.com/mapbox/mapbox-navigation-ios/pull/1175))
+
+#### Other changes
+* Fixed a crash while navigating that affected applications that do not use Mapbox-hosted styles or vector tiles. [#1183](https://github.com/mapbox/mapbox-navigation-ios/pull/1183)
+
+## v0.14.0 (February 22, 2018)
+
+#### Breaking Changes
+
+* Removed the dependency on AWSPolly. Voice announcements are now coming directly from Mapbox and for free for all developers. Because of this, PollyVoiceController has been removed.  [#617](https://github.com/mapbox/mapbox-navigation-ios/pull/617)
+* MapboxDirections.swift version 0.17.x is now required. [#1085](https://github.com/mapbox/mapbox-navigation-ios/pull/1085)
+* Removed the key `RouteControllerNotificationUserInfoKey.estimatedTimeUntilManeuverKey` from `.routeControllerProgressDidChange`. Please use `durationRemaining` instead which can be found on the `RouteProgress`. [#1126](https://github.com/mapbox/mapbox-navigation-ios/pull/1126/)
+* Renamed notification names associated with `RouteController` in Objective-C code. [#1122](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
+* The user info keys of `RouteController`-related notifications have been renamed and are now members of the `RouteControllerNotificationUserInfoKey` struct in Swift and the `MBRouteControllerNotificationUserInfoKey` extensible enumeration in Objective-C. [#1122](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
+
+<details>
+<summary>Here is reference for the new notification names:</summary>
+<br>
+<table>
+<thead>
+<tr>
+<th colspan="2">Swift</th>
+<th colspan="2">Objective-C</th>
+</tr>
+<tr>
+<th>Old</th>
+<th>New</th>
+<th>Old</th>
+<th>New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Notification.Name.navigationSettingsDidChange</code></td>
+<td><code>Notification.Name.navigationSettingsDidChange</code></td>
+<td><code>MBNavigationSettingsDidChange</code></td>
+<td><code>MBNavigationSettingsDidChangeNotification</code></td>
+</tr>
+<tr>
+<td><code>Notification.Name.routeControllerProgressDidChange</code></td>
+<td><code>Notification.Name.routeControllerProgressDidChange</code></td>
+<td><code>MBRouteControllerNotificationProgressDidChange</code></td>
+<td><code>MBRouteControllerProgressDidChangeNotification</code></td>
+</tr>
+<tr>
+<td><code>Notification.Name.routeControllerDidPassSpokenInstructionPoint</code></td>
+<td><code>Notification.Name.routeControllerDidPassSpokenInstructionPoint</code></td>
+<td><code>MBRouteControllerDidPassSpokenInstructionPoint</code></td>
+<td><code>MBRouteControllerDidPassSpokenInstructionPointNotification</code></td>
+</tr>
+<tr>
+<td><code>Notification.Name.routeControllerWillReroute</code></td>
+<td><code>Notification.Name.routeControllerWillReroute</code></td>
+<td><code>MBRouteControllerWillReroute</code></td>
+<td><code>MBRouteControllerWillRerouteNotification</code></td>
+</tr>
+<tr>
+<td><code>Notification.Name.routeControllerDidReroute</code></td>
+<td><code>Notification.Name.routeControllerDidReroute</code></td>
+<td><code>MBRouteControllerDidReroute</code></td>
+<td><code>MBRouteControllerDidRerouteNotification</code></td>
+</tr>
+<tr>
+<td><code>Notification.Name.routeControllerDidFailToReroute</code></td>
+<td><code>Notification.Name.routeControllerDidFailToReroute</code></td>
+<td><code>MBRouteControllerDidFailToReroute</code></td>
+<td><code>MBRouteControllerDidFailToRerouteNotification</code></td>
+</tr>
+<tr>
+<td><code>RouteControllerProgressDidChangeNotificationProgressKey</code></td>
+<td><code>RouteControllerNotificationUserInfoKey.routeProgressKey</code></td>
+<td><code>MBRouteControllerProgressDidChangeNotificationProgressKey</code></td>
+<td><code>MBRouteControllerRouteProgressKey</code></td>
+</tr>
+<tr>
+<td><code>RouteControllerProgressDidChangeNotificationLocationKey</code></td>
+<td><code>RouteControllerNotificationUserInfoKey.locationKey</code></td>
+<td><code>MBRouteControllerProgressDidChangeNotificationLocationKey</code></td>
+<td><code>MBRouteControllerLocationKey</code></td>
+</tr>
+<tr>
+<td><code>RouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</code></td>
+<td>🚮 (removed)</td>
+<td><code>MBRouteControllerProgressDidChangeNotificationSecondsRemainingOnStepKey</code></td>
+<td>🚮 (removed)</td>
+</tr>
+<tr>
+<td><code>RouteControllerNotificationLocationKey</code></td>
+<td><code>RouteControllerNotificationUserInfoKey.locationKey</code></td>
+<td><code>MBRouteControllerNotificationLocationKey</code></td>
+<td><code>MBRouteControllerLocationKey</code></td>
+</tr>
+<tr>
+<td><code>RouteControllerNotificationRouteKey</code></td>
+<td>🚮 (unused)</td>
+<td><code>MBRouteControllerNotificationRouteKey</code></td>
+<td>🚮 (unused)</td>
+</tr>
+<tr>
+<td><code>RouteControllerNotificationErrorKey</code></td>
+<td><code>RouteControllerNotificationUserInfoKey.routingErrorKey</code></td>
+<td><code>MBRouteControllerNotificationErrorKey</code></td>
+<td><code>MBRouteControllerRoutingErrorKey</code></td>
+</tr>
+<tr>
+<td><code>RouteControllerDidFindFasterRouteKey</code></td>
+<td><code>RouteControllerNotificationUserInfoKey.isOpportunisticKey</code></td>
+<td><code>MBRouteControllerDidFindFasterRouteKey</code></td>
+<td><code>MBRouteControllerIsOpportunisticKey</code></td>
+</tr>
+<tr>
+<td><code>RouteControllerDidPassSpokenInstructionPointRouteProgressKey</code></td>
+<td><code>RouteControllerNotificationUserInfoKey.routeProgressKey</code></td>
+<td><code>MBRouteControllerDidPassSpokenInstructionPointRouteProgressKey</code></td>
+<td><code>MBRouteControllerRouteProgressKey</code></td>
+</tr>
+</tbody>
+</table>
+</details>
+
+## Core Navigation
+
+* Location updates sent via `.routeControllerProgressDidChange` are now always sent as long as the location is qualified. [#1126](https://github.com/mapbox/mapbox-navigation-ios/pull/1126/)
 * Exposes `setOverheadCameraView(from:along:for:)` which is useful for fitting the camera to an overhead view for the remaining route coordinates.
-* Exposes `PollyVoiceController.speak(_:)` which would allow custom subclass of PollyVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
-* Added a `NavigationMapView.localizeLabels()` method that should be called within `MGLMapViewDelegate.mapView(_:didFinishLoading:)` for standalone `NavigationMapView`s to ensure that map labels are in the correct language. (#1111)
-* Changed the heuristics needed for a the users location to unsnap from the route line. (#1110)
+* Changed the heuristics needed for a the users location to unsnap from the route line. [#1110](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
+* Changes `routeController(:didDiscardLocation:)` to `routeController(:shouldDiscardLocation:)`. Now if implemented, developers can choose to keep a location when RouteController deems a location unqualified. [#1095](https://github.com/mapbox/mapbox-navigation-ios/pull/1095/)
+
+## User Interface
+
+* Added a `NavigationMapView.localizeLabels()` method that should be called within `MGLMapViewDelegate.mapView(_:didFinishLoading:)` for standalone `NavigationMapView`s to ensure that map labels are in the correct language. [#1111](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
+* The `/` delimiter is longer shown when a shield is shown on either side of the delimiter. This also removes the dependency SDWebImage. [#1046](https://github.com/mapbox/mapbox-navigation-ios/pull/1046)
+* Exposes constants used for styling the route line. [#1124](https://github.com/mapbox/mapbox-navigation-ios/pull/1124/)
+* Exposes `update(for:)` on `InstructionBannerView`. This is helpful for developers creating a custom user interface. [#1085](https://github.com/mapbox/mapbox-navigation-ios/pull/1085/)
+
+## Voice Guidance
+
+* Exposes `RouteVoiceController.speak(_:)` which would allow custom subclass of MapboxVoiceController to override this method and pass a modified SpokenInstruction to our superclass implementation.
+
 
 ## v0.13.1 (February 7, 2018)
 

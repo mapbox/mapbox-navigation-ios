@@ -12,14 +12,12 @@ Get up and running in a few minutes with our drop-in turn-by-turn navigation `Na
 
 ## Features
 
-- Drop-in turn-by-turn navigation UI
-- Automotive, cycling, and walking directions
-- Traffic avoidance
-- Maneuver announcements
-- Text instructions
-- Text to speech via Amazon Polly - no AWS key needed
-- Automatic rerouting
-- Snap to route
+* A full-fledged turn-by-turn navigation UI ready to drop into your application
+* [Professionally designed map styles](https://www.mapbox.com/maps/) for daytime and nighttime driving
+* Worldwide driving, cycling, and walking directions powered by [open data](https://www.mapbox.com/about/open/) and user feedback
+* Traffic avoidance and proactive rerouting based on current conditions in [over 30 countries](https://www.mapbox.com/api-documentation/pages/traffic-countries.html)
+* Natural-sounding turn instructions powered by [Amazon Polly](https://aws.amazon.com/polly/) (no configuration needed)
+* [Support for over a dozen languages](./docs/guides/Localization%20and%20Internationalization.md)
 
 ## [Documentation](https://www.mapbox.com/mapbox-navigation-ios/navigation/)
 
@@ -29,6 +27,8 @@ The Mapbox Navigation SDK and Core Navigation are compatible with applications w
 
 The last release compatible with Swift 3.2 was v0.10.1.
 
+The Mapbox Navigation SDK is also available [for Android](https://github.com/mapbox/mapbox-navigation-android/).
+
 ## Installation
 
 ### Using CocoaPods
@@ -37,7 +37,7 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxNavigation', '~> 0.13'
+   pod 'MapboxNavigation', '~> 0.14'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -48,7 +48,7 @@ Alternatively, to install Mapbox Navigation using [Carthage](https://github.com/
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#binary-only-frameworks) with the following dependency:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> 0.13
+   github "mapbox/mapbox-navigation-ios" ~> 0.14
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.
@@ -151,10 +151,6 @@ The library compares the user from the route and decides upon each one of these 
 ### Building your own custom navigation UI
 
 Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
-
-## Language support
-
-See [languages.md](./languages.md) for more information.
 
 ## Contributing
 

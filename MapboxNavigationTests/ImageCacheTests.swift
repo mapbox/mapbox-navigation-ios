@@ -5,6 +5,7 @@ import XCTest
 class ImageCacheTests: XCTestCase {
 
     let cache: ImageCache = ImageCache()
+    let asyncTimeout: TimeInterval = 2.0
 
     override func setUp() {
         super.setUp()
@@ -15,7 +16,7 @@ class ImageCacheTests: XCTestCase {
         cache.clearDisk {
             expectation.fulfill()
         }
-        self.wait(for: [expectation], timeout: 1)
+        self.wait(for: [expectation], timeout: asyncTimeout)
     }
 
     let imageKey = "imageKey"
@@ -25,7 +26,7 @@ class ImageCacheTests: XCTestCase {
         cache.store(shieldImage, forKey: imageKey, toDisk: false) {
             expectation.fulfill()
         }
-        self.wait(for: [expectation], timeout: 1)
+        self.wait(for: [expectation], timeout: asyncTimeout)
     }
 
     func storeImageOnDisk() {
@@ -33,7 +34,7 @@ class ImageCacheTests: XCTestCase {
         cache.store(shieldImage, forKey: imageKey, toDisk: true) {
             expectation.fulfill()
         }
-        self.wait(for: [expectation], timeout: 1)
+        self.wait(for: [expectation], timeout: asyncTimeout)
     }
 
     func testUsingURLStringAsCacheKey() {
@@ -42,7 +43,7 @@ class ImageCacheTests: XCTestCase {
         cache.store(shieldImage, forKey: cacheKeyURLString, toDisk: true) {
             expectation.fulfill()
         }
-        self.wait(for: [expectation], timeout: 1)
+        self.wait(for: [expectation], timeout: asyncTimeout)
 
         let returnedImage = cache.imageFromCache(forKey: cacheKeyURLString)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
@@ -70,7 +71,7 @@ class ImageCacheTests: XCTestCase {
         cache.clearDisk {
             expectation.fulfill()
         }
-        self.wait(for: [expectation], timeout: 1)
+        self.wait(for: [expectation], timeout: asyncTimeout)
 
         XCTAssertNil(cache.imageFromCache(forKey: imageKey))
     }

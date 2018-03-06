@@ -17,17 +17,16 @@ open class NavigationLocationManager: CLLocationManager {
     
     var lastKnownLocation: CLLocation?
     
+    /**
+     Indicates whether the location manager’s desired accuracy should update
+     when the battery state changes.
+     */
+    public var automaticallyUpdatesDesiredAccuracy = true
+    
     override public init() {
         super.init()
         
-        let always = Bundle.main.locationAlwaysUsageDescription
-        let both = Bundle.main.locationAlwaysAndWhenInUseUsageDescription
-        
-        if always != nil || both != nil {
-            requestAlwaysAuthorization()
-        } else {
-            requestWhenInUseAuthorization()
-        }
+        requestWhenInUseAuthorization()
         
         if #available(iOS 9.0, *) {
             if Bundle.main.backgroundModes.contains("location") {
@@ -35,6 +34,9 @@ open class NavigationLocationManager: CLLocationManager {
             }
         }
         
-        desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        desiredAccuracy = kCLLocationAccuracyBest
+        
+        guard automaticallyUpdatesDesiredAccuracy else { return }
+        desiredAccuracy = UIDevice.current.isPluggedIn ? kCLLocationAccuracyBestForNavigation : kCLLocationAccuracyBest
     }
 }
