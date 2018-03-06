@@ -38,5 +38,4 @@ extension RouteStep {
     open var lastInstruction: SpokenInstruction? {
         return instructionsSpokenAlongStep?.last
     }
-
 }
