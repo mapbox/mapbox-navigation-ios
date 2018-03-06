@@ -16,7 +16,6 @@ class RouteMapViewController: UIViewController {
     @IBOutlet weak var rerouteReportButton: ReportButton!
     @IBOutlet weak var recenterButton: ResumeButton!
     @IBOutlet weak var muteButton: Button!
-    @IBOutlet weak var previewInstructionsButton: Button!
     @IBOutlet weak var wayNameLabel: WayNameLabel!
     @IBOutlet weak var instructionsBannerContainerView: InstructionsBannerContentView!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
@@ -119,7 +118,6 @@ class RouteMapViewController: UIViewController {
         overviewButton.applyDefaultCornerRadiusShadow(cornerRadius: overviewButton.bounds.midX)
         reportButton.applyDefaultCornerRadiusShadow(cornerRadius: reportButton.bounds.midX)
         muteButton.applyDefaultCornerRadiusShadow(cornerRadius: muteButton.bounds.midX)
-        previewInstructionsButton.applyDefaultCornerRadiusShadow(cornerRadius: previewInstructionsButton.bounds.midX)
         
         wayNameLabel.clipsToBounds = true
         wayNameLabel.layer.borderWidth = 1.0 / UIScreen.main.scale
@@ -242,31 +240,6 @@ class RouteMapViewController: UIViewController {
     @IBAction func feedback(_ sender: Any) {
         showFeedback()
         delegate?.mapViewControllerDidOpenFeedback(self)
-    }
-    
-    @IBAction func previewDirectionsTapped(_ sender: Any) {
-        removePreviewInstructions()
-        
-        guard let controller = stepsViewController else {
-            let controller = StepsViewController(routeProgress: routeController.routeProgress)
-            controller.delegate = self
-            addChildViewController(controller)
-            view.insertSubview(controller.view, belowSubview: instructionsBannerContainerView)
-            
-            controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
-            controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-            controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-            
-            controller.didMove(toParentViewController: self)
-            controller.dropDownAnimation()
-            
-            stepsViewController = controller
-            return
-        }
-        
-        stepsViewController = nil
-        controller.dismiss {}
     }
     
     func showFeedback(source: FeedbackSource = .user) {
@@ -607,14 +580,44 @@ extension RouteMapViewController: NavigationMapViewDelegate {
     }
     
     func navigationMapViewDidTapPuck(_ sender: UIView) {
+        repeatInstructions()
+        displayPreviewInstructions()
+    }
+    
+    private func repeatInstructions() {
         guard !NavigationSettings.shared.voiceMuted, let parent = parent as? NavigationViewController else { return }
-
+        
         let routeProgress = routeController.routeProgress
         if let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
             parent.voiceController?.speak(currentInstruction)
         } else if let lastInstruction = routeProgress.currentLegProgress.currentStep.lastInstruction {
             parent.voiceController?.speak(lastInstruction)
         }
+    }
+    
+    private func displayPreviewInstructions() {
+        removePreviewInstructions()
+        
+        guard let controller = stepsViewController else {
+            let controller = StepsViewController(routeProgress: routeController.routeProgress)
+            controller.delegate = self
+            addChildViewController(controller)
+            view.insertSubview(controller.view, belowSubview: instructionsBannerContainerView)
+            
+            controller.view.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
+            controller.view.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+            controller.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            controller.view.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+            
+            controller.didMove(toParentViewController: self)
+            controller.dropDownAnimation()
+            
+            stepsViewController = controller
+            return
+        }
+        
+        stepsViewController = nil
+        controller.dismiss {}
     }
     
     /**

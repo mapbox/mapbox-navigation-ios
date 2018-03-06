@@ -56,7 +56,6 @@ open class NavigationView: UIView {
     weak var overviewButton: FloatingButton!
     weak var muteButton: FloatingButton!
     weak var reportButton: FloatingButton!
-    weak var previewDirectionsButton: FloatingButton!
     weak var rerouteReportButton: ReportButton!
     weak var separatorView: SeparatorView!
     

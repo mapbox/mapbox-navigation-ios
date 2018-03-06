@@ -52,15 +52,6 @@ extension NavigationView {
         floatingStackView.addArrangedSubview(muteButton)
         self.muteButton = muteButton
         
-        let previewDirectionsButton = FloatingButton(type: .custom)
-        previewDirectionsButton.translatesAutoresizingMaskIntoConstraints = false
-        previewDirectionsButton.constrainedSize = buttonSize
-        previewDirectionsButton.backgroundColor = .white
-        previewDirectionsButton.setImage(UIImage(named: "preview_directions", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
-        previewDirectionsButton.applyDefaultCornerRadiusShadow(cornerRadius: buttonSize.width / 2)
-        floatingStackView.addArrangedSubview(previewDirectionsButton)
-        self.previewDirectionsButton = previewDirectionsButton
-        
         let reportButton = FloatingButton(type: .custom)
         reportButton.translatesAutoresizingMaskIntoConstraints = false
         reportButton.constrainedSize = buttonSize
