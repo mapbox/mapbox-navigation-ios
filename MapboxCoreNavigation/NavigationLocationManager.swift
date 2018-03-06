@@ -24,7 +24,6 @@ open class NavigationLocationManager: CLLocationManager {
     @available(*, deprecated, message: "Manually override desiredAccuracy instead.")
     public var automaticallyUpdatesDesiredAccuracy = true
     
-    
     var accuracyOverride: CLLocationAccuracy?
     
     override open var desiredAccuracy: CLLocationAccuracy {
