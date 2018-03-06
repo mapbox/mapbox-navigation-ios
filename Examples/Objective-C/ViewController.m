@@ -130,10 +130,13 @@
 
 - (void)startNavigation:(MBRoute *)route {
     MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:route];
+    MBRouteVoiceController *voiceController = [[MBRouteVoiceController alloc] init];
+
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
                                                                                     directions:[MBDirections sharedDirections]
                                                                                          style:nil
-                                                                               locationManager:locationManager];
+                                                                               locationManager:locationManager
+                                                                               voiceController:voiceController];
     [self presentViewController:controller animated:YES completion:nil];
     
     // Suspend notifications and let `MBNavigationViewController` handle all progress and voice updates.
