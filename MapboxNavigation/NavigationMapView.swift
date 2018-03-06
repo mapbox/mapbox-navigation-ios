@@ -178,6 +178,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
+            
+            if let location = userLocationForCourseTracking, tracksUserCourse {
+                UIView.animate(withDuration: 1, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+                }, completion: nil)
+            }
         }
     }
 
