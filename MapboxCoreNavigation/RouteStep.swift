@@ -38,18 +38,5 @@ extension RouteStep {
     open var lastInstruction: SpokenInstruction? {
         return instructionsSpokenAlongStep?.last
     }
-    
-    /**
-     Returns true if the current route step contains a tunnel.
-     */
-    var containsTunnel: Bool {
-        guard let intersections = intersections else { return false }
-        for intersection in intersections {
-            if intersection.outletRoadClasses?.contains(.tunnel) == true {
-                return true
-            }
-        }
-        return false
-    }
 
 }
