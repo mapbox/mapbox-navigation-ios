@@ -30,8 +30,3 @@ public let MBCurrentLegAttribute = "isCurrentLeg"
  Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
  */
 public let MBCongestionAttribute = "congestion"
-
-/**
- The minimum distance of a tunnel intersection on a given route step.
- */
-public var MBMinimumTunnelLengthForUsingNightStyle: CLLocationDistance = 100
