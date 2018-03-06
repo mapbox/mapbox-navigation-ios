@@ -117,7 +117,7 @@ open class NavigationView: UIView {
     lazy var resumeButton: ResumeButton = .forAutoLayout()
     
     lazy var wayNameView: WayNameView = {
-        let view: WayNameView = .forAutoLayout()
+        let view: WayNameView = .forAutoLayout(hidden: true)
         view.clipsToBounds = true
         view.layer.borderWidth = 1.0 / UIScreen.main.scale
         return view
