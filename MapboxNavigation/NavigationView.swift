@@ -120,6 +120,7 @@ open class NavigationView: UIView {
         let view: WayNameView = .forAutoLayout()
         view.clipsToBounds = true
         view.layer.borderWidth = 1.0 / UIScreen.main.scale
+        view.isHidden = true
         return view
     }()
     
