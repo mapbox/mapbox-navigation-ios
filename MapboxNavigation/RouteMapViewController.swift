@@ -110,20 +110,23 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.routeController = routeController
         self.delegate = delegate
+        automaticallyAdjustsScrollViewInsets = false
     }
     
     
     override func loadView() {
-        self.view = NavigationView(delegate: self)
-        self.view.frame = parent?.view.bounds ?? UIScreen.main.bounds
-        mapView.contentInset = contentInsets
+        view = NavigationView(delegate: self)
+        view.frame = parent?.view.bounds ?? UIScreen.main.bounds
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        mapView.contentInset = contentInsets
+        view.layoutIfNeeded()
+        
         mapView.tracksUserCourse = true
         
-        automaticallyAdjustsScrollViewInsets = false
         
         distanceFormatter.numberFormatter.locale = .nationalizedCurrent
         
