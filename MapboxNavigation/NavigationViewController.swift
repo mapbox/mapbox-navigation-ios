@@ -409,7 +409,7 @@ public class NavigationViewController: UIViewController {
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
 
-        if automaticallySwitchStyleForTunnels == true,
+        if automaticallySwitchStyleForTunnels,
             let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
             let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
