@@ -4,6 +4,7 @@ import MapboxDirections
 
 protocol InstructionsBannerViewDelegate: class {
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 /// :nodoc:
@@ -59,6 +60,12 @@ open class BaseInstructionsBannerView: UIControl {
     
     @IBAction func tappedInstructionsBanner(_ sender: Any) {
         delegate?.didTapInstructionsBanner(self)
+    }
+    
+    @objc func draggedInstructionsBanner(_ sender: Any) {
+        if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
+            delegate?.didDragInstructionsBanner(self)
+        }
     }
     
     func set(_ instruction: VisualInstruction?) {

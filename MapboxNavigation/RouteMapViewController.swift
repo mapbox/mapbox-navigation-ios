@@ -590,6 +590,9 @@ extension RouteMapViewController: NavigationViewDelegate {
     //MARK: InstructionsBannerViewDelegate
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         repeatInstructions()
+    }
+    
+    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         displayPreviewInstructions()
     }
     
