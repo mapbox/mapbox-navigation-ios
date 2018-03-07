@@ -233,7 +233,7 @@ public class NavigationViewController: UIViewController {
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = RouteVoiceController()
+    @objc public lazy var voiceController: RouteVoiceController? = MapboxVoiceController()
     
     /**
      Provides all routing logic for the user.
