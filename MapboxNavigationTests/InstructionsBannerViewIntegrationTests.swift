@@ -41,9 +41,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     lazy var instructions = {
         return [
-            VisualInstructionComponent(type: .destination, text: "US 41", imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none),
-            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none),
-            VisualInstructionComponent(type: .destination, text: "I 94", imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none)
+            VisualInstructionComponent(type: .text, text: "US 41", imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "I 94", imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
         ]
     }()
 
@@ -77,8 +77,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
         //prime the cache to simulate images having already been loaded
-        let instruction1 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none)
-        let instruction2 = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none)
+        let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
+        let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
 
         imageRepository.storeImage(shieldImage, forKey: instruction1.shieldKey()!, toDisk: false)
         imageRepository.storeImage(shieldImage, forKey: instruction2.shieldKey()!, toDisk: false)
@@ -134,7 +134,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
 
-        let instruction = VisualInstructionComponent(type: .destination, text: nil, imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
+        let instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         let shieldKey = instruction.shieldKey()
 
         imageRepository.storeImage(shieldImage, forKey: shieldKey!, toDisk: false)
@@ -158,9 +158,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let instructions = [
-            VisualInstructionComponent(type: .destination, text: "US 45", imageURL: nil, maneuverType: .turn, maneuverDirection: .right),
-            VisualInstructionComponent(type: .destination, text: "/", imageURL: nil, maneuverType: .turn, maneuverDirection: .right),
-            VisualInstructionComponent(type: .destination, text: "Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)
+            VisualInstructionComponent(type: .text, text: "US 45", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "/", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
 
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
@@ -176,8 +176,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let instructions = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right),
-            VisualInstructionComponent(type: .destination, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
 
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
@@ -193,10 +193,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let primary = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right),
-            VisualInstructionComponent(type: .destination, text: "South", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "South", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
-        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)]
+        let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)]
 
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
 
@@ -211,9 +211,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
 
         let primary = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
-        let secondary = [VisualInstructionComponent(type: .destination, text: "Mountain View Test", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)]
+        let secondary = [VisualInstructionComponent(type: .text, text: "Mountain View Test", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)]
 
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
 
@@ -235,14 +235,14 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
 
         let primary = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
-        let secondary = [VisualInstructionComponent(type: .destination, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right)]
+        let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)]
 
         instructionsBannerView.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
 
         let primaryThen = [
-            VisualInstructionComponent(type: .destination, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
 
         nextBannerView.instructionLabel.instruction = primaryThen
