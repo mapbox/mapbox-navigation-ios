@@ -99,11 +99,13 @@ public class SimulatedLocationManager: NavigationLocationManager {
     }
     
     override public func startUpdatingLocation() {
-        tick()
+        DispatchQueue.main.async(execute: tick)
     }
     
     override public func stopUpdatingLocation() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
+        DispatchQueue.main.async {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.tick), object: nil)
+        }
     }
     
     @objc fileprivate func tick() {
