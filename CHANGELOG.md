@@ -4,6 +4,7 @@
 
 #### Breaking changes
 * `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
+* The Constants that concern Route-Snapping logic have been re-named. The new names are: `RouteSnappingMinimumSpeed`, `RouteSnappingMaxManipulatedCourseAngle`, and `RouteSnappingMinimumHorizontalAccuracy`.
 
 #### User interface
 * `StepsViewController` 's convienence initalizer (`StepsViewController.init(routeProgress:)`) is now public. ([#1167](https://github.com/mapbox/mapbox-navigation-ios/pull/1167))
@@ -12,6 +13,7 @@
 * Fixed an issue in which turn lanes were displayed in the wrong order when the system language was set to Hebrew. ([#1175](https://github.com/mapbox/mapbox-navigation-ios/pull/1175))
 
 #### Core Navigation
+* `RoteController` now has a new property, `snappedLocation`. This property represents the raw location, snapped to the current route, if applicable. If not applicable, the value is `nil.`
 * `RouteController`'s `MBRouteControllerProgressDidChange` notification now exposes the raw location in it's update, accessible by `MBRouteControllerRawLocationKey`
 
 #### Other changes
