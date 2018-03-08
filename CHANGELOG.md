@@ -13,7 +13,7 @@
 * Fixed an issue in which turn lanes were displayed in the wrong order when the system language was set to Hebrew. ([#1175](https://github.com/mapbox/mapbox-navigation-ios/pull/1175))
 
 #### Core Navigation
-* `RoteController` now has a new property, `snappedLocation`. This property represents the raw location, snapped to the current route, if applicable. If not applicable, the value is `nil.`
+* `RoteController` now has a new property, `snappedLocation`. This property represents the raw location, snapped to the current route, if applicable. If not applicable, the value is `nil`.
 * `RouteController`'s `MBRouteControllerProgressDidChange` notification now exposes the raw location in it's update, accessible by `MBRouteControllerRawLocationKey`
 
 #### Other changes
