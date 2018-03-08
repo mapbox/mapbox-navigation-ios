@@ -49,7 +49,9 @@ public class SimulatedLocationManager: NavigationLocationManager {
     
     var route: Route? {
         didSet {
+            stopUpdatingLocation()
             reset()
+            startUpdatingLocation()
         }
     }
     
@@ -76,9 +78,6 @@ public class SimulatedLocationManager: NavigationLocationManager {
             
             currentDistance = 0
             currentSpeed = 30
-            DispatchQueue.main.async {
-                self.startUpdatingLocation()
-            }
         }
     }
     
