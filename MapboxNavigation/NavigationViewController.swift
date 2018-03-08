@@ -316,17 +316,20 @@ public class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:style:locationManager:)
+    @objc(initWithRoute:directions:style:locationManager:voiceController:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
-                         locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+                         locationManager: NavigationLocationManager? = NavigationLocationManager(),
+                         voiceController: RouteVoiceController? = MapboxVoiceController()) {
         
         super.init(nibName: nil, bundle: nil)
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
+     
+        self.voiceController = voiceController
         
         self.directions = directions
         self.route = route
