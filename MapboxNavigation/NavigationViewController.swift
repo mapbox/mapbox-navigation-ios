@@ -414,8 +414,10 @@ public class NavigationViewController: UIViewController {
             let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
                     styleManager.applyStyle(type:.nightStyle)
+                    routeController.isDeadReckoningEnabled = true
                 } else {
                     styleManager.timeOfDayChanged()
+                    routeController.isDeadReckoningEnabled = false
                 }
         }
         
