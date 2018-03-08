@@ -169,8 +169,8 @@ open class MapboxVoiceController: RouteVoiceController {
      Plays an audio file.
      */
     @objc open func play(_ data: Data) {
-        
-        guard !super.speechSynth.isSpeaking else { return }
+
+        super.speechSynth.stopSpeaking(at: .immediate)
         
         DispatchQueue.global(qos: .userInitiated).async {
             do {
