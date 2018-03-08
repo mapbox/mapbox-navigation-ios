@@ -63,7 +63,7 @@ open class BaseInstructionsBannerView: UIControl {
     
     func set(_ instruction: VisualInstruction?) {
         let secondaryInstruction = instruction?.secondaryTextComponents
-        primaryLabel.numberOfLines = 1
+        primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
             centerYAlignInstructions()
