@@ -102,3 +102,8 @@ public var RouteSnappingMaxManipulatedCourseAngle: CLLocationDirection = 25
  Minimum Accuracy (maximum deviation, in meters) that the route snapping engine will accept before it stops snapping.
  */
 public var RouteSnappingMinimumHorizontalAccuracy: CLLocationAccuracy = 20.0
+
+/**
+ Multiplier applied to the distance which is used to caclulate if the user is on a future step.
+ */
+public var RouteControllerAdvanceToFutureStepDistanceMultiplier: Double = 0.75
