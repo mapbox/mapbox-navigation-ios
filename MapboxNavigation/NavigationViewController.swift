@@ -182,7 +182,7 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: UIViewController, RouteMapViewControllerDelegate {
+public class NavigationViewController: UIViewController {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -233,14 +233,18 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = MapboxVoiceController()
+    @objc public lazy var voiceController: RouteVoiceController? = MapboxVoiceController()
     
     /**
      Provides all routing logic for the user.
 
      See `RouteController` for more information.
      */
-    @objc public var routeController: RouteController!
+    @objc public var routeController: RouteController! {
+        didSet {
+            mapViewController?.routeController = routeController
+        }
+    }
     
     /**
      The main map view displayed inside the view controller.
@@ -318,11 +322,6 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
                          styles: [Style]? = [DayStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
-        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
-        let mapViewController = storyboard.instantiateViewController(withIdentifier: "RouteMapViewController") as! RouteMapViewController
-        
-        self.mapViewController = mapViewController
-        
         super.init(nibName: nil, bundle: nil)
         
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
@@ -333,17 +332,21 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         self.route = route
         NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
+        let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
+        self.mapViewController = mapViewController
+        mapViewController.destination = route.legs.last?.destination
+        mapViewController.willMove(toParentViewController: self)
         addChildViewController(mapViewController)
-        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(mapViewController.view)
+        mapViewController.didMove(toParentViewController: self)
+        let mapSubview: UIView = mapViewController.view
+        mapSubview.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mapSubview)
+        
+        mapSubview.pinInSuperview()
+        mapViewController.reportButton.isHidden = !showsReportFeedback
         
         self.styleManager = StyleManager(self)
         self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
-        
-        mapViewController.view!.pinInSuperview()
-        mapViewController.delegate = self
-        mapViewController.routeController = routeController
-        mapViewController.reportButton.isHidden = !showsReportFeedback
         
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
@@ -364,12 +367,16 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //initialize voice controller if it hasn't been overridden
+        _ = voiceController
+        
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
         
         if routeController.locationManager is SimulatedLocationManager {
             let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %d×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
-            mapViewController?.statusView.show(String.localizedStringWithFormat(format, 1), showSpinner: false)
+            let localized = String.localizedStringWithFormat(format, 1)
+            mapViewController?.statusView.show(localized, showSpinner: false, interactive: true)
         }
     }
     
@@ -439,12 +446,15 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         UIApplication.shared.applicationIconBadgeNumber = 1
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
-    
-    func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+}
+
+//MARK: - RouteMapViewControllerDelegate
+extension NavigationViewController: RouteMapViewControllerDelegate {
+    public func navigationMapView(_ mapView: NavigationMapView, routeCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeCasingStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    public func navigationMapView(_ mapView: NavigationMapView, routeStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, routeStyleLayerWithIdentifier: identifier, source: source)
     }
     
@@ -452,23 +462,23 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         delegate?.navigationMapView?(mapView, didTap: route)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
+    public func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
+    public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    public func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, waypointStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
+    public func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
+    public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }
     
@@ -500,8 +510,8 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
         delegate?.navigationViewController?(self, didSend: feedbackId, feedbackType: feedbackType)
     }
     
-    func mapViewController(_ mapViewController: RouteMapViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint? {
-        return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView)
+    public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
+        return delegate?.navigationViewController?(self, mapViewUserAnchorPoint: mapView) ?? .zero
     }
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
@@ -509,6 +519,7 @@ public class NavigationViewController: UIViewController, RouteMapViewControllerD
     }
 }
 
+//MARK: - RouteControllerDelegate
 extension NavigationViewController: RouteControllerDelegate {
     @objc public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
         return delegate?.navigationViewController?(self, shouldRerouteFrom: location) ?? true
@@ -527,6 +538,10 @@ extension NavigationViewController: RouteControllerDelegate {
         delegate?.navigationViewController?(self, didFailToRerouteWith: error)
     }
     
+    @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
+        return delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
+    }
+    
     @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
         if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
@@ -535,19 +550,6 @@ extension NavigationViewController: RouteControllerDelegate {
             mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
             mapViewController?.labelCurrentRoad(at: location)
         }
-    }
-    
-    @objc public func routeController(_ routeController: RouteController, shouldDiscard location: CLLocation)  -> Bool {
-        let shouldDiscard = delegate?.navigationViewController?(self, shouldDiscard: location) ?? true
-        
-        if shouldDiscard {
-            let title = NSLocalizedString("WEAK_GPS", bundle: .mapboxNavigation, value: "Weak GPS signal", comment: "Inform user about weak GPS signal")
-            mapViewController?.statusView.show(title, showSpinner: false)
-            mapViewController?.statusView.hide(delay: 3, animated: true)
-            return true
-        }
-        
-        return false
     }
     
     @objc public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
@@ -559,6 +561,7 @@ extension NavigationViewController: RouteControllerDelegate {
         return advancesToNextLeg
     }
 }
+
 
 extension NavigationViewController: StyleManagerDelegate {
     

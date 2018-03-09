@@ -27,6 +27,8 @@ The Mapbox Navigation SDK and Core Navigation are compatible with applications w
 
 The last release compatible with Swift 3.2 was v0.10.1.
 
+The Mapbox Navigation SDK is also available [for Android](https://github.com/mapbox/mapbox-navigation-android/).
+
 ## Installation
 
 ### Using CocoaPods

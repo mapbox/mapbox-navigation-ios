@@ -29,7 +29,13 @@ open class StepsViewController: UIViewController {
     typealias StepSection = [RouteStep]
     var sections = [StepSection]()
     
-    convenience init(routeProgress: RouteProgress) {
+    /**
+     Initializes StepsViewController with a RouteProgress object.
+     
+     - parameter routeProgress: The user's current route progress.
+     - SeeAlso: [RouteProgress](https://www.mapbox.com/mapbox-navigation-ios/navigation/0.14.1/Classes/RouteProgress.html)
+     */
+    public convenience init(routeProgress: RouteProgress) {
         self.init()
         self.routeProgress = routeProgress
     }
@@ -83,9 +89,9 @@ open class StepsViewController: UIViewController {
         self.backgroundView = backgroundView
         
         backgroundView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        backgroundView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        backgroundView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         let tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.separatorColor = .clear
@@ -112,19 +118,19 @@ open class StepsViewController: UIViewController {
         self.bottomView = bottomView
 
         dismissButton.heightAnchor.constraint(equalToConstant: 54).isActive = true
-        dismissButton.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        dismissButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         dismissButton.bottomAnchor.constraint(equalTo: view.safeBottomAnchor).isActive = true
-        dismissButton.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         bottomView.topAnchor.constraint(equalTo: dismissButton.bottomAnchor).isActive = true
-        bottomView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        bottomView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.bottomAnchor.constraint(equalTo: dismissButton.topAnchor).isActive = true
-        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: cellId)
     }
@@ -284,9 +290,9 @@ open class StepTableViewCell: UITableViewCell {
         self.instructionsView = instructionsView
         
         instructionsView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        instructionsView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        instructionsView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         instructionsView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        instructionsView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        instructionsView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
         let separatorView = SeparatorView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -294,9 +300,9 @@ open class StepTableViewCell: UITableViewCell {
         self.separatorView = separatorView
         
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView.leftAnchor.constraint(equalTo: instructionsView.primaryLabel.leftAnchor).isActive = true
+        separatorView.leadingAnchor.constraint(equalTo: instructionsView.primaryLabel.leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: instructionsView.bottomAnchor).isActive = true
-        separatorView.rightAnchor.constraint(equalTo: rightAnchor, constant: -18).isActive = true
+        separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
     }
 
     open override func prepareForReuse() {
