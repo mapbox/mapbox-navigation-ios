@@ -590,18 +590,6 @@ extension RouteMapViewController: NavigationViewDelegate {
     func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         displayPreviewInstructions()
     }
-    
-    private func repeatInstructions() {
-        guard !NavigationSettings.shared.voiceMuted, let parent = parent as? NavigationViewController else { return }
-        
-        let routeProgress = routeController.routeProgress
-        if let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
-            parent.voiceController?.speak(currentInstruction)
-        } else if let lastInstruction = routeProgress.currentLegProgress.currentStep.lastInstruction {
-            parent.voiceController?.speak(lastInstruction)
-        }
-    }
-    
     private func displayPreviewInstructions() {
         removePreviewInstructions()
         
