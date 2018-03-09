@@ -590,6 +590,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         displayPreviewInstructions()
     }
+ 
     private func displayPreviewInstructions() {
         removePreviewInstructions()
         
