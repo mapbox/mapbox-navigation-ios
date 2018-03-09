@@ -10,9 +10,9 @@ extension CGSize {
     static let iPhoneX      : CGSize    = CGSize(width: 375, height: 812)
 }
 
-func instructionsView() -> InstructionsBannerView {
+func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
     let bannerHeight: CGFloat = 96
-    return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: CGSize.iPhone6Plus.width, height: bannerHeight)))
+    return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: size.width, height: bannerHeight)))
 }
 
 var shieldImage: UIImage {

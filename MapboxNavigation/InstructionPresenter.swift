@@ -23,32 +23,31 @@ class InstructionPresenter {
     
     func fittedAttributedComponents() -> [NSAttributedString] {
         guard let label = self.label else { return [] }
-        var attrComponents = attributedComponents()
+        var attributedComponents = self.attributedComponents()
         let availableBounds = label.availableBounds()
-        let totalWidth = attrComponents.map { $0.size() }.reduce(.zero, +).width
+        let totalWidth = attributedComponents.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
         
-        if stringFits {
-            return attrComponents
-        } else {
-            let indexedComponents = instruction.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
-            let filtered = indexedComponents.filter { $0.component.abbreviation != nil }
-            let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority }
-            for component in sorted {
-                let isFirst = component.index == 0
-                let joinChar = isFirst ? "" : " "
-                guard component.component.type == .text else { continue }
-                guard let abbreviation = component.component.abbreviation else { continue }
-                attrComponents[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributesForLabel(label))
-                let newWidth = attrComponents.map { $0.size() }.reduce(.zero, +).width
-                
-                if newWidth <= availableBounds.width {
-                    break
-                }
-            }
+        guard !stringFits else { return attributedComponents }
+        
+        let indexedComponents = instruction.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
+        let filtered = indexedComponents.filter { $0.component.abbreviation != nil }
+        let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority }
+        for component in sorted {
+            let isFirst = component.index == 0
+            let joinChar = isFirst ? "" : " "
+            guard component.component.type == .text else { continue }
+            guard let abbreviation = component.component.abbreviation else { continue }
             
-            return attrComponents
+            attributedComponents[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributesForLabel(label))
+            let newWidth = attributedComponents.map { $0.size() }.reduce(.zero, +).width
+            
+            if newWidth <= availableBounds.width {
+                break
+            }
         }
+        
+        return attributedComponents
     }
     
     func attributedComponents() -> [NSAttributedString] {

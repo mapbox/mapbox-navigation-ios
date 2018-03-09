@@ -835,19 +835,19 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
-				355DB5731EFA73410091BFB7 /* Fixtures */,
-				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
-				16E3625A2012656C00DF0592 /* Support */,
 				35B711D31E5E7AD2001EDA8D /* Info.plist */,
 				1662244A2029059C00EA4824 /* ImageCacheTests.swift */,
 				16A509D4202A87B20011D788 /* ImageDownloaderTests.swift */,
 				166224442025699600EA4824 /* ImageRepositoryTests.swift */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
+				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
 				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
-				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
+				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
+				355DB5731EFA73410091BFB7 /* Fixtures */,
+				16E3625A2012656C00DF0592 /* Support */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";

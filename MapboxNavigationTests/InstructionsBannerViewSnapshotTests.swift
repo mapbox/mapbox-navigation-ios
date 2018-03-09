@@ -121,6 +121,24 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         verifyView(view, size: view.bounds.size)
     }
     
+    func testAbbreviateWestFreemontAvenue() {
+        let view = instructionsView(size: .iPhoneX)
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let primary = [
+                       VisualInstructionComponent(type: .text, text: "West", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: "W", abbreviationPriority: 0),
+                       VisualInstructionComponent(type: .text, text: "Fremont", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+                       VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: "Ave", abbreviationPriority: 1)
+        ]
+        
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+        
+        verifyView(view, size: view.bounds.size)
+    }
+    
     func testInstructionsAndNextInstructions() {
         let view = UIView()
         view.backgroundColor = .white
