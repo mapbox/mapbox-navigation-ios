@@ -2,7 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "volume_off.pdf"
+      "filename" : "volume_off.pdf",
+      "language-direction" : "left-to-right"
     }
   ],
   "info" : {

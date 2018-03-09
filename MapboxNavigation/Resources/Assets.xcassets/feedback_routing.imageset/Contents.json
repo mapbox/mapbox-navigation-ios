@@ -2,7 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "feedback_routing.pdf"
+      "filename" : "feedback_routing.pdf",
+      "language-direction" : "left-to-right"
     }
   ],
   "info" : {

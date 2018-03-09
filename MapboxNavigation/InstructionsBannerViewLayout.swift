@@ -68,23 +68,23 @@ extension BaseInstructionsBannerView {
         maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width).isActive = true
         maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
         maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor).isActive = true
-        maneuverView.leftAnchor.constraint(equalTo: leftAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
+        maneuverView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
         
         // Primary Label
-        primaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
-        primaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
+        primaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
+        primaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
         baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor))
         centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
         
         // Secondary Label
-        secondaryLabel.leftAnchor.constraint(equalTo: dividerView.rightAnchor).isActive = true
-        secondaryLabel.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -18).isActive = true
+        secondaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
+        secondaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
         baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor))
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
         // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
-        dividerView.leftAnchor.constraint(equalTo: leftAnchor, constant: 70).isActive = true
+        dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70).isActive = true
         dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
         dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -93,13 +93,13 @@ extension BaseInstructionsBannerView {
         _separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         _separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         _separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
-        _separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        _separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         
         // Visible separator docked to the bottom
         separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)
@@ -118,16 +118,16 @@ extension BaseInstructionsBannerView {
     
     func setupAvailableBounds() {
         // Abbreviate if the instructions do not fit on one line
-        primaryLabel.availableBounds = {
-            let height = ("|" as NSString).size(withAttributes: [.font: self.primaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
-            return CGRect(x: 0, y: 0, width: availableWidth, height: height)
+        primaryLabel.availableBounds = { [unowned self] in
+            // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
+            let availableWidth = self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
+            return CGRect(x: 0, y: 0, width: availableWidth, height: self.primaryLabel.font.lineHeight)
         }
         
-        secondaryLabel.availableBounds = {
-            let height = ("|" as NSString).size(withAttributes: [.font: self.secondaryLabel.font]).height
-            let availableWidth = self.bounds.width-self.maneuverView.frame.maxX-(8*2)
-            return CGRect(x: 0, y: 0, width: availableWidth, height: height)
+        secondaryLabel.availableBounds = { [unowned self] in
+            // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
+            let availableWidth = self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
+            return CGRect(x: 0, y: 0, width: availableWidth, height: self.secondaryLabel.font.lineHeight)
         }
     }
 }

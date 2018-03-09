@@ -1,5 +1,29 @@
 ## Changes to the Mapbox Navigation SDK for iOS
 
+## v0.15.0 (tbd)
+
+#### Breaking changes
+* `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
+* The Constants that concern Route-Snapping logic have been re-named. The new names are: `RouteSnappingMinimumSpeed`, `RouteSnappingMaxManipulatedCourseAngle`, and `RouteSnappingMinimumHorizontalAccuracy`.
+
+#### User interface
+* `StepsViewController` 's convienence initalizer (`StepsViewController.init(routeProgress:)`) is now public. ([#1167](https://github.com/mapbox/mapbox-navigation-ios/pull/1167))
+* Fixed an issue preventing the distance from appearing in the turn banner when the system language was set to Hebrew and the system region was set to Israel or any other region that uses the metric system. ([#1176](https://github.com/mapbox/mapbox-navigation-ios/pull/1176))
+* Various views and view controllers correctly mirror right-to-left in Hebrew. ([#1182](https://github.com/mapbox/mapbox-navigation-ios/pull/1182))
+
+#### Core Navigation
+* `RoteController` now has a new property, `snappedLocation`. This property represents the raw location, snapped to the current route, if applicable. If not applicable, the value is `nil`.
+* `RouteController`'s `MBRouteControllerProgressDidChange` notification now exposes the raw location in it's update, accessible by `MBRouteControllerRawLocationKey`
+
+#### Voice Guidance
+
+* Fixed an issue that caused `RouteVoiceController` and `MabpboxVoiceController` to speak over one another. [#1213](https://github.com/mapbox/mapbox-navigation-ios/pull/1213)
+
+#### Other changes
+* Fixed a crash while navigating that affected applications that do not use Mapbox-hosted styles or vector tiles. [#1183](https://github.com/mapbox/mapbox-navigation-ios/pull/1183)
+* The `DistanceFormatter.attributedString(for:)` method is now implemented. It returns an attributed string representation of the distance in which the `NSAttributedStringKey.quantity` attribute is applied to the numeric quantity. ([#1176](https://github.com/mapbox/mapbox-navigation-ios/pull/1176))
+* Fixed an issue in which turn lanes were displayed in the wrong order when the system language was set to Hebrew. ([#1175](https://github.com/mapbox/mapbox-navigation-ios/pull/1175))
+
 ## v0.14.0 (February 22, 2018)
 
 #### Breaking Changes
