@@ -644,7 +644,7 @@ extension RouteController: CLLocationManagerDelegate {
             return false
         }
         
-        if nearestStep.distance < radius * RouteControllerAdvanceToFutureStepDistanceMultiplier {
+        if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
             advanceStepIndex(to: nearestStep.index)
             return true
         }
