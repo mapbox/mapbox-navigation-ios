@@ -145,7 +145,7 @@
 * Exposes `setOverheadCameraView(from:along:for:)` which is useful for fitting the camera to an overhead view for the remaining route coordinates.
 * Changed the heuristics needed for a the users location to unsnap from the route line. [#1110](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 * Changes `routeController(:didDiscardLocation:)` to `routeController(:shouldDiscardLocation:)`. Now if implemented, developers can choose to keep a location when RouteController deems a location unqualified. [#1095](https://github.com/mapbox/mapbox-navigation-ios/pull/1095/)
-* Updates to calculate the distances of each step's intersection(s) which is used to detect the current and upcoming intersections distance from a given location coordinates. Developers can now detect road classes eg. tunnels, tolls, motorway etc. for current and upcoming intersections. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
+* Exposes `RouteStepProgress.intersectionDistances` of each step which can be used to determine the distance between `RouteStepProgress.currentIntersection` and `RouteStepProgress.upcomingIntersection` for unique use cases such as detecting tunnels, tolls, motorway etc. of a given route. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## User Interface
 

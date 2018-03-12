@@ -556,13 +556,7 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
-        let intersectionDistances = routeProgress.currentLegProgress.currentStepProgress.intersectionDistances
-        if let upcomingIntersectionIndex = intersectionDistances.index(where: { $0 > currentStepProgress.distanceTraveled }),
-            0..<intersectionDistances.endIndex ~= upcomingIntersectionIndex {
-            currentStepProgress.intersectionIndex = intersectionDistances.index(before: upcomingIntersectionIndex)
-        } else {
-            currentStepProgress.intersectionIndex = 0
-        }
+        updateIntersectionIndex(for: currentStepProgress)
         
         // Notify observers if the step’s remaining distance has changed.
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
@@ -604,7 +598,7 @@ extension RouteController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
     }
-    
+
     func startTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
         
         guard (manager is SimulatedLocationManager), self.simulatedLocationManager == nil else { return }
@@ -646,6 +640,12 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         simulatedLocationManager = nil
+    }
+    
+    func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
+        let intersectionDistances = currentStepProgress.intersectionDistances
+        let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
+        currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
     }
     
     func updateRouteLegProgress(for location: CLLocation) {
@@ -931,6 +931,10 @@ extension RouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.stepIndex += 1
         }
         
+        updateIntersectionDistances()
+    }
+    
+    func updateIntersectionDistances() {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
             let polyline = Polyline(coordinates)
             let distances = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }

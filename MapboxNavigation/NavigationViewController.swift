@@ -304,6 +304,11 @@ public class NavigationViewController: UIViewController {
      */
     @objc public var annotatesSpokenInstructions = false
     
+    /**
+     A Boolean value that indicates whether the dark style should apply when a route controller enters a tunnel.
+     */
+    @objc public var usesNightStyleInsideTunnels: Bool = false
+    
     let progressBar = ProgressBar()
     var styleManager: StyleManager!
     
@@ -407,7 +412,7 @@ public class NavigationViewController: UIViewController {
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
 
-        if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
+        if usesNightStyleInsideTunnels, let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
             let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
                     styleManager.applyStyle(type:.nightStyle)
