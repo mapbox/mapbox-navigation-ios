@@ -530,6 +530,8 @@ extension RouteController: CLLocationManagerDelegate {
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
             if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
+                // Even though a location is discarded, we can still snap the puck.
+                self.rawLocation = lastLocation
                 return
             }
         // This case handles the first location.
