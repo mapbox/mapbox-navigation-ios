@@ -108,6 +108,7 @@ open class StyleManager: NSObject {
                 delegate?.styleManager?(self, didApply: style)
             }
         }
+        
         forceRefreshAppearance()
     }
     
