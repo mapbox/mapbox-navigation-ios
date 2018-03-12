@@ -1,7 +1,7 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.7.5"
 github "ceeK/Solar" "2.1.0"
 github "facebook/ios-snapshot-test-case" "2.1.4"
-github "mapbox/MapboxDirections.swift" "9f690d7d4246b1a05dd6c99fa07aec1f59db66e3"
+github "mapbox/MapboxDirections.swift" "v0.18.0"
 github "mapbox/mapbox-events-ios" "v0.3.1"
 github "mapbox/mapbox-voice-swift" "v0.0.1"
 github "mapbox/turf-swift" "v0.0.4"
