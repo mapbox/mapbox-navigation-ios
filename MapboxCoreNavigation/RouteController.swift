@@ -601,11 +601,11 @@ extension RouteController: CLLocationManagerDelegate {
 
     func startTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
         
-        guard (manager is SimulatedLocationManager), self.simulatedLocationManager == nil else { return }
+        guard !(manager is SimulatedLocationManager), simulatedLocationManager == nil else { return }
 
-        self.simulatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
-        self.simulatedLocationManager?.delegate = self
-        self.simulatedLocationManager?.routeProgress = routeProgress
+        simulatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
+        simulatedLocationManager?.delegate = self
+        simulatedLocationManager?.routeProgress = routeProgress
         
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
@@ -621,7 +621,7 @@ extension RouteController: CLLocationManagerDelegate {
     
     func stopTunnelAnimation(for manager: CLLocationManager) {
         
-        guard (manager is SimulatedLocationManager), self.simulatedLocationManager != nil else { return }
+        guard !(manager is SimulatedLocationManager), simulatedLocationManager != nil else { return }
         
         if let lastKnownLocation = simulatedLocationManager?.lastKnownLocation {
             self.rawLocation = lastKnownLocation
