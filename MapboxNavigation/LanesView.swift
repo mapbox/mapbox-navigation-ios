@@ -61,9 +61,9 @@ public class LanesView: UIView {
         stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         separatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
-        separatorView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
     func update(for currentLegProgress: RouteLegProgress) {

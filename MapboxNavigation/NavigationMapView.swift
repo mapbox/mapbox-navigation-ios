@@ -85,8 +85,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
-    var isPluggedIn: Bool = false
-    var batteryStateObservation: NSKeyValueObservation?
     var altitude: CLLocationDistance = defaultAltitude
     var routes: [Route]?
     
@@ -180,6 +178,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
+            
+            if let location = userLocationForCourseTracking, tracksUserCourse {
+                UIView.animate(withDuration: 1, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+                }, completion: nil)
+            }
         }
     }
 
@@ -224,10 +228,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     fileprivate func commonInit() {
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
-        
-        batteryStateObservation = UIDevice.current.observe(\.batteryState) { [weak self] (device, changed) in
-            self?.isPluggedIn = device.batteryState == .charging || device.batteryState == .full
-        }
         
         resumeNotifications()
     }
@@ -299,8 +299,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
-        
-        guard !isPluggedIn else {
+        guard !UIDevice.current.isPluggedIn else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
             return
         }
@@ -351,10 +350,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         }
-        
-        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-        }, completion: nil)
         
         if let userCourseView = userCourseView as? UserCourseView {
             if let customTransformation = userCourseView.update?(location: location, pitch: camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse) {

@@ -233,7 +233,7 @@ public class NavigationViewController: UIViewController {
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = MapboxVoiceController()
+    @objc public lazy var voiceController: RouteVoiceController? = MapboxVoiceController()
     
     /**
      Provides all routing logic for the user.
@@ -366,6 +366,9 @@ public class NavigationViewController: UIViewController {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //initialize voice controller if it hasn't been overridden
+        _ = voiceController
         
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()

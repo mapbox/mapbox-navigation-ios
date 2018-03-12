@@ -50,7 +50,8 @@ class EndOfRouteViewController: UIViewController {
     lazy var placeholder: String = NSLocalizedString("END_OF_ROUTE_TITLE", bundle: .mapboxNavigation, value: "How can we improve?", comment: "Comment Placeholder Text")
     lazy var endNavigation: String = NSLocalizedString("END_NAVIGATION", bundle: .mapboxNavigation, value: "End Navigation", comment: "End Navigation Button Text")
     
-    var dismiss: ((Int, String?) -> Void)?
+    typealias DismissHandler = ((Int, String?) -> Void)
+    var dismissHandler: DismissHandler?
     var comment: String?
     var rating: Int = 0 {
         didSet {
@@ -96,7 +97,7 @@ class EndOfRouteViewController: UIViewController {
     }
     
     fileprivate func dismissView() {
-        let dismissal: () -> Void = { self.dismiss?(self.rating, self.comment) }
+        let dismissal: () -> Void = { self.dismissHandler?(self.rating, self.comment) }
         guard commentView.isFirstResponder else { return _ = dismissal() }
         commentView.resignFirstResponder()
         let fireTime = DispatchTime.now() + 0.3 //Not ideal, but works for now

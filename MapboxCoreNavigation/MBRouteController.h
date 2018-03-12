@@ -58,9 +58,14 @@ typedef NSString *MBRouteControllerNotificationUserInfoKey NS_EXTENSIBLE_STRING_
 extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerRouteProgressKey;
 
 /**
- A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current user location.
+ A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
  */
 extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerLocationKey;
+
+/**
+ A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
+ */
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerRawLocationKey;
 
 /**
  A key in the user info dictionary of a `Notification.Name.RouteControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.

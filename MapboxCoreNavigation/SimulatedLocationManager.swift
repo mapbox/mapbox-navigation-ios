@@ -49,7 +49,9 @@ public class SimulatedLocationManager: NavigationLocationManager {
     
     var route: Route? {
         didSet {
+            stopUpdatingLocation()
             reset()
+            startUpdatingLocation()
         }
     }
     
@@ -85,9 +87,6 @@ public class SimulatedLocationManager: NavigationLocationManager {
             
             currentDistance = distance ?? 0
             currentSpeed = 30
-            DispatchQueue.main.async {
-                self.startUpdatingLocation()
-            }
         }
     }
     
@@ -109,11 +108,13 @@ public class SimulatedLocationManager: NavigationLocationManager {
     }
     
     override public func startUpdatingLocation() {
-        tick()
+        DispatchQueue.main.async(execute: tick)
     }
     
     override public func stopUpdatingLocation() {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
+        DispatchQueue.main.async {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.tick), object: nil)
+        }
     }
     
     @objc fileprivate func tick() {

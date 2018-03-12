@@ -2,15 +2,12 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
+
+// MARK: - RouteController
 /**
  Maximum number of meters the user can travel away from step before `RouteControllerShouldReroute` is emitted.
  */
 public var RouteControllerMaximumDistanceBeforeRecalculating: CLLocationDistance = 50
-
-/**
- Accepted deviation excluding horizontal accuracy before the user is considered to be off route.
- */
-public var RouteControllerUserLocationSnappingDistance: CLLocationDistance = 15
 
 /**
  Threshold user must be in within to count as completing a step. One of two heuristics used to know when a user completes a step, see `RouteControllerManeuverZoneRadius`.
@@ -39,10 +36,7 @@ public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
  */
 public var RouteControllerDeadReckoningTimeInterval: TimeInterval = 1.0
 
-/**
- Maximum angle the user puck will be rotated when snapping the user's course to the route line.
- */
-public var RouteControllerMaxManipulatedCourseAngle: CLLocationDirection = 25
+
 
 /**
  :nodoc This is used internally for debugging metrics
@@ -59,7 +53,7 @@ public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 /**
  The minimum speed value before the user's actual location can be considered over the snapped location.
  */
-public var RouteControllerMinimumSpeedForLocationSnapping: CLLocationSpeed = 3
+public var RouteSnappingMinimumSpeed: CLLocationSpeed = 3
 
 /**
  The minimum distance threshold used for giving a "Continue" type instructions.
@@ -93,7 +87,18 @@ let FasterRouteFoundEvent = "navigation.fasterRoute"
  */
 public var RouteControllerDurationRemainingWaypointArrival: TimeInterval = 3
 
+//MARK: - Route Snapping (CLLocation)
 /**
- The minimum distance of a tunnel intersection on a given route step.
+ Accepted deviation excluding horizontal accuracy before the user is considered to be off route.
  */
-public var RouteProgressMinimumTunnelIntersectionDistance: CLLocationDistance = 100
+public var RouteControllerUserLocationSnappingDistance: CLLocationDistance = 15
+
+/**
+ Maximum angle the user puck will be rotated when snapping the user's course to the route line.
+ */
+public var RouteSnappingMaxManipulatedCourseAngle: CLLocationDirection = 25
+
+/**
+ Minimum Accuracy (maximum deviation, in meters) that the route snapping engine will accept before it stops snapping.
+ */
+public var RouteSnappingMinimumHorizontalAccuracy: CLLocationAccuracy = 20.0
