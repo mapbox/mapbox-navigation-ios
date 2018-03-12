@@ -70,8 +70,9 @@ extension UIView {
     }
     
 
-    class func forAutoLayout<ViewType: UIView>() -> ViewType {
-        let view = ViewType.init(frame: .zero)
+    class func forAutoLayout<ViewType: UIView>(frame: CGRect = .zero, hidden: Bool = false) -> ViewType {
+        let view = ViewType.init(frame: frame)
+        view.isHidden = hidden
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
@@ -95,6 +96,13 @@ extension UIView {
         return leftAnchor
     }
     
+    var safeLeadingAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.leadingAnchor
+        }
+        return leadingAnchor
+    }
+    
     var safeBottomAnchor: NSLayoutYAxisAnchor {
         if #available(iOS 11.0, *) {
             return safeAreaLayoutGuide.bottomAnchor
@@ -107,6 +115,13 @@ extension UIView {
             return safeAreaLayoutGuide.rightAnchor
         }
         return rightAnchor
+    }
+    
+    var safeTrailingAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.trailingAnchor
+        }
+        return trailingAnchor
     }
 }
 
@@ -203,6 +218,8 @@ protocol Anchorable {
     var bottomAnchor: NSLayoutYAxisAnchor { get }
     var leftAnchor: NSLayoutXAxisAnchor { get }
     var rightAnchor: NSLayoutXAxisAnchor { get }
+    var leadingAnchor: NSLayoutXAxisAnchor { get }
+    var trailingAnchor: NSLayoutXAxisAnchor { get }
 }
 
 extension UIView: Anchorable {}

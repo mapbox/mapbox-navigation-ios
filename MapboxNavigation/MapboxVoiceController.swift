@@ -78,8 +78,6 @@ open class MapboxVoiceController: RouteVoiceController {
         
         assert(routeProgress != nil, "routeProgress should not be nil.")
         
-        
-        
         guard let _ = routeProgress!.route.speechLocale else {
             speakWithDefaultSpeechSynthesizer(instruction, error: nil)
             return
@@ -171,6 +169,9 @@ open class MapboxVoiceController: RouteVoiceController {
      Plays an audio file.
      */
     @objc open func play(_ data: Data) {
+
+        super.speechSynth.stopSpeaking(at: .immediate)
+        
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 self.audioPlayer = try AVAudioPlayer(data: data)
@@ -186,6 +187,7 @@ open class MapboxVoiceController: RouteVoiceController {
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
+                    try super.unDuckAudio()
                     self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
