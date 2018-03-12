@@ -23,14 +23,14 @@ class InstructionPresenter {
     
     func fittedAttributedComponents() -> [NSAttributedString] {
         guard let label = self.label else { return [] }
-        var attributedComponents = self.attributedComponents()
+        var attributedPairs = self.attributedPairs()
         let availableBounds = label.availableBounds()
-        let totalWidth = attributedComponents.map { $0.size() }.reduce(.zero, +).width
+        let totalWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
         
-        guard !stringFits else { return attributedComponents }
+        guard !stringFits else { return attributedPairs.attributedStrings }
         
-        let indexedComponents = instruction.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
+        let indexedComponents = attributedPairs.components.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
         let filtered = indexedComponents.filter { $0.component.abbreviation != nil }
         let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority }
         for component in sorted {
@@ -39,32 +39,37 @@ class InstructionPresenter {
             guard component.component.type == .text else { continue }
             guard let abbreviation = component.component.abbreviation else { continue }
             
-            attributedComponents[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributesForLabel(label))
-            let newWidth = attributedComponents.map { $0.size() }.reduce(.zero, +).width
+            attributedPairs.attributedStrings[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributesForLabel(label))
+            let newWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
             
             if newWidth <= availableBounds.width {
                 break
             }
         }
         
-        return attributedComponents
+        return attributedPairs.attributedStrings
     }
     
-    func attributedComponents() -> [NSAttributedString] {
-        guard let label = self.label else { return [NSAttributedString()] }
+    typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
+    
+    func attributedPairs() -> AttributedInstructionComponents {
+        guard let label = self.label else { return (components: [], attributedStrings: []) }
         var strings = [NSAttributedString]()
+        var processedComponents = [VisualInstructionComponent]()
         let components = instruction
         
         for component in components {
             let isFirst = component == instruction.first
             let joinChar = isFirst ? "" : " "
-            
+
             if let shieldKey = component.shieldKey() {
                 if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
+                    processedComponents.append(component)
                     strings.append(attributedString(withFont: label.font, shieldImage: cachedImage))
                 } else {
                     // Display road code while shield is downloaded
                     if let text = component.text {
+                        processedComponents.append(component)
                         strings.append(NSAttributedString(string: joinChar + text, attributes: attributesForLabel(label)))
                     }
                     shieldImageForComponent(component, height: label.shieldHeight, completion: { [weak self] (image) in
@@ -77,14 +82,25 @@ class InstructionPresenter {
                     })
                 }
             } else if let text = component.text {
-                if component.type == .delimiter && instructionHasDownloadedAllShields() {
-                    continue
+                // Hide delimiter if one of the adjacent components is a shield
+                if component.type == .delimiter {
+                    let componentBefore = components.component(before: component)
+                    let componentAfter = components.component(after: component)
+                    if let shieldKey = componentBefore?.shieldKey(),
+                        imageRepository.cachedImageForKey(shieldKey) != nil {
+                        continue
+                    }
+                    if let shieldKey = componentAfter?.shieldKey(),
+                        imageRepository.cachedImageForKey(shieldKey) != nil {
+                        continue
+                    }
                 }
+                processedComponents.append(component)
                 strings.append(NSAttributedString(string: (joinChar + text), attributes: attributesForLabel(label)))
             }
         }
-        
-        return strings
+
+        return (components: processedComponents, attributedStrings: strings)
     }
 
     private func shieldImageForComponent(_ component: VisualInstructionComponent, height: CGFloat, completion: @escaping (UIImage?) -> Void) {
@@ -144,8 +160,30 @@ extension CGSize {
     }
 }
 
-
 fileprivate struct IndexedVisualInstructionComponent {
     let component: Array<VisualInstructionComponent>.Element
     let index: Array<VisualInstructionComponent>.Index
+}
+
+extension Array where Element == VisualInstructionComponent {
+    
+    fileprivate func component(before component: VisualInstructionComponent) -> VisualInstructionComponent? {
+        guard let index = self.index(of: component) else {
+            return nil
+        }
+        if index > 0 {
+            return self[index-1]
+        }
+        return nil
+    }
+    
+    fileprivate func component(after component: VisualInstructionComponent) -> VisualInstructionComponent? {
+        guard let index = self.index(of: component) else {
+            return nil
+        }
+        if index+1 < self.endIndex {
+            return self[index+1]
+        }
+        return nil
+    }
 }

@@ -121,7 +121,26 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         verifyView(view, size: view.bounds.size)
     }
     
-    func testAbbreviateWestFreemontAvenue() {
+    func testAbbreviateInstructionsIncludingDelimiter() {
+        let view = instructionsView()
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: shieldURL, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+                       VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+                       VisualInstructionComponent(type: .text, text: "10", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+                       VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+                       VisualInstructionComponent(type: .text, text: "15 North", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: "15 N", abbreviationPriority: 0),
+                       VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+                       VisualInstructionComponent(type: .text, text: "20 West", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: "20 W", abbreviationPriority: 1)]
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+        
+        verifyView(view, size: view.bounds.size)
+    }
+    
+    func testAbbreviateWestFremontAvenue() {
         let view = instructionsView(size: .iPhoneX)
         styleInstructionsView(view)
         

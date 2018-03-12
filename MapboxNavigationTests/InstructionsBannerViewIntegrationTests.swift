@@ -41,7 +41,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     lazy var instructions = {
         return [
-            VisualInstructionComponent(type: .text, text: "US 41", imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .image, text: "US 41", imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "I 94", imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
         ]
@@ -101,11 +101,11 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let view = instructionsView()
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
+        //Slash should be present until an adjacent shield is downloaded
+        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+        
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
         simulateDownloadingShieldForComponent(firstDestinationComponent)
-
-        //Slash should be present until all shields are downloaded
-        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
 
         let secondDestinationComponent = instructions[2]
         simulateDownloadingShieldForComponent(secondDestinationComponent)
