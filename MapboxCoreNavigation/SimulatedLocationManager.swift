@@ -63,18 +63,27 @@ public class SimulatedLocationManager: NavigationLocationManager {
      */
     @objc public init(route: Route) {
         super.init()
+        setupSimulatedLocationManager(for: route)
+    }
+    
+    @objc public init(route: Route, distanceTraveled: CLLocationDistance) {
+        super.init()
+        setupSimulatedLocationManager(for: route, currentDistance: distanceTraveled)
+    }
+
+    private func setupSimulatedLocationManager(for route: Route, currentDistance: CLLocationDistance? = 0) {
         self.route = route
-        reset()
+        reset(currentDistance)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
-    private func reset() {
+    private func reset(_ distance: CLLocationDistance? = 0) {
         if let coordinates = route?.coordinates {
             routeLine = coordinates
             locations = coordinates.simulatedLocationsWithTurnPenalties()
             
-            currentDistance = 0
+            currentDistance = distance ?? 0
             currentSpeed = 30
             DispatchQueue.main.async {
                 self.startUpdatingLocation()

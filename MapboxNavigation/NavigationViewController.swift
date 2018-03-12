@@ -165,7 +165,7 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Called when a location has been identified as unqualified to navigate on.
      
      See `CLLocation.isQualified` for more information about what qualifies a location.
      
@@ -404,9 +404,7 @@ public class NavigationViewController: UIViewController {
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
 
-        if let intersectionDistance = routeProgress.currentLegProgress.currentStepProgress.currentIntersectionDistance,
-            intersectionDistance >= RouteProgressMinimumTunnelIntersectionDistance,
-            let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
+        if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
             let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
                     styleManager.applyStyle(type:.nightStyle)

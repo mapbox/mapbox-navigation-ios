@@ -108,6 +108,15 @@ open class StyleManager: NSObject {
                 delegate?.styleManager?(self, didApply: style)
             }
         }
+        
+        for window in UIApplication.shared.windows {
+            for view in window.subviews {
+                view.removeFromSuperview()
+                window.addSubview(view)
+            }
+        }
+        
+        delegate?.styleManagerDidRefreshAppearance?(self)
     }
     
     func applyStyle() {

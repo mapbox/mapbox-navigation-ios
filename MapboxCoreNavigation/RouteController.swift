@@ -232,7 +232,9 @@ open class RouteController: NSObject {
     }
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
-
+    
+    var simulatedLocationManager: SimulatedLocationManager?
+    
     /**
      Intializes a new `RouteController`.
 
@@ -629,8 +631,12 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStep = currentStepProgress.step
 
         let intersectionDistances = routeProgress.currentLegProgress.currentStepProgress.intersectionDistances
-        let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
-        currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
+        if let upcomingIntersectionIndex = intersectionDistances.index(where: { $0 > currentStepProgress.distanceTraveled }),
+            0..<intersectionDistances.endIndex ~= upcomingIntersectionIndex {
+            currentStepProgress.intersectionIndex = intersectionDistances.index(before: upcomingIntersectionIndex)
+        } else {
+            currentStepProgress.intersectionIndex = 0
+        }
         
         // Notify observers if the step’s remaining distance has changed.
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
@@ -641,6 +647,15 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
                 RouteControllerNotificationUserInfoKey.locationKey: location
                 ])
+            
+            if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
+                let classes = currentIntersection.outletRoadClasses {
+                if classes.contains(.tunnel) {
+                    startTunnelAnimation(for: manager, routeProgress: routeProgress, distanceTraveled: distanceTraveled)
+                } else {
+                    stopTunnelAnimation(for: manager)
+                }
+            }
         }
         
         updateDistanceToIntersection(from: location)
@@ -661,6 +676,49 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
+    }
+    
+    func startTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
+        
+        guard (manager is SimulatedLocationManager), self.simulatedLocationManager == nil else { return }
+
+        self.simulatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
+        self.simulatedLocationManager?.delegate = self
+        self.simulatedLocationManager?.routeProgress = routeProgress
+        
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        DispatchQueue.main.async {
+            manager.stopUpdatingLocation()
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) { [weak self] in
+            self?.simulatedLocationManager?.startUpdatingLocation()
+        }
+    }
+    
+    func stopTunnelAnimation(for manager: CLLocationManager) {
+        
+        guard (manager is SimulatedLocationManager), self.simulatedLocationManager != nil else { return }
+        
+        if let lastKnownLocation = simulatedLocationManager?.lastKnownLocation {
+            self.rawLocation = lastKnownLocation
+        }
+        
+        let dispatchGroup = DispatchGroup()
+        dispatchGroup.enter()
+        
+        DispatchQueue.main.async {
+            self.simulatedLocationManager?.stopUpdatingLocation()
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            manager.startUpdatingLocation()
+        }
+        
+        simulatedLocationManager = nil
     }
     
     func updateRouteLegProgress(for location: CLLocation) {
