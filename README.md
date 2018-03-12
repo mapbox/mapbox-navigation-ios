@@ -37,7 +37,6 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxCoreNavigation', '~> 0.15'
    pod 'MapboxNavigation', '~> 0.15'
    ```
 
