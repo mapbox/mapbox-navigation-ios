@@ -36,6 +36,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     lazy var collectionView: UICollectionView = {
         let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.delegate = self
         view.dataSource = self
         view.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier)
@@ -43,7 +44,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     }()
     
     lazy var reportIssueLabel: UILabel = {
-       let label = UILabel()
+        let label: UILabel = .forAutoLayout()
         return label
     }()
     
@@ -52,7 +53,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         return layout
     }()
     
-    lazy var progressBar: ProgressBar = ProgressBar()
+    lazy var progressBar: ProgressBar = .forAutoLayout()
     
     var draggableHeight: CGFloat {
         // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
@@ -71,18 +72,16 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadSubviews()
+        setupViews()
+        setupConstraints()
+        view.layoutIfNeeded()
         //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
         flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
     }
-    
-    private func loadSubviews() {
-        let subviews: [UIView] = [reportIssueLabel, collectionView, progressBar]
-        subviews.forEach(view.addSubview(_:))
-    }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -132,6 +131,27 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     @objc func handleDismissTap(sender: UITapGestureRecognizer) {
         dismissFeedback()
+    }
+    
+    private func setupViews() {
+        [reportIssueLabel, collectionView, progressBar].forEach(view.addSubview(_:))
+    }
+    
+    private func setupConstraints() {
+        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: 30.0)
+        let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let collectionBarSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
+        let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let barHeight = progressBar.heightAnchor.constraint(equalToConstant: 6.0)
+        let barLeading = progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let barTrailing = progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        
+        let constraints = [labelHeight, labelLeading, labelTrailing,
+                           collectionBarSpacing, collectionLeading, collectionTrailing,
+                           barHeight, barLeading, barTrailing]
+        NSLayoutConstraint.activate(constraints)
     }
 }
 
