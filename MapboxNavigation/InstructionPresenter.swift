@@ -99,6 +99,8 @@ class InstructionPresenter {
                 strings.append(NSAttributedString(string: (joinChar + text), attributes: attributesForLabel(label)))
             }
         }
+        
+        assert(processedComponents.count == strings.count, "The number of processed components must match the number of attributed strings")
 
         return (components: processedComponents, attributedStrings: strings)
     }
