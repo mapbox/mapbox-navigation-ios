@@ -34,10 +34,25 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     let interactor = Interactor()
     
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var reportIssueLabel: UILabel!
-    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
-    @IBOutlet weak var progressBar: ProgressBar!
+    lazy var collectionView: UICollectionView = {
+        let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        view.delegate = self
+        view.dataSource = self
+        view.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier)
+        return view
+    }()
+    
+    lazy var reportIssueLabel: UILabel = {
+       let label = UILabel()
+        return label
+    }()
+    
+    lazy var flowLayout: UICollectionViewFlowLayout = {
+       let layout = UICollectionViewFlowLayout()
+        return layout
+    }()
+    
+    lazy var progressBar: ProgressBar = ProgressBar()
     
     var draggableHeight: CGFloat {
         // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
@@ -48,18 +63,25 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     }
     
     class func loadFromStoryboard() -> FeedbackViewController {
-        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
-        return storyboard.instantiateViewController(withIdentifier: "FeedbackViewController") as! FeedbackViewController
+        let feedbackVC = FeedbackViewController()
+        return feedbackVC
+//        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
+//        return storyboard.instantiateViewController(withIdentifier: "FeedbackViewController") as! FeedbackViewController
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        loadSubviews()
         //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
         flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
+    }
+    
+    private func loadSubviews() {
+        let subviews: [UIView] = [reportIssueLabel, collectionView, progressBar]
+        subviews.forEach(view.addSubview(_:))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -115,7 +137,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
 
 extension FeedbackViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackViewController.cellReuseIdentifier, for: indexPath) as! FeedbackCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackCollectionViewCell
         let item = sections[indexPath.section][indexPath.row]
         
         cell.titleLabel.text = item.title
@@ -151,40 +173,5 @@ extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = floor(collectionView.bounds.width / 3)
         return CGSize(width: width, height: width + FeedbackViewController.verticalCellPadding)
-    }
-}
-
-class FeedbackCollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var circleView: UIView!
-    
-    var longPress: UILongPressGestureRecognizer?
-    var originalTransform: CGAffineTransform?
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        circleView.layer.cornerRadius = circleView.bounds.midY
-    }
-    
-    override var isHighlighted: Bool {
-        didSet {
-            if originalTransform == nil {
-                originalTransform = self.imageView.transform
-            }
-            
-            UIView.defaultSpringAnimation(0.3, animations: {
-                if self.isHighlighted {
-                    self.imageView.transform = self.imageView.transform.scaledBy(x: 0.85, y: 0.85)
-                } else {
-                    guard let t = self.originalTransform else { return }
-                    self.imageView.transform = t
-                }
-            }, completion: nil)
-        }
     }
 }
