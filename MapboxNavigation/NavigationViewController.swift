@@ -233,7 +233,7 @@ public class NavigationViewController: UIViewController {
      
      See `RouteVoiceController` for more information.
      */
-    @objc public var voiceController: RouteVoiceController? = MapboxVoiceController()
+    @objc public lazy var voiceController: RouteVoiceController? = MapboxVoiceController()
     
     /**
      Provides all routing logic for the user.
@@ -304,6 +304,11 @@ public class NavigationViewController: UIViewController {
      */
     @objc public var annotatesSpokenInstructions = false
     
+    /**
+     A Boolean value that indicates whether the dark style should apply when a route controller enters a tunnel.
+     */
+    @objc public var usesNightStyleInsideTunnels: Bool = false
+    
     let progressBar = ProgressBar()
     var styleManager: StyleManager!
     
@@ -367,6 +372,9 @@ public class NavigationViewController: UIViewController {
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        //initialize voice controller if it hasn't been overridden
+        _ = voiceController
+        
         UIApplication.shared.isIdleTimerDisabled = true
         routeController.resume()
         
@@ -403,6 +411,15 @@ public class NavigationViewController: UIViewController {
         let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
+
+        if usesNightStyleInsideTunnels, let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
+            let classes = currentIntersection.outletRoadClasses {
+                if classes.contains(.tunnel) {
+                    styleManager.applyStyle(type:.nightStyle)
+                } else {
+                    styleManager.timeOfDayChanged()
+                }
+        }
         
         progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }

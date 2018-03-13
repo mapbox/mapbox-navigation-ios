@@ -55,12 +55,26 @@ class AdvancedViewController: UIViewController, MGLMapViewDelegate, CLLocationMa
         
         startButton = UIButton()
         startButton?.setTitle("Start Navigation", for: .normal)
-        startButton?.sizeToFit()
+        startButton?.translatesAutoresizingMaskIntoConstraints = false
         startButton?.backgroundColor = .blue
+        startButton?.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
         startButton?.addTarget(self, action: #selector(tappedButton(sender:)), for: .touchUpInside)
         startButton?.isHidden = true
         view.addSubview(startButton!)
+        startButton?.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+        startButton?.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
+        view.setNeedsLayout()
     }
+    
+    //overriding layout lifecycle callback so we can style the start button
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        startButton?.layer.cornerRadius = startButton!.bounds.midY
+        startButton?.clipsToBounds = true
+        startButton?.setNeedsDisplay()
+        
+    }
+
     
     @objc func tappedButton(sender: UIButton) {
         guard let route = currentRoute else { return }

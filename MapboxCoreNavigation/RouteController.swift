@@ -36,7 +36,7 @@ extension Notification.Name {
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey` and `RouteControllerNotificationUserInfoKey.locationKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
      */
     public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
     
@@ -77,7 +77,7 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
 
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Called when a location has been identified as unqualified to navigate on.
 
      See `CLLocation.isQualified` for more information about what qualifies a location.
 
@@ -356,9 +356,24 @@ open class RouteController: NSObject {
     }
     
     /**
+     The idealized user location. Snapped to the route line, if applicable, otherwise raw.
+     - seeAlso: snappedLocation, rawLocation
+     */
+    @objc public var location: CLLocation? {
+        return snappedLocation ?? rawLocation
+    }
+    
+    /**
+     The raw location, snapped to the current route.
+     - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
+     */
+    var snappedLocation: CLLocation? {
+        return rawLocation?.snapped(to: routeProgress.currentLegProgress)
+    }
+
+    /**
      The most recently received user location.
-     
-     This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
+     - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
      */
     var rawLocation: CLLocation? {
         didSet {
@@ -382,95 +397,6 @@ open class RouteController: NSObject {
             }
         }
         return RouteControllerMaximumDistanceBeforeRecalculating
-    }
-
-    /**
-     The most recently received user location, snapped to the route line.
-
-     This property contains a `CLLocation` object located along the route line near the most recently received user location. This property is set to `nil` if the route controller is unable to snap the user’s location to the route line for some reason.
-     */
-    @objc public var location: CLLocation? {
-        guard let location = rawLocation else { return nil }
-
-        var nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-
-        // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
-        // Otherwise, we may get false positives from nearby step coordinates
-        if let upcomingStep = routeProgress.currentLegProgress.upComingStep,
-            let initialHeading = upcomingStep.initialHeading,
-            let finalHeading = upcomingStep.finalHeading,
-            let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
-            
-            // The max here is 180. The closer it is to 180, the sharper the turn.
-            if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteControllerMaxManipulatedCourseAngle {
-                nearByCoordinates = coordinates
-            }
-        }
-        
-        guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: location.coordinate) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(from: location, along: nearByCoordinates) else { return nil }
-        
-        var userCourse = calculatedCourseForLocationOnStep
-        var userCoordinate = closest.coordinate
-        if !shouldSnap(location, toRouteWith: calculatedCourseForLocationOnStep) {
-            userCourse = location.course
-            userCoordinate = location.coordinate
-        }
-        
-        return CLLocation(coordinate: userCoordinate, altitude: location.altitude, horizontalAccuracy: location.horizontalAccuracy, verticalAccuracy: location.verticalAccuracy, course: userCourse, speed: location.speed, timestamp: location.timestamp)
-    }
-    
-    /**
-     Given a location and a series of coordinates, compute what the course should be for a the location.
-     */
-    func interpolatedCourse(from location: CLLocation, along coordinates: [CLLocationCoordinate2D]) -> CLLocationDirection? {
-        let nearByPolyline = Polyline(coordinates)
-        
-        guard let closest = nearByPolyline.closestCoordinate(to: location.coordinate) else { return nil }
-        
-        let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
-        let slicedLineInFront = nearByPolyline.sliced(from: closest.coordinate, to: coordinates.last)
-        let userDistanceBuffer: CLLocationDistance = max(location.speed * RouteControllerDeadReckoningTimeInterval / 2, RouteControllerUserLocationSnappingDistance / 2)
-        
-        guard let pointBehind = slicedLineBehind.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
-        guard let pointBehindClosest = nearByPolyline.closestCoordinate(to: pointBehind) else { return nil }
-        guard let pointAhead = slicedLineInFront.coordinateFromStart(distance: userDistanceBuffer) else { return nil }
-        guard let pointAheadClosest = nearByPolyline.closestCoordinate(to: pointAhead) else { return nil }
-        
-        // Get direction of these points
-        let pointBehindDirection = pointBehindClosest.coordinate.direction(to: closest.coordinate)
-        let pointAheadDirection = closest.coordinate.direction(to: pointAheadClosest.coordinate)
-        let wrappedPointBehind = pointBehindDirection.wrap(min: -180, max: 180)
-        let wrappedPointAhead = pointAheadDirection.wrap(min: -180, max: 180)
-        let wrappedCourse = location.course.wrap(min: -180, max: 180)
-        let relativeAnglepointBehind = (wrappedPointBehind - wrappedCourse).wrap(min: -180, max: 180)
-        let relativeAnglepointAhead = (wrappedPointAhead - wrappedCourse).wrap(min: -180, max: 180)
-        
-        let averageRelativeAngle: Double
-        // User is at the beginning of the route, there is no closest point behind the user.
-        if pointBehindClosest.distance <= 0 && pointAheadClosest.distance > 0 {
-            averageRelativeAngle = relativeAnglepointAhead
-        // User is at the end of the route, there is no closest point in front of the user.
-        } else if pointAheadClosest.distance <= 0 && pointBehindClosest.distance > 0 {
-            averageRelativeAngle = relativeAnglepointBehind
-        } else {
-            averageRelativeAngle = (relativeAnglepointBehind + relativeAnglepointAhead) / 2
-        }
-        
-        return (wrappedCourse + averageRelativeAngle).wrap(min: 0, max: 360)
-    }
-    
-    /**
-     Determines if the a location is qualified enough to allow the user puck to become unsnapped.
-     */
-    func shouldSnap(_ location: CLLocation, toRouteWith course: CLLocationDirection) -> Bool {
-        if location.course >= 0 &&
-            location.speed >= RouteControllerMinimumSpeedForLocationSnapping &&
-            course.differenceBetween(location.course) > RouteControllerMaxManipulatedCourseAngle &&
-            location.horizontalAccuracy < 20 {
-                return false
-        }
-        return true
     }
 
     /**
@@ -628,6 +554,8 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
+        updateIntersectionIndex(for: currentStepProgress)
+        
         // Notify observers if the step’s remaining distance has changed.
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
@@ -635,7 +563,8 @@ extension RouteController: CLLocationManagerDelegate {
             currentStepProgress.distanceTraveled = distanceTraveled
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                RouteControllerNotificationUserInfoKey.locationKey: location
+                RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
+                RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
         }
         
@@ -657,6 +586,12 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
+    }
+    
+    func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
+        let intersectionDistances = currentStepProgress.intersectionDistances
+        let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
+        currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
     }
     
     func updateRouteLegProgress(for location: CLLocation) {
@@ -713,12 +648,11 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         // Check and see if the user is near a future step.
-        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate),
-            nearestStep.index != routeProgress.currentLegProgress.stepIndex else {
+        guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
             return false
         }
         
-        if nearestStep.distance < radius {
+        if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
             advanceStepIndex(to: nearestStep.index)
             return true
         }
@@ -941,6 +875,16 @@ extension RouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.stepIndex = forcedStepIndex
         } else {
             routeProgress.currentLegProgress.stepIndex += 1
+        }
+        
+        updateIntersectionDistances()
+    }
+    
+    func updateIntersectionDistances() {
+        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
+            let polyline = Polyline(coordinates)
+            let distances = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
+            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
 }
