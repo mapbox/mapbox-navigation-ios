@@ -15,7 +15,7 @@ open class NavigationRouteOptions: RouteOptions {
      - SeeAlso:
      [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.10.1/Classes/RouteOptions.html)
      */
-    @objc public override init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+    @objc public required init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
@@ -51,6 +51,36 @@ open class NavigationRouteOptions: RouteOptions {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
 
+    @objc public required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
+    }
+}
+
+@objc(MBNavigationMatchOptions)
+open class NavigationMatchOptions: MatchOptions {
+    
+    @objc public required init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+        super.init(waypoints: waypoints.map {
+            $0.coordinateAccuracy = -1
+            return $0
+        }, profileIdentifier: profileIdentifier)
+        includesSteps = true
+        routeShapeResolution = .full
+        attributeOptions = [.congestionLevel, .expectedTravelTime]
+        includesSpokenInstructions = true
+        locale = Locale.nationalizedCurrent
+        distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
+        includesVisualInstructions = true
+    }
+    
+    @objc public convenience init(locations: [CLLocation], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+        self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
+    }
+    
+    @objc public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
+        self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
+    }
+    
     @objc public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
     }
