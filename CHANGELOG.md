@@ -1,6 +1,11 @@
 ## Changes to the Mapbox Navigation SDK for iOS
 
-## v0.15.0 (tbd)
+## Master
+
+#### User Interface
+* Added support for abbreviated top banner instructions. [#1169](https://github.com/mapbox/mapbox-navigation-ios/pull/1169)
+
+## v0.15.0 (March 13, 2018)
 
 #### Breaking changes
 * `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
