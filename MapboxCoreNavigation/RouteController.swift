@@ -577,7 +577,9 @@ extension RouteController: CLLocationManagerDelegate {
             if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
                 let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
-                    beginTunnelAnimation(for: manager, routeProgress: routeProgress, distanceTraveled: distanceTraveled)
+                    beginTunnelAnimation(for: manager,
+                               routeProgress: routeProgress,
+                            distanceTraveled: distanceTraveled)
                 } else {
                     stopTunnelAnimation(for: manager)
                 }
