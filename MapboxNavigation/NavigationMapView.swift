@@ -413,6 +413,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
+    var userPuckScreenCoordinates: CLLocationCoordinate2D? {
+        guard let rect = userCourseView?.frame else { return nil }
+        let point = CGPoint(x: rect.midX, y: rect.midY)
+        return self.convert(point, toCoordinateFrom: self)
+    }
+    
     // MARK: Feature Addition/Removal
     
     /**
@@ -803,7 +809,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     func shape(describing route: Route, legIndex: Int?) -> MGLShape? {
-        guard let coordinates = route.coordinates else { return nil }
+        guard let routeCoords = route.coordinates else { return nil }
+        
+        let coordinates: [CLLocationCoordinate2D]
+        if let userPuckScreenCoordinates = userPuckScreenCoordinates {
+            coordinates = Polyline(routeCoords).sliced(from: userPuckScreenCoordinates, to: routeCoords.last).coordinates
+        } else {
+            coordinates = routeCoords
+        }
         
         var linesPerLeg: [[MGLPolylineFeature]] = []
         
@@ -870,7 +883,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 $0.coordinates
             }.joined())
             
-            let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
+            let coordinates: [CLLocationCoordinate2D]
+            if let userPuckScreenCoordinates = userPuckScreenCoordinates {
+                coordinates = Polyline(legCoordinates).sliced(from: userPuckScreenCoordinates, to: legCoordinates.last).coordinates
+            } else {
+                coordinates = legCoordinates
+            }
+            
+            let polyline = MGLPolylineFeature(coordinates: coordinates, count: UInt(coordinates.count))
             if let legIndex = legIndex {
                 polyline.attributes[MBCurrentLegAttribute] = index == legIndex
             } else {
