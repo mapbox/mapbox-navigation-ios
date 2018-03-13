@@ -355,6 +355,11 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+        
+        // In case simulated navigation is abruptly stopped before completion,
+        // ensure simulated location manager updates are also stopped.
+        simulatedLocationManager?.stopUpdatingLocation()
+        simulatedLocationManager?.stopUpdatingHeading()
     }
     
     /**
@@ -572,7 +577,7 @@ extension RouteController: CLLocationManagerDelegate {
             if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
                 let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
-                    startTunnelAnimation(for: manager, routeProgress: routeProgress, distanceTraveled: distanceTraveled)
+                    beginTunnelAnimation(for: manager, routeProgress: routeProgress, distanceTraveled: distanceTraveled)
                 } else {
                     stopTunnelAnimation(for: manager)
                 }
@@ -599,8 +604,7 @@ extension RouteController: CLLocationManagerDelegate {
         checkForFasterRoute(from: location)
     }
 
-    func startTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
-        
+    func beginTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
         guard !(manager is SimulatedLocationManager), simulatedLocationManager == nil else { return }
 
         simulatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
@@ -610,17 +614,18 @@ extension RouteController: CLLocationManagerDelegate {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         DispatchQueue.main.async {
+            manager.stopUpdatingHeading()
             manager.stopUpdatingLocation()
             dispatchGroup.leave()
         }
         
-        dispatchGroup.notify(queue: .main) { [weak self] in
+        dispatchGroup.notify(queue:.main) { [weak self] in
+            self?.simulatedLocationManager?.startUpdatingLocation()
             self?.simulatedLocationManager?.startUpdatingLocation()
         }
     }
     
     func stopTunnelAnimation(for manager: CLLocationManager) {
-        
         guard !(manager is SimulatedLocationManager), simulatedLocationManager != nil else { return }
         
         if let lastKnownLocation = simulatedLocationManager?.lastKnownLocation {
@@ -635,11 +640,11 @@ extension RouteController: CLLocationManagerDelegate {
             dispatchGroup.leave()
         }
         
-        dispatchGroup.notify(queue: .main) {
+        dispatchGroup.notify(queue:.main) {
+            self.simulatedLocationManager = nil
             manager.startUpdatingLocation()
+            manager.startUpdatingHeading()
         }
-        
-        simulatedLocationManager = nil
     }
     
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
