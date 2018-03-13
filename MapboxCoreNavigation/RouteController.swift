@@ -77,7 +77,7 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, willRerouteFrom location: CLLocation)
 
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Called when a location has been identified as unqualified to navigate on.
 
      See `CLLocation.isQualified` for more information about what qualifies a location.
 
@@ -554,6 +554,8 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
+        updateIntersectionIndex(for: currentStepProgress)
+        
         // Notify observers if the step’s remaining distance has changed.
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
@@ -584,6 +586,12 @@ extension RouteController: CLLocationManagerDelegate {
         // If the user is approaching a maneuver, don't check for a faster alternatives
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
+    }
+    
+    func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
+        let intersectionDistances = currentStepProgress.intersectionDistances
+        let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
+        currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
     }
     
     func updateRouteLegProgress(for location: CLLocation) {
@@ -867,6 +875,16 @@ extension RouteController: CLLocationManagerDelegate {
             routeProgress.currentLegProgress.stepIndex = forcedStepIndex
         } else {
             routeProgress.currentLegProgress.stepIndex += 1
+        }
+        
+        updateIntersectionDistances()
+    }
+    
+    func updateIntersectionDistances() {
+        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
+            let polyline = Polyline(coordinates)
+            let distances = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
+            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }
 }
