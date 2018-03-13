@@ -69,6 +69,10 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
+    @objc func tappedInstructionsBanner(_ sender: Any) {
+        delegate?.didTapInstructionsBanner?(self)
+    }
+    
     func set(_ instruction: VisualInstruction?) {
         let secondaryInstruction = instruction?.secondaryTextComponents
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
