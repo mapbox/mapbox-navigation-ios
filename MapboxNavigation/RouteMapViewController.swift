@@ -401,14 +401,6 @@ class RouteMapViewController: UIViewController {
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
-
-        guard isInOverviewMode else {
-            return
-        }
-
-        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
-            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
-        }
     }
     
 func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
