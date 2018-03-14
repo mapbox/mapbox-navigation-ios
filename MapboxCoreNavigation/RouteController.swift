@@ -220,7 +220,7 @@ open class RouteController: NSObject {
 
     var hasFoundOneQualifiedLocation = false
 
-    var recentDistancesFromManeuver: [CLLocationDistance] = []
+    var movementsAwayFromRoute = 0
     
     var previousArrivalWaypoint: Waypoint? {
         didSet {
@@ -301,7 +301,6 @@ open class RouteController: NSObject {
 
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
@@ -461,10 +460,6 @@ extension RouteController {
         checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
 
-    @objc func didPassSpokenInstructionPoint(notification: NSNotification) {
-        recentDistancesFromManeuver.removeAll()
-    }
-
     @objc func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
     }
@@ -478,7 +473,7 @@ extension RouteController {
             lastReroute?.update(newRoute: routeProgress.route)
         }
         
-        recentDistancesFromManeuver.removeAll()
+        movementsAwayFromRoute = 0
     }
 }
 
@@ -611,6 +606,26 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     /**
+     Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
+     */
+    func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
+        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
+        
+        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
+        
+        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
+            return false
+        } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
+            movementsAwayFromRoute = 0
+        } else {
+            movementsAwayFromRoute += 1
+        }
+        
+        return true
+    }
+    
+    /**
      Given a users current location, returns a Boolean whether they are currently on the route.
 
      If the user is not on the route, they should be rerouted.
@@ -624,28 +639,7 @@ extension RouteController: CLLocationManagerDelegate {
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
-        guard !isCloseToCurrentStep else { return true }
-        
-        // Check to see if the user is moving away from the maneuver.
-        // Here, we store an array of distances. If the current distance is greater than the last distance,
-        // add it to the array. If the array grows larger than x, reroute the user.
-        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
-            let userDistanceToManeuver = Polyline(coordinates).distance(from: location.coordinate)
-            
-            // If the location updates have been backtracking for a certain amount of time and over a certain distance, the user most likely turned around or made a wrong turn and need a new route.
-            if recentDistancesFromManeuver.count > RouteControllerMinimumNumberLocationUpdatesBackwards && recentDistancesFromManeuver.last! - recentDistancesFromManeuver.first! > RouteControllerMinimumBacktrackingDistanceForRerouting {
-                return false
-            }
-            
-            if recentDistancesFromManeuver.isEmpty {
-                recentDistancesFromManeuver.append(userDistanceToManeuver)
-            } else if let lastDistance = recentDistancesFromManeuver.last, userDistanceToManeuver > lastDistance {
-                recentDistancesFromManeuver.append(userDistanceToManeuver)
-            } else {
-                // If we get a descending distance, reset the counter
-                recentDistancesFromManeuver.removeAll()
-            }
-        }
+        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
         
         // Check and see if the user is near a future step.
         guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
