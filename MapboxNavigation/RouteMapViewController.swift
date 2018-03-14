@@ -547,7 +547,6 @@ extension RouteMapViewController {
 
 extension RouteMapViewController: NavigationViewDelegate {
     // MARK: NavigationViewDelegate
-    
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
         delegate?.mapViewControllerDidCancelNavigation(self)
     }
@@ -583,7 +582,15 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     //MARK: InstructionsBannerViewDelegate
+    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        displayPreviewInstructions()
+    }
+    
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        displayPreviewInstructions()
+    }
+ 
+    private func displayPreviewInstructions() {
         removePreviewInstructions()
         
         if let controller = stepsViewController {

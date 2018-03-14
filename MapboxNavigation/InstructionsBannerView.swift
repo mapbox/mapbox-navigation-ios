@@ -2,8 +2,14 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
+@objc(MBInstructionsBannerViewDelegate)
 protocol InstructionsBannerViewDelegate: class {
-    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    
+    @objc(didTapInstructionsBanner:)
+    optional func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    
+    @objc(didDragInstructionsBanner:)
+    optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 /// :nodoc:
@@ -57,8 +63,14 @@ open class BaseInstructionsBannerView: UIControl {
         setupAvailableBounds()
     }
     
-    @IBAction func tappedInstructionsBanner(_ sender: Any) {
-        delegate?.didTapInstructionsBanner(self)
+    @objc func draggedInstructionsBanner(_ sender: Any) {
+        if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
+            delegate?.didDragInstructionsBanner?(self)
+        }
+    }
+    
+    @objc func tappedInstructionsBanner(_ sender: Any) {
+        delegate?.didTapInstructionsBanner?(self)
     }
     
     func set(_ instruction: VisualInstruction?) {
