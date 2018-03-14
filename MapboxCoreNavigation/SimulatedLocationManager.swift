@@ -90,12 +90,12 @@ public class SimulatedLocationManager: NavigationLocationManager {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
-    private func reset(_ distance: CLLocationDistance? = 0) {
+    private func reset(_ distance: CLLocationDistance) {
         if let coordinates = route?.coordinates {
             routeLine = coordinates
             locations = coordinates.simulatedLocationsWithTurnPenalties()
             
-            currentDistance = distance ?? 0
+            currentDistance = distance
             currentSpeed = 30
             
             currentDistance += currentSpeed * speedMultiplier
