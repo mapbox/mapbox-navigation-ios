@@ -356,8 +356,8 @@ open class RouteController: NSObject {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
         
-        // In case simulated navigation is abruptly stopped before completion,
-        // ensure simulated location manager updates are also stopped.
+        // In case the simulated navigation is stopped abruptly before it completes,
+        // we ensure the simulated location manager updates are also stopped.
         simulatedLocationManager?.stopUpdatingLocation()
         simulatedLocationManager?.stopUpdatingHeading()
     }
