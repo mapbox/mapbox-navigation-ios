@@ -155,8 +155,8 @@ extension CLLocation {
         if course >= 0 &&
             // If the user is near the beginning of leg, do not account for their speed
             (speed >= RouteSnappingMinimumSpeed || isWithinDepatureStep) &&
-            course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle &&
-            horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy {
+            (horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy || isWithinDepatureStep) &&
+            course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle {
             return false
         }
         return true
