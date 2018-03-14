@@ -65,21 +65,20 @@ class RouteControllerTests: XCTestCase {
         route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
-        let lastCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.last!
-        let lastLocation = CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude)
+        let firstLocation = CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
+        let coordNearStart = Polyline(navigation.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 10)!
         
-        navigation.locationManager(navigation.locationManager, didUpdateLocations: [lastLocation])
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         
         // We're now 100 meters away from the last coord, looking at the start.
         // Basically, moving backwards
-        let directionToStart = lastCoord.direction(to: firstCoord)
-        let facingFirstCoordNearLastCoord = lastCoord.coordinate(at: 100, facing: lastCoord.direction(to: firstCoord))
-        let facingTowardsStartLocation = CLLocation(coordinate: facingFirstCoordNearLastCoord, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: directionToStart, speed: 5, timestamp: Date())
+        let directionToStart = coordNearStart.direction(to: firstCoord)
+        let facingTowardsStartLocation = CLLocation(coordinate: coordNearStart, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: directionToStart, speed: 0, timestamp: Date())
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [facingTowardsStartLocation])
         
         // Check the interpolated course is within reason.
         XCTAssertEqual(directionToStart, navigation.location!.course, "The course should be the raw course and not an interpolated course")
-        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: navigation.routeProgress.currentLegProgress.nearbyCoordinates)!), "Should not snap")
+        XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: navigation.routeProgress.currentLegProgress.nearbyCoordinates)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
     }
 }

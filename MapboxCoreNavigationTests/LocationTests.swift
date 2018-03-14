@@ -72,11 +72,11 @@ class LocationTests: XCTestCase {
         
         let initialHeadingOnFirstStep = progress.currentLegProgress.currentStepProgress.step.finalHeading!
         
-        XCTAssertTrue(firstLocation.shouldSnap(toRouteWith: initialHeadingOnFirstStep), "Should snap")
+        XCTAssertTrue(firstLocation.shouldSnap(toRouteWith: initialHeadingOnFirstStep, distanceToFirstCoordinateOnLeg: 100), "Should snap")
         
         let differentCourseAndAccurateLocation = CLLocation(coordinate: firstLocation.coordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 10, timestamp: Date())
         
-        XCTAssertFalse(differentCourseAndAccurateLocation.shouldSnap(toRouteWith: initialHeadingOnFirstStep), "Should not snap when user course is different, the location is accurate and moving")
+        XCTAssertFalse(differentCourseAndAccurateLocation.shouldSnap(toRouteWith: initialHeadingOnFirstStep, distanceToFirstCoordinateOnLeg: 100), "Should not snap when user course is different, the location is accurate and moving")
     }
     
 }

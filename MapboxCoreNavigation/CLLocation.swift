@@ -97,8 +97,9 @@ extension CLLocation {
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = closest.coordinate
+        guard let firstCoordinate = legProgress.leg.steps.first?.coordinates?.first else { return nil }
         
-        guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) else { return nil }
+        guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep, distanceToFirstCoordinateOnLeg: self.coordinate.distance(to: firstCoordinate)) else { return nil }
         
         return CLLocation(coordinate: userCoordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: userCourse, speed: speed, timestamp: timestamp)
     }
@@ -147,9 +148,13 @@ extension CLLocation {
     /**
      Determines if the a location is qualified enough to allow the user puck to become unsnapped.
      */
-    func shouldSnap(toRouteWith course: CLLocationDirection) -> Bool {
+    func shouldSnap(toRouteWith course: CLLocationDirection, distanceToFirstCoordinateOnLeg: CLLocationDistance) -> Bool {
+        
+        let isWithinDepatureStep = distanceToFirstCoordinateOnLeg < RouteControllerManeuverZoneRadius
+
         if course >= 0 &&
-            speed >= RouteSnappingMinimumSpeed &&
+            // If the user is near the beginning of leg, do not account for their speed
+            (speed >= RouteSnappingMinimumSpeed || isWithinDepatureStep) &&
             course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle &&
             horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy {
             return false
