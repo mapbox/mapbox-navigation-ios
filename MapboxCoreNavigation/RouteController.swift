@@ -233,7 +233,7 @@ open class RouteController: NSObject {
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    var simulatedLocationManager: SimulatedLocationManager?
+    var animatedLocationManager: SimulatedLocationManager?
     
     /**
      Intializes a new `RouteController`.
@@ -356,10 +356,10 @@ open class RouteController: NSObject {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
         
-        // In case the simulated navigation is stopped abruptly before it completes,
-        // we ensure the simulated location manager updates are also stopped.
-        simulatedLocationManager?.stopUpdatingLocation()
-        simulatedLocationManager?.stopUpdatingHeading()
+        // In case the animated navigation is stopped abruptly before it completes,
+        // we ensure the animated location manager updates are also stopped.
+        animatedLocationManager?.stopUpdatingLocation()
+        animatedLocationManager?.stopUpdatingHeading()
     }
     
     /**
@@ -581,7 +581,7 @@ extension RouteController: CLLocationManagerDelegate {
                                routeProgress: routeProgress,
                             distanceTraveled: distanceTraveled)
                 } else {
-                    stopTunnelAnimation(for: manager)
+                    suspendTunnelAnimation(for: manager)
                 }
             }
         }
@@ -607,11 +607,11 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     func beginTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
-        guard !(manager is SimulatedLocationManager), simulatedLocationManager == nil else { return }
+        guard !(manager is SimulatedLocationManager), animatedLocationManager == nil else { return }
 
-        simulatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
-        simulatedLocationManager?.delegate = self
-        simulatedLocationManager?.routeProgress = routeProgress
+        animatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
+        animatedLocationManager?.delegate = self
+        animatedLocationManager?.routeProgress = routeProgress
         
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
@@ -621,16 +621,16 @@ extension RouteController: CLLocationManagerDelegate {
             dispatchGroup.leave()
         }
         
-        dispatchGroup.notify(queue:.main) { [weak self] in
-            self?.simulatedLocationManager?.startUpdatingLocation()
-            self?.simulatedLocationManager?.startUpdatingLocation()
+        dispatchGroup.notify(queue:.main) {
+            self.animatedLocationManager?.startUpdatingLocation()
+            self.animatedLocationManager?.startUpdatingLocation()
         }
     }
     
-    func stopTunnelAnimation(for manager: CLLocationManager) {
-        guard !(manager is SimulatedLocationManager), simulatedLocationManager != nil else { return }
+    func suspendTunnelAnimation(for manager: CLLocationManager) {
+        guard !(manager is SimulatedLocationManager), animatedLocationManager != nil else { return }
         
-        if let lastKnownLocation = simulatedLocationManager?.lastKnownLocation {
+        if let lastKnownLocation = animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
             self.rawLocation = lastKnownLocation
         }
         
@@ -638,12 +638,12 @@ extension RouteController: CLLocationManagerDelegate {
         dispatchGroup.enter()
         
         DispatchQueue.main.async {
-            self.simulatedLocationManager?.stopUpdatingLocation()
+            self.animatedLocationManager?.stopUpdatingLocation()
+            self.animatedLocationManager = nil
             dispatchGroup.leave()
         }
         
         dispatchGroup.notify(queue:.main) {
-            self.simulatedLocationManager = nil
             manager.startUpdatingLocation()
             manager.startUpdatingHeading()
         }
