@@ -27,7 +27,7 @@ It is up to you to listen in on reroutes and:
 Once you have a fresh route after rerouting, you need to tell the UI to update according to this new route.
 
 ```
-routeController.routeProgress = RouteProgress(route: newRouteAfterRerouting)
+yourNavigationViewController.route = route
 ```
 
 This will cause a waterfall effect, everything downstream should react to the addition of a new route.
