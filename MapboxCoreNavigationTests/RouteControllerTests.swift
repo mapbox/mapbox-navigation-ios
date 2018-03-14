@@ -70,14 +70,14 @@ class RouteControllerTests: XCTestCase {
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         
-        // We're now 100 meters away from the last coord, looking at the start.
-        // Basically, moving backwards
+        // We're now 10 meters away from the last coord, looking at the start.
+        // Basically, simulating moving backwards.
         let directionToStart = coordNearStart.direction(to: firstCoord)
         let facingTowardsStartLocation = CLLocation(coordinate: coordNearStart, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: directionToStart, speed: 0, timestamp: Date())
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [facingTowardsStartLocation])
         
-        // Check the interpolated course is within reason.
+        // The course should not be the interpolated course, rather the raw course.
         XCTAssertEqual(directionToStart, navigation.location!.course, "The course should be the raw course and not an interpolated course")
         XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: navigation.routeProgress.currentLegProgress.nearbyCoordinates)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
     }

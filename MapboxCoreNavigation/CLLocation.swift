@@ -150,10 +150,10 @@ extension CLLocation {
      */
     func shouldSnap(toRouteWith course: CLLocationDirection, distanceToFirstCoordinateOnLeg: CLLocationDistance = CLLocationDistanceMax) -> Bool {
         
+        // If the user is near the beginning of leg, allow for unsnapped more often.
         let isWithinDepatureStep = distanceToFirstCoordinateOnLeg < RouteControllerManeuverZoneRadius
 
         if course >= 0 &&
-            // If the user is near the beginning of leg, do not account for their speed
             (speed >= RouteSnappingMinimumSpeed || isWithinDepatureStep) &&
             (horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy || isWithinDepatureStep) &&
             course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle {
