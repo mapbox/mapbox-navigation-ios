@@ -148,7 +148,7 @@ extension CLLocation {
     /**
      Determines if the a location is qualified enough to allow the user puck to become unsnapped.
      */
-    func shouldSnap(toRouteWith course: CLLocationDirection, distanceToFirstCoordinateOnLeg: CLLocationDistance) -> Bool {
+    func shouldSnap(toRouteWith course: CLLocationDirection, distanceToFirstCoordinateOnLeg: CLLocationDistance = CLLocationDistanceMax) -> Bool {
         
         let isWithinDepatureStep = distanceToFirstCoordinateOnLeg < RouteControllerManeuverZoneRadius
 
