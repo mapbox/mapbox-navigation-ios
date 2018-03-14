@@ -610,8 +610,6 @@ extension RouteController: CLLocationManagerDelegate {
      */
     func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
-        
-        
         guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
         
         let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
