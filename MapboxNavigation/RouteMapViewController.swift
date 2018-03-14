@@ -658,8 +658,12 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        let endOfRouteTime = (navigationView.endOfRouteView != nil && navigationView.endOfRouteShowConstraint!.isActive == true)
-        guard !endOfRouteTime else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
+        //If the end of route component is showing, then put the anchor point slightly above the middle of the map
+        if navigationView.endOfRouteView != nil, let show = navigationView.endOfRouteShowConstraint, show.isActive {
+            return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4))
+        }
+        
+        //otherwise, ask the delegate or return .zero
         return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
     }
     
