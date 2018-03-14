@@ -1,6 +1,11 @@
 ## Changes to the Mapbox Navigation SDK for iOS
 
-## v0.15.0 (tbd)
+## Master
+
+#### User Interface
+* Added support for abbreviated top banner instructions. [#1169](https://github.com/mapbox/mapbox-navigation-ios/pull/1169)
+
+## v0.15.0 (March 13, 2018)
 
 #### Breaking changes
 * `NavigationMapViewDelegate` and `RouteMapViewControllerDelegate`: `navigationMapView(_:didTap:)` is now `navigationMapView(_:didSelect:)` [#1063](https://github.com/mapbox/mapbox-navigation-ios/pull/1063)
@@ -145,6 +150,7 @@
 * Exposes `setOverheadCameraView(from:along:for:)` which is useful for fitting the camera to an overhead view for the remaining route coordinates.
 * Changed the heuristics needed for a the users location to unsnap from the route line. [#1110](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 * Changes `routeController(:didDiscardLocation:)` to `routeController(:shouldDiscardLocation:)`. Now if implemented, developers can choose to keep a location when RouteController deems a location unqualified. [#1095](https://github.com/mapbox/mapbox-navigation-ios/pull/1095/)
+* Exposes `RouteStepProgress.intersectionDistances` of each step which can be used to determine the distance between `RouteStepProgress.currentIntersection` and `RouteStepProgress.upcomingIntersection` for unique use cases such as detecting tunnels, tolls, motorway etc. of a given route. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## User Interface
 
@@ -152,6 +158,7 @@
 * The `/` delimiter is longer shown when a shield is shown on either side of the delimiter. This also removes the dependency SDWebImage. [#1046](https://github.com/mapbox/mapbox-navigation-ios/pull/1046)
 * Exposes constants used for styling the route line. [#1124](https://github.com/mapbox/mapbox-navigation-ios/pull/1124/)
 * Exposes `update(for:)` on `InstructionBannerView`. This is helpful for developers creating a custom user interface. [#1085](https://github.com/mapbox/mapbox-navigation-ios/pull/1085/)
+* Updates to set current `NavigationViewController.styleManager.applyStyle(type:)`  to `.nightStyle` when the current step intersection contains a tunnel. Also, we reset the step style when we advance to the next intersection and the upcoming intersection doesn't contain a tunnel. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## Voice Guidance
 
