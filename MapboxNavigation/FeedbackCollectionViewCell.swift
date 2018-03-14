@@ -11,22 +11,33 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     }
     
     lazy var imageView: UIImageView = {
-        let view = UIImageView()
-        let width = view.widthAnchor.constraint(equalToConstant: Constants.imageSize.width)
-        let height = view.heightAnchor.constraint(equalToConstant: Constants.imageSize.height)
-        NSLayoutConstraint.activate([width, height])
+        let view: UIImageView = .forAutoLayout()
         return view
     }()
     
-    lazy var titleLabel: UILabel = UILabel()
-    lazy var circleView: UIView = UIView()
+    lazy var titleLabel: UILabel = {
+        let title: UILabel = .forAutoLayout()
+        title.numberOfLines = 2
+        title.textAlignment = .center
+        title.font = .systemFont(ofSize: 18.0)
+        return title
+    }()
+    lazy var circleView: UIView = .forAutoLayout()
+    
+    lazy var circleViewWidthConstraint = {
+        return circleView.widthAnchor.constraint(equalToConstant: Constants.imageSize.width)
+    }()
+    
+    lazy var circleViewHeightConstraint = {
+        return circleView.heightAnchor.constraint(equalToConstant: Constants.imageSize.height)
+    }()
     
     lazy var circleViewTopConstraint: NSLayoutConstraint = {
-        return circleView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor)
+        return circleView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor)
     }()
     
     lazy var circleViewCenterConstraint: NSLayoutConstraint = {
-        return circleView.centerXAnchor.constraint(equalTo: centerXAnchor)
+        return circleView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
     }()
     
     lazy var imageViewCenterXConstraint: NSLayoutConstraint = {
@@ -42,11 +53,11 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     }()
     
     lazy var titleLabelCenterConstraint: NSLayoutConstraint = {
-        return titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
+        return titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
     }()
     
     lazy var titleLabelLeadingConstraint: NSLayoutConstraint = {
-        return titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor)
+        return titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor)
     }()
     
     lazy var titleLabelTrailingConstraint: NSLayoutConstraint = {
@@ -98,11 +109,13 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
     }
     
     func setupViews() {
-        let children = [imageView, circleView, titleLabel]
-        children.forEach(addSubview(_:))
+        circleView.addSubview(imageView)
+        [circleView, titleLabel].forEach(contentView.addSubview(_:))
     }
     func setupConstraints() {
-        let constraints = [circleViewTopConstraint,
+        let constraints = [circleViewWidthConstraint,
+                           circleViewHeightConstraint,
+                           circleViewTopConstraint,
                            circleViewCenterConstraint,
                            imageViewCenterXConstraint,
                            imageViewCenterYConstraint,

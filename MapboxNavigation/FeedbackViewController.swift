@@ -28,6 +28,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     var sections = [FeedbackSection]()
     var activeFeedbackItem: FeedbackItem?
     
+    static let sceneTitle = NSLocalizedString("Report Problem", comment: "FeedbackViewController Title")
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
     static let verticalCellPadding: CGFloat = 20.0
@@ -37,6 +38,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     lazy var collectionView: UICollectionView = {
         let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
         view.delegate = self
         view.dataSource = self
         view.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier)
@@ -45,11 +47,16 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     lazy var reportIssueLabel: UILabel = {
         let label: UILabel = .forAutoLayout()
+        label.textAlignment = .center
+        label.text = FeedbackViewController.sceneTitle
         return label
     }()
     
     lazy var flowLayout: UICollectionViewFlowLayout = {
-       let layout = UICollectionViewFlowLayout()
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 0.0
+        layout.minimumLineSpacing = 0.0
+        //        layout.estimatedItemSize = CGSize(width: 125, height: 145)
         return layout
     }()
     
@@ -74,7 +81,9 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         super.viewDidLoad()
         setupViews()
         setupConstraints()
+        view.backgroundColor = .white
         view.layoutIfNeeded()
+        collectionView.reloadData()
         //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
         flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
@@ -138,19 +147,22 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     }
     
     private func setupConstraints() {
+        let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
         let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: 30.0)
         let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        let collectionBarSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
+        let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
         let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: progressBar.topAnchor)
         let barHeight = progressBar.heightAnchor.constraint(equalToConstant: 6.0)
         let barLeading = progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let barTrailing = progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let barBottom = progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
         
-        let constraints = [labelHeight, labelLeading, labelTrailing,
-                           collectionBarSpacing, collectionLeading, collectionTrailing,
-                           barHeight, barLeading, barTrailing]
+        let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
+                           collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing,
+                           barHeight, barLeading, barTrailing, barBottom]
         NSLayoutConstraint.activate(constraints)
     }
 }
