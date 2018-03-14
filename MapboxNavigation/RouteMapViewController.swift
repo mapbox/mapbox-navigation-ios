@@ -664,7 +664,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
         
         //otherwise, ask the delegate or return .zero
-        return self.delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
+        return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
     }
     
     /**
