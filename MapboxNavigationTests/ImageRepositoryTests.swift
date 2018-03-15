@@ -6,7 +6,7 @@ class ImageRepositoryTests: XCTestCase {
     lazy var repository: ImageRepository = {
         let repo = ImageRepository.shared
         let config = URLSessionConfiguration.default
-        config.protocolClasses = [TestImageLoadingURLProtocol.self]
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
         repo.sessionConfiguration = config
 
         return repo
@@ -18,8 +18,8 @@ class ImageRepositoryTests: XCTestCase {
         super.setUp()
         self.continueAfterFailure = false
 
-        URLProtocol.registerClass(TestImageLoadingURLProtocol.self)
-        TestImageLoadingURLProtocol.reset()
+        URLProtocol.registerClass(ImageLoadingURLProtocolSpy.self)
+        ImageLoadingURLProtocolSpy.reset()
 
         let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
         repository.resetImageCache {
@@ -32,7 +32,7 @@ class ImageRepositoryTests: XCTestCase {
         let imageName = "1.png"
         let fakeURL = URL(string: "http://an.image.url/\(imageName)")!
 
-        TestImageLoadingURLProtocol.registerData(UIImagePNGRepresentation(ShieldImage.i280.image)!, forURL: fakeURL)
+        ImageLoadingURLProtocolSpy.registerData(UIImagePNGRepresentation(ShieldImage.i280.image)!, forURL: fakeURL)
         XCTAssertNil(repository.cachedImageForKey(imageName))
 
         var imageReturned: UIImage? = nil
@@ -64,12 +64,12 @@ class ImageRepositoryTests: XCTestCase {
         }
         wait(for: [asyncExpectation], timeout: asyncTimeout)
 
-        XCTAssertNil(TestImageLoadingURLProtocol.pastRequestForURL(fakeURL))
+        XCTAssertNil(ImageLoadingURLProtocolSpy.pastRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
     }
 
     override func tearDown() {
-        URLProtocol.unregisterClass(TestImageLoadingURLProtocol.self)
+        URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
         super.tearDown()
     }
 }

@@ -1,7 +1,10 @@
 import UIKit
 import XCTest
 
-class TestImageLoadingURLProtocol: URLProtocol {
+/**
+ * This class stubs out the URL loading for any request url registered in `registerData(_, forURL:)` and records requests for a given URL for inspection. Note that unstubbed URLs will continue to load as normal.
+ */
+class ImageLoadingURLProtocolSpy: URLProtocol {
 
     private static var responseData: [URL: Data] = [:]
     private static var activeRequests: [URL: URLRequest] = [:]
@@ -31,16 +34,16 @@ class TestImageLoadingURLProtocol: URLProtocol {
         }
 
         // retrieve fake response (image) for request; ensure it is an image
-        guard let data = TestImageLoadingURLProtocol.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
+        guard let data = ImageLoadingURLProtocolSpy.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
             XCTFail("No valid image data found for url: \(url)")
             return
         }
 
         // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
-        if TestImageLoadingURLProtocol.hasActiveRequestForURL(url) {
+        if ImageLoadingURLProtocolSpy.hasActiveRequestForURL(url) {
             XCTFail("There should only be one request in flight at a time per resource")
         } else {
-            TestImageLoadingURLProtocol.activeRequests[url] = request
+            ImageLoadingURLProtocolSpy.activeRequests[url] = request
         }
 
         // send an NSHTTPURLResponse to the client
@@ -51,24 +54,36 @@ class TestImageLoadingURLProtocol: URLProtocol {
     }
 
     override func stopLoading() {
-        TestImageLoadingURLProtocol.pastRequests[request.url!] = TestImageLoadingURLProtocol.activeRequests[request.url!]
-        TestImageLoadingURLProtocol.activeRequests[request.url!] = nil
+        ImageLoadingURLProtocolSpy.pastRequests[request.url!] = ImageLoadingURLProtocolSpy.activeRequests[request.url!]
+        ImageLoadingURLProtocolSpy.activeRequests[request.url!] = nil
     }
 
+    /**
+     * Registers data for a given URL
+     */
     class func registerData(_ data: Data, forURL url: URL) {
         responseData[url] = data
     }
 
+    /**
+     * Reset stubbed data, active and past requests
+     */
     class func reset() {
         responseData = [:]
         activeRequests = [:]
         pastRequests = [:]
     }
 
+    /**
+     * Indicates whether a request for the given URL is in progress
+     */
     class func hasActiveRequestForURL(_ url: URL) -> Bool {
         return activeRequests.keys.contains(url)
     }
 
+    /**
+     * Returns the most recently completed request for the given URL
+     */
     class func pastRequestForURL(_ url: URL) -> URLRequest? {
         return pastRequests[url]
     }

@@ -1,9 +1,12 @@
 import Foundation
 @testable import MapboxNavigation
 
-class TestImageDownloadOperation: Operation, ImageDownload {
+/**
+ * This class can be used as a replacement for the `ImageDownloader`'s default download operation class, for spying on url download requests as well as returning canned responses ad hoc.
+ */
+class ImageDownloadOperationSpy: Operation, ImageDownload {
 
-    private static var operations: [URL: TestImageDownloadOperation] = [:]
+    private static var operations: [URL: ImageDownloadOperationSpy] = [:]
 
     private(set) var request: URLRequest?
     weak private var session: URLSession?
@@ -16,14 +19,17 @@ class TestImageDownloadOperation: Operation, ImageDownload {
 
         super.init()
 
-        TestImageDownloadOperation.operations[request.url!] = self
+        ImageDownloadOperationSpy.operations[request.url!] = self
     }
 
     static func reset() {
         operations.removeAll()
     }
 
-    static func operationForURL(_ URL: URL) -> TestImageDownloadOperation? {
+    /**
+     * Retrieve an operation spy instance for the given URL, which can then be used to inspect and/or execute completion handlers
+     */
+    static func operationForURL(_ URL: URL) -> ImageDownloadOperationSpy? {
         return operations[URL]
     }
 
