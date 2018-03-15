@@ -20,23 +20,6 @@ class ImageCacheTests: XCTestCase {
     }
 
     let imageKey = "imageKey"
-    let dataKey = "dataKey"
-
-    private func storeDataInMemory() {
-        let expectation = self.expectation(description: "Storing data in memory cache")
-        cache.store(UIImagePNGRepresentation(shieldImage)!, forKey: dataKey, toDisk: false) {
-            expectation.fulfill()
-        }
-        self.wait(for: [expectation], timeout: asyncTimeout)
-    }
-
-    private func storeDataOnDisk() {
-        let expectation = self.expectation(description: "Storing data in disk cache")
-        cache.store(UIImagePNGRepresentation(shieldImage)!, forKey: dataKey, toDisk: true) {
-            expectation.fulfill()
-        }
-        self.wait(for: [expectation], timeout: asyncTimeout)
-    }
 
     private func storeImageInMemory() {
         let expectation = self.expectation(description: "Storing image in memory cache")
@@ -87,13 +70,6 @@ class ImageCacheTests: XCTestCase {
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
     }
 
-    func testStoringDataInMemoryOnly() {
-        storeDataInMemory()
-
-        let returnedData = cache.dataFromCache(forKey: dataKey)
-        XCTAssertNotNil(returnedData)
-    }
-
     func testStoringImageOnDisk() {
         storeImageOnDisk()
 
@@ -105,18 +81,6 @@ class ImageCacheTests: XCTestCase {
         returnedImage = cache.imageFromCache(forKey: imageKey)
         XCTAssertNotNil(returnedImage)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
-    }
-
-    func testStoringDataOnDisk() {
-        storeDataOnDisk()
-
-        var returnedData = cache.dataFromCache(forKey: dataKey)
-        XCTAssertNotNil(returnedData)
-
-        cache.clearMemory()
-
-        returnedData = cache.dataFromCache(forKey: dataKey)
-        XCTAssertNotNil(returnedData)
     }
 
     func testResettingCache() {
