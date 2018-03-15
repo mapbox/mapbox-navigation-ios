@@ -30,7 +30,7 @@ class ImageCache: BimodalImageCache {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: NoArgBlock?) {
+    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         let key = cacheKeyForKey(key)
 
         storeImageInMemoryCache(image, forKey: key)
@@ -99,7 +99,7 @@ class ImageCache: BimodalImageCache {
         memoryCache.removeAllObjects()
     }
 
-    func clearDisk(completion: NoArgBlock?) {
+    func clearDisk(completion: CompletionHandler?) {
         guard let fileManager = fileManager else {
             return
         }
