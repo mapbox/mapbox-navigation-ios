@@ -228,8 +228,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         exampleMode = .default
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, styles: [NightStyle()], locationManager: navigationLocationManager())
         navigationViewController.delegate = self
+        navigationViewController.automaticallyAdjustsStyleForTimeOfDay = false
 
         presentAndRemoveMapview(navigationViewController)
     }
