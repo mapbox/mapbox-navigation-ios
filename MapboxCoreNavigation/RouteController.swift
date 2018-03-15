@@ -233,6 +233,9 @@ open class RouteController: NSObject {
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
+    /**
+     The location manager dedicated to dead reckoning simulated navigation.
+     */
     var animatedLocationManager: SimulatedLocationManager?
     
     /**
@@ -599,7 +602,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     fileprivate func checkForTunnel(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
-        guard !location.isQualified, let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else { return }
+        guard let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else { return }
         
         if let classes = currentIntersection.outletRoadClasses {
             if classes.contains(.tunnel) && !location.isQualified {
