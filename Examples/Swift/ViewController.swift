@@ -281,7 +281,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     func navigationLocationManager() -> NavigationLocationManager {
         guard let route = currentRoute else { return NavigationLocationManager() }
-        return simulationButton.isSelected ? SimulatedLocationManager(route: route) : NavigationLocationManager()
+        if simulationButton.isSelected {
+            let manager = SimulatedLocationManager(route: route)
+            manager.speedMultiplier = 3
+            return manager
+        }
+        return NavigationLocationManager()
     }
 
     // MARK: Navigation with multiple waypoints
