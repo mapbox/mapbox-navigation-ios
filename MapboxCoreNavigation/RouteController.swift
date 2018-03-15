@@ -574,16 +574,8 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
             
-            if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
-                let classes = currentIntersection.outletRoadClasses {
-                if classes.contains(.tunnel) {
-                    beginTunnelAnimation(for: manager,
-                               routeProgress: routeProgress,
-                            distanceTraveled: distanceTraveled)
-                } else {
-                    suspendTunnelAnimation(for: manager)
-                }
-            }
+            // Check for a tunnel intersection at the current step whenever the route progresses.
+            checkForTunnel(at: location, for: manager, distanceTraveled: distanceTraveled)
         }
         
         updateDistanceToIntersection(from: location)
@@ -605,13 +597,23 @@ extension RouteController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
     }
+    
+    fileprivate func checkForTunnel(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
+        guard !location.isQualified, let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else { return }
+        
+        if let classes = currentIntersection.outletRoadClasses {
+            if classes.contains(.tunnel) && !location.isQualified {
+                beginTunnelAnimation(for: manager,
+                                     routeProgress: routeProgress,
+                                     distanceTraveled: distanceTraveled)
+            } else {
+                suspendTunnelAnimation(for: manager)
+            }
+        }
+    }
 
-    func beginTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
+    fileprivate func beginTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
         guard !(manager is SimulatedLocationManager), animatedLocationManager == nil else { return }
-
-        animatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
-        animatedLocationManager?.delegate = self
-        animatedLocationManager?.routeProgress = routeProgress
         
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
@@ -622,12 +624,20 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         dispatchGroup.notify(queue:.main) {
+            self.animatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
+            self.animatedLocationManager?.delegate = self
+            self.animatedLocationManager?.routeProgress = routeProgress
+
             self.animatedLocationManager?.startUpdatingLocation()
             self.animatedLocationManager?.startUpdatingLocation()
+            
+            if let lastKnownLocation = self.animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
+                self.rawLocation = lastKnownLocation
+            }
         }
     }
     
-    func suspendTunnelAnimation(for manager: CLLocationManager) {
+    fileprivate func suspendTunnelAnimation(for manager: CLLocationManager) {
         guard !(manager is SimulatedLocationManager), animatedLocationManager != nil else { return }
         
         if let lastKnownLocation = animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
@@ -649,7 +659,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
+    fileprivate func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
         let intersectionDistances = currentStepProgress.intersectionDistances
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
         currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
