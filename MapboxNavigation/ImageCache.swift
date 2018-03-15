@@ -1,8 +1,8 @@
 import Foundation
 
-class ImageCache: BimodalImageCache {
+class ImageCache: BimodalImageCache, BimodalDataCache {
 
-    let memoryCache: NSCache<NSString, UIImage>
+    let memoryCache: NSCache<NSString, NSData>
     let diskCacheURL: URL = {
         let fileManager = FileManager.default
         let basePath = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first!
@@ -14,8 +14,8 @@ class ImageCache: BimodalImageCache {
     var fileManager: FileManager?
 
     init() {
-        memoryCache = NSCache<NSString, UIImage>()
-        memoryCache.name = "In-Memory Image Cache"
+        memoryCache = NSCache<NSString, NSData>()
+        memoryCache.name = "In-Memory Cache"
 
         diskAccessQueue.sync {
             fileManager = FileManager()
@@ -30,11 +30,9 @@ class ImageCache: BimodalImageCache {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
-        let key = cacheKeyForKey(key)
+    // MARK: Data cache
 
-        storeImageInMemoryCache(image, forKey: key)
-
+    func store(_ data: Data, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         let dispatchCompletion = {
             if let completion = completion {
                 DispatchQueue.main.async {
@@ -42,7 +40,7 @@ class ImageCache: BimodalImageCache {
                 }
             }
         }
-
+        storeDataInMemoryCache(data, forKey: key)
         if toDisk == true {
             guard let fileManager = fileManager else {
                 dispatchCompletion()
@@ -51,12 +49,10 @@ class ImageCache: BimodalImageCache {
             let cacheURL = diskCacheURL
             diskAccessQueue.async {
                 self.createCacheDirIfNeeded(cacheURL, fileManager: fileManager)
-
-                let data = UIImagePNGRepresentation(image)
                 let cacheURL = self.cacheURLWithKey(key)
 
                 do {
-                    try data?.write(to: cacheURL)
+                    try data.write(to: cacheURL)
                 } catch {
                     NSLog("================> Failed to write data to URL \(cacheURL)")
                 }
@@ -67,18 +63,54 @@ class ImageCache: BimodalImageCache {
         }
     }
 
-    private func storeImageInMemoryCache(_ image: UIImage, forKey key: String) {
-        memoryCache.setObject(image, forKey: key as NSString, cost: cacheCostForImage(image))
+    func dataFromCache(forKey key: String?) -> Data? {
+        if let data = dataFromMemoryCache(forKey: key) {
+            return data
+        }
+
+        if let data = dataFromDiskCache(forKey: key) {
+            //TODO: add test
+            storeDataInMemoryCache(data, forKey: key!)
+            return data
+        }
+
+        return nil
     }
 
-    private func cachePathWithKey(_ key: String) -> String {
-        let cacheKey = cacheKeyForKey(key)
-        return cacheURLWithKey(cacheKey).absoluteString
+    private func storeDataInMemoryCache(_ data: Data, forKey key: String) {
+        memoryCache.setObject(data as NSData, forKey: key as NSString)
     }
 
-    private func cacheURLWithKey(_ key: String) -> URL {
-        let cacheKey = cacheKeyForKey(key)
-        return diskCacheURL.appendingPathComponent(cacheKey)
+    private func dataFromMemoryCache(forKey key: String?) -> Data? {
+        guard let key = key, let cacheKey = cacheKeyForKey(key) as NSString! else {
+            return nil
+        }
+        if let data = memoryCache.object(forKey: cacheKey) {
+            return data as Data
+        }
+        return nil
+    }
+
+    private func dataFromDiskCache(forKey key: String?) -> Data? {
+        guard let key = key else {
+            return nil
+        }
+        do {
+            return try Data.init(contentsOf: cacheURLWithKey(key))
+        } catch {
+            NSLog("No viable data in disk cache for URL: %@", key)
+            return nil
+        }
+    }
+
+    // MARK: Image cache
+
+    func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
+        let key = cacheKeyForKey(key)
+        storeImageInMemoryCache(image, forKey: key)
+        if let data = UIImagePNGRepresentation(image) {
+            store(data, forKey: key, toDisk: toDisk, completion: completion)
+        }
     }
 
     func imageFromCache(forKey key: String?) -> UIImage? {
@@ -93,6 +125,44 @@ class ImageCache: BimodalImageCache {
         }
 
         return nil
+    }
+
+    private func storeImageInMemoryCache(_ image: UIImage, forKey key: String) {
+        let data = UIImagePNGRepresentation(image)! as NSData
+        memoryCache.setObject(data, forKey: key as NSString)
+    }
+
+    private func imageFromMemoryCache(forKey key: String?) -> UIImage? {
+        guard let key = key, let cacheKey = cacheKeyForKey(key) as NSString! else {
+            return nil
+        }
+        if let data = memoryCache.object(forKey: cacheKey) {
+            return UIImage.init(data: data as Data, scale: UIScreen.main.scale)
+        }
+        return nil
+    }
+
+    private func imageFromDiskCache(forKey key: String?) -> UIImage? {
+        if let data = dataFromDiskCache(forKey: key) {
+            return UIImage(data: data, scale: UIScreen.main.scale)
+        }
+        return nil
+    }
+
+    private func cacheCostForImage(_ image: UIImage) -> Int {
+        return Int(image.size.height * image.size.width * image.scale * image.scale);
+    }
+
+    // MARK: Common
+
+    private func cachePathWithKey(_ key: String) -> String {
+        let cacheKey = cacheKeyForKey(key)
+        return cacheURLWithKey(cacheKey).absoluteString
+    }
+
+    private func cacheURLWithKey(_ key: String) -> URL {
+        let cacheKey = cacheKeyForKey(key)
+        return diskCacheURL.appendingPathComponent(cacheKey)
     }
 
     func clearMemory() {
@@ -126,30 +196,6 @@ class ImageCache: BimodalImageCache {
             return keyAsURL.lastPathComponent
         }
         return key
-    }
-
-    private func imageFromMemoryCache(forKey key: String?) -> UIImage? {
-        guard let key = key, let cacheKey = cacheKeyForKey(key) as NSString! else {
-            return nil
-        }
-        return memoryCache.object(forKey: cacheKey)
-    }
-
-    private func imageFromDiskCache(forKey key: String?) -> UIImage? {
-        guard let key = key else {
-            return nil
-        }
-        do {
-            let data = try Data.init(contentsOf: cacheURLWithKey(key))
-            return UIImage(data: data, scale: UIScreen.main.scale)
-        } catch {
-            NSLog("================> Failed to load data at URL: \(cacheURLWithKey(key))")
-            return nil
-        }
-    }
-
-    private func cacheCostForImage(_ image: UIImage) -> Int {
-        return Int(image.size.height * image.size.width * image.scale * image.scale);
     }
 
     private func createCacheDirIfNeeded(_ url: URL, fileManager: FileManager) {
