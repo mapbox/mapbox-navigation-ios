@@ -4,6 +4,7 @@
 
 #### User Interface
 * Added support for abbreviated top banner instructions. [#1169](https://github.com/mapbox/mapbox-navigation-ios/pull/1169)
+* Reveal the steps list by swiping down on the top banner. [#1150](https://github.com/mapbox/mapbox-navigation-ios/pull/1150)
 
 ## v0.15.0 (March 13, 2018)
 

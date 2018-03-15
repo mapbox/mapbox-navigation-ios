@@ -56,6 +56,8 @@ extension BaseInstructionsBannerView {
         self.separatorView = separatorView
         
         addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
+
+        addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.draggedInstructionsBanner(_:))))
     }
     
     func setupLayout() {
