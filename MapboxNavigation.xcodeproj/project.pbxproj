@@ -189,6 +189,10 @@
 		DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
+		DAA820372059DAA200F7F067 /* Shanghai.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA820362059D9CB00F7F067 /* Shanghai.gpx */; };
+		DAA820382059DAA400F7F067 /* Tel Aviv.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA820342059C8B000F7F067 /* Tel Aviv.gpx */; };
+		DAA820392059DAA400F7F067 /* Montréal.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA820352059D26600F7F067 /* Montréal.gpx */; };
+		DAA8203B2059E00B00F7F067 /* Moscow.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA8203A2059E00B00F7F067 /* Moscow.gpx */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
 		DADAD828203504C6002E25CA /* MBNavigationSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD826203504C6002E25CA /* MBNavigationSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -570,6 +574,10 @@
 		DAA292FF1F16CC2200D94613 /* lt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAA293011F16DA0C00D94613 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
 		DAA293021F16DA1300D94613 /* es */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		DAA820342059C8B000F7F067 /* Tel Aviv.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Tel Aviv.gpx"; sourceTree = "<group>"; };
+		DAA820352059D26600F7F067 /* Montréal.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Montréal.gpx"; sourceTree = "<group>"; };
+		DAA820362059D9CB00F7F067 /* Shanghai.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Shanghai.gpx; sourceTree = "<group>"; };
+		DAA8203A2059E00B00F7F067 /* Moscow.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Moscow.gpx; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -697,6 +705,10 @@
 				35002D5F1E5F6ADB0090E733 /* Assets.xcassets */,
 				35002D601E5F6ADB0090E733 /* Base.lproj */,
 				35002D5D1E5F6ABB0090E733 /* Info.plist */,
+				DAA820342059C8B000F7F067 /* Tel Aviv.gpx */,
+				DAA820352059D26600F7F067 /* Montréal.gpx */,
+				DAA820362059D9CB00F7F067 /* Shanghai.gpx */,
+				DAA8203A2059E00B00F7F067 /* Moscow.gpx */,
 			);
 			name = "Supporting files";
 			sourceTree = "<group>";
@@ -1355,9 +1367,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAA820382059DAA400F7F067 /* Tel Aviv.gpx in Resources */,
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */,
+				DAA8203B2059E00B00F7F067 /* Moscow.gpx in Resources */,
+				DAA820372059DAA200F7F067 /* Shanghai.gpx in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
+				DAA820392059DAA400F7F067 /* Montréal.gpx in Resources */,
 				35002D621E5F6ADB0090E733 /* Base.lproj in Resources */,
 				355D20DC1EF30A6D0012B1E0 /* tunnel.route in Resources */,
 			);
