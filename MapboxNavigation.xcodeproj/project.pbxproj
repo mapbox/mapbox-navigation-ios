@@ -14,6 +14,7 @@
 		1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1662244A2029059C00EA4824 /* ImageCacheTests.swift */; };
 		16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A509D4202A87B20011D788 /* ImageDownloaderTests.swift */; };
 		16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A509D6202BC0CA0011D788 /* ImageDownload.swift */; };
+		16B63DCD205C8EEF002D56D4 /* route-with-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = 16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */; };
 		16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */; };
 		16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
@@ -334,6 +335,7 @@
 		1662244A2029059C00EA4824 /* ImageCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheTests.swift; sourceTree = "<group>"; };
 		16A509D4202A87B20011D788 /* ImageDownloaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloaderTests.swift; sourceTree = "<group>"; };
 		16A509D6202BC0CA0011D788 /* ImageDownload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownload.swift; sourceTree = "<group>"; };
+		16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-instructions.json"; sourceTree = "<group>"; };
 		16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloadOperationSpy.swift; sourceTree = "<group>"; };
 		16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxVoiceControllerTests.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -815,8 +817,9 @@
 				352690481ECC843700E387BD /* Fixture.swift */,
 				355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */,
 				355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */,
-				35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */,
 				351030101F54B72000E3B7E7 /* route-for-lane-testing.json */,
+				16B63DCC205C8EEF002D56D4 /* route-with-instructions.json */,
+				35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */,
 				3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */,
 			);
 			path = Fixtures;
@@ -1405,6 +1408,7 @@
 				355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */,
 				355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */,
 				3540514D1F73F3BB00ED572D /* route-with-straight-roundabout.json in Resources */,
+				16B63DCD205C8EEF002D56D4 /* route-with-instructions.json in Resources */,
 				35DC9D8F1F4321CC001ECD64 /* route-with-lanes.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

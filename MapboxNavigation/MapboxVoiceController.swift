@@ -39,11 +39,12 @@ open class MapboxVoiceController: RouteVoiceController {
     @objc open override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         locale = routeProgresss.route.routeOptions.locale
-        
-        for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
-            let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
+        let currentLegProgress: RouteLegProgress = routeProgresss.currentLegProgress
 
-            guard adjustedStepIndex < routeProgresss.currentLegProgress.stepIndex + stepsAheadToCache else {
+        for (stepIndex, step) in currentLegProgress.leg.steps.suffix(from: currentLegProgress.stepIndex).enumerated() {
+            let adjustedStepIndex = stepIndex + currentLegProgress.stepIndex
+
+            guard adjustedStepIndex < currentLegProgress.stepIndex + stepsAheadToCache else {
                 continue
             }
 
