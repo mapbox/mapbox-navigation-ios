@@ -151,7 +151,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     @objc func didReroute(notification: NSNotification) {
         // Play reroute sound when a faster route is found
-        if notification.userInfo?[RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
+        if notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
