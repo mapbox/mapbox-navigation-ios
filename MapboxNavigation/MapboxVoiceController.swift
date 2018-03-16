@@ -14,7 +14,7 @@ open class MapboxVoiceController: RouteVoiceController {
     /**
      Number of seconds a request can wait before it is canceled and the default speech synthesizer speaks the instruction.
      */
-    @objc public var timeoutIntervalForRequest:TimeInterval = 5
+    @objc public var timeoutIntervalForRequest: TimeInterval = 5
     
     /**
      Number of steps ahead of the current step to cache spoken instructions.
@@ -22,27 +22,20 @@ open class MapboxVoiceController: RouteVoiceController {
     @objc public var stepsAheadToCache: Int = 3
     
     var audioTask: URLSessionDataTask?
-    var spokenInstructionsForRoute = NSCache<NSString, NSData>()
+    var spokenInstructionsForRoute = NSCache<NSString, NSData>() //
     
     var speech: SpeechSynthesizer
     var locale: Locale?
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
-    
-    @objc public init(accessToken: String? = nil, host: String? = nil) {
-        if let accessToken = accessToken, let host = host {
-            speech = SpeechSynthesizer(accessToken: accessToken, host: host)
-        } else if let accessToken = accessToken {
-            speech = SpeechSynthesizer(accessToken: accessToken)
-        } else {
-            speech = SpeechSynthesizer.shared
-        }
-        
+
+    @objc public init(speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil)) {
+        speech = speechClient
         spokenInstructionsForRoute.countLimit = 200
-        
+
         super.init()
     }
-    
+
     @objc open override func didPassSpokenInstructionPoint(notification: NSNotification) {
         let routeProgresss = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         locale = routeProgresss.route.routeOptions.locale
