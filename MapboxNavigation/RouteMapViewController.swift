@@ -324,7 +324,7 @@ class RouteMapViewController: UIViewController {
             }
         }
         
-        if notification.userInfo![RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
+        if notification.userInfo![RouteControllerNotificationUserInfoKey.isProactiveKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             showStatus(title: title, withSpinner: true, for: 3)
         }
