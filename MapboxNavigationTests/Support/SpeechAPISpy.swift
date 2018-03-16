@@ -2,7 +2,9 @@ import Foundation
 import MapboxSpeech
 
 class DummyURLSessionDataTask: URLSessionDataTask {
-
+    override func resume() {
+        //
+    }
 }
 
 /**
@@ -10,7 +12,17 @@ class DummyURLSessionDataTask: URLSessionDataTask {
  */
 class SpeechAPISpy: SpeechSynthesizer {
 
+    typealias AudioDataCall = (MapboxSpeech.SpeechOptions, SpeechSynthesizer.CompletionHandler)
+
+    public var audioDataCalls: [AudioDataCall] = []
+
     override func audioData(with options: MapboxSpeech.SpeechOptions, completionHandler: @escaping MapboxSpeech.SpeechSynthesizer.CompletionHandler) -> URLSessionDataTask {
+        let call = (options, completionHandler)
+        audioDataCalls.append(call)
         return DummyURLSessionDataTask()
+    }
+
+    public func reset() {
+        audioDataCalls.removeAll()
     }
 }
