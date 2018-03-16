@@ -42,20 +42,27 @@ open class MapboxVoiceController: RouteVoiceController {
         
         for (stepIndex, step) in routeProgresss.currentLegProgress.leg.steps.suffix(from: routeProgresss.currentLegProgress.stepIndex).enumerated() {
             let adjustedStepIndex = stepIndex + routeProgresss.currentLegProgress.stepIndex
-            
-            guard adjustedStepIndex < routeProgresss.currentLegProgress.stepIndex + stepsAheadToCache else { continue }
-            guard let instructions = step.instructionsSpokenAlongStep else { continue }
-            
+
+            guard adjustedStepIndex < routeProgresss.currentLegProgress.stepIndex + stepsAheadToCache else {
+                continue
+            }
+
+            guard let instructions = step.instructionsSpokenAlongStep else {
+                continue
+            }
+
             for instruction in instructions {
-                guard spokenInstructionsForRoute.object(forKey: instruction.ssmlText as NSString) == nil else { continue }
-                
-                cacheSpokenInstruction(instruction: instruction)
+                guard !hasCachedSpokenInstructionForKey(instruction.ssmlText) else {
+                    continue
+                }
+
+                downloadAndCacheSpokenInstruction(instruction: instruction)
             }
         }
         
         super.didPassSpokenInstructionPoint(notification: notification)
     }
-    
+
     /**
      Speaks an instruction.
      
@@ -78,15 +85,15 @@ open class MapboxVoiceController: RouteVoiceController {
         
         let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
         lastSpokenInstruction = modifiedInstruction
-        
-        guard spokenInstructionsForRoute.object(forKey: modifiedInstruction.ssmlText as NSString) == nil else {
-            play(spokenInstructionsForRoute.object(forKey: modifiedInstruction.ssmlText as NSString)! as Data)
+
+        if let data = cachedDataForKey(modifiedInstruction.ssmlText) {
+            play(data)
             return
         }
         
-        fetch(instruction: modifiedInstruction)
+        fetchAndSpeak(instruction: modifiedInstruction)
     }
-    
+
     /**
      Speaks an instruction with the built in speech synthesizer.
      
@@ -112,9 +119,10 @@ open class MapboxVoiceController: RouteVoiceController {
     /**
      Fetches and plays an instruction.
      */
-    @objc open func fetch(instruction: SpokenInstruction) {
+    @objc open func fetchAndSpeak(instruction: SpokenInstruction) {
         audioTask?.cancel()
-        let options = SpeechOptions(ssml: instruction.ssmlText)
+        let ssmlText = instruction.ssmlText
+        let options = SpeechOptions(ssml: ssmlText)
         if let locale = locale {
             options.locale = locale
         }
@@ -132,18 +140,18 @@ open class MapboxVoiceController: RouteVoiceController {
                 return
             }
             self.play(data)
-            self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
+            self.cache(data, forKey: ssmlText)
         }
         
         audioTask?.resume()
     }
-    
-    
+
     /**
      Caches an instruction in an in-memory cache.
      */
-    @objc open func cacheSpokenInstruction(instruction: SpokenInstruction) {
-        let options = SpeechOptions(ssml: instruction.ssmlText)
+    @objc open func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction) {
+        let ssmlText = instruction.ssmlText
+        let options = SpeechOptions(ssml: ssmlText)
         if let locale = locale {
             options.locale = locale
         }
@@ -151,13 +159,27 @@ open class MapboxVoiceController: RouteVoiceController {
         if let locale = routeProgress?.route.speechLocale {
             options.locale = locale
         }
-        
+
         speech.audioData(with: options) { (data, error) in
-            guard let data = data else { return }
-            self.spokenInstructionsForRoute.setObject(data as NSData, forKey: instruction.ssmlText as NSString)
+            guard let data = data else {
+                return
+            }
+            self.cache(data, forKey: ssmlText)
         }
     }
-    
+
+    private func cache(_ data: Data, forKey key: String) {
+        self.spokenInstructionsForRoute.setObject(data as NSData, forKey: key as NSString)
+    }
+
+    private func cachedDataForKey(_ key: String) -> Data? {
+        return spokenInstructionsForRoute.object(forKey: key as NSString) as Data?
+    }
+
+    private func hasCachedSpokenInstructionForKey(_ key: String) -> Bool {
+        return cachedDataForKey(key) != nil
+    }
+
     /**
      Plays an audio file.
      */
