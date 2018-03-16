@@ -20,6 +20,7 @@
 		35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6B1E5F6C7F0090E733 /* Base.lproj */; };
 		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
+		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
 		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
@@ -335,6 +336,7 @@
 		35002D6C1E5F6C7F0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D6D1E5F6C7F0090E733 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35002D751E5F6CD30090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
 		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
 		351030101F54B72000E3B7E7 /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
@@ -848,6 +850,7 @@
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
 				355DB5731EFA73410091BFB7 /* Fixtures */,
 				16E3625A2012656C00DF0592 /* Support */,
+				35022319205BC94E00E1449A /* Constants.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -1620,6 +1623,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
+				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
 				1662244720256C0700EA4824 /* TestImageLoadingURLProtocol.swift in Sources */,
 				35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,

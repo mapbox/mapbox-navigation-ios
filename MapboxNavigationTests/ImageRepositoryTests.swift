@@ -32,7 +32,7 @@ class ImageRepositoryTests: XCTestCase {
         let imageName = "1.png"
         let fakeURL = URL(string: "http://an.image.url/\(imageName)")!
 
-        TestImageLoadingURLProtocol.registerData(UIImagePNGRepresentation(shieldImage)!, forURL: fakeURL)
+        TestImageLoadingURLProtocol.registerData(UIImagePNGRepresentation(ShieldImage.i280.image)!, forURL: fakeURL)
         XCTAssertNil(repository.cachedImageForKey(imageName))
 
         var imageReturned: UIImage? = nil
@@ -53,7 +53,7 @@ class ImageRepositoryTests: XCTestCase {
         let imageName = "1.png"
         let fakeURL = URL(string: "http://an.image.url/\(imageName)")!
 
-        repository.storeImage(shieldImage, forKey: imageName, toDisk: false)
+        repository.storeImage(ShieldImage.i280.image, forKey: imageName, toDisk: false)
 
         var imageReturned: UIImage? = nil
         let asyncExpectation = self.expectation(description: "Waiting for image to download")
