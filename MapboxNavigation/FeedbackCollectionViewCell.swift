@@ -10,10 +10,7 @@ class FeedbackCollectionViewCell: UICollectionViewCell {
         static let circleLabelSpacing: CGFloat = 8.0
     }
     
-    lazy var imageView: UIImageView = {
-        let view: UIImageView = .forAutoLayout()
-        return view
-    }()
+    lazy var imageView: UIImageView = .forAutoLayout()
     
     lazy var titleLabel: UILabel = {
         let title: UILabel = .forAutoLayout()
