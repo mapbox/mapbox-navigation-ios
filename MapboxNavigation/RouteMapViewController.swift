@@ -25,7 +25,7 @@ class RouteMapViewController: UIViewController {
     }()
     
     lazy var feedbackViewController: FeedbackViewController = {
-        let controller = FeedbackViewController.loadFromStoryboard()
+        let controller = FeedbackViewController()
         
         controller.sections = [
             [.turnNotAllowed, .closure, .reportTraffic],

@@ -56,7 +56,6 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0.0
         layout.minimumLineSpacing = 0.0
-        //        layout.estimatedItemSize = CGSize(width: 125, height: 145)
         return layout
     }()
     
@@ -70,23 +69,15 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         return fullHeight
     }
     
-    class func loadFromStoryboard() -> FeedbackViewController {
-        let feedbackVC = FeedbackViewController()
-        return feedbackVC
-//        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
-//        return storyboard.instantiateViewController(withIdentifier: "FeedbackViewController") as! FeedbackViewController
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
         setupConstraints()
-        view.backgroundColor = .white
         view.layoutIfNeeded()
-        collectionView.reloadData()
         //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
         flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
+        view.backgroundColor = .white
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
     }
@@ -163,6 +154,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
                            collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing,
                            barHeight, barLeading, barTrailing, barBottom]
+      
         NSLayoutConstraint.activate(constraints)
     }
 }
@@ -201,7 +193,6 @@ extension FeedbackViewController: UICollectionViewDelegate {
 }
 
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = floor(collectionView.bounds.width / 3)
         return CGSize(width: width, height: width + FeedbackViewController.verticalCellPadding)
