@@ -3,21 +3,21 @@ import XCTest
 
 class MapboxVoiceControllerTests: XCTestCase {
 
-    let speechAPIClientSpy: SpeechAPIClientSpy = SpeechAPIClientSpy(accessToken: "deadbeef")
-    var controller = MapboxVoiceController()
+    let speechAPISpy: SpeechAPISpy = SpeechAPISpy(accessToken: "deadbeef")
+    var controller: MapboxVoiceController?
 
     override func setUp() {
         super.setUp()
 
-//        speechAPIClientSpy.reset()
-        controller.speech = speechAPIClientSpy
+        controller = MapboxVoiceController(speechClient: speechAPISpy)
+//        speechAPISpy.reset()
     }
-    
+
     func testControllerPrefersCachedData() {
     }
 
     func testControllerAddsDataToCacheWhenDownloaded() {
 
     }
-    
+
 }
