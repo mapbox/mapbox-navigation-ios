@@ -193,6 +193,7 @@
 		DAA820382059DAA400F7F067 /* Tel Aviv.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA820342059C8B000F7F067 /* Tel Aviv.gpx */; };
 		DAA820392059DAA400F7F067 /* Montréal.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA820352059D26600F7F067 /* Montréal.gpx */; };
 		DAA8203B2059E00B00F7F067 /* Moscow.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA8203A2059E00B00F7F067 /* Moscow.gpx */; };
+		DAA8203D205B4D9000F7F067 /* Springdale, Ohio.gpx in Resources */ = {isa = PBXBuildFile; fileRef = DAA8203C205B4D9000F7F067 /* Springdale, Ohio.gpx */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
 		DADAD828203504C6002E25CA /* MBNavigationSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD826203504C6002E25CA /* MBNavigationSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -578,6 +579,7 @@
 		DAA820352059D26600F7F067 /* Montréal.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Montréal.gpx"; sourceTree = "<group>"; };
 		DAA820362059D9CB00F7F067 /* Shanghai.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Shanghai.gpx; sourceTree = "<group>"; };
 		DAA8203A2059E00B00F7F067 /* Moscow.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Moscow.gpx; sourceTree = "<group>"; };
+		DAA8203C205B4D9000F7F067 /* Springdale, Ohio.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Springdale, Ohio.gpx"; sourceTree = "<group>"; };
 		DAAE5F311EAE4C4700832871 /* Base */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "dc-line.geojson"; sourceTree = "<group>"; };
@@ -709,6 +711,7 @@
 				DAA820352059D26600F7F067 /* Montréal.gpx */,
 				DAA820362059D9CB00F7F067 /* Shanghai.gpx */,
 				DAA8203A2059E00B00F7F067 /* Moscow.gpx */,
+				DAA8203C205B4D9000F7F067 /* Springdale, Ohio.gpx */,
 			);
 			name = "Supporting files";
 			sourceTree = "<group>";
@@ -1370,6 +1373,7 @@
 				DAA820382059DAA400F7F067 /* Tel Aviv.gpx in Resources */,
 				35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */,
 				354D9F891EF2FE900006FAA8 /* tunnel.json in Resources */,
+				DAA8203D205B4D9000F7F067 /* Springdale, Ohio.gpx in Resources */,
 				DAA8203B2059E00B00F7F067 /* Moscow.gpx in Resources */,
 				DAA820372059DAA200F7F067 /* Shanghai.gpx in Resources */,
 				35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */,
