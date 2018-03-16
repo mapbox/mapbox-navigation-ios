@@ -7,8 +7,7 @@ Bug reports and feature requests are more than welcome, but please consider the 
 Before reporting a bug here, please determine whether the issue lies with the navigation SDK itself or with another Mapbox product:
 
 * For general questions and troubleshooting help, please contact the [Mapbox support](https://www.mapbox.com/contact/support/) team.
-* Report problems with the map’s contents using the [Mapbox Feedback](https://www.mapbox.com/map-feedback/) tool.
-* Report routing problems, especially problems specific to a particular route or region, using the [Mapbox Directions Feedback](https://www.mapbox.com/directions-feedback/) tool.
+* Report problems with the map’s contents or routing problems, especially problems specific to a particular route or region, using the [Mapbox Feedback](https://www.mapbox.com/feedback/) tool.
 * Report problems in guidance instructions in the [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions/) repository.
 
 When reporting a bug in the navigation SDK itself, please indicate:
