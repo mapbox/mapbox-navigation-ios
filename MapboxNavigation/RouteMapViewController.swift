@@ -426,7 +426,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
             strongSelf.delegate?.mapViewController(strongSelf, didSend: identifier, feedbackType: item.feedbackType)
             strongSelf.routeController.updateFeedback(feedbackId: identifier, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
-                DialogViewController.present(on: parent)
+                DialogViewController().present(on: parent)
             }
         }
     }

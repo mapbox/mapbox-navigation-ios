@@ -27,70 +27,6 @@
             </objects>
             <point key="canvasLocation" x="3214" y="126"/>
         </scene>
-        <!--Dialog View Controller-->
-        <scene sceneID="w13-5f-0a6">
-            <objects>
-                <viewController storyboardIdentifier="DialogViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9cO-wr-vPJ" customClass="DialogViewController" customModule="MapboxNavigation" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="gCR-ym-GKC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="500"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BRI-Re-dHf">
-                                <rect key="frame" x="57" y="180" width="260" height="140"/>
-                                <subviews>
-                                    <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9ao-4M-QVt">
-                                        <rect key="frame" x="30" y="36" width="200" height="68.5"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report_checkmark" translatesAutoresizingMaskIntoConstraints="NO" id="ioV-Hk-dG7">
-                                                <rect key="frame" x="79" y="0.0" width="42" height="28"/>
-                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thank you for your report!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="upm-fg-ffn">
-                                                <rect key="frame" x="0.0" y="48" width="200" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                </subviews>
-                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <constraints>
-                                    <constraint firstItem="9ao-4M-QVt" firstAttribute="centerY" secondItem="BRI-Re-dHf" secondAttribute="centerY" id="aQ6-6f-JZu"/>
-                                    <constraint firstAttribute="height" constant="140" id="ddP-m6-48l"/>
-                                    <constraint firstItem="9ao-4M-QVt" firstAttribute="centerX" secondItem="BRI-Re-dHf" secondAttribute="centerX" id="kxU-Ak-QgF"/>
-                                    <constraint firstAttribute="width" constant="260" id="ukH-l5-cNy"/>
-                                </constraints>
-                            </view>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstItem="BRI-Re-dHf" firstAttribute="centerX" secondItem="J1A-Dh-s7z" secondAttribute="centerX" id="33K-7A-cS6"/>
-                            <constraint firstItem="BRI-Re-dHf" firstAttribute="centerY" secondItem="gCR-ym-GKC" secondAttribute="centerY" id="eTM-ju-EDF"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="J1A-Dh-s7z"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="BfJ-PJ-AzX" appends="YES" id="9KF-Yg-qIZ"/>
-                        </connections>
-                    </view>
-                    <size key="freeformSize" width="375" height="500"/>
-                    <connections>
-                        <outlet property="dialogView" destination="BRI-Re-dHf" id="28l-K5-kd1"/>
-                        <outlet property="imageView" destination="ioV-Hk-dG7" id="50l-gj-Ldi"/>
-                        <outlet property="label" destination="upm-fg-ffn" id="gv8-ma-Txw"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="qZz-KZ-Hgr" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="BfJ-PJ-AzX">
-                    <connections>
-                        <action selector="dismissDialog:" destination="9cO-wr-vPJ" id="jG6-su-IpR"/>
-                        <outlet property="delegate" destination="gCR-ym-GKC" id="ftk-Eh-cA1"/>
-                    </connections>
-                </tapGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="4454" y="126"/>
-        </scene>
         <!--End Of Route View Controller-->
         <scene sceneID="D7g-l8-Czc">
             <objects>
@@ -271,7 +207,4 @@
             <point key="canvasLocation" x="3832.8000000000002" y="875.26236881559225"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="report_checkmark" width="42" height="28"/>
-    </resources>
 </document>
