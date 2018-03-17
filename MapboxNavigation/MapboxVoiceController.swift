@@ -173,11 +173,11 @@ open class MapboxVoiceController: RouteVoiceController {
         self.spokenInstructionsForRoute.setObject(data as NSData, forKey: key as NSString)
     }
 
-    private func cachedDataForKey(_ key: String) -> Data? {
+    internal func cachedDataForKey(_ key: String) -> Data? {
         return spokenInstructionsForRoute.object(forKey: key as NSString) as Data?
     }
 
-    private func hasCachedSpokenInstructionForKey(_ key: String) -> Bool {
+    internal func hasCachedSpokenInstructionForKey(_ key: String) -> Bool {
         return cachedDataForKey(key) != nil
     }
 
