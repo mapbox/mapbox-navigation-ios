@@ -1,6 +1,7 @@
 import XCTest
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxSpeech
 @testable import MapboxNavigation
 
 class MapboxVoiceControllerTests: XCTestCase {
@@ -22,8 +23,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         speechAPISpy.reset()
     }
 
-    //TODO: expand test to include cache storage
-    func testControllerDownloadsDataWhenNotified() {
+    func testControllerDownloadsAndCachesInstructionDataWhenNotified() {
         let routeProgress = RouteProgress.init(route: route, legIndex: 0, spokenInstructionIndex: 0)
         let userInfo = [RouteControllerNotificationUserInfoKey.routeProgressKey : routeProgress]
         let notification = Notification.init(name: .routeControllerDidPassSpokenInstructionPoint, object: nil, userInfo: userInfo)
@@ -31,6 +31,15 @@ class MapboxVoiceControllerTests: XCTestCase {
         NotificationCenter.default.post(notification)
 
         XCTAssertGreaterThan(speechAPISpy.audioDataCalls.count, 0)
+
+        let call: SpeechAPISpy.AudioDataCall = speechAPISpy.audioDataCalls.first!
+        let cacheKey = call.0.text
+        let completion: SpeechSynthesizer.CompletionHandler = call.1
+
+        let data = "Here is some data".data(using: .utf8)
+        completion(data, nil)
+
+        XCTAssertTrue(controller!.hasCachedSpokenInstructionForKey(cacheKey))
     }
 
     func testControllerPrefersCachedData() {
