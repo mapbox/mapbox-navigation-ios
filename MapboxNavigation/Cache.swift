@@ -122,9 +122,9 @@ internal class FileCache {
 
     private func cacheKeyForKey(_ key: String) -> String {
         if let keyAsURL = URL(string: key) {
-            return keyAsURL.lastPathComponent
+            return String.init(keyAsURL.lastPathComponent.hashValue)
         }
-        return key
+        return String.init(key.hashValue)
     }
 
     private func createCacheDirIfNeeded(_ url: URL, fileManager: FileManager) {
