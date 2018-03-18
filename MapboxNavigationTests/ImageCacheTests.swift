@@ -47,7 +47,7 @@ class ImageCacheTests: XCTestCase {
         }
         self.wait(for: [expectation], timeout: asyncTimeout)
 
-        let returnedImage = cache.imageFromCache(forKey: cacheKeyURLString)
+        let returnedImage = cache.image(forKey: cacheKeyURLString)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
     }
 
@@ -59,26 +59,26 @@ class ImageCacheTests: XCTestCase {
         }
         self.wait(for: [expectation], timeout: asyncTimeout)
 
-        let returnedImage = cache.imageFromCache(forKey: cacheKeyURLString)
+        let returnedImage = cache.image(forKey: cacheKeyURLString)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
     }
 
     func testStoringImageInMemoryOnly() {
         storeImageInMemory()
 
-        let returnedImage = cache.imageFromCache(forKey: imageKey)
+        let returnedImage = cache.image(forKey: imageKey)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
     }
 
     func testStoringImageOnDisk() {
         storeImageOnDisk()
 
-        var returnedImage = cache.imageFromCache(forKey: imageKey)
+        var returnedImage = cache.image(forKey: imageKey)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
 
         cache.clearMemory()
 
-        returnedImage = cache.imageFromCache(forKey: imageKey)
+        returnedImage = cache.image(forKey: imageKey)
         XCTAssertNotNil(returnedImage)
         XCTAssertTrue((returnedImage?.isKind(of: UIImage.self))!)
     }
@@ -88,7 +88,7 @@ class ImageCacheTests: XCTestCase {
 
         cache.clearMemory()
 
-        XCTAssertNil(cache.imageFromCache(forKey: imageKey))
+        XCTAssertNil(cache.image(forKey: imageKey))
 
         storeImageOnDisk()
 
@@ -100,7 +100,7 @@ class ImageCacheTests: XCTestCase {
         }
         self.wait(for: [expectation], timeout: asyncTimeout)
 
-        XCTAssertNil(cache.imageFromCache(forKey: imageKey))
+        XCTAssertNil(cache.image(forKey: imageKey))
     }
 
     func testClearingMemoryCacheOnMemoryWarning() {
@@ -108,6 +108,6 @@ class ImageCacheTests: XCTestCase {
 
         NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
 
-        XCTAssertNil(cache.imageFromCache(forKey: imageKey))
+        XCTAssertNil(cache.image(forKey: imageKey))
     }
 }

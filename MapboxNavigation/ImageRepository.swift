@@ -30,7 +30,7 @@ class ImageRepository {
     }
 
     func cachedImageForKey(_ key: String) -> UIImage? {
-        return imageCache.imageFromCache(forKey: key)
+        return imageCache.image(forKey: key)
     }
 
     func imageWithURL(_ imageURL: URL, cacheKey: String, completion: @escaping (UIImage?) -> Void) {
