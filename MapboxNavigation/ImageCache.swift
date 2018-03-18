@@ -37,7 +37,7 @@ internal class ImageCache: BimodalImageCache {
         }
     }
 
-    func imageFromCache(forKey key: String?) -> UIImage? {
+    func image(forKey key: String?) -> UIImage? {
         if let image = imageFromMemoryCache(forKey: key) {
             return image
         }

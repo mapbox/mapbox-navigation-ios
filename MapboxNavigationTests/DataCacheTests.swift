@@ -54,19 +54,19 @@ class DataCacheTests: XCTestCase {
     func testStoringDataInMemoryOnly() {
         storeDataInMemory()
 
-        let returnedData = cache.dataFromCache(forKey: dataKey)
+        let returnedData = cache.data(forKey: dataKey)
         XCTAssertNotNil(returnedData)
     }
 
     func testStoringDataOnDisk() {
         storeDataOnDisk()
 
-        var returnedData = cache.dataFromCache(forKey: dataKey)
+        var returnedData = cache.data(forKey: dataKey)
         XCTAssertNotNil(returnedData)
 
         cache.clearMemory()
 
-        returnedData = cache.dataFromCache(forKey: dataKey)
+        returnedData = cache.data(forKey: dataKey)
         XCTAssertNotNil(returnedData)
     }
 
@@ -75,7 +75,7 @@ class DataCacheTests: XCTestCase {
 
         cache.clearMemory()
 
-        XCTAssertNil(cache.dataFromCache(forKey: dataKey))
+        XCTAssertNil(cache.data(forKey: dataKey))
 
         storeDataOnDisk()
 
@@ -87,7 +87,7 @@ class DataCacheTests: XCTestCase {
         }
         self.wait(for: [expectation], timeout: asyncTimeout)
 
-        XCTAssertNil(cache.dataFromCache(forKey: dataKey))
+        XCTAssertNil(cache.data(forKey: dataKey))
     }
 
     func testClearingMemoryCacheOnMemoryWarning() {
@@ -95,6 +95,6 @@ class DataCacheTests: XCTestCase {
 
         NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
 
-        XCTAssertNil(cache.dataFromCache(forKey: dataKey))
+        XCTAssertNil(cache.data(forKey: dataKey))
     }
 }

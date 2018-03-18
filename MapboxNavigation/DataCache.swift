@@ -1,14 +1,15 @@
 import Foundation
 
-internal class DataCache: BimodalDataCache {
+@objc(MBDataCache)
+public class DataCache: NSObject, BimodalDataCache {
     let memoryCache: NSCache<NSString, NSData>
-    let fileCache: FileCache
+    let fileCache = FileCache()
 
-    init() {
+    public override init() {
         memoryCache = NSCache<NSString, NSData>()
         memoryCache.name = "In-Memory Data Cache"
 
-        fileCache = FileCache()
+        super.init()
 
         NotificationCenter.default.addObserver(forName: .UIApplicationDidReceiveMemoryWarning, object: nil, queue: nil) { [unowned self] (notif) in
             self.clearMemory()
@@ -21,7 +22,7 @@ internal class DataCache: BimodalDataCache {
 
     // MARK: Data cache
 
-    func store(_ data: Data, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
+    public func store(_ data: Data, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeDataInMemoryCache(data, forKey: key)
         if toDisk == true {
             fileCache.store(data, forKey: key, completion: completion)
@@ -34,7 +35,7 @@ internal class DataCache: BimodalDataCache {
         }
     }
 
-    func dataFromCache(forKey key: String?) -> Data? {
+    public func data(forKey key: String?) -> Data? {
         guard let key = key else {
             return nil
         }
@@ -51,11 +52,11 @@ internal class DataCache: BimodalDataCache {
         return nil
     }
 
-    func clearMemory() {
+    public func clearMemory() {
         memoryCache.removeAllObjects()
     }
 
-    func clearDisk(completion: CompletionHandler?) {
+    public func clearDisk(completion: CompletionHandler?) {
         fileCache.clearDisk(completion: completion)
     }
 

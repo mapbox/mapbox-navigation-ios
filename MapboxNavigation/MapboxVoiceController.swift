@@ -22,16 +22,16 @@ open class MapboxVoiceController: RouteVoiceController {
     @objc public var stepsAheadToCache: Int = 3
     
     var audioTask: URLSessionDataTask?
-    var spokenInstructionsForRoute = NSCache<NSString, NSData>() //
+    var cache: BimodalDataCache
     
     var speech: SpeechSynthesizer
     var locale: Locale?
     
     let localizedErrorMessage = NSLocalizedString("FAILED_INSTRUCTION", bundle: .mapboxNavigation, value: "Unable to read instruction aloud.", comment: "Error message when the SDK is unable to read a spoken instruction.")
 
-    @objc public init(speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil)) {
+    @objc public init(speechClient: SpeechSynthesizer = SpeechSynthesizer(accessToken: nil), dataCache: BimodalDataCache = DataCache()) {
         speech = speechClient
-        spokenInstructionsForRoute.countLimit = 200
+        cache = dataCache
 
         super.init()
     }
@@ -170,11 +170,11 @@ open class MapboxVoiceController: RouteVoiceController {
     }
 
     private func cache(_ data: Data, forKey key: String) {
-        self.spokenInstructionsForRoute.setObject(data as NSData, forKey: key as NSString)
+        cache.store(data, forKey: key, toDisk: true, completion: nil)
     }
 
     internal func cachedDataForKey(_ key: String) -> Data? {
-        return spokenInstructionsForRoute.object(forKey: key as NSString) as Data?
+        return cache.data(forKey: key)
     }
 
     internal func hasCachedSpokenInstructionForKey(_ key: String) -> Bool {

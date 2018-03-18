@@ -45,8 +45,4 @@ class MapboxVoiceControllerTests: XCTestCase {
     func testControllerPrefersCachedData() {
     }
 
-    func testControllerAddsDataToCacheWhenDownloaded() {
-
-    }
-
 }
