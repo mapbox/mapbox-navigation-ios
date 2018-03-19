@@ -78,7 +78,7 @@ public var RouteControllerNumberOfSecondsForRerouteFeedback: TimeInterval = 10
 /**
  The number of seconds between attempts to automatically calculate a more optimal route while traveling.
  */
-public var RouteControllerOpportunisticReroutingInterval: TimeInterval = 120
+public var RouteControllerProactiveReroutingInterval: TimeInterval = 120
 
 let FasterRouteFoundEvent = "navigation.fasterRoute"
 
@@ -102,3 +102,13 @@ public var RouteSnappingMaxManipulatedCourseAngle: CLLocationDirection = 25
  Minimum Accuracy (maximum deviation, in meters) that the route snapping engine will accept before it stops snapping.
  */
 public var RouteSnappingMinimumHorizontalAccuracy: CLLocationAccuracy = 20.0
+
+/**
+ Minimum number of consecutive incorrect course updates before rerouting occurs.
+ */
+public var RouteControllerMinNumberOfInCorrectCourses: Int = 4
+
+/**
+ Given a location update, the `horizontalAccuracy` is used to figure out how many consective location updates to wait before rerouting due to consecutive incorrect course updates.
+ */
+public var RouteControllerIncorrectCourseMultiplier: Int = 4

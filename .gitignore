@@ -1,6 +1,7 @@
 MapboxNavigation.xcworkspace
 
 .DS_Store
+.idea
 
 xcuserdata
 *.xccheckout

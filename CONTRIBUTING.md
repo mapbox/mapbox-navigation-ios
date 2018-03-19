@@ -7,8 +7,7 @@ Bug reports and feature requests are more than welcome, but please consider the 
 Before reporting a bug here, please determine whether the issue lies with the navigation SDK itself or with another Mapbox product:
 
 * For general questions and troubleshooting help, please contact the [Mapbox support](https://www.mapbox.com/contact/support/) team.
-* Report problems with the map’s contents using the [Mapbox Feedback](https://www.mapbox.com/map-feedback/) tool.
-* Report routing problems, especially problems specific to a particular route or region, using the [Mapbox Directions Feedback](https://www.mapbox.com/directions-feedback/) tool.
+* Report problems with the map’s contents or routing problems, especially problems specific to a particular route or region, using the [Mapbox Feedback](https://www.mapbox.com/feedback/) tool.
 * Report problems in guidance instructions in the [OSRM Text Instructions](https://github.com/Project-OSRM/osrm-text-instructions/) repository.
 
 When reporting a bug in the navigation SDK itself, please indicate:
@@ -63,11 +62,15 @@ To add or update text that the user may see in the navigation SDK:
 
 ## Adding or updating a localization
 
-The Mapbox Navigation SDK for iOS features several translations contributed through [Transifex](https://www.transifex.com/mapbox/mapbox-navigation-ios/). If your language already has a translation, feel free to complete or proofread it. Otherwise, please [request your language](https://www.transifex.com/mapbox/mapbox-navigation-ios/). Note that we’re primarily interested in languages that iOS supports as system languages.
+The Mapbox Navigation SDK for iOS features several translations contributed through [Transifex](https://www.transifex.com/mapbox/mapbox-navigation-ios/). If your language already has a translation, feel free to complete or proofread it. Otherwise, please [request your language](https://www.transifex.com/mapbox/mapbox-navigation-ios/) so you can start translating. Note that we’re primarily interested in languages that iOS supports as system languages.
 
-While you’re there, consider also translating the [Mapbox Maps SDK for iOS](https://www.transifex.com/mapbox/mapbox-gl-native/), which the navigation SDK depends on, and [OSRM Text Instructions](https://www.transifex.com/project-osrm/osrm-text-instructions/), which builds a list of textual and verbal instructions along the route. You can also help translate the [Mapbox Navigation SDK for Android](https://www.transifex.com/mapbox/mapbox-navigation-sdk-for-android/).
+While you’re there, please consider also translating the following related projects:
 
-Once you’ve finished translating the navigation SDK into a new language in Transifex, perform these steps to make Xcode aware of the translation:
+* [Mapbox Maps SDK for iOS](https://www.transifex.com/mapbox/mapbox-gl-native/), which is responsible for the map view and minor UI elements such as the compass ([instructions](https://github.com/mapbox/mapbox-gl-native/blob/master/platform/ios/DEVELOPING.md#adding-a-localization))
+* [OSRM Text Instructions](https://www.transifex.com/project-osrm/osrm-text-instructions/), which the Mapbox Directions API uses to generate textual and verbal turn instructions ([instructions](https://github.com/Project-OSRM/osrm-text-instructions/#translations))
+* [Mapbox Navigation SDK for Android](https://www.transifex.com/mapbox/mapbox-navigation-sdk-for-android/), the analogous library for Android applications ([instructions](https://github.com/mapbox/mapbox-navigation-android/#translations))
+
+Once you’ve finished translating the iOS navigation SDK into a new language in Transifex, open an issue in this repository asking to pull in your localization. Or do it yourself and open a pull request with the results:
 
 1. _(First time only.)_ Download the [`tx` command line tool](https://docs.transifex.com/client/installing-the-client) and [configure your .transifexrc](https://docs.transifex.com/client/client-configuration).
 1. In MapboxNavigation.xcodeproj, open the project editor. Using the project editor’s sidebar or tab bar dropdown, go to the “MapboxNavigation” project. Under the Localizations section of the Info tab, click the + button to add your language to the project.
@@ -77,6 +80,5 @@ The .strings files should still be in the original English – that’s expecte
 
 1. Run `tx pull -a` to fetch translations from Transifex. You can restrict the operation to just the new language using `tx pull -l xyz`, where _xyz_ is the language code.
 1. To facilitate diffing and merging, convert any added .strings files from UTF-16 encoding to UTF-8 encoding. You can convert the file encoding using Xcode’s File inspector or by running `scripts/convert_string_files.sh`.
-1. If you’ve translated the “localizableabbreviations” resource, change to the [scripts/abbreviations/](scripts/abbreviations/) folder and run `./main import xyz`, where _xyz_ is the language code.
 1. For each of the localizable files in the project, open the file, then, in the File inspector, check the box for your new localization.
-1. Add the new language to [the language support matrix](languages.md).
+1. Add the new language to [the language support matrix](docs/guides/Localization%20and%20Internationalization.md).

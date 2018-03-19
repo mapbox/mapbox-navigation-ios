@@ -6,7 +6,6 @@ import MapboxDirections
 
 class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     
-    let shieldURL = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280@3x.png")!
     let imageRepository: ImageRepository = ImageRepository.shared
     
     let asyncTimeout: TimeInterval = 2.0
@@ -15,10 +14,13 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        let instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
-        let shieldKey = instruction.shieldKey()
+        let i280Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+        let us101Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         
-        imageRepository.storeImage(shieldImage, forKey: shieldKey!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.shieldKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.shieldKey()!, toDisk: false)
+        
+        NavigationSettings.shared.distanceUnit = .mile
     }
     
     override func tearDown() {
@@ -57,7 +59,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let instructions = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
         
@@ -74,7 +76,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "South", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)]
@@ -92,7 +94,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "Mountain View Test", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)]
         
@@ -108,7 +110,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
-        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: shieldURL, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .text, text: "Drive", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: "Dr", abbreviationPriority: 0),
                        VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: "Ave", abbreviationPriority: 5),
                        VisualInstructionComponent(type: .text, text: "West", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: "W", abbreviationPriority: 4),
@@ -128,7 +130,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
-        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: shieldURL, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .text, text: "10", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
@@ -158,6 +160,23 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         verifyView(view, size: view.bounds.size)
     }
     
+    func testAdjacentShields() {
+        let view = instructionsView(size: .iPhoneX)
+        styleInstructionsView(view)
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let primary = [
+            VisualInstructionComponent(type: .text, text: "I-280", imageURL: ShieldImage.i280.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .text, text: "US-101", imageURL: ShieldImage.us101.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)
+        ]
+        
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+        
+        verifyView(view, size: view.bounds.size)
+    }
+    
     func testInstructionsAndNextInstructions() {
         let view = UIView()
         view.backgroundColor = .white
@@ -173,19 +192,34 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)]
         
         instructionsBannerView.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: secondary))
         
         let primaryThen = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: shieldURL, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, maneuverType: .turn, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
         ]
         
         nextBannerView.instructionLabel.instruction = primaryThen
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
+        
+        verifyView(view, size: view.bounds.size)
+    }
+    
+    func testLongDistance() {
+        let view = instructionsView(size: .iPhoneX)
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        NavigationSettings.shared.distanceUnit = .kilometer
+        view.distanceFormatter.numberFormatter.locale = Locale(identifier: "zh-Hans")
+        view.distance = 1000 * 999
+        
+        let primary = [VisualInstructionComponent(type: .text, text: "中国 安徽省 宣城市 郎溪县", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }

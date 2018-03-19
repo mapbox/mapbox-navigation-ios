@@ -28,16 +28,38 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     var sections = [FeedbackSection]()
     var activeFeedbackItem: FeedbackItem?
     
+    static let sceneTitle = NSLocalizedString("Report Problem", comment: "FeedbackViewController Title")
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
     static let verticalCellPadding: CGFloat = 20.0
     
     let interactor = Interactor()
     
-    @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var reportIssueLabel: UILabel!
-    @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
-    @IBOutlet weak var progressBar: ProgressBar!
+    lazy var collectionView: UICollectionView = {
+        let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .clear
+        view.delegate = self
+        view.dataSource = self
+        view.register(FeedbackCollectionViewCell.self, forCellWithReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier)
+        return view
+    }()
+    
+    lazy var reportIssueLabel: UILabel = {
+        let label: UILabel = .forAutoLayout()
+        label.textAlignment = .center
+        label.text = FeedbackViewController.sceneTitle
+        return label
+    }()
+    
+    lazy var flowLayout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 0.0
+        layout.minimumLineSpacing = 0.0
+        return layout
+    }()
+    
+    lazy var progressBar: ProgressBar = .forAutoLayout()
     
     var draggableHeight: CGFloat {
         // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
@@ -47,20 +69,19 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         return fullHeight
     }
     
-    class func loadFromStoryboard() -> FeedbackViewController {
-        let storyboard = UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
-        return storyboard.instantiateViewController(withIdentifier: "FeedbackViewController") as! FeedbackViewController
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupViews()
+        setupConstraints()
+        view.layoutIfNeeded()
         //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
         flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
+        view.backgroundColor = .white
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
     }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -111,11 +132,36 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     @objc func handleDismissTap(sender: UITapGestureRecognizer) {
         dismissFeedback()
     }
+    
+    private func setupViews() {
+        [reportIssueLabel, collectionView, progressBar].forEach(view.addSubview(_:))
+    }
+    
+    private func setupConstraints() {
+        let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
+        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: 30.0)
+        let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
+        let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: progressBar.topAnchor)
+        let barHeight = progressBar.heightAnchor.constraint(equalToConstant: 6.0)
+        let barLeading = progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        let barTrailing = progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        let barBottom = progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
+        
+        let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
+                           collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing,
+                           barHeight, barLeading, barTrailing, barBottom]
+      
+        NSLayoutConstraint.activate(constraints)
+    }
 }
 
 extension FeedbackViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackViewController.cellReuseIdentifier, for: indexPath) as! FeedbackCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackCollectionViewCell
         let item = sections[indexPath.section][indexPath.row]
         
         cell.titleLabel.text = item.title
@@ -147,44 +193,8 @@ extension FeedbackViewController: UICollectionViewDelegate {
 }
 
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = floor(collectionView.bounds.width / 3)
         return CGSize(width: width, height: width + FeedbackViewController.verticalCellPadding)
-    }
-}
-
-class FeedbackCollectionViewCell: UICollectionViewCell {
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var circleView: UIView!
-    
-    var longPress: UILongPressGestureRecognizer?
-    var originalTransform: CGAffineTransform?
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        circleView.layer.cornerRadius = circleView.bounds.midY
-    }
-    
-    override var isHighlighted: Bool {
-        didSet {
-            if originalTransform == nil {
-                originalTransform = self.imageView.transform
-            }
-            
-            UIView.defaultSpringAnimation(0.3, animations: {
-                if self.isHighlighted {
-                    self.imageView.transform = self.imageView.transform.scaledBy(x: 0.85, y: 0.85)
-                } else {
-                    guard let t = self.originalTransform else { return }
-                    self.imageView.transform = t
-                }
-            }, completion: nil)
-        }
     }
 }

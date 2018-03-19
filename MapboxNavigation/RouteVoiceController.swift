@@ -111,16 +111,25 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
      */
     override public init() {
         super.init()
+
+        verifyBackgroundAudio()
+
+        speechSynth.delegate = self
+        rerouteSoundPlayer.delegate = self
         
+        resumeNotifications()
+    }
+
+    private func verifyBackgroundAudio() {
+        guard UIApplication.shared.isKind(of: UIApplication.self) else {
+            return
+        }
+
         if !Bundle.main.backgroundModes.contains("audio") {
             assert(false, "This application’s Info.plist file must include “audio” in UIBackgroundModes. This background mode is used for spoken instructions while the application is in the background.")
         }
-        
-        speechSynth.delegate = self
-        rerouteSoundPlayer.delegate = self
-        resumeNotifications()
     }
-    
+
     deinit {
         suspendNotifications()
         speechSynth.stopSpeaking(at: .immediate)
@@ -151,7 +160,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     
     @objc func didReroute(notification: NSNotification) {
         // Play reroute sound when a faster route is found
-        if notification.userInfo?[RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
+        if notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as! Bool {
             pauseSpeechAndPlayReroutingDing(notification: notification)
         }
     }
@@ -209,7 +218,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as? RouteProgress
         assert(routeProgress != nil, "routeProgress should not be nil.")
-        
+
         guard let instruction = routeProgress!.currentLegProgress.currentStepProgress.currentSpokenInstruction else { return }
         lastSpokenInstruction = instruction
         speak(instruction)

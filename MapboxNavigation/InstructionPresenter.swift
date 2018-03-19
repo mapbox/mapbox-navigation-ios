@@ -65,7 +65,9 @@ class InstructionPresenter {
             if let shieldKey = component.shieldKey() {
                 if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
                     processedComponents.append(component)
-                    strings.append(attributedString(withFont: label.font, shieldImage: cachedImage))
+                    let attributedShieldString = NSMutableAttributedString(attributedString: NSAttributedString(string: joinChar))
+                    attributedShieldString.append(attributedString(withFont: label.font, shieldImage: cachedImage))
+                    strings.append(attributedShieldString)
                 } else {
                     // Display road code while shield is downloaded
                     if let text = component.text {
