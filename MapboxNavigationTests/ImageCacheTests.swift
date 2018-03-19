@@ -54,7 +54,7 @@ class ImageCacheTests: XCTestCase {
     func testUsingPathStringAsCacheKey() {
         let cacheKeyURLString = "/path/to/something.xyz"
         let expectation = self.expectation(description: "Storing image in disk cache")
-        cache.store(shieldImage, forKey: cacheKeyURLString, toDisk: true) {
+        cache.store(ShieldImage.i280.image, forKey: cacheKeyURLString, toDisk: true) {
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: asyncTimeout)
