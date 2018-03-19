@@ -110,4 +110,18 @@ class ImageCacheTests: XCTestCase {
 
         XCTAssertNil(cache.image(forKey: imageKey))
     }
+
+    func testJPEGSupport() {
+        let imageJPEGData = UIImageJPEGRepresentation(ShieldImage.i280.image, 9.0)!
+        let image = UIImage.init(data: imageJPEGData)!
+
+        let expectation = self.expectation(description: "Storing image in disk cache")
+        cache.store(image, forKey: "JPEG Test", toDisk: true) {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: asyncTimeout)
+
+        let retrievedImage = cache.image(forKey: "JPEG Test")!
+        XCTAssertTrue(retrievedImage.isKind(of: UIImage.self))
+    }
 }
