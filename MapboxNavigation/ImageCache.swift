@@ -43,7 +43,6 @@ internal class ImageCache: BimodalImageCache {
         }
 
         if let image = imageFromDiskCache(forKey: key) {
-            //TODO: add test
             storeImageInMemoryCache(image, forKey: key!)
             return image
         }
@@ -59,12 +58,14 @@ internal class ImageCache: BimodalImageCache {
         fileCache.clearDisk(completion: completion)
     }
 
-    private func cacheCostForImage(_ image: UIImage) -> Int {
-        return Int(image.size.height * image.size.width * image.scale * image.scale);
+    private func cost(forImage image: UIImage) -> Int {
+        let xDimensionCost = image.size.width * image.scale
+        let yDimensionCost = image.size.height * image.scale
+        return Int(xDimensionCost * yDimensionCost)
     }
 
     private func storeImageInMemoryCache(_ image: UIImage, forKey key: String) {
-        memoryCache.setObject(image, forKey: key as NSString, cost: cacheCostForImage(image))
+        memoryCache.setObject(image, forKey: key as NSString, cost: cost(forImage: image))
     }
 
     private func imageFromMemoryCache(forKey key: String?) -> UIImage? {
