@@ -71,7 +71,7 @@ extension CLLocation {
         guard let closestCoordinate = Polyline(routeStep.coordinates!).closestCoordinate(to: coordinate) else {
             return false
         }
-        return closestCoordinate.distance < maximumDistance
+        return closestCoordinate.distance <= maximumDistance
     }
     
     //MARK: - Route Snapping

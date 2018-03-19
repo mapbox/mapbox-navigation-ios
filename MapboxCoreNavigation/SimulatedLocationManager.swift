@@ -50,7 +50,7 @@ public class SimulatedLocationManager: NavigationLocationManager {
     var route: Route? {
         didSet {
             stopUpdatingLocation()
-            reset()
+            reset(currentDistance)
             startUpdatingLocation()
         }
     }
@@ -65,19 +65,40 @@ public class SimulatedLocationManager: NavigationLocationManager {
      */
     @objc public init(route: Route) {
         super.init()
+        initializeSimulatedLocationManager(for: route)
+    }
+
+    /**
+     Initalizes a new `SimulatedLocationManager` with the given route and distance traveled.
+     
+     When location simulation is needed in special cases such as dead reckoning, the distance
+     traveled on the given route determines where the `SimulatedLocationManager` needs to begin the simulation.
+     
+     - parameter route: The initial route.
+     - parameter distanceTraveled: The distance traveled on the current route.
+     - returns: A `SimulatedLocationManager`
+     */
+    @objc public init(route: Route, distanceTraveled: CLLocationDistance) {
+        super.init()
+        self.currentDistance = distanceTraveled
+        initializeSimulatedLocationManager(for: route)
+    }
+
+    private func initializeSimulatedLocationManager(for route: Route) {
         self.route = route
-        reset()
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
-    private func reset() {
+    private func reset(_ distance: CLLocationDistance) {
         if let coordinates = route?.coordinates {
             routeLine = coordinates
             locations = coordinates.simulatedLocationsWithTurnPenalties()
             
-            currentDistance = 0
+            currentDistance = distance
             currentSpeed = 30
+            
+            currentDistance += currentSpeed * speedMultiplier
         }
     }
     

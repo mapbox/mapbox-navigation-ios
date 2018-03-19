@@ -165,7 +165,7 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Called when a location has been identified as unqualified to navigate on.
      
      See `CLLocation.isQualified` for more information about what qualifies a location.
      
