@@ -78,6 +78,7 @@ class DistanceFormatterTests: XCTestCase {
         assertDistance(500,     displayed: "500 m",     quantity: "500")
         assertDistance(949,     displayed: "950 m",     quantity: "950")
         assertDistance(951,     displayed: "950 m",     quantity: "950")
+        assertDistance(999,     displayed: "1 km",      quantity: "1")
         assertDistance(1000,    displayed: "1 km",      quantity: "1")
         assertDistance(1001,    displayed: "1 km",      quantity: "1")
         assertDistance(2_500,   displayed: "2.5 km",    quantity: "2.5")
