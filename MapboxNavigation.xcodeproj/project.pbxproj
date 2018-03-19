@@ -141,6 +141,7 @@
 		8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F720409A890098CBF8 /* CGSize.swift */; };
 		8D24A2FA20449B430098CBF8 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F920449B430098CBF8 /* Dictionary.swift */; };
 		8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D391CE11FD71E78006BB91F /* Waypoint.swift */; };
+		8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */; };
 		8DB45E90201698EB001EA6A3 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB45E8F201698EB001EA6A3 /* UIStackView.swift */; };
 		8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB63A391FBBCA2200928389 /* RatingControl.swift */; };
 		8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */; };
@@ -463,6 +464,7 @@
 		8D24A2F720409A890098CBF8 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
 		8D24A2F920449B430098CBF8 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		8D391CE11FD71E78006BB91F /* Waypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Waypoint.swift; sourceTree = "<group>"; };
+		8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackCollectionViewCell.swift; sourceTree = "<group>"; };
 		8DB45E8F201698EB001EA6A3 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		8DB63A391FBBCA2200928389 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
 		8DE879651FBB9980002F06C0 /* EndOfRouteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndOfRouteViewController.swift; sourceTree = "<group>"; };
@@ -740,6 +742,7 @@
 				35C9973E1E732C1B00544D1C /* RouteVoiceController.swift */,
 				C565168A1FE1E23E00A0AD18 /* MapboxVoiceController.swift */,
 				35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */,
+				8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */,
 				35025F3E1F051DD2002BA3EA /* DialogViewController.swift */,
 				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
 				35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */,
@@ -1528,6 +1531,7 @@
 				8D24A2FA20449B430098CBF8 /* Dictionary.swift in Sources */,
 				8DB45E90201698EB001EA6A3 /* UIStackView.swift in Sources */,
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
+				8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */,
 				35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */,
 				C588C3C21F33882100520EF2 /* String.swift in Sources */,
 				3512C7C81FB0A0C100CDD2A3 /* UIViewController.swift in Sources */,
