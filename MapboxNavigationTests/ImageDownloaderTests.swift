@@ -24,7 +24,7 @@ class ImageDownloaderTests: XCTestCase {
         URLProtocol.registerClass(TestImageLoadingURLProtocol.self)
         TestImageLoadingURLProtocol.reset()
 
-        let originalImageData = UIImagePNGRepresentation(shieldImage)!
+        let originalImageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
         TestImageLoadingURLProtocol.registerData(originalImageData, forURL: imageURL)
     }
 

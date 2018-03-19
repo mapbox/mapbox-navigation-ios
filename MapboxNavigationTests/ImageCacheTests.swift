@@ -23,7 +23,7 @@ class ImageCacheTests: XCTestCase {
 
     func storeImageInMemory() {
         let expectation = self.expectation(description: "Storing image in memory cache")
-        cache.store(shieldImage, forKey: imageKey, toDisk: false) {
+        cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: false) {
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: asyncTimeout)
@@ -31,7 +31,7 @@ class ImageCacheTests: XCTestCase {
 
     func storeImageOnDisk() {
         let expectation = self.expectation(description: "Storing image in disk cache")
-        cache.store(shieldImage, forKey: imageKey, toDisk: true) {
+        cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: true) {
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: asyncTimeout)
@@ -40,7 +40,7 @@ class ImageCacheTests: XCTestCase {
     func testUsingURLStringAsCacheKey() {
         let cacheKeyURLString = "https://zombo.com/lulz/shieldKey.xyz"
         let expectation = self.expectation(description: "Storing image in disk cache")
-        cache.store(shieldImage, forKey: cacheKeyURLString, toDisk: true) {
+        cache.store(ShieldImage.i280.image, forKey: cacheKeyURLString, toDisk: true) {
             expectation.fulfill()
         }
         self.wait(for: [expectation], timeout: asyncTimeout)

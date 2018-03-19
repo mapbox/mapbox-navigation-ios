@@ -32,7 +32,7 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
-    fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
+    let distanceFormatter = DistanceFormatter(approximate: true)
     
     var distance: CLLocationDistance? {
         didSet {

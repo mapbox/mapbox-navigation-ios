@@ -29,7 +29,7 @@ extension Notification.Name {
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isOpportunisticKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
      */
     public static let routeControllerDidReroute = MBRouteControllerDidReroute
     
@@ -172,9 +172,9 @@ open class RouteController: NSObject {
     @objc public var isDeadReckoningEnabled = false
 
     /**
-     If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerOpportunisticReroutingInterval`.
+     If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
-    @objc public var reroutesOpportunistically = false
+    @objc public var reroutesProactively = false
 
     var didFindFasterRoute = false
 
@@ -198,7 +198,7 @@ open class RouteController: NSObject {
             if let location = locationManager.location {
                 userInfo[.locationKey] = location
             }
-            userInfo[.isOpportunisticKey] = didFindFasterRoute
+            userInfo[.isProactiveKey] = didFindFasterRoute
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
@@ -465,7 +465,7 @@ extension RouteController {
     }
     
     @objc func didReroute(notification: NSNotification) {
-        if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isOpportunisticKey] as? Bool, didFindFasterRoute {
+        if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as? Bool, didFindFasterRoute {
             _ = enqueueFoundFasterRouteEvent()
         }
         
@@ -575,7 +575,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateSpokenInstructionProgress(for: location)
 
         // Check for faster route given users current location
-        guard reroutesOpportunistically else { return }
+        guard reroutesProactively else { return }
         // Only check for faster alternatives if the user has plenty of time left on the route.
         guard routeProgress.durationRemaining > 600 else { return }
         // If the user is approaching a maneuver, don't check for a faster alternatives
@@ -663,7 +663,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         // Only check every so often for a faster route.
-        guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerOpportunisticReroutingInterval else { return }
+        guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerProactiveReroutingInterval else { return }
         let durationRemaining = routeProgress.durationRemaining
 
         getDirections(from: location) { [weak self] (route, error) in
@@ -680,7 +680,7 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
                 strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
-                    RouteControllerNotificationUserInfoKey.isOpportunisticKey: true
+                    RouteControllerNotificationUserInfoKey.isProactiveKey: true
                 ]))
                 strongSelf.didFindFasterRoute = false
             }
