@@ -49,6 +49,9 @@ internal class FileCache {
         }
     }
 
+    /*
+     Stores data in the file cache for the given key, and calls the completion handler when finished.
+     */
     public func store(_ data: Data, forKey key: String, completion: CompletionHandler?) {
         let dispatchCompletion = {
             if let completion = completion {
@@ -57,13 +60,14 @@ internal class FileCache {
                 }
             }
         }
+
         guard let fileManager = fileManager else {
             dispatchCompletion()
             return
         }
-        let cacheURL = diskCacheURL
+
         diskAccessQueue.async {
-            self.createCacheDirIfNeeded(cacheURL, fileManager: fileManager)
+            self.createCacheDirIfNeeded(self.diskCacheURL, fileManager: fileManager)
             let cacheURL = self.cacheURLWithKey(key)
 
             do {
@@ -76,10 +80,14 @@ internal class FileCache {
 
     }
 
+    /*
+     Returns data from the file cache for the given key, if any.
+     */
     public func dataFromFileCache(forKey key: String?) -> Data? {
         guard let key = key else {
             return nil
         }
+
         do {
             return try Data.init(contentsOf: cacheURLWithKey(key))
         } catch {
@@ -88,10 +96,14 @@ internal class FileCache {
         }
     }
 
+    /*
+     Clears the disk cache by removing and recreating the cache directory, and calls the completion handler when finished.
+     */
     public func clearDisk(completion: CompletionHandler?) {
         guard let fileManager = fileManager else {
             return
         }
+
         let cacheURL = self.diskCacheURL
         self.diskAccessQueue.async {
             do {
@@ -124,6 +136,7 @@ internal class FileCache {
         if let keyAsURL = URL(string: key) {
             return String.init(keyAsURL.lastPathComponent.hashValue)
         }
+
         return String.init(key.hashValue)
     }
 
