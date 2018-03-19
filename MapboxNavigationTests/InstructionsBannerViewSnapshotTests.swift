@@ -19,6 +19,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.shieldKey()!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.shieldKey()!, toDisk: false)
+        
+        NavigationSettings.shared.distanceUnit = .mile
     }
     
     override func tearDown() {
@@ -203,6 +205,21 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         nextBannerView.instructionLabel.instruction = primaryThen
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
+        
+        verifyView(view, size: view.bounds.size)
+    }
+    
+    func testLongDistance() {
+        let view = instructionsView(size: .iPhoneX)
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        NavigationSettings.shared.distanceUnit = .kilometer
+        view.distanceFormatter.numberFormatter.locale = Locale(identifier: "zh-Hans")
+        view.distance = 1000 * 999
+        
+        let primary = [VisualInstructionComponent(type: .text, text: "中国 安徽省 宣城市 郎溪县", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
     }
