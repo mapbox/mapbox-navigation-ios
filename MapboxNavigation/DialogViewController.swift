@@ -1,36 +1,84 @@
 import UIKit
 
 class DialogViewController: UIViewController {
+    enum Constants {
+        static let dialogColor = UIColor.black.withAlphaComponent(0.8)
+        static let dialogSize = CGSize(width: 260, height: 140)
+        static let cornerRadius = CGFloat(10.0)
+        static let labelFont = UIFont.systemFont(ofSize: 17.0)
+        static let stackSpacing = CGFloat(20.0)
+        static let checkmark = UIImage(named: "report_checkmark", in: .mapboxNavigation, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        static let labelText = NSLocalizedString("Thank you for your report!", comment: "Feedback Report Submission Thanks")
+    }
     
-    @IBOutlet weak var dialogView: UIView!
-    @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var label: UILabel!
+    lazy var dialogView: UIView = {
+        let view: UIView = .forAutoLayout()
+        view.backgroundColor = Constants.dialogColor
+        view.layer.cornerRadius = Constants.cornerRadius
+        return view
+    }()
+    
+    lazy var imageView: UIImageView = {
+        let view: UIImageView = .forAutoLayout()
+        view.image = Constants.checkmark
+        view.tintColor = .white
+        return view
+    }()
+    
+    lazy var label: UILabel = {
+        let label: UILabel = .forAutoLayout()
+        label.textColor = .white
+        label.font = Constants.labelFont
+        label.text = Constants.labelText
+        return label
+    }()
+    
+    lazy var stackView = UIStackView(orientation: .vertical,
+                                     alignment: .center,
+                                     distribution: .equalSpacing,
+                                     spacing: Constants.stackSpacing,
+                                     autoLayout: true)
+    
+    lazy var tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(DialogViewController.dismissAnimated))
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dialogView.layer.cornerRadius = 10
-        imageView.tintColor = nil
-        imageView.tintColor = .white
+        setupViews()
+        setupConstraints()
     }
     
-    class func present(on viewController: UIViewController) {
-        let storyboard = UIStoryboard(name: "Navigation", bundle: Bundle.mapboxNavigation   )
-        let controller = storyboard.instantiateViewController(withIdentifier: "DialogViewController") as! DialogViewController
+    func setupViews() {
+        view.addGestureRecognizer(tapRecognizer)
+        view.addSubview(dialogView)
+        dialogView.addSubview(stackView)
+        stackView.addArrangedSubviews([imageView, label])
+    }
+
+    func setupConstraints() {
+        let dialogWidth = dialogView.widthAnchor.constraint(equalToConstant: Constants.dialogSize.width)
+        let dialogHeight = dialogView.heightAnchor.constraint(equalToConstant: Constants.dialogSize.height)
+        let dialogCenterX = dialogView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        let dialogCenterY = dialogView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        let stackCenterX = stackView.centerXAnchor.constraint(equalTo: dialogView.centerXAnchor)
+        let stackCenterY = stackView.centerYAnchor.constraint(equalTo: dialogView.centerYAnchor)
         
-        controller.modalPresentationStyle = .overFullScreen
-        controller.modalTransitionStyle = .crossDissolve
+        let constraints = [dialogWidth, dialogHeight,
+                           dialogCenterX, dialogCenterY,
+                           stackCenterX, stackCenterY]
+        NSLayoutConstraint.activate(constraints)
+    }
+    
+    func present(on viewController: UIViewController) {
+        modalPresentationStyle = .overFullScreen
+        modalTransitionStyle = .crossDissolve
         
-        viewController.present(controller, animated: true, completion: nil)
+        viewController.present(self, animated: true, completion: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
         perform(#selector(dismissAnimated), with: nil, afterDelay: 0.5)
-    }
-    
-    @IBAction func dismissDialog(_ sender: UITapGestureRecognizer) {
-        dismissAnimated()
     }
     
     @objc func dismissAnimated() {

@@ -25,7 +25,7 @@ class RouteMapViewController: UIViewController {
     }()
     
     lazy var feedbackViewController: FeedbackViewController = {
-        let controller = FeedbackViewController.loadFromStoryboard()
+        let controller = FeedbackViewController()
         
         controller.sections = [
             [.turnNotAllowed, .closure, .reportTraffic],
@@ -324,7 +324,7 @@ class RouteMapViewController: UIViewController {
             }
         }
         
-        if notification.userInfo![RouteControllerNotificationUserInfoKey.isOpportunisticKey] as! Bool {
+        if notification.userInfo![RouteControllerNotificationUserInfoKey.isProactiveKey] as! Bool {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             showStatus(title: title, withSpinner: true, for: 3)
         }
@@ -401,14 +401,6 @@ class RouteMapViewController: UIViewController {
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
-
-        guard isInOverviewMode else {
-            return
-        }
-
-        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
-            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
-        }
     }
     
 func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
@@ -426,7 +418,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
             strongSelf.delegate?.mapViewController(strongSelf, didSend: identifier, feedbackType: item.feedbackType)
             strongSelf.routeController.updateFeedback(feedbackId: identifier, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
-                DialogViewController.present(on: parent)
+                DialogViewController().present(on: parent)
             }
         }
     }
@@ -555,7 +547,6 @@ extension RouteMapViewController {
 
 extension RouteMapViewController: NavigationViewDelegate {
     // MARK: NavigationViewDelegate
-    
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
         delegate?.mapViewControllerDidCancelNavigation(self)
     }
@@ -591,7 +582,15 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     //MARK: InstructionsBannerViewDelegate
+    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        displayPreviewInstructions()
+    }
+    
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
+        displayPreviewInstructions()
+    }
+ 
+    private func displayPreviewInstructions() {
         removePreviewInstructions()
         
         if let controller = stepsViewController {
@@ -658,8 +657,12 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        let endOfRouteTime = (navigationView.endOfRouteView != nil && navigationView.endOfRouteShowConstraint!.isActive == true)
-        guard !endOfRouteTime else { return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4)) }
+        //If the end of route component is showing, then put the anchor point slightly above the middle of the map
+        if navigationView.endOfRouteView != nil, let show = navigationView.endOfRouteShowConstraint, show.isActive {
+            return CGPoint(x: mapView.bounds.midX, y: (mapView.bounds.height * 0.4))
+        }
+        
+        //otherwise, ask the delegate or return .zero
         return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
     }
     

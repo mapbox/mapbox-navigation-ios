@@ -6,7 +6,7 @@ class ImageDownloaderTests: XCTestCase {
 
     lazy var sessionConfig: URLSessionConfiguration = {
         let config = URLSessionConfiguration.default
-        config.protocolClasses = [TestImageLoadingURLProtocol.self]
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
         return config
     }()
 
@@ -21,15 +21,15 @@ class ImageDownloaderTests: XCTestCase {
         super.setUp()
         self.continueAfterFailure = false
 
-        URLProtocol.registerClass(TestImageLoadingURLProtocol.self)
-        TestImageLoadingURLProtocol.reset()
+        URLProtocol.registerClass(ImageLoadingURLProtocolSpy.self)
+        ImageLoadingURLProtocolSpy.reset()
 
-        let originalImageData = UIImagePNGRepresentation(shieldImage)!
-        TestImageLoadingURLProtocol.registerData(originalImageData, forURL: imageURL)
+        let originalImageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
+        ImageLoadingURLProtocolSpy.registerData(originalImageData, forURL: imageURL)
     }
 
     override func tearDown() {
-        URLProtocol.unregisterClass(TestImageLoadingURLProtocol.self)
+        URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
 
         super.tearDown()
     }
@@ -49,7 +49,7 @@ class ImageDownloaderTests: XCTestCase {
         wait(for: [async], timeout: asyncTimeout)
 
         // The ImageDownloader is meant to be used with an external caching mechanism
-        let request = TestImageLoadingURLProtocol.pastRequestForURL(imageURL)!
+        let request = ImageLoadingURLProtocolSpy.pastRequestForURL(imageURL)!
         XCTAssertEqual(request.cachePolicy, .reloadIgnoringCacheData)
 
         XCTAssertNotNil(imageReturned)

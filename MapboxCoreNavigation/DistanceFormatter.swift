@@ -111,7 +111,7 @@ public class DistanceFormatter: LengthFormatter {
     lazy var roundingTableMetric: RoundingTable = {
         return RoundingTable(thresholds: [.init(maximumDistance: 25, roundingIncrement: 5, unit: .meter, maximumFractionDigits: 0),
                                           .init(maximumDistance: 100, roundingIncrement: 25, unit: .meter, maximumFractionDigits: 0),
-                                          .init(maximumDistance: 1_000, roundingIncrement: 50, unit: .meter, maximumFractionDigits: 0),
+                                          .init(maximumDistance: 999, roundingIncrement: 50, unit: .meter, maximumFractionDigits: 0),
                                           .init(maximumDistance: 3_000, roundingIncrement: 0, unit: .kilometer, maximumFractionDigits: 1),
                                           .init(maximumDistance: 5_000, roundingIncrement: 0, unit: .kilometer, maximumFractionDigits: 0)])
     }()

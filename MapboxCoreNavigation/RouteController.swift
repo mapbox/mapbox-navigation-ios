@@ -29,7 +29,7 @@ extension Notification.Name {
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isOpportunisticKey`.
+     The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
      */
     public static let routeControllerDidReroute = MBRouteControllerDidReroute
     
@@ -172,9 +172,9 @@ open class RouteController: NSObject {
     @objc public var isDeadReckoningEnabled = false
 
     /**
-     If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerOpportunisticReroutingInterval`.
+     If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`.
      */
-    @objc public var reroutesOpportunistically = false
+    @objc public var reroutesProactively = false
 
     var didFindFasterRoute = false
 
@@ -198,7 +198,7 @@ open class RouteController: NSObject {
             if let location = locationManager.location {
                 userInfo[.locationKey] = location
             }
-            userInfo[.isOpportunisticKey] = didFindFasterRoute
+            userInfo[.isProactiveKey] = didFindFasterRoute
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
@@ -220,7 +220,7 @@ open class RouteController: NSObject {
 
     var hasFoundOneQualifiedLocation = false
 
-    var recentDistancesFromManeuver: [CLLocationDistance] = []
+    var movementsAwayFromRoute = 0
     
     var previousArrivalWaypoint: Waypoint? {
         didSet {
@@ -306,7 +306,6 @@ open class RouteController: NSObject {
 
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: self)
-        NotificationCenter.default.addObserver(self, selector: #selector(didPassSpokenInstructionPoint(notification:)), name: .routeControllerDidPassSpokenInstructionPoint, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: self)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation), name: .UIDeviceOrientationDidChange, object: nil)
@@ -471,16 +470,12 @@ extension RouteController {
         checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
 
-    @objc func didPassSpokenInstructionPoint(notification: NSNotification) {
-        recentDistancesFromManeuver.removeAll()
-    }
-
     @objc func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
     }
     
     @objc func didReroute(notification: NSNotification) {
-        if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isOpportunisticKey] as? Bool, didFindFasterRoute {
+        if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as? Bool, didFindFasterRoute {
             _ = enqueueFoundFasterRouteEvent()
         }
         
@@ -488,7 +483,7 @@ extension RouteController {
             lastReroute?.update(newRoute: routeProgress.route)
         }
         
-        recentDistancesFromManeuver.removeAll()
+        movementsAwayFromRoute = 0
     }
 }
 
@@ -593,7 +588,7 @@ extension RouteController: CLLocationManagerDelegate {
         updateSpokenInstructionProgress(for: location)
 
         // Check for faster route given users current location
-        guard reroutesOpportunistically else { return }
+        guard reroutesProactively else { return }
         // Only check for faster alternatives if the user has plenty of time left on the route.
         guard routeProgress.durationRemaining > 600 else { return }
         // If the user is approaching a maneuver, don't check for a faster alternatives
@@ -685,6 +680,26 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     /**
+     Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
+     */
+    func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
+        let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
+        guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
+        
+        let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
+        
+        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
+            return false
+        } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
+            movementsAwayFromRoute = 0
+        } else {
+            movementsAwayFromRoute += 1
+        }
+        
+        return true
+    }
+    
+    /**
      Given a users current location, returns a Boolean whether they are currently on the route.
 
      If the user is not on the route, they should be rerouted.
@@ -698,28 +713,7 @@ extension RouteController: CLLocationManagerDelegate {
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
-        guard !isCloseToCurrentStep else { return true }
-        
-        // Check to see if the user is moving away from the maneuver.
-        // Here, we store an array of distances. If the current distance is greater than the last distance,
-        // add it to the array. If the array grows larger than x, reroute the user.
-        if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates {
-            let userDistanceToManeuver = Polyline(coordinates).distance(from: location.coordinate)
-            
-            // If the location updates have been backtracking for a certain amount of time and over a certain distance, the user most likely turned around or made a wrong turn and need a new route.
-            if recentDistancesFromManeuver.count > RouteControllerMinimumNumberLocationUpdatesBackwards && recentDistancesFromManeuver.last! - recentDistancesFromManeuver.first! > RouteControllerMinimumBacktrackingDistanceForRerouting {
-                return false
-            }
-            
-            if recentDistancesFromManeuver.isEmpty {
-                recentDistancesFromManeuver.append(userDistanceToManeuver)
-            } else if let lastDistance = recentDistancesFromManeuver.last, userDistanceToManeuver > lastDistance {
-                recentDistancesFromManeuver.append(userDistanceToManeuver)
-            } else {
-                // If we get a descending distance, reset the counter
-                recentDistancesFromManeuver.removeAll()
-            }
-        }
+        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
         
         // Check and see if the user is near a future step.
         guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
@@ -743,7 +737,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         // Only check every so often for a faster route.
-        guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerOpportunisticReroutingInterval else { return }
+        guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerProactiveReroutingInterval else { return }
         let durationRemaining = routeProgress.durationRemaining
 
         getDirections(from: location) { [weak self] (route, error) in
@@ -760,7 +754,7 @@ extension RouteController: CLLocationManagerDelegate {
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
                 strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
-                    RouteControllerNotificationUserInfoKey.isOpportunisticKey: true
+                    RouteControllerNotificationUserInfoKey.isProactiveKey: true
                 ]))
                 strongSelf.didFindFasterRoute = false
             }

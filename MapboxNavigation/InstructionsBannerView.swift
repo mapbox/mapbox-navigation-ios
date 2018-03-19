@@ -2,8 +2,14 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
+@objc(MBInstructionsBannerViewDelegate)
 protocol InstructionsBannerViewDelegate: class {
-    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    
+    @objc(didTapInstructionsBanner:)
+    optional func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
+    
+    @objc(didDragInstructionsBanner:)
+    optional func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 /// :nodoc:
@@ -26,7 +32,7 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
-    fileprivate let distanceFormatter = DistanceFormatter(approximate: true)
+    let distanceFormatter = DistanceFormatter(approximate: true)
     
     var distance: CLLocationDistance? {
         didSet {
@@ -57,8 +63,14 @@ open class BaseInstructionsBannerView: UIControl {
         setupAvailableBounds()
     }
     
-    @IBAction func tappedInstructionsBanner(_ sender: Any) {
-        delegate?.didTapInstructionsBanner(self)
+    @objc func draggedInstructionsBanner(_ sender: Any) {
+        if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
+            delegate?.didDragInstructionsBanner?(self)
+        }
+    }
+    
+    @objc func tappedInstructionsBanner(_ sender: Any) {
+        delegate?.didTapInstructionsBanner?(self)
     }
     
     func set(_ instruction: VisualInstruction?) {
@@ -79,8 +91,7 @@ open class BaseInstructionsBannerView: UIControl {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        
-        primaryLabel.instruction = [VisualInstructionComponent(type: .destination, text: "Primary text label", imageURL: nil, maneuverType: .none, maneuverDirection: .none)]
+        primaryLabel.instruction = [VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
         
         distance = 100
     }

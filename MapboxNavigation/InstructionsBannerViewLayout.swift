@@ -17,7 +17,7 @@ extension BaseInstructionsBannerView {
         let distanceLabel = DistanceLabel()
         distanceLabel.translatesAutoresizingMaskIntoConstraints = false
         distanceLabel.adjustsFontSizeToFitWidth = true
-        distanceLabel.minimumScaleFactor = 20.0 / 22.0
+        distanceLabel.minimumScaleFactor = 16.0 / 22.0
         addSubview(distanceLabel)
         self.distanceLabel = distanceLabel
         
@@ -56,10 +56,14 @@ extension BaseInstructionsBannerView {
         self.separatorView = separatorView
         
         addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
+
+        addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.draggedInstructionsBanner(_:))))
     }
     
     func setupLayout() {
         // Distance label
+        distanceLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: BaseInstructionsBannerView.padding / 2).isActive = true
+        distanceLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -BaseInstructionsBannerView.padding / 2).isActive = true
         distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
         distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding).isActive = true
         
