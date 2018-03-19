@@ -28,6 +28,8 @@
 		35002D6F1E5F6C7F0090E733 /* Base.lproj in Resources */ = {isa = PBXBuildFile; fileRef = 35002D6B1E5F6C7F0090E733 /* Base.lproj */; };
 		35002D711E5F6C7F0090E733 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 35002D6D1E5F6C7F0090E733 /* main.m */; };
 		35002D761E5F6CD30090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D741E5F6CD30090E733 /* Main.storyboard */; };
+		35022312205A855B00E1449A /* NavigationCameraLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022311205A855B00E1449A /* NavigationCameraLayer.swift */; };
+		35022318205AB8A100E1449A /* NavigationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022317205AB8A100E1449A /* NavigationCamera.swift */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
@@ -428,6 +430,8 @@
 		35002D6C1E5F6C7F0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D6D1E5F6C7F0090E733 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		35002D751E5F6CD30090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		35022311205A855B00E1449A /* NavigationCameraLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraLayer.swift; sourceTree = "<group>"; };
+		35022317205AB8A100E1449A /* NavigationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCamera.swift; sourceTree = "<group>"; };
 		35022319205BC94E00E1449A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35025F3E1F051DD2002BA3EA /* DialogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialogViewController.swift; sourceTree = "<group>"; };
 		3510300E1F54B67000E3B7E7 /* LaneTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneTests.swift; sourceTree = "<group>"; };
@@ -1107,6 +1111,8 @@
 				35DA85781FC45787004092EC /* StatusView.swift */,
 				8DB63A391FBBCA2200928389 /* RatingControl.swift */,
 				35B5A47D1FFFDCE5000A3C8D /* NavigationViewLayout.swift */,
+				35022311205A855B00E1449A /* NavigationCameraLayer.swift */,
+				35022317205AB8A100E1449A /* NavigationCamera.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -1773,6 +1779,7 @@
 				353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
 				35D428291FA0B61F00176028 /* InstructionsBannerViewLayout.swift in Sources */,
+				35022312205A855B00E1449A /* NavigationCameraLayer.swift in Sources */,
 				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
 				353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */,
 				C58822001FB0F0D7008B0A2D /* Error.swift in Sources */,
@@ -1810,6 +1817,7 @@
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
+				35022318205AB8A100E1449A /* NavigationCamera.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */,

@@ -86,6 +86,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance = defaultAltitude
+    var navigationCamera: NavigationCamera!
     var routes: [Route]?
     
     fileprivate var preferredFramesPerSecond: Int = 60 {
@@ -220,6 +221,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     fileprivate func commonInit() {
+        navigationCamera = NavigationCamera(self)
+        addSubview(navigationCamera)
+        
         makeGestureRecognizersRespectCourseTracking()
         makeGestureRecognizersUpdateCourseView()
         
@@ -1102,19 +1106,39 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Sets the camera directly over a series of coordinates.
      */
     @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
-        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
-        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+//        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
+//        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+//
+//        tracksUserCourse = false
+//        let camera = self.camera
+//        camera.pitch = 0
+//        camera.heading = 0
+//        self.camera = camera
+//
+//        // Don't keep zooming in
+//        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
+//
+//        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+//        self.animView?.percent = 0
+//        UIView.animate(withDuration: SWViewController.kAnimDuration) {
+//            self.animView?.percent = 100.0
+//        }
         
-        tracksUserCourse = false
-        let camera = self.camera
-        camera.pitch = 0
-        camera.heading = 0
-        self.camera = camera
+        self.navigationCamera.altitude = 100
+        self.navigationCamera.pitch = 50
+        self.navigationCamera.course = self.direction
         
-        // Don't keep zooming in
-        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
+        UIView.animate(withDuration: 1) {
+            self.navigationCamera.altitude = 10_000
+        }
         
-        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+        UIView.animate(withDuration: 1, delay: 1, options: [], animations: {
+            self.navigationCamera.pitch = 0
+        }, completion: nil)
+        
+        UIView.animate(withDuration: 1, delay: 2, options: [], animations: {
+            self.navigationCamera.course = 0
+        }, completion: nil)
     }
 }
 
