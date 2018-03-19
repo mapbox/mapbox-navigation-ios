@@ -46,8 +46,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
         self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
 
-        TestImageDownloadOperation.reset()
-        imageRepository.imageDownloader.setOperationType(TestImageDownloadOperation.self)
+        ImageDownloadOperationSpy.reset()
+        imageRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
     }
 
     override func tearDown() {
@@ -92,7 +92,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
         //Slash should be present until an adjacent shield is downloaded
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
-        
+
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
         simulateDownloadingShieldForComponent(firstDestinationComponent)
 
@@ -104,7 +104,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
-        let operation: TestImageDownloadOperation = TestImageDownloadOperation.operationForURL(component.imageURL!)!
+        let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
         operation.fireAllCompletions(ShieldImage.i280.image, data: UIImagePNGRepresentation(ShieldImage.i280.image), error: nil)
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
