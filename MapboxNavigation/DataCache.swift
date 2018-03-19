@@ -44,7 +44,6 @@ public class DataCache: NSObject, BimodalDataCache {
         }
 
         if let data = fileCache.dataFromFileCache(forKey: key) {
-            //TODO: add test
             storeDataInMemoryCache(data, forKey: key)
             return data
         }
