@@ -106,6 +106,10 @@ class ImageCacheTests: XCTestCase {
     func testClearingMemoryCacheOnMemoryWarning() {
         storeImageInMemory()
 
+        var tempDataCache: ImageCache? = ImageCache()
+        tempDataCache?.clearMemory()
+        tempDataCache = nil
+        
         NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
 
         XCTAssertNil(cache.image(forKey: imageKey))
