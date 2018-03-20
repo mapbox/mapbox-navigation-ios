@@ -362,6 +362,7 @@ open class RouteController: NSObject {
         // we ensure the animated location manager updates are also stopped.
         animatedLocationManager?.stopUpdatingLocation()
         animatedLocationManager?.stopUpdatingHeading()
+        animatedLocationManager = nil
     }
     
     /**
@@ -527,6 +528,8 @@ extension RouteController: CLLocationManagerDelegate {
             hasFoundOneQualifiedLocation = true
         }
         
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        
         var potentialLocation: CLLocation?
         
         // `filteredLocations` contains qualified locations
@@ -536,7 +539,7 @@ extension RouteController: CLLocationManagerDelegate {
         } else if hasFoundOneQualifiedLocation {
             if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
                 // Check for a tunnel intersection at the current step we found the bad location update.
-                checkForTunnel(at: lastLocation, for: manager, distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled)
+                checkForTunnelIntersection(at: lastLocation, for: manager, distanceTraveled: currentStepProgress.distanceTraveled)
                 return
             }
         // This case handles the first location.
@@ -557,15 +560,24 @@ extension RouteController: CLLocationManagerDelegate {
             perform(#selector(interpolateLocation), with: nil, afterDelay: 1.1)
         }
 
-        updateIntersectionIndex(for: routeProgress.currentLegProgress.currentStepProgress)
+        updateIntersectionIndex(for: currentStepProgress)
         
         // Check if the step’s remaining distance has changed.
-        if stepRemainingDistanceDidChange(at: location) {
-            // Check for a tunnel intersection whenever the current route step progresses.
-            checkForTunnel(at: location,
-                          for: manager,
-             distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled)
+        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
+        if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
+            // Notify observers if the step’s remaining distance has changed.
+            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
+            let distanceTraveled = currentStepProgress.step.distance - remainingDistance
+            currentStepProgress.distanceTraveled = distanceTraveled
+            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
+                RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+                RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
+                RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
+                ])
         }
+        
+        // Check for a tunnel intersection whenever the current route step progresses.
+        checkForTunnelIntersection(at: location, for: manager, distanceTraveled: currentStepProgress.distanceTraveled)
         
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
@@ -587,30 +599,16 @@ extension RouteController: CLLocationManagerDelegate {
         checkForFasterRoute(from: location)
     }
     
-    func stepRemainingDistanceDidChange(at location: CLLocation) -> Bool {
-        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        guard let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) else { return false }
-        
-        // Notify observers if the step’s remaining distance has changed.
-        let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
-        let distanceTraveled = routeProgress.currentLegProgress.currentStepProgress.step.distance - remainingDistance
-        routeProgress.currentLegProgress.currentStepProgress.distanceTraveled = distanceTraveled
-        
-        NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-            RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-            RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
-            RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
-        ])
-        
-        return true
-    }
-    
-    func checkForTunnel(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
+    func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
         guard let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else { return }
         
         if let classes = currentIntersection.outletRoadClasses {
-            if classes.contains(.tunnel) || !location.isQualified {
-                beginTunnelAnimation(for: manager,
+            // There main conditions to enable simulated tunnel animation:
+            //  - User location is within tunnel entrance radius
+            //  - Current intersection's road classes contain a tunnel
+            //  - When we receive a bad location update from GPS
+            if userWithinTunnelEntranceRadius(at: location) == true || classes.contains(.tunnel) || !location.isQualified {
+                enableTunnelAnimation(for: manager,
                                      routeProgress: routeProgress,
                                      distanceTraveled: distanceTraveled)
             } else {
@@ -619,7 +617,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func beginTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
+    func enableTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
         guard !(manager is SimulatedLocationManager), animatedLocationManager == nil else { return }
         
         let dispatchGroup = DispatchGroup()
@@ -709,16 +707,37 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     /**
+     Given a user's current location, returns a Boolean whether they are within a radius of a tunnel entrance.
+     */
+    @objc public func userWithinTunnelEntranceRadius(at location: CLLocation) -> Bool {
+        
+        // Ensure upcoming intersection is a tunnel intersection.
+        guard let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection,
+              let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
+              let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return false }
+        
+        // Find future location of user
+        let newLocation = locationAhead(of: location)
+        // Determine the distance to the upcoming tunnel entrance
+        let distanceToTunnel = Polyline(coordinates).distance(from: newLocation.coordinate, to: upcomingIntersection.location)
+        
+        return distanceToTunnel < RouteControllerMinimumDistanceToTunnelEntrance
+    }
+    
+    func locationAhead(of location: CLLocation) -> CLLocation {
+        let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
+        let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
+        return CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
+    }
+    
+    /**
      Given a users current location, returns a Boolean whether they are currently on the route.
 
      If the user is not on the route, they should be rerouted.
      */
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
 
-        // Find future location of user
-        let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
-        let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
-        let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
+        let newLocation = locationAhead(of: location)
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         

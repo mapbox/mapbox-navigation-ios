@@ -112,3 +112,8 @@ public var RouteControllerMinNumberOfInCorrectCourses: Int = 4
  Given a location update, the `horizontalAccuracy` is used to figure out how many consective location updates to wait before rerouting due to consecutive incorrect course updates.
  */
 public var RouteControllerIncorrectCourseMultiplier: Int = 4
+
+/**
+ Minimum distance to flag the close proximity to an upcoming tunnel intersection on a route.
+ */
+public var RouteControllerMinimumDistanceToTunnelEntrance: CLLocationDistance = 15
