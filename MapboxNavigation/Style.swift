@@ -1,4 +1,5 @@
 import UIKit
+import MapboxDirections
 
 /**
  `Style` is a convenient wrapper for styling the appearance of various interface components throughout the Navigation UI.
@@ -217,34 +218,31 @@ open class SpeedLimitSign: UIView {
     
     lazy var label: SpeedLimitLabel = .forAutoLayout()
     
-    let defaultText = "Speed\nLimit\n"
+    let defaultText = NSLocalizedString("SPEED_LIMIT", bundle: .mapboxNavigation, value: "Speed\nLimit\n", comment: "Speed limit sign main text.")
+    let paragraphStyle = NSMutableParagraphStyle()
     
-    var attributedDefaultText: NSAttributedString {
-        let fontSize = UIFont.systemFontSize
-        let boldAttributes = [
-            NSAttributedStringKey.font: UIFont.systemFont(ofSize: fontSize),
-            NSAttributedStringKey.foregroundColor: UIColor.black
-        ]
-        return NSMutableAttributedString(string: defaultText.uppercased(), attributes: boldAttributes)
-    }
-    
-    func attributedText(for speed: Int) -> NSAttributedString {
-        let fontSize = UIFont.systemFontSize
-        let boldAttributes = [
-            NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize * 2),
-            NSAttributedStringKey.foregroundColor: UIColor.black
-        ]
-        let speedString = String(describing: speed)
-        return NSMutableAttributedString(string: speedString, attributes: boldAttributes)
-    }
-    
-    
-    var speed: Int? {
+    var speedLimit: SpeedLimit? {
         didSet {
-            guard let speed = speed else { return }
+            guard let speedLimit = speedLimit else { return }
+            let fontSize = UIFont.systemFontSize
+            
             let strings = NSMutableAttributedString()
-            strings.append(attributedDefaultText)
-            strings.append(attributedText(for: speed))
+            
+            strings.append(NSMutableAttributedString(string: defaultText.uppercased(), attributes: [
+                NSAttributedStringKey.paragraphStyle: paragraphStyle,
+                NSAttributedStringKey.font: UIFont.systemFont(ofSize: fontSize * 0.9)
+                ]))
+            
+            strings.append(NSMutableAttributedString(string: String(describing: speedLimit.speed), attributes: [
+                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize * 2),
+                NSAttributedStringKey.paragraphStyle: paragraphStyle
+                ]))
+            
+            strings.append(NSMutableAttributedString(string: "\n\(speedLimit.speedUnits.localizedSpeedUnit)", attributes: [
+                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize / 1.3),
+                NSAttributedStringKey.paragraphStyle: paragraphStyle
+                ]))
+            
             label.attributedText = strings
         }
     }
@@ -272,9 +270,11 @@ open class SpeedLimitSign: UIView {
     
     func commonInit() {
         addSubview(label)
+        paragraphStyle.lineHeightMultiple = 0.9
+        paragraphStyle.alignment = .center
         layoutMargins = SpeedLimitSign.textInsets
         label.lineBreakMode = .byWordWrapping
-        label.numberOfLines = 3
+        label.numberOfLines = 4
         label.textAlignment = .center
         label.pinInSuperview(respectingMargins: true)
     }
@@ -284,6 +284,20 @@ open class SpeedLimitSign: UIView {
         layer.cornerRadius = bounds.midY / 8
     }
 }
+
+extension SpeedUnit {
+    var localizedSpeedUnit: String {
+        switch self {
+        case .kilometersPerHour:
+            return NSLocalizedString("KILOMETERS_PER_HOUR", bundle: .mapboxNavigation, value: "kph", comment: "Inform the user on limits for speed.")
+        case .milesPerHour:
+            return NSLocalizedString("MILES_PER_HOUR", bundle: .mapboxNavigation, value: "mph", comment: "Inform the user on limits for speed.")
+        default:
+            return NSLocalizedString("KILOMETERS_PER_HOUR", bundle: .mapboxNavigation, value: "kph", comment: "Inform the user on limits for speed.")
+        }
+    }
+}
+
 
 /// :nodoc:
 @objc(MBStylableLabel)

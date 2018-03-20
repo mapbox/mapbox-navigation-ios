@@ -235,7 +235,6 @@ open class NavigationView: UIView {
         DayStyle().apply()
         [mapView, instructionsBannerView, lanesView, bottomBannerView, nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
         wayNameView.text = "Street Label"
-        speedLimitSign.speed = 60
     }
     
     @objc func cancelButtonTapped(_ sender: CancelButton) {

@@ -329,7 +329,7 @@ class RouteMapViewController: UIViewController {
             navigationView.speedLimitSign.isHidden = true
             return
         }
-        navigationView.speedLimitSign.speed = currentSpeed.speed
+        navigationView.speedLimitSign.speedLimit = currentSpeed
         navigationView.speedLimitSign.isHidden = false
     }
     
