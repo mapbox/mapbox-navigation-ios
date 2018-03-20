@@ -161,4 +161,14 @@ extension CLLocation {
         }
         return true
     }
+    
+    // Speed representation in miles per hour.
+    public var speedMPH: Double {
+        return speed * 2.23694
+    }
+    
+    // Speed representation in kilometers per hour.
+    public var speedKPH: Double {
+        return speed * 3.6
+    }
 }

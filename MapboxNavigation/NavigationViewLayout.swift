@@ -45,6 +45,10 @@ extension NavigationView {
         
         wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         wayNameView.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        
+        
+        speedLimitSign.bottomAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: -10).isActive = true
+        speedLimitSign.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
     }
 
     func constrainEndOfRoute() {

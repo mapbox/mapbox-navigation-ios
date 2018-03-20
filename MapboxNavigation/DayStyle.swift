@@ -128,6 +128,7 @@ open class DayStyle: Style {
         WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
+        SpeedLimitSign.appearance().backgroundColor = .white
         EndOfRouteTitleLabel.appearance().normalTextColor = .black
         EndOfRouteTitleLabel.appearance().normalFont = .systemFont(ofSize: 36.0)
         EndOfRouteContentView.appearance().backgroundColor = .white

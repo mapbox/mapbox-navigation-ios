@@ -1,4 +1,5 @@
 import UIKit
+import MapboxDirections
 
 /**
  `Style` is a convenient wrapper for styling the appearance of various interface components throughout the Navigation UI.
@@ -210,6 +211,98 @@ public class ResumeButton: UIControl {
 }
 
 /// :nodoc:
+@objc(MBSpeedLimitSign)
+open class SpeedLimitSign: UIView {
+    
+    private static let textInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+    
+    lazy var label: SpeedLimitLabel = .forAutoLayout()
+    
+    let defaultText = NSLocalizedString("SPEED_LIMIT", bundle: .mapboxNavigation, value: "Speed\nLimit\n", comment: "Speed limit sign main text.")
+    let paragraphStyle = NSMutableParagraphStyle()
+    
+    var userIsOverSpeedLimit = false
+    
+    var speedLimit: SpeedLimit? {
+        didSet {
+            guard let speedLimit = speedLimit else { return }
+            let fontSize = UIFont.systemFontSize
+            
+            let strings = NSMutableAttributedString()
+            
+            strings.append(NSMutableAttributedString(string: defaultText.uppercased(), attributes: [
+                NSAttributedStringKey.paragraphStyle: paragraphStyle,
+                NSAttributedStringKey.font: UIFont.systemFont(ofSize: fontSize * 0.9)
+                ]))
+            
+            strings.append(NSMutableAttributedString(string: String(describing: speedLimit.speed), attributes: [
+                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize * 2),
+                NSAttributedStringKey.paragraphStyle: paragraphStyle,
+                NSAttributedStringKey.foregroundColor: userIsOverSpeedLimit ? #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0) : UIColor.black
+                ]))
+            
+            strings.append(NSMutableAttributedString(string: "\n\(speedLimit.speedUnits.localizedSpeedUnit)", attributes: [
+                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize / 1.3),
+                NSAttributedStringKey.paragraphStyle: paragraphStyle
+                ]))
+            
+            label.attributedText = strings
+        }
+    }
+    
+    @objc dynamic public var borderColor: UIColor? {
+        get {
+            guard let color = layer.borderColor else { return nil }
+            return UIColor(cgColor: color)
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
+        }
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    
+    func commonInit() {
+        addSubview(label)
+        paragraphStyle.lineHeightMultiple = 0.9
+        paragraphStyle.alignment = .center
+        layoutMargins = SpeedLimitSign.textInsets
+        label.lineBreakMode = .byWordWrapping
+        label.numberOfLines = 4
+        label.textAlignment = .center
+        label.pinInSuperview(respectingMargins: true)
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.midY / 8
+    }
+}
+
+extension SpeedUnit {
+    var localizedSpeedUnit: String {
+        switch self {
+        case .kilometersPerHour:
+            return NSLocalizedString("KILOMETERS_PER_HOUR", bundle: .mapboxNavigation, value: "kph", comment: "Inform the user on limits for speed.")
+        case .milesPerHour:
+            return NSLocalizedString("MILES_PER_HOUR", bundle: .mapboxNavigation, value: "mph", comment: "Inform the user on limits for speed.")
+        default:
+            return NSLocalizedString("KILOMETERS_PER_HOUR", bundle: .mapboxNavigation, value: "kph", comment: "Inform the user on limits for speed.")
+        }
+    }
+}
+
+
+/// :nodoc:
 @objc(MBStylableLabel)
 open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
@@ -400,6 +493,10 @@ open class WayNameView: UIView {
 /// :nodoc:
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {}
+
+/// :nodoc:
+@objc(MBSpeedLimitLabel)
+open class SpeedLimitLabel: StylableLabel {}
 
 /// :nodoc:
 @objc(MBProgressBar)

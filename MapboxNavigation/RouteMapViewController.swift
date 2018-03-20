@@ -54,6 +54,8 @@ class RouteMapViewController: UIViewController {
     var destination: Waypoint?
     
     var showsEndOfRoute: Bool = true
+    
+    var showMaximumSpeedLimitSign = false
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -184,6 +186,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(notification:)), name: .routeControllerProgressDidChange, object: nil)
         subscribeToKeyboardNotifications()
     }
     
@@ -192,6 +195,7 @@ class RouteMapViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
         unsubscribeFromKeyboardNotifications()
     }
 
@@ -309,6 +313,34 @@ class RouteMapViewController: UIViewController {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
         statusView.show(title, showSpinner: true)
+    }
+    
+    @objc func progressDidChange(notification: NSNotification) {
+        guard showMaximumSpeedLimitSign else { return }
+        
+        let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
+        
+        let legCoordinates = Array(routeProgress.currentLegProgress.leg.steps.flatMap { $0.coordinates }.joined())
+        let userCurrentSegment = Int(Double(legCoordinates.count) * routeProgress.currentLegProgress.fractionTraveled)
+        
+        guard let speeds = routeProgress.currentLegProgress.leg.segmentMaximumSpeedLimits else { return }
+        guard userCurrentSegment < speeds.endIndex else {
+            navigationView.speedLimitSign.isHidden = true
+            navigationView.speedLimitSign.userIsOverSpeedLimit = false
+            return
+        }
+        
+        let currentSpeedLimit = speeds[userCurrentSegment]
+        guard currentSpeedLimit.speed != NSNotFound, !currentSpeedLimit.speedIsUnknown else {
+            navigationView.speedLimitSign.isHidden = true
+            navigationView.speedLimitSign.userIsOverSpeedLimit = false
+            return
+        }
+        navigationView.speedLimitSign.speedLimit = currentSpeedLimit
+        navigationView.speedLimitSign.userIsOverSpeedLimit = (currentSpeedLimit.speedUnits == .kilometersPerHour && Int(location.speedKPH) > currentSpeedLimit.speed) ||
+            (currentSpeedLimit.speedUnits == .milesPerHour && Int(location.speedMPH) > currentSpeedLimit.speed)
+        navigationView.speedLimitSign.isHidden = false
     }
     
     @objc func didReroute(notification: NSNotification) {
