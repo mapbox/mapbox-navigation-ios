@@ -560,14 +560,16 @@ extension RouteController: CLLocationManagerDelegate {
             perform(#selector(interpolateLocation), with: nil, afterDelay: 1.1)
         }
 
+        let currentStep = currentStepProgress.step
+        
         updateIntersectionIndex(for: currentStepProgress)
         
-        // Check if the step’s remaining distance has changed.
+       // Notify observers if the step’s remaining distance has changed.
         let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             // Notify observers if the step’s remaining distance has changed.
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
-            let distanceTraveled = currentStepProgress.step.distance - remainingDistance
+            let distanceTraveled = currentStep.distance - remainingDistance
             currentStepProgress.distanceTraveled = distanceTraveled
             NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
                 RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
