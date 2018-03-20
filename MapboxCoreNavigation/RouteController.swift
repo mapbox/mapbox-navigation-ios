@@ -575,10 +575,9 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
+            // Check for a tunnel intersection whenever the current route step progresses.
+            checkForTunnelIntersection(at: location, for: manager, distanceTraveled: distanceTraveled)
         }
-        
-        // Check for a tunnel intersection whenever the current route step progresses.
-        checkForTunnelIntersection(at: location, for: manager, distanceTraveled: currentStepProgress.distanceTraveled)
         
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
