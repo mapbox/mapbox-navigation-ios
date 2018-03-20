@@ -535,6 +535,8 @@ extension RouteController: CLLocationManagerDelegate {
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
             if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
+                // Check for a tunnel intersection at the current step we found the bad location update.
+                checkForTunnel(at: lastLocation, for: manager, distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled)
                 return
             }
         // This case handles the first location.
@@ -555,25 +557,14 @@ extension RouteController: CLLocationManagerDelegate {
             perform(#selector(interpolateLocation), with: nil, afterDelay: 1.1)
         }
 
-        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-        let currentStep = currentStepProgress.step
-
-        updateIntersectionIndex(for: currentStepProgress)
+        updateIntersectionIndex(for: routeProgress.currentLegProgress.currentStepProgress)
         
-        // Notify observers if the step’s remaining distance has changed.
-        if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
-            let distanceTraveled = currentStep.distance - remainingDistance
-            currentStepProgress.distanceTraveled = distanceTraveled
-            NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-                RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
-                RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
-                RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
-                ])
-            
-            // Check for a tunnel intersection at the current step whenever the route progresses.
-            checkForTunnel(at: location, for: manager, distanceTraveled: distanceTraveled)
+        // Check if the step’s remaining distance has changed.
+        if stepRemainingDistanceDidChange(at: location) {
+            // Check for a tunnel intersection whenever the current route step progresses.
+            checkForTunnel(at: location,
+                          for: manager,
+             distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled)
         }
         
         updateDistanceToIntersection(from: location)
@@ -596,11 +587,29 @@ extension RouteController: CLLocationManagerDelegate {
         checkForFasterRoute(from: location)
     }
     
-    fileprivate func checkForTunnel(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
+    func stepRemainingDistanceDidChange(at location: CLLocation) -> Bool {
+        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
+        guard let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) else { return false }
+        
+        // Notify observers if the step’s remaining distance has changed.
+        let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
+        let distanceTraveled = routeProgress.currentLegProgress.currentStepProgress.step.distance - remainingDistance
+        routeProgress.currentLegProgress.currentStepProgress.distanceTraveled = distanceTraveled
+        
+        NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
+            RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress,
+            RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
+            RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
+        ])
+        
+        return true
+    }
+    
+    func checkForTunnel(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
         guard let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else { return }
         
         if let classes = currentIntersection.outletRoadClasses {
-            if classes.contains(.tunnel) && !location.isQualified {
+            if classes.contains(.tunnel) || !location.isQualified {
                 beginTunnelAnimation(for: manager,
                                      routeProgress: routeProgress,
                                      distanceTraveled: distanceTraveled)
@@ -610,7 +619,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    fileprivate func beginTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
+    func beginTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
         guard !(manager is SimulatedLocationManager), animatedLocationManager == nil else { return }
         
         let dispatchGroup = DispatchGroup()
@@ -635,7 +644,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    fileprivate func suspendTunnelAnimation(for manager: CLLocationManager) {
+    func suspendTunnelAnimation(for manager: CLLocationManager) {
         guard !(manager is SimulatedLocationManager), animatedLocationManager != nil else { return }
         
         if let lastKnownLocation = animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
@@ -657,7 +666,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    fileprivate func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
+    func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
         let intersectionDistances = currentStepProgress.intersectionDistances
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
         currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
