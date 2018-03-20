@@ -707,7 +707,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     /**
-     Given a user's current location, returns a Boolean whether they are within a radius of a tunnel entrance.
+     Given a user's current location, returns a Boolean whether they are within the radius of a tunnel entrance.
      */
     @objc public func userWithinTunnelEntranceRadius(at location: CLLocation) -> Bool {
         
