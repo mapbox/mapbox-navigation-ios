@@ -210,6 +210,82 @@ public class ResumeButton: UIControl {
 }
 
 /// :nodoc:
+@objc(MBSpeedLimitSign)
+open class SpeedLimitSign: UIView {
+    
+    private static let textInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+    
+    lazy var label: SpeedLimitLabel = .forAutoLayout()
+    
+    let defaultText = "Speed\nLimit\n"
+    
+    var attributedDefaultText: NSAttributedString {
+        let fontSize = UIFont.systemFontSize
+        let boldAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: fontSize),
+            NSAttributedStringKey.foregroundColor: UIColor.black
+        ]
+        return NSMutableAttributedString(string: defaultText.uppercased(), attributes: boldAttributes)
+    }
+    
+    func attributedText(for speed: Int) -> NSAttributedString {
+        let fontSize = UIFont.systemFontSize
+        let boldAttributes = [
+            NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize * 2),
+            NSAttributedStringKey.foregroundColor: UIColor.black
+        ]
+        let speedString = String(describing: speed)
+        return NSMutableAttributedString(string: speedString, attributes: boldAttributes)
+    }
+    
+    
+    var speed: Int? {
+        didSet {
+            guard let speed = speed else { return }
+            let strings = NSMutableAttributedString()
+            strings.append(attributedDefaultText)
+            strings.append(attributedText(for: speed))
+            label.attributedText = strings
+        }
+    }
+    
+    @objc dynamic public var borderColor: UIColor? {
+        get {
+            guard let color = layer.borderColor else { return nil }
+            return UIColor(cgColor: color)
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
+        }
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    
+    func commonInit() {
+        addSubview(label)
+        layoutMargins = SpeedLimitSign.textInsets
+        label.lineBreakMode = .byWordWrapping
+        label.numberOfLines = 3
+        label.textAlignment = .center
+        label.pinInSuperview(respectingMargins: true)
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.midY / 8
+    }
+}
+
+/// :nodoc:
 @objc(MBStylableLabel)
 open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
@@ -400,6 +476,10 @@ open class WayNameView: UIView {
 /// :nodoc:
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {}
+
+/// :nodoc:
+@objc(MBSpeedLimitLabel)
+open class SpeedLimitLabel: StylableLabel {}
 
 /// :nodoc:
 @objc(MBProgressBar)

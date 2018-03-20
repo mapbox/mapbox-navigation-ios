@@ -123,6 +123,13 @@ open class NavigationView: UIView {
         return view
     }()
     
+    lazy var speedLimitSign: SpeedLimitSign = {
+        let view: SpeedLimitSign = .forAutoLayout(hidden: true)
+        view.clipsToBounds = true
+        view.layer.borderWidth = 1.0 / UIScreen.main.scale
+        return view
+    }()
+    
     lazy var rerouteReportButton: ReportButton = {
         let button: ReportButton = .forAutoLayout()
         button.setTitle(Constants.rerouteReportTitle, for: .normal)
@@ -214,6 +221,7 @@ open class NavigationView: UIView {
             separatorView,
             resumeButton,
             wayNameView,
+            speedLimitSign,
             rerouteReportButton,
             bottomBannerContentView,
             instructionsBannerContentView
@@ -227,6 +235,7 @@ open class NavigationView: UIView {
         DayStyle().apply()
         [mapView, instructionsBannerView, lanesView, bottomBannerView, nextBannerView].forEach { $0.prepareForInterfaceBuilder() }
         wayNameView.text = "Street Label"
+        speedLimitSign.speed = 60
     }
     
     @objc func cancelButtonTapped(_ sender: CancelButton) {
