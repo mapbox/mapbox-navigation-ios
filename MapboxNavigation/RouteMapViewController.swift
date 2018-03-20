@@ -54,6 +54,8 @@ class RouteMapViewController: UIViewController {
     var destination: Waypoint?
     
     var showsEndOfRoute: Bool = true
+    
+    var showMaximumSpeedLimitSign = false
 
     var pendingCamera: MGLMapCamera? {
         guard let parent = parent as? NavigationViewController else {
@@ -314,22 +316,30 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func progressDidChange(notification: NSNotification) {
+        guard showMaximumSpeedLimitSign else { return }
+        
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
         
         let legCoordinates = Array(routeProgress.currentLegProgress.leg.steps.flatMap { $0.coordinates }.joined())
         let userCurrentSegment = Int(Double(legCoordinates.count) * routeProgress.currentLegProgress.fractionTraveled)
         
         guard let speeds = routeProgress.currentLegProgress.leg.segmentMaximumSpeedLimits else { return }
-        let currentSpeed = speeds[userCurrentSegment]
-        guard currentSpeed.speed != NSNotFound else {
+        guard userCurrentSegment < speeds.endIndex else {
             navigationView.speedLimitSign.isHidden = true
+            navigationView.speedLimitSign.userIsOverSpeedLimit = false
             return
         }
-        guard !currentSpeed.speedIsUnknown else {
+        
+        let currentSpeedLimit = speeds[userCurrentSegment]
+        guard currentSpeedLimit.speed != NSNotFound, !currentSpeedLimit.speedIsUnknown else {
             navigationView.speedLimitSign.isHidden = true
+            navigationView.speedLimitSign.userIsOverSpeedLimit = false
             return
         }
-        navigationView.speedLimitSign.speedLimit = currentSpeed
+        navigationView.speedLimitSign.speedLimit = currentSpeedLimit
+        navigationView.speedLimitSign.userIsOverSpeedLimit = (currentSpeedLimit.speedUnits == .kilometersPerHour && Int(location.speedKPH) > currentSpeedLimit.speed) ||
+            (currentSpeedLimit.speedUnits == .milesPerHour && Int(location.speedMPH) > currentSpeedLimit.speed)
         navigationView.speedLimitSign.isHidden = false
     }
     

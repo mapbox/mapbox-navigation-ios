@@ -309,6 +309,15 @@ public class NavigationViewController: UIViewController {
      */
     @objc public var usesNightStyleInsideTunnels: Bool = false
     
+    /**
+     If true, the maximum speed limit for the segment of road the user is current traveling on will be shown.
+     */
+    @objc public var showMaximumSpeedLimitSign = false {
+        didSet {
+            mapViewController?.showMaximumSpeedLimitSign = showMaximumSpeedLimitSign
+        }
+    }
+    
     let progressBar = ProgressBar()
     var styleManager: StyleManager!
     

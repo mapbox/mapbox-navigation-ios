@@ -221,6 +221,8 @@ open class SpeedLimitSign: UIView {
     let defaultText = NSLocalizedString("SPEED_LIMIT", bundle: .mapboxNavigation, value: "Speed\nLimit\n", comment: "Speed limit sign main text.")
     let paragraphStyle = NSMutableParagraphStyle()
     
+    var userIsOverSpeedLimit = false
+    
     var speedLimit: SpeedLimit? {
         didSet {
             guard let speedLimit = speedLimit else { return }
@@ -235,7 +237,8 @@ open class SpeedLimitSign: UIView {
             
             strings.append(NSMutableAttributedString(string: String(describing: speedLimit.speed), attributes: [
                 NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize * 2),
-                NSAttributedStringKey.paragraphStyle: paragraphStyle
+                NSAttributedStringKey.paragraphStyle: paragraphStyle,
+                NSAttributedStringKey.foregroundColor: userIsOverSpeedLimit ? #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0) : UIColor.black
                 ]))
             
             strings.append(NSMutableAttributedString(string: "\n\(speedLimit.speedUnits.localizedSpeedUnit)", attributes: [
