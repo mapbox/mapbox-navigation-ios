@@ -10,15 +10,10 @@ public class DataCache: NSObject, BimodalDataCache {
         memoryCache.name = "In-Memory Data Cache"
 
         super.init()
-
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidReceiveMemoryWarning, object: nil, queue: nil) { [unowned self] (notif) in
-            self.clearMemory()
-        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
 
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
 
     // MARK: Data cache
 

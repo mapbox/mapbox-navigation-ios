@@ -32,6 +32,11 @@ extension BottomBannerView {
         addSubview(dividerView)
         self.dividerView = dividerView
         
+        let progressBar = ProgressBar()
+        progressBar.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(progressBar)
+        self.progressBar = progressBar
+        
         setupConstraints()
     }
     
@@ -61,6 +66,11 @@ extension BottomBannerView {
         
         c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: dividerView.leadingAnchor, constant: -10))
         c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor))
+        
+        c.append(progressBar.leadingAnchor.constraint(equalTo: leadingAnchor))
+        c.append(progressBar.trailingAnchor.constraint(equalTo: trailingAnchor))
+        c.append(progressBar.bottomAnchor.constraint(equalTo: bottomAnchor))
+        c.append(progressBar.heightAnchor.constraint(equalToConstant: 3))
     }
     
     fileprivate func setupVerticalRegularLayout(_ c: inout [NSLayoutConstraint]) {
@@ -84,6 +94,11 @@ extension BottomBannerView {
         
         c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
         c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: dividerView.leadingAnchor, constant: -10))
+        
+        c.append(progressBar.leadingAnchor.constraint(equalTo: leadingAnchor))
+        c.append(progressBar.trailingAnchor.constraint(equalTo: trailingAnchor))
+        c.append(progressBar.bottomAnchor.constraint(equalTo: bottomAnchor))
+        c.append(progressBar.heightAnchor.constraint(equalToConstant: 3))
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

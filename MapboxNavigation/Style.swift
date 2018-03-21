@@ -434,13 +434,6 @@ public class ProgressBar: UIView {
         }, completion: nil)
     }
     
-    func dock(on view: UIView) {
-        translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(self)
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bar]-0-|", options: [], metrics: nil, views: ["bar": self]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bar(\(bounds.height))]-0-|", options: [], metrics: nil, views: ["bar": self]))
-    }
-    
     public override func layoutSubviews() {
         super.layoutSubviews()
         
