@@ -3,7 +3,7 @@
 ## master
 
 ### User interface
-* `DayStyle` is temporarily replaced with `NightStyle` while the user travels through a tunnel. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
+* Styles with styleType of type `.night` will be applied temporarily while the user travels through a tunnel. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
 * The user can reveal the list of upcoming steps by swiping downward from the top banner. ([#1150](https://github.com/mapbox/mapbox-navigation-ios/pull/1150))
 * Fixed an issue causing the overview map to insist on centering the route upon each location update. ([#1223](https://github.com/mapbox/mapbox-navigation-ios/pull/1223))
 * Improved the contrast of `TimeRemainingLabel.trafficSevereColor` against `BottomBannerView.backgroundColor` in `NightStyle`. ([#1228](https://github.com/mapbox/mapbox-navigation-ios/pull/1228))
