@@ -16,6 +16,7 @@ open class BottomBannerView: UIView {
     weak var arrivalTimeLabel: ArrivalTimeLabel!
     weak var cancelButton: CancelButton!
     weak var dividerView: SeparatorView!
+    weak var progressBar: ProgressBar!
     weak var routeController: RouteController!
     weak var delegate: BottomBannerViewDelegate?
     
@@ -75,6 +76,8 @@ open class BottomBannerView: UIView {
     }
     
     func updateETA(routeProgress: RouteProgress) {
+        progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
+        
         guard let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date()) else { return }
         arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate)
 
