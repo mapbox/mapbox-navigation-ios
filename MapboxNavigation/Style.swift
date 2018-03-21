@@ -231,19 +231,19 @@ open class SpeedLimitSign: UIView {
             let strings = NSMutableAttributedString()
             
             strings.append(NSMutableAttributedString(string: defaultText.uppercased(), attributes: [
-                NSAttributedStringKey.paragraphStyle: paragraphStyle,
-                NSAttributedStringKey.font: UIFont.systemFont(ofSize: fontSize * 0.9)
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont.systemFont(ofSize: fontSize * 0.9)
                 ]))
             
             strings.append(NSMutableAttributedString(string: String(describing: speedLimit.speed), attributes: [
-                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize * 2),
-                NSAttributedStringKey.paragraphStyle: paragraphStyle,
-                NSAttributedStringKey.foregroundColor: userIsOverSpeedLimit ? #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0) : UIColor.black
+                .font: UIFont.boldSystemFont(ofSize: fontSize * 2),
+                .paragraphStyle: paragraphStyle,
+                .foregroundColor: userIsOverSpeedLimit ? #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0) : UIColor.black
                 ]))
             
             strings.append(NSMutableAttributedString(string: "\n\(speedLimit.speedUnits.localizedSpeedUnit)", attributes: [
-                NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: fontSize / 1.3),
-                NSAttributedStringKey.paragraphStyle: paragraphStyle
+                .font: UIFont.boldSystemFont(ofSize: fontSize / 1.3),
+                .paragraphStyle: paragraphStyle
                 ]))
             
             label.attributedText = strings
