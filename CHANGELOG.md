@@ -16,6 +16,7 @@
 * Renamed the `RouteController.reroutesOpportunistically` property to `RouteController.reroutesProactively`, `RouteControllerOpportunisticReroutingInterval` global variable to `RouteControllerProactiveReroutingInterval`, and the `RouteControllerNotificationUserInfoKey.isOpportunisticKey` value to `RouteControllerNotificationUserInfoKey.isProactiveKey`. ([#1230](https://github.com/mapbox/mapbox-navigation-ios/pull/1230))
 * Added a `RouteStepProgress.currentIntersection` property that is set to the intersection the user has most recently passed along the route. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
 * Fixed an issue where the `RouteStepProgress.upcomingIntersection` property was always set to the current step’s first intersection. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
+* Added support for using the Mapbox Map Matching API. [#1177](https://github.com/mapbox/mapbox-navigation-ios/pull/1177)
 
 ## v0.15.0 (March 13, 2018)
 
