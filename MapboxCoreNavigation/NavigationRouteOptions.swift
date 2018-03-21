@@ -70,7 +70,7 @@ open class NavigationMatchOptions: MatchOptions {
      Initializes a navigation route options object for routes between the given waypoints and an optional profile identifier optimized for navigation.
      
      - SeeAlso:
-     [RouteOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.10.1/Classes/RouteOptions.html)
+     [MatchOptions](https://www.mapbox.com/mapbox-navigation-ios/directions/0.19.0/Classes/MatchOptions.html)
      */
     @objc public required init(waypoints: [Waypoint], profileIdentifier: MBDirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         super.init(waypoints: waypoints.map {
