@@ -10,13 +10,7 @@ internal class ImageCache: BimodalImageCache {
 
         fileCache = FileCache()
 
-        NotificationCenter.default.addObserver(forName: .UIApplicationDidReceiveMemoryWarning, object: nil, queue: nil) { [unowned self] (notif) in
-            self.clearMemory()
-        }
-    }
-
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self, selector: #selector(DataCache.clearMemory), name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
 
     // MARK: Image cache
