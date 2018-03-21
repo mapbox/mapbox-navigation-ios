@@ -91,7 +91,6 @@ internal class FileCache {
         do {
             return try Data.init(contentsOf: cacheURLWithKey(key))
         } catch {
-            NSLog("No viable data in disk cache for URL: %@", key)
             return nil
         }
     }
