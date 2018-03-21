@@ -194,6 +194,14 @@ open class RouteLegProgress: NSObject {
     @objc public var userHasArrivedAtWaypoint = false
     
     /**
+     An approximatation of the closest segment on the current leg.
+     */
+    @objc public var currentSegment: Int {
+        let legCoordinates = Array(leg.steps.flatMap { $0.coordinates }.joined())
+        return Int(Double(legCoordinates.count) * fractionTraveled)
+    }
+    
+    /**
      Returns the `RouteStep` before a given step. Returns `nil` if there is no step prior.
      */
     @objc public func stepBefore(_ step: RouteStep) -> RouteStep? {

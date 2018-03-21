@@ -316,30 +316,29 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func progressDidChange(notification: NSNotification) {
-        guard showMaximumSpeedLimitSign else { return }
+        guard showMaximumSpeedLimitSign else {
+            navigationView.speedLimitSign.isHidden = true
+            return
+        }
         
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
-        
-        let legCoordinates = Array(routeProgress.currentLegProgress.leg.steps.flatMap { $0.coordinates }.joined())
-        let userCurrentSegment = Int(Double(legCoordinates.count) * routeProgress.currentLegProgress.fractionTraveled)
-        
         guard let speeds = routeProgress.currentLegProgress.leg.segmentMaximumSpeedLimits else { return }
+        
+        let userCurrentSegment = routeProgress.currentLegProgress.currentSegment
+        
         guard userCurrentSegment < speeds.endIndex else {
             navigationView.speedLimitSign.isHidden = true
-            navigationView.speedLimitSign.userIsOverSpeedLimit = false
             return
         }
         
         let currentSpeedLimit = speeds[userCurrentSegment]
+        
         guard currentSpeedLimit.speed != NSNotFound, !currentSpeedLimit.speedIsUnknown else {
             navigationView.speedLimitSign.isHidden = true
-            navigationView.speedLimitSign.userIsOverSpeedLimit = false
             return
         }
+        
         navigationView.speedLimitSign.speedLimit = currentSpeedLimit
-        navigationView.speedLimitSign.userIsOverSpeedLimit = (currentSpeedLimit.speedUnits == .kilometersPerHour && Int(location.speedKPH) > currentSpeedLimit.speed) ||
-            (currentSpeedLimit.speedUnits == .milesPerHour && Int(location.speedMPH) > currentSpeedLimit.speed)
         navigationView.speedLimitSign.isHidden = false
     }
     
