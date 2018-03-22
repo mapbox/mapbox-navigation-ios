@@ -48,7 +48,7 @@ The upcoming road or ramp destination is named according to the local or nationa
 | Hebrew     | ✅              | ✅                             | —                     | ✅
 | Hungarian  | ✅              | —                             | —                     | ✅
 | Italian    | ✅              | ✅                             | ✅                     | ✅
-| Portuguese | ✅              | ✅                             | ✅                     | ✅
+| Portuguese | ✅             | ✅                             | ✅                     | ✅
 | Polish     | —              | ✅                             | ✅                     | ✅
 | Romanian   | —              | ✅                             | ✅                     | ✅
 | Russian    | ✅              | ✅                             | ✅                     | ✅

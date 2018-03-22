@@ -21,7 +21,7 @@
 * Added support for using the Mapbox Map Matching API. [#1177](https://github.com/mapbox/mapbox-navigation-ios/pull/1177)
 
 ### Other changes
-* Added an Arabic localization. ([#1252](https://github.com/mapbox/mapbox-navigation-ios/pull/1251))
+* Added Arabic and European Portuguese localizations. ([#1252](https://github.com/mapbox/mapbox-navigation-ios/pull/1251))
 
 ## v0.15.0 (March 13, 2018)
 
