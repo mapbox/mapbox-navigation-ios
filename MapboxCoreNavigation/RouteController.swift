@@ -605,7 +605,8 @@ extension RouteController: CLLocationManagerDelegate {
         if let classes = currentIntersection.outletRoadClasses {
             // Main conditions to enable simulated tunnel animation:
             // - User location is within tunnel entrance radius OR
-            // - Current intersection's road classes contain a tunnel AND when we receive a bad location update from the GPS
+            // - Current intersection's road classes contain a tunnel
+            //   AND when we receive a bad location update from the GPS
             if userWithinTunnelEntranceRadius(at: location) == true || (classes.contains(.tunnel) && !location.isQualified) {
                 enableTunnelAnimation(for: manager,
                                      routeProgress: routeProgress,
