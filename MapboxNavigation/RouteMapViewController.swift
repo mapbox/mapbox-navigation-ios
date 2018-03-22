@@ -316,11 +316,6 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func progressDidChange(notification: NSNotification) {
-        guard showMaximumSpeedLimitSign else {
-            navigationView.speedLimitSign.isHidden = true
-            return
-        }
-        
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         guard let speeds = routeProgress.currentLegProgress.leg.segmentMaximumSpeedLimits else { return }
         
@@ -333,13 +328,8 @@ class RouteMapViewController: UIViewController {
         
         let currentSpeedLimit = speeds[userCurrentSegment]
         
-        guard currentSpeedLimit.speed != NSNotFound, !currentSpeedLimit.speedIsUnknown else {
-            navigationView.speedLimitSign.isHidden = true
-            return
-        }
-        
         navigationView.speedLimitSign.speedLimit = currentSpeedLimit
-        navigationView.speedLimitSign.isHidden = false
+        navigationView.speedLimitSign.isHidden = !showMaximumSpeedLimitSign || currentSpeedLimit == SpeedLimit.invalid
     }
     
     @objc func didReroute(notification: NSNotification) {

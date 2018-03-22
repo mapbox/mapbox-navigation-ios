@@ -216,34 +216,47 @@ open class SpeedLimitSign: UIView {
     
     private static let textInsets = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
     
-    lazy var label: SpeedLimitLabel = .forAutoLayout()
+    var labels: [SpeedLimitLabel] = []
     
-    let defaultText = NSLocalizedString("SPEED_LIMIT", bundle: .mapboxNavigation, value: "Speed\nLimit\n", comment: "Speed limit sign main text.")
+    let defaultText = NSLocalizedString("SPEED_LIMIT", bundle: .mapboxNavigation, value: "Speed Limit", comment: "Speed limit sign main text.")
+    var defaultTextSplit: [String] {
+        return defaultText.components(separatedBy: " ")
+    }
     let paragraphStyle = NSMutableParagraphStyle()
+    let fontSize = UIFont.systemFontSize
+    let strings = NSMutableAttributedString()
+    let numberFormater = NumberFormatter()
     
     var speedLimit: SpeedLimit? {
         didSet {
             guard let speedLimit = speedLimit else { return }
-            let fontSize = UIFont.systemFontSize
+            guard let speedString = numberFormater.string(from: speedLimit.value as NSNumber) else { return }
             
-            let strings = NSMutableAttributedString()
+            let defaultLabels = defaultTextSplit.map { (string: String) -> SpeedLimitLabel in
+                let label: SpeedLimitLabel = .forAutoLayout()
+                label.attributedText = NSMutableAttributedString(string: string.uppercased(), attributes: [
+                    .paragraphStyle: paragraphStyle,
+                    .font: UIFont.systemFont(ofSize: fontSize * 0.9)
+                    ])
+                return label
+            }
+            labels.append(contentsOf: defaultLabels)
             
-            strings.append(NSMutableAttributedString(string: defaultText.uppercased(), attributes: [
-                .paragraphStyle: paragraphStyle,
-                .font: UIFont.systemFont(ofSize: fontSize * 0.9)
-                ]))
-            
-            strings.append(NSMutableAttributedString(string: String(describing: speedLimit.speed), attributes: [
+            let speedLabel: SpeedLimitLabel = .forAutoLayout()
+            speedLabel.attributedText = NSMutableAttributedString(string: speedString, attributes: [
                 .font: UIFont.boldSystemFont(ofSize: fontSize * 2),
                 .paragraphStyle: paragraphStyle
-                ]))
+                ])
+            labels.append(speedLabel)
             
-            strings.append(NSMutableAttributedString(string: "\n\(speedLimit.speedUnits.localizedSpeedUnit)", attributes: [
+            let unitLabel: SpeedLimitLabel = .forAutoLayout()
+            unitLabel.attributedText = NSMutableAttributedString(string: "\n\(speedLimit.unit.localizedSpeedUnit)", attributes: [
                 .font: UIFont.boldSystemFont(ofSize: fontSize / 1.3),
                 .paragraphStyle: paragraphStyle
-                ]))
+                ])
+            labels.append(unitLabel)
             
-            label.attributedText = strings
+            initStackViews()
         }
     }
     
@@ -269,14 +282,20 @@ open class SpeedLimitSign: UIView {
     
     
     func commonInit() {
-        addSubview(label)
         paragraphStyle.lineHeightMultiple = 0.9
         paragraphStyle.alignment = .center
         layoutMargins = SpeedLimitSign.textInsets
-        label.lineBreakMode = .byWordWrapping
-        label.numberOfLines = 4
-        label.textAlignment = .center
-        label.pinInSuperview(respectingMargins: true)
+    }
+    
+    func initStackViews() {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .equalSpacing
+        for label in labels {
+            label.textAlignment = .center
+            label.pinInSuperview(respectingMargins: true)
+            addSubview(label)
+        }
     }
     
     open override func layoutSubviews() {
