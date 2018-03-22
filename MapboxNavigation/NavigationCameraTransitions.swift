@@ -7,7 +7,7 @@ extension NavigationCamera {
         
         UIView.animate(withDuration: 1, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             self.centerCoordinate = centerCoordinate
-            self.course = course
+            self.direction = course
             self.pitch = pitch
             self.altitude = altitude
         }, completion: nil)
@@ -28,7 +28,7 @@ extension NavigationCamera {
         }, completion: nil)
         
         UIView.animate(withDuration: 1, delay: 2, options: [], animations: {
-            self.course = course
+            self.direction = course
         }, completion: nil)
     }
     
@@ -42,7 +42,7 @@ extension NavigationCamera {
             self.pitch = pitch
         }, completion: nil)
         UIView.animate(withDuration: 1, delay: 2, options: [], animations: {
-            self.course = course
+            self.direction = course
         }, completion: nil)
     }
     

@@ -5,14 +5,14 @@ class NavigationCameraLayer: CALayer {
     
     @NSManaged var pitch: CGFloat
     @NSManaged var altitude: CLLocationDistance
-    @NSManaged var course: CLLocationDirection
+    @NSManaged var direction: CLLocationDirection
     @NSManaged var centerLatitude: CLLocationDegrees
     @NSManaged var centerLongitude: CLLocationDegrees
     
     enum CustomAnimationKey: String {
         case altitude
         case pitch
-        case course
+        case direction
         case centerLatitude
         case centerLongitude
     }
@@ -26,7 +26,7 @@ class NavigationCameraLayer: CALayer {
         if let layer = layer as? NavigationCameraLayer {
             altitude = layer.altitude
             pitch = layer.pitch
-            course = layer.course
+            direction = layer.direction
             centerLatitude = layer.centerLatitude
             centerLongitude = layer.centerLongitude
         }
@@ -66,8 +66,8 @@ class NavigationCameraLayer: CALayer {
             animation.fromValue = presentationLayer.altitude
         case .pitch:
             animation.fromValue = presentationLayer.pitch
-        case .course:
-            animation.fromValue = presentationLayer.course
+        case .direction:
+            animation.fromValue = presentationLayer.direction
         case .centerLatitude:
             animation.fromValue = presentationLayer.centerLatitude
         case .centerLongitude:

@@ -24,14 +24,14 @@ class NavigationCamera: UIView {
         }
     }
     
-    var course: CLLocationDirection {
+    var direction: CLLocationDirection {
         set {
             guard let layer = layer as? NavigationCameraLayer else { return }
-            layer.course = newValue
+            layer.direction = newValue.wrap(min: -180, max: 180)
         }
         get {
             guard let layer = layer as? NavigationCameraLayer else { return 0 }
-            return layer.course
+            return layer.direction
         }
     }
     
@@ -66,7 +66,7 @@ class NavigationCamera: UIView {
     // Updates the values on the presentation layer so that they can be interpolated from the current state.
     func updateValues() {
         centerCoordinate = mapView.camera.centerCoordinate
-        course = mapView.direction
+        direction = mapView.direction
         pitch = mapView.camera.pitch
         altitude = mapView.altitude
     }
@@ -83,7 +83,6 @@ class NavigationCamera: UIView {
         
         mapView.setCamera(camera, animated: false)
         
-        // TODO: Get the smallest angle and wrap properly
-        mapView.direction = presentationLayer.course
+        mapView.direction = presentationLayer.direction
     }
 }
