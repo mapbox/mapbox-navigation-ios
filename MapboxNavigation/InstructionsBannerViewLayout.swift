@@ -3,7 +3,9 @@ import UIKit
 extension BaseInstructionsBannerView {
     
     static let padding: CGFloat = 16
+    static let centerXOffset: CGFloat = 15
     static let maneuverViewSize = CGSize(width: 38, height: 38)
+    static let dragIndicatorViewSize = CGSize(width: 38, height: 5)
     
     func setupViews() {
         backgroundColor = .clear
@@ -55,6 +57,11 @@ extension BaseInstructionsBannerView {
         addSubview(separatorView)
         self.separatorView = separatorView
         
+        let dragIndicatorView = DraggableView()
+        dragIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(dragIndicatorView)
+        self.dragIndicatorView = dragIndicatorView
+        
         addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
 
         addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.draggedInstructionsBanner(_:))))
@@ -87,6 +94,14 @@ extension BaseInstructionsBannerView {
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
+        // Drag Indicator View
+        dragIndicatorView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.dragIndicatorViewSize.height).isActive = true
+        dragIndicatorView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.dragIndicatorViewSize.width).isActive = true
+        dragIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding).isActive = true
+        dragIndicatorView.centerXAnchor.constraint(equalTo: primaryLabel.centerXAnchor, constant: -BaseInstructionsBannerView.centerXOffset).isActive = true
+        baselineConstraints.append(dragIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor, constant: 0))
+        centerYConstraints.append(dragIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor, constant: 0))
+
         // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
         dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70).isActive = true
         dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true

@@ -235,6 +235,9 @@ extension StepsViewController: UITableViewDataSource {
                 cell.instructionsView.distance = nil
             }
         }
+        
+        // Hide drag indicator view
+        cell.instructionsView.dragIndicatorView.isHidden = true
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

@@ -210,6 +210,21 @@ public class ResumeButton: UIControl {
 }
 
 /// :nodoc:
+@objc(MBDraggableView)
+open class DraggableView: UIView {
+    
+    // Workaround the fact that UIView properties are not marked with UI_APPEARANCE_SELECTOR
+    @objc dynamic open var gradientColors: [UIColor] = [.red, .lightGray, .red]
+    
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        applyGradient(colors: gradientColors)
+        layer.cornerRadius = bounds.midY
+        layer.masksToBounds = true
+    }
+}
+
+/// :nodoc:
 @objc(MBStylableLabel)
 open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR

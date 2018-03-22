@@ -27,6 +27,7 @@ open class BaseInstructionsBannerView: UIControl {
     weak var dividerView: UIView!
     weak var _separatorView: UIView!
     weak var separatorView: SeparatorView!
+    weak var dragIndicatorView: DraggableView!
     weak var delegate: InstructionsBannerViewDelegate?
     
     var centerYConstraints = [NSLayoutConstraint]()
@@ -67,6 +68,7 @@ open class BaseInstructionsBannerView: UIControl {
         if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
             delegate?.didDragInstructionsBanner?(self)
         }
+        dragIndicatorView.isHidden = true
     }
     
     @objc func tappedInstructionsBanner(_ sender: Any) {
