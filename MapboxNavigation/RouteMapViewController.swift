@@ -828,7 +828,6 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     }
     
     func didDismissStepsViewController(_ viewController: StepsViewController) {
-        previewInstructionsView?.dragIndicatorView.isHidden = false
         viewController.dismiss {
             self.stepsViewController = nil
         }

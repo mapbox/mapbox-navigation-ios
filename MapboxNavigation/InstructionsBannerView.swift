@@ -67,8 +67,8 @@ open class BaseInstructionsBannerView: UIControl {
     @objc func draggedInstructionsBanner(_ sender: Any) {
         if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
             delegate?.didDragInstructionsBanner?(self)
+            dragIndicatorView.isHidden = true
         }
-        dragIndicatorView.isHidden = true
     }
     
     @objc func tappedInstructionsBanner(_ sender: Any) {
