@@ -32,17 +32,17 @@ class StyleManagerTests: XCTestCase {
         let midnight = dateFormatter.date(from: "00:00")!
         
         styleManager.date = beforeSunrise
-        XCTAssert(styleManager.styleType(for: location) == .nightStyle)
+        XCTAssert(styleManager.styleType(for: location) == .night)
         styleManager.date = afterSunrise
-        XCTAssert(styleManager.styleType(for: location) == .dayStyle)
+        XCTAssert(styleManager.styleType(for: location) == .day)
         styleManager.date = noonDate
-        XCTAssert(styleManager.styleType(for: location) == .dayStyle)
+        XCTAssert(styleManager.styleType(for: location) == .day)
         styleManager.date = beforeSunset
-        XCTAssert(styleManager.styleType(for: location) == .dayStyle)
+        XCTAssert(styleManager.styleType(for: location) == .day)
         styleManager.date = afterSunset
-        XCTAssert(styleManager.styleType(for: location) == .nightStyle)
+        XCTAssert(styleManager.styleType(for: location) == .night)
         styleManager.date = midnight
-        XCTAssert(styleManager.styleType(for: location) == .nightStyle)
+        XCTAssert(styleManager.styleType(for: location) == .night)
     }
     
     func testStyleManagerSanFrancisco() {
@@ -61,17 +61,17 @@ class StyleManagerTests: XCTestCase {
         let midnight = dateFormatter.date(from: "00:00 AM")!
         
         styleManager.date = beforeSunrise
-        XCTAssert(styleManager.styleType(for: location) == .nightStyle)
+        XCTAssert(styleManager.styleType(for: location) == .night)
         styleManager.date = afterSunrise
-        XCTAssert(styleManager.styleType(for: location) == .dayStyle)
+        XCTAssert(styleManager.styleType(for: location) == .day)
         styleManager.date = noonDate
-        XCTAssert(styleManager.styleType(for: location) == .dayStyle)
+        XCTAssert(styleManager.styleType(for: location) == .day)
         styleManager.date = beforeSunset
-        XCTAssert(styleManager.styleType(for: location) == .dayStyle)
+        XCTAssert(styleManager.styleType(for: location) == .day)
         styleManager.date = afterSunset
-        XCTAssert(styleManager.styleType(for: location) == .nightStyle)
+        XCTAssert(styleManager.styleType(for: location) == .night)
         styleManager.date = midnight
-        XCTAssert(styleManager.styleType(for: location) == .nightStyle)
+        XCTAssert(styleManager.styleType(for: location) == .night)
     }
 }
 

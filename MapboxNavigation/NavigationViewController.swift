@@ -413,7 +413,7 @@ public class NavigationViewController: UIViewController {
         if usesNightStyleInsideTunnels, let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
             let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
-                    styleManager.applyStyle(type:.nightStyle)
+                    styleManager.applyStyle(type: .night)
                 } else {
                     styleManager.timeOfDayChanged()
                 }
