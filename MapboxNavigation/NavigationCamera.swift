@@ -48,6 +48,8 @@ class NavigationCamera: UIView {
         }
     }
     
+    var isTransitioning: Bool = false
+    
     var mapView: NavigationMapView
     
     required init(mapView: NavigationMapView) {
@@ -63,19 +65,12 @@ class NavigationCamera: UIView {
         return NavigationCameraLayer.self
     }
     
-    // Updates the values on the presentation layer so that they can be interpolated from the current state.
-    func updateValues() {
-        centerCoordinate = mapView.camera.centerCoordinate
-        direction = mapView.direction
-        pitch = mapView.camera.pitch
-        altitude = mapView.altitude
-    }
-    
     override func display(_ layer: CALayer) {
         guard let presentationLayer = layer.presentation() as? NavigationCameraLayer else { return }
         
         let camera = mapView.camera
         camera.altitude = presentationLayer.altitude
+        
         camera.pitch = presentationLayer.pitch
         
         let centerCoordinate = CLLocationCoordinate2D(latitude: presentationLayer.centerLatitude, longitude: presentationLayer.centerLongitude)

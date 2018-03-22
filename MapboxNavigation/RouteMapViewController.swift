@@ -198,16 +198,19 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func recenter(_ sender: AnyObject) {
-        mapView.tracksUserCourse = true
-        mapView.enableFrameByFrameCourseViewTracking(for: 3)
-        isInOverviewMode = false
-        updateCameraAltitude(for: routeController.routeProgress)
+        self.mapView.enableFrameByFrameCourseViewTracking(for: 3)
         
-        mapView.addArrow(route: routeController.routeProgress.route,
-                         legIndex: routeController.routeProgress.legIndex,
-                         stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        
-        removePreviewInstructions()
+        mapView.transitionToCourseTracking { [unowned self] (successfully) in
+            self.mapView.tracksUserCourse = true
+            self.isInOverviewMode = false
+            self.updateCameraAltitude(for: self.routeController.routeProgress)
+            
+            self.mapView.addArrow(route: self.routeController.routeProgress.route,
+                                  legIndex: self.routeController.routeProgress.legIndex,
+                                  stepIndex: self.routeController.routeProgress.currentLegProgress.stepIndex + 1)
+            
+            self.removePreviewInstructions()
+        }
     }
     
     @objc func removeTimer() {
@@ -344,25 +347,25 @@ class RouteMapViewController: UIViewController {
 
     func updateCameraAltitude(for routeProgress: RouteProgress) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
-        
-        let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
-        let defaultAltitude = NavigationMapView.defaultAltitude
-        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
-        let currentStep = routeProgress.currentLegProgress.currentStep
-        let upComingStep = routeProgress.currentLegProgress.upComingStep
-        
-        //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
-        let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
-        
-        //If the user is on a motorway, not exiting, and their segment is sufficently long, the map should zoom out to the motorway altitude.
-        //otherwise, zoom in if it's the last instruction on the step.
-        let currentStepIsMotorway = currentStep.isMotorway
-        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
-        if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
-            setCamera(altitude: zoomOutAltitude)
-        } else if currentInstruction == currentStep.lastInstruction {
-            setCamera(altitude: defaultAltitude)
-        }
+//
+//        let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
+//        let defaultAltitude = NavigationMapView.defaultAltitude
+//        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
+//        let currentStep = routeProgress.currentLegProgress.currentStep
+//        let upComingStep = routeProgress.currentLegProgress.upComingStep
+//
+//        //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
+//        let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
+//
+//        //If the user is on a motorway, not exiting, and their segment is sufficently long, the map should zoom out to the motorway altitude.
+//        //otherwise, zoom in if it's the last instruction on the step.
+//        let currentStepIsMotorway = currentStep.isMotorway
+//        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
+//        if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
+//            setCamera(altitude: zoomOutAltitude)
+//        } else if currentInstruction == currentStep.lastInstruction {
+//            setCamera(altitude: defaultAltitude)
+//        }
     }
     
     private func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {

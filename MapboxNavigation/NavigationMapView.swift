@@ -338,13 +338,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if tracksUserCourse {
+        if tracksUserCourse, !navigationCamera.isTransitioning {
             // TODO: offset centerCoordinate according to `userAnchorPoint`
-            navigationCamera.setCourseFollowing(centerCoordinate: location.coordinate,
-                                                course: location.course,
-                                                pitch: 45,
-                                                altitude: altitude,
-                                                animated: animated)
+            navigationCamera.setCourseTracking(centerCoordinate: location.coordinate, direction: location.course, pitch: 45, altitude: altitude, animated: animated)
             
         } else {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
@@ -1103,7 +1099,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
         tracksUserCourse = false
         // TODO: Set bounds correctly
-        navigationCamera.setOverview(altitude: 10_000, pitch: 0, course: 0)
+    
+        navigationCamera.transitionToOverview(altitude: 10_000, pitch: 0, direction: 0)
+    }
+    
+    func transitionToCourseTracking(completion: NavigationCamera.CompletionHandler = nil) {
+        guard let location = userLocationForCourseTracking else {
+            completion?(false)
+            return
+        }
+        
+        navigationCamera.transitionToCourseTracking(duration: 2, // TODO: Set duration based on travel distance
+                                                    centerCoordinate: location.coordinate,
+                                                    direction: location.course,
+                                                    pitch: 45,
+                                                    altitude: NavigationMapView.defaultAltitude,
+                                                    completion: completion)
     }
 }
 
