@@ -176,7 +176,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true, forceUpdatePuck: true)
+                updateCourseTracking(location: location, animated: true)
             }
         }
     }
@@ -329,9 +329,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
     }
     
-    var isUpdatingPuckPosition = false
-    
-    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool, forceUpdatePuck: Bool = false) {
+    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
         let duration: TimeInterval = animated ? 1 : 0
         animatesUserLocation = animated
         userLocationForCourseTracking = location
@@ -344,16 +342,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
-        }
-        
-        if !isUpdatingPuckPosition || forceUpdatePuck {
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: {
+                UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+                }, completion: nil)
+            })
+        } else {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                self.isUpdatingPuckPosition = true
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-            }) { (_) in
-                self.isUpdatingPuckPosition = false
-            }
+            }, completion: nil)
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
