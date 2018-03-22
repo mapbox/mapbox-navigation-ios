@@ -2,6 +2,8 @@
 
 ## master
 
+* Renamed redundantly named style types `.dayStyle` and `.nightStyle` to `.day` and `.night`. ([#1250](https://github.com/mapbox/mapbox-navigation-ios/pull/1250))
+
 ### User interface
 * While the user travels through a tunnel, `NavigationMapView` temporarily applies a night style (a style whose `styleType` property is set to `StyleType.nightStyle`). ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
 * The user can reveal the list of upcoming steps by swiping downward from the top banner. ([#1150](https://github.com/mapbox/mapbox-navigation-ios/pull/1150))
