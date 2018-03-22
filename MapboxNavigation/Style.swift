@@ -29,7 +29,7 @@ open class Style: NSObject {
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
      */
-    @objc public var styleType: StyleType = .dayStyle
+    @objc public var styleType: StyleType = .day
     
     /**
      Map style to be used for the style.

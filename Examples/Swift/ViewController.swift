@@ -445,7 +445,7 @@ class CustomDayStyle: DayStyle {
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        styleType = .dayStyle
+        styleType = .day
     }
     
     override func apply() {
@@ -460,7 +460,7 @@ class CustomNightStyle: NightStyle {
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        styleType = .nightStyle
+        styleType = .night
     }
 
     override func apply() {

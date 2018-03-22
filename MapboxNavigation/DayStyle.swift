@@ -44,7 +44,7 @@ open class DayStyle: Style {
     public required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
-        styleType = .dayStyle
+        styleType = .day
         statusBarStyle = .default
     }
     
@@ -152,7 +152,7 @@ open class NightStyle: DayStyle {
     public required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")!
-        styleType = .nightStyle
+        styleType = .night
         statusBarStyle = .lightContent
     }
     
