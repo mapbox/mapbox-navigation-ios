@@ -178,12 +178,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
-            
-            if let location = userLocationForCourseTracking, tracksUserCourse {
-                UIView.animate(withDuration: 1, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-                }, completion: nil)
-            }
         }
     }
 
@@ -348,7 +342,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: {
+                UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+                }, completion: nil)
+            })
         } else {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
