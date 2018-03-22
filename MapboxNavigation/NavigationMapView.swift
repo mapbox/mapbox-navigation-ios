@@ -176,7 +176,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
+                updateCourseTracking(location: location, animated: false)
             }
         }
     }
