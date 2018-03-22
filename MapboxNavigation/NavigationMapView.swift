@@ -176,13 +176,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
-            }
-            
-            if let location = userLocationForCourseTracking, tracksUserCourse {
-                UIView.animate(withDuration: 1, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-                }, completion: nil)
+                updateCourseTracking(location: location, animated: true, forceUpdatePuck: true)
             }
         }
     }
@@ -335,7 +329,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
     }
     
-    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
+    var isUpdatingPuckPosition = false
+    
+    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool, forceUpdatePuck: Bool = false) {
         let duration: TimeInterval = animated ? 1 : 0
         animatesUserLocation = animated
         userLocationForCourseTracking = location
@@ -349,10 +345,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
-        } else {
+        }
+        
+        if !isUpdatingPuckPosition || forceUpdatePuck {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                self.isUpdatingPuckPosition = true
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-            }, completion: nil)
+            }) { (_) in
+                self.isUpdatingPuckPosition = false
+            }
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
