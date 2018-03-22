@@ -226,11 +226,14 @@ open class SpeedLimitSign: UIView {
     let fontSize = UIFont.systemFontSize
     let strings = NSMutableAttributedString()
     let numberFormater = NumberFormatter()
+    let stackView = UIStackView()
     
     var speedLimit: SpeedLimit? {
         didSet {
             guard let speedLimit = speedLimit else { return }
             guard let speedString = numberFormater.string(from: speedLimit.value as NSNumber) else { return }
+            
+            labels.removeAll()
             
             let defaultLabels = defaultTextSplit.map { (string: String) -> SpeedLimitLabel in
                 let label: SpeedLimitLabel = .forAutoLayout()
@@ -256,7 +259,7 @@ open class SpeedLimitSign: UIView {
                 ])
             labels.append(unitLabel)
             
-            initStackViews()
+            updateStackView(with: labels)
         }
     }
     
@@ -285,17 +288,17 @@ open class SpeedLimitSign: UIView {
         paragraphStyle.lineHeightMultiple = 0.9
         paragraphStyle.alignment = .center
         layoutMargins = SpeedLimitSign.textInsets
+        stackView.axis = .vertical
+        stackView.contentMode = .scaleAspectFill
+        stackView.distribution = .equalSpacing
+        addSubview(stackView)
+        stackView.layoutIfNeeded()
     }
     
-    func initStackViews() {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
-        for label in labels {
-            label.textAlignment = .center
-            label.pinInSuperview(respectingMargins: true)
-            addSubview(label)
-        }
+    func updateStackView(with labels: [SpeedLimitLabel]) {
+        stackView.subviews.forEach { $0.removeFromSuperview() }
+        stackView.addArrangedSubviews(labels)
+        stackView.layoutIfNeeded()
     }
     
     open override func layoutSubviews() {
@@ -311,8 +314,6 @@ extension SpeedUnit {
             return NSLocalizedString("KILOMETERS_PER_HOUR", bundle: .mapboxNavigation, value: "kph", comment: "Inform the user on limits for speed.")
         case .milesPerHour:
             return NSLocalizedString("MILES_PER_HOUR", bundle: .mapboxNavigation, value: "mph", comment: "Inform the user on limits for speed.")
-        default:
-            return NSLocalizedString("KILOMETERS_PER_HOUR", bundle: .mapboxNavigation, value: "kph", comment: "Inform the user on limits for speed.")
         }
     }
 }
