@@ -31,23 +31,23 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Straat\nafgesloten";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Dankjewel voor je rapport!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Rapporteer probleem";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ en %2$@";
 
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
-/* FeedbackViewController Title */
-"Report Problem" = "Rapporteer probleem";
-
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Nieuwe route…";
 
 /* Button title for resume tracking */
 "RESUME" = "Doorgaan";
-
-/* Feedback Report Submission Thanks */
-"Thank you for your report!" = "Dankjewel voor je rapport!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulating Navigation at %d×";

@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Väg\nAvstängd";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Tack för din feedback!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Rapportera Problem";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ och %2$@";
 
@@ -58,9 +64,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "%ld stjärn(or).";
 
-/* FeedbackViewController Title */
-"Report Problem" = "Rapportera Problem";
-
 /* Title on button that appears when a reroute occurs */
 "REROUTE_REPORT_TITLE" = "Rapportera Problem";
 
@@ -69,9 +72,6 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Återuppta";
-
-/* Feedback Report Submission Thanks */
-"Thank you for your report!" = "Tack för din feedback!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulerar Navigation i %d×";

@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Straße\ngesperrt";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Danke für deine Nachricht!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Problem melden";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ und %2$@";
 
@@ -58,9 +64,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "%ld star(s) set.";
 
-/* FeedbackViewController Title */
-"Report Problem" = "Problem melden";
-
 /* Title on button that appears when a reroute occurs */
 "REROUTE_REPORT_TITLE" = "Problem melden";
 
@@ -69,9 +72,6 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Fortfahren";
-
-/* Feedback Report Submission Thanks */
-"Thank you for your report!" = "Danke für deine Nachricht!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Navigation bei %d simulieren.";

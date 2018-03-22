@@ -28,6 +28,9 @@
 /* Feedback type for Closure */
 "FEEDBACK_ROAD_CLOSURE" = "Rota\nBloqueada";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Obrigado por seu relato !";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ e %2$@";
 
@@ -39,9 +42,6 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Continue";
-
-/* Feedback Report Submission Thanks */
-"Thank you for your report!" = "Obrigado por seu relato !";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulando Navegação";

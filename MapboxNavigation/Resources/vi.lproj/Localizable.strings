@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Đường\nĐóng cửa";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Cảm ơn bạn đã báo cáo!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Báo cáo Vấn đề";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ và %2$@";
 
@@ -58,9 +64,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Đã đánh giá %ld sao.";
 
-/* FeedbackViewController Title */
-"Report Problem" = "Báo cáo Vấn đề";
-
 /* Title on button that appears when a reroute occurs */
 "REROUTE_REPORT_TITLE" = "Báo cáo Vấn đề";
 
@@ -69,9 +72,6 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Tiếp tục";
-
-/* Feedback Report Submission Thanks */
-"Thank you for your report!" = "Cảm ơn bạn đã báo cáo!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Đang Mô phỏng Điều hướng (Tốc độ Gấp %d Lần)";

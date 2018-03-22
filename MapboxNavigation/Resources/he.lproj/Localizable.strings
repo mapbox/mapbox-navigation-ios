@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "דרך\nסגורה";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "תודה על הדיווח שלך!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "דווח על בעיה";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ ו %2$@";
 
@@ -58,9 +64,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = " דורג ב%ld כוכב(ים)";
 
-/* FeedbackViewController Title */
-"Report Problem" = "דווח על בעיה";
-
 /* Title on button that appears when a reroute occurs */
 "REROUTE_REPORT_TITLE" = "דווח על בעיה";
 
@@ -69,9 +72,6 @@
 
 /* Button title for resume tracking */
 "RESUME" = "חזור";
-
-/* Feedback Report Submission Thanks */
-"Thank you for your report!" = "תודה על הדיווח שלך!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "הדמה ניווט ב %dx";

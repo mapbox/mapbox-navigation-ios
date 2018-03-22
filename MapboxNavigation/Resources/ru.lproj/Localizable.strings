@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Дорога\nзакрыта";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Благодарим за отзыв!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Сообщить о проблеме";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ и %2$@";
 
@@ -58,9 +64,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "%ld звёзд.";
 
-/* FeedbackViewController Title */
-"Report Problem" = "Сообщить о проблеме";
-
 /* Title on button that appears when a reroute occurs */
 "REROUTE_REPORT_TITLE" = "Сообщить о проблеме";
 
@@ -69,9 +72,6 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Возобновить";
-
-/* Feedback Report Submission Thanks */
-"Thank you for your report!" = "Благодарим за отзыв!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Ускорение маршрута %d×";
