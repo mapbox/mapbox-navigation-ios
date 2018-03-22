@@ -6,12 +6,15 @@ class NavigationCameraLayer: CALayer {
     @NSManaged var pitch: CGFloat
     @NSManaged var altitude: CLLocationDistance
     @NSManaged var course: CLLocationDirection
+    @NSManaged var centerLatitude: CLLocationDegrees
+    @NSManaged var centerLongitude: CLLocationDegrees
     
     enum CustomAnimationKey: String {
         case altitude
         case pitch
         case course
-        static let allKeys: [CustomAnimationKey] = [.altitude, .pitch, .course]
+        case centerLatitude
+        case centerLongitude
     }
     
     override init() {
@@ -24,6 +27,8 @@ class NavigationCameraLayer: CALayer {
             altitude = layer.altitude
             pitch = layer.pitch
             course = layer.course
+            centerLatitude = layer.centerLatitude
+            centerLongitude = layer.centerLongitude
         }
     }
     
@@ -36,7 +41,7 @@ class NavigationCameraLayer: CALayer {
     }
     
     override class func needsDisplay(forKey key: String) -> Bool {
-        return self.isCustomAnimationKey(key: key) ? true : super.needsDisplay(forKey: key)
+        return isCustomAnimationKey(key: key) || super.needsDisplay(forKey: key)
     }
     
     override func action(forKey event: String) -> CAAction? {
@@ -63,17 +68,13 @@ class NavigationCameraLayer: CALayer {
             animation.fromValue = presentationLayer.pitch
         case .course:
             animation.fromValue = presentationLayer.course
+        case .centerLatitude:
+            animation.fromValue = presentationLayer.centerLatitude
+        case .centerLongitude:
+            animation.fromValue = presentationLayer.centerLongitude
         }
         
         animation.toValue = nil
         return animation
     }
 }
-
-
-
-
-
-
-
-

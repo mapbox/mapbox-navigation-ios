@@ -221,7 +221,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     fileprivate func commonInit() {
-        navigationCamera = NavigationCamera(self)
+        navigationCamera = NavigationCamera(mapView: self)
         addSubview(navigationCamera)
         
         makeGestureRecognizersRespectCourseTracking()
@@ -313,9 +313,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    
-
-    
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
     func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(disableFrameByFramePositioning), object: nil)
@@ -342,15 +339,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
         if tracksUserCourse {
-            let point = userAnchorPoint
-            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
-            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
-            let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: {
-                UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-                }, completion: nil)
-            })
+            // TODO: offset centerCoordinate according to `userAnchorPoint`
+            navigationCamera.setCourseFollowing(centerCoordinate: location.coordinate,
+                                                course: location.course,
+                                                pitch: 45,
+                                                altitude: altitude,
+                                                animated: animated)
+            
         } else {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
@@ -1106,39 +1101,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Sets the camera directly over a series of coordinates.
      */
     @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
-//        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
-//        let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
-//
-//        tracksUserCourse = false
-//        let camera = self.camera
-//        camera.pitch = 0
-//        camera.heading = 0
-//        self.camera = camera
-//
-//        // Don't keep zooming in
-//        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
-//
-//        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
-//        self.animView?.percent = 0
-//        UIView.animate(withDuration: SWViewController.kAnimDuration) {
-//            self.animView?.percent = 100.0
-//        }
-        
-        self.navigationCamera.altitude = 100
-        self.navigationCamera.pitch = 50
-        self.navigationCamera.course = self.direction
-        
-        UIView.animate(withDuration: 1) {
-            self.navigationCamera.altitude = 10_000
-        }
-        
-        UIView.animate(withDuration: 1, delay: 1, options: [], animations: {
-            self.navigationCamera.pitch = 0
-        }, completion: nil)
-        
-        UIView.animate(withDuration: 1, delay: 2, options: [], animations: {
-            self.navigationCamera.course = 0
-        }, completion: nil)
+        tracksUserCourse = false
+        // TODO: Set bounds correctly
+        navigationCamera.setOverview(altitude: 10_000, pitch: 0, course: 0)
     }
 }
 
