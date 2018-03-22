@@ -58,6 +58,9 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Definida(s) %ld estrela(s).";
 
+/* FeedbackViewController Title */
+"Report Problem" = "Relatar Problema";
+
 /* Title on button that appears when a reroute occurs */
 "REROUTE_REPORT_TITLE" = "Relatar Problema";
 
@@ -66,6 +69,9 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Continuar";
+
+/* Feedback Report Submission Thanks */
+"Thank you for your report!" = "Obrigado pelo seu relatório!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulando Navegação em %d×";

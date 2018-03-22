@@ -58,14 +58,20 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Évalué à %ld étoile(s).";
 
+/* FeedbackViewController Title */
+"Report Problem" = "Signaler un problème";
+
 /* Title on button that appears when a reroute occurs */
-"REROUTE_REPORT_TITLE" = "Report Problem";
+"REROUTE_REPORT_TITLE" = "Signaler un problème";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Recalcul d’itinéraire…";
 
 /* Button title for resume tracking */
 "RESUME" = "Reprendre";
+
+/* Feedback Report Submission Thanks */
+"Thank you for your report!" = "Merci pour votre signalement !";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulation de navigation à %d×";

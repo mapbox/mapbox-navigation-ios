@@ -37,11 +37,17 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* FeedbackViewController Title */
+"Report Problem" = "Rapporteer probleem";
+
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Nieuwe route…";
 
 /* Button title for resume tracking */
 "RESUME" = "Doorgaan";
+
+/* Feedback Report Submission Thanks */
+"Thank you for your report!" = "Dankjewel voor je rapport!";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Simulating Navigation at %d×";
