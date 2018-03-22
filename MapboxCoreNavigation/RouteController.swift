@@ -716,10 +716,8 @@ extension RouteController: CLLocationManagerDelegate {
               let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
               let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return false }
         
-        // Find future location of user
-        let newLocation = locationAhead(of: location)
         // Determine the distance to the upcoming tunnel entrance
-        let distanceToTunnel = Polyline(coordinates).distance(from: newLocation.coordinate, to: upcomingIntersection.location)
+        let distanceToTunnel = Polyline(coordinates).distance(from: location.coordinate, to: upcomingIntersection.location)
         
         return distanceToTunnel < RouteControllerMinimumDistanceToTunnelEntrance
     }
@@ -737,7 +735,10 @@ extension RouteController: CLLocationManagerDelegate {
      */
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
 
-        let newLocation = locationAhead(of: location)
+        // Find future location of user
+        let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
+        let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
+        let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
         let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
         let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
