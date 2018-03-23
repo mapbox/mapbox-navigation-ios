@@ -492,11 +492,11 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }
     
-    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+    public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return delegate?.navigationMapView?(mapView, imageFor: annotation)
     }
     
-    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+    public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return delegate?.navigationMapView?(mapView, viewFor: annotation)
     }
     
