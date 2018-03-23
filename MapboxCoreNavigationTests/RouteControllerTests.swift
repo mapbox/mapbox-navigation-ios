@@ -3,13 +3,15 @@ import MapboxDirections
 import Turf
 @testable import MapboxCoreNavigation
 
+let TestLocationShouldUseHeading: CLLocationDirection = 50
+
 class RouteControllerTests: XCTestCase {
     
     var setup: (routeController: RouteController, firstLocation: CLLocation) {
         route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
-        return (routeController: navigation, firstLocation: CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude))
+        return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
     }
     
     func testUserIsOnRoute() {
@@ -81,4 +83,36 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(directionToStart, navigation.location!.course, "The course should be the raw course and not an interpolated course")
         XCTAssertFalse(facingTowardsStartLocation.shouldSnap(toRouteWith: facingTowardsStartLocation.interpolatedCourse(along: navigation.routeProgress.currentLegProgress.nearbyCoordinates)!, distanceToFirstCoordinateOnLeg: facingTowardsStartLocation.distance(from: firstLocation)), "Should not snap")
     }
+    
+    func testLocationShouldUseHeading() {
+        let navigation = setup.routeController
+        let firstLocation = setup.firstLocation
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
+        
+        XCTAssertEqual(navigation.location!.course, firstLocation.course, "Course should be using course")
+        
+        let invalidCourseLocation = CLLocation(coordinate: firstLocation.coordinate, altitude: firstLocation.altitude, horizontalAccuracy: firstLocation.horizontalAccuracy, verticalAccuracy: firstLocation.verticalAccuracy, course: -1, speed: firstLocation.speed, timestamp: firstLocation.timestamp)
+        
+        let heading = CustomHeading()
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [invalidCourseLocation])
+        navigation.locationManager(navigation.locationManager, didUpdateHeading: heading)
+        
+        XCTAssertEqual(navigation.location!.course, TestLocationShouldUseHeading, "Course should be using bearing")
+    }
 }
+
+class CustomHeading: CLHeading {
+    override var trueHeading: CLLocationDirection {
+        return TestLocationShouldUseHeading
+    }
+    
+    override init() {
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}
+
