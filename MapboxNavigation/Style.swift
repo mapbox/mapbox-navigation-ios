@@ -211,7 +211,7 @@ public class ResumeButton: UIControl {
 
 /// :nodoc:
 @objc(MBDraggableView)
-open class DraggableView: UIView {
+open class StepListIndicatorView: UIView {
     
     // Workaround the fact that UIView properties are not marked with UI_APPEARANCE_SELECTOR
     @objc dynamic open var gradientColors: [UIColor] = [.gray, .lightGray, .gray]
@@ -221,6 +221,11 @@ open class DraggableView: UIView {
         applyGradient(colors: gradientColors)
         layer.cornerRadius = bounds.midY
         layer.masksToBounds = true
+        
+        let blurEffect = UIBlurEffect(style: .extraLight)
+        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        blurredEffectView.frame = bounds
+        addSubview(blurredEffectView)
     }
 }
 
