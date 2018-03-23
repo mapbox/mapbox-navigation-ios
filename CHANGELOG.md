@@ -1,15 +1,26 @@
 ## Changes to the Mapbox Navigation SDK for iOS
 
-## Master
+## master
 
-#### User interface
-* Added support for abbreviated top banner instructions. [#1169](https://github.com/mapbox/mapbox-navigation-ios/pull/1169)
-* Reveal the steps list by swiping down on the top banner. [#1150](https://github.com/mapbox/mapbox-navigation-ios/pull/1150)
-* Fixed the poor contrast of the `TimeRemainingLabel.appearance().trafficSevereColor`, when navigation night style (theme) is enabled. [#1228](https://github.com/mapbox/mapbox-navigation-ios/pull/1228)
-* Data representing spoken voice instructions is now cached locally for reuse. [#1229](https://github.com/mapbox/mapbox-navigation-ios/pull/1229)
+### User interface
+* While the user travels through a tunnel, `NavigationMapView` temporarily applies a night style (a style whose `styleType` property is set to `StyleType.night`). ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
+* The user can reveal the list of upcoming steps by swiping downward from the top banner. ([#1150](https://github.com/mapbox/mapbox-navigation-ios/pull/1150))
+* Renamed `StyleType.dayStyle` and `StyleType.nightStyle` to `StyleType.day` and `StyleType.night`, respectively. ([#1250](https://github.com/mapbox/mapbox-navigation-ios/pull/1250))
+* Fixed an issue causing the overview map to insist on centering the route upon each location update. ([#1223](https://github.com/mapbox/mapbox-navigation-ios/pull/1223))
+* Improved the contrast of `TimeRemainingLabel.trafficSevereColor` against `BottomBannerView.backgroundColor` in `NightStyle`. ([#1228](https://github.com/mapbox/mapbox-navigation-ios/pull/1228))
+* Fixed an issue where a slash appeared between two shields in the top banner. ([#1169](https://github.com/mapbox/mapbox-navigation-ios/pull/1169))
 
-#### Core Navigation
+### Spoken instructions
+* Audio data for spoken instructions is cached in device storage to minimize data usage. ([#12296](https://github.com/mapbox/mapbox-navigation-ios/pull/1226))
+
+### Core Navigation
 * Renamed the `RouteController.reroutesOpportunistically` property to `RouteController.reroutesProactively`, `RouteControllerOpportunisticReroutingInterval` global variable to `RouteControllerProactiveReroutingInterval`, and the `RouteControllerNotificationUserInfoKey.isOpportunisticKey` value to `RouteControllerNotificationUserInfoKey.isProactiveKey`. ([#1230](https://github.com/mapbox/mapbox-navigation-ios/pull/1230))
+* Added a `RouteStepProgress.currentIntersection` property that is set to the intersection the user has most recently passed along the route. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
+* Fixed an issue where the `RouteStepProgress.upcomingIntersection` property was always set to the current step’s first intersection. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
+* Added support for using the Mapbox Map Matching API. [#1177](https://github.com/mapbox/mapbox-navigation-ios/pull/1177)
+
+### Other changes
+* Added Arabic and European Portuguese localizations. ([#1252](https://github.com/mapbox/mapbox-navigation-ios/pull/1251))
 
 ## v0.15.0 (March 13, 2018)
 
@@ -156,7 +167,6 @@
 * Exposes `setOverheadCameraView(from:along:for:)` which is useful for fitting the camera to an overhead view for the remaining route coordinates.
 * Changed the heuristics needed for a the users location to unsnap from the route line. [#1110](https://github.com/mapbox/mapbox-navigation-ios/pull/1122)
 * Changes `routeController(:didDiscardLocation:)` to `routeController(:shouldDiscardLocation:)`. Now if implemented, developers can choose to keep a location when RouteController deems a location unqualified. [#1095](https://github.com/mapbox/mapbox-navigation-ios/pull/1095/)
-* Exposes `RouteStepProgress.intersectionDistances` of each step which can be used to determine the distance between `RouteStepProgress.currentIntersection` and `RouteStepProgress.upcomingIntersection` for unique use cases such as detecting tunnels, tolls, motorway etc. of a given route. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## User Interface
 
@@ -164,7 +174,6 @@
 * The `/` delimiter is longer shown when a shield is shown on either side of the delimiter. This also removes the dependency SDWebImage. [#1046](https://github.com/mapbox/mapbox-navigation-ios/pull/1046)
 * Exposes constants used for styling the route line. [#1124](https://github.com/mapbox/mapbox-navigation-ios/pull/1124/)
 * Exposes `update(for:)` on `InstructionBannerView`. This is helpful for developers creating a custom user interface. [#1085](https://github.com/mapbox/mapbox-navigation-ios/pull/1085/)
-* Updates to set current `NavigationViewController.styleManager.applyStyle(type:)`  to `.nightStyle` when the current step intersection contains a tunnel. Also, we reset the step style when we advance to the next intersection and the upcoming intersection doesn't contain a tunnel. [#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127)
 
 ## Voice Guidance
 

@@ -309,7 +309,6 @@ public class NavigationViewController: UIViewController {
      */
     @objc public var usesNightStyleInsideTunnels: Bool = false
     
-    let progressBar = ProgressBar()
     var styleManager: StyleManager!
     
     required public init?(coder aDecoder: NSCoder) {
@@ -365,7 +364,6 @@ public class NavigationViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
-        progressBar.dock(on: view)
         view.clipsToBounds = true
     }
     
@@ -415,13 +413,11 @@ public class NavigationViewController: UIViewController {
         if usesNightStyleInsideTunnels, let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
             let classes = currentIntersection.outletRoadClasses {
                 if classes.contains(.tunnel) {
-                    styleManager.applyStyle(type:.nightStyle)
+                    styleManager.applyStyle(type: .night)
                 } else {
                     styleManager.timeOfDayChanged()
                 }
         }
-        
-        progressBar.setProgress(routeProgress.currentLegProgress.userHasArrivedAtWaypoint ? 1 : CGFloat(routeProgress.fractionTraveled), animated: true)
     }
     
     @objc func didPassInstructionPoint(notification: NSNotification) {
