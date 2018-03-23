@@ -28,6 +28,9 @@
 /* Feedback type for Closure */
 "FEEDBACK_ROAD_CLOSURE" = "Rota\nBloqueada";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Obrigado por seu relato !";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ e %2$@";
 

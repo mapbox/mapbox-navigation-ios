@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Estrada\nFechada";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Obrigado pelo seu relatório!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Relatar Problema";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ e %2$@";
 
@@ -62,7 +68,7 @@
 "REROUTE_REPORT_TITLE" = "Relatar Problema";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Redirecionando...";
+"REROUTING" = "Redirecionando…";
 
 /* Button title for resume tracking */
 "RESUME" = "Continuar";
