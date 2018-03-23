@@ -221,6 +221,7 @@ open class StepListIndicatorView: UIView {
         applyGradient(colors: gradientColors)
         layer.cornerRadius = bounds.midY
         layer.masksToBounds = true
+        layer.opacity = 0.25
         
         let blurEffect = UIBlurEffect(style: .extraLight)
         let blurredEffectView = UIVisualEffectView(effect: blurEffect)
