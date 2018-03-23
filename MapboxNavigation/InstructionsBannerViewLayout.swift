@@ -4,7 +4,6 @@ extension BaseInstructionsBannerView {
     
     static let padding: CGFloat = 16
     static let bottomPadding: CGFloat = 10
-    static let centerXOffset: CGFloat = 15
     static let maneuverViewSize = CGSize(width: 38, height: 38)
     static let dragIndicatorViewSize = CGSize(width: 38, height: 5)
     
@@ -99,7 +98,7 @@ extension BaseInstructionsBannerView {
         dragIndicatorView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.dragIndicatorViewSize.height).isActive = true
         dragIndicatorView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.dragIndicatorViewSize.width).isActive = true
         dragIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.bottomPadding).isActive = true
-        dragIndicatorView.centerXAnchor.constraint(equalTo: primaryLabel.centerXAnchor, constant: -BaseInstructionsBannerView.centerXOffset).isActive = true
+        dragIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         baselineConstraints.append(dragIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(dragIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor, constant: 0))
 
