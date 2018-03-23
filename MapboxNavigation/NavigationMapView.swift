@@ -1210,6 +1210,24 @@ public protocol NavigationMapViewDelegate: class {
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
     /**
+     Asks the receiver to return an MGLAnnotationImage that describes the image used an annotation.
+     - parameter mapView: The MGLMapView.
+     - parameter annotation: The annotation to be styled.
+     - returns: Optionally, a `MGLAnnotationImage` that defines the image used for the annotation.
+     */
+    @objc(navigationMapView:imageForAnnotation:)
+    optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+    
+    /**
+     Asks the receiver to return an MGLAnnotationView that describes the image used an annotation.
+     - parameter mapView: The MGLMapView.
+     - parameter annotation: The annotation to be styled.
+     - returns: Optionally, a `MGLAnnotationView` that defines the view used for the annotation.
+     */
+    @objc(navigationMapView:viewForAnnotation:)
+    optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
+    
+    /**
      Asks the receiver to return a CGPoint to serve as the anchor for the user icon.
      - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
      - parameter mapView: The NavigationMapView.
