@@ -496,7 +496,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationMapView?(mapView, imageFor: annotation)
     }
     
-    func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+    public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return delegate?.navigationMapView?(mapView, viewFor: annotation)
     }
     
