@@ -359,13 +359,13 @@ open class RouteController: NSObject {
      - seeAlso: snappedLocation, rawLocation
      */
     @objc public var location: CLLocation? {
-        let loc = snappedLocation ?? rawLocation
         
-        if let loc = loc, let heading = heading, !loc.course.isQualified {
+        // If there is no snapped location, and the rawLocation corse is unqualified, use the user's heading.
+        if snappedLocation == nil, let loc = rawLocation, let heading = heading, loc.course.isQualified {
             return CLLocation(coordinate: loc.coordinate, altitude: loc.altitude, horizontalAccuracy: loc.horizontalAccuracy, verticalAccuracy: loc.verticalAccuracy, course: heading.trueHeading, speed: loc.speed, timestamp: loc.timestamp)
         }
         
-        return loc
+        return snappedLocation ?? rawLocation
     }
     
     /**
