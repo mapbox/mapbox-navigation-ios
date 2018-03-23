@@ -216,10 +216,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             guard let routes = potentialRoutes else { return }
             return success(routes)
         }
-        
-        let directions = Directions(accessToken: "pk.eyJ1IjoiYnN1ZGVrdW0iLCJhIjoiY2loNDVmYWRwMDBocmlibHh5Z3J6bDAwMiJ9.KGUP5pu3aLWKsvFPPZ2EgA", host: "api-directions-maxspeed-internal.tilestream.net")
 
-        _ = directions.calculate(options, completionHandler: handler)
+        _ = Directions.shared.calculate(options, completionHandler: handler)
     }
 
     // MARK: Basic Navigation
