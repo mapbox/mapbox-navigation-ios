@@ -12,4 +12,12 @@ extension CLLocationDirection {
         
         return acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
     }
+    
+    var isQualified: Bool {
+        #if (arch(i386) || arch(x86_64)) && (os(iOS) || os(watchOS) || os(tvOS))
+            return true
+        #else
+            return self > -1
+        #endif
+    }
 }
