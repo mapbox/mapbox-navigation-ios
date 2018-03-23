@@ -14,10 +14,6 @@ extension CLLocationDirection {
     }
     
     var isQualified: Bool {
-        #if (arch(i386) || arch(x86_64)) && (os(iOS) || os(watchOS) || os(tvOS))
-            return true
-        #else
-            return self > -1
-        #endif
+        return self > -1
     }
 }
