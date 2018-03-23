@@ -830,6 +830,7 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     func didDismissStepsViewController(_ viewController: StepsViewController) {
         viewController.dismiss {
             self.stepsViewController = nil
+            self.navigationView.instructionsBannerView.dragIndicatorView.isHidden = false
         }
     }
     
