@@ -68,7 +68,7 @@
 "REROUTE_REPORT_TITLE" = "דווח על בעיה";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "מחשב מסלול מחדש...";
+"REROUTING" = "מחשב מסלול מחדש…";
 
 /* Button title for resume tracking */
 "RESUME" = "חזור";

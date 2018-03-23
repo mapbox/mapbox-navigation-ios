@@ -68,7 +68,7 @@
 "REROUTE_REPORT_TITLE" = "Relatar Problema";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "Redirecionando...";
+"REROUTING" = "Redirecionando…";
 
 /* Button title for resume tracking */
 "RESUME" = "Continuar";
