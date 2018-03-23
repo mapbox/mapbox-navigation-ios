@@ -603,6 +603,16 @@
 		DADAD827203504C6002E25CA /* MBNavigationSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBNavigationSettings.m; sourceTree = "<group>"; };
 		DADAD82C20350849002E25CA /* MBRouteVoiceController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MBRouteVoiceController.h; sourceTree = "<group>"; };
 		DADAD82D20350849002E25CA /* MBRouteVoiceController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MBRouteVoiceController.m; sourceTree = "<group>"; };
+		DAE26B1A20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
+		DAE26B1B20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
+		DAE26B1C20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Navigation.strings; sourceTree = "<group>"; };
+		DAE26B1F2064407D001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DAE26B20206441D8001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
+		DAE26B21206441D9001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
+		DAE26B22206441D9001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Navigation.strings"; sourceTree = "<group>"; };
+		DAE26B23206441F7001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		DAE26B2420644215001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		DAE26B2520644225001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "pt-PT"; path = "Resources/pt-PT.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
 		DAE7114C1F22E94E009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114D1F22E966009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114E1F22E977009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -868,7 +878,6 @@
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
 				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
-				16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */,
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
 				355DB5731EFA73410091BFB7 /* Fixtures */,
@@ -1335,6 +1344,8 @@
 				bg,
 				da,
 				he,
+				ar,
+				"pt-PT",
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
@@ -1800,6 +1811,8 @@
 				DA5AD03C1FEBA03700FC7D7B /* bg */,
 				DA3525712011435E0048DDFC /* da */,
 				DAC049C020171886004C2217 /* he */,
+				DAE26B1A20644047001D6E1F /* ar */,
+				DAE26B20206441D8001D6E1F /* pt-PT */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1829,6 +1842,8 @@
 				DA5AD03D1FEBA03700FC7D7B /* bg */,
 				DA352568201096F20048DDFC /* da */,
 				DA1811FD20128B0900C91918 /* he */,
+				DAE26B1B20644047001D6E1F /* ar */,
+				DAE26B21206441D9001D6E1F /* pt-PT */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1857,6 +1872,8 @@
 				DA5AD03E1FEBA03700FC7D7B /* bg */,
 				DA352572201143BA0048DDFC /* da */,
 				DA1811FE20128B0900C91918 /* he */,
+				DAE26B1C20644047001D6E1F /* ar */,
+				DAE26B22206441D9001D6E1F /* pt-PT */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
@@ -1880,6 +1897,8 @@
 				DA545AC01FA9A15A0090908E /* nl */,
 				DA18120120128B7B00C91918 /* he */,
 				DAC049BE201715D5004C2217 /* ru */,
+				DAE26B1F2064407D001D6E1F /* ar */,
+				DAE26B23206441F7001D6E1F /* pt-PT */,
 			);
 			name = Localizable.strings;
 			path = Resources;
@@ -1896,6 +1915,7 @@
 				DAF257122017C1E800367EF5 /* sv */,
 				DAD88E00202AC7AA00AAA536 /* uk */,
 				DAD88E02202AC81F00AAA536 /* da */,
+				DAE26B2520644225001D6E1F /* pt-PT */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";
@@ -1919,6 +1939,7 @@
 				DA18120320128E9400C91918 /* fr */,
 				DAC049C1201718AC004C2217 /* he */,
 				DAD88E01202AC80100AAA536 /* uk */,
+				DAE26B2420644215001D6E1F /* pt-PT */,
 			);
 			name = Localizable.strings;
 			path = Resources;
