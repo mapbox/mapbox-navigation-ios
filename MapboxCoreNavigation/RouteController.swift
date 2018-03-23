@@ -360,8 +360,12 @@ open class RouteController: NSObject {
      */
     @objc public var location: CLLocation? {
         
-        // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading.
-        if snappedLocation == nil, let heading = heading, let loc = rawLocation, !loc.course.isQualified {
+        // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
+        if snappedLocation == nil,
+            let heading = heading,
+            let loc = rawLocation,
+            !loc.course.isQualified,
+            heading.trueHeading.isQualified {
             return CLLocation(coordinate: loc.coordinate, altitude: loc.altitude, horizontalAccuracy: loc.horizontalAccuracy, verticalAccuracy: loc.verticalAccuracy, course: heading.trueHeading, speed: loc.speed, timestamp: loc.timestamp)
         }
         
