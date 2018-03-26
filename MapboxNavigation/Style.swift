@@ -216,7 +216,6 @@ open class StepListIndicatorView: UIView {
     // Workaround the fact that UIView properties are not marked with UI_APPEARANCE_SELECTOR
     @objc dynamic open var gradientColors: [UIColor] = [.gray, .lightGray, .gray] {
         didSet {
-            applyGradient(colors: gradientColors)
             setNeedsLayout()
         }
     }
@@ -230,6 +229,7 @@ open class StepListIndicatorView: UIView {
         layer.cornerRadius = bounds.midY
         layer.masksToBounds = true
         layer.opacity = 0.25
+        applyGradient(colors: gradientColors)
         addBlurredEffect(view: blurredEffectView, to: self)
     }
     
