@@ -319,7 +319,7 @@ class RouteMapViewController: UIViewController {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         guard let speeds = routeProgress.currentLegProgress.leg.segmentMaximumSpeedLimits else { return }
         
-        let userCurrentSegment = routeProgress.currentLegProgress.currentSegment
+        let userCurrentSegment = routeProgress.currentLegProgress.currentSegmentIndex
         
         guard userCurrentSegment < speeds.endIndex else {
             navigationView.speedLimitSign.isHidden = true
