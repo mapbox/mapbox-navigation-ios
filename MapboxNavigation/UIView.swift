@@ -30,17 +30,17 @@ extension UIView {
     }
     
     func applyGradient(colors: [UIColor], locations: [NSNumber]? = nil) {
+        guard let sublayers = layer.sublayers else { return }
+        
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame = self.bounds
         gradient.colors = colors.map { $0.cgColor }
         gradient.locations = locations
         
-        if let sublayers = layer.sublayers {
-            if !sublayers.isEmpty, let sublayer = sublayers.first {
-                layer.replaceSublayer(sublayer, with: gradient)
-            } else if sublayers.isEmpty {
-                layer.addSublayer(gradient)
-            }
+        if !sublayers.isEmpty, let sublayer = sublayers.first {
+            layer.replaceSublayer(sublayer, with: gradient)
+        } else if sublayers.isEmpty {
+            layer.addSublayer(gradient)
         }
     }
     
