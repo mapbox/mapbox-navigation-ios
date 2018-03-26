@@ -229,7 +229,7 @@ class RouteMapViewController: UIViewController {
     @objc func toggleOverview(_ sender: Any) {
         mapView.enableFrameByFrameCourseViewTracking(for: 3)
         if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
-            mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+            mapView.setOverheadCameraView(from: userLocation, along: coordinates, edgePadding: overheadInsets)
         }
         isInOverviewMode = true
     }
@@ -293,7 +293,7 @@ class RouteMapViewController: UIViewController {
 
         if isInOverviewMode {
             if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
-                mapView.setOverheadCameraView(from: userLocation, along: coordinates, for: overheadInsets)
+                mapView.setOverheadCameraView(from: userLocation, along: coordinates, edgePadding: overheadInsets)
             }
         } else {
             mapView.tracksUserCourse = true
@@ -347,25 +347,25 @@ class RouteMapViewController: UIViewController {
 
     func updateCameraAltitude(for routeProgress: RouteProgress) {
         guard mapView.tracksUserCourse else { return } //only adjust when we are actively tracking user course
-//
-//        let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
-//        let defaultAltitude = NavigationMapView.defaultAltitude
-//        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
-//        let currentStep = routeProgress.currentLegProgress.currentStep
-//        let upComingStep = routeProgress.currentLegProgress.upComingStep
-//
-//        //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
-//        let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
-//
-//        //If the user is on a motorway, not exiting, and their segment is sufficently long, the map should zoom out to the motorway altitude.
-//        //otherwise, zoom in if it's the last instruction on the step.
-//        let currentStepIsMotorway = currentStep.isMotorway
-//        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
-//        if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
-//            setCamera(altitude: zoomOutAltitude)
-//        } else if currentInstruction == currentStep.lastInstruction {
-//            setCamera(altitude: defaultAltitude)
-//        }
+        
+        let zoomOutAltitude = NavigationMapView.zoomedOutMotorwayAltitude
+        let defaultAltitude = NavigationMapView.defaultAltitude
+        let isLongRoad = routeProgress.distanceRemaining >= NavigationMapView.longManeuverDistance
+        let currentStep = routeProgress.currentLegProgress.currentStep
+        let upComingStep = routeProgress.currentLegProgress.upComingStep
+        
+        //If the user is at the last turn maneuver, the map should zoom in to the default altitude.
+        let currentInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction
+        
+        //If the user is on a motorway, not exiting, and their segment is sufficently long, the map should zoom out to the motorway altitude.
+        //otherwise, zoom in if it's the last instruction on the step.
+        let currentStepIsMotorway = currentStep.isMotorway
+        let nextStepIsMotorway = upComingStep?.isMotorway ?? false
+        if currentStepIsMotorway, nextStepIsMotorway, isLongRoad {
+            mapView.updateAltitude(zoomOutAltitude)
+        } else if currentInstruction == currentStep.lastInstruction {
+            mapView.updateAltitude(defaultAltitude)
+        }
     }
     
     private func showStatus(title: String, withSpinner spin: Bool = false, for time: TimeInterval, animated: Bool = true, interactive: Bool = false) {

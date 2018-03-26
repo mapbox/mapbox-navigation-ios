@@ -70,12 +70,8 @@ class NavigationCamera: UIView {
         
         let camera = mapView.camera
         camera.altitude = presentationLayer.altitude
-        
         camera.pitch = presentationLayer.pitch
-        
-        let centerCoordinate = CLLocationCoordinate2D(latitude: presentationLayer.centerLatitude, longitude: presentationLayer.centerLongitude)
-        camera.centerCoordinate = centerCoordinate
-        
+        camera.centerCoordinate = CLLocationCoordinate2D(latitude: presentationLayer.centerLatitude, longitude: presentationLayer.centerLongitude)
         mapView.setCamera(camera, animated: false)
         
         mapView.direction = presentationLayer.direction

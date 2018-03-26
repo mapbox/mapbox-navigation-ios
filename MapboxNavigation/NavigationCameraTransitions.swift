@@ -19,6 +19,12 @@ extension NavigationCamera {
         }, completion: completion)
     }
     
+    func updateAltitude(_ altitude: CLLocationDistance, completion: CompletionHandler = nil) {
+        UIView.animate(withDuration: 1, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
+            self.altitude = altitude
+        }, completion: completion)
+    }
+    
     func transitionToCourseTracking(duration: TimeInterval = 2,
                                     centerCoordinate: CLLocationCoordinate2D,
                                     direction: CLLocationDirection,
@@ -52,27 +58,31 @@ extension NavigationCamera {
         }, completion: nil)
     }
     
-    func transitionToOverview(duration: TimeInterval = 1, altitude: CLLocationDistance, pitch: CGFloat, direction: CLLocationDirection, completion: CompletionHandler = nil) {
+    func transitionToOverview(duration: TimeInterval = 1,
+                              coordinates: [CLLocationCoordinate2D],
+                              edgePadding: UIEdgeInsets,
+                              completion: CompletionHandler = nil) {
+        
+        
         guard !isTransitioning else {
             completion?(false)
             return
         }
         
-        isTransitioning = true
+        let line = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
         
         UIView.animate(withDuration: 0.2 * duration, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
-            self.pitch = pitch
-        }, completion: nil)
-        
-        UIView.animate(withDuration: 0.8 * duration, delay: 0.2 * duration, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
-            self.altitude = altitude
-        }, completion: nil)
-        
-        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
-            self.direction = direction
-        }) { (successfully) in
-            self.isTransitioning = false
-            completion?(successfully)
+            self.pitch = 0
+        }) { (success) in
+            let camera = self.mapView.cameraThatFitsShape(line, direction: 0, edgePadding: edgePadding)
+            
+            UIView.animate(withDuration: 1, delay: 0, options: [], animations: {
+                self.centerCoordinate = camera.centerCoordinate
+                self.direction = 0
+                self.altitude = camera.altitude
+            }, completion: { (success) in
+                completion?(success)
+            })
         }
     }
 }

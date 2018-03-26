@@ -338,7 +338,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if tracksUserCourse, !navigationCamera.isTransitioning {
+        if tracksUserCourse {
             // TODO: offset centerCoordinate according to `userAnchorPoint`
             navigationCamera.setCourseTracking(centerCoordinate: location.coordinate, direction: location.course, pitch: 45, altitude: altitude, animated: animated)
             
@@ -1096,11 +1096,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     /**
      Sets the camera directly over a series of coordinates.
      */
-    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+    @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets) {
         tracksUserCourse = false
-        // TODO: Set bounds correctly
+        let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
+        navigationCamera.transitionToOverview(coordinates: slicedLine, edgePadding: edgePadding)
+    }
     
-        navigationCamera.transitionToOverview(altitude: 10_000, pitch: 0, direction: 0)
+    func updateAltitude(_ altitude: CLLocationDistance) {
+        navigationCamera.updateAltitude(altitude)
     }
     
     func transitionToCourseTracking(completion: NavigationCamera.CompletionHandler = nil) {
