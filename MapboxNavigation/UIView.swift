@@ -29,11 +29,7 @@ extension UIView {
         layer.shadowOpacity = Float(shadowOpacity!)
     }
     
-    func applyGradient(colors: [UIColor]) {
-        applyGradient(colors: colors, locations: nil)
-    }
-    
-    func applyGradient(colors: [UIColor], locations: [NSNumber]?) {
+    func applyGradient(colors: [UIColor], locations: [NSNumber]? = nil) {
         let gradient: CAGradientLayer = CAGradientLayer()
         gradient.frame = self.bounds
         gradient.colors = colors.map { $0.cgColor }
