@@ -1,6 +1,6 @@
 ## Changes to the Mapbox Navigation SDK for iOS
 
-## v0.16.0 (March 27, 2018)
+## v0.16.0 (March 26, 2018)
 
 ### User interface
 * While the user travels through a tunnel, `NavigationMapView` temporarily applies a night style (a style whose `styleType` property is set to `StyleType.night`). ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
