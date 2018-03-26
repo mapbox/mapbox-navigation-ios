@@ -9,7 +9,7 @@ class RouteControllerTests: XCTestCase {
         route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
-        return (routeController: navigation, firstLocation: CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude))
+        return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 1, course: 0, speed: 5, timestamp: Date()))
     }
     
     func testUserIsOnRoute() {
@@ -53,6 +53,19 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
     }
     
+    func testSnappedLocationForUnqualifiedLocation() {
+        let navigation = setup.routeController
+        let firstLocation = setup.firstLocation
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
+        XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
+        
+        let futureCoord = Polyline(navigation.routeProgress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 100)!
+        let futureInaccurateLocation = CLLocation(coordinate: futureCoord, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 200, course: 0, speed: 5, timestamp: Date())
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [futureInaccurateLocation])
+        XCTAssertEqual(navigation.location!.coordinate, futureInaccurateLocation.coordinate, "Inaccurate location is still snapped")
+    }
+  
     func testUserPuckShouldFaceBackwards() {
         // This route is a simple straight line: http://geojson.io/#id=gist:anonymous/64cfb27881afba26e3969d06bacc707c&map=17/37.77717/-122.46484
         let response = Fixture.JSONFromFileNamed(name: "straight-line")
