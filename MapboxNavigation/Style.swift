@@ -214,20 +214,31 @@ public class ResumeButton: UIControl {
 open class StepListIndicatorView: UIView {
     
     // Workaround the fact that UIView properties are not marked with UI_APPEARANCE_SELECTOR
-    @objc dynamic open var gradientColors: [UIColor] = [.gray, .lightGray, .gray]
+    @objc dynamic open var gradientColors: [UIColor] = [.gray, .lightGray, .gray] {
+        didSet {
+            applyGradient(colors: gradientColors)
+            setNeedsLayout()
+        }
+    }
     
+    fileprivate lazy var blurredEffectView: UIVisualEffectView = {
+        return UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
+    }()
+
     override open func layoutSubviews() {
         super.layoutSubviews()
-        applyGradient(colors: gradientColors)
         layer.cornerRadius = bounds.midY
         layer.masksToBounds = true
         layer.opacity = 0.25
-        
-        let blurEffect = UIBlurEffect(style: .extraLight)
-        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
-        blurredEffectView.frame = bounds
-        addSubview(blurredEffectView)
+        addBlurredEffect(view: blurredEffectView, to: self)
     }
+    
+    fileprivate func addBlurredEffect(view: UIView, to parentView: UIView)  {
+        guard !view.isDescendant(of: parentView) else { return }
+        view.frame = parentView.bounds
+        parentView.addSubview(view)
+    }
+    
 }
 
 /// :nodoc:
