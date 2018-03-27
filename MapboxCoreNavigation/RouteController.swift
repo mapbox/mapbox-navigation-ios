@@ -144,8 +144,6 @@ public protocol RouteControllerDelegate: class {
  */
 @objc(MBRouteController)
 open class RouteController: NSObject {
-    // TODO: This needs to be injected as a default initializer param so that we can substitute a spy under test.
-    let events = MMEEventsManager.shared()
 
     /**
      The route controller’s delegate.
@@ -216,6 +214,7 @@ open class RouteController: NSObject {
     /// :nodoc: This is used internally when the navigation UI is being used
     public var usesDefaultUserInterface = false
 
+    var eventsManager: MMEEventsManager
     var sessionState: SessionState
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
 
@@ -241,13 +240,14 @@ open class RouteController: NSObject {
      - parameter directions: The Directions object that created `route`.
      - parameter locationManager: The associated location manager.
      */
-    @objc(initWithRoute:directions:locationManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager()) {
+    @objc(initWithRoute:directions:locationManager:eventsManager:)
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: MMEEventsManager = MMEEventsManager.shared()) {
         self.sessionState = SessionState(currentRoute: route, originalRoute: route)
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
+        self.eventsManager = eventsManager
         UIDevice.current.isBatteryMonitoringEnabled = true
         super.init()
 
@@ -288,13 +288,13 @@ open class RouteController: NSObject {
         }
 
         if let mapboxAccessToken = mapboxAccessToken {
-            events.isDebugLoggingEnabled = eventLoggingEnabled
-            events.isMetricsEnabledInSimulator = true
-            events.isMetricsEnabledForInUsePermissions = true
+            eventsManager.isDebugLoggingEnabled = eventLoggingEnabled
+            eventsManager.isMetricsEnabledInSimulator = true
+            eventsManager.isMetricsEnabledForInUsePermissions = true
             let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-            events.initialize(withAccessToken: mapboxAccessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
-            events.disableLocationMetrics()
-            events.sendTurnstileEvent()
+            eventsManager.initialize(withAccessToken: mapboxAccessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
+            eventsManager.disableLocationMetrics()
+            eventsManager.sendTurnstileEvent()
         } else {
             assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
         }
@@ -951,19 +951,19 @@ struct SessionState {
 extension RouteController {
     // MARK: Sending events
     func sendDepartEvent() {
-        events.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: events.navigationDepartEvent(routeController: self))
-        events.flush()
+        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: eventsManager.navigationDepartEvent(routeController: self))
+        eventsManager.flush()
     }
 
     func sendArriveEvent() {
-        events.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: events.navigationArriveEvent(routeController: self))
-        events.flush()
+        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: eventsManager.navigationArriveEvent(routeController: self))
+        eventsManager.flush()
     }
 
     open func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
-        let attributes = events.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
-        events.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
-        events.flush()
+        let attributes = eventsManager.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
+        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
+        eventsManager.flush()
     }
 
     func sendFeedbackEvent(event: CoreFeedbackEvent) {
@@ -973,16 +973,16 @@ extension RouteController {
         }
 
         let eventName = event.eventDictionary["event"] as! String
-        let eventDictionary = events.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
+        let eventDictionary = eventsManager.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
 
-        events.enqueueEvent(withName: eventName, attributes: eventDictionary)
-        events.flush()
+        eventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
+        eventsManager.flush()
     }
 
     // MARK: Enqueue feedback
 
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
-        let eventDictionary = events.navigationFeedbackEvent(routeController: self, type: type, description: description)
+        let eventDictionary = eventsManager.navigationFeedbackEvent(routeController: self, type: type, description: description)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
         outstandingFeedbackEvents.append(event)
@@ -992,7 +992,7 @@ extension RouteController {
 
     func enqueueRerouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = events.navigationRerouteEvent(routeController: self)
+        let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self)
 
         sessionState.lastRerouteDate = timestamp
         sessionState.numberOfReroutes += 1
@@ -1006,7 +1006,7 @@ extension RouteController {
     
     func enqueueFoundFasterRouteEvent() -> String {
         let timestamp = Date()
-        let eventDictionary = events.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
+        let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
         
         sessionState.lastRerouteDate = timestamp
         
