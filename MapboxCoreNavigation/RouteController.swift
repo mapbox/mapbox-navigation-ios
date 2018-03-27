@@ -376,12 +376,16 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation? {
         didSet {
-            guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
-                userSnapToStepDistanceFromManeuver = nil
-                return
-            }
-            userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
+            updateDistanceToManeuver()
         }
+    }
+    
+    func updateDistanceToManeuver() {
+        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
+            userSnapToStepDistanceFromManeuver = nil
+            return
+        }
+        userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
     }
 
     @objc public var reroutingTolerance: CLLocationDistance {
@@ -603,6 +607,7 @@ extension RouteController: CLLocationManagerDelegate {
             
             if !routeProgress.isFinalLeg && advancesToNextLeg {
                 routeProgress.legIndex += 1
+                updateDistanceToManeuver()
             }
         }
     }
@@ -852,8 +857,11 @@ extension RouteController: CLLocationManagerDelegate {
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
         
+        // Always give the first voice announcement when beginning a leg.
+        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0
+        
         for voiceInstruction in spokenInstructions {
-            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0 {
+            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
@@ -874,6 +882,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         updateIntersectionDistances()
+        updateDistanceToManeuver()
     }
     
     func updateIntersectionDistances() {
