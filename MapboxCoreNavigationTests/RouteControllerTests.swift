@@ -1,6 +1,7 @@
 import XCTest
 import MapboxDirections
 import Turf
+import MapboxMobileEvents
 @testable import MapboxCoreNavigation
 
 fileprivate let mbTestHeading: CLLocationDirection = 50
@@ -129,18 +130,22 @@ class RouteControllerTests: XCTestCase {
         controller.reroute(from: someLocation)
 
         // It logs the event
-        XCTAssertTrue(eventsManagerSpy.recentEvents.contains("whatever we need to include"))
+        let expectedName: String = MMEEventTypeNavigationReroute
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedName))
 
 //        // TODO: it tells the delegate
 //        XCTAssertTrue(delegate.recentMessages.includes("routeController(_, willRerouteFrom:)"))
 //
 //        // TODO: it posts a "will reroute" notification (figure out whether to keep this after clarifying the event tracking)
 //        XCTAssertTrue(notificationObserver.recentNotifications.includes(.routeControllerWillReroute))
+
+        // TODO: what about SessionState?
     }
 
     // MARK: Failing to get directions from location
     // TODO: it tells the delegate
-    // TODO: it logs the event
+    // TODO: it logs the telemetry event
     // TODO: it posts a notification with the error (do we keep this after clarifying the event tracking
 
     // MARK: When a RouteProgress is set / when progress changes
