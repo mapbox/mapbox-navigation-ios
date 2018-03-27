@@ -7,11 +7,19 @@ fileprivate let mbTestHeading: CLLocationDirection = 50
 
 class RouteControllerTests: XCTestCase {
 
+    let eventsManagerSpy = EventsManagerSpy()
+
     var setup: (routeController: RouteController, firstLocation: CLLocation) {
         route.accessToken = "foo"
-        let navigation = RouteController(along: route, directions: directions)
+        let navigation = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
+    }
+
+    override func setUp() {
+        super.setUp()
+
+        eventsManagerSpy.reset()
     }
 
     func testUserIsOnRoute() {
@@ -44,7 +52,6 @@ class RouteControllerTests: XCTestCase {
 
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [futureLocation])
         XCTAssertTrue(navigation.userIsOnRoute(futureLocation), "User should be on route")
-
         XCTAssertEqual(navigation.routeProgress.currentLegProgress.stepIndex, 2, "User should be on route and we should increment all the way to the 4th step")
     }
 
@@ -115,16 +122,17 @@ class RouteControllerTests: XCTestCase {
     }
 
     // MARK: When told to re-route from location -- `reroute(from:)`
-    func testReroutingFromALocation() {
-        XCTFail("Start here...")
-//        let controller = setup.routeController
-//        controller.reroute(from: someLocation)
-//
+    func testReroutingFromALocationSendsEvents() {
+        let controller = setup.routeController
+
+        let someLocation = CLLocation(latitude: 123, longitude: 456)
+        controller.reroute(from: someLocation)
+
+        // It logs the event
+        XCTAssertTrue(eventsManagerSpy.recentEvents.contains("whatever we need to include"))
+
 //        // TODO: it tells the delegate
 //        XCTAssertTrue(delegate.recentMessages.includes("routeController(_, willRerouteFrom:)"))
-//
-//        // TODO: it logs the event
-//        XCTAssertTrue(eventsManagerSpy.recentEvents.includes("whatever we need to include"))
 //
 //        // TODO: it posts a "will reroute" notification (figure out whether to keep this after clarifying the event tracking)
 //        XCTAssertTrue(notificationObserver.recentNotifications.includes(.routeControllerWillReroute))
