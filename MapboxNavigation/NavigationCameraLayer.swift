@@ -37,7 +37,7 @@ class NavigationCameraLayer: CALayer {
     }
     
     fileprivate class func isCustomAnimationKey(key: String) -> Bool {
-        return !(CustomAnimationKey(rawValue: key) == nil)
+        return CustomAnimationKey.maps(to: key)
     }
     
     override class func needsDisplay(forKey key: String) -> Bool {
@@ -76,5 +76,11 @@ class NavigationCameraLayer: CALayer {
         
         animation.toValue = nil
         return animation
+    }
+}
+
+extension RawRepresentable {
+    static func maps(to value: RawValue) -> Bool {
+        return self.init(rawValue: value) != nil
     }
 }
