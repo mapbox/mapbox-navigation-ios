@@ -8,7 +8,7 @@ class DialogViewController: UIViewController {
         static let labelFont = UIFont.systemFont(ofSize: 17.0)
         static let stackSpacing = CGFloat(20.0)
         static let checkmark = UIImage(named: "report_checkmark", in: .mapboxNavigation, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-        static let labelText = NSLocalizedString("Thank you for your report!", comment: "Feedback Report Submission Thanks")
+        static let labelText = NSLocalizedString("FEEDBACK_THANK_YOU", value: "Thank you for your report!", comment: "Message confirming that the user has successfully sent feedback")
     }
     
     lazy var dialogView: UIView = {

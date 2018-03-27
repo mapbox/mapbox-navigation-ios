@@ -178,12 +178,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
-            
-            if let location = userLocationForCourseTracking, tracksUserCourse {
-                UIView.animate(withDuration: 1, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-                }, completion: nil)
-            }
         }
     }
 
@@ -348,7 +342,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
+            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: {
+                UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                    self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+                }, completion: nil)
+            })
         } else {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
@@ -1210,6 +1208,24 @@ public protocol NavigationMapViewDelegate: class {
      */
     @objc(navigationMapView:shapeDescribingWaypoints:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    
+    /**
+     Asks the receiver to return an MGLAnnotationImage that describes the image used an annotation.
+     - parameter mapView: The MGLMapView.
+     - parameter annotation: The annotation to be styled.
+     - returns: Optionally, a `MGLAnnotationImage` that defines the image used for the annotation.
+     */
+    @objc(navigationMapView:imageForAnnotation:)
+    optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
+    
+    /**
+     Asks the receiver to return an MGLAnnotationView that describes the image used an annotation.
+     - parameter mapView: The MGLMapView.
+     - parameter annotation: The annotation to be styled.
+     - returns: Optionally, a `MGLAnnotationView` that defines the view used for the annotation.
+     */
+    @objc(navigationMapView:viewForAnnotation:)
+    optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
     
     /**
      Asks the receiver to return a CGPoint to serve as the anchor for the user icon.

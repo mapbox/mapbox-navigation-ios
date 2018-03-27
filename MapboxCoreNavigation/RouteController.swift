@@ -538,8 +538,13 @@ extension RouteController: CLLocationManagerDelegate {
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
             if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
+                
+                // Allow the user puck to advance. A stationary puck is not great.
+                self.rawLocation = lastLocation
+                
                 // Check for a tunnel intersection at the current step we found the bad location update.
                 checkForTunnelIntersection(at: lastLocation, for: manager, distanceTraveled: currentStepProgress.distanceTraveled)
+                
                 return
             }
         // This case handles the first location.

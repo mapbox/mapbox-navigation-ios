@@ -29,7 +29,7 @@ open class Style: NSObject {
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
      */
-    @objc public var styleType: StyleType = .dayStyle
+    @objc public var styleType: StyleType = .day
     
     /**
      Map style to be used for the style.
@@ -432,13 +432,6 @@ public class ProgressBar: UIView {
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveLinear, animations: {
             self.progress = progress
         }, completion: nil)
-    }
-    
-    func dock(on view: UIView) {
-        translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(self)
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-0-[bar]-0-|", options: [], metrics: nil, views: ["bar": self]))
-        view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[bar(\(bounds.height))]-0-|", options: [], metrics: nil, views: ["bar": self]))
     }
     
     public override func layoutSubviews() {

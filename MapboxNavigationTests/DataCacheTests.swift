@@ -97,4 +97,12 @@ class DataCacheTests: XCTestCase {
 
         XCTAssertNil(cache.data(forKey: dataKey))
     }
+
+    func testNotificationObserverDoesNotCrash() {
+        var tempCache: DataCache? = DataCache()
+        tempCache?.clearMemory()
+        tempCache = nil
+
+        NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
+    }
 }

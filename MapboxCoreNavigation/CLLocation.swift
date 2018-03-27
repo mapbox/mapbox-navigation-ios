@@ -5,13 +5,9 @@ import Turf
 extension CLLocation {
     
     var isQualified: Bool {
-        #if (arch(i386) || arch(x86_64)) && (os(iOS) || os(watchOS) || os(tvOS))
-            return true
-        #else
-            return
-                0...100 ~= horizontalAccuracy &&
+        return
+            0...100 ~= horizontalAccuracy &&
                 0...30 ~= verticalAccuracy
-        #endif
     }
     
     /// Returns a dictionary representation of the location.
@@ -97,8 +93,9 @@ extension CLLocation {
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = closest.coordinate
+        guard let firstCoordinate = legProgress.leg.steps.first?.coordinates?.first else { return nil }
         
-        guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) else { return nil }
+        guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep, distanceToFirstCoordinateOnLeg: self.coordinate.distance(to: firstCoordinate)) else { return nil }
         
         return CLLocation(coordinate: userCoordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: userCourse, speed: speed, timestamp: timestamp)
     }
@@ -147,11 +144,15 @@ extension CLLocation {
     /**
      Determines if the a location is qualified enough to allow the user puck to become unsnapped.
      */
-    func shouldSnap(toRouteWith course: CLLocationDirection) -> Bool {
+    func shouldSnap(toRouteWith course: CLLocationDirection, distanceToFirstCoordinateOnLeg: CLLocationDistance = CLLocationDistanceMax) -> Bool {
+        
+        // If the user is near the beginning of leg, allow for unsnapped more often.
+        let isWithinDepatureStep = distanceToFirstCoordinateOnLeg < RouteControllerManeuverZoneRadius
+
         if course >= 0 &&
-            speed >= RouteSnappingMinimumSpeed &&
-            course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle &&
-            horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy {
+            (speed >= RouteSnappingMinimumSpeed || isWithinDepatureStep) &&
+            (horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy || isWithinDepatureStep) &&
+            course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle {
             return false
         }
         return true
