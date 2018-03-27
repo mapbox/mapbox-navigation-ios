@@ -359,6 +359,16 @@ open class RouteController: NSObject {
      - seeAlso: snappedLocation, rawLocation
      */
     @objc public var location: CLLocation? {
+        
+        // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
+        if snappedLocation == nil,
+            let heading = heading,
+            let loc = rawLocation,
+            !loc.course.isQualified,
+            heading.trueHeading.isQualified {
+            return CLLocation(coordinate: loc.coordinate, altitude: loc.altitude, horizontalAccuracy: loc.horizontalAccuracy, verticalAccuracy: loc.verticalAccuracy, course: heading.trueHeading, speed: loc.speed, timestamp: loc.timestamp)
+        }
+        
         return snappedLocation ?? rawLocation
     }
     
@@ -369,6 +379,8 @@ open class RouteController: NSObject {
     var snappedLocation: CLLocation? {
         return rawLocation?.snapped(to: routeProgress.currentLegProgress)
     }
+    
+    var heading: CLHeading?
 
     /**
      The most recently received user location.
@@ -504,6 +516,10 @@ extension RouteController: CLLocationManagerDelegate {
                                               timestamp: Date())
 
         self.locationManager(self.locationManager, didUpdateLocations: [interpolatedLocation])
+    }
+    
+    @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading = newHeading
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
