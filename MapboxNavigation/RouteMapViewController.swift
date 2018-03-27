@@ -328,8 +328,32 @@ class RouteMapViewController: UIViewController {
         
         let currentSpeedLimit = speeds[userCurrentSegment]
         
+        navigationView.speedLimitSign.region = .world
         navigationView.speedLimitSign.speedLimit = currentSpeedLimit
-        navigationView.speedLimitSign.isHidden = !showMaximumSpeedLimitSign || currentSpeedLimit == SpeedLimit.invalid
+        // TODO: Uncomment. Leaving commented while debuggin
+        navigationView.speedLimitSign.isHidden = false
+        // navigationView.speedLimitSign.isHidden = !showMaximumSpeedLimitSign || currentSpeedLimit.value == SpeedLimit.invalid.value
+        
+        resetETATimer()
+        
+        updateETA()
+        
+        lanesView.update(for: routeProgress.currentLegProgress)
+        instructionsBannerView.update(for: routeProgress.currentLegProgress)
+        if lanesView.isHidden {
+            nextBannerView.update(for: routeProgress)
+        }
+        
+        if currentLegIndexMapped != routeProgress.legIndex {
+            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
+            mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
+            
+            currentLegIndexMapped = routeProgress.legIndex
+        }
+        
+        if annotatesSpokenInstructions {
+            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
+        }
     }
     
     @objc func didReroute(notification: NSNotification) {
@@ -401,30 +425,7 @@ class RouteMapViewController: UIViewController {
         return navigationMapView(mapView, viewFor: annotation)
     }
 
-    func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
-        resetETATimer()
-        
-        updateETA()
-        
-        lanesView.update(for: routeProgress.currentLegProgress)
-        instructionsBannerView.update(for: routeProgress.currentLegProgress)
-        if lanesView.isHidden {
-            nextBannerView.update(for: routeProgress)
-        }
-        
-        if currentLegIndexMapped != routeProgress.legIndex {
-            mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
-            
-            currentLegIndexMapped = routeProgress.legIndex
-        }
-        
-        if annotatesSpokenInstructions {
-            mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
-        }
-    }
-    
-func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
+    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
         let identifier = routeController.recordFeedback()
         let send = defaultSendFeedbackHandler(feedbackId: identifier)
         let dismiss = defaultDismissFeedbackHandler(feedbackId: identifier)

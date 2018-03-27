@@ -12,38 +12,50 @@ open class SpeedLimitSign: UIStackView {
     }
     
     let paragraphStyle = NSMutableParagraphStyle()
-    let fontSize = UIFont.systemFontSize
+    let fontSize: CGFloat = 14.0
     let strings = NSMutableAttributedString()
     let numberFormater = NumberFormatter()
+    
+    var circleBounds: CGRect {
+        // TODO: adjust x and y location
+        let padding: CGFloat = 20
+        if bounds.width > bounds.height {
+            return CGRect(x: 0, y: 0, width: bounds.width + padding, height: bounds.width + padding)
+        } else {
+            return CGRect(x: 0, y: 0, width: bounds.height + padding, height: bounds.height + padding)
+        }
+    }
+    
+    var region: SpeedLimitSignRegionType!
     
     var speedLimit: SpeedLimit? {
         didSet {
             guard let speedLimit = speedLimit else { return }
             guard let speedString = numberFormater.string(from: speedLimit.value as NSNumber) else { return }
-            
             labels.removeAll()
             
-            let defaultLabels = defaultTextSplit.map { (string: String) -> SpeedLimitLabel in
-                let label: SpeedLimitLabel = .forAutoLayout()
-                label.attributedText = NSMutableAttributedString(string: string.uppercased(), attributes: [
-                    .paragraphStyle: paragraphStyle,
-                    .font: UIFont.systemFont(ofSize: fontSize * 0.9)
-                    ])
-                return label
+            // Only include the string `SPEED LIMIT` for .unitedStates.
+            if region == .unitedStates {
+                let defaultLabels = defaultTextSplit.map { (string: String) -> SpeedLimitLabel in
+                    let label: SpeedLimitLabel = .forAutoLayout()
+                    label.attributedText = NSMutableAttributedString(string: string.uppercased(), attributes: [
+                        .font: UIFont.systemFont(ofSize: fontSize * 0.9),
+                        .paragraphStyle: paragraphStyle
+                        ])
+                    return label
+                }
+                labels.append(contentsOf: defaultLabels)
             }
-            labels.append(contentsOf: defaultLabels)
             
             let speedLabel: SpeedLimitLabel = .forAutoLayout()
             speedLabel.attributedText = NSMutableAttributedString(string: speedString, attributes: [
-                .font: UIFont.boldSystemFont(ofSize: fontSize * 2),
-                .paragraphStyle: paragraphStyle
+                .font: UIFont.boldSystemFont(ofSize: fontSize * 2)
                 ])
             labels.append(speedLabel)
             
             let unitLabel: SpeedLimitLabel = .forAutoLayout()
             unitLabel.attributedText = NSMutableAttributedString(string: speedLimit.unit.localizedSpeedUnit, attributes: [
-                .font: UIFont.boldSystemFont(ofSize: fontSize * 0.7),
-                .paragraphStyle: paragraphStyle
+                .font: UIFont.boldSystemFont(ofSize: fontSize * 0.7)
                 ])
             labels.append(unitLabel)
             
@@ -62,11 +74,11 @@ open class SpeedLimitSign: UIStackView {
     }
     
     func commonInit() {
-        paragraphStyle.alignment = .center
-        layoutMargins = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+        isLayoutMarginsRelativeArrangement = true
         axis = .vertical
+        alignment = .center
         contentMode = .scaleAspectFill
-        distribution = .equalSpacing
+        distribution = .fillProportionally
     }
     
     func updateStackView(with labels: [SpeedLimitLabel]) {
@@ -76,20 +88,64 @@ open class SpeedLimitSign: UIStackView {
     }
     
     func addBackground() {
-        let subView = UIView(frame: bounds)
-        subView.backgroundColor = .white
-        subView.layer.cornerRadius = 3
-        subView.layer.borderWidth = 1
-        subView.layer.borderColor = UIColor.black.cgColor
-        subView.layoutMargins = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
-        subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        insertSubview(subView, at: 0)
+        let background: UIView
+        if region == .unitedStates {
+            background = UnitedStatesSignBase(frame: bounds)
+        } else {
+            background = WorldSignBase(frame: circleBounds)
+        }
+        insertSubview(background, at: 0)
     }
 
     open override func layoutSubviews() {
         super.layoutSubviews()
         addBackground()
-        layoutMargins = UIEdgeInsets(top: 6, left: 6, bottom: 6, right: 6)
+    }
+}
+
+public enum SpeedLimitSignRegionType {
+    case world
+    case unitedStates
+}
+
+class WorldSignBase: UIView {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    func commonInit() {
+        backgroundColor = .white
+        layer.cornerRadius = bounds.size.width / 2
+        layer.borderWidth = 5
+        layer.borderColor = UIColor(red:0.93, green:0.11, blue:0.14, alpha:1.0).cgColor
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+}
+
+
+class UnitedStatesSignBase: UIView {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    func commonInit() {
+        backgroundColor = .white
+        layer.cornerRadius = 3
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.black.cgColor
+        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
     }
 }
 
