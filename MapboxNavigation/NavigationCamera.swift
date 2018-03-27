@@ -1,5 +1,24 @@
 import UIKit
 
+extension CLLocationDirection {
+    
+    // Minimize the rotation by taking the shorter path around
+    mutating func normalizeAngle(_ anchorAngle: CLLocationDirection) -> CLLocationDirection {
+        self = self.wrap(min: 0, max: 360)
+        let diff = abs(self - anchorAngle)
+        
+        if (abs(self - 180 - anchorAngle) < diff) {
+            self -= 360
+        }
+        
+        if (abs(self + 180 - anchorAngle) < diff) {
+            self += 360
+        }
+        
+        return self
+    }
+}
+
 class NavigationCamera: UIView {
     
     var altitude: CLLocationDistance {
@@ -27,7 +46,8 @@ class NavigationCamera: UIView {
     var direction: CLLocationDirection {
         set {
             guard let layer = layer as? NavigationCameraLayer else { return }
-            layer.direction = newValue.wrap(min: -180, max: 180)
+            var newDirection = newValue
+            layer.direction = newDirection.normalizeAngle(layer.direction)
         }
         get {
             guard let layer = layer as? NavigationCameraLayer else { return 0 }
@@ -72,8 +92,7 @@ class NavigationCamera: UIView {
         camera.altitude = presentationLayer.altitude
         camera.pitch = presentationLayer.pitch
         camera.centerCoordinate = CLLocationCoordinate2D(latitude: presentationLayer.centerLatitude, longitude: presentationLayer.centerLongitude)
+        camera.heading = presentationLayer.direction
         mapView.setCamera(camera, animated: false)
-        
-        mapView.direction = presentationLayer.direction
     }
 }
