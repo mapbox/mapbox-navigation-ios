@@ -3,7 +3,7 @@ import MapboxDirections
 import Turf
 @testable import MapboxCoreNavigation
 
-let TestLocationShouldUseHeading: CLLocationDirection = 50
+fileprivate let mbTestHeading: CLLocationDirection = 50
 
 class RouteControllerTests: XCTestCase {
     
@@ -106,26 +106,11 @@ class RouteControllerTests: XCTestCase {
         
         let invalidCourseLocation = CLLocation(coordinate: firstLocation.coordinate, altitude: firstLocation.altitude, horizontalAccuracy: firstLocation.horizontalAccuracy, verticalAccuracy: firstLocation.verticalAccuracy, course: -1, speed: firstLocation.speed, timestamp: firstLocation.timestamp)
         
-        let heading = CustomHeading()
+        let heading = CLHeading(heading: mbTestHeading, accuracy: 1)!
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [invalidCourseLocation])
         navigation.locationManager(navigation.locationManager, didUpdateHeading: heading)
         
-        XCTAssertEqual(navigation.location!.course, TestLocationShouldUseHeading, "Course should be using bearing")
+        XCTAssertEqual(navigation.location!.course, mbTestHeading, "Course should be using bearing")
     }
 }
-
-class CustomHeading: CLHeading {
-    override var trueHeading: CLLocationDirection {
-        return TestLocationShouldUseHeading
-    }
-    
-    override init() {
-        super.init()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-}
-
