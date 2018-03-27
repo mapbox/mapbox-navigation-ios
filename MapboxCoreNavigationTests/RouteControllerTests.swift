@@ -126,10 +126,14 @@ class RouteControllerTests: XCTestCase {
     func testReroutingFromALocationSendsEvents() {
         let controller = setup.routeController
 
-        let someLocation = CLLocation(latitude: 123, longitude: 456)
+        let someLocation = setup.firstLocation
         controller.reroute(from: someLocation)
 
         // It logs the event
+        // when the next location update is received
+        controller.locationManager(controller.locationManager, didUpdateLocations: [someLocation])
+
+        // It logs (flushes) the event
         let expectedName: String = MMEEventTypeNavigationReroute
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedName))

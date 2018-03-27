@@ -29,20 +29,20 @@ class EventsManagerSpy: MMEEventsManager {
     }
 
     public func hasFlushedEvent(with name: String) -> Bool {
-        return flushedEvents.contains { (event: MockTelemetryEvent) in
+        for event in flushedEvents {
             if event.name == name {
                 return true
             }
-            return false
         }
+        return false
     }
 
     public func hasEnqueuedEvent(with name: String) -> Bool {
-        return enqueuedEvents.contains { (event: MockTelemetryEvent) in
+        for event in enqueuedEvents {
             if event.name == name {
                 return true
             }
-            return false
         }
+        return false
     }
 }
