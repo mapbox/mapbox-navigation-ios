@@ -13,10 +13,15 @@ class SpeedLimitSignTests: FBSnapshotTestCase {
     
     func testWorldSpeedLimitSign() {
         let view: SpeedLimitSign = .forAutoLayout(hidden: false)
-        view.clipsToBounds = true
-        view.layer.borderWidth = 1.0 / UIScreen.main.scale
         view.region = .world
         view.speedLimit = SpeedLimit(value: 20, speedUnits: .kilometersPerHour)
+        FBSnapshotVerifyView(view)
+    }
+    
+    func testUSSpeedLimitSign() {
+        let view: SpeedLimitSign = .forAutoLayout(hidden: false)
+        view.region = .unitedStates
+        view.speedLimit = SpeedLimit(value: 20, speedUnits: .milesPerHour)
         FBSnapshotVerifyView(view)
     }
 }
