@@ -114,24 +114,35 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(navigation.location!.course, mbTestHeading, "Course should be using bearing")
     }
 
+    // MARK: When told to re-route from location -- `reroute(from:)`
+    func testReroutingFromALocation() {
+        XCTFail("Start here...")
+//        let controller = setup.routeController
+//        controller.reroute(from: someLocation)
+//
+//        // TODO: it tells the delegate
+//        XCTAssertTrue(delegate.recentMessages.includes("routeController(_, willRerouteFrom:)"))
+//
+//        // TODO: it logs the event
+//        XCTAssertTrue(eventsManagerSpy.recentEvents.includes("whatever we need to include"))
+//
+//        // TODO: it posts a "will reroute" notification (figure out whether to keep this after clarifying the event tracking)
+//        XCTAssertTrue(notificationObserver.recentNotifications.includes(.routeControllerWillReroute))
+    }
+
     // MARK: Failing to get directions from location
     // TODO: it tells the delegate
     // TODO: it logs the event
     // TODO: it posts a notification with the error (do we keep this after clarifying the event tracking
 
-    // MARK: When told to re-route from location
-    // TODO: it tells the delegate
-    // TODO: it logs the event
-    // TODO: it posts a "will reroute" notification (do we keep this after clarifying the event tracking
-
     // MARK: When a RouteProgress is set / when progress changes
-    // TODO: it posts a re-route notification?!? Note that it does not tell the delegate. check how this is used.
+    // TODO: it posts a re-route notification... Note that it does not tell the delegate. check how this is used.
 
     // MARK: Checking for a faster route
     // getDirections, if a bunch of checks are met (refactoring oppty), schenanigans
     // TODO: it sets routeProgress & all that
     // TODO: it tells the delegate
-    // TODO: possible bug, it calls didReroute with a mock Notification, does not post
+    // TODO: major refactoring opportunity, it calls didReroute with a mock Notification, does not post
 
 
 

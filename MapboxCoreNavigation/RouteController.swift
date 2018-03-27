@@ -144,6 +144,7 @@ public protocol RouteControllerDelegate: class {
  */
 @objc(MBRouteController)
 open class RouteController: NSObject {
+    // TODO: This needs to be injected as a default initializer param so that we can substitute a spy under test.
     let events = MMEEventsManager.shared()
 
     /**
@@ -555,7 +556,9 @@ extension RouteController: CLLocationManagerDelegate {
             potentialLocation = lastLocation
         }
         
-        guard let location = potentialLocation else { return }
+        guard let location = potentialLocation else {
+            return
+        }
         
         self.rawLocation = location
 
@@ -588,7 +591,8 @@ extension RouteController: CLLocationManagerDelegate {
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
-        
+
+        // TODO: refactor this!!
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
