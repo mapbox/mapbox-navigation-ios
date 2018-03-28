@@ -10,12 +10,13 @@ class RouteControllerTests: XCTestCase {
 
     let eventsManagerSpy = EventsManagerSpy()
 
-    var setup: (routeController: RouteController, firstLocation: CLLocation) {
+    lazy var setup: (routeController: RouteController, firstLocation: CLLocation) = {
+        print("line #: \(#line); function: \(#function)")
         route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
-    }
+    }()
 
     override func setUp() {
         super.setUp()
@@ -125,8 +126,8 @@ class RouteControllerTests: XCTestCase {
     // MARK: When told to re-route from location -- `reroute(from:)`
     func testReroutingFromALocationSendsEvents() {
         let controller = setup.routeController
-
         let someLocation = setup.firstLocation
+
         print("Kicking off reroute...")
         controller.reroute(from: someLocation)
 
