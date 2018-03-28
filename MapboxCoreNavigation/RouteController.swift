@@ -528,7 +528,6 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        print("locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])")
         let filteredLocations = locations.filter {
             sessionState.pastLocations.push($0)
             return $0.isQualified
@@ -999,7 +998,6 @@ extension RouteController {
 
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
-        print("Appending event internally")
         outstandingFeedbackEvents.append(event)
 
         return event.id.uuidString
@@ -1014,6 +1012,7 @@ extension RouteController {
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
         outstandingFeedbackEvents.append(event)
+//        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationReroute, attributes: event.eventDictionary)
 
         return event.id.uuidString
     }
