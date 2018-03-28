@@ -127,11 +127,13 @@ class RouteControllerTests: XCTestCase {
         let controller = setup.routeController
 
         let someLocation = setup.firstLocation
+        print("Kicking off reroute...")
         controller.reroute(from: someLocation)
 
-        // It logs the event
         // when the next location update is received
+        print("Simulating location update")
         controller.locationManager(controller.locationManager, didUpdateLocations: [someLocation])
+
 
         // It logs (flushes) the event
         let expectedName: String = MMEEventTypeNavigationReroute
