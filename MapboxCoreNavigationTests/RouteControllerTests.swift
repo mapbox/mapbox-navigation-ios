@@ -8,12 +8,34 @@ fileprivate let mbTestHeading: CLLocationDirection = 50
 
 class RouteControllerTests: XCTestCase {
 
+    struct Constants {
+        static let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
+        static let accessToken = "access-token"
+    }
+
     let eventsManagerSpy = EventsManagerSpy()
+    let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
 
     lazy var setup: (routeController: RouteController, firstLocation: CLLocation) = {
         let navigation = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
+    }()
+
+    lazy var initialRoute: Route = {
+        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+        route.accessToken = Constants.accessToken
+        return route
+    }()
+
+    lazy var alternateRoute: Route = {
+        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.893922, longitude: -77.023900))
+        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 38.880727, longitude: -77.024888))
+        let route = Route(json: Constants.jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+        route.accessToken = Constants.accessToken
+        return route
     }()
 
     override func setUp() {
@@ -124,20 +146,16 @@ class RouteControllerTests: XCTestCase {
     // MARK: When told to re-route from location -- `reroute(from:)`
     func testReroutingFromALocationSendsEvents() {
         let controller = setup.routeController
-        let someLocation = setup.firstLocation
+        let testLocation = setup.firstLocation
+        let updatedRoute = alternateRoute
+        let expectedEventName = MMEEventTypeNavigationReroute
 
-        print("Kicking off reroute...")
-        controller.reroute(from: someLocation)
+        controller.reroute(from: testLocation)
+        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [updatedRoute], error: nil)
+        controller.locationManager(controller.locationManager, didUpdateLocations: [testLocation])
 
-        // when the next location update is received
-        print("Simulating location update")
-        controller.locationManager(controller.locationManager, didUpdateLocations: [someLocation])
-
-
-        // It logs (flushes) the event
-        let expectedName: String = MMEEventTypeNavigationReroute
-        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedName))
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedName))
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
 
 //        // TODO: it tells the delegate
 //        XCTAssertTrue(delegate.recentMessages.includes("routeController(_, willRerouteFrom:)"))
@@ -165,6 +183,5 @@ class RouteControllerTests: XCTestCase {
     // MARK: more tests
     // TODO: test feedback event mutation workflow
     // TODO: test & refactor the mutation of the re-route events
-
 
 }
