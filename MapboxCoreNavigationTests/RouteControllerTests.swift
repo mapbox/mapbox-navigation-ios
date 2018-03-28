@@ -10,7 +10,7 @@ class RouteControllerTests: XCTestCase {
 
     struct Constants {
         static let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
-        static let accessToken = "access-token"
+        static let accessToken = "nonsense"
     }
 
     let eventsManagerSpy = EventsManagerSpy()
