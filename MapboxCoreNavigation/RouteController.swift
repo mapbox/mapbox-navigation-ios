@@ -528,7 +528,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
+        print("locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])")
         let filteredLocations = locations.filter {
             sessionState.pastLocations.push($0)
             return $0.isQualified
@@ -951,22 +951,27 @@ struct SessionState {
 extension RouteController {
     // MARK: Sending events
     func sendDepartEvent() {
+        print("\(#function)")
         eventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: eventsManager.navigationDepartEvent(routeController: self))
         eventsManager.flush()
     }
 
     func sendArriveEvent() {
+        print("\(#function)")
         eventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: eventsManager.navigationArriveEvent(routeController: self))
         eventsManager.flush()
     }
 
     open func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
+        print("\(#function)")
         let attributes = eventsManager.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
         eventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         eventsManager.flush()
     }
 
     func sendFeedbackEvent(event: CoreFeedbackEvent) {
+        print("\(#function)")
+
         // remove from outstanding event queue
         if let index = outstandingFeedbackEvents.index(of: event) {
             outstandingFeedbackEvents.remove(at: index)
@@ -982,6 +987,7 @@ extension RouteController {
     // MARK: Enqueue feedback
 
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
+        print("\(#function)")
         let eventDictionary = eventsManager.navigationFeedbackEvent(routeController: self, type: type, description: description)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
@@ -991,6 +997,7 @@ extension RouteController {
     }
 
     func enqueueRerouteEvent() -> String {
+        print("\(#function)")
         let timestamp = Date()
         let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self)
 
@@ -999,12 +1006,14 @@ extension RouteController {
 
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
+        print("Appending event internally")
         outstandingFeedbackEvents.append(event)
 
         return event.id.uuidString
     }
     
     func enqueueFoundFasterRouteEvent() -> String {
+        print("\(#function)")
         let timestamp = Date()
         let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
         
@@ -1018,6 +1027,7 @@ extension RouteController {
     }
 
     func checkAndSendOutstandingFeedbackEvents(forceAll: Bool) {
+        print("\(#function)")
         let now = Date()
         let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
             now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
