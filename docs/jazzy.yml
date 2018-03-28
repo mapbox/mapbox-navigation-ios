@@ -16,6 +16,7 @@ custom_categories:
       - Storyboards
       - Localization and Internationalization
       - Using Map Matching
+      - Reduce Memory Usage
   - name: Examples
     children:
       - Basic
