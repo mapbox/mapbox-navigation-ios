@@ -235,8 +235,7 @@ extension StepsViewController: UITableViewDataSource {
                 cell.instructionsView.distance = nil
             }
         }
-        
-        // Hide drag indicator view
+
         cell.instructionsView.stepListIndicatorView.isHidden = true
     }
     
