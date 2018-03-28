@@ -241,6 +241,8 @@ extension InstructionsBannerViewSnapshotTests {
         view.secondaryLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
         view.dividerView.backgroundColor = .red
         view._separatorView.backgroundColor = .red
+        view.stepListIndicatorView.layer.opacity = 0.25
+        view.stepListIndicatorView.gradientColors = [.gray, .lightGray, .gray]
         
         view.distanceLabel.valueFont = UIFont.systemFont(ofSize: 24)
         view.distanceLabel.unitFont = UIFont.systemFont(ofSize: 14)

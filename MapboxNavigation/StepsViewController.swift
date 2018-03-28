@@ -235,6 +235,8 @@ extension StepsViewController: UITableViewDataSource {
                 cell.instructionsView.distance = nil
             }
         }
+
+        cell.instructionsView.stepListIndicatorView.isHidden = true
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
