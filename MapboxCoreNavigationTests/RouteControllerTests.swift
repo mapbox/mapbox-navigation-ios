@@ -11,9 +11,7 @@ class RouteControllerTests: XCTestCase {
     let eventsManagerSpy = EventsManagerSpy()
 
     lazy var setup: (routeController: RouteController, firstLocation: CLLocation) = {
-        print("line #: \(#line); function: \(#function)")
-        route.accessToken = "foo"
-        let navigation = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
+        let navigation = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
     }()

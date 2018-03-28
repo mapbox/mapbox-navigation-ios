@@ -14,35 +14,35 @@ public typealias RouteControllerNotificationUserInfoKey = MBRouteControllerNotif
 extension Notification.Name {
     /**
      Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
-     
+
      The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.errorKey`.
      */
     public static let routeControllerDidFailToReroute = MBRouteControllerDidFailToReroute
-    
+
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
-     
+
      The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.locationKey`.
      */
     public static let routeControllerWillReroute = MBRouteControllerWillReroute
-    
+
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
-     
+
      The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.locationKey` and `RouteControllerNotificationUserInfoKey.isProactiveKey`.
      */
     public static let routeControllerDidReroute = MBRouteControllerDidReroute
-    
+
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
-     
+
      The user info dictionary contains the keys `RouteControllerNotificationUserInfoKey.routeProgressKey`, `RouteControllerNotificationUserInfoKey.locationKey`, and `RouteControllerNotificationUserInfoKey.rawLocationKey`.
      */
     public static let routeControllerProgressDidChange = MBRouteControllerProgressDidChange
-    
+
     /**
      Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
-     
+
      The user info dictionary contains the key `RouteControllerNotificationUserInfoKey.routeProgressKey`.
      */
     public static let routeControllerDidPassSpokenInstructionPoint = MBRouteControllerDidPassSpokenInstructionPoint
@@ -121,12 +121,12 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:didUpdateLocations:)
     optional func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation])
-    
+
     /**
      Called when the route controller arrives at a waypoint.
-     
+
      You can implement this method to prevent the route controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the route controller automatically advances to the next leg when arriving at a waypoint.
-     
+
      - postcondition: If you return false, you must manually advance to the next leg: obtain the value of the `routeProgress` property, then increment the `RouteProgress.legIndex` property.
      - parameter routeController: The route controller that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the controller has arrived at.
@@ -201,7 +201,7 @@ open class RouteController: NSObject {
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
-    
+
     var endOfRouteStarRating: Int?
     var endOfRouteComment: String?
 
@@ -221,7 +221,7 @@ open class RouteController: NSObject {
     var hasFoundOneQualifiedLocation = false
 
     var movementsAwayFromRoute = 0
-    
+
     var previousArrivalWaypoint: Waypoint? {
         didSet {
             if oldValue != previousArrivalWaypoint {
@@ -230,7 +230,7 @@ open class RouteController: NSObject {
             }
         }
     }
-    
+
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
 
     /**
@@ -258,9 +258,9 @@ open class RouteController: NSObject {
         DispatchQueue.main.async {
             self.startEvents(route: route)
         }
-        
+
         checkForUpdates()
-        
+
         guard let _ = Bundle.main.bundleIdentifier else { return }
         if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
             preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
@@ -312,27 +312,27 @@ open class RouteController: NSObject {
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     @objc func didChangeOrientation() {
         if UIDevice.current.orientation.isPortrait {
             sessionState.timeSpentInLandscape += abs(sessionState.lastTimeInPortrait.timeIntervalSinceNow)
-            
+
             sessionState.lastTimeInPortrait = Date()
         } else if UIDevice.current.orientation.isLandscape {
             sessionState.timeSpentInPortrait += abs(sessionState.lastTimeInLandscape.timeIntervalSinceNow)
-            
+
             sessionState.lastTimeInLandscape = Date()
         }
     }
-    
+
     @objc func didChangeApplicationState() {
         if UIApplication.shared.applicationState == .active {
             sessionState.timeSpentInForeground += abs(sessionState.lastTimeInBackground.timeIntervalSinceNow)
-            
+
             sessionState.lastTimeInForeground = Date()
         } else if UIApplication.shared.applicationState == .background {
             sessionState.timeSpentInBackground += abs(sessionState.lastTimeInForeground.timeIntervalSinceNow)
-            
+
             sessionState.lastTimeInBackground = Date()
         }
     }
@@ -354,13 +354,13 @@ open class RouteController: NSObject {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
     }
-    
+
     /**
      The idealized user location. Snapped to the route line, if applicable, otherwise raw.
      - seeAlso: snappedLocation, rawLocation
      */
     @objc public var location: CLLocation? {
-        
+
         // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
         if snappedLocation == nil,
             let heading = heading,
@@ -369,10 +369,10 @@ open class RouteController: NSObject {
             heading.trueHeading.isQualified {
             return CLLocation(coordinate: loc.coordinate, altitude: loc.altitude, horizontalAccuracy: loc.horizontalAccuracy, verticalAccuracy: loc.verticalAccuracy, course: heading.trueHeading, speed: loc.speed, timestamp: loc.timestamp)
         }
-        
+
         return snappedLocation ?? rawLocation
     }
-    
+
     /**
      The raw location, snapped to the current route.
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
@@ -380,7 +380,7 @@ open class RouteController: NSObject {
     var snappedLocation: CLLocation? {
         return rawLocation?.snapped(to: routeProgress.currentLegProgress)
     }
-    
+
     var heading: CLHeading?
 
     /**
@@ -392,7 +392,7 @@ open class RouteController: NSObject {
             updateDistanceToManeuver()
         }
     }
-    
+
     func updateDistanceToManeuver() {
         guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
             userSnapToStepDistanceFromManeuver = nil
@@ -451,7 +451,7 @@ open class RouteController: NSObject {
             outstandingFeedbackEvents.remove(at: index)
         }
     }
-    
+
     /**
      Set the rating and any comment the user may have about their route. Only used when exiting navigaiton.
      */
@@ -467,29 +467,29 @@ extension RouteController {
             sessionState.departureTimestamp = Date()
             sendDepartEvent()
         }
-        
+
         if sessionState.arrivalTimestamp == nil,
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             sessionState.arrivalTimestamp = Date()
             sendArriveEvent()
         }
-        
+
         checkAndSendOutstandingFeedbackEvents(forceAll: false)
     }
 
     @objc func willReroute(notification: NSNotification) {
         _ = enqueueRerouteEvent()
     }
-    
+
     @objc func didReroute(notification: NSNotification) {
         if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as? Bool, didFindFasterRoute {
             _ = enqueueFoundFasterRouteEvent()
         }
-        
+
         if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
-        
+
         movementsAwayFromRoute = 0
     }
 }
@@ -522,7 +522,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         self.locationManager(self.locationManager, didUpdateLocations: [interpolatedLocation])
     }
-    
+
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
     }
@@ -533,13 +533,13 @@ extension RouteController: CLLocationManagerDelegate {
             sessionState.pastLocations.push($0)
             return $0.isQualified
         }
-        
+
         if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
             hasFoundOneQualifiedLocation = true
         }
-        
+
         var potentialLocation: CLLocation?
-        
+
         // `filteredLocations` contains qualified locations
         if let lastFiltered = filteredLocations.last {
             potentialLocation = lastFiltered
@@ -555,11 +555,11 @@ extension RouteController: CLLocationManagerDelegate {
         } else if let lastLocation = locations.last {
             potentialLocation = lastLocation
         }
-        
+
         guard let location = potentialLocation else {
             return
         }
-        
+
         self.rawLocation = location
 
         delegate?.routeController?(self, didUpdate: [location])
@@ -575,7 +575,7 @@ extension RouteController: CLLocationManagerDelegate {
         let currentStep = currentStepProgress.step
 
         updateIntersectionIndex(for: currentStepProgress)
-        
+
         // Notify observers if the step’s remaining distance has changed.
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
@@ -587,7 +587,7 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
         }
-        
+
         updateDistanceToIntersection(from: location)
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
@@ -597,7 +597,7 @@ extension RouteController: CLLocationManagerDelegate {
             reroute(from: location)
             return
         }
-        
+
         updateSpokenInstructionProgress(for: location)
 
         // Check for faster route given users current location
@@ -608,39 +608,39 @@ extension RouteController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
     }
-    
+
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
         let intersectionDistances = currentStepProgress.intersectionDistances
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
         currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
     }
-    
+
     func updateRouteLegProgress(for location: CLLocation) {
         let currentDestination = routeProgress.currentLeg.destination
         let legDurationRemaining = routeProgress.currentLegProgress.durationRemaining
-        
+
         if legDurationRemaining < RouteControllerDurationRemainingWaypointArrival, currentDestination != previousArrivalWaypoint {
             previousArrivalWaypoint = currentDestination
-            
+
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
             let advancesToNextLeg = delegate?.routeController?(self, didArriveAt: currentDestination) ?? true
-            
+
             if !routeProgress.isFinalLeg && advancesToNextLeg {
                 routeProgress.legIndex += 1
                 updateDistanceToManeuver()
             }
         }
     }
-    
+
     /**
      Monitors the user's course to see if it is consistantly moving away from what we expect the course to be at a given point.
      */
     func userCourseIsOnRoute(_ location: CLLocation) -> Bool {
         let nearByCoordinates = routeProgress.currentLegProgress.nearbyCoordinates
         guard let calculatedCourseForLocationOnStep = location.interpolatedCourse(along: nearByCoordinates) else { return true }
-        
+
         let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
-        
+
         if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
             return false
         } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
@@ -648,27 +648,27 @@ extension RouteController: CLLocationManagerDelegate {
         } else {
             movementsAwayFromRoute += 1
         }
-        
+
         return true
     }
-    
+
     /**
      Given a users current location, returns a Boolean whether they are currently on the route.
 
      If the user is not on the route, they should be rerouted.
      */
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
-        
+
         let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
         let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-        
+
         guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
-        
+
         // Check and see if the user is near a future step.
         guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
             return false
         }
-        
+
         if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
             // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
             if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
@@ -676,7 +676,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
             return true
         }
-        
+
         return false
     }
 
@@ -713,7 +713,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
     }
-    
+
     func reroute(from location: CLLocation) {
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
@@ -753,7 +753,7 @@ extension RouteController: CLLocationManagerDelegate {
             strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
         }
     }
-    
+
     func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
             guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
@@ -761,9 +761,9 @@ extension RouteController: CLLocationManagerDelegate {
             _ = URLSession.shared.dataTask(with: URL(string: "https://www.mapbox.com/mapbox-navigation-ios/latest_version")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
-                
+
                 guard let data = data, let currentVersion = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .newlines) else { return }
-                
+
                 if latestVersion != currentVersion {
                     let updateString = NSLocalizedString("UPDATE_AVAILABLE", bundle: .mapboxCoreNavigation, value: "Mapbox Navigation SDK for iOS version %@ is now available.", comment: "Inform developer an update is available")
                     print(String.localizedStringWithFormat(updateString, latestVersion), "https://github.com/mapbox/mapbox-navigation-ios/releases/tag/v\(latestVersion)")
@@ -795,7 +795,7 @@ extension RouteController: CLLocationManagerDelegate {
             if let error = error {
                 return completion(nil, error)
             }
-            
+
             guard let routes = routes else {
                 return completion(nil, nil)
             }
@@ -809,7 +809,7 @@ extension RouteController: CLLocationManagerDelegate {
             }
         }
     }
-    
+
     func mostSimilarRoute(in routes: [Route]) -> Route? {
         return routes.min { (left, right) -> Bool in
             let leftDistance = left.description.minimumEditDistance(to: routeProgress.route.description)
@@ -836,7 +836,7 @@ extension RouteController: CLLocationManagerDelegate {
 
     func updateRouteStepProgress(for location: CLLocation) {
         guard routeProgress.currentLegProgress.remainingSteps.count > 0 else { return }
-        
+
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         var courseMatchesManeuverFinalHeading = false
 
@@ -872,17 +872,17 @@ extension RouteController: CLLocationManagerDelegate {
 
         routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation = userAbsoluteDistance
     }
-    
+
     func updateSpokenInstructionProgress(for location: CLLocation) {
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
-        
+
         // Always give the first voice announcement when beginning a leg.
         let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0
-        
+
         for voiceInstruction in spokenInstructions {
             if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
-                
+
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
                 ])
@@ -900,11 +900,11 @@ extension RouteController: CLLocationManagerDelegate {
         } else {
             routeProgress.currentLegProgress.stepIndex += 1
         }
-        
+
         updateIntersectionDistances()
         updateDistanceToManeuver()
     }
-    
+
     func updateIntersectionDistances() {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
             let polyline = Polyline(coordinates)
@@ -926,16 +926,16 @@ struct SessionState {
 
     var currentRoute: Route
     var originalRoute: Route
-    
+
     var timeSpentInPortrait: TimeInterval = 0
     var timeSpentInLandscape: TimeInterval = 0
-    
+
     var lastTimeInLandscape = Date()
     var lastTimeInPortrait = Date()
-    
+
     var timeSpentInForeground: TimeInterval = 0
     var timeSpentInBackground: TimeInterval = 0
-    
+
     var lastTimeInForeground = Date()
     var lastTimeInBackground = Date()
 
@@ -951,27 +951,22 @@ struct SessionState {
 extension RouteController {
     // MARK: Sending events
     func sendDepartEvent() {
-        print("\(#function)")
         eventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: eventsManager.navigationDepartEvent(routeController: self))
         eventsManager.flush()
     }
 
     func sendArriveEvent() {
-        print("\(#function)")
         eventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: eventsManager.navigationArriveEvent(routeController: self))
         eventsManager.flush()
     }
 
     open func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
-        print("\(#function)")
         let attributes = eventsManager.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
         eventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         eventsManager.flush()
     }
 
     func sendFeedbackEvent(event: CoreFeedbackEvent) {
-        print("\(#function)")
-
         // remove from outstanding event queue
         if let index = outstandingFeedbackEvents.index(of: event) {
             outstandingFeedbackEvents.remove(at: index)
@@ -987,7 +982,6 @@ extension RouteController {
     // MARK: Enqueue feedback
 
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
-        print("\(#function)")
         let eventDictionary = eventsManager.navigationFeedbackEvent(routeController: self, type: type, description: description)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
@@ -997,7 +991,6 @@ extension RouteController {
     }
 
     func enqueueRerouteEvent() -> String {
-        print("\(#function)")
         let timestamp = Date()
         let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self)
 
@@ -1011,28 +1004,28 @@ extension RouteController {
 
         return event.id.uuidString
     }
-    
+
     func enqueueFoundFasterRouteEvent() -> String {
-        print("\(#function)")
         let timestamp = Date()
         let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
-        
+
         sessionState.lastRerouteDate = timestamp
-        
+
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
-        
+
         outstandingFeedbackEvents.append(event)
-        
+
         return event.id.uuidString
     }
 
     func checkAndSendOutstandingFeedbackEvents(forceAll: Bool) {
-        print("\(#function)")
-        let now = Date()
-        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
-            now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
-        }
-        for event in eventsToPush {
+//        let now = Date()
+
+//        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
+//            now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
+//        }
+
+        for event in outstandingFeedbackEvents {
             sendFeedbackEvent(event: event)
         }
     }
