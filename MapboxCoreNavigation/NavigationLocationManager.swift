@@ -41,7 +41,11 @@ open class NavigationLocationManager: CLLocationManager {
         
         requestWhenInUseAuthorization()
         
+        // Other navigation prevents Apple from snapping to the road network
         activityType = .otherNavigation
+        
+        // Necessary when `.otherNavigation` is enabled.
+        pausesLocationUpdatesAutomatically = false
         
         if #available(iOS 9.0, *) {
             if Bundle.main.backgroundModes.contains("location") {
