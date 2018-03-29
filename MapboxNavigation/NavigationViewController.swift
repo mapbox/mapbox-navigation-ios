@@ -328,7 +328,13 @@ public class NavigationViewController: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
+        // `NavigationLocationManager.pausesLocationUpdatesAutomatically` needs to be applied inconjuction with `NavigationLocationManager.activityType = .otherNavigation`.
+        // However, it cannot be set in `NavigationLocationManager` because it cannot be used with UI-less apps (I.E. MapboxCoreNavigation tests or anyone just using MapboxCoreNavigation in the background).
+        // Ref: https://github.com/mapbox/mapbox-navigation-ios/pull/1266#issuecomment-377262740
+        let manager = locationManager ?? NavigationLocationManager()
+        manager.pausesLocationUpdatesAutomatically = false
+        
+        self.routeController = RouteController(along: route, directions: directions, locationManager: manager)
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
