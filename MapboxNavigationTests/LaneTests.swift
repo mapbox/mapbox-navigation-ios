@@ -33,7 +33,7 @@ class LaneTests: FBSnapshotTestCase {
         navigationView.lanesView.update(for: routeProgress.currentLegProgress)
         navigationView.lanesView.show(animated: false)
         
-        FBSnapshotVerifyView(navigationView.lanesView, tolerance: 0.01)
+        FBSnapshotVerifyView(navigationView.lanesView)
     }
     
     func testRightRight() {
