@@ -17,6 +17,17 @@ class InstructionPresenter {
     
     func attributedText() -> NSAttributedString {
         let string = NSMutableAttributedString()
+        let exit = ExitView(pointSize: label!.font.pointSize)
+        exit.translatesAutoresizingMaskIntoConstraints = false
+        exit.exitText = "123A"
+        exit.invalidateIntrinsicContentSize()
+        exit.setNeedsLayout()
+        exit.layoutIfNeeded()
+        let exitAttachment = NSTextAttachment()
+        exitAttachment.image = exit.imageRepresentation
+        print(exit.imageRepresentation.scale)
+        let exitString = NSAttributedString(attachment: exitAttachment)
+        string.append(exitString)
         fittedAttributedComponents().forEach { string.append($0) }
         return string
     }
