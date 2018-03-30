@@ -146,26 +146,43 @@ class RouteControllerTests: XCTestCase {
     }
 
     // MARK: When a new Route is obtained (and therefore a new RouteProgress is set)
-    // TODO: it posts a re-route notification. Note that it does not tell the delegate. note that this happens on init() as well as when a faster route is found.
+    // TODO: it posts a re-route notification. Note that it does not currently tell the delegate, but we will need to add a new delegate method in order to move the notifications out of RouteController. Also note that this happens on init() as well as when a faster route is found.
 
     // MARK: When told to re-route from location -- `reroute(from:)`
     func testReroutingFromALocationSendsEvents() {
         let routeController = dependencies.routeController
-
         let testLocation = dependencies.firstLocation
+
+        let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: routeController) { (notification) -> Bool in
+            let fromLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
+            return fromLocation == testLocation
+        }
+
+        let didRerouteNotificationExpectation = expectation(forNotification: .routeControllerDidReroute, object: routeController, handler: nil)
+
         routeController.reroute(from: testLocation)
         directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
+
+        wait(for: [willRerouteNotificationExpectation, didRerouteNotificationExpectation], timeout: 2.0, enforceOrder: true)
+
+        let routeProgressDidChangeNotificationExpectation = expectation(forNotification: .routeControllerProgressDidChange, object: routeController) { (notification) -> Bool in
+            let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
+            let rawLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.rawLocationKey] as? CLLocation
+            let _ = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
+
+            return location == rawLocation
+        }
+
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [testLocation])
+
+        wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 2.0)
 
         let expectedEventName = MMEEventTypeNavigationReroute
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
 
-//        // TODO: it tells the delegate
+        // TODO: it tells the delegate
 //        XCTAssertTrue(delegate.recentMessages.includes("routeController(_, willRerouteFrom:)"))
-//
-//        // TODO: it posts a "will reroute" notification (figure out whether to keep this after clarifying the event tracking)
-//        XCTAssertTrue(notificationObserver.recentNotifications.includes(.routeControllerWillReroute))
 
         // TODO: what about SessionState?
     }
