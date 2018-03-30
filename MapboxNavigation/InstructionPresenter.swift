@@ -15,6 +15,7 @@ class InstructionPresenter {
 
     private let imageRepository = ImageRepository.shared
     
+    //CONSUMPTION SITE
     func attributedText() -> NSAttributedString {
         let string = NSMutableAttributedString()
         let exit = ExitView(pointSize: label!.font.pointSize, side: .right, text: "123A")
@@ -71,6 +72,9 @@ class InstructionPresenter {
             let isFirst = component == instruction.first
             let joinChar = isFirst ? "" : " "
 
+            
+            
+            //If we have a shield, lets include those
             if let shieldKey = component.shieldKey() {
                 if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
                     processedComponents.append(component)
@@ -92,7 +96,9 @@ class InstructionPresenter {
                         }
                     })
                 }
-            } else if let text = component.text {
+            }
+                //else if it's just text
+            else if let text = component.text {
                 // Hide delimiter if one of the adjacent components is a shield
                 if component.type == .delimiter {
                     let componentBefore = components.component(before: component)
@@ -179,6 +185,13 @@ fileprivate struct IndexedVisualInstructionComponent {
 }
 
 extension Array where Element == VisualInstructionComponent {
+    var isExit: Bool {
+        guard count >= 2 else { return false }
+        let isFirstExit = first!.maneuverType == .takeOffRamp
+        let isSecondExit = self[1].maneuverType == .takeOffRamp
+        
+        return isFirstExit && isSecondExit
+    }
     
     fileprivate func component(before component: VisualInstructionComponent) -> VisualInstructionComponent? {
         guard let index = self.index(of: component) else {
