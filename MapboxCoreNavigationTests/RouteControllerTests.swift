@@ -145,15 +145,14 @@ class RouteControllerTests: XCTestCase {
 
     // MARK: When told to re-route from location -- `reroute(from:)`
     func testReroutingFromALocationSendsEvents() {
-        let controller = setup.routeController
+        let routeController = setup.routeController
+
         let testLocation = setup.firstLocation
-        let updatedRoute = alternateRoute
+        routeController.reroute(from: testLocation)
+        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [testLocation])
+
         let expectedEventName = MMEEventTypeNavigationReroute
-
-        controller.reroute(from: testLocation)
-        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [updatedRoute], error: nil)
-        controller.locationManager(controller.locationManager, didUpdateLocations: [testLocation])
-
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
 
