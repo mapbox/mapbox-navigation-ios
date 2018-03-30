@@ -1,12 +1,6 @@
 import Foundation
 import MapboxSpeech
 
-class DummyURLSessionDataTask: URLSessionDataTask {
-    override func resume() {
-        //
-    }
-}
-
 /**
  * This class can be used as a substitute for SpeechSynthesizer under test, in order to verify whether expected calls were made.
  */
