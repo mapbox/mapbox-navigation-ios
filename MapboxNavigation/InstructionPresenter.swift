@@ -24,7 +24,6 @@ class InstructionPresenter {
         exit.layoutIfNeeded()
         let exitAttachment = NSTextAttachment()
         exitAttachment.image = exit.imageRepresentation
-        print(exit.imageRepresentation.scale)
         let exitString = NSAttributedString(attachment: exitAttachment)
         string.append(exitString)
         fittedAttributedComponents().forEach { string.append($0) }
