@@ -246,6 +246,7 @@ open class RouteController: NSObject {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
+        // TODO: shouldn't this be done inside didSet
         self.locationManager.activityType = route.routeOptions.activityType
         self.eventsManager = eventsManager
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -260,11 +261,7 @@ open class RouteController: NSObject {
         }
 
         checkForUpdates()
-
-        guard let _ = Bundle.main.bundleIdentifier else { return }
-        if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
-            preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
-        }
+        checkForLocationUsageDescription()
     }
 
     deinit {
@@ -766,7 +763,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func checkForUpdates() {
+    private func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
             guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
@@ -782,6 +779,15 @@ extension RouteController: CLLocationManagerDelegate {
                 }
             }).resume()
         #endif
+    }
+
+    private func checkForLocationUsageDescription() {
+        guard let _ = Bundle.main.bundleIdentifier else {
+            return
+        }
+        if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
+            preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
+        }
     }
 
     func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
