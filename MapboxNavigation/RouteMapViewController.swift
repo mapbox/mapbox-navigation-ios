@@ -687,7 +687,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         
         let closestCoordinate = location.coordinate
         let roadLabelLayerIdentifier = "roadLabelLayer"
-        var streetsSources = style.sources.flatMap {
+        var streetsSources = style.sources.compatibleFlatMap {
             $0 as? MGLVectorSource
             }.filter {
                 $0.isMapboxStreets
