@@ -17,9 +17,8 @@ class InstructionPresenter {
     
     func attributedText() -> NSAttributedString {
         let string = NSMutableAttributedString()
-        let exit = ExitView(pointSize: label!.font.pointSize)
+        let exit = ExitView(pointSize: label!.font.pointSize, side: .right, text: "123A")
         exit.translatesAutoresizingMaskIntoConstraints = false
-        exit.exitText = "123A"
         exit.invalidateIntrinsicContentSize()
         exit.setNeedsLayout()
         exit.layoutIfNeeded()
