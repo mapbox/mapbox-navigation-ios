@@ -16,9 +16,10 @@ class RouteControllerTests: XCTestCase {
     let eventsManagerSpy = EventsManagerSpy()
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
 
-    lazy var setup: (routeController: RouteController, firstLocation: CLLocation) = {
+    lazy var dependencies: (routeController: RouteController, firstLocation: CLLocation) = {
         let navigation = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
+
         return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
     }()
 
@@ -42,19 +43,20 @@ class RouteControllerTests: XCTestCase {
         super.setUp()
 
         eventsManagerSpy.reset()
+        directionsClientSpy.reset()
     }
 
     func testUserIsOnRoute() {
-        let navigation = setup.routeController
-        let firstLocation = setup.firstLocation
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
 
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertTrue(navigation.userIsOnRoute(firstLocation), "User should be on route")
     }
 
     func testUserIsOffRoute() {
-        let navigation = setup.routeController
-        let firstLocation = setup.firstLocation
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
 
         let coordinateOffRoute = firstLocation.coordinate.coordinate(at: 100, facing: 90)
         let locationOffRoute = CLLocation(latitude: coordinateOffRoute.latitude, longitude: coordinateOffRoute.longitude)
@@ -63,8 +65,8 @@ class RouteControllerTests: XCTestCase {
     }
 
     func testAdvancingToFutureStepAndNotRerouting() {
-        let navigation = setup.routeController
-        let firstLocation = setup.firstLocation
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertTrue(navigation.userIsOnRoute(firstLocation), "User should be on route")
         XCTAssertEqual(navigation.routeProgress.currentLegProgress.stepIndex, 0, "User is on first step")
@@ -78,15 +80,15 @@ class RouteControllerTests: XCTestCase {
     }
 
     func testSnappedLocation() {
-        let navigation = setup.routeController
-        let firstLocation = setup.firstLocation
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
     }
 
     func testSnappedLocationForUnqualifiedLocation() {
-        let navigation = setup.routeController
-        let firstLocation = setup.firstLocation
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
 
@@ -127,8 +129,8 @@ class RouteControllerTests: XCTestCase {
     }
 
     func testLocationShouldUseHeading() {
-        let navigation = setup.routeController
-        let firstLocation = setup.firstLocation
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
 
         XCTAssertEqual(navigation.location!.course, firstLocation.course, "Course should be using course")
@@ -143,11 +145,14 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(navigation.location!.course, mbTestHeading, "Course should be using bearing")
     }
 
+    // MARK: When a new Route is obtained (and therefore a new RouteProgress is set)
+    // TODO: it posts a re-route notification. Note that it does not tell the delegate. note that this happens on init() as well as when a faster route is found.
+
     // MARK: When told to re-route from location -- `reroute(from:)`
     func testReroutingFromALocationSendsEvents() {
-        let routeController = setup.routeController
+        let routeController = dependencies.routeController
 
-        let testLocation = setup.firstLocation
+        let testLocation = dependencies.firstLocation
         routeController.reroute(from: testLocation)
         directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [testLocation])
@@ -170,9 +175,6 @@ class RouteControllerTests: XCTestCase {
     // TODO: it logs the telemetry event
     // TODO: it posts a notification with the error (do we keep this after clarifying the event tracking
 
-    // MARK: When a RouteProgress is set / when progress changes
-    // TODO: it posts a re-route notification... Note that it does not tell the delegate. check how this is used.
-
     // MARK: Checking for a faster route
     // getDirections, if a bunch of checks are met (refactoring oppty), schenanigans
     // TODO: it sets routeProgress & all that
@@ -182,5 +184,8 @@ class RouteControllerTests: XCTestCase {
     // MARK: more tests
     // TODO: test feedback event mutation workflow
     // TODO: test & refactor the mutation of the re-route events
+
+    // MARK: When route progress changes (triggered in locationManager(didUpdateLocations:))
+    // TODO: it posts a routeControllerProgressDidChange notification
 
 }

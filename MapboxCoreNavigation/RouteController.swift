@@ -680,7 +680,9 @@ extension RouteController: CLLocationManagerDelegate {
     }
 
     func checkForFasterRoute(from location: CLLocation) {
-        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else { return }
+        guard let currentUpcomingManeuver = routeProgress.currentLegProgress.upComingStep else {
+            return
+        }
 
         guard let lastLocationDate = lastLocationDate else {
             self.lastLocationDate = location.timestamp
@@ -688,26 +690,37 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         // Only check every so often for a faster route.
-        guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerProactiveReroutingInterval else { return }
+        guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerProactiveReroutingInterval else {
+            return
+        }
         let durationRemaining = routeProgress.durationRemaining
 
         getDirections(from: location) { [weak self] (route, error) in
-            guard let strongSelf = self else { return }
-            guard let route = route else { return }
+            guard let strongSelf = self else {
+                return
+            }
+
+            guard let route = route else {
+                return
+            }
+
             strongSelf.lastLocationDate = nil
 
-            if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first,
-                firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval,
-                currentUpcomingManeuver == firstLeg.steps[1],
-                route.expectedTravelTime <= 0.9 * durationRemaining {
+            guard let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first else {
+                return
+            }
+
+            let routeIsFaster = firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval &&
+                currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
+
+            if routeIsFaster {
                 strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-                //TODO: this seems wrong
+                //TODO: this seems wrong // when we call from here, we want to mutate the re-route event
                 strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
-                    RouteControllerNotificationUserInfoKey.isProactiveKey: true
-                ]))
+                    RouteControllerNotificationUserInfoKey.isProactiveKey: true]))
                 strongSelf.didFindFasterRoute = false
             }
         }
