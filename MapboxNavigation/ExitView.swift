@@ -10,19 +10,25 @@ import UIKit
 
 enum ExitSide: String{
     case left, right, other
+    
+    var exitImage: UIImage {
+        return self == .left ? ExitView.leftExitImage : ExitView.rightExitImage
+    }
 }
 
 class ExitView: UIView {
-    static let exitImage = UIImage(named: "exit", in: .mapboxNavigation, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-
+    static let leftExitImage = UIImage(named: "exit-left", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    static let rightExitImage = UIImage(named: "exit-right", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+    
     var side: ExitSide = .right {
         didSet {
+            populateExitImage()
             rebuildConstraints()
         }
     }
     
     lazy var imageView: UIImageView = {
-        let view = UIImageView(image: ExitView.exitImage)
+        let view = UIImageView(image: self.side.exitImage)
         view.tintColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
@@ -81,11 +87,15 @@ class ExitView: UIView {
     func setupViews() {
         [imageView, exitNumberLabel].forEach(addSubview(_:))
     }
+    
+    func populateExitImage() {
+        imageView.image = self.side.exitImage
+    }
+    
     func buildConstraints() {
         let height = heightAnchor.constraint(equalToConstant: pointSize! * 1.2)
-        
-        let imageTop = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 2)
-        let imageBottom = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -2)
+
+        let imageHeight = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.6)
         let imageAspect = imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: imageView.image?.size.aspectRatio ?? 1.0)
 
         let imageCenterY = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
@@ -93,7 +103,7 @@ class ExitView: UIView {
 
         let sideConstraints = self.side != .left ? rightExitConstraints() : leftExitConstraints()
         
-        let constraints = [height, imageTop, imageBottom, imageAspect,
+        let constraints = [height, imageHeight, imageAspect,
                            imageCenterY, labelCenterY] + sideConstraints
         
         addConstraints(constraints)
