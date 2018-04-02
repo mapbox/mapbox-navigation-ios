@@ -1,6 +1,6 @@
 import XCTest
 import FBSnapshotTestCase
-@testable import MapboxDirections
+import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
