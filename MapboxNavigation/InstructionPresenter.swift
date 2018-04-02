@@ -15,7 +15,6 @@ class InstructionPresenter {
 
     private let imageRepository = ImageRepository.shared
     
-    //CONSUMPTION SITE
     func attributedText() -> NSAttributedString {
         let string = NSMutableAttributedString()
         fittedAttributedComponents().forEach { string.append($0) }
