@@ -164,8 +164,13 @@ class InstructionPresenter {
         exit.invalidateIntrinsicContentSize()
         exit.setNeedsLayout()
         exit.layoutIfNeeded()
-        let exitAttachment = ShieldAttachment()
-        exitAttachment.image = exit.imageRepresentation
+        let exitAttachment = NSTextAttachment()
+        let exitImage = exit.imageRepresentation
+        exitAttachment.image = exitImage
+        if let label = self.label {
+            let yOrigin = (label.font.capHeight - exitImage.size.height).rounded() / 2
+            exitAttachment.bounds = CGRect(x: 0, y: yOrigin, width: exitImage.size.width, height: exitImage.size.height)
+        }
         let exitString = NSAttributedString(attachment: exitAttachment)
         return exitString
     }
