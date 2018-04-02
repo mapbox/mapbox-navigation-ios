@@ -29,7 +29,7 @@ class ExitView: UIView {
     
     lazy var imageView: UIImageView = {
         let view = UIImageView(image: self.side.exitImage)
-        view.tintColor = .white
+        view.tintColor = .black
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
         return view
@@ -38,8 +38,9 @@ class ExitView: UIView {
     lazy var exitNumberLabel: UILabel = {
         let label: UILabel = .forAutoLayout()
         label.text = exitText
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+        label.textColor = .black
+        print("system font size! \(UIFont.systemFontSize)")
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         return label
     }()
 
@@ -78,7 +79,9 @@ class ExitView: UIView {
     }
     
     func commonInit() {
-        backgroundColor = .darkGray
+        backgroundColor = .clear
+        layer.borderWidth = 1.0
+        layer.borderColor = UIColor.black.cgColor
         layer.cornerRadius = 5.0
         layer.masksToBounds = true
         setupViews()
@@ -95,7 +98,7 @@ class ExitView: UIView {
     func buildConstraints() {
         let height = heightAnchor.constraint(equalToConstant: pointSize! * 1.2)
 
-        let imageHeight = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.6)
+        let imageHeight = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5)
         let imageAspect = imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: imageView.image?.size.aspectRatio ?? 1.0)
 
         let imageCenterY = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
