@@ -18,15 +18,6 @@ class InstructionPresenter {
     //CONSUMPTION SITE
     func attributedText() -> NSAttributedString {
         let string = NSMutableAttributedString()
-        let exit = ExitView(pointSize: label!.font.pointSize, side: .right, text: "123A")
-        exit.translatesAutoresizingMaskIntoConstraints = false
-        exit.invalidateIntrinsicContentSize()
-        exit.setNeedsLayout()
-        exit.layoutIfNeeded()
-        let exitAttachment = NSTextAttachment()
-        exitAttachment.image = exit.imageRepresentation
-        let exitString = NSAttributedString(attachment: exitAttachment)
-        string.append(exitString)
         fittedAttributedComponents().forEach { string.append($0) }
         return string
     }
@@ -68,14 +59,25 @@ class InstructionPresenter {
         var processedComponents = [VisualInstructionComponent]()
         let components = instruction
         
-        for component in components {
-            let isFirst = component == instruction.first
+        let exitInstructionIndex = components.index(where: {$0.type == .exit}) ?? NSNotFound
+        let isExitInstruction = 0...1 ~= exitInstructionIndex
+        
+        for (index, component) in components.enumerated() {
+            let isFirst = index == 0
             let joinChar = isFirst ? "" : " "
 
-            
-            
+            //TODO: If we have a exit, in the first two components, lets handle that first.
+            if component.maneuverType == .takeOffRamp, isExitInstruction, 0...1 ~= index {
+                //we're only interested in the "Exit Number" component, and only if it's populated
+                guard component.type == .exitNumber, let exitNumber = component.text else { continue }
+                let exitSide: ExitSide = component.maneuverDirection == .left ? .left : .right
+                let exitString = exitShield(side: exitSide, text: exitNumber)
+                processedComponents.append(component)
+                strings.append(exitString)
+                
+            }
             //If we have a shield, lets include those
-            if let shieldKey = component.shieldKey() {
+            else if let shieldKey = component.shieldKey() {
                 if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
                     processedComponents.append(component)
                     let attributedShieldString = NSMutableAttributedString(attributedString: NSAttributedString(string: joinChar))
@@ -154,6 +156,18 @@ class InstructionPresenter {
         attachment.font = font
         attachment.image = shieldImage
         return NSAttributedString(attachment: attachment)
+    }
+    
+    private func exitShield(side: ExitSide = .right, text: String) -> NSAttributedString {
+        let exit = ExitView(pointSize: label!.font.pointSize, side: side, text: text)
+        exit.translatesAutoresizingMaskIntoConstraints = false
+        exit.invalidateIntrinsicContentSize()
+        exit.setNeedsLayout()
+        exit.layoutIfNeeded()
+        let exitAttachment = ShieldAttachment()
+        exitAttachment.image = exit.imageRepresentation
+        let exitString = NSAttributedString(attachment: exitAttachment)
+        return exitString
     }
 
 }
