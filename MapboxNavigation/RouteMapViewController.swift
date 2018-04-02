@@ -95,6 +95,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     var currentLegIndexMapped = 0
+    var currentStepIndexMapped = 0
     
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
@@ -172,6 +173,7 @@ class RouteMapViewController: UIViewController {
         annotatesSpokenInstructions = delegate?.mapViewControllerShouldAnnotateSpokenInstructions(self) ?? false
         showRouteIfNeeded()
         currentLegIndexMapped = routeController.routeProgress.legIndex
+        currentStepIndexMapped = routeController.routeProgress.currentLegProgress.stepIndex
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -396,6 +398,11 @@ class RouteMapViewController: UIViewController {
             mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
+        }
+        
+        if currentStepIndexMapped != routeProgress.currentLegProgress.stepIndex {
+            updateMapOverlays(for: routeProgress)
+            currentStepIndexMapped = routeProgress.currentLegProgress.stepIndex
         }
         
         if annotatesSpokenInstructions {
