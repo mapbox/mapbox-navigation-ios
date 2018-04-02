@@ -273,6 +273,7 @@ class RouteMapViewController: UIViewController {
 
     func notifyDidReroute(route: Route) {
         updateETA()
+        currentStepIndexMapped = 0
         
         instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress)
         lanesView.update(for: routeController.routeProgress.currentLegProgress)
