@@ -370,6 +370,16 @@ open class RouteController: NSObject {
      - seeAlso: snappedLocation, rawLocation
      */
     @objc public var location: CLLocation? {
+        
+        // If there is no snapped location, and the rawLocation course is unqualified, use the user's heading as long as it is accurate.
+        if snappedLocation == nil,
+            let heading = heading,
+            let loc = rawLocation,
+            !loc.course.isQualified,
+            heading.trueHeading.isQualified {
+            return CLLocation(coordinate: loc.coordinate, altitude: loc.altitude, horizontalAccuracy: loc.horizontalAccuracy, verticalAccuracy: loc.verticalAccuracy, course: heading.trueHeading, speed: loc.speed, timestamp: loc.timestamp)
+        }
+        
         return snappedLocation ?? rawLocation
     }
     
@@ -380,6 +390,8 @@ open class RouteController: NSObject {
     var snappedLocation: CLLocation? {
         return rawLocation?.snapped(to: routeProgress.currentLegProgress)
     }
+    
+    var heading: CLHeading?
 
     /**
      The most recently received user location.
@@ -387,12 +399,16 @@ open class RouteController: NSObject {
      */
     var rawLocation: CLLocation? {
         didSet {
-            guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
-                userSnapToStepDistanceFromManeuver = nil
-                return
-            }
-            userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
+            updateDistanceToManeuver()
         }
+    }
+    
+    func updateDistanceToManeuver() {
+        guard let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let coordinate = rawLocation?.coordinate else {
+            userSnapToStepDistanceFromManeuver = nil
+            return
+        }
+        userSnapToStepDistanceFromManeuver = Polyline(coordinates).distance(from: coordinate)
     }
 
     @objc public var reroutingTolerance: CLLocationDistance {
@@ -515,6 +531,10 @@ extension RouteController: CLLocationManagerDelegate {
                                               timestamp: Date())
 
         self.locationManager(self.locationManager, didUpdateLocations: [interpolatedLocation])
+    }
+    
+    @objc public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading = newHeading
     }
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -687,6 +707,7 @@ extension RouteController: CLLocationManagerDelegate {
             
             if !routeProgress.isFinalLeg && advancesToNextLeg {
                 routeProgress.legIndex += 1
+                updateDistanceToManeuver()
             }
         }
     }
@@ -958,8 +979,11 @@ extension RouteController: CLLocationManagerDelegate {
         guard let userSnapToStepDistanceFromManeuver = userSnapToStepDistanceFromManeuver else { return }
         guard let spokenInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
         
+        // Always give the first voice announcement when beginning a leg.
+        let firstInstructionOnFirstStep = routeProgress.currentLegProgress.stepIndex == 0 && routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0
+        
         for voiceInstruction in spokenInstructions {
-            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex == 0 {
+            if userSnapToStepDistanceFromManeuver <= voiceInstruction.distanceAlongStep || firstInstructionOnFirstStep {
                 
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routeProgressKey: routeProgress
@@ -980,6 +1004,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         updateIntersectionDistances()
+        updateDistanceToManeuver()
     }
     
     func updateIntersectionDistances() {
