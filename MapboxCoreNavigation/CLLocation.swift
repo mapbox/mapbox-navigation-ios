@@ -6,8 +6,7 @@ extension CLLocation {
     
     var isQualified: Bool {
         return
-            0...100 ~= horizontalAccuracy &&
-                0...30 ~= verticalAccuracy
+            0...100 ~= horizontalAccuracy
     }
     
     /// Returns a dictionary representation of the location.
