@@ -15,16 +15,7 @@ open class SpeedLimitSign: UIStackView {
     let fontSize: CGFloat = 14.0
     let strings = NSMutableAttributedString()
     let numberFormater = NumberFormatter()
-    
-    var circleBounds: CGRect {
-        // TODO: adjust x and y location
-        let padding: CGFloat = 20
-        if bounds.width > bounds.height {
-            return CGRect(x: 0, y: 0, width: bounds.width + padding, height: bounds.width + padding)
-        } else {
-            return CGRect(x: 0, y: 0, width: bounds.height + padding, height: bounds.height + padding)
-        }
-    }
+    let padding: CGFloat = 16
     
     var region: SpeedLimitSignRegionType!
     
@@ -51,6 +42,12 @@ open class SpeedLimitSign: UIStackView {
             speedLabel.attributedText = NSMutableAttributedString(string: speedString, attributes: [
                 .font: UIFont.boldSystemFont(ofSize: fontSize * 2)
                 ])
+            if region == .world {
+                speedLabel.adjustsFontSizeToFitWidth = true
+                speedLabel.numberOfLines = 1
+                speedLabel.minimumScaleFactor = 0.5
+                speedLabel.allowsDefaultTighteningForTruncation = true
+            }
             labels.append(speedLabel)
             
             let unitLabel: SpeedLimitLabel = .forAutoLayout()
@@ -74,27 +71,28 @@ open class SpeedLimitSign: UIStackView {
     }
     
     func commonInit() {
-        isLayoutMarginsRelativeArrangement = true
         axis = .vertical
         alignment = .center
-        contentMode = .scaleAspectFill
-        distribution = .fillProportionally
+        spacing = 0.5
+        if region == .world {
+            layoutMargins = UIEdgeInsets(top: padding / 2, left: padding, bottom: padding / 2, right: padding)
+            isLayoutMarginsRelativeArrangement = true
+            addConstraint(widthAnchor.constraint(equalToConstant: 60))
+        }
     }
     
     func updateStackView(with labels: [SpeedLimitLabel]) {
+        commonInit()
         subviews.forEach { $0.removeFromSuperview() }
         addArrangedSubviews(labels)
-        layoutIfNeeded()
     }
     
     func addBackground() {
-        let background: UIView
-        if region == .unitedStates {
-            background = UnitedStatesSignBase(frame: bounds)
+        if region == .world {
+            insertSubview(WorldSignBase(frame: bounds), at: 0)
         } else {
-            background = WorldSignBase(frame: circleBounds)
+            insertSubview(UnitedStatesSignBase(frame: bounds), at: 0)
         }
-        insertSubview(background, at: 0)
     }
 
     open override func layoutSubviews() {
