@@ -1,6 +1,6 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "3.7.6"
 github "ceeK/Solar" "2.1.0"
-github "mapbox/MapboxDirections.swift" "6e07e3e5b2d52642f349c3b95e1dd65e0468d4f2"
+github "mapbox/MapboxDirections.swift" "81b377600c1aa3b0bba492a1f7f1e49fb8a64a70"
 github "mapbox/mapbox-events-ios" "v0.3.1"
 github "mapbox/mapbox-voice-swift" "v0.0.1"
 github "mapbox/turf-swift" "v0.0.4"
