@@ -55,6 +55,10 @@ extension String {
     func minimumEditDistance(to word: String) -> Int {
         let fromWordCount = count
         let toWordCount = word.count
+        
+        guard toWordCount > 0 else { return fromWordCount }
+        guard fromWordCount > 0 else { return toWordCount }
+        
         var matrix = [[Int]](repeating: [Int](repeating: 0, count: toWordCount + 1), count: fromWordCount + 1)
         
         // initialize matrix

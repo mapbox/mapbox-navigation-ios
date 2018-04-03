@@ -3,10 +3,10 @@ import XCTest
 
 class StringTests: XCTestCase {
     func testMinimumEditDistance() {
-        let fromString = "hello this is a test."
+        let fromString = "hello this is a test"
         let toString = "hello"
         let distance = fromString.minimumEditDistance(to: toString)
-        XCTAssertEqual(distance, 5)
+        XCTAssertEqual(distance, 15)
     }
     
     func testMinimumEditDistanceFromEmptyString() {
