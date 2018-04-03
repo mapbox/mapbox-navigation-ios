@@ -304,6 +304,7 @@ class RouteMapViewController: UIViewController {
         stepsViewController?.dismiss {
             self.removePreviewInstructions()
             self.stepsViewController = nil
+            self.navigationView.instructionsBannerView.stepListIndicatorView.isHidden = false
         }
     }
 
