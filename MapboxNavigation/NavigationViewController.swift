@@ -308,7 +308,7 @@ public class NavigationViewController: UIViewController {
      A Boolean value that indicates whether the dark style should apply when a route controller enters a tunnel.
      */
     @objc public var usesNightStyleInsideTunnels: Bool = false
-    
+
     /**
      If true, the maximum speed limit for the segment of road the user is current traveling on will be shown.
      */
@@ -429,8 +429,6 @@ public class NavigationViewController: UIViewController {
 
     @objc func didPassInstructionPoint(notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
-
-        mapViewController?.updateMapOverlays(for: routeProgress)
         mapViewController?.updateCameraAltitude(for: routeProgress)
 
         clearStaleNotifications()
@@ -498,11 +496,11 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
     }
-    
+
     public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return delegate?.navigationMapView?(mapView, imageFor: annotation)
     }
-    
+
     public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return delegate?.navigationMapView?(mapView, viewFor: annotation)
     }

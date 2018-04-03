@@ -29,6 +29,19 @@ extension UIView {
         layer.shadowOpacity = Float(shadowOpacity!)
     }
     
+    func applyGradient(colors: [UIColor], locations: [NSNumber]? = nil) {
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame = self.bounds
+        gradient.colors = colors.map { $0.cgColor }
+        gradient.locations = locations
+        
+        if let sublayers = layer.sublayers, !sublayers.isEmpty, let sublayer = sublayers.first {
+            layer.replaceSublayer(sublayer, with: gradient)
+        } else {
+            layer.addSublayer(gradient)
+        }
+    }
+    
     func startRippleAnimation() {
         layer.masksToBounds = true
         let rippleLayer = RippleLayer()
