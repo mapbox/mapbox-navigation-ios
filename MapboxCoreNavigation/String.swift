@@ -56,8 +56,8 @@ extension String {
         let fromWordCount = count
         let toWordCount = word.count
         
-        guard !isEmpty else { return fromWordCount }
-        guard !word.isEmpty else { return toWordCount }
+        guard !isEmpty else { return toWordCount }
+        guard !word.isEmpty else { return fromWordCount }
         
         var matrix = [[Int]](repeating: [Int](repeating: 0, count: toWordCount + 1), count: fromWordCount + 1)
         
