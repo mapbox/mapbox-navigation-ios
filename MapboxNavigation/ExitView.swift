@@ -98,7 +98,7 @@ class ExitView: UIView {
     func buildConstraints() {
         let height = heightAnchor.constraint(equalToConstant: pointSize! * 1.2)
 
-        let imageHeight = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.5)
+        let imageHeight = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4)
         let imageAspect = imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: imageView.image?.size.aspectRatio ?? 1.0)
 
         let imageCenterY = imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
