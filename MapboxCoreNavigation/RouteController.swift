@@ -666,7 +666,10 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
-            advanceStepIndex(to: nearestStep.index)
+            // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
+            if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
+                advanceStepIndex(to: nearestStep.index)
+            }
             return true
         }
         
