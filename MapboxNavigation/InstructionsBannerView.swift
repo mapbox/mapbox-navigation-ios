@@ -66,13 +66,13 @@ open class BaseInstructionsBannerView: UIControl {
     
     @objc func draggedInstructionsBanner(_ sender: Any) {
         if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
-            stepListIndicatorView.isHidden = true
+            stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
             delegate?.didDragInstructionsBanner?(self)
         }
     }
     
     @objc func tappedInstructionsBanner(_ sender: Any) {
-        stepListIndicatorView.isHidden = stepListIndicatorView.isHidden ? false : true
+        stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
         delegate?.didTapInstructionsBanner?(self)
     }
     
