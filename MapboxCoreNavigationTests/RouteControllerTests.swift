@@ -166,15 +166,6 @@ class RouteControllerTests: XCTestCase {
         XCTAssertFalse(userIsAtTunnelEntranceRadius, "Location must not outside the tunnel entrance radius")
     }
     
-    fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
-        return CLLocation(coordinate: coordinate,
-                            altitude: 5,
-                  horizontalAccuracy: 258.20,
-                    verticalAccuracy: 200,
-                              course: 20,
-                               speed: 15,
-                           timestamp: Date())
-    }
     
     // TODO: Test Tunnel Animation Enabled
     // TODO: Test Tunnel Animation Disabled
@@ -199,4 +190,17 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(navigation.shouldEnableTunnelAnimation(at: currentLocation, for: navigation.locationManager, intersection: currentIntersection), "Cannot animate tunnel navigation at that location")
     }
 
+}
+
+extension RouteControllerTests {
+    
+    fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
+        return CLLocation(coordinate: coordinate,
+                          altitude: 5,
+                          horizontalAccuracy: 258.20,
+                          verticalAccuracy: 200,
+                          course: 20,
+                          speed: 15,
+                          timestamp: Date())
+    }
 }
