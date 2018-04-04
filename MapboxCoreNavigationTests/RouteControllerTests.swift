@@ -8,7 +8,6 @@ fileprivate let mbTestHeading: CLLocationDirection = 50
 struct TunnelDetectorTestData {
     static let ninthStreetFileName = "routeWithTunnels_9thStreetDC"
     static let kRouteKey = "routes"
-    // static let startLocation = CLLocationCoordinate2D(latitude: 38.89213219443445, longitude: -77.02398915179958)
     static let startLocation = CLLocationCoordinate2D(latitude: 38.890774, longitude: -77.023970)
     static let endLocation = CLLocationCoordinate2D(latitude: 38.88061238536352, longitude: -77.02471810711819)
 }
