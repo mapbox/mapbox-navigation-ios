@@ -1,4 +1,5 @@
 import UIKit
+import MapboxDirections
 
 /**
  `Style` is a convenient wrapper for styling the appearance of various interface components throughout the Navigation UI.
@@ -432,6 +433,10 @@ open class WayNameView: UIView {
 /// :nodoc:
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {}
+
+/// :nodoc:
+@objc(MBSpeedLimitLabel)
+open class SpeedLimitLabel: StylableLabel {}
 
 /// :nodoc:
 @objc(MBProgressBar)

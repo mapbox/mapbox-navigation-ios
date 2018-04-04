@@ -20,14 +20,14 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     // MARK: - Class Constants
     static let mapInsets = UIEdgeInsets(top: 25, left: 25, bottom: 25, right: 25)
-    
+
     // MARK: - IBOutlets
     @IBOutlet weak var longPressHintView: UIView!
 
     @IBOutlet weak var simulationButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var bottomBar: UIView!
-    
+
     @IBOutlet weak var clearMap: UIButton!
 
     // MARK: Properties
@@ -93,7 +93,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         simulationButton.isSelected = true
         startButton.isEnabled = false
-        
+
         alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
         alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
             self.startBasicNavigation()
@@ -128,7 +128,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         if (presentedViewController != nil) {
             DayStyle().apply()
         }
-        
+
     }
 
     // MARK: Gesture Recognizer Handlers
@@ -140,7 +140,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         clearMap.isHidden = false
         longPressHintView.isHidden = true
-        
+
         guard let mapView = mapView else { return }
 
         if let annotation = mapView.annotations?.last, waypoints.count > 2 {
@@ -211,7 +211,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
-
         let handler: Directions.RouteCompletionHandler = {(waypoints, potentialRoutes, potentialError) in
             if let error = potentialError, let fail = failure { return fail(error) }
             guard let routes = potentialRoutes else { return }
@@ -230,18 +229,19 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
+        navigationViewController.showMaximumSpeedLimitSign = true
 
         presentAndRemoveMapview(navigationViewController)
     }
-    
+
     func startNavigation(styles: [Style]) {
         guard let route = currentRoute else { return }
-        
+
         exampleMode = .default
-        
+
         let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
-        
+
         presentAndRemoveMapview(navigationViewController)
     }
 
@@ -296,46 +296,46 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         presentAndRemoveMapview(navigationViewController)
     }
-    
+
     func presentAndRemoveMapview(_ navigationViewController: NavigationViewController) {
         present(navigationViewController, animated: true) {
             self.mapView?.removeFromSuperview()
             self.mapView = nil
         }
     }
-    
+
     func setupMapView() {
         guard self.mapView == nil else { return }
         let mapView = NavigationMapView(frame: view.bounds)
         self.mapView = mapView
-        
+
         mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView.delegate = self
         mapView.navigationMapDelegate = self
         mapView.userTrackingMode = .follow
         let bottomPadding = (view.frame.height + view.frame.origin.y) - bottomBar.frame.origin.y
-        
+
         var topPadding: CGFloat = 0.0
         if #available(iOS 11.0, *) {
             topPadding = view.safeAreaInsets.top
         } else if let navCon = navigationController {
             topPadding = navCon.navigationBar.frame.size.height
         }
-        
+
         let subviewMask = UIEdgeInsets(top: topPadding, left: 0, bottom: bottomPadding, right: 0)
         mapView.contentInset = ViewController.mapInsets + subviewMask
-        
+
         view.insertSubview(mapView, belowSubview: bottomBar)
-        
+
         let singleTap = UILongPressGestureRecognizer(target: self, action: #selector(didLongPress(tap:)))
         mapView.gestureRecognizers?.filter({ $0 is UILongPressGestureRecognizer }).forEach(singleTap.require(toFail:))
         mapView.addGestureRecognizer(singleTap)
-    
+
     }
-    
+
     func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         self.mapView?.localizeLabels()
-        
+
         if let routes = routes, let coords = currentRoute?.coordinates, let coordCounts = currentRoute?.coordinateCount {
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: coordCounts).overlayBounds, animated: false)
             self.mapView?.showRoutes(routes)
@@ -383,11 +383,11 @@ extension ViewController: NavigationMapViewDelegate {
     func voiceController(_ voiceController: RouteVoiceController, didInterrupt interruptedInstruction: SpokenInstruction, with interruptingInstruction: SpokenInstruction) {
         print(interruptedInstruction.text, interruptingInstruction.text)
     }
-    
+
     func voiceController(_ voiceController: RouteVoiceController, willSpeak instruction: SpokenInstruction, routeProgress: RouteProgress) -> SpokenInstruction? {
         return SpokenInstruction(distanceAlongStep: instruction.distanceAlongStep, text: "New Instruction!", ssmlText: "<speak>New Instruction!</speak>")
     }
-    
+
     // By default, the routeController will attempt to filter out bad locations.
     // If however you would like to filter these locations in,
     // you can conditionally return a Bool here according to your own heuristics.
@@ -428,7 +428,7 @@ extension ViewController: NavigationViewControllerDelegate {
         navigationViewController.present(confirmationController, animated: true, completion: nil)
         return false
     }
-    
+
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController) {
@@ -441,13 +441,13 @@ extension ViewController: NavigationViewControllerDelegate {
  */
 // MARK: CustomDayStyle
 class CustomDayStyle: DayStyle {
-    
+
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
         styleType = .day
     }
-    
+
     override func apply() {
         super.apply()
         BottomBannerView.appearance().backgroundColor = .orange

@@ -6,13 +6,13 @@ extension UIColor {
     class var defaultRouteLayer: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
     class var defaultAlternateLine: UIColor { get { return .gray } }
     class var defaultArrowStroke: UIColor { get { return .defaultTint } }
-    
+
     class var defaultTurnArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var defaultTurnArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
-    
+
     class var defaultLaneArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var defaultLaneArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
-    
+
     class var trafficUnknown: UIColor { get { return defaultRouteLayer } }
     class var trafficLow: UIColor { get { return defaultRouteLayer } }
     class var trafficModerate: UIColor { get { return #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0) } }
@@ -40,24 +40,24 @@ extension UIFont {
  */
 @objc(MBDayStyle)
 open class DayStyle: Style {
-    
+
     public required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
         styleType = .day
         statusBarStyle = .default
     }
-    
+
     open override func apply() {
         super.apply()
-        
+
         // General styling
         if let color = UIApplication.shared.delegate?.window??.tintColor {
             tintColor = color
         } else {
             tintColor = .defaultTint
         }
-        
+
         ArrivalTimeLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
         ArrivalTimeLabel.appearance().normalTextColor = .defaultPrimaryText
         BottomBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -139,7 +139,7 @@ open class DayStyle: Style {
         WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
-        
+
         UIApplication.shared.statusBarStyle = statusBarStyle ?? .default
     }
 }
@@ -149,19 +149,19 @@ open class DayStyle: Style {
  */
 @objc(MBNightStyle)
 open class NightStyle: DayStyle {
-    
+
     public required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")!
         styleType = .night
         statusBarStyle = .lightContent
     }
-    
+
     open override func apply() {
         super.apply()
-        
+
         let backgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
-        
+
         ArrivalTimeLabel.appearance().normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         BottomBannerContentView.appearance().backgroundColor = backgroundColor
         BottomBannerView.appearance().backgroundColor = backgroundColor
