@@ -180,7 +180,23 @@ class RouteControllerTests: XCTestCase {
     // TODO: Test Tunnel Animation Disabled
     func testTunnelSimulatedNavigation() {
         
+    }
+    
+    func testEnableTunnelAnimation() {
+        let navigation = tunnelSetup.routeController
         
+        // Intersection with a tunnel roadClass
+        navigation.advanceStepIndex(to: 1)
+        let intersectionLocation = navigation.routeProgress.currentLegProgress.currentStep.intersections![1].location
+        navigation.routeProgress.currentLegProgress.currentStepProgress.distanceTraveled = intersectionLocation.distance(to: tunnelSetup.firstLocation.coordinate)
+        let tunnelEntranceLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelEntranceLocation])
+        
+        // test should animate tunnel navigation
+        let currentIntersection = navigation.routeProgress.currentLegProgress.currentStepProgress.currentIntersection
+        let currentLocation = location(at: navigation.location!.coordinate)
+        XCTAssertTrue(navigation.shouldEnableTunnelAnimation(at: currentLocation, for: navigation.locationManager, intersection: currentIntersection), "Cannot animate tunnel animation at that location")
     }
 
 }
