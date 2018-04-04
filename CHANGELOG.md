@@ -2,7 +2,10 @@
 
 ## master
 
+### Core Navigation
+
 * Fixed a crash that was caused by check the edit distance of an empty string. [#1281](https://github.com/mapbox/mapbox-navigation-ios/pull/1281/)
+* Removes warnings when using Swift 4.1. [#1271](https://github.com/mapbox/mapbox-navigation-ios/pull/1271)
 
 ## v0.16.0 (March 26, 2018)
 
