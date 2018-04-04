@@ -2,6 +2,10 @@
 
 ## master
 
+### User Interface
+
+* Draws slight right and left turn icons for slight turns in the turn lane view. [#1270](https://github.com/mapbox/mapbox-navigation-ios/pull/1270)
+
 ### Core Navigation
 
 * Fixed a crash that was caused by check the edit distance of an empty string. [#1281](https://github.com/mapbox/mapbox-navigation-ios/pull/1281/)

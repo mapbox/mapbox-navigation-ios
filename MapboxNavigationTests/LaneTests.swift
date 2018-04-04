@@ -43,4 +43,13 @@ class LaneTests: FBSnapshotTestCase {
     func testRightNone() {
         assertLanes(step: steps[1])
     }
+    
+    func testSlightRight() {
+        let view = LaneView(frame: CGRect(origin: .zero, size: CGSize(width: 30, height: 30)))
+        view.backgroundColor = .white
+        view.lane = Lane(indications: [.slightRight])
+        view.maneuverDirection = .slightRight
+        view.isValid = true
+        FBSnapshotVerifyView(view)
+    }
 }
