@@ -654,13 +654,9 @@ extension RouteController: CLLocationManagerDelegate {
      If the user is not on the route, they should be rerouted.
      */
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
-
-        // Find future location of user
-        let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
-        let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
-        let newLocation = CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-        let radius = max(reroutingTolerance, location.horizontalAccuracy + RouteControllerUserLocationSnappingDistance)
-        let isCloseToCurrentStep = newLocation.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
+        
+        let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
+        let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
         
         guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
         
@@ -670,7 +666,10 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         if nearestStep.distance < RouteControllerUserLocationSnappingDistance {
-            advanceStepIndex(to: nearestStep.index)
+            // Only advance the stepIndex to a future step if the step is new. Otherwise, the user is still on the current step.
+            if nearestStep.index != routeProgress.currentLegProgress.stepIndex {
+                advanceStepIndex(to: nearestStep.index)
+            }
             return true
         }
         
