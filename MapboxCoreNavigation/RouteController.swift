@@ -648,7 +648,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         if let classes = currentIntersection.outletRoadClasses {
             // Main conditions to enable simulated tunnel animation:
-            // - User location is within minimum tunnel entrance radius AND their location speed is at least 5 m/s
+            // - User location is within minimum tunnel entrance radius
             // - OR Current intersection's road classes contain a tunnel AND when we receive series of bad GPS location updates
             let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection
             let distanceToUpcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection
@@ -763,9 +763,9 @@ extension RouteController: CLLocationManagerDelegate {
      returns a Boolean whether they are within the minimum radius of a tunnel entrance.
      */
     public func userWithinTunnelEntranceRadius(at location: CLLocation, intersection: Intersection?, distance: CLLocationDistance?) -> Bool {
-        // Ensure the upcoming intersection is a tunnel intersection.
-        guard let upcomingIntersection = intersection,
-              let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
+        // Ensure the upcoming intersection is a tunnel intersection
+        // OR the location speed is either at least 5 m/s or is considered a bad location update
+        guard let upcomingIntersection = intersection, let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
               (location.speed >= RouteControllerMinimumSpeedAtTunnelEntranceRadius || !location.isQualified) else {
                 return false
         }
