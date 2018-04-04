@@ -141,12 +141,11 @@ class RouteControllerTests: XCTestCase {
         // Intersection with a tunnel roadClass
         let intersectionLocation = navigation.routeProgress.route.legs[0].steps[1].intersections![1].location
         let tunnelEntranceLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelEntranceLocation])
 
         let currentLegProgress = (navigation.routeProgress.currentLegProgress)!
         let currentStep = currentLegProgress.currentStep
-        let currentIntersection = currentStep.intersections![currentLegProgress.stepIndex]
+        let currentIntersection = currentStep.intersections![1]
         
         var currentLocation = location(at: navigation.location!.coordinate)
         var distanceToTunnelEntrance = currentIntersection.location.distance(to: currentLocation.coordinate)
