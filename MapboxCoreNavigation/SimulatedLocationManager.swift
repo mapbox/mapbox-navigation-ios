@@ -95,10 +95,8 @@ public class SimulatedLocationManager: NavigationLocationManager {
             routeLine = coordinates
             locations = coordinates.simulatedLocationsWithTurnPenalties()
             
-            currentDistance = distance
             currentSpeed = 30
-            
-            currentDistance += currentSpeed * speedMultiplier
+            currentDistance = distance + (currentSpeed * speedMultiplier)
         }
     }
     
