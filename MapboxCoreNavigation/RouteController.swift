@@ -238,7 +238,6 @@ open class RouteController: NSObject {
      */
     var animatedLocationManager: SimulatedLocationManager?
     
-    
     /**
      An array of bad location updates recorded upon exit of a tunnel.
      */
