@@ -196,7 +196,7 @@ class RouteControllerTests: XCTestCase {
         // test should animate tunnel navigation
         let currentIntersection = navigation.routeProgress.currentLegProgress.currentStepProgress.currentIntersection
         let currentLocation = location(at: navigation.location!.coordinate)
-        XCTAssertTrue(navigation.shouldEnableTunnelAnimation(at: currentLocation, for: navigation.locationManager, intersection: currentIntersection), "Cannot animate tunnel animation at that location")
+        XCTAssertTrue(navigation.shouldEnableTunnelAnimation(at: currentLocation, for: navigation.locationManager, intersection: currentIntersection), "Cannot animate tunnel navigation at that location")
     }
 
 }
