@@ -196,6 +196,8 @@
 		C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */; };
 		C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; };
 		C5EF397520599120009A2C50 /* straight-line.json in Resources */ = {isa = PBXBuildFile; fileRef = C5EF397420599120009A2C50 /* straight-line.json */; };
+		C5F2DCA0206DBF5E002F99F6 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F2DC9F206DBF5E002F99F6 /* Sequence.swift */; };
+		C5F2DCA1206DBF5E002F99F6 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F2DC9F206DBF5E002F99F6 /* Sequence.swift */; };
 		DA23C9611F4FC05C00BA9522 /* MGLMapView+MGLNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 35D825F91E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA23C9641F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA23C9631F4FC0A600BA9522 /* MGLMapView+CustomAdditions.m */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
@@ -531,6 +533,7 @@
 		C5D9800E1EFBCDAD006DBF2E /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouteOptions.swift; sourceTree = "<group>"; };
 		C5EF397420599120009A2C50 /* straight-line.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "straight-line.json"; sourceTree = "<group>"; };
+		C5F2DC9F206DBF5E002F99F6 /* Sequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sequence.swift; sourceTree = "<group>"; };
 		DA1811FD20128B0900C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Main.strings; sourceTree = "<group>"; };
 		DA1811FE20128B0900C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA18120120128B7B00C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1003,6 +1006,7 @@
 				C57491DE1FACC42F006F97BC /* CGPoint.swift */,
 				C582FD5E203626E900A9086E /* CLLocationDirection.swift */,
 				C5381F01204E03B600A5493E /* UIDevice.swift */,
+				C5F2DC9F206DBF5E002F99F6 /* Sequence.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1595,6 +1599,7 @@
 				35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */,
 				35B5A47E1FFFDCE5000A3C8D /* NavigationViewLayout.swift in Sources */,
 				3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */,
+				C5F2DCA1206DBF5E002F99F6 /* Sequence.swift in Sources */,
 				35DA85791FC45787004092EC /* StatusView.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
 				359A8AEF1FA7B25B00BDB486 /* LanesStyleKit.swift in Sources */,
@@ -1711,6 +1716,7 @@
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
+				C5F2DCA0206DBF5E002F99F6 /* Sequence.swift in Sources */,
 				35BF8CA41F28EBD8003F6125 /* String.swift in Sources */,
 				64847A041F04629D003F3A69 /* Feedback.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* Constants.swift in Sources */,
