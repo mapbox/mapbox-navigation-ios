@@ -114,6 +114,11 @@ public var RouteControllerMinNumberOfInCorrectCourses: Int = 4
 public var RouteControllerIncorrectCourseMultiplier: Int = 4
 
 /**
- Minimum distance to flag the close proximity to an upcoming tunnel intersection on a route.
+ Minimum distance to flag the proximity to an upcoming tunnel intersection on the route.
  */
 public var RouteControllerMinimumDistanceToTunnelEntrance: CLLocationDistance = 15
+
+/**
+ Minimum speed (mps) as the user enters the minimum radius of the tunnel entrance on the route.
+ */
+public var RouteControllerMinimumSpeedAtTunnelEntranceRadius: CLLocationSpeed = 5

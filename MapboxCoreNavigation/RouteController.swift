@@ -238,6 +238,12 @@ open class RouteController: NSObject {
      */
     var animatedLocationManager: SimulatedLocationManager?
     
+    
+    /**
+     An array of bad location updates recorded upon exit of a tunnel.
+     */
+    var tunnelExitLocations = [CLLocation]()
+    
     /**
      Intializes a new `RouteController`.
 
@@ -363,6 +369,7 @@ open class RouteController: NSObject {
         animatedLocationManager?.stopUpdatingLocation()
         animatedLocationManager?.stopUpdatingHeading()
         animatedLocationManager = nil
+        tunnelExitLocations.removeAll()
     }
     
     /**
@@ -625,21 +632,35 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
-        guard let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else { return }
+        let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection
+        let shouldAnimate = shouldEnableTunnelAnimation(at: location, for: manager, intersection: currentIntersection)
+        
+        if shouldAnimate {
+            enableTunnelAnimation(for: manager,
+                        routeProgress: routeProgress,
+                     distanceTraveled: distanceTraveled)
+        } else {
+            suspendTunnelAnimation(for: manager, at: location)
+        }
+    }
+    
+    func shouldEnableTunnelAnimation(at location: CLLocation, for manager: CLLocationManager, intersection: Intersection?) -> Bool {
+        guard let currentIntersection = intersection else { return false }
         
         if let classes = currentIntersection.outletRoadClasses {
             // Main conditions to enable simulated tunnel animation:
-            // - User location is within tunnel entrance radius OR
-            // - Current intersection's road classes contain a tunnel
-            //   AND when we receive a bad location update from the GPS
-            if userWithinTunnelEntranceRadius(at: location) == true || (classes.contains(.tunnel) && !location.isQualified) {
-                enableTunnelAnimation(for: manager,
-                                     routeProgress: routeProgress,
-                                     distanceTraveled: distanceTraveled)
-            } else {
-                suspendTunnelAnimation(for: manager)
+            // - User location is within minimum tunnel entrance radius AND their location speed is at least 5 m/s
+            // - OR Current intersection's road classes contain a tunnel AND when we receive series of bad GPS location updates
+            let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection
+            let distanceToUpcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection
+            if userWithinTunnelEntranceRadius(at: location, intersection: upcomingIntersection, distance: distanceToUpcomingIntersection) ||
+               (classes.contains(.tunnel) && (manager is NavigationLocationManager && !location.isQualified))
+            {
+                return true
             }
         }
+
+        return false
     }
 
     func enableTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
@@ -667,25 +688,31 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
     
-    func suspendTunnelAnimation(for manager: CLLocationManager) {
-        guard !(manager is SimulatedLocationManager), animatedLocationManager != nil else { return }
+    func suspendTunnelAnimation(for manager: CLLocationManager, at location: CLLocation) {
+        guard (manager is SimulatedLocationManager), animatedLocationManager != nil else { return }
         
-        if let lastKnownLocation = animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
-            self.rawLocation = lastKnownLocation
+        // Disable the tunnel animation after at least 3 bad location updates.
+        // Otherwise if we receive a valid location updates, disable the tunnel animation immediately.
+        guard tunnelExitLocations.count > 3 || location.isQualified else {
+            tunnelExitLocations.append(location)
+            tunnelExitLocations = tunnelExitLocations.filter { !$0.isQualified }
+            return
         }
+
+        rawLocation = location
         
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         
         DispatchQueue.main.async {
-            self.animatedLocationManager?.stopUpdatingLocation()
-            self.animatedLocationManager = nil
+            manager.stopUpdatingHeading()
+            manager.stopUpdatingLocation()
+            self.suspendLocationUpdates()
             dispatchGroup.leave()
         }
         
         dispatchGroup.notify(queue:.main) {
-            manager.startUpdatingLocation()
-            manager.startUpdatingHeading()
+            self.resume()
         }
     }
     
@@ -733,19 +760,21 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     /**
-     Given a user's current location, returns a Boolean whether they are within the radius of a tunnel entrance.
+     Given a user's current location, an intersection that contains a tunnel road class and the current distance to the intersection provided,
+     returns a Boolean whether they are within the minimum radius of a tunnel entrance.
      */
-    @objc public func userWithinTunnelEntranceRadius(at location: CLLocation) -> Bool {
-        
-        // Ensure upcoming intersection is a tunnel intersection.
-        guard let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection,
+    public func userWithinTunnelEntranceRadius(at location: CLLocation, intersection: Intersection?, distance: CLLocationDistance?) -> Bool {
+        // Ensure the upcoming intersection is a tunnel intersection.
+        guard let upcomingIntersection = intersection,
               let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
-              let coordinates = routeProgress.currentLegProgress.currentStep.coordinates else { return false }
+              (location.speed >= RouteControllerMinimumSpeedAtTunnelEntranceRadius || !location.isQualified) else {
+                return false
+        }
         
-        // Determine the distance to the upcoming tunnel entrance
-        let distanceToTunnel = Polyline(coordinates).distance(from: location.coordinate, to: upcomingIntersection.location)
+        // Distance to the upcoming tunnel entrance
+        guard let distanceToTunnelEntrance = distance else { return false }
         
-        return distanceToTunnel < RouteControllerMinimumDistanceToTunnelEntrance
+        return distanceToTunnelEntrance < RouteControllerMinimumDistanceToTunnelEntrance
     }
     
     func locationAhead(of location: CLLocation) -> CLLocation {

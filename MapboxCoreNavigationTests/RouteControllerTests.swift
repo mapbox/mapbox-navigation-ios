@@ -5,14 +5,36 @@ import Turf
 
 fileprivate let mbTestHeading: CLLocationDirection = 50
 
+struct TunnelDetectorTestData {
+    static let ninthStreetFileName = "routeWithTunnels_9thStreetDC"
+    static let kRouteKey = "routes"
+    // static let startLocation = CLLocationCoordinate2D(latitude: 38.89213219443445, longitude: -77.02398915179958)
+    static let startLocation = CLLocationCoordinate2D(latitude: 38.890774, longitude: -77.023970)
+    static let endLocation = CLLocationCoordinate2D(latitude: 38.88061238536352, longitude: -77.02471810711819)
+}
+
+let tunnelResponse = Fixture.JSONFromFileNamed(name: TunnelDetectorTestData.ninthStreetFileName)
+let tunnelJsonRoute = (tunnelResponse[TunnelDetectorTestData.kRouteKey] as! [AnyObject]).first as! [String: Any]
+let tunnelWayPoint1 = Waypoint(coordinate: TunnelDetectorTestData.startLocation)
+let tunnelWaypoint2 = Waypoint(coordinate: TunnelDetectorTestData.endLocation)
+let tunnelRoute = Route(json: tunnelJsonRoute, waypoints: [tunnelWayPoint1, tunnelWaypoint2], routeOptions: NavigationRouteOptions(waypoints: [tunnelWayPoint1, tunnelWaypoint2]))
+
+
 class RouteControllerTests: XCTestCase {
-    
-    var setup: (routeController: RouteController, firstLocation: CLLocation) {
+
+    lazy var setup: (routeController: RouteController, firstLocation: CLLocation) = {
         route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
-    }
+    }()
+    
+    lazy var tunnelSetup: (routeController: RouteController, firstLocation: CLLocation) = {
+       tunnelRoute.accessToken = "foo"
+        let navigation = RouteController(along: tunnelRoute, directions: directions)
+        let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
+        return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 6, timestamp: Date()))
+    }()
     
     func testUserIsOnRoute() {
         let navigation = setup.routeController
@@ -113,4 +135,53 @@ class RouteControllerTests: XCTestCase {
         
         XCTAssertEqual(navigation.location!.course, mbTestHeading, "Course should be using bearing")
     }
+
+    func testUserWithinTunnelEntranceRadius() {
+        let navigation = tunnelSetup.routeController
+        
+        // Intersection with a tunnel roadClass
+        let intersectionLocation = navigation.routeProgress.route.legs[0].steps[1].intersections![1].location
+        let tunnelEntranceLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelEntranceLocation])
+
+        let currentLegProgress = (navigation.routeProgress.currentLegProgress)!
+        let currentStep = currentLegProgress.currentStep
+        let currentIntersection = currentStep.intersections![currentLegProgress.stepIndex]
+        
+        var currentLocation = location(at: navigation.location!.coordinate)
+        var distanceToTunnelEntrance = currentIntersection.location.distance(to: currentLocation.coordinate)
+        
+        var userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: currentIntersection, distance: distanceToTunnelEntrance)
+        XCTAssertTrue(userIsAtTunnelEntranceRadius, "Location must be within the tunnel entrance radius")
+
+        let outsideTunnelEntranceRadius =  intersectionLocation.coordinate(at: 200, facing: intersectionLocation.direction(to: tunnelSetup.firstLocation.coordinate))
+        let outsideTunnelEntranceRadiusLocation = CLLocation(latitude: outsideTunnelEntranceRadius.latitude, longitude: outsideTunnelEntranceRadius.longitude)
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [outsideTunnelEntranceRadiusLocation])
+        
+        currentLocation = location(at: navigation.location!.coordinate)
+        distanceToTunnelEntrance = currentIntersection.location.distance(to: outsideTunnelEntranceRadiusLocation.coordinate)
+
+        userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: currentIntersection, distance: distanceToTunnelEntrance)
+        XCTAssertFalse(userIsAtTunnelEntranceRadius, "Location must not outside the tunnel entrance radius")
+    }
+    
+    fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
+        return CLLocation(coordinate: coordinate,
+                            altitude: 5,
+                  horizontalAccuracy: 258.20,
+                    verticalAccuracy: 200,
+                              course: 20,
+                               speed: 15,
+                           timestamp: Date())
+    }
+    
+    // TODO: Test Tunnel Animation Enabled
+    // TODO: Test Tunnel Animation Disabled
+    func testTunnelSimulatedNavigation() {
+        
+        
+    }
+
 }
