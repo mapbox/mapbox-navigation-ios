@@ -776,12 +776,6 @@ extension RouteController: CLLocationManagerDelegate {
         return distanceToTunnelEntrance < RouteControllerMinimumDistanceToTunnelEntrance
     }
     
-    func locationAhead(of location: CLLocation) -> CLLocation {
-        let metersInFrontOfUser = location.speed * RouteControllerDeadReckoningTimeInterval
-        let locationInfrontOfUser = location.coordinate.coordinate(at: metersInFrontOfUser, facing: location.course)
-        return CLLocation(latitude: locationInfrontOfUser.latitude, longitude: locationInfrontOfUser.longitude)
-    }
-    
     /**
      Given a users current location, returns a Boolean whether they are currently on the route.
 
