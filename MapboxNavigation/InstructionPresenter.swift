@@ -68,9 +68,9 @@ class InstructionPresenter {
             //TODO: If we have a exit, in the first two components, lets handle that first.
             if component.maneuverType == .takeOffRamp, isExitInstruction, 0...1 ~= index {
                 //we're only interested in the "Exit Number" component, and only if it's populated
-                guard component.type == .exitNumber, let exitNumber = component.text else { continue }
+                guard component.type == .exitCode, let exitCode = component.text else { continue }
                 let exitSide: ExitSide = component.maneuverDirection == .left ? .left : .right
-                let exitString = exitShield(side: exitSide, text: exitNumber)
+                let exitString = exitShield(side: exitSide, text: exitCode)
                 processedComponents.append(component)
                 strings.append(exitString)
                 
