@@ -197,7 +197,7 @@ open class RouteLegProgress: NSObject {
      An approximatation of the closest segment on the current leg.
      */
     @objc public var currentSegmentIndex: Int {
-        let legCoordinates = Array(leg.steps.flatMap { $0.coordinates }.joined())
+        let legCoordinates = Array(leg.steps.compactMap { $0.coordinates }.joined())
         return Int(Double(legCoordinates.count) * fractionTraveled)
     }
     
