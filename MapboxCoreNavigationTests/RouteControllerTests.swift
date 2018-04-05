@@ -138,7 +138,7 @@ class RouteControllerTests: XCTestCase {
     func testUserWithinTunnelEntranceRadius() {
         let navigation = tunnelSetup.routeController
         
-        // Intersection with a tunnel roadClass
+        // Step with a tunnel intersection
         navigation.advanceStepIndex(to: 1)
         
         // Intersection with a tunnel roadClass
@@ -181,7 +181,7 @@ class RouteControllerTests: XCTestCase {
     func testEnableTunnelAnimation() {
         let navigation = tunnelSetup.routeController
         
-        // Intersection with a tunnel roadClass
+        // Step with a tunnel intersection
         navigation.advanceStepIndex(to: 1)
         
         let tunnelIntersection =  navigation.routeProgress.currentLegProgress.currentStep.intersections![1]
