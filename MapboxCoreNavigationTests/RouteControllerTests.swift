@@ -139,29 +139,35 @@ class RouteControllerTests: XCTestCase {
         let navigation = tunnelSetup.routeController
         
         // Intersection with a tunnel roadClass
-        let intersectionLocation = navigation.routeProgress.route.legs[0].steps[1].intersections![1].location
+        navigation.advanceStepIndex(to: 1)
+        
+        // Intersection with a tunnel roadClass
+        let tunnelIntersection = navigation.routeProgress.currentLegProgress.currentStep.intersections![1]
+        let intersectionLocation = tunnelIntersection.location
+        
+        var currentLocation = location(at: tunnelSetup.firstLocation.coordinate,
+                                       for: navigation,
+                              intersection: tunnelIntersection,
+                                  distance: intersectionLocation.distance(to: tunnelSetup.firstLocation.coordinate))
+
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [currentLocation])
+        
         let tunnelEntranceLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelEntranceLocation])
-
-        let currentLegProgress = (navigation.routeProgress.currentLegProgress)!
-        let currentStep = currentLegProgress.currentStep
-        let currentIntersection = currentStep.intersections![1]
         
-        var currentLocation = location(at: navigation.location!.coordinate)
-        var distanceToTunnelEntrance = currentIntersection.location.distance(to: currentLocation.coordinate)
-        
-        var userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: currentIntersection, distance: distanceToTunnelEntrance)
+        var userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: tunnelIntersection)
         XCTAssertTrue(userIsAtTunnelEntranceRadius, "Location must be within the tunnel entrance radius")
 
-        let outsideTunnelEntranceRadius =  intersectionLocation.coordinate(at: 200, facing: intersectionLocation.direction(to: tunnelSetup.firstLocation.coordinate))
+        let outsideTunnelEntranceRadius = intersectionLocation.coordinate(at: 200, facing: intersectionLocation.direction(to: tunnelSetup.firstLocation.coordinate))
         let outsideTunnelEntranceRadiusLocation = CLLocation(latitude: outsideTunnelEntranceRadius.latitude, longitude: outsideTunnelEntranceRadius.longitude)
-        
+
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [outsideTunnelEntranceRadiusLocation])
         
-        currentLocation = location(at: navigation.location!.coordinate)
-        distanceToTunnelEntrance = currentIntersection.location.distance(to: outsideTunnelEntranceRadiusLocation.coordinate)
-
-        userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: currentIntersection, distance: distanceToTunnelEntrance)
+        currentLocation = location(at: tunnelSetup.firstLocation.coordinate,
+                                   for: navigation,
+                                   intersection: tunnelIntersection,
+                                   distance: 10)
+        userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: tunnelIntersection)
         XCTAssertFalse(userIsAtTunnelEntranceRadius, "Location must not outside the tunnel entrance radius")
     }
     
@@ -178,19 +184,11 @@ class RouteControllerTests: XCTestCase {
         // Intersection with a tunnel roadClass
         navigation.advanceStepIndex(to: 1)
         
-        let intersectionLocation = navigation.routeProgress.currentLegProgress.currentStep.intersections![1].location
-        let polyline = Polyline(navigation.routeProgress.currentLegProgress.currentStep.coordinates!)
-        let testLocation = CLLocationCoordinate2D(latitude: tunnelSetup.firstLocation.coordinate.latitude,
-                                                 longitude: tunnelSetup.firstLocation.coordinate.longitude).coordinate(
-                                                        at: 200,
-                                                    facing: (polyline.coordinates.first?.direction(to: intersectionLocation))!
-                                                )
-        
-        let fakeLocation = location(at: testLocation)
+        let tunnelIntersection =  navigation.routeProgress.currentLegProgress.currentStep.intersections![1]
+        let fakeLocation = location(at: tunnelSetup.firstLocation.coordinate, for: navigation, intersection: tunnelIntersection)
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [fakeLocation])
         
-        let tunnelEntranceLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        
+        let tunnelEntranceLocation = CLLocation(latitude: tunnelIntersection.location.latitude, longitude: tunnelIntersection.location.longitude)
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelEntranceLocation])
         
         // test should animate tunnel navigation
@@ -202,6 +200,20 @@ class RouteControllerTests: XCTestCase {
 }
 
 extension RouteControllerTests {
+    
+    fileprivate func location(at coordinate: CLLocationCoordinate2D,
+                        for routeController: RouteController,
+                               intersection: Intersection,
+                                   distance: CLLocationDistance? = 200) -> CLLocation {
+        
+        let polyline = Polyline(routeController.routeProgress.currentLegProgress.currentStep.coordinates!)
+        let newLocation = CLLocationCoordinate2D(latitude: coordinate.latitude,
+                                                longitude: coordinate.longitude).coordinate(
+                                                       at: distance!,
+                                                   facing: (polyline.coordinates.first?.direction(to: intersection.location))!
+                                                )
+        return location(at: newLocation)
+    }
     
     fileprivate func location(at coordinate: CLLocationCoordinate2D) -> CLLocation {
         return CLLocation(coordinate: coordinate,

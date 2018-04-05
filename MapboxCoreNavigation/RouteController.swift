@@ -651,8 +651,7 @@ extension RouteController: CLLocationManagerDelegate {
             // - User location is within minimum tunnel entrance radius
             // - OR Current intersection's road classes contain a tunnel AND when we receive series of bad GPS location updates
             let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection
-            let distanceToUpcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection
-            if userWithinTunnelEntranceRadius(at: location, intersection: upcomingIntersection, distance: distanceToUpcomingIntersection) ||
+            if userWithinTunnelEntranceRadius(at: location, intersection: upcomingIntersection) ||
                (classes.contains(.tunnel) && (manager is NavigationLocationManager && !location.isQualified))
             {
                 return true
@@ -759,10 +758,10 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     /**
-     Given a user's current location, an intersection that contains a tunnel road class and the current distance to the intersection provided,
+     Given a user's current location and an intersection that contains a tunnel road class,
      returns a Boolean whether they are within the minimum radius of a tunnel entrance.
      */
-    public func userWithinTunnelEntranceRadius(at location: CLLocation, intersection: Intersection?, distance: CLLocationDistance?) -> Bool {
+    public func userWithinTunnelEntranceRadius(at location: CLLocation, intersection: Intersection?) -> Bool {
         // Ensure the upcoming intersection is a tunnel intersection
         // OR the location speed is either at least 5 m/s or is considered a bad location update
         guard let upcomingIntersection = intersection, let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
@@ -771,7 +770,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
         
         // Distance to the upcoming tunnel entrance
-        guard let distanceToTunnelEntrance = distance else { return false }
+        guard let distanceToTunnelEntrance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection else { return false }
         
         return distanceToTunnelEntrance < RouteControllerMinimumDistanceToTunnelEntrance
     }
