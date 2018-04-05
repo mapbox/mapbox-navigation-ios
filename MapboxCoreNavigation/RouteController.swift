@@ -49,7 +49,7 @@ extension Notification.Name {
 }
 
 /**
- The `RouteControllerDelegate` class provides methods for responding to significant occasions during the user’s traversal of a route monitored by a `RouteController`.
+ The `RouteControllerDelegate` protocol provides methods for responding to significant events during the user’s traversal of a route monitored by a `RouteController`.
  */
 @objc(MBRouteControllerDelegate)
 public protocol RouteControllerDelegate: class {
@@ -111,9 +111,9 @@ public protocol RouteControllerDelegate: class {
     optional func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error)
 
     /**
-     Called when the route controller’s location manager receive a location update.
+     Called when the route controller’s location manager receives a location update.
 
-     These locations can be modified due to replay or simulation but they can
+     These locations may be modified due to replay or simulation and can
      also derive from regular location updates from a `CLLocationManager`.
 
      - parameter routeController: The route controller that received the new locations.
