@@ -8,7 +8,7 @@ class EventsManagerSpy: MMEEventsManager {
     private var enqueuedEvents = [MockTelemetryEvent]()
     private var flushedEvents = [MockTelemetryEvent]()
 
-    func reset() {
+    public func reset() {
         enqueuedEvents.removeAll()
         flushedEvents.removeAll()
     }
@@ -38,5 +38,17 @@ class EventsManagerSpy: MMEEventsManager {
         return enqueuedEvents.contains(where: { (event) -> Bool in
             return event.attributes["event"] as! String == name
         })
+    }
+
+    public func enqueuedEventCount(with name: String) -> Int {
+        return enqueuedEvents.filter { (event) in
+            return event.attributes["event"] as! String == name
+        }.count
+    }
+
+    public func flushedEventCount(with name: String) -> Int {
+        return flushedEvents.filter { (event) in
+            return event.attributes["event"] as! String == name
+        }.count
     }
 }
