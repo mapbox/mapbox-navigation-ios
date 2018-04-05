@@ -170,11 +170,48 @@ class RouteControllerTests: XCTestCase {
         userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: tunnelIntersection)
         XCTAssertFalse(userIsAtTunnelEntranceRadius, "Location must not outside the tunnel entrance radius")
     }
-    
-    
-    // TODO: Test Tunnel Animation Enabled
-    // TODO: Test Tunnel Animation Disabled
+
     func testTunnelSimulatedNavigation() {
+        let navigation = tunnelSetup.routeController
+        
+        // Step with a tunnel intersection
+        navigation.advanceStepIndex(to: 1)
+        
+        // Intersection with a tunnel roadClass
+        let tunnelIntersection = navigation.routeProgress.currentLegProgress.currentStep.intersections![1]
+        let intersectionLocation = tunnelIntersection.location
+        
+        let currentLocation = location(at: tunnelSetup.firstLocation.coordinate,
+                                      for: navigation,
+                             intersection: tunnelIntersection,
+                                 distance: intersectionLocation.distance(to: tunnelSetup.firstLocation.coordinate))
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [currentLocation])
+        
+        let upcomingIntersection = navigation.routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection!
+        let tunnelLocation = location(at: upcomingIntersection.location)
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelLocation])
+        
+        // Enable the tunnel animation, which should enable the simulated location manager
+        let enableTunnelAnimationExpectation = expectation(description: "enableTunnelAnimation")
+
+        navigation.enableTunnelAnimation(for: navigation.locationManager,
+                               routeProgress: navigation.routeProgress,
+                            distanceTraveled: navigation.routeProgress.currentLegProgress.currentStepProgress.distanceTraveled) { manager in
+            
+            enableTunnelAnimationExpectation.fulfill()
+            
+                                if manager is SimulatedLocationManager {
+                                    print(" KOBE!!! KOBE!!! KOBE!!! \(manager is SimulatedLocationManager)")
+                                }
+
+            XCTAssertTrue(manager is SimulatedLocationManager,
+                          "Location manager must be of type `SimulatedLocationManager` in order to simulate navigation.")
+                        
+        }
+        
+        self.wait(for: [enableTunnelAnimationExpectation], timeout: 1.0)
         
     }
     
@@ -184,7 +221,7 @@ class RouteControllerTests: XCTestCase {
         // Step with a tunnel intersection
         navigation.advanceStepIndex(to: 1)
         
-        let tunnelIntersection =  navigation.routeProgress.currentLegProgress.currentStep.intersections![1]
+        let tunnelIntersection = navigation.routeProgress.currentLegProgress.currentStep.intersections![1]
         let fakeLocation = location(at: tunnelSetup.firstLocation.coordinate, for: navigation, intersection: tunnelIntersection)
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [fakeLocation])
         

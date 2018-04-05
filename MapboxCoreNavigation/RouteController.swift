@@ -11,6 +11,8 @@ import Turf
  */
 public typealias RouteControllerNotificationUserInfoKey = MBRouteControllerNotificationUserInfoKey
 
+public typealias RouteControllerSimulationCompletionBlock = ((_ manager: NavigationLocationManager)-> Void)
+
 extension Notification.Name {
     /**
      Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
@@ -637,9 +639,12 @@ extension RouteController: CLLocationManagerDelegate {
         if shouldAnimate {
             enableTunnelAnimation(for: manager,
                         routeProgress: routeProgress,
-                     distanceTraveled: distanceTraveled)
+                     distanceTraveled: distanceTraveled,
+                             callback: nil)
         } else {
-            suspendTunnelAnimation(for: manager, at: location)
+            suspendTunnelAnimation(for: manager,
+                                    at: location,
+                              callback: nil)
         }
     }
     
@@ -661,7 +666,11 @@ extension RouteController: CLLocationManagerDelegate {
         return false
     }
 
-    func enableTunnelAnimation(for manager: CLLocationManager, routeProgress: RouteProgress, distanceTraveled: CLLocationDistance) {
+    func enableTunnelAnimation(for manager: CLLocationManager,
+                             routeProgress: RouteProgress,
+                          distanceTraveled: CLLocationDistance,
+                                  callback: RouteControllerSimulationCompletionBlock?) {
+       
         guard !(manager is SimulatedLocationManager), animatedLocationManager == nil else { return }
         
         let dispatchGroup = DispatchGroup()
@@ -683,10 +692,15 @@ extension RouteController: CLLocationManagerDelegate {
             if let lastKnownLocation = self.animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
                 self.rawLocation = lastKnownLocation
             }
+
+            callback?(self.animatedLocationManager!)
         }
     }
     
-    func suspendTunnelAnimation(for manager: CLLocationManager, at location: CLLocation) {
+    func suspendTunnelAnimation(for manager: CLLocationManager,
+                                at location: CLLocation,
+                                   callback: RouteControllerSimulationCompletionBlock?) {
+        
         guard (manager is SimulatedLocationManager), animatedLocationManager != nil else { return }
         
         // Disable the tunnel animation after at least 3 bad location updates.
@@ -711,6 +725,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         dispatchGroup.notify(queue:.main) {
             self.resume()
+            callback?(self.locationManager)
         }
     }
     
