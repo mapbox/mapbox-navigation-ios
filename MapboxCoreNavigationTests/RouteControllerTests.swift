@@ -180,6 +180,8 @@ class RouteControllerTests: XCTestCase {
         let expectedEventName = MMEEventTypeNavigationReroute
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
+        XCTAssertEqual(eventsManagerSpy.flushedEventCount(with: expectedEventName), 1)
 
         // TODO: it tells the delegate
 //        XCTAssertTrue(delegate.recentMessages.includes("routeController(_, willRerouteFrom:)"))
