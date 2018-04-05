@@ -191,13 +191,7 @@ open class MapboxVoiceController: RouteVoiceController {
         DispatchQueue.global(qos: .userInitiated).async {
             do {
                 self.audioPlayer = try AVAudioPlayer(data: data)
-                let prepared = self.audioPlayer?.prepareToPlay() ?? false
-                
-                guard prepared else {
-                    self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
-                    return
-                }
-                
+                self.audioPlayer?.prepareToPlay()
                 self.audioPlayer?.delegate = self
                 try super.duckAudio()
                 let played = self.audioPlayer?.play() ?? false
