@@ -170,7 +170,8 @@ class RouteControllerTests: XCTestCase {
         userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: tunnelIntersection)
         XCTAssertFalse(userIsAtTunnelEntranceRadius, "Location must not outside the tunnel entrance radius")
     }
-
+    
+    // TODO: Check for Disabled Simulation
     func testTunnelSimulatedNavigation() {
         let navigation = tunnelSetup.routeController
         
