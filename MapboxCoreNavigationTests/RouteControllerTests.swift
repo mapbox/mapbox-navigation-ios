@@ -177,8 +177,18 @@ class RouteControllerTests: XCTestCase {
         
         // Intersection with a tunnel roadClass
         navigation.advanceStepIndex(to: 1)
+        
         let intersectionLocation = navigation.routeProgress.currentLegProgress.currentStep.intersections![1].location
-        navigation.routeProgress.currentLegProgress.currentStepProgress.distanceTraveled = intersectionLocation.distance(to: tunnelSetup.firstLocation.coordinate)
+        let polyline = Polyline(navigation.routeProgress.currentLegProgress.currentStep.coordinates!)
+        let testLocation = CLLocationCoordinate2D(latitude: tunnelSetup.firstLocation.coordinate.latitude,
+                                                 longitude: tunnelSetup.firstLocation.coordinate.longitude).coordinate(
+                                                        at: 200,
+                                                    facing: (polyline.coordinates.first?.direction(to: intersectionLocation))!
+                                                )
+        
+        let fakeLocation = location(at: testLocation)
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [fakeLocation])
+        
         let tunnelEntranceLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelEntranceLocation])
