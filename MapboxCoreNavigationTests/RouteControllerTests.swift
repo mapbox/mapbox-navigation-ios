@@ -145,10 +145,8 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(navigation.location!.course, mbTestHeading, "Course should be using bearing")
     }
 
-    // MARK: When a new Route is obtained (and therefore a new RouteProgress is set)
-    // TODO: it posts a re-route notification. Note that it does not currently tell the delegate, but we will need to add a new delegate method in order to move the notifications out of RouteController. Also note that this happens on init() as well as when a faster route is found.
+    // MARK: - Events & Delegation
 
-    // MARK: When told to re-route from location -- `reroute(from:)`
     func testReroutingFromALocationSendsEvents() {
         let routeController = dependencies.routeController
         let testLocation = dependencies.firstLocation
@@ -160,11 +158,6 @@ class RouteControllerTests: XCTestCase {
 
         let didRerouteNotificationExpectation = expectation(forNotification: .routeControllerDidReroute, object: routeController, handler: nil)
 
-        routeController.reroute(from: testLocation)
-        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
-
-        wait(for: [willRerouteNotificationExpectation, didRerouteNotificationExpectation], timeout: 2.0, enforceOrder: true)
-
         let routeProgressDidChangeNotificationExpectation = expectation(forNotification: .routeControllerProgressDidChange, object: routeController) { (notification) -> Bool in
             let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
             let rawLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.rawLocationKey] as? CLLocation
@@ -173,10 +166,22 @@ class RouteControllerTests: XCTestCase {
             return location == rawLocation
         }
 
+        // MARK: When told to re-route from location -- `reroute(from:)`
+        routeController.reroute(from: testLocation)
+
+        // MARK: Upon rerouting successfully...
+        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
+
+        // MARK: It sends willReroute/didReroute notifications
+        wait(for: [willRerouteNotificationExpectation, didRerouteNotificationExpectation], timeout: 2.0, enforceOrder: true)
+
+        // MARK: On the next call to `locationManager(_, didUpdateLocations:)`
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [testLocation])
 
+        // MARK: It notifies that routeProgressDidChange
         wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 2.0)
 
+        // MARK: It enqueues and flushes a NavigationRerouteEvent
         let expectedEventName = MMEEventTypeNavigationReroute
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
