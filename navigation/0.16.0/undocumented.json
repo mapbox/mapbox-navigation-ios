@@ -51,7 +51,7 @@
     },
     {
       "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/MMEEventsManager.swift",
-      "line": 195,
+      "line": 198,
       "symbol": "MMEEventsManager.unrated",
       "symbol_kind": "source.lang.swift.decl.var.static",
       "warning": "undocumented"
@@ -128,21 +128,28 @@
     },
     {
       "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
-      "line": 387,
+      "line": 403,
       "symbol": "RouteController.reroutingTolerance",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
-      "line": 509,
+      "line": 525,
+      "symbol": "RouteController.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
+      "line": 529,
       "symbol": "RouteController.locationManager(_:didUpdateLocations:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxCoreNavigation/RouteController.swift",
-      "line": 932,
+      "line": 958,
       "symbol": "RouteController.sendCancelEvent(rating:comment:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -187,6 +194,13 @@
       "line": 7,
       "symbol": "CGSize.init(size:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxNavigation/Cache.swift",
+      "line": 3,
+      "symbol": "CompletionHandler",
+      "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
@@ -247,7 +261,7 @@
     },
     {
       "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxNavigation/DayStyle.swift",
-      "line": 152,
+      "line": 153,
       "symbol": "NightStyle.init()",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
@@ -527,7 +541,7 @@
     },
     {
       "file": "/Users/bobby/Documents/mapbox/mapbox-navigation-ios/MapboxNavigation/StepsViewController.swift",
-      "line": 240,
+      "line": 242,
       "symbol": "StepsViewController.tableView(_:titleForHeaderInSection:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
