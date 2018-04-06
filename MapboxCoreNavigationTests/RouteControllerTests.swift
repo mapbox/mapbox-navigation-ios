@@ -202,10 +202,6 @@ class RouteControllerTests: XCTestCase {
                             distanceTraveled: navigation.routeProgress.currentLegProgress.currentStepProgress.distanceTraveled) { manager in
             
             enableTunnelAnimationExpectation.fulfill()
-            
-                                if manager is SimulatedLocationManager {
-                                    print(" KOBE!!! KOBE!!! KOBE!!! \(manager is SimulatedLocationManager)")
-                                }
 
             XCTAssertTrue(manager is SimulatedLocationManager,
                           "Location manager must be of type `SimulatedLocationManager` in order to simulate navigation.")
