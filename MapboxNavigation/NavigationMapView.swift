@@ -667,7 +667,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrowSymbolLayer.iconColor = NSExpression(forConstantValue: UIColor.white)
                 arrowSymbolLayer.iconRotationAlignment = NSExpression(forConstantValue: "map")
                 arrowSymbolLayer.iconRotation = NSExpression(forConstantValue: shaftDirection as NSNumber)
-                arrow.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.12))
+                arrowSymbolLayer.iconScale = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.12))
                 arrowSymbolLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
                 
                 let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
