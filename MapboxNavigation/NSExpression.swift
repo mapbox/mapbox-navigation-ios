@@ -27,7 +27,7 @@ extension NSExpression {
         switch expressionType {
         case .constantValue:
             if replacesTokens, let value = constantValue as? String, value.contains("{name") {
-                return NSExpression(forConstantValue: "{\(localizedKeyPath)}")
+                return NSExpression(forKeyPath: localizedKeyPath)
             }
             if let stops = constantValue as? [Float: NSExpression] {
                 let localizedStops = stops.localized(into: locale, replacingTokens: replacesTokens)

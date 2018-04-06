@@ -73,16 +73,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let alternateSourceIdentifier = "alternateSource"
     let alternateLayerIdentifier = "alternateLayer"
     
-    /**
-     Attribute name for the route line that is used for identifying whether a RouteLeg is the current active leg.
-     */
-    public let currentLegAttribute = "isCurrentLeg"
-    
-    /**
-     Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
-     */
-    public let congestionAttribute = "congestion"
-    
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
     @objc dynamic public var trafficModerateColor: UIColor = .trafficModerate
@@ -634,9 +624,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 source.shape = arrowShape
             } else {
                 arrow.minimumZoomLevel = minimumZoomLevel
-                arrow.lineCap = NSExpression(forConstantValue: "cap")
-                arrow.lineJoin = NSExpression(forConstantValue: "join")
-                arrow.lineWidth = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", argumentArray: [MBRouteLineWidthByZoomLevel.multiplied(by: 0.70)])
+                arrow.lineCap = NSExpression(forConstantValue: "butt")
+                arrow.lineJoin = NSExpression(forConstantValue: "round")
+                arrow.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.70))
                 arrow.lineColor = NSExpression(forConstantValue: UIColor.white)
                 
                 style.addSource(arrowSource)
@@ -647,10 +637,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 source.shape = arrowStrokeShape
             } else {
                 
-                arrowStroke.minimumZoomLevel = minimumZoomLevel
-                arrowStroke.lineCap = NSExpression(forConstantValue: "cap")
-                arrowStroke.lineJoin = NSExpression(forConstantValue: "join")
-                arrow.lineWidth = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", argumentArray: [MBRouteLineWidthByZoomLevel.multiplied(by: 0.80)])
+                arrowStroke.minimumZoomLevel = arrow.minimumZoomLevel
+                arrowStroke.lineCap = arrow.lineCap
+                arrowStroke.lineJoin = arrow.lineJoin
+                arrowStroke.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.80))
                 arrowStroke.lineColor = NSExpression(forConstantValue: UIColor.defaultArrowStroke)
                 
                 style.addSource(arrowSourceStroke)
@@ -677,17 +667,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrowSymbolLayer.iconColor = NSExpression(forConstantValue: UIColor.white)
                 arrowSymbolLayer.iconRotationAlignment = NSExpression(forConstantValue: "map")
                 arrowSymbolLayer.iconRotation = NSExpression(forConstantValue: shaftDirection as NSNumber)
-                arrow.lineWidth = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", argumentArray: [MBRouteLineWidthByZoomLevel.multiplied(by: 0.12)])
+                arrow.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.12))
                 arrowSymbolLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
                 
                 let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
-                arrowSymbolLayerCasing.minimumZoomLevel = minimumZoomLevel
-                arrowSymbolLayerCasing.iconImageName = NSExpression(forConstantValue: "triangle-tip-navigation")
+                arrowSymbolLayerCasing.minimumZoomLevel = arrowSymbolLayer.minimumZoomLevel
+                arrowSymbolLayerCasing.iconImageName = arrowSymbolLayer.iconImageName
                 arrowSymbolLayerCasing.iconColor = NSExpression(forConstantValue: UIColor.defaultArrowStroke)
                 arrowSymbolLayerCasing.iconRotationAlignment = arrowSymbolLayer.iconRotationAlignment
-                arrowSymbolLayerCasing.iconRotation = NSExpression(forConstantValue: shaftDirection as NSNumber)
-                arrowSymbolLayerCasing.iconScale = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", argumentArray: [MBRouteLineWidthByZoomLevel.multiplied(by: 0.14)])
-                arrowSymbolLayerCasing.iconAllowsOverlap = NSExpression(forConstantValue: true)
+                arrowSymbolLayerCasing.iconRotation = arrowSymbolLayer.iconRotation
+                arrowSymbolLayerCasing.iconScale = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.14))
+                arrowSymbolLayerCasing.iconAllowsOverlap = arrowSymbolLayer.iconAllowsOverlap
                 
                 style.addSource(arrowSymbolSource)
                 style.insertLayer(arrowSymbolLayer, above: arrow)
@@ -899,8 +889,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
         // Take the default line width and make it wider for the casing
-        lineCasing.lineWidth = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.85))
-        
+        lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.85))
         lineCasing.lineColor = NSExpression(forConstantValue: routeAlternateColor)
         lineCasing.lineCap = NSExpression(forConstantValue: "round")
         lineCasing.lineJoin = NSExpression(forConstantValue: "round")
@@ -912,7 +901,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
         circles.circleColor = NSExpression(forConstantValue: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0))
-        circles.circleOpacity = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", [
+        circles.circleOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [
             2: 0.5,
             7: 1])
         circles.circleRadius = NSExpression(forConstantValue: 10)
@@ -925,7 +914,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func routeWaypointSymbolStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         let symbol = MGLSymbolStyleLayer(identifier: identifier, source: source)
         
-        symbol.text = NSExpression(forConstantValue: "{name}")
+        symbol.text = NSExpression(forKeyPath: "name")
         symbol.textFontSize = NSExpression(forConstantValue: 10)
         symbol.textHaloWidth = NSExpression(forConstantValue: 0.25)
         symbol.textHaloColor = NSExpression(forConstantValue: UIColor.black)
@@ -936,9 +925,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func routeStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
-        line.lineWidth = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", argumentArray: [MBRouteLineWidthByZoomLevel])
-        line.lineOpacity = NSExpression(forConditional: NSPredicate(format: "currentLegAttribute == true"), trueExpression: NSExpression(forConstantValue: 1), falseExpression: NSExpression(forConstantValue: 0.85))
-        line.lineColor = NSExpression(format: "MGL_MATCH(congestion, 'unknown', %@, 'low' , %@, 'moderate', %@, 'heavy', %@, 'severe', %@, %@)", trafficUnknownColor, trafficLowColor, trafficModerateColor, trafficHeavyColor, trafficSevereColor, UIColor.purple)
+        line.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
+        line.lineOpacity = NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"), trueExpression: NSExpression(forConstantValue: 1), falseExpression: NSExpression(forConstantValue: 0.85))
+        line.lineColor = NSExpression(format: "MGL_MATCH(congestion, 'low' , %@, 'moderate', %@, 'heavy', %@, 'severe', %@, %@)", trafficLowColor, trafficModerateColor, trafficHeavyColor, trafficSevereColor, trafficUnknownColor)
         line.lineJoin = NSExpression(forConstantValue: "round")
         
         return line
@@ -949,7 +938,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
         
         // Take the default line width and make it wider for the casing
-        lineCasing.lineWidth = NSExpression(format: "FUNCTION($zoomLevel, 'mgl_interpolateWithCurveType:parameters:stops:', 'linear', nil, %@)", argumentArray: [MBRouteLineWidthByZoomLevel.multiplied(by: 1.5)])
+        lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
         
         lineCasing.lineColor = NSExpression(forConstantValue: routeCasingColor)
         lineCasing.lineCap = NSExpression(forConstantValue: "round")
