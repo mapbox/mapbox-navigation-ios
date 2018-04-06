@@ -670,8 +670,8 @@ extension RouteController: CLLocationManagerDelegate {
                              routeProgress: RouteProgress,
                           distanceTraveled: CLLocationDistance,
                                   callback: RouteControllerSimulationCompletionBlock?) {
-       
-        guard !(manager is SimulatedLocationManager), animatedLocationManager == nil else { return }
+
+        guard animatedLocationManager == nil else { return }
         
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
@@ -701,7 +701,7 @@ extension RouteController: CLLocationManagerDelegate {
                                 at location: CLLocation,
                                    callback: RouteControllerSimulationCompletionBlock?) {
         
-        guard (manager is SimulatedLocationManager), animatedLocationManager != nil else { return }
+        guard animatedLocationManager != nil else { return }
         
         // Disable the tunnel animation after at least 3 bad location updates.
         // Otherwise if we receive a valid location updates, disable the tunnel animation immediately.
@@ -730,7 +730,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
-        let intersectionDistances = currentStepProgress.intersectionDistances
+        guard let intersectionDistances = currentStepProgress.intersectionDistances else { return }
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
         currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
     }
@@ -968,6 +968,11 @@ extension RouteController: CLLocationManagerDelegate {
 
         if let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
             routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = Polyline(currentStepProgress.step.coordinates!).distance(from: location.coordinate, to: upcomingIntersection.location)
+        }
+        
+        if routeProgress.currentLegProgress.currentStepProgress.intersectionDistances == nil {
+            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = [CLLocationDistance]()
+            updateIntersectionDistances()
         }
     }
 
