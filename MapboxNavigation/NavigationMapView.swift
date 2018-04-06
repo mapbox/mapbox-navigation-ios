@@ -993,40 +993,30 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             $0.identifier
         }
         
+        let locale: Locale?
+        if let language = MGLVectorTileSource.preferredMapboxStreetsLanguage {
+            locale = Locale(identifier: language)
+        } else {
+            locale = nil
+        }
+        
         for layer in style.layers where layer is MGLSymbolStyleLayer {
             let layer = layer as! MGLSymbolStyleLayer
             guard let sourceIdentifier = layer.sourceIdentifier,
                 streetsSourceIdentifiers.contains(sourceIdentifier) else {
                 continue
             }
-            
-            let token: NSExpression
-            if layer.sourceLayerIdentifier == "road_label" {
-                token = NSExpression(forKeyPath: "name")
-            } else if let language = MGLVectorTileSource.preferredMapboxStreetsLanguage {
-                token = NSExpression(forKeyPath: "name_\(language)")
-            } else {
-                token = NSExpression(forKeyPath: "name")
+            guard let text = layer.text else {
+                continue
             }
-
-//            if let value = layer.text, value.expressionType == .keyPath, value.keyPath.contains("name")  {
-//                layer.text = token
-//            } else if let function = layer.text, function.expressionType == .function, function.function == "mgl_interpolate:withCurveType:parameters:stops:" {
-//                var localizedStops = function.function
-//                var hasName = false
-//                // @1ec5 todo
-//                for (zoomLevel, value) in localizedStops {
-//                    let value = value as! MGLConstantStyleValue<NSString>
-//                    if value.rawValue.contains("{name") {
-//                        hasName = true
-//                        localizedStops[zoomLevel] = MGLStyleValue(rawValue: token as NSString)
-//                    }
-//                }
-//                if hasName {
-//                    function.stops = localizedStops
-//                    layer.text = function
-//                }
-//            }
+            
+            // Road labels should match road signage.
+            let locale = layer.sourceLayerIdentifier == "road_label" ? nil : locale
+            
+            let localizedText = text.localized(into: locale, replacingTokens: true)
+            if localizedText != text {
+                layer.text = localizedText
+            }
         }
     }
     

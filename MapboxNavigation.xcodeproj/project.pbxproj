@@ -237,6 +237,8 @@
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DAB2CCE71DF7AFDF001B2FE1 /* dc-line.geojson in Resources */ = {isa = PBXBuildFile; fileRef = DAB2CCE61DF7AFDE001B2FE1 /* dc-line.geojson */; };
+		DAC9BD072076F60900E7E845 /* NSExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC9BD062076F60900E7E845 /* NSExpression.swift */; };
+		DAC9BD0920771E0500E7E845 /* NSExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC9BD0820771E0500E7E845 /* NSExpressionTests.swift */; };
 		DADAD828203504C6002E25CA /* MBNavigationSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD826203504C6002E25CA /* MBNavigationSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DADAD829203504C6002E25CA /* MBNavigationSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DADAD827203504C6002E25CA /* MBNavigationSettings.m */; };
 		DADAD82E20350849002E25CA /* MBRouteVoiceController.h in Headers */ = {isa = PBXBuildFile; fileRef = DADAD82C20350849002E25CA /* MBRouteVoiceController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -690,6 +692,8 @@
 		DAC049BF201715EA004C2217 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = Resources/ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DAC049C020171886004C2217 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Main.strings; sourceTree = "<group>"; };
 		DAC049C1201718AC004C2217 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DAC9BD062076F60900E7E845 /* NSExpression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSExpression.swift; sourceTree = "<group>"; };
+		DAC9BD0820771E0500E7E845 /* NSExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSExpressionTests.swift; sourceTree = "<group>"; };
 		DACCD9CD1F1FE05C00BB09A1 /* Example-Swift-BridgingHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Example-Swift-BridgingHeader.h"; sourceTree = "<group>"; };
 		DAD88E00202AC7AA00AAA536 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = uk; path = Resources/uk.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DAD88E01202AC80100AAA536 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1025,6 +1029,7 @@
 				3510300E1F54B67000E3B7E7 /* LaneTests.swift */,
 				3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */,
 				35B711D11E5E7AD2001EDA8D /* MapboxNavigationTests.swift */,
+				DAC9BD0820771E0500E7E845 /* NSExpressionTests.swift */,
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
 				355DB5731EFA73410091BFB7 /* Fixtures */,
@@ -1073,6 +1078,7 @@
 				35D825FA1E6A2DBE0088F83B /* MGLMapView+MGLNavigationAdditions.m */,
 				C58159001EA6D02700FC6C3D /* MGLVectorTileSource.swift */,
 				8D5DFFF0207C04840093765A /* NSAttributedString.swift */,
+				DAC9BD062076F60900E7E845 /* NSExpression.swift */,
 				35B7837D1F9547B300291F9A /* Transitioning.swift */,
 				359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */,
 				8DF399B11FB257B30034904C /* UIGestureRecognizer.swift */,
@@ -1815,6 +1821,7 @@
 				8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */,
 				35B7837E1F9547B300291F9A /* Transitioning.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
+				DAC9BD072076F60900E7E845 /* NSExpression.swift in Sources */,
 				C565168B1FE1E23E00A0AD18 /* MapboxVoiceController.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				C51DF8671F38C337006C6A15 /* Date.swift in Sources */,
@@ -1891,6 +1898,7 @@
 			files = (
 				8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */,
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
+				DAC9BD0920771E0500E7E845 /* NSExpressionTests.swift in Sources */,
 				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */,
