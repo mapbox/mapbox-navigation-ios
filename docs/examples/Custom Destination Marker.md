@@ -1,5 +1,5 @@
 
-_Source available [here](https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation-Examples/Examples/CustomDestinationMarker.swift)_
+_Source available [here](https://github.com/mapbox/navigation-ios-examples/blob/master/Navigation-Examples/Examples/Custom-Destination-Marker.swift)_
 
 ```swift
 import Foundation
