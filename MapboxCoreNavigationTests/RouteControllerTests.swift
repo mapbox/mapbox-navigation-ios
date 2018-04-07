@@ -9,7 +9,7 @@ fileprivate let mbTestHeading: CLLocationDirection = 50
 class RouteControllerTests: XCTestCase {
 
     struct Constants {
-        static let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
+        static let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         static let accessToken = "nonsense"
     }
 
@@ -102,7 +102,7 @@ class RouteControllerTests: XCTestCase {
     func testUserPuckShouldFaceBackwards() {
         // This route is a simple straight line: http://geojson.io/#id=gist:anonymous/64cfb27881afba26e3969d06bacc707c&map=17/37.77717/-122.46484
         let response = Fixture.JSONFromFileNamed(name: "straight-line")
-        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String : Any]
+        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
         let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
         let directions = Directions(accessToken: "pk.feedCafeDeadBeefBadeBede")
@@ -151,6 +151,9 @@ class RouteControllerTests: XCTestCase {
         let routeController = dependencies.routeController
         let testLocation = dependencies.firstLocation
 
+        let delegate = RouteControllerDelegateSpy()
+        routeController.delegate = delegate
+
         let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: routeController) { (notification) -> Bool in
             let fromLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
             return fromLocation == testLocation
@@ -169,17 +172,23 @@ class RouteControllerTests: XCTestCase {
         // MARK: When told to re-route from location -- `reroute(from:)`
         routeController.reroute(from: testLocation)
 
+        // MARK: it tells the delegate & posts a willReroute notification
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:willRerouteFrom:)"))
+        wait(for: [willRerouteNotificationExpectation], timeout: 0.1)
+
         // MARK: Upon rerouting successfully...
         directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
 
-        // MARK: It sends willReroute/didReroute notifications
-        wait(for: [willRerouteNotificationExpectation, didRerouteNotificationExpectation], timeout: 2.0, enforceOrder: true)
+        // MARK: It tells the delegate & posts a didReroute notification
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didRerouteAlong:)"))
+        wait(for: [didRerouteNotificationExpectation], timeout: 0.1)
 
         // MARK: On the next call to `locationManager(_, didUpdateLocations:)`
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [testLocation])
 
-        // MARK: It notifies that routeProgressDidChange
-        wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 2.0)
+        // MARK: It tells the delegate & posts a routeProgressDidChange notification
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didUpdate:)"))
+        wait(for: [routeProgressDidChangeNotificationExpectation], timeout: 0.1)
 
         // MARK: It enqueues and flushes a NavigationRerouteEvent
         let expectedEventName = MMEEventTypeNavigationReroute
@@ -187,11 +196,6 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
         XCTAssertEqual(eventsManagerSpy.enqueuedEventCount(with: expectedEventName), 1)
         XCTAssertEqual(eventsManagerSpy.flushedEventCount(with: expectedEventName), 1)
-
-        // TODO: it tells the delegate
-//        XCTAssertTrue(delegate.recentMessages.includes("routeController(_, willRerouteFrom:)"))
-
-        // TODO: what about SessionState?
     }
 
     // MARK: Failing to get directions from location
@@ -208,8 +212,9 @@ class RouteControllerTests: XCTestCase {
     // MARK: more tests
     // TODO: test feedback event mutation workflow
     // TODO: test & refactor the mutation of the re-route events
+    // TODO: what about SessionState?
 
     // MARK: When route progress changes (triggered in locationManager(didUpdateLocations:))
     // TODO: it posts a routeControllerProgressDidChange notification
-
+    
 }
