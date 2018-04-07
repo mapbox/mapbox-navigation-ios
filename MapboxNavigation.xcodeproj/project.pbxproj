@@ -169,6 +169,7 @@
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
 		3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */; };
 		3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938BE5468824787100228 /* ImageRepository.swift */; };
+		3EA93DC5BA00B5DFCBE7BAC3 /* RouteControllerDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93EBD6E6BEC966BBE51D6 /* RouteControllerDelegateSpy.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
@@ -556,6 +557,7 @@
 		3EA938479CF48D7AD1B6369B /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		3EA938BE5468824787100228 /* ImageRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		3EA93A10227A7DAF1861D9F5 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		3EA93EBD6E6BEC966BBE51D6 /* RouteControllerDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteControllerDelegateSpy.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIEdgeInsets.swift; sourceTree = "<group>"; };
@@ -821,6 +823,7 @@
 				16435E02206EE32F00AF48B6 /* DirectionsSpy.swift */,
 				16435E04206EE37800AF48B6 /* DummyURLSessionDataTask.swift */,
 				16120A4C20645D6E007EA21D /* EventsManagerSpy.swift */,
+				3EA93EBD6E6BEC966BBE51D6 /* RouteControllerDelegateSpy.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -1951,6 +1954,7 @@
 				C52D09D31DEF636C00BE3C5C /* Fixture.swift in Sources */,
 				16435E03206EE32F00AF48B6 /* DirectionsSpy.swift in Sources */,
 				C5ABB50E20408D2C00AFA92C /* RouteControllerTests.swift in Sources */,
+				3EA93DC5BA00B5DFCBE7BAC3 /* RouteControllerDelegateSpy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
