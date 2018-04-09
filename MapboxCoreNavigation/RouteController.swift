@@ -625,11 +625,9 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
-        
         guard let tunnelIntersectionManager = tunnelIntersectionManager else { return }
         
         let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
-        
         if tunnelDetected {
             tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, callback: nil)
         } else {
@@ -679,25 +677,7 @@ extension RouteController: CLLocationManagerDelegate {
         
         return true
     }
-    
-    /**
-     Given a user's current location and an intersection that contains a tunnel road class,
-     returns a Boolean whether they are within the minimum radius of a tunnel entrance.
-     */
-    public func userWithinTunnelEntranceRadius(at location: CLLocation, intersection: Intersection?) -> Bool {
-        // Ensure the upcoming intersection is a tunnel intersection
-        // OR the location speed is either at least 5 m/s or is considered a bad location update
-        guard let upcomingIntersection = intersection, let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
-              (location.speed >= RouteControllerMinimumSpeedAtTunnelEntranceRadius || !location.isQualified) else {
-                return false
-        }
-        
-        // Distance to the upcoming tunnel entrance
-        guard let distanceToTunnelEntrance = routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection else { return false }
-        
-        return distanceToTunnelEntrance < RouteControllerMinimumDistanceToTunnelEntrance
-    }
-    
+
     /**
      Given a users current location, returns a Boolean whether they are currently on the route.
 
