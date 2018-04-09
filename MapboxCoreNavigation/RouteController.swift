@@ -235,15 +235,7 @@ open class RouteController: NSObject {
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    /**
-     The location manager dedicated to dead reckoning simulated navigation.
-     */
-    var animatedLocationManager: SimulatedLocationManager?
-    
-    /**
-     An array of bad location updates recorded upon exit of a tunnel.
-     */
-    var tunnelExitLocations = [CLLocation]()
+    var tunnelIntersectionManager: TunnelIntersectionManager?
     
     /**
      Intializes a new `RouteController`.
@@ -276,6 +268,9 @@ open class RouteController: NSObject {
         if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
             preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
         }
+        
+        tunnelIntersectionManager = TunnelIntersectionManager()
+        tunnelIntersectionManager?.delegate = self
     }
 
     deinit {
@@ -364,13 +359,10 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
-        
+
         // In case the animated navigation is stopped abruptly before it completes,
         // we ensure the animated location manager updates are also stopped.
-        animatedLocationManager?.stopUpdatingLocation()
-        animatedLocationManager?.stopUpdatingHeading()
-        animatedLocationManager = nil
-        tunnelExitLocations.removeAll()
+        tunnelIntersectionManager?.suspendLocationUpdates()
     }
     
     /**
@@ -633,99 +625,15 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
-        let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection
-        let shouldAnimate = shouldEnableTunnelAnimation(at: location, for: manager, intersection: currentIntersection)
         
-        if shouldAnimate {
-            enableTunnelAnimation(for: manager,
-                        routeProgress: routeProgress,
-                     distanceTraveled: distanceTraveled,
-                             callback: nil)
+        guard let tunnelIntersectionManager = tunnelIntersectionManager else { return }
+        
+        let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
+        
+        if tunnelDetected {
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, callback: nil)
         } else {
-            suspendTunnelAnimation(for: manager,
-                                    at: location,
-                              callback: nil)
-        }
-    }
-    
-    func shouldEnableTunnelAnimation(at location: CLLocation, for manager: CLLocationManager, intersection: Intersection?) -> Bool {
-        guard let currentIntersection = intersection else { return false }
-        
-        if let classes = currentIntersection.outletRoadClasses {
-            // Main conditions to enable simulated tunnel animation:
-            // - User location is within minimum tunnel entrance radius
-            // - OR Current intersection's road classes contain a tunnel AND when we receive series of bad GPS location updates
-            let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection
-            if userWithinTunnelEntranceRadius(at: location, intersection: upcomingIntersection) ||
-               (classes.contains(.tunnel) && (manager is NavigationLocationManager && !location.isQualified))
-            {
-                return true
-            }
-        }
-
-        return false
-    }
-
-    func enableTunnelAnimation(for manager: CLLocationManager,
-                             routeProgress: RouteProgress,
-                          distanceTraveled: CLLocationDistance,
-                                  callback: RouteControllerSimulationCompletionBlock?) {
-
-        guard animatedLocationManager == nil else { return }
-        
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        DispatchQueue.main.async {
-            manager.stopUpdatingHeading()
-            manager.stopUpdatingLocation()
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue:.main) {
-            self.animatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
-            self.animatedLocationManager?.delegate = self
-            self.animatedLocationManager?.routeProgress = routeProgress
-
-            self.animatedLocationManager?.startUpdatingLocation()
-            self.animatedLocationManager?.startUpdatingLocation()
-            
-            if let lastKnownLocation = self.animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
-                self.rawLocation = lastKnownLocation
-            }
-
-            callback?(self.animatedLocationManager!)
-        }
-    }
-    
-    func suspendTunnelAnimation(for manager: CLLocationManager,
-                                at location: CLLocation,
-                                   callback: RouteControllerSimulationCompletionBlock?) {
-        
-        guard animatedLocationManager != nil else { return }
-        
-        // Disable the tunnel animation after at least 3 bad location updates.
-        // Otherwise if we receive a valid location updates, disable the tunnel animation immediately.
-        guard tunnelExitLocations.count > 3 || location.isQualified else {
-            tunnelExitLocations.append(location)
-            tunnelExitLocations = tunnelExitLocations.filter { !$0.isQualified }
-            return
-        }
-
-        rawLocation = location
-        
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        
-        DispatchQueue.main.async {
-            manager.stopUpdatingHeading()
-            manager.stopUpdatingLocation()
-            self.suspendLocationUpdates()
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue:.main) {
-            self.resume()
-            callback?(self.locationManager)
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, callback: nil)
         }
     }
     
@@ -1171,5 +1079,28 @@ extension RouteController {
 
     func resetSession() {
         sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
+    }
+}
+
+extension RouteController: TunnelIntersectionManagerDelegate {
+    
+    public func tunnelIntersectionManager(_ manager: CLLocationManager,
+                     willEnableAnimationAt location: CLLocation,
+                                           callback: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.enableTunnelAnimation(for: manager,
+                                             routeController: self,
+                                               routeProgress: routeProgress,
+                                            distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled,
+                                                    callback: nil)
+    }
+    
+    public func tunnelIntersectionManager(_ manager: CLLocationManager,
+                    willDisableAnimationAt location: CLLocation,
+                                           callback: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager,
+                                                           at: location,
+                                              routeController: self,
+                                                     callback: nil)
+        
     }
 }
