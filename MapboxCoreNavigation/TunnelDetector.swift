@@ -1,38 +1,44 @@
 import Foundation
 import CoreLocation
 
-@objc(MBTunnelDetectorDelegate)
-public protocol TunnelDetectorDelegate: class {
+@objc(MBTunnelIntersectionManagerDelegate)
+public protocol TunnelIntersectionManagerDelegate: class {
     
-    @objc(tunnelDetector:didEnterTunnelAtLocation:)
-    optional func tunnelDetector(_ tunnelDetector: TunnelDetector, didEnterTunnelAt location: CLLocation)
+    @objc(tunnelIntersectionManager:didEnterTunnelAtLocation:)
+    optional func tunnelIntersectionManager(_ tunnelIntersectionManager: TunnelIntersectionManager, didEnterTunnelAt location: CLLocation)
     
-    @objc(tunnelDetector:didExitTunnelAtLocation:)
-    optional func tunnelDetector(_ tunnelDetector: TunnelDetector, didExitTunnelAt location: CLLocation)
+    @objc(tunnelIntersectionManager:didExitTunnelAtLocation:)
+    optional func tunnelIntersectionManager(_ tunnelIntersectionManager: TunnelIntersectionManager, didExitTunnelAt location: CLLocation)
     
     @objc(tunnelDector:willEnableAnimationAtLocation:callback:)
-    optional func tunnelDetector(_ tunnelDetector: TunnelDetector, willEnableAnimationAt location: CLLocation, callback: RouteControllerSimulationCompletionBlock?)
+    optional func tunnelIntersectionManager(_ tunnelIntersectionManager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation, callback: RouteControllerSimulationCompletionBlock?)
     
-    @objc(tunnelDetector:willDisableAnimationAtLocation:callback:)
-    optional func tunnelDetector(_ tunnelDetector: TunnelDetector, willDisableAnimationAt location: CLLocation, callback: RouteControllerSimulationCompletionBlock?)
+    @objc(tunnelIntersectionManager:willDisableAnimationAtLocation:callback:)
+    optional func tunnelIntersectionManager(_ tunnelIntersectionManager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation, callback: RouteControllerSimulationCompletionBlock?)
 }
 
-@objc(MBTunnelDetector)
-open class TunnelDetector: NSObject {
+@objc(MBTunnelIntersectionManager)
+open class TunnelIntersectionManager: NSObject {
     
-    @objc public weak var delegate: TunnelDetectorDelegate?
+    @objc public weak var delegate: TunnelIntersectionManagerDelegate?
     
     @objc public var routeController: RouteController?
     
     @objc public var badLocationsUponExit: [CLLocation] = [CLLocation]()
     
     /**
+     The location manager dedicated to dead reckoning simulated navigation.
+     */
+    @objc public var animatedLocationManager: SimulatedLocationManager?
+    
+    /**
      Given a user's current location and route progress,
      returns a Boolean whether a tunnel has been detected on the current route step progress.
      */
     @objc public func didDetectTunnel(at routeProgress: RouteProgress) -> Bool {
-        if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection, let classes = currentIntersection.outletRoadClasses {
-                return classes.contains(.tunnel)
+        if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
+           let classes = currentIntersection.outletRoadClasses {
+            return classes.contains(.tunnel)
         }
         return false
     }
@@ -41,7 +47,9 @@ open class TunnelDetector: NSObject {
      Given a user's current location, location manager and route progress,
      returns a Boolean whether a tunnel has been detected on the current route step progress.
      */
-    @objc public func didDetectTunnel(at location: CLLocation, for manager: CLLocationManager, routeProgress: RouteProgress) -> Bool {
+    @objc public func didDetectTunnel(at location: CLLocation,
+                                      for manager: CLLocationManager,
+                                    routeProgress: RouteProgress) -> Bool {
         
         guard let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else {
             return false
@@ -52,7 +60,9 @@ open class TunnelDetector: NSObject {
             // - User location is within minimum tunnel entrance radius
             // - Current intersection's road classes contain a tunnel AND when we receive series of bad GPS location updates
            let isWithinTunnelEntranceRadius = userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
-            if isWithinTunnelEntranceRadius || ((manager is NavigationLocationManager && !location.isQualified) && classes.contains(.tunnel)) {
+            if isWithinTunnelEntranceRadius {
+                return true
+            } else if classes.contains(.tunnel) && (manager is NavigationLocationManager && !location.isQualified) {
                 return true
             }
         }
@@ -68,8 +78,10 @@ open class TunnelDetector: NSObject {
     @objc public func userWithinTunnelEntranceRadius(at location: CLLocation, routeProgress: RouteProgress) -> Bool {
         // Ensure the upcoming intersection is a tunnel intersection
         // OR the location speed is either at least 5 m/s or is considered a bad location update
-        guard let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection, let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel), (location.speed >= RouteControllerMinimumSpeedAtTunnelEntranceRadius || !location.isQualified) else {
-            return false
+        guard let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection,
+            let roadClasses = upcomingIntersection.outletRoadClasses, roadClasses.contains(.tunnel),
+            (location.speed >= RouteControllerMinimumSpeedAtTunnelEntranceRadius || !location.isQualified) else {
+                return false
         }
         
         // Distance to the upcoming tunnel entrance
