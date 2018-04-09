@@ -23,7 +23,7 @@ class InstructionPresenter {
     
     func fittedAttributedComponents() -> [NSAttributedString] {
         guard let label = self.label else { return [] }
-        var attributedPairs = self.attributedPairs(for: instruction, on: label, imageRespository: imageRepository)
+        var attributedPairs = self.attributedPairs(for: instruction, on: label, imageRepository: imageRepository)
         let availableBounds = label.availableBounds()
         let totalWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
@@ -52,7 +52,7 @@ class InstructionPresenter {
     
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
-    func attributedPairs(for components: [VisualInstructionComponent], on label: InstructionLabel, imageRespository: ImageRepository) -> AttributedInstructionComponents {
+    func attributedPairs(for components: [VisualInstructionComponent], on label: InstructionLabel, imageRepository: ImageRepository) -> AttributedInstructionComponents {
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
         
@@ -85,7 +85,7 @@ class InstructionPresenter {
             }
                 
             //If we have a shield, lets include those
-            else if let shieldString = attributedString(forShieldComponent: component, repository: imageRespository, label: label) {
+            else if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, label: label) {
                 build(component, [joinString, shieldString])
             }
             
