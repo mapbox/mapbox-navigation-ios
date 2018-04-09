@@ -23,7 +23,7 @@ class InstructionPresenter {
     
     func fittedAttributedComponents() -> [NSAttributedString] {
         guard let label = self.label else { return [] }
-        var attributedPairs = self.attributedPairs()
+        var attributedPairs = self.attributedPairs(for: instruction, on: label, imageRespository: imageRepository)
         let availableBounds = label.availableBounds()
         let totalWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
@@ -52,11 +52,9 @@ class InstructionPresenter {
     
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
-    func attributedPairs() -> AttributedInstructionComponents {
-        guard let label = self.label else { return (components: [], attributedStrings: []) }
-        var strings = [NSAttributedString]()
-        var processedComponents = [VisualInstructionComponent]()
-        let components = instruction
+    func attributedPairs(for components: [VisualInstructionComponent], on label: InstructionLabel, imageRespository: ImageRepository) -> AttributedInstructionComponents {
+        var strings: [NSAttributedString] = []
+        var processedComponents: [VisualInstructionComponent] = []
         
         let exitInstructionIndex = components.index(where: {$0.type == .exit}) ?? NSNotFound
         let isExitInstruction = 0...1 ~= exitInstructionIndex
@@ -64,46 +62,40 @@ class InstructionPresenter {
         for (index, component) in components.enumerated() {
             let isFirst = index == 0
             let joinChar = isFirst ? "" : " "
-
-            //TODO: If we have a exit, in the first two components, lets handle that first.
-            if component.maneuverType == .takeOffRamp, isExitInstruction, 0...1 ~= index {
-                //we're only interested in the "Exit Number" component, and only if it's populated
-                guard component.type == .exitCode, let exitCode = component.text else { continue }
-                let exitSide: ExitSide = component.maneuverDirection == .left ? .left : .right
-                let exitString = exitShield(side: exitSide, text: exitCode)
+            let joinString = NSAttributedString(string: joinChar, attributes: attributesForLabel(label))
+            let initial = NSAttributedString()
+            
+            //This is the closure that builds the string.
+            let build: (_: VisualInstructionComponent, _: [NSAttributedString]) -> Void = { (component, attributedStrings) in
                 processedComponents.append(component)
-                strings.append(exitString)
+                strings.append(attributedStrings.reduce(initial, +))
+            }
+            
+            //Throw away exit components. We know this is safe because we know that if there is an exit component,
+            //  there is an exit code component, and the latter contains the information we care about.
+
+            guard component.type != .exit else { continue }
+            
+            //If we have a exit, in the first two components, lets handle that first.
+            if component.maneuverType == .takeOffRamp,
+                isExitInstruction, 0...1 ~= index,
+                let exitString = attributedString(forExitComponent: component, label: label) {
+        
+                build(component, [exitString])
+            }
                 
-            }
             //If we have a shield, lets include those
-            else if let shieldKey = component.shieldKey() {
-                if let cachedImage = imageRepository.cachedImageForKey(shieldKey) {
-                    processedComponents.append(component)
-                    let attributedShieldString = NSMutableAttributedString(attributedString: NSAttributedString(string: joinChar))
-                    attributedShieldString.append(attributedString(withFont: label.font, shieldImage: cachedImage))
-                    strings.append(attributedShieldString)
-                } else {
-                    // Display road code while shield is downloaded
-                    if let text = component.text {
-                        processedComponents.append(component)
-                        strings.append(NSAttributedString(string: joinChar + text, attributes: attributesForLabel(label)))
-                    }
-                    shieldImageForComponent(component, height: label.shieldHeight, completion: { [weak self] (image) in
-                        guard image != nil else {
-                            return
-                        }
-                        if let strongSelf = self, let completion = strongSelf.onShieldDownload {
-                            completion(strongSelf.attributedText())
-                        }
-                    })
-                }
+            else if let shieldString = attributedString(forShieldComponent: component, repository: imageRespository, label: label) {
+                build(component, [joinString, shieldString])
             }
-                //else if it's just text
-            else if let text = component.text {
-                // Hide delimiter if one of the adjacent components is a shield
+            
+            else {
+                //if it's a delimiter, skip it if it's between two shields. Otherwise, process the regular text component.
                 if component.type == .delimiter {
+                    
                     let componentBefore = components.component(before: component)
                     let componentAfter = components.component(after: component)
+                    
                     if let shieldKey = componentBefore?.shieldKey(),
                         imageRepository.cachedImageForKey(shieldKey) != nil {
                         continue
@@ -113,16 +105,48 @@ class InstructionPresenter {
                         continue
                     }
                 }
-                processedComponents.append(component)
-                strings.append(NSAttributedString(string: (joinChar + text), attributes: attributesForLabel(label)))
+                guard let componentString = attributedString(forTextComponent: component, in: label) else { continue }
+                build(component, [joinString, componentString])
             }
         }
         
         assert(processedComponents.count == strings.count, "The number of processed components must match the number of attributed strings")
-
         return (components: processedComponents, attributedStrings: strings)
     }
 
+    private func attributedString(forExitComponent exit: VisualInstructionComponent, label: UILabel) -> NSAttributedString? {
+        guard exit.type == .exitCode, let exitCode = exit.text else { return nil }
+        let exitSide: ExitSide = exit.maneuverDirection == .left ? .left : .right
+        let exitString = exitShield(side: exitSide, text: exitCode)
+        return exitString
+    }
+    
+    private func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, label: InstructionLabel) -> NSAttributedString? {
+        guard let shieldKey = shield.shieldKey() else { return nil }
+        if let cachedImage = repository.cachedImageForKey(shieldKey) {
+            return attributedString(withFont: label.font, shieldImage: cachedImage)
+        } else {
+            // Display road code while shield is downloaded
+            if let text = shield.text {
+                return NSAttributedString(string: text, attributes: attributesForLabel(label))
+            }
+            shieldImageForComponent(shield, height: label.shieldHeight, completion: { [weak self] (image) in
+                guard image != nil else {
+                    return
+                }
+                if let strongSelf = self, let completion = strongSelf.onShieldDownload {
+                    completion(strongSelf.attributedText())
+                }
+            })
+        }
+        return nil
+    }
+    
+    private func attributedString(forTextComponent component: VisualInstructionComponent, in label: UILabel) -> NSAttributedString? {
+        guard let text = component.text else { return nil }
+        return NSAttributedString(string: text, attributes: attributesForLabel(label))
+    }
+    
     private func shieldImageForComponent(_ component: VisualInstructionComponent, height: CGFloat, completion: @escaping (UIImage?) -> Void) {
         guard let imageURL = component.imageURL, let shieldKey = component.shieldKey() else {
             return
