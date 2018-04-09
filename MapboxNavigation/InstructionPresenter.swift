@@ -123,13 +123,12 @@ class InstructionPresenter {
     
     private func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, label: InstructionLabel) -> NSAttributedString? {
         guard let shieldKey = shield.shieldKey() else { return nil }
+        
+        //If we have the shield already cached, use that.
         if let cachedImage = repository.cachedImageForKey(shieldKey) {
             return attributedString(withFont: label.font, shieldImage: cachedImage)
         } else {
-            // Display road code while shield is downloaded
-            if let text = shield.text {
-                return NSAttributedString(string: text, attributes: attributesForLabel(label))
-            }
+            // Let's download the shield
             shieldImageForComponent(shield, height: label.shieldHeight, completion: { [weak self] (image) in
                 guard image != nil else {
                     return
@@ -138,8 +137,9 @@ class InstructionPresenter {
                     completion(strongSelf.attributedText())
                 }
             })
+            //and return the shield's code for usage in the meantime until download is complete.
+            return attributedString(forTextComponent: shield, in: label)
         }
-        return nil
     }
     
     private func attributedString(forTextComponent component: VisualInstructionComponent, in label: UILabel) -> NSAttributedString? {
