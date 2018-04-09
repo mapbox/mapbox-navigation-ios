@@ -145,14 +145,17 @@ class RouteControllerTests: XCTestCase {
         let tunnelIntersection = navigation.routeProgress.currentLegProgress.currentStep.intersections![1]
         let intersectionLocation = tunnelIntersection.location
         
+        // Mock location moved from the first location on route to the tunnel intersection location
         var currentLocation = location(at: tunnelSetup.firstLocation.coordinate,
-                                       for: navigation,
-                              intersection: tunnelIntersection,
-                                  distance: intersectionLocation.distance(to: tunnelSetup.firstLocation.coordinate))
+                                      for: navigation,
+                             intersection: tunnelIntersection,
+                                 distance: intersectionLocation.distance(to: tunnelSetup.firstLocation.coordinate))
 
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [currentLocation])
         
+        // Set location to the entrance of the tunnel intersection
         let tunnelEntranceLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
+
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [tunnelEntranceLocation])
         
         var userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: tunnelIntersection)
@@ -164,9 +167,9 @@ class RouteControllerTests: XCTestCase {
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [outsideTunnelEntranceRadiusLocation])
         
         currentLocation = location(at: tunnelSetup.firstLocation.coordinate,
-                                   for: navigation,
-                                   intersection: tunnelIntersection,
-                                   distance: 10)
+                                  for: navigation,
+                         intersection: tunnelIntersection,
+                             distance: 10)
         userIsAtTunnelEntranceRadius = navigation.userWithinTunnelEntranceRadius(at: currentLocation, intersection: tunnelIntersection)
         XCTAssertFalse(userIsAtTunnelEntranceRadius, "Location must not outside the tunnel entrance radius")
     }
