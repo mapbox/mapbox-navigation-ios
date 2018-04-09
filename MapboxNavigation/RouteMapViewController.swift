@@ -282,7 +282,11 @@ class RouteMapViewController: UIViewController {
         }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        var routes = [routeController.routeProgress.route]
+        if let altRoute = routeController.routeProgress.alternateRoute {
+            routes.append(altRoute)
+        }
+        mapView.showRoutes(routes, legIndex: routeController.routeProgress.legIndex)
         
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
@@ -650,6 +654,9 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
+        if let parent = parent as? NavigationViewController {
+            parent.route = route
+        }
         delegate?.navigationMapView?(mapView, didSelect: route)
     }
 

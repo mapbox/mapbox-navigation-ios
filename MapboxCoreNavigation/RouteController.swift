@@ -688,9 +688,9 @@ extension RouteController: CLLocationManagerDelegate {
         guard location.timestamp.timeIntervalSince(lastLocationDate) >= RouteControllerProactiveReroutingInterval else { return }
         let durationRemaining = routeProgress.durationRemaining
 
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location) { [weak self] (routes, error) in
             guard let strongSelf = self else { return }
-            guard let route = route else { return }
+            guard let route = routes?.first else { return }
             strongSelf.lastLocationDate = nil
 
             if let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first,
@@ -729,7 +729,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location) { [weak self] (routes, error) in
             guard let strongSelf = self else {
                 return
             }
@@ -741,10 +741,12 @@ extension RouteController: CLLocationManagerDelegate {
                 ])
             }
 
-            guard let route = route else { return }
+            guard let route = routes?.first else { return }
 
             strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0)
-            strongSelf.routeProgress.currentLegProgress.stepIndex = 0
+            if let altRoute = routes?.last {
+                strongSelf.routeProgress.alternateRoute = altRoute
+            }
             strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
         }
     }
@@ -767,7 +769,7 @@ extension RouteController: CLLocationManagerDelegate {
         #endif
     }
 
-    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
+    func getDirections(from location: CLLocation, completion: @escaping (_ routes: [Route]?, _ error: Error?)->Void) {
         routeTask?.cancel()
 
         let options = routeProgress.route.routeOptions
@@ -797,16 +799,14 @@ extension RouteController: CLLocationManagerDelegate {
 
             if let route = self?.mostSimilarRoute(in: routes) {
                 return completion(route, error)
-            } else if let route = routes.first {
-                return completion(route, error)
             } else {
-                return completion(nil, nil)
+                return completion(routes, error)
             }
         }
     }
     
-    func mostSimilarRoute(in routes: [Route]) -> Route? {
-        return routes.min { (left, right) -> Bool in
+    func mostSimilarRoute(in routes: [Route]) -> [Route]? {
+        return routes.sorted { (left, right) -> Bool in
             let leftDistance = left.description.minimumEditDistance(to: routeProgress.route.description)
             let rightDistance = right.description.minimumEditDistance(to: routeProgress.route.description)
             return leftDistance < rightDistance

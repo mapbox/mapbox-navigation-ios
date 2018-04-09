@@ -11,6 +11,11 @@ open class RouteProgress: NSObject {
      Returns the current `Route`.
      */
     @objc public let route: Route
+    
+    /**
+     An optional alternate route the user could use for navigation.
+     */
+    @objc public var alternateRoute: Route?
 
     /**
      Index representing current `RouteLeg`.
