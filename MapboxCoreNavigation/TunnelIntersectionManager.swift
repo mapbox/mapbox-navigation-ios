@@ -22,7 +22,7 @@ open class TunnelIntersectionManager: NSObject {
     @objc public weak var delegate: TunnelIntersectionManagerDelegate?
     
     /**
-     The simulated location manager dedicated to dead reckoning simulated navigation.
+     The simulated location manager dedicated to tunnel simulated navigation.
      */
     @objc public var animatedLocationManager: SimulatedLocationManager?
     
