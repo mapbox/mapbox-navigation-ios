@@ -274,6 +274,9 @@ class RouteMapViewController: UIViewController {
     func notifyDidReroute(route: Route) {
         updateETA()
         currentStepIndexMapped = 0
+        if let annotation = mapView.annotations?.first {
+            mapView.deselectAnnotation(annotation, animated: false)
+        }
         
         instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress)
         lanesView.update(for: routeController.routeProgress.currentLegProgress)
@@ -383,7 +386,7 @@ class RouteMapViewController: UIViewController {
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationMapView(mapView, imageFor: annotation)
     }
-//    
+//
 //    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
 //        return navigationMapView(mapView, viewFor: annotation)
 //    }

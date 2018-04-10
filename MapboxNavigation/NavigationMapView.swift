@@ -581,6 +581,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc public func showAlternateRoutePopup(for routeProgress: RouteProgress) {
+        guard self.selectedAnnotations.count == 0 else { return }
         guard let altRoute = routeProgress.alternateRoute else { return }
         guard let userCoordinate = self.userLocation?.coordinate else { return }
         let route = routeProgress.route
@@ -588,18 +589,28 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let remainingPolyline = Polyline(altRoute.coordinates!)
         let remainingDistance = remainingPolyline.distance()
         
+        let dateComponentsFormatter = DateComponentsFormatter()
+        dateComponentsFormatter.allowedUnits = [.hour, .minute]
+        dateComponentsFormatter.unitsStyle = .short
+        
+        let ETADifference = route.expectedTravelTime - altRoute.expectedTravelTime
+        
         for currentIndex in 0...Int(remainingDistance) {
             guard currentIndex % 100 == 0 else { continue }
             guard let newCoord = currentPolyline.coordinateFromStart(distance: Double(currentIndex)) else { continue }
             guard let closestcoord = remainingPolyline.closestCoordinate(to: newCoord) else { continue }
             let closestCoordDistance = closestcoord.distance
-            guard closestCoordDistance > 100 else { continue }
-            let hello = MGLPointAnnotation()
-            hello.coordinate = closestcoord.coordinate
-            hello.title = "Faster Route"
-            hello.subtitle = "1m faster"
-            self.addAnnotation(hello)
-            self.selectAnnotation(hello, animated: true)
+            guard closestCoordDistance > 500 else { continue }
+            let altRoutePopup = MGLPointAnnotation()
+            altRoutePopup.coordinate = closestcoord.coordinate
+            if ETADifference <= 60 {
+                altRoutePopup.title = "Similar ETA"
+            } else {
+                altRoutePopup.title = dateComponentsFormatter.string(from: abs(ETADifference))
+                altRoutePopup.subtitle = ETADifference > 0 ? "Faster" : "Slower"
+            }
+            self.addAnnotation(altRoutePopup)
+            self.selectAnnotation(altRoutePopup, animated: true)
             break
         }
     }
