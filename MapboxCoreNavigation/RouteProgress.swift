@@ -107,6 +107,7 @@ open class RouteProgress: NSObject {
     @objc public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
+        self.alternateRoute = nil
         super.init()
         currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         

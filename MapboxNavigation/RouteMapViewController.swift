@@ -431,8 +431,7 @@ class RouteMapViewController: UIViewController {
     
     
     func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        // Create an empty view annotation. Set a frame to offset the callout.
-        return MGLAnnotationView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        return MGLAnnotationView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
     }
     
     func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {

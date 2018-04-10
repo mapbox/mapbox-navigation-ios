@@ -178,6 +178,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
+            
+            guard let annotations = self.annotations else { return }
+            for annotation in annotations {
+                deselectAnnotation(annotation, animated: false)
+            }
         }
     }
 
@@ -595,14 +600,29 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let ETADifference = route.expectedTravelTime - altRoute.expectedTravelTime
         
+        var currentMax: (CLLocationDistance, CLLocationCoordinate2D) = (0, kCLLocationCoordinate2DInvalid)
+        
         for currentIndex in 0...Int(remainingDistance) {
             guard currentIndex % 100 == 0 else { continue }
             guard let newCoord = currentPolyline.coordinateFromStart(distance: Double(currentIndex)) else { continue }
             guard let closestcoord = remainingPolyline.closestCoordinate(to: newCoord) else { continue }
             let closestCoordDistance = closestcoord.distance
-            guard closestCoordDistance > 500 else { continue }
+            
+            if tracksUserCourse && closestCoordDistance > 500 {
+                currentMax = (closestCoordDistance, closestcoord.coordinate)
+                break
+            }
+            
+            let f = MGLCoordinateBoundsGetCoordinateSpan(self.bounds)
+            
+            if closestCoordDistance > currentMax.0 {
+                currentMax = (closestCoordDistance, closestcoord.coordinate)
+            }
+        }
+        
+        if currentMax.0 > 0 {
             let altRoutePopup = MGLPointAnnotation()
-            altRoutePopup.coordinate = closestcoord.coordinate
+            altRoutePopup.coordinate = currentMax.1
             if ETADifference <= 60 {
                 altRoutePopup.title = "Similar ETA"
             } else {
@@ -610,8 +630,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 altRoutePopup.subtitle = ETADifference > 0 ? "Faster" : "Slower"
             }
             self.addAnnotation(altRoutePopup)
-            self.selectAnnotation(altRoutePopup, animated: true)
-            break
+            self.selectAnnotation(altRoutePopup, animated: false)
         }
     }
     
