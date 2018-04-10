@@ -155,6 +155,7 @@
 		35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesView.swift */; };
 		35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E407671F5625FF00EFC814 /* StyleKitMarker.swift */; };
 		35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
+		35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */; };
 		35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */; };
 		35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F520BF1FB482A200FC9C37 /* NextBannerView.swift */; };
 		35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */; };
@@ -1844,6 +1845,7 @@
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
 				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
+				35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */,
 				16E4F97F205B05FE00531791 /* MapboxVoiceControllerTests.swift in Sources */,
 				35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,

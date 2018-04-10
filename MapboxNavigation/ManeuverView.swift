@@ -82,17 +82,9 @@ public class ManeuverView: UIView {
             ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
-            switch direction {
-            case .straightAhead:
-                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 180)
-                flip = visualInstruction.drivingSide == .left
-            case .left, .slightLeft, .sharpLeft:
-                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 275)
-                flip = visualInstruction.drivingSide == .left
-            default:
-                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 90)
-                flip = visualInstruction.drivingSide == .left
-            }
+            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: CGFloat(visualInstruction.degrees))
+            flip = visualInstruction.drivingSide == .left
+            
         case .arrive:
             switch direction {
             case .right:
