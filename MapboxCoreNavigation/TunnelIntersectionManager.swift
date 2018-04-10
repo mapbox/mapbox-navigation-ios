@@ -1,6 +1,8 @@
 import Foundation
 import CoreLocation
 
+public typealias RouteControllerSimulationCompletionBlock = ((_ animationEnabled: Bool, _ manager: NavigationLocationManager)-> Void)
+
 @objc(MBTunnelIntersectionManagerDelegate)
 public protocol TunnelIntersectionManagerDelegate: class {
     
@@ -14,10 +16,13 @@ public protocol TunnelIntersectionManagerDelegate: class {
 @objc(MBTunnelIntersectionManager)
 open class TunnelIntersectionManager: NSObject {
     
+    /**
+     The associated delegate for tunnel intersection manager.
+     */
     @objc public weak var delegate: TunnelIntersectionManagerDelegate?
     
     /**
-     The location manager dedicated to dead reckoning simulated navigation.
+     The simulated location manager dedicated to dead reckoning simulated navigation.
      */
     @objc public var animatedLocationManager: SimulatedLocationManager?
     
@@ -25,6 +30,11 @@ open class TunnelIntersectionManager: NSObject {
      An array of bad location updates recorded upon exit of a tunnel.
      */
     @objc public var tunnelExitLocations = [CLLocation]()
+    
+    /**
+     The flag that indicates whether simulated location manager is initialized.
+     */
+    @objc public var isAnimationEnabled: Bool = false
     
     /**
      Given a user's current location and route progress,
@@ -90,7 +100,7 @@ open class TunnelIntersectionManager: NSObject {
                                           routeProgress: RouteProgress,
                                        distanceTraveled: CLLocationDistance,
                                                callback: RouteControllerSimulationCompletionBlock?) {
-        guard animatedLocationManager == nil else { return }
+        guard !isAnimationEnabled else { return }
         
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
@@ -112,16 +122,16 @@ open class TunnelIntersectionManager: NSObject {
                 routeController.rawLocation = lastKnownLocation
             }
             
-            callback?(self.animatedLocationManager!)
+            callback?(true, self.animatedLocationManager!)
         }
     }
     
     @objc public func suspendTunnelAnimation(for manager: CLLocationManager,
                                              at location: CLLocation,
-                                             routeController: RouteController,
+                                         routeController: RouteController,
                                                 callback: RouteControllerSimulationCompletionBlock?) {
         
-        guard animatedLocationManager != nil else { return }
+        guard isAnimationEnabled else { return }
         
         // Disable the tunnel animation after at least 3 bad location updates.
         // Otherwise if we receive a valid location updates, disable the tunnel animation immediately.
@@ -145,7 +155,7 @@ open class TunnelIntersectionManager: NSObject {
         
         dispatchGroup.notify(queue:.main) {
             routeController.resume()
-            callback?(routeController.locationManager)
+            callback?(false, routeController.locationManager)
         }
     }
     

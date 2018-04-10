@@ -11,8 +11,6 @@ import Turf
  */
 public typealias RouteControllerNotificationUserInfoKey = MBRouteControllerNotificationUserInfoKey
 
-public typealias RouteControllerSimulationCompletionBlock = ((_ manager: NavigationLocationManager)-> Void)
-
 extension Notification.Name {
     /**
      Posted when `RouteController` fails to reroute the user after the user diverges from the expected route.
@@ -235,7 +233,9 @@ open class RouteController: NSObject {
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    var tunnelIntersectionManager: TunnelIntersectionManager?
+    public var tunnelIntersectionManager: TunnelIntersectionManager?
+    
+    var tunnelIntersectionManagerCompletionHandler: RouteControllerSimulationCompletionBlock?
     
     /**
      Intializes a new `RouteController`.
@@ -271,6 +271,9 @@ open class RouteController: NSObject {
         
         tunnelIntersectionManager = TunnelIntersectionManager()
         tunnelIntersectionManager?.delegate = self
+        tunnelIntersectionManagerCompletionHandler = { enabled, manager in
+            self.tunnelIntersectionManager?.isAnimationEnabled = enabled
+        }
     }
 
     deinit {
@@ -1071,7 +1074,7 @@ extension RouteController: TunnelIntersectionManagerDelegate {
                                              routeController: self,
                                                routeProgress: routeProgress,
                                             distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled,
-                                                    callback: nil)
+                                                    callback: tunnelIntersectionManagerCompletionHandler)
     }
     
     public func tunnelIntersectionManager(_ manager: CLLocationManager,
@@ -1080,7 +1083,7 @@ extension RouteController: TunnelIntersectionManagerDelegate {
         tunnelIntersectionManager?.suspendTunnelAnimation(for: manager,
                                                            at: location,
                                               routeController: self,
-                                                     callback: nil)
+                                                     callback: tunnelIntersectionManagerCompletionHandler)
         
     }
 }
