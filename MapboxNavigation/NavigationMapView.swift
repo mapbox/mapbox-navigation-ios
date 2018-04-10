@@ -580,6 +580,30 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
+    @objc public func showAlternateRoutePopup(for routeProgress: RouteProgress) {
+        guard let altRoute = routeProgress.alternateRoute else { return }
+        guard let userCoordinate = self.userLocation?.coordinate else { return }
+        let route = routeProgress.route
+        let currentPolyline = Polyline(route.coordinates!)
+        let remainingPolyline = Polyline(altRoute.coordinates!)
+        let remainingDistance = remainingPolyline.distance()
+        
+        for currentIndex in 0...Int(remainingDistance) {
+            guard currentIndex % 100 == 0 else { continue }
+            guard let newCoord = currentPolyline.coordinateFromStart(distance: Double(currentIndex)) else { continue }
+            guard let closestcoord = remainingPolyline.closestCoordinate(to: newCoord) else { continue }
+            let closestCoordDistance = closestcoord.distance
+            guard closestCoordDistance > 100 else { continue }
+            let hello = MGLPointAnnotation()
+            hello.coordinate = closestcoord.coordinate
+            hello.title = "Faster Route"
+            hello.subtitle = "1m faster"
+            self.addAnnotation(hello)
+            self.selectAnnotation(hello, animated: true)
+            break
+        }
+    }
+    
     /**
      Shows the step arrow given the current `RouteProgress`.
      */

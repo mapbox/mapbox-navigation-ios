@@ -383,10 +383,10 @@ class RouteMapViewController: UIViewController {
     func mapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return navigationMapView(mapView, imageFor: annotation)
     }
-    
-    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
-        return navigationMapView(mapView, viewFor: annotation)
-    }
+//    
+//    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+//        return navigationMapView(mapView, viewFor: annotation)
+//    }
 
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         resetETATimer()
@@ -398,6 +398,8 @@ class RouteMapViewController: UIViewController {
         if lanesView.isHidden {
             nextBannerView.update(for: routeProgress)
         }
+        
+        mapView.showAlternateRoutePopup(for: routeProgress)
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
@@ -416,12 +418,22 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
+    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
         let identifier = routeController.recordFeedback()
         let send = defaultSendFeedbackHandler(feedbackId: identifier)
         let dismiss = defaultDismissFeedbackHandler(feedbackId: identifier)
         
         return (send, dismiss)
+    }
+    
+    
+    func mapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+        // Create an empty view annotation. Set a frame to offset the callout.
+        return MGLAnnotationView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+    }
+    
+    func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+        return true
     }
     
     func defaultSendFeedbackHandler(source: FeedbackSource = .user, feedbackId identifier: String) -> FeedbackViewController.SendFeedbackHandler {
