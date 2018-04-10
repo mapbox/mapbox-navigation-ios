@@ -586,13 +586,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc public func showAlternateRoutePopup(for routeProgress: RouteProgress) {
-        guard self.selectedAnnotations.count == 0 else { return }
         guard let altRoute = routeProgress.alternateRoute else { return }
-        guard let userCoordinate = self.userLocation?.coordinate else { return }
+        guard let userCoordinate = self.userLocationForCourseTracking?.coordinate else { return }
         let route = routeProgress.route
-        let currentPolyline = Polyline(route.coordinates!)
-        let remainingPolyline = Polyline(altRoute.coordinates!)
-        let remainingDistance = remainingPolyline.distance()
+        let currentPolyline = Polyline(route.coordinates!).sliced(from: userCoordinate)
+        let altPolyline = Polyline(altRoute.coordinates!).sliced(from: userCoordinate)
         
         let dateComponentsFormatter = DateComponentsFormatter()
         dateComponentsFormatter.allowedUnits = [.hour, .minute]
@@ -600,38 +598,40 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let ETADifference = route.expectedTravelTime - altRoute.expectedTravelTime
         
-        var currentMax: (CLLocationDistance, CLLocationCoordinate2D) = (0, kCLLocationCoordinate2DInvalid)
+        guard let maxCoord = maxDistanceBetween(fromLine: altPolyline, toLine: currentPolyline) else { return }
         
-        for currentIndex in 0...Int(remainingDistance) {
-            guard currentIndex % 100 == 0 else { continue }
-            guard let newCoord = currentPolyline.coordinateFromStart(distance: Double(currentIndex)) else { continue }
-            guard let closestcoord = remainingPolyline.closestCoordinate(to: newCoord) else { continue }
-            let closestCoordDistance = closestcoord.distance
-            
-            if tracksUserCourse && closestCoordDistance > 500 {
-                currentMax = (closestCoordDistance, closestcoord.coordinate)
-                break
-            }
-            
-            let f = MGLCoordinateBoundsGetCoordinateSpan(self.bounds)
-            
-            if closestCoordDistance > currentMax.0 {
-                currentMax = (closestCoordDistance, closestcoord.coordinate)
-            }
+        let altRoutePopup = MGLPointAnnotation()
+        altRoutePopup.coordinate = maxCoord
+        if ETADifference <= 60 {
+            altRoutePopup.title = "Similar ETA"
+        } else {
+            altRoutePopup.title = dateComponentsFormatter.string(from: abs(ETADifference))
+            altRoutePopup.subtitle = ETADifference > 0 ? "Faster" : "Slower"
         }
+        self.addAnnotation(altRoutePopup)
+        self.selectAnnotation(altRoutePopup, animated: false)
+    }
+    
+    func maxDistanceBetween(fromLine: Polyline, toLine: Polyline) -> CLLocationCoordinate2D? {
+        guard let userCoordinate = self.userLocation?.coordinate else { return nil }
+
+        let remainingDistance = fromLine.distance()
+        guard remainingDistance > 0 else { return nil }
         
-        if currentMax.0 > 0 {
-            let altRoutePopup = MGLPointAnnotation()
-            altRoutePopup.coordinate = currentMax.1
-            if ETADifference <= 60 {
-                altRoutePopup.title = "Similar ETA"
-            } else {
-                altRoutePopup.title = dateComponentsFormatter.string(from: abs(ETADifference))
-                altRoutePopup.subtitle = ETADifference > 0 ? "Faster" : "Slower"
-            }
-            self.addAnnotation(altRoutePopup)
-            self.selectAnnotation(altRoutePopup, animated: false)
+        var currentMax: (CLLocationDistance, CLLocationCoordinate2D?) = (0, nil)
+        
+        for currentIndex in 1...Int(remainingDistance) - 1 {
+            guard currentIndex % 200 == 0 else { continue }
+            guard let coord = fromLine.coordinateFromStart(distance: CLLocationDistance(currentIndex)) else { continue }
+            let slicedLine = fromLine.sliced(from: userCoordinate, to: coord)
+            guard MGLPolyline(coordinates: slicedLine.coordinates, count: UInt(slicedLine.coordinates.count)).intersects(self.visibleCoordinateBounds) else { continue }
+            guard let newCoord = toLine.coordinateFromStart(distance: Double(currentIndex)) else { continue }
+            guard let closestCoordBetweenLines = slicedLine.closestCoordinate(to: newCoord) else { continue }
+            guard closestCoordBetweenLines.distance > currentMax.0 else { continue }
+            
+            currentMax = (closestCoordBetweenLines.distance, closestCoordBetweenLines.coordinate)
         }
+        return currentMax.1
     }
     
     /**
