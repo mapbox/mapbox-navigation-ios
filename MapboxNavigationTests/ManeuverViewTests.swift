@@ -20,9 +20,9 @@ class ManeuverViewTests: FBSnapshotTestCase {
         window.addSubview(maneuverView)
     }
     
-    func maneuverInstruction(_ maneuverType: ManeuverType, _ maneuverDirection: ManeuverDirection, _ drivingSide: DrivingSide) -> VisualInstruction {
-        let primaryInstruction = VisualInstructionComponent(type: .delimiter, text: "", imageURL: nil, maneuverType: maneuverType, maneuverDirection: maneuverDirection) // Placeholder
-        return VisualInstruction(distanceAlongStep: 0, primaryText: "", primaryTextComponents: [primaryInstruction], secondaryText: nil, secondaryTextComponents: nil, drivingSide: drivingSide)
+    func maneuverInstruction(_ maneuverType: ManeuverType, _ maneuverDirection: ManeuverDirection, _ drivingSide: DrivingSide, _ degrees: CLLocationDegrees = 180) -> VisualInstruction {
+        let primaryInstruction = VisualInstructionComponent(type: .delimiter, text: "", imageURL: nil, maneuverType: maneuverType, maneuverDirection: maneuverDirection, abbreviation: nil, abbreviationPriority: 0)
+        return VisualInstruction(distanceAlongStep: 0, primaryText: "", primaryTextComponents: [primaryInstruction], secondaryText: nil, secondaryTextComponents: nil, drivingSide: drivingSide, degrees: degrees)
     }
     
     func testStraightRoundabout() {
@@ -42,6 +42,41 @@ class ManeuverViewTests: FBSnapshotTestCase {
     
     func testMergeRight() {
         maneuverView.visualInstruction = maneuverInstruction(.merge, .right, .right)
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
+    func testRoundabout45() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 45)
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
+    func testRoundabout90() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 90)
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
+    func testRoundabout135() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 135)
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
+    func testRoundabout180() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 180)
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
+    func testRoundabout225() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 225)
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
+    func testRoundabout315() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 315)
+        FBSnapshotVerifyLayer(maneuverView.layer)
+    }
+    
+    func testRoundabout360() {
+        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 360)
         FBSnapshotVerifyLayer(maneuverView.layer)
     }
     
