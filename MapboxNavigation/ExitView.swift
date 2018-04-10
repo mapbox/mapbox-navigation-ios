@@ -1,11 +1,3 @@
-//
-//  ExitView.swift
-//  MapboxNavigation
-//
-//  Created by Jerrad Thramer on 3/23/18.
-//  Copyright © 2018 Mapbox. All rights reserved.
-//
-
 import UIKit
 
 enum ExitSide: String{
@@ -50,7 +42,7 @@ class ExitView: UIView {
             invalidateIntrinsicContentSize()
         }
     }
-    var pointSize: CGFloat? {
+    var pointSize: CGFloat {
         didSet {
             rebuildConstraints()
         }
@@ -65,10 +57,12 @@ class ExitView: UIView {
     }
     
     override init(frame: CGRect) {
+        pointSize = 0.0
         super.init(frame: frame)
     }
     
     required init?(coder aDecoder: NSCoder) {
+        pointSize = 0.0
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -96,7 +90,7 @@ class ExitView: UIView {
     }
     
     func buildConstraints() {
-        let height = heightAnchor.constraint(equalToConstant: pointSize! * 1.2)
+        let height = heightAnchor.constraint(equalToConstant: pointSize * 1.2)
 
         let imageHeight = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4)
         let imageAspect = imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: imageView.image?.size.aspectRatio ?? 1.0)

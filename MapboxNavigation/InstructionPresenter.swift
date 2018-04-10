@@ -14,7 +14,7 @@ class InstructionPresenter {
     typealias ShieldDownloadCompletion = (NSAttributedString) -> ()
     
     var onShieldDownload: ShieldDownloadCompletion?
-
+    
     private let imageRepository = ImageRepository.shared
     
     func attributedText() -> NSAttributedString {
@@ -119,7 +119,7 @@ class InstructionPresenter {
     static func attributedString(forExitComponent exit: VisualInstructionComponent, label: UILabel) -> NSAttributedString? {
         guard exit.type == .exitCode, let exitCode = exit.text else { return nil }
         let exitSide: ExitSide = exit.maneuverDirection == .left ? .left : .right
-        let exitString = exitShield(side: exitSide, text: exitCode, for: label)
+        guard let exitString = exitShield(side: exitSide, text: exitCode, for: label) else { return nil }
         return exitString
     }
     
@@ -175,14 +175,14 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private static func exitShield(side: ExitSide = .right, text: String, for label: UILabel) -> NSAttributedString {
+    private static func exitShield(side: ExitSide = .right, text: String, for label: UILabel) -> NSAttributedString? {
         let exit = ExitView(pointSize: label.font.pointSize, side: side, text: text)
         exit.translatesAutoresizingMaskIntoConstraints = false
         exit.invalidateIntrinsicContentSize()
         exit.setNeedsLayout()
         exit.layoutIfNeeded()
         let exitAttachment = NSTextAttachment()
-        let exitImage = exit.imageRepresentation
+        guard let exitImage = exit.imageRepresentation else { return nil }
         exitAttachment.image = exitImage
         
         let yOrigin = (label.font.capHeight - exitImage.size.height).rounded() / 2

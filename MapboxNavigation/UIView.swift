@@ -137,13 +137,14 @@ extension UIView {
         return trailingAnchor
     }
     
-    var imageRepresentation: UIImage {
+    var imageRepresentation: UIImage? {
         let size = CGSize(width: frame.size.width, height: frame.size.height)
         UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
-        layer.render(in:UIGraphicsGetCurrentContext()!)
+        guard let currentContext = UIGraphicsGetCurrentContext() else { return nil }
+        layer.render(in:currentContext)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return image!
+        return image
     }
 }
 
