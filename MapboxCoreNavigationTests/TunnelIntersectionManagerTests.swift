@@ -99,7 +99,7 @@ class TunnelIntersectionManagerTests: XCTestCase {
         
         var didDetectTunnel = routeController.tunnelIntersectionManager?.didDetectTunnel(at: routeController.location!, for: routeController.locationManager, routeProgress: routeController.routeProgress) ?? false
         
-        XCTAssertTrue(didDetectTunnel, "Simulated tunnel navigation should be enabled at that location")
+        XCTAssertTrue(didDetectTunnel, "A tunnel should be enabled at that location")
         
         // Step without a tunnel intersection
         routeController.advanceStepIndex(to: 2)
@@ -182,7 +182,7 @@ class TunnelIntersectionManagerTests: XCTestCase {
             XCTAssertFalse(animationEnabled, "Animation through tunnel should be disabled.")
         })
 
-        self.wait(for: [disableTunnelAnimationExpectation], timeout: 0.1)
+        self.wait(for: [disableTunnelAnimationExpectation], timeout: 1.0)
     }
     
 }

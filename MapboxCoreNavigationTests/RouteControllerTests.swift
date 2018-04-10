@@ -113,5 +113,4 @@ class RouteControllerTests: XCTestCase {
         
         XCTAssertEqual(navigation.location!.course, mbTestHeading, "Course should be using bearing")
     }
-
 }

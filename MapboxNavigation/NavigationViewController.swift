@@ -311,8 +311,6 @@ public class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
-    var tunnelIntersectionManager: TunnelIntersectionManager?
-    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -357,8 +355,6 @@ public class NavigationViewController: UIViewController {
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
-        
-        self.tunnelIntersectionManager = TunnelIntersectionManager()
     }
     
     deinit {

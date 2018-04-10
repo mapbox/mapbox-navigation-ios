@@ -78,7 +78,7 @@ public class SimulatedLocationManager: NavigationLocationManager {
      - parameter distanceTraveled: The distance traveled on the current route.
      - returns: A `SimulatedLocationManager`
      */
-    @objc public init(route: Route, distanceTraveled: CLLocationDistance) {
+    @objc public init(route: Route, distanceTraveled: CLLocationDistance) { 
         super.init()
         self.currentDistance = distanceTraveled
         initializeSimulatedLocationManager(for: route)
