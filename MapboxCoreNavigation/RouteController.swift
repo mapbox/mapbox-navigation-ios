@@ -632,9 +632,9 @@ extension RouteController: CLLocationManagerDelegate {
         
         let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
         if tunnelDetected {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, callback: nil)
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, callback: tunnelIntersectionManagerCompletionHandler)
         } else {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, callback: nil)
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, callback: tunnelIntersectionManagerCompletionHandler)
         }
     }
     
@@ -1074,7 +1074,7 @@ extension RouteController: TunnelIntersectionManagerDelegate {
                                              routeController: self,
                                                routeProgress: routeProgress,
                                             distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled,
-                                                    callback: tunnelIntersectionManagerCompletionHandler)
+                                                    callback: callback)
     }
     
     public func tunnelIntersectionManager(_ manager: CLLocationManager,
@@ -1083,7 +1083,7 @@ extension RouteController: TunnelIntersectionManagerDelegate {
         tunnelIntersectionManager?.suspendTunnelAnimation(for: manager,
                                                            at: location,
                                               routeController: self,
-                                                     callback: tunnelIntersectionManagerCompletionHandler)
+                                                     callback: callback)
         
     }
 }
