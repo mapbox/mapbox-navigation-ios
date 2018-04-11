@@ -64,12 +64,9 @@ open class TunnelIntersectionManager: NSObject {
             // Main conditions to enable simulated tunnel animation:
             // - User location is within minimum tunnel entrance radius
             // - Current intersection's road classes contain a tunnel
-            //    * Animation NOT enabled OR when we receive series of bad GPS location updates
            let isWithinTunnelEntranceRadius = userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
-            if isWithinTunnelEntranceRadius {
+            if isWithinTunnelEntranceRadius || classes.contains(.tunnel) {
                 return true
-            } else if classes.contains(.tunnel) {
-                return !isAnimationEnabled || (manager is NavigationLocationManager && !location.isQualified)
             }
         }
         
@@ -103,28 +100,14 @@ open class TunnelIntersectionManager: NSObject {
                                                callback: RouteControllerSimulationCompletionBlock?) {
         guard !isAnimationEnabled else { return }
         
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        DispatchQueue.main.async {
-            manager.stopUpdatingHeading()
-            manager.stopUpdatingLocation()
-            dispatchGroup.leave()
-        }
+        self.animatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
+        self.animatedLocationManager?.delegate = routeController
+        self.animatedLocationManager?.routeProgress = routeProgress
         
-        dispatchGroup.notify(queue:.main) {
-            self.animatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
-            self.animatedLocationManager?.delegate = routeController
-            self.animatedLocationManager?.routeProgress = routeProgress
-            
-            self.animatedLocationManager?.startUpdatingLocation()
-            self.animatedLocationManager?.startUpdatingLocation()
-            
-            if let lastKnownLocation = self.animatedLocationManager?.lastKnownLocation, lastKnownLocation.isQualified {
-                routeController.rawLocation = lastKnownLocation
-            }
-            
-            callback?(true, self.animatedLocationManager!)
-        }
+        self.animatedLocationManager?.startUpdatingLocation()
+        self.animatedLocationManager?.startUpdatingLocation()
+        
+        callback?(true, self.animatedLocationManager!)
     }
     
     @objc public func suspendTunnelAnimation(for manager: CLLocationManager,
@@ -142,28 +125,12 @@ open class TunnelIntersectionManager: NSObject {
             return
         }
         
-        routeController.rawLocation = location
-        
-        let dispatchGroup = DispatchGroup()
-        dispatchGroup.enter()
-        
-        DispatchQueue.main.async {
-            manager.stopUpdatingHeading()
-            manager.stopUpdatingLocation()
-            routeController.suspendLocationUpdates()
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue:.main) {
-            routeController.resume()
-            callback?(false, routeController.locationManager)
-        }
-    }
-    
-    @objc public func suspendLocationUpdates() {
         animatedLocationManager?.stopUpdatingLocation()
         animatedLocationManager?.stopUpdatingHeading()
         animatedLocationManager = nil
         tunnelExitLocations.removeAll()
+        
+        routeController.rawLocation = location
+        callback?(false, routeController.locationManager)
     }
 }
