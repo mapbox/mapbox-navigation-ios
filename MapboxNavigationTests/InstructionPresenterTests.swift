@@ -1,46 +1,23 @@
 import Foundation
 import XCTest
 @testable import MapboxNavigation
-import MapboxDirections
-
-let fixtureString = """
-{
-"distanceAlongGeometry": 503.1,
-"primary": {
-"type": "off ramp",
-"modifier": "right",
-"components": [
-{
-"text": "Exit",
-"type": "exit"
-},
-{
-"text": "25",
-"type": "exit-number"
-},
-{
-"text": "335",
-"type": "text"
-},
-{
-"text": "Sud",
-"type": "text"
-}
-],
-"text": "Exit 25 335 Sud"
-},
-"secondary": null
-}
-"""
+@testable import MapboxDirections
 
 class InstructionPresenterTests: XCTestCase {
     
-    static let fixtureData = fixtureString.data(using: .utf8)
-    static let fixtureJSON: [String: Any] = try! JSONSerialization.jsonObject(with: InstructionPresenterTests.fixtureData!, options: []) as! [String: Any]
-    static let subject = VisualInstruction(json: InstructionPresenterTests.fixtureJSON, drivingSide: .right)
-
-    func testExitRecognized() {
-        let subject = InstructionPresenterTests.subject
-        XCTAssertTrue(subject.primaryTextComponents.isExit, "Not recognizing exit instruction components as an exit")
+    func testExitInstructionProvidesExit() {
+                let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+                let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+                let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 50, height: 50)))
+        
+                //FIXME: not ideal -- UIAutoLayout?
+                label.availableBounds = { return label.frame }
+        
+                let presenter = InstructionPresenter([exitAttribute, exitCodeAttribute], label: label)
+                let attributed = presenter.attributedText()
+        
+                let attachment = attributed.attribute(.attachment, at: 0, effectiveRange: nil)
+        
+                XCTAssert(attachment is ExitAttachment, "Attachment for exit shield should be of type ExitAttachment")
     }
 }
