@@ -99,7 +99,7 @@ class TunnelIntersectionManagerTests: XCTestCase {
         
         var didDetectTunnel = routeController.tunnelIntersectionManager?.didDetectTunnel(at: routeController.location!, for: routeController.locationManager, routeProgress: routeController.routeProgress) ?? false
         
-        XCTAssertTrue(didDetectTunnel, "A tunnel should be enabled at that location")
+        XCTAssertTrue(didDetectTunnel, "A tunnel should be detected at that location")
         
         // Step without a tunnel intersection
         routeController.advanceStepIndex(to: 2)
@@ -109,7 +109,7 @@ class TunnelIntersectionManagerTests: XCTestCase {
         
         didDetectTunnel = routeController.tunnelIntersectionManager?.didDetectTunnel(at: routeController.location!, for: routeController.locationManager, routeProgress: routeController.routeProgress) ?? false
         
-        XCTAssertFalse(didDetectTunnel, "Simulated tunnel navigation should be disabled at that location")
+        XCTAssertFalse(didDetectTunnel, "A tunnel should not exist at that location")
     }
     
     func testTunnelSimulatedNavigationEnabled() {
