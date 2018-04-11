@@ -102,6 +102,31 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
     }
+    
+    func testExitBannerIntegration() {
+        let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+        let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0)
+        let mainStreetString = VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: "Main St", abbreviationPriority: 0)
+        let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 375, height: 100)))
+        
+        label.availableBounds = { return label.frame }
+        
+        let presenter = InstructionPresenter([exitAttribute, exitCodeAttribute, mainStreetString], label: label)
+        let attributed = presenter.attributedText()
+        
+        let spaceRange = NSMakeRange(1, 1)
+        let space = attributed.attributedSubstring(from: spaceRange)
+        //Do we have spacing between the attachment and the road name?
+        XCTAssert(space.string == " ", "Should be a space between exit attachment and name")
+        
+        //Road Name should be present and not abbreviated
+        
+        XCTAssert(attributed.length == 13, "Road name should not be abbreviated")
+        
+        let roadNameRange = NSMakeRange(2, 11)
+        let roadName = attributed.attributedSubstring(from: roadNameRange)
+        XCTAssert(roadName.string == "Main Street", "Banner not populating road name correctly")
+    }
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
