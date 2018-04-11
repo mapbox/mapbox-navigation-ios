@@ -20,9 +20,10 @@ class ManeuverViewTests: FBSnapshotTestCase {
         window.addSubview(maneuverView)
     }
     
-    func maneuverInstruction(_ maneuverType: ManeuverType, _ maneuverDirection: ManeuverDirection, _ drivingSide: DrivingSide, _ degrees: CLLocationDegrees = 180) -> VisualInstruction {
-        let primaryInstruction = VisualInstructionComponent(type: .delimiter, text: "", imageURL: nil, maneuverType: maneuverType, maneuverDirection: maneuverDirection, abbreviation: nil, abbreviationPriority: 0)
-        return VisualInstruction(distanceAlongStep: 0, primaryText: "", primaryTextComponents: [primaryInstruction], secondaryText: nil, secondaryTextComponents: nil, drivingSide: drivingSide, degrees: degrees)
+    func maneuverInstruction(_ maneuverType: ManeuverType, _ maneuverDirection: ManeuverDirection, _ drivingSide: DrivingSide, _ degrees: CLLocationDegrees = 180) -> VisualInstructionBanner {
+        let component = VisualInstructionComponent(type: .delimiter, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
+        let primary = VisualInstruction(text: "", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: [component], degrees: degrees)
+        return VisualInstructionBanner(distanceAlongStep: 0, primaryInstruction: primary, secondaryInstruction: nil, drivingSide: drivingSide)
     }
     
     func testStraightRoundabout() {
