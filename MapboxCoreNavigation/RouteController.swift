@@ -362,10 +362,6 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
-
-        // In case the animated navigation is stopped abruptly before it completes,
-        // we ensure the animated location manager updates are also stopped.
-        tunnelIntersectionManager?.suspendLocationUpdates()
     }
     
     /**
