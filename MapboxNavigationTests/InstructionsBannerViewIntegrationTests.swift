@@ -11,8 +11,18 @@ func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
     return InstructionsBannerView(frame: CGRect(origin: .zero, size: CGSize(width: size.width, height: bannerHeight)))
 }
 
-func makeVisualInstruction(primaryInstruction: [VisualInstructionComponent], secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstruction {
-    return VisualInstruction(distanceAlongStep: 482.803, primaryText: "Instruction", primaryTextComponents: primaryInstruction, secondaryText: "Instruction", secondaryTextComponents: secondaryInstruction, drivingSide: .right)
+func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
+                           _ maneuverDirection: ManeuverDirection = .left,
+                           primaryInstruction: [VisualInstructionComponent],
+                           secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstructionBanner {
+    
+    let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: primaryInstruction)
+    var secondary: VisualInstruction? = nil
+    if let secondaryInstruction = secondaryInstruction {
+        secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: secondaryInstruction)
+    }
+    
+    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, drivingSide: .right)
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
@@ -30,9 +40,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     lazy var instructions = {
         return [
-            VisualInstructionComponent(type: .image, text: "US 41", imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "I 94", imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "US 41", imageURL: shieldURL1, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "I 94", imageURL: shieldURL2, abbreviation: nil, abbreviationPriority: 0)
         ]
     }()
 
@@ -66,8 +76,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
         //prime the cache to simulate images having already been loaded
-        let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
-        let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
+        let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL1, abbreviation: nil, abbreviationPriority: 0)
+        let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL2, abbreviation: nil, abbreviationPriority: 0)
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.shieldKey()!, toDisk: false)
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.shieldKey()!, toDisk: false)
