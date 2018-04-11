@@ -231,14 +231,6 @@ fileprivate struct IndexedVisualInstructionComponent {
 }
 
 extension Array where Element == VisualInstructionComponent {
-    var isExit: Bool {
-        guard count >= 2 else { return false }
-        let isFirstExit = first!.maneuverType == .takeOffRamp
-        let isSecondExit = self[1].maneuverType == .takeOffRamp
-        
-        return isFirstExit && isSecondExit
-    }
-    
     fileprivate func component(before component: VisualInstructionComponent) -> VisualInstructionComponent? {
         guard let index = self.index(of: component) else {
             return nil
