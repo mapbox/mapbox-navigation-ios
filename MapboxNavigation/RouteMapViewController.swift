@@ -421,6 +421,12 @@ class RouteMapViewController: UIViewController {
         }
     }
     
+    func mapView(_ mapView: MGLMapView, tapOnCalloutFor annotation: MGLAnnotation) {
+        if let parent = parent as? NavigationViewController {
+            parent.route = self.routeController.routeProgress.alternateRoute
+        }
+    }
+    
     func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
         let identifier = routeController.recordFeedback()
         let send = defaultSendFeedbackHandler(feedbackId: identifier)

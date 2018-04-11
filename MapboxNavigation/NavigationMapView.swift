@@ -624,10 +624,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             guard currentIndex % 200 == 0 else { continue }
             guard let coord = fromLine.coordinateFromStart(distance: CLLocationDistance(currentIndex)) else { continue }
             let slicedLine = fromLine.sliced(from: userCoordinate, to: coord)
-            guard MGLPolyline(coordinates: slicedLine.coordinates, count: UInt(slicedLine.coordinates.count)).intersects(self.visibleCoordinateBounds) else { continue }
             guard let newCoord = toLine.coordinateFromStart(distance: Double(currentIndex)) else { continue }
             guard let closestCoordBetweenLines = slicedLine.closestCoordinate(to: newCoord) else { continue }
+            guard closestCoordBetweenLines.distance > 100 else { continue }
             guard closestCoordBetweenLines.distance > currentMax.0 else { continue }
+            guard MGLPolyline(coordinates: slicedLine.coordinates, count: UInt(slicedLine.coordinates.count)).intersects(self.visibleCoordinateBounds) else { continue }
             
             currentMax = (closestCoordBetweenLines.distance, closestCoordBetweenLines.coordinate)
         }
