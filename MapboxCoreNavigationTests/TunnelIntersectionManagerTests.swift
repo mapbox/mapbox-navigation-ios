@@ -146,7 +146,7 @@ class TunnelIntersectionManagerTests: XCTestCase {
             XCTAssertTrue(animationEnabled, "Animation through tunnel should be enabled.")
         })
         
-        self.wait(for: [enableTunnelAnimationExpectation], timeout: 0.1)
+        self.wait(for: [enableTunnelAnimationExpectation], timeout: 1.0)
     }
     
     func testTunnelSimulatedNavigationDisabled() {
