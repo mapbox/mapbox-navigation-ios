@@ -427,6 +427,13 @@ class RouteMapViewController: UIViewController {
         }
     }
     
+    func mapViewRegionIsChanging(_ mapView: MGLMapView) {
+        guard let annotations = mapView.annotations else { return }
+        for annotation in annotations {
+            mapView.deselectAnnotation(annotation, animated: false)
+        }
+    }
+    
     func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
         let identifier = routeController.recordFeedback()
         let send = defaultSendFeedbackHandler(feedbackId: identifier)

@@ -586,6 +586,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc public func showAlternateRoutePopup(for routeProgress: RouteProgress) {
+        guard self.selectedAnnotations.count == 0 else { return }
         guard let altRoute = routeProgress.alternateRoute else { return }
         guard let userCoordinate = self.userLocationForCourseTracking?.coordinate else { return }
         let route = routeProgress.route
@@ -626,7 +627,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let slicedLine = fromLine.sliced(from: userCoordinate, to: coord)
             guard let newCoord = toLine.coordinateFromStart(distance: Double(currentIndex)) else { continue }
             guard let closestCoordBetweenLines = slicedLine.closestCoordinate(to: newCoord) else { continue }
-            guard closestCoordBetweenLines.distance > 100 else { continue }
+            guard closestCoordBetweenLines.distance > 1 else { continue }
             guard closestCoordBetweenLines.distance > currentMax.0 else { continue }
             guard MGLPolyline(coordinates: slicedLine.coordinates, count: UInt(slicedLine.coordinates.count)).intersects(self.visibleCoordinateBounds) else { continue }
             
