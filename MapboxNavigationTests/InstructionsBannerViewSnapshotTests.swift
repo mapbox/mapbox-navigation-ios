@@ -223,6 +223,34 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         verifyView(view, size: view.bounds.size)
     }
+    
+    func testSweEngLongDistance() {
+        let view = instructionsView(size: .iPhoneX)
+        styleInstructionsView(view)
+        
+        NavigationSettings.shared.distanceUnit = .mile
+        view.distanceFormatter.numberFormatter.locale = Locale(identifier: "sv-se")
+        view.distance = 1000 * 999
+        
+        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+        
+        verifyView(view, size: view.bounds.size)
+    }
+    
+    func testUkrainianLongDistance() {
+        let view = instructionsView(size: .iPhoneX)
+        styleInstructionsView(view)
+        
+        NavigationSettings.shared.distanceUnit = .mile
+        view.distanceFormatter.numberFormatter.locale = Locale(identifier: "uk-UA")
+        view.distance = 1000 * 999
+        
+        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
+        
+        verifyView(view, size: view.bounds.size)
+    }
 }
 
 extension InstructionsBannerViewSnapshotTests {
