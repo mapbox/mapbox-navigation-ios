@@ -78,11 +78,10 @@ class ExitView: UIView {
         layer.borderColor = UIColor.black.cgColor
         layer.cornerRadius = 5.0
         layer.masksToBounds = true
-        setupViews()
-        buildConstraints()
-    }
-    func setupViews() {
+
+        //build view hierarchy
         [imageView, exitNumberLabel].forEach(addSubview(_:))
+        buildConstraints()
     }
     
     func populateExitImage() {
