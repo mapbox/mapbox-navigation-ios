@@ -191,7 +191,7 @@ class InstructionPresenter {
         exit.setNeedsLayout()
         exit.layoutIfNeeded()
         let exitAttachment = ExitAttachment()
-        guard let exitImage = exit.imageRepresentation else { return nil }
+        guard let exitImage = takeSnapshot(on: exit) else { return nil }
         exitAttachment.image = exitImage
         exitAttachment.font = dataSource.font
         
@@ -201,6 +201,15 @@ class InstructionPresenter {
     
     private func completeShieldDownload(_ image: UIImage?) {
         onShieldDownload?(attributedText())
+    }
+    
+    private func takeSnapshot(on view: UIView) -> UIImage?{
+        let window = UIApplication.shared.delegate!.window!!
+        
+        window.addSubview(view)
+        let image = view.imageRepresentation
+        view.removeFromSuperview()
+        return image
     }
 
 }

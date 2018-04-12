@@ -12,6 +12,26 @@ class ExitView: UIView {
     static let leftExitImage = UIImage(named: "exit-left", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     static let rightExitImage = UIImage(named: "exit-right", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     
+    
+    @objc dynamic var foregroundColor: UIColor? {
+        didSet {
+            layer.borderColor = foregroundColor?.cgColor
+            imageView.tintColor = foregroundColor
+            exitNumberLabel.textColor = foregroundColor
+            setNeedsDisplay()
+        }
+    }
+    @objc dynamic var borderWidth: CGFloat {
+        didSet {
+            layer.borderWidth = borderWidth
+        }
+    }
+    @objc dynamic var cornerRadius: CGFloat {
+        didSet {
+            layer.cornerRadius = cornerRadius
+        }
+    }
+    
     var side: ExitSide = .right {
         didSet {
             populateExitImage()
@@ -21,7 +41,7 @@ class ExitView: UIView {
     
     lazy var imageView: UIImageView = {
         let view = UIImageView(image: self.side.exitImage)
-        view.tintColor = .black
+        view.tintColor = foregroundColor
         view.translatesAutoresizingMaskIntoConstraints = false
         view.contentMode = .scaleAspectFit
         return view
@@ -58,11 +78,17 @@ class ExitView: UIView {
     
     override init(frame: CGRect) {
         pointSize = 0.0
+        borderWidth = 0.0
+        cornerRadius = 0.0
+        
         super.init(frame: frame)
     }
     
     required init?(coder aDecoder: NSCoder) {
         pointSize = 0.0
+        borderWidth = 0.0
+        cornerRadius = 0.0
+        
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -73,10 +99,6 @@ class ExitView: UIView {
     }
     
     func commonInit() {
-        backgroundColor = .clear
-        layer.borderWidth = 1.0
-        layer.borderColor = UIColor.black.cgColor
-        layer.cornerRadius = 5.0
         layer.masksToBounds = true
 
         //build view hierarchy
