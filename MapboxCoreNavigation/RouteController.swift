@@ -250,18 +250,17 @@ open class RouteController: NSObject {
         self.locationManager.activityType = route.routeOptions.activityType
         self.eventsManager = eventsManager
         UIDevice.current.isBatteryMonitoringEnabled = true
+
         super.init()
 
         self.locationManager.delegate = self
-        self.resumeNotifications()
-        self.resetSession()
-
-        DispatchQueue.main.async {
-            self.startEvents(route: route)
-        }
+        resumeNotifications()
+        resetSession()
 
         checkForUpdates()
         checkForLocationUsageDescription()
+
+        startEvents(route: route)
     }
 
     deinit {

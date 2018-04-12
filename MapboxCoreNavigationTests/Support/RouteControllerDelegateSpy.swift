@@ -3,10 +3,10 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 class RouteControllerDelegateSpy: RouteControllerDelegate {
-    public var recentMessages: [String] = []
+    private(set) var recentMessages: [String] = []
 
     public func reset() {
-        recentMessages = []
+        recentMessages.removeAll()
     }
 
     internal func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
