@@ -12,6 +12,7 @@ class ExitView: UIView {
     static let leftExitImage = UIImage(named: "exit-left", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     static let rightExitImage = UIImage(named: "exit-right", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     
+    static let labelFontSizeScaleFactor: CGFloat = 2.0/3.0
     
     @objc dynamic var foregroundColor: UIColor? {
         didSet {
@@ -52,7 +53,9 @@ class ExitView: UIView {
         label.text = exitText
         label.textColor = .black
         print("system font size! \(UIFont.systemFontSize)")
-        label.font = UIFont.boldSystemFont(ofSize: 20)
+
+        label.font = UIFont.boldSystemFont(ofSize: pointSize * ExitView.labelFontSizeScaleFactor)
+
         return label
     }()
 
@@ -64,6 +67,7 @@ class ExitView: UIView {
     }
     var pointSize: CGFloat {
         didSet {
+            exitNumberLabel.font = exitNumberLabel.font.withSize(pointSize * ExitView.labelFontSizeScaleFactor)
             rebuildConstraints()
         }
     }
