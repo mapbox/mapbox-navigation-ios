@@ -15,12 +15,15 @@ class RouteControllerTests: XCTestCase {
 
     let eventsManagerSpy = EventsManagerSpy()
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
+    let delegate = RouteControllerDelegateSpy()
 
     lazy var dependencies: (routeController: RouteController, firstLocation: CLLocation) = {
-        let navigation = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
-        let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
+        let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
+        routeController.delegate = delegate
 
-        return (routeController: navigation, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
+        let firstCoord = routeController.routeProgress.currentLegProgress.nearbyCoordinates.first!
+
+        return (routeController: routeController, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
     }()
 
     lazy var initialRoute: Route = {
@@ -44,6 +47,7 @@ class RouteControllerTests: XCTestCase {
 
         eventsManagerSpy.reset()
         directionsClientSpy.reset()
+        delegate.reset()
     }
 
     func testUserIsOnRoute() {
@@ -147,12 +151,16 @@ class RouteControllerTests: XCTestCase {
 
     // MARK: - Events & Delegation
 
+    func testTurnstileEventSentUponInitialization() {
+        // MARK: it sends a turnstile event upon initialization
+        let _ = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
+
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
+    }
+
     func testReroutingFromALocationSendsEvents() {
         let routeController = dependencies.routeController
         let testLocation = dependencies.firstLocation
-
-        let delegate = RouteControllerDelegateSpy()
-        routeController.delegate = delegate
 
         let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: routeController) { (notification) -> Bool in
             let fromLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation

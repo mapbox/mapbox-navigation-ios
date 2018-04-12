@@ -22,6 +22,10 @@ class EventsManagerSpy: MMEEventsManager {
         enqueuedEvents.append(event)
     }
 
+    override func sendTurnstileEvent() {
+        flushedEvents.append((name: "???", attributes: ["event" : MMEEventTypeAppUserTurnstile, "eventsManager" : String(describing: self)]))
+    }
+
     override func flush() {
         enqueuedEvents.forEach { (event: MockTelemetryEvent) in
             flushedEvents.append(event)
