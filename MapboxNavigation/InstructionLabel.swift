@@ -4,7 +4,7 @@ import MapboxDirections
 
 /// :nodoc:
 @objc(MBInstructionLabel)
-open class InstructionLabel: StylableLabel {
+open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
     var shieldHeight: CGFloat = 30
@@ -16,7 +16,7 @@ open class InstructionLabel: StylableLabel {
                 instructionPresenter = nil
                 return
             }
-            let presenter = InstructionPresenter(instruction, label: self)
+            let presenter = InstructionPresenter(instruction, dataSource: self)
             attributedText = presenter.attributedText()
             presenter.onShieldDownload = { [weak self] (attributedText: NSAttributedString) in
                 self?.attributedText = attributedText
@@ -24,6 +24,8 @@ open class InstructionLabel: StylableLabel {
             instructionPresenter = presenter
         }
     }
+    
+    
 
     private var instructionPresenter: InstructionPresenter?
 }

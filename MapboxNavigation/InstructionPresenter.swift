@@ -1,13 +1,22 @@
 import UIKit
 import MapboxDirections
 
-class InstructionPresenter {
-    private let instruction: [VisualInstructionComponent]
-    private weak var label: InstructionLabel?
+protocol InstructionPresenterDataSource: class {
+    var availableBounds: (() -> CGRect)! { get }
+    var font: UIFont! { get }
+    var textColor: UIColor! { get }
+    var shieldHeight: CGFloat { get }
+}
 
-    required init(_ instruction: [VisualInstructionComponent], label: InstructionLabel) {
+class InstructionPresenter {
+    typealias DataSource = InstructionPresenterDataSource
+    
+    private let instruction: [VisualInstructionComponent]
+    private weak var dataSource: DataSource?
+
+    required init(_ instruction: [VisualInstructionComponent], dataSource: DataSource) {
         self.instruction = instruction
-        self.label = label
+        self.dataSource = dataSource
     }
 
     typealias ImageDownloadCompletion = (UIImage?) -> Void
@@ -24,9 +33,9 @@ class InstructionPresenter {
     }
     
     func fittedAttributedComponents() -> [NSAttributedString] {
-        guard let label = self.label else { return [] }
-        var attributedPairs = self.attributedPairs(for: instruction, on: label, imageRepository: imageRepository, onImageDownload: completeShieldDownload)
-        let availableBounds = label.availableBounds()
+        guard let source = self.dataSource else { return [] }
+        var attributedPairs = self.attributedPairs(for: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload)
+        let availableBounds = source.availableBounds()
         let totalWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
         
@@ -41,7 +50,7 @@ class InstructionPresenter {
             guard component.component.type == .text else { continue }
             guard let abbreviation = component.component.abbreviation else { continue }
             
-            attributedPairs.attributedStrings[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributesForLabel(label))
+            attributedPairs.attributedStrings[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributes(for: source))
             let newWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
             
             if newWidth <= availableBounds.width {
@@ -54,7 +63,7 @@ class InstructionPresenter {
     
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
-    func attributedPairs(for components: [VisualInstructionComponent], on label: InstructionLabel, imageRepository: ImageRepository, onImageDownload: ImageDownloadCompletion?) -> AttributedInstructionComponents {
+    func attributedPairs(for components: [VisualInstructionComponent], dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: ImageDownloadCompletion?) -> AttributedInstructionComponents {
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
         
@@ -64,7 +73,7 @@ class InstructionPresenter {
         for (index, component) in components.enumerated() {
             let isFirst = index == 0
             let joinChar = isFirst ? "" : " "
-            let joinString = NSAttributedString(string: joinChar, attributes: attributesForLabel(label))
+            let joinString = NSAttributedString(string: joinChar, attributes: attributes(for: dataSource))
             let initial = NSAttributedString()
             
             //This is the closure that builds the string.
@@ -81,13 +90,13 @@ class InstructionPresenter {
             //If we have a exit, in the first two components, lets handle that first.
             if component.maneuverType == .takeOffRamp,
                 isExitInstruction, 0...1 ~= index,
-                let exitString = attributedString(forExitComponent: component, label: label) {
+                let exitString = attributedString(forExitComponent: component, dataSource: dataSource) {
         
                 build(component, [exitString])
             }
                 
             //If we have a shield, lets include those
-            else if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, label: label, onImageDownload: onImageDownload) {
+            else if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, dataSource: dataSource, onImageDownload: onImageDownload) {
                 build(component, [joinString, shieldString])
             }
             
@@ -107,7 +116,7 @@ class InstructionPresenter {
                         continue
                     }
                 }
-                guard let componentString = attributedString(forTextComponent: component, in: label) else { continue }
+                guard let componentString = attributedString(forTextComponent: component, dataSource: dataSource) else { continue }
                 build(component, [joinString, componentString])
             }
         }
@@ -116,31 +125,31 @@ class InstructionPresenter {
         return (components: processedComponents, attributedStrings: strings)
     }
 
-    func attributedString(forExitComponent exit: VisualInstructionComponent, label: UILabel) -> NSAttributedString? {
+    func attributedString(forExitComponent exit: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         guard exit.type == .exitCode, let exitCode = exit.text else { return nil }
         let exitSide: ExitSide = exit.maneuverDirection == .left ? .left : .right
-        guard let exitString = exitShield(side: exitSide, text: exitCode, for: label) else { return nil }
+        guard let exitString = exitShield(side: exitSide, text: exitCode, dataSource: dataSource) else { return nil }
         return exitString
     }
     
-    func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, label: InstructionLabel, onImageDownload: ImageDownloadCompletion?) -> NSAttributedString? {
+    func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: ImageDownloadCompletion?) -> NSAttributedString? {
         guard let shieldKey = shield.shieldKey() else { return nil }
         
         //If we have the shield already cached, use that.
         if let cachedImage = repository.cachedImageForKey(shieldKey) {
-            return attributedString(withFont: label.font, shieldImage: cachedImage)
+            return attributedString(withFont: dataSource.font, shieldImage: cachedImage)
         }
         
         // Let's download the shield
-        shieldImageForComponent(shield, in: repository, height: label.shieldHeight, completion: onImageDownload)
+        shieldImageForComponent(shield, in: repository, height: dataSource.shieldHeight, completion: onImageDownload)
         
         //and return the shield's code for usage in the meantime until download is complete.
-        return attributedString(forTextComponent: shield, in: label)
+        return attributedString(forTextComponent: shield, dataSource: dataSource)
     }
     
-    func attributedString(forTextComponent component: VisualInstructionComponent, in label: UILabel) -> NSAttributedString? {
+    func attributedString(forTextComponent component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         guard let text = component.text else { return nil }
-        return NSAttributedString(string: text, attributes: attributesForLabel(label))
+        return NSAttributedString(string: text, attributes: attributes(for: dataSource))
     }
     
     private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, height: CGFloat, completion: ImageDownloadCompletion?) {
@@ -164,8 +173,8 @@ class InstructionPresenter {
         return true
     }
 
-    private func attributesForLabel(_ label: UILabel) -> [NSAttributedStringKey: Any] {
-        return [.font: label.font, .foregroundColor: label.textColor]
+    private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedStringKey: Any] {
+        return [.font: dataSource.font, .foregroundColor: dataSource.textColor]
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
@@ -175,8 +184,8 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func exitShield(side: ExitSide = .right, text: String, for label: UILabel) -> NSAttributedString? {
-        let exit = ExitView(pointSize: label.font.pointSize, side: side, text: text)
+    private func exitShield(side: ExitSide = .right, text: String, dataSource: DataSource) -> NSAttributedString? {
+        let exit = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
         exit.translatesAutoresizingMaskIntoConstraints = false
         exit.invalidateIntrinsicContentSize()
         exit.setNeedsLayout()
@@ -184,7 +193,7 @@ class InstructionPresenter {
         let exitAttachment = ExitAttachment()
         guard let exitImage = exit.imageRepresentation else { return nil }
         exitAttachment.image = exitImage
-        exitAttachment.font = label.font
+        exitAttachment.font = dataSource.font
         
         let exitString = NSAttributedString(attachment: exitAttachment)
         return exitString
