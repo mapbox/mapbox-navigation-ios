@@ -25,6 +25,8 @@ custom_categories:
       - Embedded Navigation
       - Advanced
       - Custom Voice Controller
+      - Custom Destination Marker
+      - Custom Server
   - name: Turn-by-turn UI
     children:
       - NavigationViewController

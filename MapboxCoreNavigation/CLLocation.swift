@@ -6,8 +6,7 @@ extension CLLocation {
     
     var isQualified: Bool {
         return
-            0...100 ~= horizontalAccuracy &&
-                0...30 ~= verticalAccuracy
+            0...100 ~= horizontalAccuracy
     }
     
     /// Returns a dictionary representation of the location.
@@ -152,7 +151,7 @@ extension CLLocation {
         if course >= 0 &&
             (speed >= RouteSnappingMinimumSpeed || isWithinDepatureStep) &&
             (horizontalAccuracy < RouteSnappingMinimumHorizontalAccuracy || isWithinDepatureStep) &&
-            course.differenceBetween(self.course) > RouteSnappingMaxManipulatedCourseAngle {
+            course.difference(from: self.course) > RouteSnappingMaxManipulatedCourseAngle {
             return false
         }
         return true
