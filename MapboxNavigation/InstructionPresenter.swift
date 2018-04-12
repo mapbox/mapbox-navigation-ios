@@ -23,7 +23,7 @@ class InstructionPresenter {
     typealias ShieldDownloadCompletion = (NSAttributedString) -> ()
     
     var onShieldDownload: ShieldDownloadCompletion?
-    
+
     private let imageRepository = ImageRepository.shared
     
     func attributedText() -> NSAttributedString {

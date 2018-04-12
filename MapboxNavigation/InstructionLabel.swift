@@ -24,8 +24,6 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             instructionPresenter = presenter
         }
     }
-    
-    
 
     private var instructionPresenter: InstructionPresenter?
 }

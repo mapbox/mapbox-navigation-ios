@@ -120,7 +120,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssert(space.string == " ", "Should be a space between exit attachment and name")
         
         //Road Name should be present and not abbreviated
-        
         XCTAssert(attributed.length == 13, "Road name should not be abbreviated")
         
         let roadNameRange = NSMakeRange(2, 11)
