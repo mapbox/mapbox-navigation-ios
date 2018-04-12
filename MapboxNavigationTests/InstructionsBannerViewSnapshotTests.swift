@@ -223,6 +223,24 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         
         verifyView(view, size: view.bounds.size)
     }
+    
+    func testExitShields() {
+        let view = instructionsView()
+        styleInstructionsView(view)
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let primary = [
+            VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, abbreviation: "Main St", abbreviationPriority: 0)
+        ]
+        
+        let secondary = VisualInstructionComponent(type: .text, text: "Anytown Avenue", imageURL: nil, maneuverType: .continue, maneuverDirection: .straightAhead, abbreviation: "Anytown Ave", abbreviationPriority: 0)
+        
+        view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: [secondary]))
+        verifyView(view, size: view.bounds.size)
+    }
 }
 
 extension InstructionsBannerViewSnapshotTests {
