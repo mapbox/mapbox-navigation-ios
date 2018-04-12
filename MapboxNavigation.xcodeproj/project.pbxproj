@@ -281,6 +281,13 @@
 			remoteGlobalIDString = C5ADFBC81DDCC7840011824B;
 			remoteInfo = MapboxCoreNavigation;
 		};
+		8DBCA7772080174600981EB2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
+			remoteInfo = "Example-Swift";
+		};
 		C5ADFBD41DDCC7840011824B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -1223,6 +1230,7 @@
 			dependencies = (
 				3525449C1E663D2C004C8F1C /* PBXTargetDependency */,
 				35B711D61E5E7AD2001EDA8D /* PBXTargetDependency */,
+				8DBCA7782080174600981EB2 /* PBXTargetDependency */,
 			);
 			name = MapboxNavigationTests;
 			productName = MapboxNavigationTests;
@@ -1315,6 +1323,7 @@
 						DevelopmentTeam = GJZR2MEM28;
 						LastSwiftMigration = 0910;
 						ProvisioningStyle = Automatic;
+						TestTargetID = 358D14621E5E3B7700ADE590;
 					};
 					C5ADFBC81DDCC7840011824B = {
 						CreatedOnToolsVersion = 8.1;
@@ -1794,6 +1803,11 @@
 			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
 			targetProxy = 35CEA3571E5CEBBC009F2255 /* PBXContainerItemProxy */;
 		};
+		8DBCA7782080174600981EB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 358D14621E5E3B7700ADE590 /* Example-Swift */;
+			targetProxy = 8DBCA7772080174600981EB2 /* PBXContainerItemProxy */;
+		};
 		C5ADFBD51DDCC7840011824B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C5ADFBC81DDCC7840011824B /* MapboxCoreNavigation */;
@@ -2191,6 +2205,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example-Swift.app/Example-Swift";
 			};
 			name = Debug;
 		};
@@ -2210,6 +2225,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
 				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example-Swift.app/Example-Swift";
 			};
 			name = Release;
 		};

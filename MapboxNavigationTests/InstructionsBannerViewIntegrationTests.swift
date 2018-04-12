@@ -111,7 +111,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         
         label.availableBounds = { return label.frame }
         
-        let presenter = InstructionPresenter([exitAttribute, exitCodeAttribute, mainStreetString], label: label)
+        let presenter = InstructionPresenter([exitAttribute, exitCodeAttribute, mainStreetString], dataSource: label)
         let attributed = presenter.attributedText()
         
         let spaceRange = NSMakeRange(1, 1)

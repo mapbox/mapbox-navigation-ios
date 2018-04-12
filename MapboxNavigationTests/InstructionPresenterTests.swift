@@ -13,7 +13,7 @@ class InstructionPresenterTests: XCTestCase {
                 //FIXME: not ideal -- UIAutoLayout?
                 label.availableBounds = { return label.frame }
         
-                let presenter = InstructionPresenter([exitAttribute, exitCodeAttribute], label: label)
+                let presenter = InstructionPresenter([exitAttribute, exitCodeAttribute], dataSource: label)
                 let attributed = presenter.attributedText()
         
                 let attachment = attributed.attribute(.attachment, at: 0, effectiveRange: nil)
