@@ -225,6 +225,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     }
     
     func testExitShields() {
+        let window = UIApplication.shared.delegate!.window!!
         let view = instructionsView()
         styleInstructionsView(view)
         view.maneuverView.isStart = true
@@ -237,6 +238,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         ]
         
         let secondary = VisualInstructionComponent(type: .text, text: "Anytown Avenue", imageURL: nil, maneuverType: .continue, maneuverDirection: .straightAhead, abbreviation: "Anytown Ave", abbreviationPriority: 0)
+        
+        window.addSubview(view)
+        DayStyle().apply()
         
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: [secondary]))
         verifyView(view, size: view.bounds.size)
