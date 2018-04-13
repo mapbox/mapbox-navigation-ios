@@ -8,7 +8,7 @@ enum ExitSide: String{
     }
 }
 
-class ExitView: UIView {
+class ExitView: StylableView {
     static let leftExitImage = UIImage(named: "exit-left", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     static let rightExitImage = UIImage(named: "exit-right", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     
@@ -20,16 +20,6 @@ class ExitView: UIView {
             imageView.tintColor = foregroundColor
             exitNumberLabel.textColor = foregroundColor
             setNeedsDisplay()
-        }
-    }
-    @objc dynamic var borderWidth: CGFloat {
-        didSet {
-            layer.borderWidth = borderWidth
-        }
-    }
-    @objc dynamic var cornerRadius: CGFloat {
-        didSet {
-            layer.cornerRadius = cornerRadius
         }
     }
     
@@ -82,17 +72,11 @@ class ExitView: UIView {
     
     override init(frame: CGRect) {
         pointSize = 0.0
-        borderWidth = 0.0
-        cornerRadius = 0.0
-        
         super.init(frame: frame)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        pointSize = 0.0
-        borderWidth = 0.0
-        cornerRadius = 0.0
-        
+        pointSize = 0.0        
         super.init(coder: aDecoder)
         commonInit()
     }

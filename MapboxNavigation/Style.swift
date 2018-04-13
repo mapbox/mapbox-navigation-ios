@@ -258,6 +258,21 @@ open class StylableLabel: UILabel {
     }
 }
 
+/// :nodoc
+@objc(MBStyleableView)
+open class StylableView: UIView {
+    @objc dynamic var borderWidth: CGFloat = 0.0 {
+        didSet {
+            layer.borderWidth = borderWidth
+        }
+    }
+    @objc dynamic var cornerRadius: CGFloat = 0.0 {
+        didSet {
+            layer.cornerRadius = cornerRadius
+        }
+    }
+}
+
 /// :nodoc:
 @objc(MBStylableTextView)
 open class StylableTextView: UITextView {
