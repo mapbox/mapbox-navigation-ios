@@ -69,19 +69,15 @@ public class SimulatedLocationManager: NavigationLocationManager {
     }
 
     /**
-     Initalizes a new `SimulatedLocationManager` with the given route and distance traveled.
+     Initalizes a new `SimulatedLocationManager` with the given routeProgress.
      
-     When location simulation is needed in special cases such as dead reckoning, the distance
-     traveled on the given route determines where the `SimulatedLocationManager` needs to begin the simulation.
-     
-     - parameter route: The initial route.
-     - parameter distanceTraveled: The distance traveled on the current route.
+     - parameter routeProgress: The routeProgress of the current route.
      - returns: A `SimulatedLocationManager`
      */
-    @objc public init(route: Route, distanceTraveled: CLLocationDistance) { 
+    @objc public init(routeProgress: RouteProgress) {
         super.init()
-        self.currentDistance = distanceTraveled
-        initializeSimulatedLocationManager(for: route)
+        self.currentDistance = routeProgress.distanceTraveled
+        initializeSimulatedLocationManager(for: routeProgress.route)
     }
 
     private func initializeSimulatedLocationManager(for route: Route) {

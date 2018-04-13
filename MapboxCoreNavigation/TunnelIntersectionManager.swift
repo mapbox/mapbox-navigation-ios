@@ -64,8 +64,9 @@ open class TunnelIntersectionManager: NSObject {
             // Main conditions to enable simulated tunnel animation:
             // - User location is within minimum tunnel entrance radius
             // - Current intersection's road classes contain a tunnel
+            // - Invalid GPS location updates
            let isWithinTunnelEntranceRadius = userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
-            if isWithinTunnelEntranceRadius || classes.contains(.tunnel) {
+            if isWithinTunnelEntranceRadius || classes.contains(.tunnel) || (manager is NavigationLocationManager && !location.isQualified) {
                 return true
             }
         }
@@ -100,14 +101,14 @@ open class TunnelIntersectionManager: NSObject {
                                                callback: RouteControllerSimulationCompletionBlock?) {
         guard !isAnimationEnabled else { return }
         
-        self.animatedLocationManager = SimulatedLocationManager(route: routeProgress.route, distanceTraveled: distanceTraveled)
+        isAnimationEnabled = true
+        
+        self.animatedLocationManager = SimulatedLocationManager(routeProgress: routeProgress)
         self.animatedLocationManager?.delegate = routeController
         self.animatedLocationManager?.routeProgress = routeProgress
+        self.animatedLocationManager?.startUpdatingHeading()
         
-        self.animatedLocationManager?.startUpdatingLocation()
-        self.animatedLocationManager?.startUpdatingLocation()
-        
-        callback?(true, self.animatedLocationManager!)
+        callback?(isAnimationEnabled, self.animatedLocationManager!)
     }
     
     @objc public func suspendTunnelAnimation(for manager: CLLocationManager,
@@ -125,12 +126,15 @@ open class TunnelIntersectionManager: NSObject {
             return
         }
         
+        isAnimationEnabled = false
+        
         animatedLocationManager?.stopUpdatingLocation()
         animatedLocationManager?.stopUpdatingHeading()
         animatedLocationManager = nil
         tunnelExitLocations.removeAll()
         
         routeController.rawLocation = location
-        callback?(false, routeController.locationManager)
+        
+        callback?(isAnimationEnabled, routeController.locationManager)
     }
 }
