@@ -162,6 +162,8 @@ class RouteControllerTests: XCTestCase {
         let routeController = dependencies.routeController
         let testLocation = dependencies.firstLocation
 
+        routeController.delaysEventFlushing = false
+
         let willRerouteNotificationExpectation = expectation(forNotification: .routeControllerWillReroute, object: routeController) { (notification) -> Bool in
             let fromLocation = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as? CLLocation
             return fromLocation == testLocation
@@ -222,7 +224,4 @@ class RouteControllerTests: XCTestCase {
     // TODO: test & refactor the mutation of the re-route events
     // TODO: what about SessionState?
 
-    // MARK: When route progress changes (triggered in locationManager(didUpdateLocations:))
-    // TODO: it posts a routeControllerProgressDidChange notification
-    
 }
