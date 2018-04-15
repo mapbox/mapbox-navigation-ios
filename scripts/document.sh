@@ -29,7 +29,7 @@ THEME=${JAZZY_THEME:-$DEFAULT_THEME}
 BASE_URL="https://www.mapbox.com/mapbox-navigation-ios"
 
 # Link to directions documentation
-DIRECTIONS_VERSION="0.19.1"
+DIRECTIONS_VERSION=$(cat Cartfile.resolved | grep 'MapboxDirections.swift' | grep -oE '"v.+?"' | grep -oE '[^"v]+')
 DIRECTIONS_SYMBOLS="Directions|DirectionsOptions|DirectionsResult|Intersection|Lane|Match|MatchOptions|Route|RouteLeg|RouteOptions|RouteStep|SpokenInstruction|Tracepoint|VisualInstruction|VisualInstructionComponent|Waypoint"
 
 rm -rf ${OUTPUT}
