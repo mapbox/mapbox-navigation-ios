@@ -175,6 +175,11 @@ open class RouteController: NSObject {
      */
     @objc public var reroutesProactively = false
 
+    /**
+     When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
+     */
+    @objc public var delaysEventFlushing = true
+
     var didFindFasterRoute = false
 
     /**
@@ -260,22 +265,23 @@ open class RouteController: NSObject {
         checkForUpdates()
         checkForLocationUsageDescription()
 
-        startEvents(route: route)
+        startEvents(accessToken: route.accessToken)
     }
 
     deinit {
         suspendLocationUpdates()
         sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
-        checkAndSendOutstandingFeedbackEvents(forceAll: true)
+        sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         UIDevice.current.isBatteryMonitoringEnabled = false
     }
 
-    func startEvents(route: Route) {
+    func startEvents(accessToken: String?) {
         let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
 
         var mapboxAccessToken: String? = nil
-        if let accessToken = route.accessToken {
+
+        if let accessToken = accessToken {
             mapboxAccessToken = accessToken
         } else if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
             let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
@@ -470,7 +476,7 @@ extension RouteController {
             sendArriveEvent()
         }
 
-        checkAndSendOutstandingFeedbackEvents(forceAll: false)
+        sendOutstandingFeedbackEvents(forceAll: false)
     }
 
     @objc func willReroute(notification: NSNotification) {
@@ -977,28 +983,30 @@ extension RouteController {
         eventsManager.flush()
     }
 
-    open func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
+    private func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         let attributes = eventsManager.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
         eventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         eventsManager.flush()
     }
 
-    func sendFeedbackEvent(event: CoreFeedbackEvent) {
-        // remove from outstanding event queue
-        if let index = outstandingFeedbackEvents.index(of: event) {
-            outstandingFeedbackEvents.remove(at: index)
+    private func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
+        events.forEach { event in
+            // remove from outstanding event queue
+            if let index = outstandingFeedbackEvents.index(of: event) {
+                outstandingFeedbackEvents.remove(at: index)
+            }
+
+            let eventName = event.eventDictionary["event"] as! String
+            let eventDictionary = eventsManager.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
+
+            eventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
         }
-
-        let eventName = event.eventDictionary["event"] as! String
-        let eventDictionary = eventsManager.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
-
-        eventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
         eventsManager.flush()
     }
 
     // MARK: Enqueue feedback
 
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
+    private func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
         let eventDictionary = eventsManager.navigationFeedbackEvent(routeController: self, type: type, description: description)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
@@ -1007,7 +1015,7 @@ extension RouteController {
         return event.id.uuidString
     }
 
-    func enqueueRerouteEvent() -> String {
+    private func enqueueRerouteEvent() -> String {
         let timestamp = Date()
         let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self)
 
@@ -1021,7 +1029,7 @@ extension RouteController {
         return event.id.uuidString
     }
 
-    func enqueueFoundFasterRouteEvent() -> String {
+    private func enqueueFoundFasterRouteEvent() -> String {
         let timestamp = Date()
         let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
 
@@ -1035,19 +1043,26 @@ extension RouteController {
         return event.id.uuidString
     }
 
-    func checkAndSendOutstandingFeedbackEvents(forceAll: Bool) {
-//        let now = Date()
-
-//        let eventsToPush = forceAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
-//            now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
-//        }
-
-        for event in outstandingFeedbackEvents {
-            sendFeedbackEvent(event: event)
-        }
+    private func shouldDelayEvents() -> Bool {
+        return delaysEventFlushing
     }
 
-    func resetSession() {
+    private func sendOutstandingFeedbackEvents(forceAll: Bool) {
+        let flushAll = forceAll || !shouldDelayEvents()
+        let eventsToPush = eventsToFlush(flushAll: flushAll)
+
+        sendFeedbackEvents(eventsToPush)
+    }
+
+    private func eventsToFlush(flushAll: Bool) -> [CoreFeedbackEvent] {
+        let now = Date()
+        let eventsToPush = flushAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
+            now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
+        }
+        return eventsToPush
+    }
+
+    private func resetSession() {
         sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
     }
 }
