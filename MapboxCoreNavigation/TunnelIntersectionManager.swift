@@ -61,14 +61,10 @@ open class TunnelIntersectionManager: NSObject {
         }
         
         if let classes = currentIntersection.outletRoadClasses {
-            // Main conditions to enable simulated tunnel animation:
-            // - User location is within minimum tunnel entrance radius
-            // - Current intersection's road classes contain a tunnel
-            // - Invalid GPS location updates
-           let isWithinTunnelEntranceRadius = userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
-            if isWithinTunnelEntranceRadius || classes.contains(.tunnel) || (manager is NavigationLocationManager && !location.isQualified) {
-                return true
-            }
+            let badLocationUpdates = (manager is NavigationLocationManager && !location.isQualified)
+            guard !classes.contains(.tunnel) || badLocationUpdates else { return true }
+            
+            return userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
         }
         
         return false
