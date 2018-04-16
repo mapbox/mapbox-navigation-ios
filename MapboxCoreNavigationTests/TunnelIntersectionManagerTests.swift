@@ -138,15 +138,9 @@ class TunnelIntersectionManagerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [tunnelLocation])
         
         // Enable the tunnel animation, which should enable the simulated location manager
-        let enableTunnelAnimationExpectation = expectation(description: "enableTunnelAnimation")
-        
-        routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willEnableAnimationAt: routeController.location!,
-                                                                                        callback: { (animationEnabled, _) in
-            enableTunnelAnimationExpectation.fulfill()
-            XCTAssertTrue(animationEnabled, "Animation through tunnel should be enabled.")
-        })
-        
-        self.wait(for: [enableTunnelAnimationExpectation], timeout: 1.0)
+        routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willEnableAnimationAt: routeController.location!) { isAnimationEnabled, manager in
+                XCTAssertTrue(isAnimationEnabled, "Animation through tunnel should be enabled.")
+        }
     }
     
     func testTunnelSimulatedNavigationDisabled() {
@@ -177,10 +171,10 @@ class TunnelIntersectionManagerTests: XCTestCase {
         
         let tunnelExitLocation = location(at: routeController.location!.coordinate, horizontalAccuracy: 20)
 
-        routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation, callback: { (animationEnabled, _) in
-            disableTunnelAnimationExpectation.fulfill()
-            XCTAssertFalse(animationEnabled, "Animation through tunnel should be disabled.")
-        })
+        routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation) { animationEnabled, _ in
+                disableTunnelAnimationExpectation.fulfill()
+                XCTAssertFalse(animationEnabled, "Animation through tunnel should be disabled.")
+        }
 
         self.wait(for: [disableTunnelAnimationExpectation], timeout: 1.0)
     }
