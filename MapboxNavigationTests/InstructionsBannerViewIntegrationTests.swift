@@ -17,8 +17,6 @@ func makeVisualInstruction(primaryInstruction: [VisualInstructionComponent], sec
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
-    let shieldURL1 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-41@3x.png")!
-    let shieldURL2 = URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-94@3x.png")!
 
     let asyncTimeout: TimeInterval = 2.0
 
@@ -30,9 +28,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     lazy var instructions = {
         return [
-            VisualInstructionComponent(type: .image, text: "US 41", imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "I 94", imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
         ]
     }()
 
@@ -66,8 +64,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
         //prime the cache to simulate images having already been loaded
-        let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL1, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
-        let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: shieldURL2, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
+        let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
+        let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: 0)
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.shieldKey()!, toDisk: false)
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.shieldKey()!, toDisk: false)
