@@ -259,7 +259,7 @@ open class StylableLabel: UILabel {
 }
 
 /// :nodoc
-@objc(MBStyleableView)
+@objc(MBStylableView)
 open class StylableView: UIView {
     @objc dynamic var borderWidth: CGFloat = 0.0 {
         didSet {

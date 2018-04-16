@@ -11,7 +11,7 @@ class InstructionPresenterTests: XCTestCase {
                 let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 50, height: 50)))
         
                 //FIXME: not ideal -- UIAutoLayout?
-                label.availableBounds = { return label.frame }
+                label.availableBounds = { return CGRect(origin: .zero, size: CGSize.iPhoneX) }
         
                 let presenter = InstructionPresenter([exitAttribute, exitCodeAttribute], dataSource: label)
                 let attributed = presenter.attributedText()
