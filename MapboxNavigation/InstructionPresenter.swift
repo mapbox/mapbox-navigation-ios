@@ -8,20 +8,13 @@ protocol InstructionPresenterDataSource: class {
     var shieldHeight: CGFloat { get }
 }
 
-protocol InstructionPresenterImageSource: class {
-    func cachedImageForKey(_ key: String) -> UIImage?
-    func imageWithURL(_ imageURL: URL, cacheKey: String, completion: @escaping (UIImage?) -> Void)
-}
-
-extension ImageRepository: InstructionPresenterImageSource {}
-
 class InstructionPresenter {
     typealias DataSource = InstructionPresenterDataSource
-    typealias ImageSource = InstructionPresenterImageSource
+    
     private let instruction: [VisualInstructionComponent]
+    private weak var dataSource: DataSource?
 
-    required init(_ instruction: [VisualInstructionComponent], dataSource: DataSource, imageSource: ImageSource = ImageRepository.shared) {
-        self.imageSource = imageSource
+    required init(_ instruction: [VisualInstructionComponent], dataSource: DataSource) {
         self.instruction = instruction
         self.dataSource = dataSource
     }
@@ -31,8 +24,7 @@ class InstructionPresenter {
     
     var onShieldDownload: ShieldDownloadCompletion?
 
-    private weak var dataSource: DataSource?
-    private let imageSource: ImageSource
+    private let imageRepository = ImageRepository.shared
     
     func attributedText() -> NSAttributedString {
         let string = NSMutableAttributedString()
@@ -42,7 +34,7 @@ class InstructionPresenter {
     
     func fittedAttributedComponents() -> [NSAttributedString] {
         guard let source = self.dataSource else { return [] }
-        var attributedPairs = self.attributedPairs(for: instruction, dataSource: source, imageSource: imageSource, onImageDownload: completeShieldDownload)
+        var attributedPairs = self.attributedPairs(for: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload)
         let availableBounds = source.availableBounds()
         let totalWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
@@ -71,7 +63,7 @@ class InstructionPresenter {
     
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
-    func attributedPairs(for components: [VisualInstructionComponent], dataSource: DataSource, imageSource: ImageSource, onImageDownload: ImageDownloadCompletion?) -> AttributedInstructionComponents {
+    func attributedPairs(for components: [VisualInstructionComponent], dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: ImageDownloadCompletion?) -> AttributedInstructionComponents {
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
         
@@ -104,7 +96,7 @@ class InstructionPresenter {
             }
                 
             //If we have a shield, lets include those
-            else if let shieldString = attributedString(forShieldComponent: component, imageSource: imageSource, dataSource: dataSource, onImageDownload: onImageDownload) {
+            else if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, dataSource: dataSource, onImageDownload: onImageDownload) {
                 build(component, [joinString, shieldString])
             }
             
@@ -116,11 +108,11 @@ class InstructionPresenter {
                     let componentAfter = components.component(after: component)
                     
                     if let shieldKey = componentBefore?.shieldKey(),
-                        imageSource.cachedImageForKey(shieldKey) != nil {
+                        imageRepository.cachedImageForKey(shieldKey) != nil {
                         continue
                     }
                     if let shieldKey = componentAfter?.shieldKey(),
-                        imageSource.cachedImageForKey(shieldKey) != nil {
+                        imageRepository.cachedImageForKey(shieldKey) != nil {
                         continue
                     }
                 }
@@ -140,16 +132,16 @@ class InstructionPresenter {
         return exitString
     }
     
-    func attributedString(forShieldComponent shield: VisualInstructionComponent, imageSource:ImageSource, dataSource: DataSource, onImageDownload: ImageDownloadCompletion?) -> NSAttributedString? {
+    func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: ImageDownloadCompletion?) -> NSAttributedString? {
         guard let shieldKey = shield.shieldKey() else { return nil }
         
         //If we have the shield already cached, use that.
-        if let cachedImage = imageSource.cachedImageForKey(shieldKey) {
+        if let cachedImage = repository.cachedImageForKey(shieldKey) {
             return attributedString(withFont: dataSource.font, shieldImage: cachedImage)
         }
         
         // Let's download the shield
-        shieldImageForComponent(shield, in: imageSource, height: dataSource.shieldHeight, completion: onImageDownload)
+        shieldImageForComponent(shield, in: repository, height: dataSource.shieldHeight, completion: onImageDownload)
         
         //and return the shield's code for usage in the meantime until download is complete.
         return attributedString(forTextComponent: shield, dataSource: dataSource)
@@ -160,12 +152,12 @@ class InstructionPresenter {
         return NSAttributedString(string: text, attributes: attributes(for: dataSource))
     }
     
-    private func shieldImageForComponent(_ component: VisualInstructionComponent, in imageSource: ImageSource, height: CGFloat, completion: ImageDownloadCompletion?) {
+    private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, height: CGFloat, completion: ImageDownloadCompletion?) {
         guard let imageURL = component.imageURL, let shieldKey = component.shieldKey() else {
             return
         }
 
-        imageSource.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion ?? {_ in } )
+        repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion ?? {_ in } )
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
@@ -174,7 +166,7 @@ class InstructionPresenter {
                 continue
             }
 
-            if imageSource.cachedImageForKey(key) == nil {
+            if imageRepository.cachedImageForKey(key) == nil {
                 return false
             }
         }
