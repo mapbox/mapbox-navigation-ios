@@ -11,10 +11,10 @@ protocol InstructionPresenterDataSource: class {
 class InstructionPresenter {
     typealias DataSource = InstructionPresenterDataSource
     
-    private let instruction: [VisualInstructionComponent]
+    private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
 
-    required init(_ instruction: [VisualInstructionComponent], dataSource: DataSource) {
+    required init(_ instruction: VisualInstruction, dataSource: DataSource) {
         self.instruction = instruction
         self.dataSource = dataSource
     }
@@ -63,7 +63,8 @@ class InstructionPresenter {
     
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
-    func attributedPairs(for components: [VisualInstructionComponent], dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: ImageDownloadCompletion?) -> AttributedInstructionComponents {
+    func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: ImageDownloadCompletion?) -> AttributedInstructionComponents {
+        let components = instruction.textComponents
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
         
@@ -88,9 +89,9 @@ class InstructionPresenter {
             guard component.type != .exit else { continue }
             
             //If we have a exit, in the first two components, lets handle that first.
-            if component.maneuverType == .takeOffRamp,
+            if instruction.maneuverType == .takeOffRamp,
                 isExitInstruction, 0...1 ~= index,
-                let exitString = attributedString(forExitComponent: component, dataSource: dataSource) {
+                let exitString = attributedString(forExitComponent: component, maneuverDirection: instruction.maneuverDirection, dataSource: dataSource) {
         
                 build(component, [exitString])
             }
@@ -125,9 +126,9 @@ class InstructionPresenter {
         return (components: processedComponents, attributedStrings: strings)
     }
 
-    func attributedString(forExitComponent exit: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
+    func attributedString(forExitComponent exit: VisualInstructionComponent, maneuverDirection: ManeuverDirection, dataSource: DataSource) -> NSAttributedString? {
         guard exit.type == .exitCode, let exitCode = exit.text else { return nil }
-        let exitSide: ExitSide = exit.maneuverDirection == .left ? .left : .right
+        let exitSide: ExitSide = maneuverDirection == .left ? .left : .right
         guard let exitString = exitShield(side: exitSide, text: exitCode, dataSource: dataSource) else { return nil }
         return exitString
     }
@@ -161,7 +162,7 @@ class InstructionPresenter {
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
-        for component in instruction {
+        for component in instruction.textComponents {
             guard let key = component.shieldKey() else {
                 continue
             }

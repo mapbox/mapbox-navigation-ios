@@ -9,7 +9,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var availableBounds: AvailableBoundsHandler!
     var shieldHeight: CGFloat = 30
 
-    var instruction: [VisualInstructionComponent]? {
+    var instruction: VisualInstruction? {
         didSet {
             guard let instruction = instruction else {
                 text = nil

@@ -39,7 +39,7 @@ public class ManeuverView: UIView {
         }
     }
 
-    @objc public var visualInstruction: VisualInstruction? {
+    @objc public var visualInstruction: VisualInstructionBanner? {
         didSet {
             setNeedsDisplay()
         }
@@ -66,8 +66,9 @@ public class ManeuverView: UIView {
         }
 
         var flip: Bool = false
-        guard let maneuverType = visualInstruction.primaryTextComponents.first?.maneuverType else { return }
-        guard let maneuverDirection = visualInstruction.primaryTextComponents.first?.maneuverDirection else { return }
+        let maneuverType = visualInstruction.primaryInstruction.maneuverType
+        let maneuverDirection = visualInstruction.primaryInstruction.maneuverDirection
+        
         let type = maneuverType != .none ? maneuverType : .turn
         let direction = maneuverDirection != .none ? maneuverDirection : .straightAhead
 
@@ -82,17 +83,9 @@ public class ManeuverView: UIView {
             ManeuversStyleKit.drawFork(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor)
             flip = [.left, .slightLeft, .sharpLeft].contains(direction)
         case .takeRoundabout, .turnAtRoundabout, .takeRotary:
-            switch direction {
-            case .straightAhead:
-                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 180)
-                flip = visualInstruction.drivingSide == .left
-            case .left, .slightLeft, .sharpLeft:
-                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 275)
-                flip = visualInstruction.drivingSide == .left
-            default:
-                ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: 90)
-                flip = visualInstruction.drivingSide == .left
-            }
+            ManeuversStyleKit.drawRoundabout(frame: bounds, resizing: resizing, primaryColor: primaryColor, secondaryColor: secondaryColor, roundabout_angle: CGFloat(visualInstruction.primaryInstruction.degrees))
+            flip = visualInstruction.drivingSide == .left
+            
         case .arrive:
             switch direction {
             case .right:
