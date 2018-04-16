@@ -46,39 +46,20 @@ class ManeuverViewTests: FBSnapshotTestCase {
         FBSnapshotVerifyLayer(maneuverView.layer)
     }
     
-    func testRoundabout45() {
-        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 45)
-        FBSnapshotVerifyLayer(maneuverView.layer)
-    }
-    
-    func testRoundabout90() {
-        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 90)
-        FBSnapshotVerifyLayer(maneuverView.layer)
-    }
-    
-    func testRoundabout135() {
-        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 135)
-        FBSnapshotVerifyLayer(maneuverView.layer)
-    }
-    
-    func testRoundabout180() {
-        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 180)
-        FBSnapshotVerifyLayer(maneuverView.layer)
-    }
-    
-    func testRoundabout225() {
-        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 225)
-        FBSnapshotVerifyLayer(maneuverView.layer)
-    }
-    
-    func testRoundabout315() {
-        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 315)
-        FBSnapshotVerifyLayer(maneuverView.layer)
-    }
-    
-    func testRoundabout360() {
-        maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, 360)
-        FBSnapshotVerifyLayer(maneuverView.layer)
+    func testRoundabout() {
+        let incrementer: CGFloat = 45
+        let size = CGSize(width: maneuverView.bounds.width * (360 / incrementer), height: maneuverView.bounds.height)
+        let views = UIView(frame: CGRect(origin: .zero, size: size))
+        
+        for bearing in stride(from: CGFloat(0), to: CGFloat(360), by: incrementer) {
+            let position = CGPoint(x: maneuverView.bounds.width * (bearing / incrementer), y: 0)
+            let view = ManeuverView(frame: CGRect(origin: position, size: maneuverView.bounds.size))
+            view.backgroundColor = .white
+            view.visualInstruction = maneuverInstruction(.takeRoundabout, .right, .right, CLLocationDegrees(bearing))
+            views.addSubview(view)
+        }
+        
+        FBSnapshotVerifyLayer(views.layer)
     }
     
     // TODO: Figure out why the flip transformation do not render in a snapshot so we can test left turns and left side rule of the road.
