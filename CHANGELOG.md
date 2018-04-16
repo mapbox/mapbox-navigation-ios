@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v0.16.2 (April 13, 2018)
+
+* Fixed a compiler error after installing the SDK using CocoaPods. ([#1296](https://github.com/mapbox/mapbox-navigation-ios/pull/1296))
+
 ## v0.16.1 (April 9, 2018)
 
 ### User Interface
