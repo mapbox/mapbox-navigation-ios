@@ -6,9 +6,23 @@ public typealias RouteControllerSimulationCompletionBlock = ((_ animationEnabled
 @objc(MBTunnelIntersectionManagerDelegate)
 public protocol TunnelIntersectionManagerDelegate: class {
     
+    /**
+     Called immediately when the location manager detects a tunnel on a route.
+     
+     - parameter manager: The location manager that currently sends the location updates.
+     - parameter location: The user’s current location where the tunnel was detected.
+     - parameter callback: The callback which indicates the animated enabled status and the active location manager.
+     */
     @objc(tunnelIntersectionManager:willEnableAnimationAtLocation:callback:)
     optional func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation, callback: RouteControllerSimulationCompletionBlock?)
     
+    /**
+     Called immediately when the location manager detects the user's current location is no longer within a tunnel.
+     
+     - parameter manager: The location manager that currently sends the location updates.
+     - parameter location: The user’s current location where the tunnel was detected.
+     - parameter callback: The callback which indicates the animated enabled status and the active location manager.
+     */
     @objc(tunnelIntersectionManager:willDisableAnimationAtLocation:callback:)
     optional func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation, callback: RouteControllerSimulationCompletionBlock?)
 }
