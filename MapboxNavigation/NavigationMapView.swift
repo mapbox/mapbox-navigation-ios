@@ -959,8 +959,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Streets source</a>. On iOS, the user can set the system’s preferred
      language in Settings, General Settings, Language & Region.
      
-     Unlike the `MGLStyle.localizesLabels` property, this method localizes road
-     labels into the local language, regardless of the system’s preferred
+     Unlike the `MGLStyle.localizeLabels(into:)` method, this method localizes
+     road labels into the local language, regardless of the system’s preferred
      language, in an effort to match road signage. The turn banner always
      displays road names and exit destinations in the local language, so you
      should call this method in the
@@ -982,13 +982,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             $0.identifier
         }
         
-        let locale: Locale?
-        if let language = MGLVectorTileSource.preferredMapboxStreetsLanguage {
-            locale = Locale(identifier: language)
-        } else {
-            locale = nil
-        }
-        
         for layer in style.layers where layer is MGLSymbolStyleLayer {
             let layer = layer as! MGLSymbolStyleLayer
             guard let sourceIdentifier = layer.sourceIdentifier,
@@ -1000,9 +993,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             // Road labels should match road signage.
-            let locale = layer.sourceLayerIdentifier == "road_label" ? nil : locale
+            let locale = layer.sourceLayerIdentifier == "road_label" ? Locale(identifier: "mul") : nil
             
-            let localizedText = text.localized(into: locale, replacingTokens: true)
+            let localizedText = text.mgl_expressionLocalized(into: locale)
             if localizedText != text {
                 layer.text = localizedText
             }
