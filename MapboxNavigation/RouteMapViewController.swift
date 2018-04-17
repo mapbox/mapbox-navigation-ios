@@ -677,7 +677,7 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func navigationMapViewWillUpdateStreetName(_ name: String) {
-        customStreetName = name
+        customStreetName = name 
     }
     
     /**
