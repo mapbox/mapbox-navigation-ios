@@ -158,7 +158,7 @@ class InstructionPresenter {
             return
         }
 
-        repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion ?? {_ in } )
+        repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion! )
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
@@ -201,7 +201,7 @@ class InstructionPresenter {
     }
     
     private func completeShieldDownload(_ image: UIImage?) {
-        onShieldDownload?(attributedText())
+        onShieldDownload?(attributedText()) //FIXME: Can we work with the image directly?
     }
     
     private func takeSnapshot(on view: UIView) -> UIImage?{

@@ -15,7 +15,7 @@ class ImageDownloaderTests: XCTestCase {
     }()
 
     let imageURL = URL(string: "https://zombo.com/lulz/selfie.png")!
-    let asyncTimeout: TimeInterval = 2.0
+    let asyncTimeout: TimeInterval = 15.0
 
     override func setUp() {
         super.setUp()

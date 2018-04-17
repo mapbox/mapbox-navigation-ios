@@ -19,7 +19,9 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             let presenter = InstructionPresenter(instruction, dataSource: self)
             attributedText = presenter.attributedText()
             presenter.onShieldDownload = { [weak self] (attributedText: NSAttributedString) in
-                self?.attributedText = attributedText
+                DispatchQueue.main.async {
+                    self?.attributedText = attributedText
+                }
             }
             instructionPresenter = presenter
         }

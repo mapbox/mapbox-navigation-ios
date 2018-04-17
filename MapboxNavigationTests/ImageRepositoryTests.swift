@@ -12,7 +12,7 @@ class ImageRepositoryTests: XCTestCase {
         return repo
     }()
 
-    let asyncTimeout: TimeInterval = 2.0
+    let asyncTimeout: TimeInterval = 10.0
 
     override func setUp() {
         super.setUp()

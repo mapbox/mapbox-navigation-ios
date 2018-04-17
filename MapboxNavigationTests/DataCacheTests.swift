@@ -5,7 +5,7 @@ import XCTest
 class DataCacheTests: XCTestCase {
 
     let cache: DataCache = DataCache()
-    let asyncTimeout: TimeInterval = 2.0
+    let asyncTimeout: TimeInterval = 10.0
 
     override func setUp() {
         super.setUp()

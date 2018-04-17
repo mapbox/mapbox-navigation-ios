@@ -28,7 +28,7 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
 
-    let asyncTimeout: TimeInterval = 2.0
+    let asyncTimeout: TimeInterval = 15.0
 
     lazy var imageRepository: ImageRepository = {
         let repo = ImageRepository.shared
@@ -78,7 +78,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
 
-        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: [instruction1, instruction2])
         
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.shieldKey()!, toDisk: false)
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.shieldKey()!, toDisk: false)

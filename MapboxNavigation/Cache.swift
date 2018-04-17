@@ -53,16 +53,8 @@ internal class FileCache {
      Stores data in the file cache for the given key, and calls the completion handler when finished.
      */
     public func store(_ data: Data, forKey key: String, completion: CompletionHandler?) {
-        let dispatchCompletion = {
-            if let completion = completion {
-                DispatchQueue.main.async {
-                    completion()
-                }
-            }
-        }
-
         guard let fileManager = fileManager else {
-            dispatchCompletion()
+            completion?()
             return
         }
 
@@ -75,7 +67,7 @@ internal class FileCache {
             } catch {
                 NSLog("================> Failed to write data to URL \(cacheURL)")
             }
-            dispatchCompletion()
+            completion?()
         }
 
     }
@@ -113,11 +105,7 @@ internal class FileCache {
 
             self.createCacheDirIfNeeded(cacheURL, fileManager: fileManager)
 
-            if let completion = completion {
-                DispatchQueue.main.async {
-                    completion()
-                }
-            }
+            completion?()
         }
     }
 

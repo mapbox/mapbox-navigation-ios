@@ -153,11 +153,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
 
     private func fireAllCompletions(_ image: UIImage?, data: Data?, error: Error?) {
         barrierQueue.sync {
-            for completion in completionBlocks {
-                DispatchQueue.main.async {
-                    completion(image, data, error)
-                }
-            }
+            completionBlocks.forEach { $0(image, data, error) }
         }
     }
 }
