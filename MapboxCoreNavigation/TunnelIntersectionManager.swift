@@ -74,14 +74,11 @@ open class TunnelIntersectionManager: NSObject {
             return false
         }
         
-        if let classes = currentIntersection.outletRoadClasses {
-            let badLocationUpdates = (manager is NavigationLocationManager && !location.isQualified)
-            guard !classes.contains(.tunnel) || badLocationUpdates else { return true }
-            
-            return userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
+        if let classes = currentIntersection.outletRoadClasses, classes.contains(.tunnel) {
+            return true
         }
         
-        return false
+        return userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
     }
     
     /**
