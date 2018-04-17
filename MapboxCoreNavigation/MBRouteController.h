@@ -3,7 +3,7 @@
 /**
  Posted when `MBRouteController` receives a user location update representing movement along the expected route.
  
- The user info dictionary contains the keys `MBRouteControllerRouteProgressKey` and `MBRouteControllerLocationKey`.
+ The user info dictionary contains the keys `MBRouteControllerRouteProgressKey`, `MBRouteControllerLocationKey` and `MBRouteControllerCurrentStreetNameKey`.
  
  :nodoc:
  */
@@ -66,6 +66,11 @@ extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerLocationK
  A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
  */
 extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerRawLocationKey;
+
+/**
+ A key in the user info dictionary of a `Notification.Name.MBRouteControllerProgressDidChange` or `Notification.Name.RouteControllerWillReroute` notification. The corresponding value is a `String` object representing the current street name.
+ */
+extern const MBRouteControllerNotificationUserInfoKey MBRouteControllerCurrentStreetNameKey;
 
 /**
  A key in the user info dictionary of a `Notification.Name.RouteControllerDidFailToReroute` notification. The corresponding value is an `NSError` object indicating why `RouteController` was unable to calculate a new route.

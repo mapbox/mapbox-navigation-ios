@@ -11,5 +11,6 @@ const MBRouteControllerNotificationUserInfoKey MBRouteControllerLocationKey     
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerRawLocationKey                = @"rawLocation";
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerRoutingErrorKey               = @"error";
 const MBRouteControllerNotificationUserInfoKey MBRouteControllerIsProactiveKey                = @"RouteControllerDidFindFasterRoute";
+const MBRouteControllerNotificationUserInfoKey MBRouteControllerCurrentStreetNameKey          = @"currentStreetName";
 
 NSString *const MBErrorDomain = @"ErrorDomain";
