@@ -271,7 +271,7 @@ open class RouteController: NSObject {
         
         tunnelIntersectionManager = TunnelIntersectionManager()
         tunnelIntersectionManager?.delegate = self
-        tunnelIntersectionManagerCompletionHandler = { enabled, manager in
+        tunnelIntersectionManagerCompletionHandler = { enabled, _ in
             self.tunnelIntersectionManager?.isAnimationEnabled = enabled
         }
     }
