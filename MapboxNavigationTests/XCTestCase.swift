@@ -3,6 +3,6 @@ import XCTest
 
 extension XCTestCase {
     enum NavigationTests {
-        static let timeout: DispatchTime = DispatchTime.now() + DispatchTimeInterval.seconds(8)
+        static let timeout: DispatchTime = DispatchTime.now() + DispatchTimeInterval.seconds(10)
     }
 }
