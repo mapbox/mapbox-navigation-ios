@@ -676,10 +676,6 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapViewUserAnchorPoint?(mapView) ?? .zero
     }
     
-    func navigationMapViewWillUpdateStreetName(_ name: String) {
-        customStreetName = name 
-    }
-    
     /**
      Updates the current road name label to reflect the road on which the user is currently traveling.
      
@@ -690,6 +686,12 @@ extension RouteMapViewController: NavigationViewDelegate {
             let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
             navigationView.resumeButton.isHidden else {
                 return
+        }
+        
+        let roadName = delegate?.mapViewController(self, roadNameAt: location)
+        guard roadName == nil else {
+            navigationView.wayNameView.text = roadName
+            return
         }
         
         // Avoid aggressively opting the developer into Mapbox services if they
@@ -931,6 +933,7 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
     func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
 }
 
 

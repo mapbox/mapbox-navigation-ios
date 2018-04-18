@@ -526,6 +526,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
     }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
+        return nil 
+    }
 }
 
 //MARK: - RouteControllerDelegate

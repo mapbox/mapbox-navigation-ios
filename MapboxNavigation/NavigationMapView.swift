@@ -309,7 +309,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
         let currentStreetName = notification.userInfo![RouteControllerNotificationUserInfoKey.currentStreetNameKey] as! String
-        navigationMapDelegate?.navigationMapViewWillUpdateStreetName?(currentStreetName)
+        
     }
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
@@ -1235,9 +1235,6 @@ public protocol NavigationMapViewDelegate: class {
     */
     @objc(navigationMapViewUserAnchorPoint:)
     optional func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint
-    
-    @objc(navigationMapViewWillUpdateStreetName:)
-    optional func navigationMapViewWillUpdateStreetName(_ name: String)
 }
 
 // MARK: NavigationMapViewCourseTrackingDelegate
