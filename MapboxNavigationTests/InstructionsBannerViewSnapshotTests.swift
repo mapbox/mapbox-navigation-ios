@@ -24,13 +24,13 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     }
     
     override func tearDown() {
-        super.tearDown()
-        
-        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
+        let semaphore = DispatchSemaphore(value: 0)
         imageRepository.resetImageCache {
-            clearImageCacheExpectation.fulfill()
+            semaphore.signal()
         }
-        self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
+        semaphore.wait()
+
+        super.tearDown()
     }
     
     func testSinglelinePrimary() {

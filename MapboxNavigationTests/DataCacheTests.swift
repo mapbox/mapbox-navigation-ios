@@ -5,18 +5,21 @@ import XCTest
 class DataCacheTests: XCTestCase {
 
     let cache: DataCache = DataCache()
-    let asyncTimeout: TimeInterval = 10.0
+
+    private func clearDisk() {
+        let semaphore = DispatchSemaphore(value: 0)
+        cache.clearDisk {
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
 
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
 
         cache.clearMemory()
-        let expectation = self.expectation(description: "Clearing Disk Cache")
-        cache.clearDisk {
-            expectation.fulfill()
-        }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        clearDisk()
     }
 
     let dataKey = "dataKey"
@@ -34,19 +37,19 @@ class DataCacheTests: XCTestCase {
     }
 
     private func storeDataInMemory() {
-        let expectation = self.expectation(description: "Storing data in memory cache")
+        let semaphore = DispatchSemaphore(value: 0)
         cache.store(exampleData!, forKey: dataKey, toDisk: false) {
-            expectation.fulfill()
+            semaphore.signal()
         }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        semaphore.wait()
     }
 
     private func storeDataOnDisk() {
-        let expectation = self.expectation(description: "Storing data in disk cache")
+        let semaphore = DispatchSemaphore(value: 0)
         cache.store(exampleData!, forKey: dataKey, toDisk: true) {
-            expectation.fulfill()
+            semaphore.signal()
         }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        semaphore.wait()
     }
 
     // MARK: Tests
@@ -80,12 +83,7 @@ class DataCacheTests: XCTestCase {
         storeDataOnDisk()
 
         cache.clearMemory()
-
-        let expectation = self.expectation(description: "Clearing Disk Cache")
-        cache.clearDisk {
-            expectation.fulfill()
-        }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        clearDisk()
 
         XCTAssertNil(cache.data(forKey: dataKey))
     }

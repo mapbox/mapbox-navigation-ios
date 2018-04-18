@@ -9,6 +9,7 @@ enum DownloadError: Error {
 protocol ImageDownload: URLSessionDataDelegate {
     init(request: URLRequest, in session: URLSession)
     func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock)
+    var isFinished: Bool { get }
 }
 
 class ImageDownloadOperation: Operation, ImageDownload {

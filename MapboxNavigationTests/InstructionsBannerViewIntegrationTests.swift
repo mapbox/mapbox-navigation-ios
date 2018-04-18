@@ -27,9 +27,6 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
-
-    let asyncTimeout: TimeInterval = 15.0
-
     lazy var imageRepository: ImageRepository = {
         let repo = ImageRepository.shared
         repo.sessionConfiguration = URLSessionConfiguration.default
@@ -45,15 +42,19 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         return components
     }()
 
+    private func resetImageCache() {
+        let semaphore = DispatchSemaphore(value: 0)
+        imageRepository.resetImageCache {
+            semaphore.signal()
+        }
+        semaphore.wait()
+    }
+
     override func setUp() {
         super.setUp()
 
         imageRepository.disableDiskCache()
-        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
-        imageRepository.resetImageCache {
-            clearImageCacheExpectation.fulfill()
-        }
-        self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
+        resetImageCache()
 
         ImageDownloadOperationSpy.reset()
         imageRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
@@ -78,7 +79,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
 
-        
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.shieldKey()!, toDisk: false)
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.shieldKey()!, toDisk: false)
 
@@ -89,13 +89,10 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
         //explicitly reset the cache
-        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
-        imageRepository.resetImageCache {
-            clearImageCacheExpectation.fulfill()
-        }
-        self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
+        resetImageCache()
     }
 
+    //FIXME: this test is artificially slow as we are polling the run loop following each simulated download. need a better way of synchronizing on the underlying completions.
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
         let view = instructionsView()
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
@@ -142,6 +139,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
         operation.fireAllCompletions(ShieldImage.i280.image, data: UIImagePNGRepresentation(ShieldImage.i280.image), error: nil)
+        //FIXME: need to get to a place where this isn't necessary, probably by adjusting our test code.
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 1))
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
     }
