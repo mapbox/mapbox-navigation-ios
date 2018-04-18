@@ -106,7 +106,6 @@ class RouteMapViewController: UIViewController {
         return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: navigationView.bottomBannerView.bounds.height, right: 20)
     }
     
-    private var customStreetName: String?
 
     convenience init(routeController: RouteController, delegate: RouteMapViewControllerDelegate? = nil) {
         self.init()
@@ -756,9 +755,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                 if minDistanceBetweenPoints < smallestLabelDistance {
                     smallestLabelDistance = minDistanceBetweenPoints
                     
-                    if let streetName = customStreetName {
-                        currentName = streetName
-                    } else if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
+                    if let line = feature as? MGLPolylineFeature, let name = line.attribute(forKey: "name") as? String {
                         currentName = name
                     } else if let line = feature as? MGLMultiPolylineFeature, let name = line.attribute(forKey: "name") as? String {
                         currentName = name
