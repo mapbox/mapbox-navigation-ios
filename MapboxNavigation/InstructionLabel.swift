@@ -8,7 +8,9 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
     var shieldHeight: CGFloat = 30
-
+    var imageRepository: ImageRepository = .shared
+    var imageDownloadCompletion: (() -> Void)?
+    
     var instruction: VisualInstruction? {
         didSet {
             guard let instruction = instruction else {
@@ -16,13 +18,17 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                 instructionPresenter = nil
                 return
             }
-            let presenter = InstructionPresenter(instruction, dataSource: self)
-            attributedText = presenter.attributedText()
-            presenter.onShieldDownload = { [weak self] (attributedText: NSAttributedString) in
-                DispatchQueue.main.async {
+            let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
+                DispatchQueue.main.async{
                     self?.attributedText = attributedText
+                    self?.imageDownloadCompletion?()
                 }
             }
+            
+            
+            let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
+            
+            attributedText = presenter.attributedText()
             instructionPresenter = presenter
         }
     }

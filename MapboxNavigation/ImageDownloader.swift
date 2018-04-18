@@ -27,10 +27,16 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         self.queue.name = Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloader"
     }
 
-    convenience init(sessionConfiguration: URLSessionConfiguration) {
+    convenience init(sessionConfiguration: URLSessionConfiguration? = nil, operationType: ImageDownload.Type? = nil) {
         self.init()
 
-        self.sessionConfiguration = sessionConfiguration
+        if let config = sessionConfiguration {
+            self.sessionConfiguration = config
+        }
+        
+        if let op = operationType {
+            self.operationType = op
+        }
     }
 
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {

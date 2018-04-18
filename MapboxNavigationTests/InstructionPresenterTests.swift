@@ -16,7 +16,7 @@ class InstructionPresenterTests: XCTestCase {
         //FIXME: not ideal -- UIAutoLayout?
         label.availableBounds = { return CGRect(origin: .zero, size: CGSize.iPhoneX) }
 
-        let presenter = InstructionPresenter(exitInstruction, dataSource: label)
+        let presenter = InstructionPresenter(exitInstruction, dataSource: label, downloadCompletion: nil)
         let attributed = presenter.attributedText()
 
         let attachment = attributed.attribute(.attachment, at: 0, effectiveRange: nil)

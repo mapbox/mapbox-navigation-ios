@@ -14,17 +14,19 @@ class InstructionPresenter {
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
 
-    required init(_ instruction: VisualInstruction, dataSource: DataSource) {
+    required init(_ instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository = .shared, downloadCompletion: ShieldDownloadCompletion?) {
         self.instruction = instruction
         self.dataSource = dataSource
+        self.imageRepository = imageRepository
+        self.onShieldDownload = downloadCompletion
     }
 
     typealias ImageDownloadCompletion = (UIImage?) -> Void
     typealias ShieldDownloadCompletion = (NSAttributedString) -> ()
     
-    var onShieldDownload: ShieldDownloadCompletion?
+    let onShieldDownload: ShieldDownloadCompletion?
 
-    private let imageRepository = ImageRepository.shared
+    private let imageRepository: ImageRepository
     
     func attributedText() -> NSAttributedString {
         let string = NSMutableAttributedString()

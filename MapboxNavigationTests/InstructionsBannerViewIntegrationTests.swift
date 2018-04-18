@@ -95,17 +95,42 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     //FIXME: this test is artificially slow as we are polling the run loop following each simulated download. need a better way of synchronizing on the underlying completions.
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
         let view = instructionsView()
+        
+        //setup expectations
+        let firstExpectation = XCTestExpectation(description: "First Component Callback")
+        let secondExpectation = XCTestExpectation(description: "Second Component Callback")
+        
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
+        view.primaryLabel.imageDownloadCompletion = firstExpectation.fulfill
+        
+        view.secondaryLabel.imageDownloadCompletion = {
+            XCTFail("ImageDownloadCompletion should not have been called on the secondary label.")
+        }
+        
+        //set the view, which triggers the instruction image fetch
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
-
+        
+        
         //Slash should be present until an adjacent shield is downloaded
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
 
+        //simulate the downloads
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
         simulateDownloadingShieldForComponent(firstDestinationComponent)
+        
+        //ensure that first callback fires
+        wait(for: [firstExpectation], timeout: 5)
 
+        //change the callback to track the second shield component
+        view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
+        
         let secondDestinationComponent = instructions[2]
         simulateDownloadingShieldForComponent(secondDestinationComponent)
 
+        //ensure that second callback fires
+        wait(for: [secondExpectation], timeout: 5)
+ 
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
     }
@@ -120,7 +145,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         
         label.availableBounds = { return label.frame }
         
-        let presenter = InstructionPresenter(exitInstruction, dataSource: label)
+        let presenter = InstructionPresenter(exitInstruction, dataSource: label, downloadCompletion: nil)
         let attributed = presenter.attributedText()
         
         let spaceRange = NSMakeRange(1, 1)
