@@ -687,8 +687,8 @@ extension RouteMapViewController: NavigationViewDelegate {
                 return
         }
         
-        let roadName = delegate?.mapViewController(self, roadNameAt: location)
-        guard roadName == nil else {
+        let roadName = delegate?.mapViewController(self, roadNameAt: location) ?? ""
+        guard roadName.isEmpty else {
             navigationView.wayNameView.isHidden = false
             navigationView.wayNameView.text = roadName
             return

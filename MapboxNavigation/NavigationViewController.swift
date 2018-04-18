@@ -174,6 +174,15 @@ public protocol NavigationViewControllerDelegate {
      - return: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
+    
+    /**
+     Called when the current location has a customized street name.
+     
+     - parameter navigationViewController: The navigation view controller aware of the user-defined street name.
+     - parameter location: The location where the custom street name gets assigned.
+     - return String: The custom street name defined by the user.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
 }
 
 /**
@@ -525,6 +534,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
+    }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
+        return delegate?.navigationViewController?(self, roadNameAt: location)
     }
 }
 
