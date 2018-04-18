@@ -47,7 +47,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         imageRepository.resetImageCache {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     override func setUp() {

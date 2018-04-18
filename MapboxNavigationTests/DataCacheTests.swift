@@ -11,7 +11,8 @@ class DataCacheTests: XCTestCase {
         cache.clearDisk {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     override func setUp() {
@@ -41,7 +42,8 @@ class DataCacheTests: XCTestCase {
         cache.store(exampleData!, forKey: dataKey, toDisk: false) {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     private func storeDataOnDisk() {
@@ -49,7 +51,8 @@ class DataCacheTests: XCTestCase {
         cache.store(exampleData!, forKey: dataKey, toDisk: true) {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     // MARK: Tests

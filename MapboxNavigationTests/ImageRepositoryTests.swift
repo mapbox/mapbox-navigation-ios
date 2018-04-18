@@ -23,7 +23,8 @@ class ImageRepositoryTests: XCTestCase {
         repository.resetImageCache {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     func test_imageWithURL_downloadsImageWhenNotCached() {
@@ -40,8 +41,9 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             semaphore.signal()
         }
-        semaphore.wait()
-
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
         XCTAssertNotNil(imageReturned)
         // round-trip through UIImagePNGRepresentation results in changes in data due to metadata stripping, thus direct image comparison is not always possible.
         XCTAssertTrue((imageReturned?.isKind(of: UIImage.self))!)
@@ -60,8 +62,9 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             semaphore.signal()
         }
-        semaphore.wait()
-
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
         XCTAssertNil(ImageLoadingURLProtocolSpy.pastRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
     }

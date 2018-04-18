@@ -45,7 +45,8 @@ class ImageDownloaderTests: XCTestCase {
             errorReturned = error
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
 
         // The ImageDownloader is meant to be used with an external caching mechanism
         let request = ImageLoadingURLProtocolSpy.pastRequestForURL(imageURL)!
@@ -75,7 +76,7 @@ class ImageDownloaderTests: XCTestCase {
 
         runUntil(condition: {
             return downloader.activeOperationWithURL(imageURL) == nil
-        }, pollingInterval: 0.1)
+        }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         //These flags might seem redundant, but it's good to be explicit here
         XCTAssertTrue(firstCallbackCalled)
@@ -90,12 +91,13 @@ class ImageDownloaderTests: XCTestCase {
             firstCallbackCalled = true
             semaphore.signal()
         }
-        semaphore.wait()
-
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
         // we are beholden to the URL loading system here... can't proceed until the URLProtocol has finished winding down its previous URL loading work
         runUntil(condition: {
             return downloader.activeOperationWithURL(imageURL) == nil
-        }, pollingInterval: 0.1)
+        }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         var secondCallbackCalled = false
 
@@ -103,17 +105,23 @@ class ImageDownloaderTests: XCTestCase {
             secondCallbackCalled = true
             semaphore.signal()
         }
-        semaphore.wait()
-
+        let secondSemaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(secondSemaphoreResult == .success, "Semaphore timed out")
+        
         //These flags might seem redundant, but it's good to be explicit sometimes
         XCTAssertTrue(firstCallbackCalled)
         XCTAssertTrue(secondCallbackCalled)
     }
 
-    private func runUntil(condition: () -> Bool, pollingInterval: TimeInterval) {
+    private func runUntil(condition: () -> Bool, pollingInterval: TimeInterval, until timeout: DispatchTime) {
+        guard (timeout >= DispatchTime.now()) else {
+            XCTFail("Timeout occurred on \(#function)")
+            return
+        }
+        
         if condition() == false {
             RunLoop.current.run(until: Date(timeIntervalSinceNow: pollingInterval))
-            runUntil(condition: condition, pollingInterval: pollingInterval)
+            runUntil(condition: condition, pollingInterval: pollingInterval, until: timeout)
         }
     }
 }

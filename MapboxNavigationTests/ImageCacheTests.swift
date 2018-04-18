@@ -12,7 +12,8 @@ class ImageCacheTests: XCTestCase {
         cache.clearDisk {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     override func setUp() {
@@ -30,7 +31,8 @@ class ImageCacheTests: XCTestCase {
         cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: false) {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     private func storeImageOnDisk() {
@@ -38,7 +40,8 @@ class ImageCacheTests: XCTestCase {
         cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: true) {
             semaphore.signal()
         }
-        semaphore.wait()
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     // MARK: Tests
