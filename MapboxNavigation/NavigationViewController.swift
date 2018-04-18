@@ -526,10 +526,6 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
     }
-    
-    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
-        return nil // TODO: Under discussion regarding a solution on how we expect developers to store a road name at a location.
-    }
 }
 
 //MARK: - RouteControllerDelegate
