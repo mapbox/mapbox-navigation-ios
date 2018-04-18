@@ -689,9 +689,12 @@ extension RouteMapViewController: NavigationViewDelegate {
         
         let roadName = delegate?.mapViewController(self, roadNameAt: location)
         guard roadName == nil else {
+            navigationView.wayNameView.isHidden = false
             navigationView.wayNameView.text = roadName
             return
         }
+        
+        navigationView.wayNameView.isHidden = true
         
         // Avoid aggressively opting the developer into Mapbox services if they
         // haven’t provided an access token.
