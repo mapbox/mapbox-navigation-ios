@@ -176,11 +176,13 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
     
     /**
-     Called when the current location has a customized street name.
+     Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
      
-     - parameter navigationViewController: The navigation view controller aware of the user-defined street name.
-     - parameter location: The location where the custom street name gets assigned.
-     - return String: The custom street name defined by the user.
+     This method is called on each location update. By default, the label displays the name of the road the user is currently traveling on.
+     
+     - parameter navigationViewController: The navigation view controller that will display the road name.
+     - parameter location: The user’s current location.
+     - return: The custom street name defined by the user.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
 }
