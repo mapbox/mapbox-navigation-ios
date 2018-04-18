@@ -307,10 +307,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         } else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         }
-        
-        let currentStreetName = notification.userInfo![RouteControllerNotificationUserInfoKey.currentStreetNameKey] as! String
-        
     }
+    
+    
+    
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
     func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
