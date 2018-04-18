@@ -3,7 +3,7 @@
 /**
  Posted when `MBRouteController` receives a user location update representing movement along the expected route.
  
- The user info dictionary contains the keys `MBRouteControllerRouteProgressKey` and `MBRouteControllerCurrentStreetNameKey`.
+ The user info dictionary contains the keys `MBRouteControllerRouteProgressKey` and `MBRouteControllerLocationKey`.
  
  :nodoc:
  */
