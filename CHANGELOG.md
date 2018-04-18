@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Exit indications are now drawn accurately with a correct exit bearing. [#1288](https://github.com/mapbox/mapbox-navigation-ios/pull/1288)
+
 ## v0.16.2 (April 13, 2018)
 
 * Fixed a compiler error after installing the SDK using CocoaPods. ([#1296](https://github.com/mapbox/mapbox-navigation-ios/pull/1296))

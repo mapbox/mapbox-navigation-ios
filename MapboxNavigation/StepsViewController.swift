@@ -201,7 +201,7 @@ extension StepsViewController: UITableViewDataSource {
     }
     
     func instructionForArrivalInstruction(text: String?) -> VisualInstructionComponent {
-        return VisualInstructionComponent(type: .text, text: text, imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)
+        return VisualInstructionComponent(type: .text, text: text, imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
     }
     
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
@@ -216,7 +216,7 @@ extension StepsViewController: UITableViewDataSource {
             let stepBefore = leg.steps[leg.steps.count-1]
             if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
                 cell.instructionsView.set(instructions)
-                cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [instructionForArrivalInstruction(text: arrivalSecondaryInstruction)] : instructions.secondaryTextComponents
+                cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [instructionForArrivalInstruction(text: arrivalSecondaryInstruction)] : instructions.secondaryInstruction?.textComponents
             }
             cell.instructionsView.distance = stepBefore.distance
         } else {
@@ -224,13 +224,13 @@ extension StepsViewController: UITableViewDataSource {
             if let stepBefore = leg.steps.stepBefore(step) {
                 if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
                     cell.instructionsView.set(instructions)
-                    cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [instructionForArrivalInstruction(text: arrivalSecondaryInstruction)] : instructions.secondaryTextComponents
+                    cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [instructionForArrivalInstruction(text: arrivalSecondaryInstruction)] : instructions.secondaryInstruction?.textComponents
                 }
                 cell.instructionsView.distance = stepBefore.distance
             } else {
                 if let instructions = step.instructionsDisplayedAlongStep?.last {
                     cell.instructionsView.set(instructions)
-                    cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [instructionForArrivalInstruction(text: arrivalSecondaryInstruction)] : instructions.secondaryTextComponents
+                    cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? [instructionForArrivalInstruction(text: arrivalSecondaryInstruction)] : instructions.secondaryInstruction?.textComponents
                 }
                 cell.instructionsView.distance = nil
             }

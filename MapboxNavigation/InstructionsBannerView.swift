@@ -76,8 +76,8 @@ open class BaseInstructionsBannerView: UIControl {
         delegate?.didTapInstructionsBanner?(self)
     }
     
-    func set(_ instruction: VisualInstruction?) {
-        let secondaryInstruction = instruction?.secondaryTextComponents
+    func set(_ instruction: VisualInstructionBanner?) {
+        let secondaryInstruction = instruction?.secondaryInstruction?.textComponents
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
@@ -86,7 +86,7 @@ open class BaseInstructionsBannerView: UIControl {
             baselineAlignInstructions()
         }
         
-        primaryLabel.instruction = instruction?.primaryTextComponents
+        primaryLabel.instruction = instruction?.primaryInstruction.textComponents
         secondaryLabel.instruction = secondaryInstruction
         maneuverView.visualInstruction = instruction
     }
@@ -94,7 +94,7 @@ open class BaseInstructionsBannerView: UIControl {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        primaryLabel.instruction = [VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        primaryLabel.instruction = [VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
         
         distance = 100
     }

@@ -53,7 +53,7 @@ open class NextBannerView: UIView {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
-        instructionLabel.instruction = [VisualInstructionComponent(type: .text, text: "Next step", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        instructionLabel.instruction = [VisualInstructionComponent(type: .text, text: "Next step", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
     }
     
     func setupLayout() {
@@ -95,7 +95,7 @@ open class NextBannerView: UIView {
         guard let instruction = routeProgress.currentLegProgress.upComingStep?.instructionsDisplayedAlongStep?.last else { return }
         
         maneuverView.visualInstruction = instruction
-        instructionLabel.instruction = instruction.primaryTextComponents
+        instructionLabel.instruction = instruction.primaryInstruction.textComponents
         show()
     }
     

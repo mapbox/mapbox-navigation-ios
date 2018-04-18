@@ -434,7 +434,7 @@ open class RouteStepProgress: NSObject {
     /**
      An `Array` of remaining `VisualInstruction` for a step.
      */
-    @objc public var remainingVisualInstructions: [VisualInstruction]? {
+    @objc public var remainingVisualInstructions: [VisualInstructionBanner]? {
         guard let visualInstructions = step.instructionsDisplayedAlongStep else { return nil }
         return Array(visualInstructions.suffix(from: visualInstructionIndex))
     }
