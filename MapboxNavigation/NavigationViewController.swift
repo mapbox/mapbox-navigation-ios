@@ -182,7 +182,7 @@ public protocol NavigationViewControllerDelegate {
      
      - parameter navigationViewController: The navigation view controller that will display the road name.
      - parameter location: The user’s current location.
-     - return: The custom street name defined by the user.
+     - return: The road name to display in the label, or nil to hide the label.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
 }
