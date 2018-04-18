@@ -60,6 +60,5 @@ class ImageDownloadOperationSpy: Operation, ImageDownload {
         completionBlocks.forEach { completion in
             completion(image, data, error)
         }
-        RunLoop.current.run(until: Date())
     }
 }
