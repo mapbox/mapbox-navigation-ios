@@ -21,7 +21,11 @@ internal class ImageCache: BimodalImageCache {
     public func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeImageInMemoryCache(image, forKey: key)
         
-        guard toDisk == true, let data = UIImagePNGRepresentation(image) else { return _ = completion?() }
+        guard toDisk == true, let data = UIImagePNGRepresentation(image) else {
+            completion?()
+            return
+        }
+        
         fileCache.store(data, forKey: key, completion: completion)
     }
 
