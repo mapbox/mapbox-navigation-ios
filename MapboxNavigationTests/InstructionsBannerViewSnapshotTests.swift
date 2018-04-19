@@ -150,9 +150,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-                       VisualInstructionComponent(type: .text, text: "West", imageURL: nil, abbreviation: "W", abbreviationPriority: 0),
-                       VisualInstructionComponent(type: .text, text: "Fremont", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 1)
+            VisualInstructionComponent(type: .text, text: "West", imageURL: nil, abbreviation: "W", abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "Fremont", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 1)
         ]
         
         view.set(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
@@ -232,7 +232,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distanceFormatter.numberFormatter.locale = Locale(identifier: "sv-se")
         view.distance = 1000 * 999
         
-        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
@@ -246,7 +246,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distanceFormatter.numberFormatter.locale = Locale(identifier: "uk-UA")
         view.distance = 1000 * 999
         
-        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil,  abbreviation: nil, abbreviationPriority: NSNotFound)]
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
