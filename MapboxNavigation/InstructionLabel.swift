@@ -19,10 +19,8 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                 return
             }
             let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
-                DispatchQueue.main.async{
-                    self?.attributedText = attributedText
-                    self?.imageDownloadCompletion?()
-                }
+                self?.attributedText = attributedText
+                self?.imageDownloadCompletion?()
             }
             
             
