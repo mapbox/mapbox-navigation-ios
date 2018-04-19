@@ -45,7 +45,7 @@ class ImageDownloaderTests: XCTestCase {
             errorReturned = error
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
 
         // The ImageDownloader is meant to be used with an external caching mechanism
@@ -74,9 +74,7 @@ class ImageDownloaderTests: XCTestCase {
 
         XCTAssertTrue(operation! === downloader.activeOperationWithURL(imageURL)!, "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
 
-        runUntil(condition: {
-            return downloader.activeOperationWithURL(imageURL) == nil
-        }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
+        runUntil(condition: downloader.activeOperationWithURL(imageURL) == nil , pollingInterval: 0.1, until: XCTestCase.NavigationTests.deadline)
 
         //These flags might seem redundant, but it's good to be explicit here
         XCTAssertTrue(firstCallbackCalled)
@@ -91,13 +89,11 @@ class ImageDownloaderTests: XCTestCase {
             firstCallbackCalled = true
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
         
         // we are beholden to the URL loading system here... can't proceed until the URLProtocol has finished winding down its previous URL loading work
-        runUntil(condition: {
-            return downloader.activeOperationWithURL(imageURL) == nil
-        }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
+        runUntil(condition: downloader.activeOperationWithURL(imageURL) == nil, pollingInterval: 0.1, until: XCTestCase.NavigationTests.deadline)
 
         var secondCallbackCalled = false
 
@@ -105,23 +101,11 @@ class ImageDownloaderTests: XCTestCase {
             secondCallbackCalled = true
             semaphore.signal()
         }
-        let secondSemaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let secondSemaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(secondSemaphoreResult == .success, "Semaphore timed out")
         
         //These flags might seem redundant, but it's good to be explicit sometimes
         XCTAssertTrue(firstCallbackCalled)
         XCTAssertTrue(secondCallbackCalled)
-    }
-
-    private func runUntil(condition: () -> Bool, pollingInterval: TimeInterval, until timeout: DispatchTime) {
-        guard (timeout >= DispatchTime.now()) else {
-            XCTFail("Timeout occurred on \(#function)")
-            return
-        }
-        
-        if condition() == false {
-            RunLoop.current.run(until: Date(timeIntervalSinceNow: pollingInterval))
-            runUntil(condition: condition, pollingInterval: pollingInterval, until: timeout)
-        }
     }
 }

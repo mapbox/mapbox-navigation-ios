@@ -43,9 +43,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
+        ImageDownloadOperationSpy.reset()
         imageRepository = ImageRepository(withDownloader: mockDownloader, useDisk: false)
 
-        ImageDownloadOperationSpy.reset()
     }
 
     override func tearDown() {
@@ -71,13 +71,14 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.shieldKey()!, toDisk: false)
 
         let view = instructionsView()
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
+        
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         //the delimiter should NOT be present since both shields are already in the cache
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
-        //explicitly reset the cache
-        resetImageCache()
     }
 
     //FIXME: this test is artificially slow as we are polling the run loop following each simulated download. need a better way of synchronizing on the underlying completions.
@@ -108,7 +109,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         simulateDownloadingShieldForComponent(firstDestinationComponent)
         
         //ensure that first callback fires
-        wait(for: [firstExpectation], timeout: 5)
+        wait(for: [firstExpectation], timeout: XCTestCase.NavigationTests.imageDownloadTimeout)
 
         //change the callback to track the second shield component
         view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
@@ -117,7 +118,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         simulateDownloadingShieldForComponent(secondDestinationComponent)
 
         //ensure that second callback fires
-        wait(for: [secondExpectation], timeout: 5)
+        wait(for: [secondExpectation], timeout: XCTestCase.NavigationTests.imageDownloadTimeout)
  
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
@@ -153,7 +154,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
         operation.fireAllCompletions(ShieldImage.i280.image, data: UIImagePNGRepresentation(ShieldImage.i280.image), error: nil)
         //FIXME: need to get to a place where this isn't necessary, probably by adjusting our test code.
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 1))
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
     }

@@ -53,6 +53,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let view = instructionsView()
         styleInstructionsView(view)
         
+        
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
+        
         view.maneuverView.isStart = true
         view.distance = 482
         
@@ -69,6 +73,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     func testSinglelinePrimaryAndSecondary() {
         let view = instructionsView()
         styleInstructionsView(view)
+        
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
         
         view.maneuverView.isStart = true
         view.distance = 482
@@ -88,6 +95,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let view = instructionsView()
         styleInstructionsView(view)
         
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
+        
         view.maneuverView.isStart = true
         view.distance = 482
         
@@ -104,6 +114,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     func testAbbreviateInstructions() {
         let view = instructionsView()
         styleInstructionsView(view)
+        
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
         
         view.maneuverView.isStart = true
         view.distance = 482
@@ -124,6 +137,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     func testAbbreviateInstructionsIncludingDelimiter() {
         let view = instructionsView()
         styleInstructionsView(view)
+        
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
         
         view.maneuverView.isStart = true
         view.distance = 482
@@ -164,6 +180,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
+        
         let primary = [
             VisualInstructionComponent(type: .text, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
@@ -182,6 +201,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let nextBannerViewFrame = CGRect(x: 0, y: instructionsBannerView.frame.maxY, width: instructionsBannerView.bounds.width, height: 44)
         let nextBannerView = NextBannerView(frame: nextBannerViewFrame)
         nextBannerView.translatesAutoresizingMaskIntoConstraints = true
+        
+        instructionsBannerView.primaryLabel.imageRepository = imageRepository
+        nextBannerView.instructionLabel.imageRepository = imageRepository
+        
         view.addSubview(instructionsBannerView)
         view.addSubview(nextBannerView)
         view.frame = CGRect(origin: .zero, size: CGSize(width: nextBannerViewFrame.width, height: nextBannerViewFrame.maxY))

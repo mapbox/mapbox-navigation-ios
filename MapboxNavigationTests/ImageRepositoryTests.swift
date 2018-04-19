@@ -23,7 +23,7 @@ class ImageRepositoryTests: XCTestCase {
         repository.resetImageCache {
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
@@ -41,7 +41,7 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
         
         XCTAssertNotNil(imageReturned)
@@ -62,7 +62,7 @@ class ImageRepositoryTests: XCTestCase {
             imageReturned = image
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
         
         XCTAssertNil(ImageLoadingURLProtocolSpy.pastRequestForURL(fakeURL))
