@@ -17,13 +17,17 @@ class RouteControllerTests: XCTestCase {
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
     let delegate = RouteControllerDelegateSpy()
 
-    lazy var dependencies: (routeController: RouteController, firstLocation: CLLocation) = {
+    lazy var dependencies: (routeController: RouteController, firstLocation: CLLocation, lastLocation: CLLocation) = {
         let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
         routeController.delegate = delegate
 
         let firstCoord = routeController.routeProgress.currentLegProgress.nearbyCoordinates.first!
+        let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
-        return (routeController: routeController, firstLocation: CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date()))
+        let lastCoord = routeController.routeProgress.currentLegProgress.remainingSteps.last!.coordinates!.first!
+        let lastLocation = CLLocation(coordinate: lastCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
+
+        return (routeController: routeController, firstLocation: firstLocation, lastLocation: lastLocation)
     }()
 
     lazy var initialRoute: Route = {
@@ -208,6 +212,41 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(eventsManagerSpy.flushedEventCount(with: expectedEventName), 1)
     }
 
+    func testGeneratingAnArrivalEvent() {
+        let routeController = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
+        let lastLocation = dependencies.lastLocation
+
+        // MARK: When navigation begins with a location update
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [firstLocation])
+
+        // MARK: It queues and flushes a Depart event
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        // TODO: should there be a delegate message here as well?
+
+        // MARK: When navigation continues with a location update to the last location
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
+
+        // MARK: And then navigation continues with another location update at the last location
+        let currentLocation = routeController.location!
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
+
+        // MARK: It tells the delegate that the user did arrive
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
+
+        // FIXME: event isn't logged unless the routecontroller receives another location update. if this doesn't happen, no event. which means we might not be accounting for all of our arrivals.
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
+
+        // MARK: It enqueues and flushes an arrival event
+        let expectedEventName = MMEEventTypeNavigationArrive
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+    }
+
+    // MARK: Next steps
+    // TODO: Feedback event
+    // TODO: More detailed testing of rerouting scenarios
+
     // MARK: Failing to get directions from location
     // TODO: it tells the delegate
     // TODO: it logs the telemetry event
@@ -218,10 +257,5 @@ class RouteControllerTests: XCTestCase {
     // TODO: it sets routeProgress & all that
     // TODO: it tells the delegate
     // TODO: major refactoring opportunity, it calls didReroute with a mock Notification, does not post
-
-    // MARK: more tests
-    // TODO: test feedback event mutation workflow
-    // TODO: test & refactor the mutation of the re-route events
-    // TODO: what about SessionState?
 
 }
