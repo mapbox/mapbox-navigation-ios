@@ -933,6 +933,16 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
     func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+    
+    /**
+     Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
+     
+     This method is called on each location update. By default, the label displays the name of the road the user is currently traveling on.
+     
+     - parameter mapViewController: The route map view controller that will display the road name.
+     - parameter location: The user’s current location.
+     - return: The road name to display in the label, or nil to hide the label.
+     */
     func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
 }
 
