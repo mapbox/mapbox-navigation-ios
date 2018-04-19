@@ -3,7 +3,7 @@
 ## master
 
 * Exit indications are now drawn accurately with a correct exit bearing. [#1288](https://github.com/mapbox/mapbox-navigation-ios/pull/1288)
-* Added a delegate method, `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)` which allows developers to customize the contents of the road name label displayed towards the bottom of the map view. [#1309](https://github.com/mapbox/mapbox-navigation-ios/pull/1309)
+* Added a delegate method, `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)` which allows you to customize the contents of the road name label displayed towards the bottom of the map view. [#1309](https://github.com/mapbox/mapbox-navigation-ios/pull/1309)
 
 ## v0.16.2 (April 13, 2018)
 
