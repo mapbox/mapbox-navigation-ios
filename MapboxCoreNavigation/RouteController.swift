@@ -624,6 +624,8 @@ extension RouteController: CLLocationManagerDelegate {
             previousArrivalWaypoint = currentDestination
 
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
+
+            // TODO: we should be more explicit about the default behavior here (nil vs. returning false)
             let advancesToNextLeg = delegate?.routeController?(self, didArriveAt: currentDestination) ?? true
 
             if !routeProgress.isFinalLeg && advancesToNextLeg {
