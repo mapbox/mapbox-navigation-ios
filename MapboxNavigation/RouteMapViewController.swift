@@ -696,8 +696,6 @@ extension RouteMapViewController: NavigationViewDelegate {
             return
         }
         
-        navigationView.wayNameView.isHidden = true
-        
         // Avoid aggressively opting the developer into Mapbox services if they
         // haven’t provided an access token.
         guard let _ = MGLAccountManager.accessToken() else {
