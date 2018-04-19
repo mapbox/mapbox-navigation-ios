@@ -151,9 +151,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-                       VisualInstructionComponent(type: .text, text: "West", imageURL: nil, abbreviation: "W", abbreviationPriority: 0),
-                       VisualInstructionComponent(type: .text, text: "Fremont", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-                       VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 1)
+            VisualInstructionComponent(type: .text, text: "West", imageURL: nil, abbreviation: "W", abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "Fremont", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 1)
         ]
         
         view.set(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
