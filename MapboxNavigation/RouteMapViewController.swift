@@ -941,7 +941,7 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
      
      - parameter mapViewController: The route map view controller that will display the road name.
      - parameter location: The user’s current location.
-     - return: The road name to display in the label, or nil to hide the label.
+     - return: The road name to display in the label, or the empty string to hide the label, or nil to query the map’s vector tiles for the road name.
      */
     func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
 }
