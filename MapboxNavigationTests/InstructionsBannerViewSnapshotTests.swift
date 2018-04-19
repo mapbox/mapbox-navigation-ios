@@ -6,13 +6,16 @@ import MapboxDirections
 
 class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     
-    let imageRepository: ImageRepository = ImageRepository.shared
+    let mockDownloader = ImageDownloader(sessionConfiguration: .default, operationType: ImageDownloadOperationSpy.self)
+    var imageRepository: ImageRepository!
     
     let asyncTimeout: TimeInterval = 2.0
     
     override func setUp() {
         super.setUp()
         recordMode = false
+        
+        imageRepository = ImageRepository(withDownloader: mockDownloader, useDisk: false)
         
         let i280Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let us101Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
@@ -24,13 +27,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     }
     
     override func tearDown() {
-        let semaphore = DispatchSemaphore(value: 0)
-        imageRepository.resetImageCache {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-        
+        imageRepository = nil
         super.tearDown()
     }
     

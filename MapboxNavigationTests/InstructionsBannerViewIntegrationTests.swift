@@ -27,11 +27,9 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
-    lazy var imageRepository: ImageRepository = {
-        let repo = ImageRepository.shared
-        repo.sessionConfiguration = URLSessionConfiguration.default
-        return repo
-    }()
+    var imageRepository: ImageRepository!
+    let mockDownloader = ImageDownloader(sessionConfiguration: .default, operationType: ImageDownloadOperationSpy.self)
+
 
     lazy var instructions: [VisualInstructionComponent] = {
          let components =  [
@@ -42,29 +40,18 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         return components
     }()
 
-    private func resetImageCache() {
-        let semaphore = DispatchSemaphore(value: 0)
-        imageRepository.resetImageCache {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-    }
-
     override func setUp() {
         super.setUp()
 
-        imageRepository.disableDiskCache()
-        resetImageCache()
+        imageRepository = ImageRepository(withDownloader: mockDownloader, useDisk: false)
 
         ImageDownloadOperationSpy.reset()
-        imageRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
     }
 
     override func tearDown() {
         super.tearDown()
 
-        imageRepository.imageDownloader.setOperationType(nil)
+        imageRepository = nil
     }
 
     func testDelimiterIsShownWhenShieldsNotLoaded() {

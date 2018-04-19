@@ -45,7 +45,7 @@ internal class FileCache {
 
     init() {
         diskAccessQueue.sync {
-            fileManager = FileManager()
+            self.fileManager = FileManager()
         }
     }
 
