@@ -20,18 +20,9 @@ internal class ImageCache: BimodalImageCache {
      */
     public func store(_ image: UIImage, forKey key: String, toDisk: Bool, completion: CompletionHandler?) {
         storeImageInMemoryCache(image, forKey: key)
-
-        if toDisk == true {
-            if let data = UIImagePNGRepresentation(image) {
-                fileCache.store(data, forKey: key, completion: completion)
-            }
-        } else {
-            if let completion = completion {
-                DispatchQueue.main.async {
-                    completion()
-                }
-            }
-        }
+        
+        guard toDisk == true, let data = UIImagePNGRepresentation(image) else { return _ = completion?() }
+        fileCache.store(data, forKey: key, completion: completion)
     }
 
     /*

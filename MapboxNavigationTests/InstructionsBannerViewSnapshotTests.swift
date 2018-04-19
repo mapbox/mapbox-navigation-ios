@@ -24,13 +24,14 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     }
     
     override func tearDown() {
-        super.tearDown()
-        
-        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
+        let semaphore = DispatchSemaphore(value: 0)
         imageRepository.resetImageCache {
-            clearImageCacheExpectation.fulfill()
+            semaphore.signal()
         }
-        self.wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
+        super.tearDown()
     }
     
     func testSinglelinePrimary() {
@@ -201,8 +202,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let primaryThen = [
             VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
+        let primaryThenInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: primaryThen)
         
-        nextBannerView.instructionLabel.instruction = primaryThen
+        nextBannerView.instructionLabel.instruction = primaryThenInstruction
         nextBannerView.maneuverView.backgroundColor = .clear
         nextBannerView.maneuverView.isEnd = true
         
@@ -246,9 +248,31 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distanceFormatter.numberFormatter.locale = Locale(identifier: "uk-UA")
         view.distance = 1000 * 999
         
-        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil,  abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let primary = [VisualInstructionComponent(type: .text, text: "Lorem Ipsum / Dolor Sit Amet", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
         view.set(makeVisualInstruction(primaryInstruction: primary, secondaryInstruction: nil))
         
+        verifyView(view, size: view.bounds.size)
+    }
+    
+    func testExitShields() {
+        let window = UIApplication.shared.delegate!.window!!
+        let view = instructionsView()
+        styleInstructionsView(view)
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let primary = [
+            VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)
+        ]
+        
+        let secondary = VisualInstructionComponent(type: .text, text: "Anytown Avenue", imageURL: nil, abbreviation: "Anytown Ave", abbreviationPriority: 0)
+        
+        window.addSubview(view)
+        DayStyle().apply()
+        
+        view.set(makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
         verifyView(view, size: view.bounds.size)
     }
 }

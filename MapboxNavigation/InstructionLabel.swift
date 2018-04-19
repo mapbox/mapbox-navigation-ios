@@ -4,23 +4,29 @@ import MapboxDirections
 
 /// :nodoc:
 @objc(MBInstructionLabel)
-open class InstructionLabel: StylableLabel {
+open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
     var shieldHeight: CGFloat = 30
-
-    var instruction: [VisualInstructionComponent]? {
+    var imageRepository: ImageRepository = .shared
+    var imageDownloadCompletion: (() -> Void)?
+    
+    var instruction: VisualInstruction? {
         didSet {
             guard let instruction = instruction else {
                 text = nil
                 instructionPresenter = nil
                 return
             }
-            let presenter = InstructionPresenter(instruction, label: self)
-            attributedText = presenter.attributedText()
-            presenter.onShieldDownload = { [weak self] (attributedText: NSAttributedString) in
+            let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
                 self?.attributedText = attributedText
+                self?.imageDownloadCompletion?()
             }
+            
+            
+            let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
+            
+            attributedText = presenter.attributedText()
             instructionPresenter = presenter
         }
     }
