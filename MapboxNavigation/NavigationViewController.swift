@@ -174,6 +174,17 @@ public protocol NavigationViewControllerDelegate {
      - return: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
+    
+    /**
+     Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
+     
+     This method is called on each location update. By default, the label displays the name of the road the user is currently traveling on.
+     
+     - parameter navigationViewController: The navigation view controller that will display the road name.
+     - parameter location: The user’s current location.
+     - return: The road name to display in the label, or nil to hide the label.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
 }
 
 /**
@@ -525,6 +536,13 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
+    }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
+        guard let roadName = delegate?.navigationViewController?(self, roadNameAt: location) else {
+            return nil
+        }
+        return roadName
     }
 }
 

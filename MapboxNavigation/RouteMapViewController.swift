@@ -687,6 +687,15 @@ extension RouteMapViewController: NavigationViewDelegate {
                 return
         }
         
+        let roadName = delegate?.mapViewController(self, roadNameAt: location)
+        guard roadName == nil else {
+            if let roadName = roadName {
+                navigationView.wayNameView.text = roadName
+                navigationView.wayNameView.isHidden = roadName.isEmpty
+            }
+            return
+        }
+        
         // Avoid aggressively opting the developer into Mapbox services if they
         // haven’t provided an access token.
         guard let _ = MGLAccountManager.accessToken() else {
@@ -924,6 +933,17 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
     func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
+    
+    /**
+     Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
+     
+     This method is called on each location update. By default, the label displays the name of the road the user is currently traveling on.
+     
+     - parameter mapViewController: The route map view controller that will display the road name.
+     - parameter location: The user’s current location.
+     - return: The road name to display in the label, or the empty string to hide the label, or nil to query the map’s vector tiles for the road name.
+     */
+    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
 }
 
 
