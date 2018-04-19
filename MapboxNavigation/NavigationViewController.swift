@@ -539,7 +539,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     }
     
     func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
-        return delegate?.navigationViewController?(self, roadNameAt: location)
+        guard let roadName = delegate?.navigationViewController?(self, roadNameAt: location) else {
+            return nil
+        }
+        return roadName
     }
 }
 
