@@ -1036,7 +1036,6 @@ extension RouteController {
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
         outstandingFeedbackEvents.append(event)
-//        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationReroute, attributes: event.eventDictionary)
 
         return event.id.uuidString
     }
