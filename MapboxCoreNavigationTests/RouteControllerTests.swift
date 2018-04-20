@@ -234,7 +234,7 @@ class RouteControllerTests: XCTestCase {
         // MARK: It tells the delegate that the user did arrive
         XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
 
-        // FIXME: event isn't logged unless the routecontroller receives another location update. if this doesn't happen, no event. which means we might not be accounting for all of our arrivals.
+        // FIXME: event isn't logged unless the routecontroller receives yet another location update.
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
 
         // MARK: It enqueues and flushes an arrival event
@@ -242,20 +242,5 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
-
-    // MARK: Next steps
-    // TODO: Feedback event
-    // TODO: More detailed testing of rerouting scenarios
-
-    // MARK: Failing to get directions from location
-    // TODO: it tells the delegate
-    // TODO: it logs the telemetry event
-    // TODO: it posts a notification with the error (do we keep this after clarifying the event tracking
-
-    // MARK: Checking for a faster route
-    // getDirections, if a bunch of checks are met (refactoring oppty), schenanigans
-    // TODO: it sets routeProgress & all that
-    // TODO: it tells the delegate
-    // TODO: major refactoring opportunity, it calls didReroute with a mock Notification, does not post
 
 }

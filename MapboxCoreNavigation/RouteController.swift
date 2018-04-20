@@ -251,7 +251,6 @@ open class RouteController: NSObject {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
-        // TODO: shouldn't this be done inside didSet
         self.locationManager.activityType = route.routeOptions.activityType
         self.eventsManager = eventsManager
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -593,7 +592,6 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
 
-        // TODO: refactor this!!
         guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
@@ -625,7 +623,6 @@ extension RouteController: CLLocationManagerDelegate {
 
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
 
-            // TODO: we should be more explicit about the default behavior here (nil vs. returning false)
             let advancesToNextLeg = delegate?.routeController?(self, didArriveAt: currentDestination) ?? true
 
             if !routeProgress.isFinalLeg && advancesToNextLeg {
@@ -722,7 +719,6 @@ extension RouteController: CLLocationManagerDelegate {
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
                 strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
                 strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
-                //TODO: this seems wrong // when we call from here, we want to mutate the re-route event
                 strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
                     RouteControllerNotificationUserInfoKey.isProactiveKey: true]))
                 strongSelf.didFindFasterRoute = false
@@ -997,10 +993,10 @@ extension RouteController {
             if let index = outstandingFeedbackEvents.index(of: event) {
                 outstandingFeedbackEvents.remove(at: index)
             }
-
+            
             let eventName = event.eventDictionary["event"] as! String
             let eventDictionary = eventsManager.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
-
+            
             eventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
         }
         eventsManager.flush()

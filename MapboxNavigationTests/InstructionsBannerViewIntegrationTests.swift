@@ -93,33 +93,28 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         resetImageCache()
     }
 
-    //FIXME: this test is artificially slow as we are polling the run loop following each simulated download. need a better way of synchronizing on the underlying completions.
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
         let view = instructionsView()
         
-        //setup expectations
         let firstExpectation = XCTestExpectation(description: "First Component Callback")
         let secondExpectation = XCTestExpectation(description: "Second Component Callback")
-        
-        view.primaryLabel.imageRepository = imageRepository
-        view.secondaryLabel.imageRepository = imageRepository
+
         view.primaryLabel.imageDownloadCompletion = firstExpectation.fulfill
         
         view.secondaryLabel.imageDownloadCompletion = {
             XCTFail("ImageDownloadCompletion should not have been called on the secondary label.")
         }
         
-        //set the view, which triggers the instruction image fetch
+        //set visual instructions on the view, which triggers the instruction image fetch
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
-        
-        
+
         //Slash should be present until an adjacent shield is downloaded
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
 
         //simulate the downloads
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
         simulateDownloadingShieldForComponent(firstDestinationComponent)
-        
+
         //ensure that first callback fires
         wait(for: [firstExpectation], timeout: 5)
 
@@ -165,8 +160,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
         operation.fireAllCompletions(ShieldImage.i280.image, data: UIImagePNGRepresentation(ShieldImage.i280.image), error: nil)
-        //FIXME: need to get to a place where this isn't necessary, probably by adjusting our test code.
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 1))
 
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
     }
