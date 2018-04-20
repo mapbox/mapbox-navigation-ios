@@ -12,7 +12,7 @@ class ImageCacheTests: XCTestCase {
         cache.clearDisk {
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
@@ -31,7 +31,7 @@ class ImageCacheTests: XCTestCase {
         cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: false) {
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
@@ -40,7 +40,7 @@ class ImageCacheTests: XCTestCase {
         cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: true) {
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 

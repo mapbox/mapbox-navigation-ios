@@ -27,11 +27,9 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
 
-    lazy var imageRepository: ImageRepository = {
-        let repo = ImageRepository.shared
-        repo.sessionConfiguration = URLSessionConfiguration.default
-        return repo
-    }()
+    var imageRepository: ImageRepository!
+    let mockDownloader = ImageDownloader(sessionConfiguration: .default, operationType: ImageDownloadOperationSpy.self)
+
 
     lazy var instructions: [VisualInstructionComponent] = {
          let components =  [
@@ -42,29 +40,18 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         return components
     }()
 
-    private func resetImageCache() {
-        let semaphore = DispatchSemaphore(value: 0)
-        imageRepository.resetImageCache {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-    }
-
     override func setUp() {
         super.setUp()
 
-        imageRepository.disableDiskCache()
-        resetImageCache()
-
         ImageDownloadOperationSpy.reset()
-        imageRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
+        imageRepository = ImageRepository(withDownloader: mockDownloader, useDisk: false)
+
     }
 
     override func tearDown() {
         super.tearDown()
 
-        imageRepository.imageDownloader.setOperationType(nil)
+        imageRepository = nil
     }
 
     func testDelimiterIsShownWhenShieldsNotLoaded() {
@@ -84,13 +71,14 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.shieldKey()!, toDisk: false)
 
         let view = instructionsView()
+        view.primaryLabel.imageRepository = imageRepository
+        view.secondaryLabel.imageRepository = imageRepository
+        
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         //the delimiter should NOT be present since both shields are already in the cache
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
-        //explicitly reset the cache
-        resetImageCache()
     }
 
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
@@ -116,7 +104,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         simulateDownloadingShieldForComponent(firstDestinationComponent)
 
         //ensure that first callback fires
-        wait(for: [firstExpectation], timeout: 5)
+        wait(for: [firstExpectation], timeout: XCTestCase.NavigationTests.imageDownloadTimeout)
 
         //change the callback to track the second shield component
         view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
@@ -125,7 +113,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         simulateDownloadingShieldForComponent(secondDestinationComponent)
 
         //ensure that second callback fires
-        wait(for: [secondExpectation], timeout: 5)
+        wait(for: [secondExpectation], timeout: XCTestCase.NavigationTests.imageDownloadTimeout)
  
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")

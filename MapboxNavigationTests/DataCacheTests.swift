@@ -11,7 +11,7 @@ class DataCacheTests: XCTestCase {
         cache.clearDisk {
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
@@ -42,7 +42,7 @@ class DataCacheTests: XCTestCase {
         cache.store(exampleData!, forKey: dataKey, toDisk: false) {
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
@@ -51,7 +51,7 @@ class DataCacheTests: XCTestCase {
         cache.store(exampleData!, forKey: dataKey, toDisk: true) {
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.deadline)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
