@@ -38,6 +38,9 @@ extension NavigationCamera {
         
         isTransitioning = true
         
+        // The following animations will transition to course tracking mode by running four animations in parallel.
+        // Starting by moving the center coordinate, quickly followed by adjusting the altitude and rotating the map, finished off by changing the pitch.
+        
         UIView.animate(withDuration: 0.2 * duration, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
             self.centerCoordinate = centerCoordinate
         }, completion: nil)
@@ -70,6 +73,9 @@ extension NavigationCamera {
         }
         
         let line = MGLPolyline(coordinates: coordinates, count: UInt(coordinates.count))
+        
+        // The following animations will transition to overview mode.
+        // Starting by resetting the pitch, followed by moving the center coordinate, reset to north, and fit to coordinates.
         
         UIView.animate(withDuration: 0.2 * duration, delay: 0, options: [.beginFromCurrentState, .curveEaseInOut], animations: {
             self.pitch = 0
