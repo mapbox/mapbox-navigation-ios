@@ -26,7 +26,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, NavigationViewControllerD
         
         // Bundled Route
         //let route = Fixture.route(from: "downtown-sf")
-        let route = Fixture.route(from: "wrap-turn")
+        //let route = Fixture.route(from: "wrap-turn")
+        let route = Fixture.route(from: "wrap-turn2")
         
         let locationManager = SimulatedLocationManager(route: route)
         let controller = NavigationViewController(for: route, directions: Directions.shared, locationManager: locationManager)
