@@ -83,12 +83,10 @@ open class DayStyle: Style {
         EndOfRouteStaticLabel.appearance().normalTextColor = #colorLiteral(red: 0.217173934, green: 0.3645851612, blue: 0.489295125, alpha: 1)
         EndOfRouteTitleLabel.appearance().normalFont = .systemFont(ofSize: 36.0)
         EndOfRouteTitleLabel.appearance().normalTextColor = .black
-        
         ExitView.appearance().backgroundColor = .clear
         ExitView.appearance().foregroundColor = .black
         ExitView.appearance().borderWidth = 1.0
         ExitView.appearance().cornerRadius = 5.0
-        
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance().tintColor = tintColor
         InstructionsBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -187,9 +185,7 @@ open class NightStyle: DayStyle {
         EndOfRouteStaticLabel.appearance().alpha = 1.0
         EndOfRouteStaticLabel.appearance().textColor = UIColor.white.withAlphaComponent(0.9)
         EndOfRouteTitleLabel.appearance().textColor = .white
-        
         ExitView.appearance().foregroundColor = .white
-        
         FloatingButton.appearance().backgroundColor = backgroundColor
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         InstructionsBannerContentView.appearance().backgroundColor = backgroundColor

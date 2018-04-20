@@ -42,8 +42,6 @@ class ExitView: StylableView {
         let label: UILabel = .forAutoLayout()
         label.text = exitText
         label.textColor = .black
-        print("system font size! \(UIFont.systemFontSize)")
-
         label.font = UIFont.boldSystemFont(ofSize: pointSize * ExitView.labelFontSizeScaleFactor)
 
         return label

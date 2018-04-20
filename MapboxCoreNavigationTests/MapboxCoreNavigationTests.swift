@@ -87,7 +87,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         let secondLocation = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 38, longitude: -124),
                                         altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, course: 0, speed: 0,
-                                        timestamp: Date(timeIntervalSinceNow: 5))
+                                        timestamp: Date(timeIntervalSinceNow: 1))
         
         let locationManager = ReplayLocationManager(locations: [firstLocation, secondLocation])
         let navigation = RouteController(along: route, directions: directions, locationManager: locationManager)

@@ -65,7 +65,7 @@ class InstructionPresenter {
     
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
-    func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: ImageDownloadCompletion?) -> AttributedInstructionComponents {
+    func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> AttributedInstructionComponents {
         let components = instruction.textComponents
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
@@ -135,7 +135,7 @@ class InstructionPresenter {
         return exitString
     }
     
-    func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: ImageDownloadCompletion?) -> NSAttributedString? {
+    func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
         guard let shieldKey = shield.shieldKey() else { return nil }
         
         //If we have the shield already cached, use that.
@@ -155,12 +155,12 @@ class InstructionPresenter {
         return NSAttributedString(string: text, attributes: attributes(for: dataSource))
     }
     
-    private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, height: CGFloat, completion: ImageDownloadCompletion?) {
+    private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, height: CGFloat, completion: @escaping ImageDownloadCompletion) {
         guard let imageURL = component.imageURL, let shieldKey = component.shieldKey() else {
             return
         }
 
-        repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion! )
+        repository.imageWithURL(imageURL, cacheKey: shieldKey, completion: completion )
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
@@ -212,6 +212,7 @@ class InstructionPresenter {
     private func takeSnapshot(on view: UIView) -> UIImage?{
         let window = UIApplication.shared.delegate!.window!!
         
+        //We have to temporarily add the view to the view heirarchy in order for UIAppearance to work it's magic.
         window.addSubview(view)
         let image = view.imageRepresentation
         view.removeFromSuperview()
