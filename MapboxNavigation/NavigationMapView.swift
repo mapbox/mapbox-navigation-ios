@@ -92,9 +92,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     fileprivate var preferredFramesPerSecond: Int = 60 {
         didSet {
             if #available(iOS 10.0, *) {
-                displayLink?.preferredFramesPerSecond = preferredFramesPerSecond
+                // TODO: Re-enable throttling
+                //displayLink?.preferredFramesPerSecond = preferredFramesPerSecond
             } else {
-                displayLink?.frameInterval = FrameIntervalOptions.defaultFramesPerSecond / preferredFramesPerSecond
+                //displayLink?.frameInterval = FrameIntervalOptions.defaultFramesPerSecond / preferredFramesPerSecond
             }
         }
     }
