@@ -137,6 +137,7 @@
 		35BF8CA41F28EBD8003F6125 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BF8CA31F28EBD8003F6125 /* String.swift */; };
 		35C57D632089EDBD00BDD2A6 /* wrap-turn.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C57D622089EDBD00BDD2A6 /* wrap-turn.json */; };
 		35C57D67208A38EC00BDD2A6 /* wrap-turn2.json in Resources */ = {isa = PBXBuildFile; fileRef = 35C57D66208A38EC00BDD2A6 /* wrap-turn2.json */; };
+		35C57D68208A428F00BDD2A6 /* CLLocationDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C582FD5E203626E900A9086E /* CLLocationDirection.swift */; };
 		35C57D6A208DD4A200BDD2A6 /* BridgingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C57D69208DD4A200BDD2A6 /* BridgingTests.m */; };
 		35C6A35B1E5E418D0004CA57 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 35C6A34D1E5E418D0004CA57 /* ViewController.m */; };
 		35C714AE203B251300F0C2AE /* MapboxSpeech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */; };
@@ -1830,6 +1831,7 @@
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
 				35022318205AB8A100E1449A /* NavigationCamera.swift in Sources */,
+				35C57D68208A428F00BDD2A6 /* CLLocationDirection.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */,
