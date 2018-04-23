@@ -185,7 +185,7 @@ open class RouteController: NSObject {
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
-    public var routeProgress: RouteProgress {
+    @objc public var routeProgress: RouteProgress {
         willSet {
             // Save any progress completed up until now
             sessionState.totalDistanceCompleted += routeProgress.distanceTraveled
