@@ -1,8 +1,9 @@
 import XCTest
 import Foundation
 
-class Fixture {
-    class func stringFromFileNamed(name: String) -> String {
+@objc(MBFixture)
+class Fixture: NSObject {
+    @objc class func stringFromFileNamed(name: String) -> String {
         guard let path = Bundle(for: self).path(forResource: name, ofType: "json") ?? Bundle(for: self).path(forResource: name, ofType: "geojson") else {
             XCTAssert(false, "Fixture \(name) not found.")
             return ""
@@ -15,7 +16,7 @@ class Fixture {
         }
     }
     
-    class func JSONFromFileNamed(name: String) -> [String: Any] {
+    @objc class func JSONFromFileNamed(name: String) -> [String: Any] {
         guard let path = Bundle(for: self).path(forResource: name, ofType: "json") ?? Bundle(for: self).path(forResource: name, ofType: "geojson") else {
             XCTAssert(false, "Fixture \(name) not found.")
             return [:]

@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 
+@objc(MBDirectionsSpy)
 class DirectionsSpy: Directions {
     
     var lastCalculateOptionsCompletion: RouteCompletionHandler?
