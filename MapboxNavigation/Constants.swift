@@ -8,12 +8,12 @@ typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
  
  You may use this constant in your implementation of `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` if you want to keep the default line widths but customize other aspects of the route line.
  */
-public let MBRouteLineWidthByZoomLevel: [Int: MGLStyleValue<NSNumber>] = [
-    10: MGLStyleValue(rawValue: 8),
-    13: MGLStyleValue(rawValue: 9),
-    16: MGLStyleValue(rawValue: 11),
-    19: MGLStyleValue(rawValue: 22),
-    22: MGLStyleValue(rawValue: 28)
+public let MBRouteLineWidthByZoomLevel: [Int: NSExpression] = [
+    10: NSExpression(forConstantValue: 8),
+    13: NSExpression(forConstantValue: 9),
+    16: NSExpression(forConstantValue: 11),
+    19: NSExpression(forConstantValue: 22),
+    22: NSExpression(forConstantValue: 28)
 ]
 
 /**
