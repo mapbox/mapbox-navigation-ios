@@ -11,7 +11,7 @@ public protocol NavigationViewControllerDelegate {
     /**
      Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
      */
-    @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController)
+    @objc optional func navigationViewControllerDidEndNavigation(_ navigationViewController: NavigationViewController, cancelled: Bool)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -518,8 +518,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationViewControllerDidCancelFeedback?(self)
     }
     
-    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController) {
-        if delegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
+    func mapViewControllerDidEndNavigation(_ mapViewController: RouteMapViewController, cancelled: Bool) {
+        if delegate?.navigationViewControllerDidEndNavigation?(self, cancelled: cancelled) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)
