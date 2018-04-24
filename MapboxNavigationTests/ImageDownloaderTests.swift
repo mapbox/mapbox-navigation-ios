@@ -45,7 +45,7 @@ class ImageDownloaderTests: XCTestCase {
             errorReturned = error
             semaphore.signal()
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        let semaphoreResult = semaphore.wait(timeout: .distantFuture)
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
 
         // The ImageDownloader is meant to be used with an external caching mechanism
