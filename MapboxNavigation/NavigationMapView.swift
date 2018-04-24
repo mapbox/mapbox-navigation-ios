@@ -1187,7 +1187,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeDescribingRoute:)
+    @objc(navigationMapView:shapeDescribing:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     
     /**
@@ -1197,7 +1197,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route at lower zoomlevels, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:simplifiedShapeDescribingRoute:)
+    @objc(navigationMapView:simplifiedShapeDescribing:)
     optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
     /**
@@ -1206,7 +1206,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter waypoints: The waypoints to be displayed on the map.
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeDescribingWaypoints:)
+    @objc(navigationMapView:shapeFor:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
     
     /**
@@ -1215,7 +1215,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter annotation: The annotation to be styled.
      - returns: Optionally, a `MGLAnnotationImage` that defines the image used for the annotation.
      */
-    @objc(navigationMapView:imageForAnnotation:)
+    @objc(navigationMapView:imageFor:)
     optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     
     /**
@@ -1224,7 +1224,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter annotation: The annotation to be styled.
      - returns: Optionally, a `MGLAnnotationView` that defines the view used for the annotation.
      */
-    @objc(navigationMapView:viewForAnnotation:)
+    @objc(navigationMapView:viewFor:)
     optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
     
     /**
