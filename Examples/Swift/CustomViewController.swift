@@ -140,8 +140,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
             // Style the line
             line.lineColor = NSExpression(forConstantValue: UIColor(red:0.00, green:0.45, blue:0.74, alpha:0.9))
             line.lineWidth = NSExpression(forConstantValue: 5)
-            line.lineCap = NSExpression(forConstantValue: NSValue(mglLineCap: .round))
-            line.lineJoin = NSExpression(forConstantValue: NSValue(mglLineJoin: .round))
+            line.lineCap = NSExpression(forConstantValue: "round")
+            line.lineJoin = NSExpression(forConstantValue: "round")
 
             // Add source and layer
             style.addSource(lineSource)
