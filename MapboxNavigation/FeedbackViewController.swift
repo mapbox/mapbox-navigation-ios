@@ -28,7 +28,7 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     var sections = [FeedbackSection]()
     var activeFeedbackItem: FeedbackItem?
     
-    static let sceneTitle = NSLocalizedString("Report Problem", comment: "FeedbackViewController Title")
+    static let sceneTitle = NSLocalizedString("FEEDBACK_REPORT_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "FeedbackViewController Title")
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
     static let verticalCellPadding: CGFloat = 20.0
