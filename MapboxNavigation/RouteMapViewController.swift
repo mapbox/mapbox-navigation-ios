@@ -459,7 +459,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
             self?.routeController.setEndOfRoute(rating: rating, comment: comment)
-            self?.delegate?.mapViewControllerDidCancelNavigation(self!)
+            self?.delegate?.mapViewControllerDidEndNavigation(self!, cancelled: false)
         }
     }
     
@@ -557,7 +557,7 @@ extension RouteMapViewController {
 extension RouteMapViewController: NavigationViewDelegate {
     // MARK: NavigationViewDelegate
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
-        delegate?.mapViewControllerDidCancelNavigation(self)
+        delegate?.mapViewControllerDidEndNavigation(self, cancelled: true)
     }
     
     // MARK: MGLMapViewDelegate
@@ -863,14 +863,6 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     }
 }
 
-// MARK: BottomBannerViewDelegate
-
-extension RouteMapViewController: BottomBannerViewDelegate {
-    func didCancel() {
-        delegate?.mapViewControllerDidCancelNavigation(self)
-    }
-}
-
 // MARK: - Keyboard Handling
 
 extension RouteMapViewController {
@@ -930,7 +922,7 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
 
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
-    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
+    func mapViewControllerDidEndNavigation(_ mapViewController: RouteMapViewController, cancelled: Bool)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
     
