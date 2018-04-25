@@ -5,7 +5,7 @@
 1. Create a new branch.
 1. Update the internal and marketing version: `agvtool next-version -all && agvtool new-marketing-version $VERSION_NUMBER`.
 1. Update `*.podspec` to appropriate new version.
-1. If this is a minor version, update versions in the readme.
+1. If this is a minor version, update versions in README.md and custom-navigation.md.
 1. In `CHANGELOG.md`, update `master` to the new version.
 1. Create a new PR.
 
