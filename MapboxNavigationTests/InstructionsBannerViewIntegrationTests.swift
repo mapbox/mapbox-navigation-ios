@@ -62,9 +62,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }
 
     override func tearDown() {
-        super.tearDown()
-
         imageRepository.imageDownloader.setOperationType(nil)
+
+        super.tearDown()
     }
 
     func testDelimiterIsShownWhenShieldsNotLoaded() {

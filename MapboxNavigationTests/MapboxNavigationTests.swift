@@ -20,11 +20,6 @@ class MapboxNavigationTests: FBSnapshotTestCase {
         isDeviceAgnostic = true
     }
 
-    override func tearDown() {
-        super.tearDown()
-
-    }
-
     func storyboard() -> UIStoryboard {
         return UIStoryboard(name: "Navigation", bundle: .mapboxNavigation)
     }
