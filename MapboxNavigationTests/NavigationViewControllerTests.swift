@@ -54,8 +54,6 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
         
-        // The road name to display in the label, or the empty string to hide the label, or nil to query the map’s vector tiles for the road name.
-        
         let navigationViewController = dependencies.navigationViewController
         let routeController = navigationViewController.routeController!
         
