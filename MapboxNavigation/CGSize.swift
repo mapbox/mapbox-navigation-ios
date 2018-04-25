@@ -11,4 +11,8 @@ extension CGSize: ExpressibleByFloatLiteral {
     public init(floatLiteral value: FloatLiteralType) {
         self.init(size: value)
     }
+    
+    var aspectRatio: CGFloat {
+        return width / height
+    }
 }

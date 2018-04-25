@@ -8,16 +8,17 @@ class ImageRepository {
         }
     }
 
-    public static let shared = ImageRepository.init(withDownloader: ImageDownloader(), cache: ImageCache())
+    public static let shared = ImageRepository.init()
 
     let imageCache: BimodalImageCache
     fileprivate(set) var imageDownloader: ReentrantImageDownloader
 
-    var useDiskCache = true
+    var useDiskCache: Bool
 
-    required init(withDownloader downloader: ReentrantImageDownloader, cache: BimodalImageCache) {
+    required init(withDownloader downloader: ReentrantImageDownloader = ImageDownloader(), cache: BimodalImageCache = ImageCache(), useDisk: Bool = true) {
         imageDownloader = downloader
         imageCache = cache
+        useDiskCache = useDisk
     }
 
     func resetImageCache(_ completion: CompletionHandler?) {

@@ -5,36 +5,43 @@ import XCTest
 class ImageCacheTests: XCTestCase {
 
     let cache: ImageCache = ImageCache()
-    let asyncTimeout: TimeInterval = 2.0
+    let asyncTimeout: TimeInterval = 10.0
+
+    private func clearDiskCache() {
+        let semaphore = DispatchSemaphore(value: 0)
+        cache.clearDisk {
+            semaphore.signal()
+        }
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+    }
 
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
 
         cache.clearMemory()
-        let expectation = self.expectation(description: "Clearing Disk Cache")
-        cache.clearDisk {
-            expectation.fulfill()
-        }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        clearDiskCache()
     }
 
     let imageKey = "imageKey"
 
     private func storeImageInMemory() {
-        let expectation = self.expectation(description: "Storing image in memory cache")
+        let semaphore = DispatchSemaphore(value: 0)
         cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: false) {
-            expectation.fulfill()
+            semaphore.signal()
         }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     private func storeImageOnDisk() {
-        let expectation = self.expectation(description: "Storing image in disk cache")
+        let semaphore = DispatchSemaphore(value: 0)
         cache.store(ShieldImage.i280.image, forKey: imageKey, toDisk: true) {
-            expectation.fulfill()
+            semaphore.signal()
         }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     // MARK: Tests
@@ -93,12 +100,7 @@ class ImageCacheTests: XCTestCase {
         storeImageOnDisk()
 
         cache.clearMemory()
-
-        let expectation = self.expectation(description: "Clearing Disk Cache")
-        cache.clearDisk {
-            expectation.fulfill()
-        }
-        self.wait(for: [expectation], timeout: asyncTimeout)
+        clearDiskCache()
 
         XCTAssertNil(cache.image(forKey: imageKey))
     }
