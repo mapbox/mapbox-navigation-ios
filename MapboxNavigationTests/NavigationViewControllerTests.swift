@@ -49,71 +49,114 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName.removeAll()
     }
     
-    func testNavigationViewControllerDelegateRoadNameAtLocation() {
-
+    // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
+    //        with a road name provided and wayNameView label is visible.
+    
+    func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
+        
         // The road name to display in the label, or the empty string to hide the label, or nil to query the map’s vector tiles for the road name.
-
+        
         let navigationViewController = dependencies.navigationViewController
-        var routeController = navigationViewController.routeController!
+        let routeController = navigationViewController.routeController!
         
         // Identify a location to set the custom road name.
         let taylorStreetLocation = dependencies.poi.first!
-        var roadName = "Taylor Swift Street"
+        let roadName = "Taylor Swift Street"
         customRoadName[taylorStreetLocation.coordinate] = roadName
         
-        // Test 1: navigationViewController(_:roadNameAt:) delegate method is implemented,
-        //         with a road name provided and wayNameView label is visible.
+        let mapviewExpectation = expectation(description: "mapview_exp_display_roadname")
+        let customMapView = MGLMapView(frame: (navigationViewController.mapView?.bounds)!, styleURL: URL(string: "mapbox://styles/mapbox/streets-v9"))
         
-        routeController.locationManager(routeController.locationManager, didUpdateLocations: [taylorStreetLocation])
+        let delay = 10.0
+        let fireTime = DispatchTime.now() + delay
         
-        var wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
-        var currentRoadName = wayNameView.text!
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
-        XCTAssertFalse(wayNameView.isHidden, "WayNameView should been visible.")
+        DispatchQueue.main.asyncAfter(deadline: fireTime) {
+            
+            navigationViewController.mapView?.delegate?.mapView?(customMapView, didFinishLoading: customMapView.style!)
+            navigationViewController.mapView?.delegate?.mapViewDidFinishLoadingMap?(customMapView)
+            
+            routeController.locationManager(routeController.locationManager, didUpdateLocations: [taylorStreetLocation])
+            
+            let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
+            let currentRoadName = wayNameView.text!
+            XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
+            XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
+            
+            mapviewExpectation.fulfill()
+        }
+        
+        wait(for: [mapviewExpectation], timeout: delay)
+    }
     
+    // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
+    //        with a blank road name (empty string) provided and wayNameView label is hidden.
+    
+    func testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
+        
+        let navigationViewController = dependencies.navigationViewController
+        let routeController = navigationViewController.routeController!
+        
         // Identify a location to set the custom road name.
         let turkStreetLocation = dependencies.poi[1]
-        roadName = ""
+        let roadName = ""
         customRoadName[turkStreetLocation.coordinate] = roadName
         
-        // Test 2: navigationViewController(_:roadNameAt:) delegate method is implemented,
-        //         with a blank road name (empty string) provided and wayNameView label is hidden.
+        let mapviewExpectation = expectation(description: "mapview_exp_hide_roadname")
+        let customMapView = MGLMapView(frame: (navigationViewController.mapView?.bounds)!, styleURL: URL(string: "mapbox://styles/mapbox/streets-v9"))
         
-        routeController.locationManager(routeController.locationManager, didUpdateLocations: [turkStreetLocation])
-        wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
-        currentRoadName = wayNameView.text!
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
-        XCTAssertTrue(wayNameView.isHidden, "WayNameView should been hidden.")
+        let delay = 10.0
+        let fireTime = DispatchTime.now() + delay
         
-        // NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:) is unimplemented: fall back to the tile-querying implementation.
+        DispatchQueue.main.asyncAfter(deadline: fireTime) {
+            
+            navigationViewController.mapView?.delegate?.mapView?(customMapView, didFinishLoading: customMapView.style!)
+            navigationViewController.mapView?.delegate?.mapViewDidFinishLoadingMap?(customMapView)
+            
+            routeController.locationManager(routeController.locationManager, didUpdateLocations: [turkStreetLocation])
+            
+            let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
+            let currentRoadName = wayNameView.text!
+            XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
+            XCTAssertTrue(wayNameView.isHidden, "WayNameView should be hidden.")
+            
+            mapviewExpectation.fulfill()
+        }
         
-        // Test 3: navigationViewController(_:roadNameAt:) delegate method is implemented,
-        //         with a blank road name (empty string) provided and wayNameView label is hidden.
+        wait(for: [mapviewExpectation], timeout: delay)
+    }
+    
+    // TODO: Most likely a UI-Test candidate.
+    func testNavigationViewControllerDelegateRoadNameAtLocationUmimplemented() {
+        
         let dummyNavigationViewController = dependencies.dummyNavigationViewController
-        
-        /**
-         
-         The style currently displayed in the receiver.
-         Unlike the `styleURL` property, this property is set to an object that allows you to manipulate every aspect of the style locally.
-         If the style is loading, this property is set to `nil` until the style finishes loading. If the style has failed to load, this property is set to `nil`. Because the style loads asynchronously, you should manipulate it in the `-[MGLMapViewDelegate mapView:didFinishLoadingStyle:]` or `-[MGLMapViewDelegate mapViewDidFinishLoadingMap:]` method. It is not possible to manipulate the style before it has finished loading.
-         */
-        
+        let routeController = dummyNavigationViewController.routeController!
         
         // Identify a location without a custom road name.
         let fultonStreetLocation = dependencies.poi[2]
-        routeController = dummyNavigationViewController.routeController
         
-        let url = URL(string: "mapbox://styles/mapbox/streets-v9")
-        let mapView = MGLMapView(frame: (dummyNavigationViewController.mapView?.bounds)!, styleURL: url)
-        dummyNavigationViewController.mapView?.delegate?.mapView?(dummyNavigationViewController.mapView!, didFinishLoading: mapView.style!)
-        dummyNavigationViewController.mapView?.delegate?.mapViewDidFinishLoadingMap?(dummyNavigationViewController.mapView!)
-        routeController.locationManager(routeController.locationManager, didUpdateLocations: [fultonStreetLocation])
-        currentRoadName = "Fulton Street"
-        wayNameView = (dummyNavigationViewController.mapViewController?.navigationView.wayNameView)!
-        currentRoadName = wayNameView.text!
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
-        XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
+        let mapviewExpectation = expectation(description: "mapview_exp_default_roadname")
+        let customMapView = MGLMapView(frame: (dummyNavigationViewController.mapView?.bounds)!, styleURL: URL(string: "mapbox://styles/mapbox/streets-v9"))
         
+        let delay = 1.0
+        let fireTime = DispatchTime.now() + delay
+        
+        DispatchQueue.main.asyncAfter(deadline: fireTime) {
+            
+            dummyNavigationViewController.mapView?.delegate?.mapView?(customMapView, didFinishLoading: customMapView.style!)
+            dummyNavigationViewController.mapView?.delegate?.mapViewDidFinishLoadingMap?(customMapView)
+            
+            routeController.locationManager(routeController.locationManager, didUpdateLocations: [fultonStreetLocation])
+            
+            // let roadName = "Fulton Street"
+            // let wayNameView = (dummyNavigationViewController.mapViewController?.navigationView.wayNameView)!
+            // let currentRoadName = wayNameView.text!
+            // XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
+            // XCTAssertFalse(wayNameView.isHidden, "WayNameView should be hidden.")
+            
+            mapviewExpectation.fulfill()
+        }
+        
+        wait(for: [mapviewExpectation], timeout: delay)
     }
 }
 

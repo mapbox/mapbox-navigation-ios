@@ -680,14 +680,15 @@ extension RouteMapViewController: NavigationViewDelegate {
      
      - parameter location: The user’s current location.
      */
-    func labelCurrentRoad(at location: CLLocation) {
+    func labelCurrentRoad(at rawLocation: CLLocation, for snappedLoction: CLLocation? = nil) {
+        
         guard let style = mapView.style,
             let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
             navigationView.resumeButton.isHidden else {
                 return
         }
         
-        let roadName = delegate?.mapViewController(self, roadNameAt: location)
+        let roadName = delegate?.mapViewController(self, roadNameAt: rawLocation)
         guard roadName == nil else {
             if let roadName = roadName {
                 navigationView.wayNameView.text = roadName
@@ -695,6 +696,8 @@ extension RouteMapViewController: NavigationViewDelegate {
             }
             return
         }
+        
+        let location = snappedLoction ?? rawLocation
         
         // Avoid aggressively opting the developer into Mapbox services if they
         // haven’t provided an access token.
