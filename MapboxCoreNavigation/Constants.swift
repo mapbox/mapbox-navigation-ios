@@ -96,7 +96,7 @@ public var RouteControllerUserLocationSnappingDistance: CLLocationDistance = 15
 /**
  Maximum angle the user puck will be rotated when snapping the user's course to the route line.
  */
-public var RouteSnappingMaxManipulatedCourseAngle: CLLocationDirection = 25
+public var RouteSnappingMaxManipulatedCourseAngle: CLLocationDirection = 45
 
 /**
  Minimum Accuracy (maximum deviation, in meters) that the route snapping engine will accept before it stops snapping.

@@ -2,8 +2,5 @@
 /* Class = "UILabel"; text = "Rerouting…"; ObjectID = "UpZ-gr-OKM"; */
 "UpZ-gr-OKM.text" = "Recalculant la ruta…";
 
-/* Class = "UILabel"; text = "Thank you for your report!"; ObjectID = "upm-fg-ffn"; */
-"upm-fg-ffn.text" = "Gràcies pel vostre informe!";
-
 /* Class = "UILabel"; text = "Recording Audio"; ObjectID = "xTH-eK-F5H"; */
 "xTH-eK-F5H.text" = "Enregistrant àudio";

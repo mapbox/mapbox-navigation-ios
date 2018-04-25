@@ -29,6 +29,19 @@ extension UIView {
         layer.shadowOpacity = Float(shadowOpacity!)
     }
     
+    func applyGradient(colors: [UIColor], locations: [NSNumber]? = nil) {
+        let gradient: CAGradientLayer = CAGradientLayer()
+        gradient.frame = self.bounds
+        gradient.colors = colors.map { $0.cgColor }
+        gradient.locations = locations
+        
+        if let sublayers = layer.sublayers, !sublayers.isEmpty, let sublayer = sublayers.first {
+            layer.replaceSublayer(sublayer, with: gradient)
+        } else {
+            layer.addSublayer(gradient)
+        }
+    }
+    
     func startRippleAnimation() {
         layer.masksToBounds = true
         let rippleLayer = RippleLayer()
@@ -122,6 +135,16 @@ extension UIView {
             return safeAreaLayoutGuide.trailingAnchor
         }
         return trailingAnchor
+    }
+    
+    var imageRepresentation: UIImage? {
+        let size = CGSize(width: frame.size.width, height: frame.size.height)
+        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+        guard let currentContext = UIGraphicsGetCurrentContext() else { return nil }
+        layer.render(in:currentContext)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 }
 

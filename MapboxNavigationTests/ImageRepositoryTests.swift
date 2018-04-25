@@ -12,8 +12,6 @@ class ImageRepositoryTests: XCTestCase {
         return repo
     }()
 
-    let asyncTimeout: TimeInterval = 2.0
-
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
@@ -21,11 +19,12 @@ class ImageRepositoryTests: XCTestCase {
         URLProtocol.registerClass(ImageLoadingURLProtocolSpy.self)
         ImageLoadingURLProtocolSpy.reset()
 
-        let clearImageCacheExpectation = self.expectation(description: "Clear Image Cache")
+        let semaphore = DispatchSemaphore(value: 0)
         repository.resetImageCache {
-            clearImageCacheExpectation.fulfill()
+            semaphore.signal()
         }
-        wait(for: [clearImageCacheExpectation], timeout: asyncTimeout)
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
     func test_imageWithURL_downloadsImageWhenNotCached() {
@@ -36,14 +35,15 @@ class ImageRepositoryTests: XCTestCase {
         XCTAssertNil(repository.cachedImageForKey(imageName))
 
         var imageReturned: UIImage? = nil
-        let asyncExpectation = self.expectation(description: "Waiting for image to download")
+        let semaphore = DispatchSemaphore(value: 0)
 
         repository.imageWithURL(fakeURL, cacheKey: imageName) { (image) in
             imageReturned = image
-            asyncExpectation.fulfill()
+            semaphore.signal()
         }
-        wait(for: [asyncExpectation], timeout: asyncTimeout)
-
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
         XCTAssertNotNil(imageReturned)
         // round-trip through UIImagePNGRepresentation results in changes in data due to metadata stripping, thus direct image comparison is not always possible.
         XCTAssertTrue((imageReturned?.isKind(of: UIImage.self))!)
@@ -56,14 +56,15 @@ class ImageRepositoryTests: XCTestCase {
         repository.storeImage(ShieldImage.i280.image, forKey: imageName, toDisk: false)
 
         var imageReturned: UIImage? = nil
-        let asyncExpectation = self.expectation(description: "Waiting for image to download")
+        let semaphore = DispatchSemaphore(value: 0)
 
         repository.imageWithURL(fakeURL, cacheKey: imageName) { (image) in
             imageReturned = image
-            asyncExpectation.fulfill()
+            semaphore.signal()
         }
-        wait(for: [asyncExpectation], timeout: asyncTimeout)
-
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
         XCTAssertNil(ImageLoadingURLProtocolSpy.pastRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
     }

@@ -1,0 +1,9 @@
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "شكرا لك على هذا التقرير!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "أبلِغ عن مشكلة";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "أبلِغ عن مشكلة";
+

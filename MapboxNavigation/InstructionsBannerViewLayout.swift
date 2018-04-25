@@ -4,6 +4,7 @@ extension BaseInstructionsBannerView {
     
     static let padding: CGFloat = 16
     static let maneuverViewSize = CGSize(width: 38, height: 38)
+    static let stepListIndicatorViewSize = CGSize(width: 30, height: 5)
     
     func setupViews() {
         backgroundColor = .clear
@@ -26,7 +27,7 @@ extension BaseInstructionsBannerView {
         primaryLabel.allowsDefaultTighteningForTruncation = true
         primaryLabel.adjustsFontSizeToFitWidth = true
         primaryLabel.numberOfLines = 1
-        primaryLabel.minimumScaleFactor = 26.0 / 30.0
+        primaryLabel.minimumScaleFactor = 20.0 / 30.0
         primaryLabel.lineBreakMode = .byTruncatingTail
         addSubview(primaryLabel)
         self.primaryLabel = primaryLabel
@@ -55,12 +56,20 @@ extension BaseInstructionsBannerView {
         addSubview(separatorView)
         self.separatorView = separatorView
         
+        let stepListIndicatorView = StepListIndicatorView()
+        stepListIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(stepListIndicatorView)
+        self.stepListIndicatorView = stepListIndicatorView
+        
         addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
 
         addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.draggedInstructionsBanner(_:))))
     }
     
     func setupLayout() {
+        // firstColumnWidth is the width of the left side of the banner containing the maneuver view and distance label
+        let firstColumnWidth = BaseInstructionsBannerView.maneuverViewSize.width + BaseInstructionsBannerView.padding * 3
+        
         // Distance label
         distanceLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: BaseInstructionsBannerView.padding / 2).isActive = true
         distanceLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -BaseInstructionsBannerView.padding / 2).isActive = true
@@ -72,23 +81,31 @@ extension BaseInstructionsBannerView {
         maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width).isActive = true
         maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
         maneuverView.bottomAnchor.constraint(greaterThanOrEqualTo: distanceLabel.topAnchor).isActive = true
-        maneuverView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
+        maneuverView.centerXAnchor.constraint(equalTo: leadingAnchor, constant: firstColumnWidth / 2).isActive = true
         
         // Primary Label
         primaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
         primaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
-        baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor))
+        baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor, constant: -BaseInstructionsBannerView.padding/2))
         centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
         
         // Secondary Label
         secondaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
         secondaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
-        baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor))
+        baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor, constant: -BaseInstructionsBannerView.padding / 2))
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
         
+        // Drag Indicator View
+        stepListIndicatorView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.stepListIndicatorViewSize.height).isActive = true
+        stepListIndicatorView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.stepListIndicatorViewSize.width).isActive = true
+        stepListIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding / 2).isActive = true
+        stepListIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        baselineConstraints.append(stepListIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor))
+        centerYConstraints.append(stepListIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor, constant: 0))
+
         // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
-        dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 70).isActive = true
+        dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: firstColumnWidth).isActive = true
         dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
         dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true

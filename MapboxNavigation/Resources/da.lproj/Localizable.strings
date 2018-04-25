@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Lukket\nVej";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Tak for din anmeldelse";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Rapporter et problem";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ og %2$@";
 

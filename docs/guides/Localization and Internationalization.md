@@ -37,6 +37,7 @@ The upcoming road or ramp destination is named according to the local or nationa
 
 | Language   | User interface | [Spoken instructions][osrmti] | Mapbox Voice API | [`AVSpeechSynthesizer`][iossynth]<br>(iOS 11)
 |------------|:--------------:|:-----------------------------:|:---------------------:|:--------------------------------:
+| Arabic    | ✅              | —                             | —                     | ✅
 | Catalan    | ✅              | —                             | —                     | —
 | Chinese    | ✅ Simplified   | ✅                             | —                     | ✅
 | Danish     | ✅              | ✅                             | ✅                     | ✅
@@ -47,7 +48,7 @@ The upcoming road or ramp destination is named according to the local or nationa
 | Hebrew     | ✅              | ✅                             | —                     | ✅
 | Hungarian  | ✅              | —                             | —                     | ✅
 | Italian    | ✅              | ✅                             | ✅                     | ✅
-| Portuguese | ✅              | ✅                             | ✅                     | ✅
+| Portuguese | ✅             | ✅                             | ✅                     | ✅
 | Polish     | —              | ✅                             | ✅                     | ✅
 | Romanian   | —              | ✅                             | ✅                     | ✅
 | Russian    | ✅              | ✅                             | ✅                     | ✅

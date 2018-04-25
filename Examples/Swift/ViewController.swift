@@ -431,7 +431,7 @@ extension ViewController: NavigationViewControllerDelegate {
     
     // Called when the user hits the exit button.
     // If implemented, you are responsible for also dismissing the UI.
-    func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController) {
+    func navigationViewControllerDidEndNavigation(_ navigationViewController: NavigationViewController, cancelled: Bool) {
         navigationViewController.dismiss(animated: true, completion: nil)
     }
 }
@@ -445,7 +445,7 @@ class CustomDayStyle: DayStyle {
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        styleType = .dayStyle
+        styleType = .day
     }
     
     override func apply() {
@@ -460,7 +460,7 @@ class CustomNightStyle: NightStyle {
     required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        styleType = .nightStyle
+        styleType = .night
     }
 
     override func apply() {

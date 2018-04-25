@@ -9,6 +9,7 @@ enum DownloadError: Error {
 protocol ImageDownload: URLSessionDataDelegate {
     init(request: URLRequest, in session: URLSession)
     func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock)
+    var isFinished: Bool { get }
 }
 
 class ImageDownloadOperation: Operation, ImageDownload {
@@ -153,11 +154,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
 
     private func fireAllCompletions(_ image: UIImage?, data: Data?, error: Error?) {
         barrierQueue.sync {
-            for completion in completionBlocks {
-                DispatchQueue.main.async {
-                    completion(image, data, error)
-                }
-            }
+            completionBlocks.forEach { $0(image, data, error) }
         }
     }
 }

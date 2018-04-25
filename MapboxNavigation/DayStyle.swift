@@ -44,7 +44,7 @@ open class DayStyle: Style {
     public required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
-        styleType = .dayStyle
+        styleType = .day
         statusBarStyle = .default
     }
     
@@ -75,6 +75,7 @@ open class DayStyle: Style {
         DistanceLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         DistanceRemainingLabel.appearance().font = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
         DistanceRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+        StepListIndicatorView.appearance().gradientColors = [#colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1), #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1), #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)]
         EndOfRouteButton.appearance().textColor = .darkGray
         EndOfRouteButton.appearance().textFont = .systemFont(ofSize: 15)
         EndOfRouteContentView.appearance().backgroundColor = .white
@@ -82,6 +83,10 @@ open class DayStyle: Style {
         EndOfRouteStaticLabel.appearance().normalTextColor = #colorLiteral(red: 0.217173934, green: 0.3645851612, blue: 0.489295125, alpha: 1)
         EndOfRouteTitleLabel.appearance().normalFont = .systemFont(ofSize: 36.0)
         EndOfRouteTitleLabel.appearance().normalTextColor = .black
+        ExitView.appearance().backgroundColor = .clear
+        ExitView.appearance().foregroundColor = .black
+        ExitView.appearance().borderWidth = 1.0
+        ExitView.appearance().cornerRadius = 5.0
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance().tintColor = tintColor
         InstructionsBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -152,7 +157,7 @@ open class NightStyle: DayStyle {
     public required init() {
         super.init()
         mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")!
-        styleType = .nightStyle
+        styleType = .night
         statusBarStyle = .lightContent
     }
     
@@ -180,6 +185,7 @@ open class NightStyle: DayStyle {
         EndOfRouteStaticLabel.appearance().alpha = 1.0
         EndOfRouteStaticLabel.appearance().textColor = UIColor.white.withAlphaComponent(0.9)
         EndOfRouteTitleLabel.appearance().textColor = .white
+        ExitView.appearance().foregroundColor = .white
         FloatingButton.appearance().backgroundColor = backgroundColor
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         InstructionsBannerContentView.appearance().backgroundColor = backgroundColor

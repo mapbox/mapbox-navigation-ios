@@ -38,6 +38,7 @@ struct EventDetails {
     var locationEngine: CLLocationManager.Type?
     var percentTimeInPortrait: Int
     var percentTimeInForeground: Int
+    var locationManagerDesiredAccuracy: CLLocationAccuracy?
     
     var stepIndex: Int
     var stepCount: Int
@@ -96,6 +97,7 @@ struct EventDetails {
         applicationState = UIApplication.shared.applicationState
         if let manager = routeController.locationManager {
             locationEngine = type(of: manager)
+            locationManagerDesiredAccuracy = manager.desiredAccuracy
         }
         
         var totalTimeInPortrait = session.timeSpentInPortrait
@@ -176,6 +178,7 @@ struct EventDetails {
         modifiedEventDictionary["absoluteDistanceToDestination"] = userAbsoluteDistanceToDestination
         if let locationEngine = locationEngine {
             modifiedEventDictionary["locationEngine"] = String(describing: locationEngine)
+            modifiedEventDictionary["locationManagerDesiredAccuracy"] = locationManagerDesiredAccuracy
         }
         
         modifiedEventDictionary["percentTimeInPortrait"] = percentTimeInPortrait

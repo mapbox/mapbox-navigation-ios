@@ -1,13 +1,43 @@
-## Changes to the Mapbox Navigation SDK for iOS
+# Changes to the Mapbox Navigation SDK for iOS
 
 ## master
 
+* Upgraded to the [Mapbox Maps SDK for iOS v4.0.0](https://github.com/mapbox/mapbox-gl-native/releases/tag/ios-v4.0.0). If you have customized the route map’s appearance, you may need to migrate your code to use expressions instead of style functions. ([#1076](https://github.com/mapbox/mapbox-navigation-ios/pull/1076))
+* `NavigationViewControllerDelegate.navigationViewControllerDidCancelNavigation(_:)` has been superseded by `NavigationViewControllerDelegate.navigationViewControllerDidEndNavigation(_:cancelled:)`. [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318)
+* `RouteController`’s `routeProgress` is now exposed to Objective-C. [#1323](https://github.com/mapbox/mapbox-navigation-ios/pull/1323)
+* Exit indications are now drawn accurately with a correct exit bearing. [#1288](https://github.com/mapbox/mapbox-navigation-ios/pull/1288)
+* Added a delegate method, `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)` which allows you to customize the contents of the road name label displayed towards the bottom of the map view. [#1309](https://github.com/mapbox/mapbox-navigation-ios/pull/1309)
+
+## v0.16.2 (April 13, 2018)
+
+* Fixed a compiler error after installing the SDK using CocoaPods. ([#1296](https://github.com/mapbox/mapbox-navigation-ios/pull/1296))
+
+## v0.16.1 (April 9, 2018)
+
+### User Interface
+
+* Draws slight right and left turn icons for slight turns in the turn lane view. [#1270](https://github.com/mapbox/mapbox-navigation-ios/pull/1270)
+
+### Core Navigation
+
+* Fixed a crash that was caused by check the edit distance of an empty string. [#1281](https://github.com/mapbox/mapbox-navigation-ios/pull/1281/)
+* Removes warnings when using Swift 4.1. [#1271](https://github.com/mapbox/mapbox-navigation-ios/pull/1271)
+
+### Spoken Instruction
+
+* Fixed an issue that would preemptively fallback to the default speech synthesizer. [#1284](https://github.com/mapbox/mapbox-navigation-ios/pull/1284)
+
+## v0.16.0 (March 26, 2018)
+
 ### User interface
-* While the user travels through a tunnel, `NavigationMapView` temporarily applies a night style (a style whose `styleType` property is set to `StyleType.nightStyle`). ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
+* While the user travels through a tunnel, `NavigationMapView` temporarily applies a night style (a style whose `styleType` property is set to `StyleType.night`). ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
 * The user can reveal the list of upcoming steps by swiping downward from the top banner. ([#1150](https://github.com/mapbox/mapbox-navigation-ios/pull/1150))
+* Renamed `StyleType.dayStyle` and `StyleType.nightStyle` to `StyleType.day` and `StyleType.night`, respectively. ([#1250](https://github.com/mapbox/mapbox-navigation-ios/pull/1250))
 * Fixed an issue causing the overview map to insist on centering the route upon each location update. ([#1223](https://github.com/mapbox/mapbox-navigation-ios/pull/1223))
 * Improved the contrast of `TimeRemainingLabel.trafficSevereColor` against `BottomBannerView.backgroundColor` in `NightStyle`. ([#1228](https://github.com/mapbox/mapbox-navigation-ios/pull/1228))
 * Fixed an issue where a slash appeared between two shields in the top banner. ([#1169](https://github.com/mapbox/mapbox-navigation-ios/pull/1169))
+* Fixed an issue where using `NavigationMapViewControllerDelegate.navigationMapView(_:imageFor:)` would not override the destination annotation. ([#1256](https://github.com/mapbox/mapbox-navigation-ios/pull/1256))
+* Adds a handle at the bottom of the banner to reveals additional instructions. ([#1253](https://github.com/mapbox/mapbox-navigation-ios/pull/1253))
 
 ### Spoken instructions
 * Audio data for spoken instructions is cached in device storage to minimize data usage. ([#12296](https://github.com/mapbox/mapbox-navigation-ios/pull/1226))
@@ -17,6 +47,9 @@
 * Added a `RouteStepProgress.currentIntersection` property that is set to the intersection the user has most recently passed along the route. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
 * Fixed an issue where the `RouteStepProgress.upcomingIntersection` property was always set to the current step’s first intersection. ([#1127](https://github.com/mapbox/mapbox-navigation-ios/pull/1127))
 * Added support for using the Mapbox Map Matching API. [#1177](https://github.com/mapbox/mapbox-navigation-ios/pull/1177)
+
+### Other changes
+* Added Arabic and European Portuguese localizations. ([#1252](https://github.com/mapbox/mapbox-navigation-ios/pull/1251))
 
 ## v0.15.0 (March 13, 2018)
 

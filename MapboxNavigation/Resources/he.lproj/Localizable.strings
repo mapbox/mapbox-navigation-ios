@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "דרך\nסגורה";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "תודה על הדיווח שלך!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "דווח על בעיה";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ ו %2$@";
 
@@ -62,7 +68,7 @@
 "REROUTE_REPORT_TITLE" = "דווח על בעיה";
 
 /* Indicates that rerouting is in progress */
-"REROUTING" = "מחשב מסלול מחדש...";
+"REROUTING" = "מחשב מסלול מחדש…";
 
 /* Button title for resume tracking */
 "RESUME" = "חזור";

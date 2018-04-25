@@ -27,6 +27,7 @@ open class BaseInstructionsBannerView: UIControl {
     weak var dividerView: UIView!
     weak var _separatorView: UIView!
     weak var separatorView: SeparatorView!
+    weak var stepListIndicatorView: StepListIndicatorView!
     weak var delegate: InstructionsBannerViewDelegate?
     
     var centerYConstraints = [NSLayoutConstraint]()
@@ -65,16 +66,18 @@ open class BaseInstructionsBannerView: UIControl {
     
     @objc func draggedInstructionsBanner(_ sender: Any) {
         if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
+            stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
             delegate?.didDragInstructionsBanner?(self)
         }
     }
     
     @objc func tappedInstructionsBanner(_ sender: Any) {
+        stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
         delegate?.didTapInstructionsBanner?(self)
     }
     
-    func set(_ instruction: VisualInstruction?) {
-        let secondaryInstruction = instruction?.secondaryTextComponents
+    func set(_ instruction: VisualInstructionBanner?) {
+        let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
@@ -83,7 +86,7 @@ open class BaseInstructionsBannerView: UIControl {
             baselineAlignInstructions()
         }
         
-        primaryLabel.instruction = instruction?.primaryTextComponents
+        primaryLabel.instruction = instruction?.primaryInstruction
         secondaryLabel.instruction = secondaryInstruction
         maneuverView.visualInstruction = instruction
     }
@@ -91,7 +94,9 @@ open class BaseInstructionsBannerView: UIControl {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        primaryLabel.instruction = [VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, maneuverType: .none, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        let component = VisualInstructionComponent(type: .text, text: "Primary text label", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
+        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: [component])
+        primaryLabel.instruction = instruction
         
         distance = 100
     }

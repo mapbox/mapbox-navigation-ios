@@ -139,10 +139,10 @@ open class StyleManager: NSObject {
         guard let solar = Solar(date: date, coordinate: location.coordinate),
             let sunrise = solar.sunrise,
             let sunset = solar.sunset else {
-                return .dayStyle
+                return .day
         }
         
-        return solar.date.isNighttime(sunrise: sunrise, sunset: sunset) ? .nightStyle : .dayStyle
+        return solar.date.isNighttime(sunrise: sunrise, sunset: sunset) ? .night : .day
     }
     
     func forceRefreshAppearanceIfNeeded() {

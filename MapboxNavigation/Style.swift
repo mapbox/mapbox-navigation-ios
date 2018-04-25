@@ -29,7 +29,7 @@ open class Style: NSObject {
     /**
      Describes the situations in which the style should be used. By default, the style will be used during the daytime.
      */
-    @objc public var styleType: StyleType = .dayStyle
+    @objc public var styleType: StyleType = .day
     
     /**
      Map style to be used for the style.
@@ -210,6 +210,38 @@ public class ResumeButton: UIControl {
 }
 
 /// :nodoc:
+@objc(MBDraggableView)
+open class StepListIndicatorView: UIView {
+    
+    // Workaround the fact that UIView properties are not marked with UI_APPEARANCE_SELECTOR
+    @objc dynamic open var gradientColors: [UIColor] = [.gray, .lightGray, .gray] {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+    
+    fileprivate lazy var blurredEffectView: UIVisualEffectView = {
+        return UIVisualEffectView(effect: UIBlurEffect(style: .extraLight))
+    }()
+
+    override open func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.midY
+        layer.masksToBounds = true
+        layer.opacity = 0.25
+        applyGradient(colors: gradientColors)
+        addBlurredEffect(view: blurredEffectView, to: self)
+    }
+    
+    fileprivate func addBlurredEffect(view: UIView, to parentView: UIView)  {
+        guard !view.isDescendant(of: parentView) else { return }
+        view.frame = parentView.bounds
+        parentView.addSubview(view)
+    }
+    
+}
+
+/// :nodoc:
 @objc(MBStylableLabel)
 open class StylableLabel: UILabel {
     // Workaround the fact that UILabel properties are not marked with UI_APPEARANCE_SELECTOR
@@ -222,6 +254,21 @@ open class StylableLabel: UILabel {
     @objc dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
         didSet {
             font = normalFont
+        }
+    }
+}
+
+/// :nodoc
+@objc(MBStylableView)
+open class StylableView: UIView {
+    @objc dynamic var borderWidth: CGFloat = 0.0 {
+        didSet {
+            layer.borderWidth = borderWidth
+        }
+    }
+    @objc dynamic var cornerRadius: CGFloat = 0.0 {
+        didSet {
+            layer.cornerRadius = cornerRadius
         }
     }
 }

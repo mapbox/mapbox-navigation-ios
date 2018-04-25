@@ -1,15 +1,15 @@
 import Foundation
 
-extension Dictionary where Key == Int, Value: MGLStyleValue<NSNumber> {
+extension Dictionary where Key == Int, Value: NSExpression {
     /**
      Returns a copy of the stop dictionary with each value multiplied by the given factor.
      */
     public func multiplied(by factor: Double) -> Dictionary {
-        var newCameraStop: [Int: MGLStyleValue<NSNumber>] = [:]
-        for stop in self as [Int : MGLStyleValue<NSNumber>] {
-            let f = stop.value as! MGLConstantStyleValue
-            let newValue =  f.rawValue.doubleValue * factor
-            newCameraStop[stop.key] = MGLStyleValue<NSNumber>(rawValue: NSNumber(value:newValue))
+        var newCameraStop: [Int: NSExpression] = [:]
+        for stop in self {
+            let currentValue = stop.value.constantValue as! Double
+            let newValue =  currentValue * factor
+            newCameraStop[stop.key] = NSExpression(forConstantValue: newValue)
         }
         return newCameraStop as! Dictionary<Key, Value>
     }

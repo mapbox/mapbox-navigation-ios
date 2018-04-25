@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation"
-  s.version = "0.15.0"
+  s.version = "0.16.2"
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.source_files = ["MapboxNavigation/*", "MapboxCoreNavigation/{Date,Geometry,String}.swift"]
+  s.source_files = ["MapboxNavigation/*", "MapboxCoreNavigation/{Date,Sequence,String}.swift"]
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -44,9 +44,8 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
-  s.dependency "Mapbox-iOS-SDK", "~> 3.6"
+  s.dependency "Mapbox-iOS-SDK", "~> 4.0"
   s.dependency "Solar", "~> 2.1"
-  s.dependency "Turf", "~> 0.0.4"
   s.dependency "MapboxSpeech", "~> 0.0.1"
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to

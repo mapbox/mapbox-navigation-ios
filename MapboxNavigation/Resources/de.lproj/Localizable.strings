@@ -40,6 +40,12 @@
 /* Feedback type for Road Closed */
 "FEEDBACK_ROAD_CLOSURE" = "Straße\ngesperrt";
 
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "Danke für deine Nachricht!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "Problem melden";
+
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ und %2$@";
 
@@ -47,7 +53,7 @@
 "LESS_THAN" = "<%@";
 
 /* Accessibility value of label indicating the absence of a rating */
-"NO_RATING" = "No rating set.";
+"NO_RATING" = "Keine Bewertung gesetzt.";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Klicke, um Bewertung auf 0 zurückzusetzen.";
@@ -59,7 +65,7 @@
 "RATING_STARS_FORMAT" = "%ld star(s) set.";
 
 /* Title on button that appears when a reroute occurs */
-"REROUTE_REPORT_TITLE" = "Report Problem";
+"REROUTE_REPORT_TITLE" = "Problem melden";
 
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Routenneuberechnung…";
@@ -75,4 +81,3 @@
 
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ und %2$@";
-

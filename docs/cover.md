@@ -71,7 +71,7 @@ This SDK is divided into two frameworks: the Mapbox Navigation framework (`Mapbo
 
 `NavigationViewController` is the main class that encapsulates the entirety of the turn-by-turn navigation UI, orchestrating the map view, various UI elements, and the route controller. Your application would most likely present an instance of this class. The `NavigationViewControllerDelegate` protocol allows your application to customize various aspects of the UI and react to location-related events as they occur.
 
-`NavigationMapView` is the map view at the center of the turn-by-turn navigation UI. You can also use this class independently of `NavigationMapView`, for example to display a route preview map. The `NavigationMapViewDelegate` protocol allows your application to customize various aspects of the map view’s appearance.
+`NavigationMapView` is the map view at the center of the turn-by-turn navigation UI. You can also use this class independently of `NavigationViewController`, for example to display a route preview map. The `NavigationMapViewDelegate` protocol allows your application to customize various aspects of the map view’s appearance.
 
 ### Core Navigation
 
