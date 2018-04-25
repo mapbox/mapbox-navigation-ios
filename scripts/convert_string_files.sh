@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-source ./file_conversion.sh
-DIRECTORIES=( "../MapboxNavigation" "../MapboxCoreNavigation" "../Examples" )
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "${DIR}/file_conversion.sh"
+DIRECTORIES=( "${DIR}/../MapboxNavigation" "${DIR}/../MapboxCoreNavigation" "${DIR}/../Examples" )
 
 for dir in ${DIRECTORIES[@]}
 do

@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-NAVIGATION=../MapboxNavigation
-CORE=../MapboxCoreNavigation
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+NAVIGATION="${DIR}/../MapboxNavigation"
+CORE="${DIR}/../MapboxCoreNavigation"
 
 LANGUAGES=( "Base" )
 
@@ -21,7 +23,7 @@ do
     ibtool ${NAVIGATION}/Resources/${lang}.lproj/Navigation.storyboard --generate-strings-file ${NAVIGATION}/Resources/${lang}.lproj/Navigation.strings
 
     # Remove strings that should not be translated
-    source ./file_conversion.sh
+    source "${DIR}/file_conversion.sh"
     convertIfNeeded "${NAVIGATION}/Resources/${lang}.lproj/Navigation.strings"
     sed -i '' -e '/DO NOT TRANSLATE/{N;N;d;}' "${NAVIGATION}/Resources/${lang}.lproj/Navigation.strings"
 
