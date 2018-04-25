@@ -51,7 +51,6 @@ class NavigationViewControllerTests: XCTestCase {
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a road name provided and wayNameView label is visible.
-    
     func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
         
         let navigationViewController = dependencies.navigationViewController
@@ -88,7 +87,6 @@ class NavigationViewControllerTests: XCTestCase {
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a blank road name (empty string) provided and wayNameView label is hidden.
-    
     func testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
         
         let navigationViewController = dependencies.navigationViewController
@@ -135,7 +133,7 @@ class NavigationViewControllerTests: XCTestCase {
         let mapviewExpectation = expectation(description: "mapview_exp_default_roadname")
         let customMapView = MGLMapView(frame: (dummyNavigationViewController.mapView?.bounds)!, styleURL: URL(string: "mapbox://styles/mapbox/streets-v9"))
         
-        let delay = 1.0
+        let delay = 10.0
         let fireTime = DispatchTime.now() + delay
         
         DispatchQueue.main.asyncAfter(deadline: fireTime) {
