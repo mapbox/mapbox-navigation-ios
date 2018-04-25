@@ -459,7 +459,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
             self?.routeController.setEndOfRoute(rating: rating, comment: comment)
-            self?.dismiss(animated: true, completion: nil)
+            self?.delegate?.mapViewControllerDidEndNavigation(self!, cancelled: false)
         }
     }
     
@@ -557,7 +557,7 @@ extension RouteMapViewController {
 extension RouteMapViewController: NavigationViewDelegate {
     // MARK: NavigationViewDelegate
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
-        delegate?.mapViewControllerDidCancelNavigation(self)
+        delegate?.mapViewControllerDidEndNavigation(self, cancelled: true)
     }
     
     // MARK: MGLMapViewDelegate
@@ -701,7 +701,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         
         // Avoid aggressively opting the developer into Mapbox services if they
         // haven’t provided an access token.
-        guard let _ = MGLAccountManager.accessToken() else {
+        guard let _ = MGLAccountManager.accessToken else {
             navigationView.wayNameView.isHidden = true
             return
         }
@@ -709,14 +709,14 @@ extension RouteMapViewController: NavigationViewDelegate {
         let closestCoordinate = location.coordinate
         let roadLabelLayerIdentifier = "roadLabelLayer"
         var streetsSources = style.sources.compactMap {
-            $0 as? MGLVectorSource
+            $0 as? MGLVectorTileSource
             }.filter {
                 $0.isMapboxStreets
         }
         
         // Add Mapbox Streets if the map does not already have it
         if streetsSources.isEmpty {
-            let source = MGLVectorSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
+            let source = MGLVectorTileSource(identifier: "mapboxStreetsv7", configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v7")!)
             style.addSource(source)
             streetsSources.append(source)
         }
@@ -724,9 +724,9 @@ extension RouteMapViewController: NavigationViewDelegate {
         if let mapboxSteetsSource = streetsSources.first, style.layer(withIdentifier: roadLabelLayerIdentifier) == nil {
             let streetLabelLayer = MGLLineStyleLayer(identifier: roadLabelLayerIdentifier, source: mapboxSteetsSource)
             streetLabelLayer.sourceLayerIdentifier = "road_label"
-            streetLabelLayer.lineOpacity = MGLStyleValue(rawValue: 1)
-            streetLabelLayer.lineWidth = MGLStyleValue(rawValue: 20)
-            streetLabelLayer.lineColor = MGLStyleValue(rawValue: .white)
+            streetLabelLayer.lineOpacity = NSExpression(forConstantValue: 1)
+            streetLabelLayer.lineWidth = NSExpression(forConstantValue: 20)
+            streetLabelLayer.lineColor = NSExpression(forConstantValue: UIColor.white)
             style.insertLayer(streetLabelLayer, at: 0)
         }
         
@@ -866,14 +866,6 @@ extension RouteMapViewController: StepsViewControllerDelegate {
     }
 }
 
-// MARK: BottomBannerViewDelegate
-
-extension RouteMapViewController: BottomBannerViewDelegate {
-    func didCancel() {
-        delegate?.mapViewControllerDidCancelNavigation(self)
-    }
-}
-
 // MARK: - Keyboard Handling
 
 extension RouteMapViewController {
@@ -933,7 +925,7 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
 
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
-    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController)
+    func mapViewControllerDidEndNavigation(_ mapViewController: RouteMapViewController, cancelled: Bool)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
     
