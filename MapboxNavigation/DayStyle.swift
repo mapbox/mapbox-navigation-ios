@@ -6,6 +6,7 @@ extension UIColor {
     class var defaultRouteLayer: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
     class var defaultAlternateLine: UIColor { get { return .gray } }
     class var defaultArrowStroke: UIColor { get { return .defaultTint } }
+    class var defaultManeuverArrow: UIColor { get { return #colorLiteral(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0, alpha: 1) } }
     
     class var defaultTurnArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var defaultTurnArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
@@ -109,6 +110,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficModerateColor     = .trafficModerate
         NavigationMapView.appearance().trafficSevereColor       = .trafficSevere
         NavigationMapView.appearance().trafficUnknownColor      = .trafficUnknown
+        NavigationMapView.appearance().maneuverArrowColor       = .defaultManeuverArrow
         NextBannerView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         NextInstructionLabel.appearance().font = UIFont.systemFont(ofSize: 20, weight: .medium).adjustedFont
         NextInstructionLabel.appearance().normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
