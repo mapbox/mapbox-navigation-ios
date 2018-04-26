@@ -10,9 +10,7 @@ class ImageDownloaderTests: XCTestCase {
         return config
     }()
 
-    lazy var downloader: ReentrantImageDownloader = {
-        return ImageDownloader(sessionConfiguration: sessionConfig)
-    }()
+    var downloader: ReentrantImageDownloader?
 
     let imageURL = URL(string: "https://zombo.com/lulz/selfie.png")!
 
@@ -25,10 +23,13 @@ class ImageDownloaderTests: XCTestCase {
 
         let originalImageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
         ImageLoadingURLProtocolSpy.registerData(originalImageData, forURL: imageURL)
+
+        downloader = ImageDownloader(sessionConfiguration: sessionConfig)
     }
 
     override func tearDown() {
         URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
+        downloader = nil
 
         super.tearDown()
     }
@@ -39,7 +40,7 @@ class ImageDownloaderTests: XCTestCase {
         var errorReturned: Error?
         let semaphore = DispatchSemaphore(value: 0)
 
-        downloader.downloadImage(with: imageURL) { (image, data, error) in
+        downloader?.downloadImage(with: imageURL) { (image, data, error) in
             imageReturned = image
             dataReturned = data
             errorReturned = error
@@ -59,6 +60,10 @@ class ImageDownloaderTests: XCTestCase {
     }
 
     func testDownloadingSameImageWhileInProgressAddsCallbacksWithoutAddingAnotherRequest() {
+        guard let downloader = downloader else {
+            XCTFail()
+            return
+        }
         var firstCallbackCalled = false
         var secondCallbackCalled = false
         var operation: ImageDownload?
@@ -84,6 +89,10 @@ class ImageDownloaderTests: XCTestCase {
     }
 
     func testDownloadingImageAgainAfterFirstDownloadCompletes() {
+        guard let downloader = downloader else {
+            XCTFail()
+            return
+        }
         let semaphore = DispatchSemaphore(value: 0)
         var firstCallbackCalled = false
 
