@@ -6,10 +6,9 @@ import Turf
 
 var customRoadName = [CLLocationCoordinate2D: String?]()
 let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
-typealias NavigationViewControllerClosure = (NavigationViewControllerDelegate) -> NavigationViewController
 
 class NavigationViewControllerTests: XCTestCase {
-    var mapLoadedExpectation: XCTestExpectation!
+
     var navigationViewController: NavigationViewController!
     
     lazy var dependencies: (startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
@@ -36,12 +35,11 @@ class NavigationViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
-        mapLoadedExpectation = XCTestExpectation(description: "Loading VC Map")
-        navigationViewController = NavigationViewControllerCustomRoadNameStub(closure: mapLoadedExpectation.fulfill)
+        navigationViewController = NavigationViewControllerStub(for: NavigationViewControllerStub.initialRoute,
+                                                         directions: Directions(accessToken: "pk.feedCafeDeadBeefBadeBede"))
     }
     
     override func tearDown() {
-        mapLoadedExpectation = nil
         navigationViewController = nil
         super.tearDown()
     }
@@ -56,8 +54,6 @@ class NavigationViewControllerTests: XCTestCase {
         let taylorStreetLocation = dependencies.poi.first!
         let roadName = "Taylor Swift Street"
         customRoadName[taylorStreetLocation.coordinate] = roadName
-        
-        wait(for: [mapLoadedExpectation], timeout: 5.0)
         
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [taylorStreetLocation])
         
@@ -78,8 +74,6 @@ class NavigationViewControllerTests: XCTestCase {
         let roadName = ""
         customRoadName[turkStreetLocation.coordinate] = roadName
         
-        wait(for: [mapLoadedExpectation], timeout: 5.0)
-        
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [turkStreetLocation])
         
         let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
@@ -87,40 +81,9 @@ class NavigationViewControllerTests: XCTestCase {
         XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
         XCTAssertTrue(wayNameView.isHidden, "WayNameView should be hidden.")
     }
-    
-    func testNavigationViewControllerDelegateRoadNameAtLocationUmimplemented() {
-        
-        // We break the communication between CLLocation and MBRouteController
-        // Intent: Prevent the routecontroller from being fed real location updates
-        navigationViewController.routeController.locationManager.delegate = nil
-        
-        UIApplication.shared.delegate!.window!!.addSubview(navigationViewController.view)
-        
-        let routeController = navigationViewController.routeController!
-        
-        // Identify a location without a custom road name.
-        let fultonStreetLocation = dependencies.poi[2]
-        
-        wait(for: [mapLoadedExpectation], timeout: 5.0)
-        
-        routeController.locationManager(routeController.locationManager, didUpdateLocations: [fultonStreetLocation])
-        
-        navigationViewController.mapView?.setZoomLevel(22.0, animated: false)
-        
-        let roadName = "Fulton Street"
-        let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
-        let currentRoadName = wayNameView.text!
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(currentRoadName)")
-        XCTAssertFalse(wayNameView.isHidden, "WayNameView should be hidden.")
-    }
 }
 
-class NavigationViewControllerCustomRoadNameStub: NavigationViewControllerStub { }
-
 class NavigationViewControllerStub: NavigationViewController {
-    
-    typealias CompletionHandler = () -> Void
-    var mapViewCompletionHandler: CompletionHandler?
     
     static var initialRoute: Route = {
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
@@ -128,29 +91,17 @@ class NavigationViewControllerStub: NavigationViewController {
         let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
         let route     = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
         
-        route.accessToken = "nonsense"
+        route.accessToken = "foo"
         
         return route
     }()
-    
-    convenience init(closure: @escaping CompletionHandler) {
-        
-        self.init(for: NavigationViewControllerCustomRoadNameStub.initialRoute,
-                  directions: Directions(accessToken: "pk.feedCafeDeadBeefBadeBede"))
-        
-        self.mapViewCompletionHandler = closure
-    }
-    
-    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        mapViewCompletionHandler?()
-    }
     
     override func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
         return false
     }
 }
 
-extension NavigationViewControllerCustomRoadNameStub: NavigationViewControllerDelegate {
+extension NavigationViewControllerStub: NavigationViewControllerDelegate {
     
     override func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
         return customRoadName[location.coordinate] ?? nil
