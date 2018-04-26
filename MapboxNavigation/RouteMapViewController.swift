@@ -687,9 +687,7 @@ extension RouteMapViewController: NavigationViewDelegate {
      */
     func labelCurrentRoad(at rawLocation: CLLocation, for snappedLoction: CLLocation? = nil) {
         
-        guard let style = mapView.style,
-            let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
-            navigationView.resumeButton.isHidden else {
+        guard navigationView.resumeButton.isHidden else {
                 return
         }
         
@@ -710,6 +708,9 @@ extension RouteMapViewController: NavigationViewDelegate {
             navigationView.wayNameView.isHidden = true
             return
         }
+        
+        guard let style = mapView.style,
+            let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else { return }
         
         let closestCoordinate = location.coordinate
         let roadLabelLayerIdentifier = "roadLabelLayer"
