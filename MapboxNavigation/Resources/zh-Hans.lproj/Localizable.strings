@@ -1,2 +1,84 @@
-﻿/* Format string for less than; 1 = duration remaining */
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "关闭";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "结束导航";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "你已到达目的地";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "针对本次导航有何意见？";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "无法朗读导航指令。";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "发现一条更快的路线";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "路线问题";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "导航指令不清";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "其它问题";
+
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "出口缺失";
+
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "道路缺失";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "道路禁行";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "道路拥挤";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "道路关闭";
+
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "谢谢您的反馈！";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "问题上报";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@和%2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "＜%@";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "还没有评分。";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "点击将评分置零。";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "设置为%ld-星评分";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld星。";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "报告问题";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "线路重新规划中…";
+
+/* Button title for resume tracking */
+"RESUME" = "我的位置";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "正在模拟导航，当前速率 %d";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@，经由%2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@和%2$@";
+
