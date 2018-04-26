@@ -8,11 +8,12 @@ var customRoadName = [CLLocationCoordinate2D: String?]()
 let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
 
 class NavigationViewControllerTests: XCTestCase {
-
-    var navigationViewController: NavigationViewController!
     
-    lazy var dependencies: (startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
+    lazy var dependencies: (navigationViewController: NavigationViewControllerStub, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
        
+        let navigationViewController = NavigationViewControllerStub(for: NavigationViewControllerStub.initialRoute,
+                                                         directions: Directions(accessToken: "pk.feedCafeDeadBeefBadeBede"))
+        
         let routeController = navigationViewController.routeController!
         let firstCoord      = routeController.routeProgress.currentLegProgress.nearbyCoordinates.first!
         let firstLocation   = location(at: firstCoord)
@@ -29,25 +30,19 @@ class NavigationViewControllerTests: XCTestCase {
         let lastCoord    = routeController.routeProgress.currentLegProgress.remainingSteps.last!.coordinates!.first!
         let lastLocation = location(at: lastCoord)
         
-        return (startLocation: firstLocation, poi: poi, endLocation: lastLocation)
+        return (navigationViewController: navigationViewController, startLocation: firstLocation, poi: poi, endLocation: lastLocation)
     }()
     
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
-        navigationViewController = NavigationViewControllerStub(for: NavigationViewControllerStub.initialRoute,
-                                                         directions: Directions(accessToken: "pk.feedCafeDeadBeefBadeBede"))
-    }
-    
-    override func tearDown() {
-        navigationViewController = nil
-        super.tearDown()
     }
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a road name provided and wayNameView label is visible.
     func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
         
+        let navigationViewController = dependencies.navigationViewController
         let routeController = navigationViewController.routeController!
         
         // Identify a location to set the custom road name.
@@ -67,6 +62,7 @@ class NavigationViewControllerTests: XCTestCase {
     //        with a blank road name (empty string) provided and wayNameView label is hidden.
     func testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
         
+        let navigationViewController = dependencies.navigationViewController
         let routeController = navigationViewController.routeController!
         
         // Identify a location to set the custom road name.
