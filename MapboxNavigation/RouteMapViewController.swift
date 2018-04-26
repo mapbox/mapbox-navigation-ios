@@ -576,6 +576,11 @@ extension RouteMapViewController: NavigationViewDelegate {
         // (if the style is cached) preventing UIAppearance to apply the style.
         showRouteIfNeeded()
         self.mapView.localizeLabels()
+        delegate?.mapView?(mapView, didFinishLoading: style)
+    }
+    
+    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
+        delegate?.mapViewDidFinishLoadingMap?(mapView)
     }
     
     // MARK: NavigationMapViewCourseTrackingDelegate
