@@ -35,12 +35,16 @@ class ImageDownloaderTests: XCTestCase {
     }
 
     func testDownloadingAnImage() {
+        guard let downloader = downloader else {
+            XCTFail()
+            return
+        }
         var imageReturned: UIImage?
         var dataReturned: Data?
         var errorReturned: Error?
         let semaphore = DispatchSemaphore(value: 0)
 
-        downloader?.downloadImage(with: imageURL) { (image, data, error) in
+        downloader.downloadImage(with: imageURL) { (image, data, error) in
             imageReturned = image
             dataReturned = data
             errorReturned = error
