@@ -193,7 +193,7 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: UIViewController {
+open class NavigationViewController: UIViewController {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -372,13 +372,13 @@ public class NavigationViewController: UIViewController {
         suspendNotifications()
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
         view.clipsToBounds = true
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         //initialize voice controller if it hasn't been overridden
@@ -394,7 +394,7 @@ public class NavigationViewController: UIViewController {
         }
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false

@@ -28,7 +28,7 @@ fileprivate class SimulatedLocation: CLLocation {
  The route will be replaced upon a `RouteControllerDidReroute` notification.
  */
 @objc(MBSimulatedLocationManager)
-public class SimulatedLocationManager: NavigationLocationManager {
+open class SimulatedLocationManager: NavigationLocationManager {
     fileprivate var currentDistance: CLLocationDistance = 0
     fileprivate var currentLocation = CLLocation()
     fileprivate var currentSpeed: CLLocationSpeed = 30
@@ -41,7 +41,7 @@ public class SimulatedLocationManager: NavigationLocationManager {
      */
     @objc public var speedMultiplier: Double = 1
     
-    @objc override public var location: CLLocation? {
+    @objc override open var location: CLLocation? {
         get {
             return currentLocation
         }
@@ -98,11 +98,11 @@ public class SimulatedLocationManager: NavigationLocationManager {
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
     }
     
-    override public func startUpdatingLocation() {
+    override open func startUpdatingLocation() {
         DispatchQueue.main.async(execute: tick)
     }
     
-    override public func stopUpdatingLocation() {
+    override open func stopUpdatingLocation() {
         DispatchQueue.main.async {
             NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(self.tick), object: nil)
         }
