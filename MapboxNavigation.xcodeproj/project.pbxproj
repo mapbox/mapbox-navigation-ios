@@ -160,6 +160,7 @@
 		35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesView.swift */; };
 		35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E407671F5625FF00EFC814 /* StyleKitMarker.swift */; };
 		35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
+		35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ECAF2C2092275100DC3BC3 /* UIImage.swift */; };
 		35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */; };
 		35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */; };
 		35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F520BF1FB482A200FC9C37 /* NextBannerView.swift */; };
@@ -551,6 +552,7 @@
 		35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-lanes.json"; sourceTree = "<group>"; };
 		35DC9D901F4323AA001ECD64 /* LanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesView.swift; sourceTree = "<group>"; };
 		35E407671F5625FF00EFC814 /* StyleKitMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleKitMarker.swift; sourceTree = "<group>"; };
+		35ECAF2C2092275100DC3BC3 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManagerTests.swift; sourceTree = "<group>"; };
 		35F520BF1FB482A200FC9C37 /* NextBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBannerView.swift; sourceTree = "<group>"; };
 		35F611C31F1E1C0500C43249 /* FeedbackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewController.swift; sourceTree = "<group>"; };
@@ -1086,6 +1088,7 @@
 				3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */,
 				C5A7EC5B1FD610A80008B9BA /* VisualInstructionComponent.swift */,
 				8D391CE11FD71E78006BB91F /* Waypoint.swift */,
+				35ECAF2C2092275100DC3BC3 /* UIImage.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1812,6 +1815,7 @@
 				359A8AEF1FA7B25B00BDB486 /* LanesStyleKit.swift in Sources */,
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				351BEC0E1E5BCC72006FE110 /* DashedLineView.swift in Sources */,
+				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,

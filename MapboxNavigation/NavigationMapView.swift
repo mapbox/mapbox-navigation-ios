@@ -80,6 +80,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
+    @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
@@ -593,7 +594,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
+        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate).tinted(maneuverArrowColor) else { return }
+        
         style.setImage(triangleImage, forName: "triangle-tip-navigation")
         
         guard step.maneuverType != .arrive else { return }
@@ -627,7 +629,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrow.lineCap = NSExpression(forConstantValue: "butt")
                 arrow.lineJoin = NSExpression(forConstantValue: "round")
                 arrow.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.70))
-                arrow.lineColor = NSExpression(forConstantValue: UIColor.white)
+                arrow.lineColor = NSExpression(forConstantValue: maneuverArrowColor)
                 
                 style.addSource(arrowSource)
                 style.addLayer(arrow)

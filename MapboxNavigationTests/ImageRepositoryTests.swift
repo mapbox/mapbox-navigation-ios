@@ -27,6 +27,12 @@ class ImageRepositoryTests: XCTestCase {
         XCTAssert(semaphoreResult == .success, "Semaphore timed out")
     }
 
+    override func tearDown() {
+        URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
+
+        super.tearDown()
+    }
+
     func test_imageWithURL_downloadsImageWhenNotCached() {
         let imageName = "1.png"
         let fakeURL = URL(string: "http://an.image.url/\(imageName)")!
@@ -67,10 +73,5 @@ class ImageRepositoryTests: XCTestCase {
         
         XCTAssertNil(ImageLoadingURLProtocolSpy.pastRequestForURL(fakeURL))
         XCTAssertNotNil(imageReturned)
-    }
-
-    override func tearDown() {
-        URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
-        super.tearDown()
     }
 }

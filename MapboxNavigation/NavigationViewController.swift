@@ -165,9 +165,9 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Allows the delegate to decide whether to ignore a location update.
      
-     See `CLLocation.isQualified` for more information about what qualifies a location.
+     This method is called on every location update. By default, the navigation view controller ignores certain location updates that appear to be unreliable, as determined by the `CLLocation.isQualified` property.
      
      - parameter navigationViewController: The navigation view controller that discarded the location.
      - parameter location: The location that will be discarded.
