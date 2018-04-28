@@ -18,17 +18,15 @@ class ImageDownloaderTests: XCTestCase {
         super.setUp()
         self.continueAfterFailure = false
 
-        URLProtocol.registerClass(ImageLoadingURLProtocolSpy.self)
         ImageLoadingURLProtocolSpy.reset()
 
-        let originalImageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
-        ImageLoadingURLProtocolSpy.registerData(originalImageData, forURL: imageURL)
+        let imageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
+        ImageLoadingURLProtocolSpy.registerData(imageData, forURL: imageURL)
 
         downloader = ImageDownloader(sessionConfiguration: sessionConfig)
     }
 
     override func tearDown() {
-        URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
         downloader = nil
 
         super.tearDown()
