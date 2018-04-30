@@ -331,7 +331,7 @@ public class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:style:locationManager:)
+    @objc(initWithRoute:directions:styles:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
