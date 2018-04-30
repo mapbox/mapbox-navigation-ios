@@ -9,9 +9,12 @@ import Mapbox
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate {
     /**
-     Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
+     Called when the navigation view controller is dismissed, such as when the user ends a trip.
+     
+     - parameter navigationViewController: The navigation view controller that was dismissed.
+     - parameter canceled: True if the user dismissed the navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    @objc optional func navigationViewControllerDidEndNavigation(_ navigationViewController: NavigationViewController, cancelled: Bool)
+    @objc optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -193,7 +196,7 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: UIViewController {
+open class NavigationViewController: UIViewController {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -331,7 +334,7 @@ public class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:style:locationManager:)
+    @objc(initWithRoute:directions:styles:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
@@ -372,13 +375,13 @@ public class NavigationViewController: UIViewController {
         suspendNotifications()
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
         view.clipsToBounds = true
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         //initialize voice controller if it hasn't been overridden
@@ -394,7 +397,7 @@ public class NavigationViewController: UIViewController {
         }
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
@@ -518,8 +521,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationViewControllerDidCancelFeedback?(self)
     }
     
-    func mapViewControllerDidEndNavigation(_ mapViewController: RouteMapViewController, cancelled: Bool) {
-        if delegate?.navigationViewControllerDidEndNavigation?(self, cancelled: cancelled) != nil {
+    func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
+        if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: canceled) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)
