@@ -2,6 +2,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import Mapbox
+import AVFoundation
 
 /**
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
@@ -366,6 +367,8 @@ open class NavigationViewController: UIViewController {
         self.styleManager = StyleManager(self)
         self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
+        notifyUserAboutLowVolume()
+        
         if !(route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
@@ -444,6 +447,15 @@ open class NavigationViewController: UIViewController {
         if routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= RouteControllerHighAlertInterval {
             scheduleLocalNotification(about: routeProgress.currentLegProgress.currentStep, legIndex: routeProgress.legIndex, numberOfLegs: routeProgress.route.legs.count)
         }
+    }
+    
+    func notifyUserAboutLowVolume() {
+        guard !NavigationSettings.shared.voiceMuted else { return }
+        guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
+        
+        let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
+        mapViewController?.statusView.show(title, showSpinner: false)
+        mapViewController?.statusView.hide(delay: 3, animated: true)
     }
     
     func scheduleLocalNotification(about step: RouteStep, legIndex: Int?, numberOfLegs: Int?) {
