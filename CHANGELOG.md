@@ -2,6 +2,7 @@
 
 ## master
 
+* `DistanceFormatter`, `ReplayLocationManager`, `SimulatedLocationManager`, `LanesView`, and `ManueverView` are now subclassable. ([#1345](https://github.com/mapbox/mapbox-navigation-ios/pull/1345]))
 * Upgraded to the [Mapbox Maps SDK for iOS v4.0.0](https://github.com/mapbox/mapbox-gl-native/releases/tag/ios-v4.0.0). If you have customized the route map’s appearance, you may need to migrate your code to use expressions instead of style functions. ([#1076](https://github.com/mapbox/mapbox-navigation-ios/pull/1076))
 * `NavigationViewControllerDelegate.navigationViewControllerDidCancelNavigation(_:)` has been superseded by `NavigationViewControllerDelegate.navigationViewControllerDidEndNavigation(_:cancelled:)`. [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318)
 * `RouteController`’s `routeProgress` is now exposed to Objective-C. [#1323](https://github.com/mapbox/mapbox-navigation-ios/pull/1323)
