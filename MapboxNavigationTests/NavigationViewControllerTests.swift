@@ -123,7 +123,7 @@ extension NavigationViewControllerTests: NavigationViewControllerDelegate {
 
 extension CLLocationCoordinate2D: Hashable {
     // Hash value property multiplied by a prime constant.
-    public var hashValue: Int {
+    fileprivate var hashValue: Int {
         return latitude.hashValue ^ longitude.hashValue &* 16777619
     }
     
