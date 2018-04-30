@@ -184,6 +184,7 @@ class RouteMapViewController: UIViewController {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(rerouteDidFail(notification:)), name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
         subscribeToKeyboardNotifications()
@@ -313,6 +314,10 @@ class RouteMapViewController: UIViewController {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
         statusView.show(title, showSpinner: true)
+    }
+    
+    @objc func rerouteDidFail(notification: NSNotification) {
+        statusView.hide()
     }
     
     @objc func didReroute(notification: NSNotification) {
