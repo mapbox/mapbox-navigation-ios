@@ -11,7 +11,7 @@
 
 ### User interface
 
-* If a reroute request fails, the `Rerouting...` status view update is dismissed.
+* If a reroute request fails, the `Rerouting...` status view update is dismissed. [#1357](https://github.com/mapbox/mapbox-navigation-ios/pull/1357)
 
 ## v0.16.2 (April 13, 2018)
 
