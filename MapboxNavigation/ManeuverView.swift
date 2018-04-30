@@ -6,7 +6,7 @@ import Turf
 /// :nodoc:
 @IBDesignable
 @objc(MBManeuverView)
-public class ManeuverView: UIView {
+open class ManeuverView: UIView {
 
     @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
@@ -45,7 +45,7 @@ public class ManeuverView: UIView {
         }
     }
 
-    override public func draw(_ rect: CGRect) {
+    override open func draw(_ rect: CGRect) {
         super.draw(rect)
 
         transform = CGAffineTransform.identity

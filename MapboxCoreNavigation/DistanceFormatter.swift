@@ -98,7 +98,7 @@ extension NSAttributedStringKey {
 
 /// Provides appropriately formatted, localized descriptions of linear distances.
 @objc(MBDistanceFormatter)
-public class DistanceFormatter: LengthFormatter {
+open class DistanceFormatter: LengthFormatter {
     /// True to favor brevity over precision.
     var approx: Bool
     
@@ -146,7 +146,7 @@ public class DistanceFormatter: LengthFormatter {
         super.init(coder: decoder)
     }
     
-    public override func encode(with aCoder: NSCoder) {
+    open override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         aCoder.encode(approx, forKey: "approximate")
     }
@@ -175,7 +175,7 @@ public class DistanceFormatter: LengthFormatter {
         return formattedDistance(distance)
     }
     
-    @objc public override func string(fromMeters numberInMeters: Double) -> String {
+    @objc open override func string(fromMeters numberInMeters: Double) -> String {
         return self.string(from: numberInMeters)
     }
     
@@ -192,7 +192,7 @@ public class DistanceFormatter: LengthFormatter {
      
      `NSAttributedStringKey.quantity` is applied to the numeric quantity.
      */
-    @objc public override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedStringKey : Any]? = nil) -> NSAttributedString? {
+    @objc open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedStringKey : Any]? = nil) -> NSAttributedString? {
         guard let distance = obj as? CLLocationDistance else {
             return nil
         }

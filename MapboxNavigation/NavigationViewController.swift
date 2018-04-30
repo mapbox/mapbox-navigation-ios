@@ -165,9 +165,9 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
-     Called when a location has been identified as unqualified to navigate on.
+     Allows the delegate to decide whether to ignore a location update.
      
-     See `CLLocation.isQualified` for more information about what qualifies a location.
+     This method is called on every location update. By default, the navigation view controller ignores certain location updates that appear to be unreliable, as determined by the `CLLocation.isQualified` property.
      
      - parameter navigationViewController: The navigation view controller that discarded the location.
      - parameter location: The location that will be discarded.
@@ -193,7 +193,7 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: UIViewController {
+open class NavigationViewController: UIViewController {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -331,7 +331,7 @@ public class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:style:locationManager:)
+    @objc(initWithRoute:directions:styles:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
@@ -372,13 +372,13 @@ public class NavigationViewController: UIViewController {
         suspendNotifications()
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
         view.clipsToBounds = true
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         //initialize voice controller if it hasn't been overridden
@@ -394,7 +394,7 @@ public class NavigationViewController: UIViewController {
         }
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
