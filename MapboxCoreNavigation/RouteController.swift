@@ -563,7 +563,7 @@ extension RouteController: CLLocationManagerDelegate {
                 self.rawLocation = lastLocation
                 
                 // Check for a tunnel intersection at the current step we found the bad location update.
-                checkForTunnelIntersection(at: lastLocation, for: manager, distanceTraveled: currentStepProgress.distanceTraveled)
+                checkForTunnelIntersection(at: lastLocation, for: manager)
                 
                 return
             }
@@ -603,7 +603,7 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
             // Check for a tunnel intersection whenever the current route step progresses.
-            checkForTunnelIntersection(at: location, for: manager, distanceTraveled: distanceTraveled)
+            checkForTunnelIntersection(at: location, for: manager)
         }
 
         updateDistanceToIntersection(from: location)
@@ -626,7 +626,7 @@ extension RouteController: CLLocationManagerDelegate {
         checkForFasterRoute(from: location)
     }
     
-    func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager, distanceTraveled: CLLocationDistance) {
+    func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager) {
         guard let tunnelIntersectionManager = tunnelIntersectionManager else { return }
         
         let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
