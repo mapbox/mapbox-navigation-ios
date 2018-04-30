@@ -599,7 +599,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let ETADifference = route.expectedTravelTime - altRoute.expectedTravelTime
         
-        guard let maxCoord = maxDistanceBetween(fromLine: altPolyline, toLine: currentPolyline) else { return }
+        guard let maxCoord = maxScreenDistanceBetween(fromLine: altPolyline, toLine: currentPolyline) else { return }
         
         let altRoutePopup = MGLPointAnnotation()
         altRoutePopup.coordinate = maxCoord
@@ -613,7 +613,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.selectAnnotation(altRoutePopup, animated: false)
     }
     
-    func maxDistanceBetween(fromLine: Polyline, toLine: Polyline) -> CLLocationCoordinate2D? {
+    func maxScreenDistanceBetween(fromLine: Polyline, toLine: Polyline) -> CLLocationCoordinate2D? {
         guard let userCoordinate = self.userLocation?.coordinate else { return nil }
 
         let remainingDistance = fromLine.distance()
@@ -625,10 +625,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             guard currentIndex % 200 == 0 else { continue }
             guard let coord = fromLine.coordinateFromStart(distance: CLLocationDistance(currentIndex)) else { continue }
             let slicedLine = fromLine.sliced(from: userCoordinate, to: coord)
+            print(slicedLine.distance())
             guard let newCoord = toLine.coordinateFromStart(distance: Double(currentIndex)) else { continue }
             guard let closestCoordBetweenLines = slicedLine.closestCoordinate(to: newCoord) else { continue }
-            guard closestCoordBetweenLines.distance > 1 else { continue }
-            guard closestCoordBetweenLines.distance > currentMax.0 else { continue }
+            guard closestCoordBetweenLines.distance > currentMax.0 && closestCoordBetweenLines.distance > 1 else { continue }
             guard MGLPolyline(coordinates: slicedLine.coordinates, count: UInt(slicedLine.coordinates.count)).intersects(self.visibleCoordinateBounds) else { continue }
             
             currentMax = (closestCoordBetweenLines.distance, closestCoordBetweenLines.coordinate)
