@@ -10,9 +10,12 @@ typealias NavigationViewControllerClosure = (NavigationViewControllerDelegate) -
 
 class NavigationViewControllerTests: XCTestCase {
     
-    lazy var dependencies: (navigationViewController: NavigationViewControllerStub, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
+    lazy var dependencies: (navigationViewController: NavigationViewController, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
        
-        let navigationViewController = NavigationViewControllerStub(closure: mapLoadedExpectation.fulfill)
+        let navigationViewController = NavigationViewController(for: initialRoute,
+                                                         directions: Directions(accessToken: "pk.feedCafeDeadBeefBadeBede"))
+        
+        navigationViewController.delegate = self
         
         let routeController = navigationViewController.routeController!
         let firstCoord      = routeController.routeProgress.currentLegProgress.nearbyCoordinates.first!
@@ -33,12 +36,20 @@ class NavigationViewControllerTests: XCTestCase {
         return (navigationViewController: navigationViewController, startLocation: firstLocation, poi: poi, endLocation: lastLocation)
     }()
     
-    var mapLoadedExpectation: XCTestExpectation!
+    lazy var initialRoute: Route = {
+        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
+        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+        let route     = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
+        
+        route.accessToken = "foo"
+        
+        return route
+    }()
     
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
-        mapLoadedExpectation = XCTestExpectation(description: "Loading VC Map")
     }
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
@@ -96,8 +107,6 @@ class NavigationViewControllerTests: XCTestCase {
         // Identify a location without a custom road name.
         let fultonStreetLocation = dependencies.poi[2]
         
-        wait(for: [mapLoadedExpectation], timeout: 5.0)
-        
         navigationViewController.mapViewController!.labelRoadNameCompletionHandler = { (defaultRaodNameAssigned) in
             XCTAssertTrue(defaultRaodNameAssigned, "Unfortunstely label road name was not successfully set")
         }
@@ -106,39 +115,9 @@ class NavigationViewControllerTests: XCTestCase {
     }
 }
 
-class NavigationViewControllerStub: NavigationViewController {
-    typealias CompletionHandler = () -> Void
-    var mapViewCompletionHandler: CompletionHandler?
+extension NavigationViewControllerTests: NavigationViewControllerDelegate {
     
-    static var initialRoute: Route = {
-        let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-        let route     = Route(json: jsonRoute, waypoints: [waypoint1, waypoint2], routeOptions: NavigationRouteOptions(waypoints: [waypoint1, waypoint2]))
-        
-        route.accessToken = "foo"
-        
-        return route
-    }()
-    
-    convenience init(closure: @escaping CompletionHandler) {
-        self.init(for: NavigationViewControllerStub.initialRoute,
-           directions: Directions(accessToken: "pk.feedCafeDeadBeefBadeBede"))
-        self.mapViewCompletionHandler = closure
-    }
-    
-    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
-        mapViewCompletionHandler?()
-    }
-    
-    override func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
-        return false
-    }
-}
-
-extension NavigationViewControllerStub: NavigationViewControllerDelegate {
-    
-    override func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
+    func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
         return customRoadName[location.coordinate] ?? nil
     }
 }
