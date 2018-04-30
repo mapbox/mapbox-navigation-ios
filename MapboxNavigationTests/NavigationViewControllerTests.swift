@@ -6,14 +6,13 @@ import Turf
 
 var customRoadName = [CLLocationCoordinate2D: String?]()
 let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
-typealias NavigationViewControllerClosure = (NavigationViewControllerDelegate) -> NavigationViewController
 
 class NavigationViewControllerTests: XCTestCase {
     
     lazy var dependencies: (navigationViewController: NavigationViewController, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
        
         let navigationViewController = NavigationViewController(for: initialRoute,
-                                                         directions: Directions(accessToken: "pk.feedCafeDeadBeefBadeBede"))
+                                                         directions: Directions(accessToken: "garbage", host: nil))
         
         navigationViewController.delegate = self
         
