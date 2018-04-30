@@ -130,28 +130,9 @@ then initialize `NavigationViewController` with your style or styles:
 NavigationViewController(for: route, styles: [CustomStyle()])
 ```
 
-### `NavigationViewControllerDelegate` methods
+### Starting from scratch
 
-* `navigationViewController:didArriveAtDestination:`: Fired when the user arrives at their destination. You are responsible for dismissing the UI.
-* `navigationViewControllerDidCancelNavigation`: Fired when the user taps `Cancel`. You are responsible for dismissing the UI.
-* `navigationViewController:shouldRerouteFromLocation:`: Fired when SDK detects that a user has gone off route. You can return `false` here to either prevent a reroute from occuring or if you want to rerequest an alternative route manually.
-* `navigationViewController:willRerouteFromLocation:`: Fired just before the SDK requests a new route.
-* `navigationViewController:didRerouteAlongRoute:`: Fired as soon as the SDK receives a new route.
-* `navigationViewController:didFailToRerouteWithError:`: Fired when SDK receives an error instead of a new route.
-
-### `RouteController`
-
-`RouteController` is given a route. Internally `RouteController` matches the user's current location to the route while looking at 3 principle pieces:
-
-1. Is the user on or off the route?
-1. How far along the step is the user?
-1. Does the user need to be alerted about an upcoming maneuver?
-
-The library compares the user from the route and decides upon each one of these parameters and acts accordingly. The developer is told what is happening behind the scenes via notifications.
-
-### Building your own custom navigation UI
-
-Looking for a more advanced use case? See our installation guide of [MapboxCoreNavigation](./custom-navigation.md).
+If your application needs something totally custom, such as a voice-only experience or an unconventional user interface, consult the [Core Navigation installation guide](./custom-navigation.md).
 
 ## Contributing
 

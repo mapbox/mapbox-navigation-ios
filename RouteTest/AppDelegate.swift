@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, NavigationViewControllerD
         return true
     }
     
-    func navigationViewControllerDidEndNavigation(_ navigationViewController: NavigationViewController, cancelled: Bool) {
+    func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         startNavigation()
     }
     
