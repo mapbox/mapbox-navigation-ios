@@ -916,7 +916,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func routeWaypointSymbolStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         let symbol = MGLSymbolStyleLayer(identifier: identifier, source: source)
         
-        symbol.text = NSExpression(forKeyPath: "name")
+        symbol.text = NSExpression(format: "CAST(name, 'NSString')")
         symbol.textFontSize = NSExpression(forConstantValue: 10)
         symbol.textHaloWidth = NSExpression(forConstantValue: 0.25)
         symbol.textHaloColor = NSExpression(forConstantValue: UIColor.black)
