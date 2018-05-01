@@ -242,6 +242,8 @@ open class RouteController: NSObject {
     
     var tunnelIntersectionManagerCompletionHandler: RouteControllerSimulationCompletionBlock?
     
+    public var tunnelSimulationFeatureEnabled: Bool = false
+    
     /**
      Intializes a new `RouteController`.
 
@@ -610,7 +612,8 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
 
-        guard userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
+        let tunnelAnimationEnabled = tunnelSimulationFeatureEnabled && (tunnelIntersectionManager?.isAnimationEnabled ?? false)
+        guard tunnelAnimationEnabled || userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
         }
@@ -627,7 +630,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager) {
-        guard let tunnelIntersectionManager = tunnelIntersectionManager else { return }
+        guard tunnelSimulationFeatureEnabled, let tunnelIntersectionManager = tunnelIntersectionManager else { return }
         
         let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
         if tunnelDetected {
