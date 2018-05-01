@@ -4,10 +4,11 @@ import MapboxCoreNavigation
 import Turf
 @testable import MapboxNavigation
 
-var customRoadName = [CLLocationCoordinate2D: String?]()
 let response = Fixture.JSONFromFileNamed(name: "route-with-instructions")
 
 class NavigationViewControllerTests: XCTestCase {
+    
+    var customRoadName = [CLLocationCoordinate2D: String?]()
     
     lazy var dependencies: (navigationViewController: NavigationViewController, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
        
@@ -123,7 +124,7 @@ extension NavigationViewControllerTests: NavigationViewControllerDelegate {
 
 extension CLLocationCoordinate2D: Hashable {
     // Hash value property multiplied by a prime constant.
-    public var hashValue: Int {
+    fileprivate var hashValue: Int {
         return latitude.hashValue ^ longitude.hashValue &* 16777619
     }
     
