@@ -8,7 +8,7 @@ extension Waypoint {
     
     var instructionComponent: VisualInstructionComponent? {
         guard let name = name else { return nil }
-        return VisualInstructionComponent(type: .text, text: name, imageURL: nil, maneuverType: .arrive, maneuverDirection: .none, abbreviation: nil, abbreviationPriority: NSNotFound)
+        return VisualInstructionComponent(type: .text, text: name, imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
     }
     
     var instructionComponents: [VisualInstructionComponent]? {

@@ -9,9 +9,12 @@ import Mapbox
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate {
     /**
-     Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
+     Called when the navigation view controller is dismissed, such as when the user ends a trip.
+     
+     - parameter navigationViewController: The navigation view controller that was dismissed.
+     - parameter canceled: True if the user dismissed the navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    @objc optional func navigationViewControllerDidCancelNavigation(_ navigationViewController: NavigationViewController)
+    @objc optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -165,15 +168,26 @@ public protocol NavigationViewControllerDelegate {
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
-     Called when a location has been idenetified as unqualified to navigate on.
+     Allows the delegate to decide whether to ignore a location update.
      
-     See `CLLocation.isQualified` for more information about what qualifies a location.
+     This method is called on every location update. By default, the navigation view controller ignores certain location updates that appear to be unreliable, as determined by the `CLLocation.isQualified` property.
      
      - parameter navigationViewController: The navigation view controller that discarded the location.
      - parameter location: The location that will be discarded.
      - return: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      */
     @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
+    
+    /**
+     Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
+     
+     This method is called on each location update. By default, the label displays the name of the road the user is currently traveling on.
+     
+     - parameter navigationViewController: The navigation view controller that will display the road name.
+     - parameter location: The user’s current location.
+     - return: The road name to display in the label, or nil to hide the label.
+     */
+    @objc optional func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
 }
 
 /**
@@ -182,7 +196,7 @@ public protocol NavigationViewControllerDelegate {
  It provides step by step instructions, an overview of all steps for the given route and support for basic styling.
  */
 @objc(MBNavigationViewController)
-public class NavigationViewController: UIViewController {
+open class NavigationViewController: UIViewController {
     
     /** 
      A `Route` object constructed by [MapboxDirections](https://mapbox.github.io/mapbox-navigation-ios/directions/).
@@ -320,7 +334,7 @@ public class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:style:locationManager:)
+    @objc(initWithRoute:directions:styles:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
@@ -361,13 +375,13 @@ public class NavigationViewController: UIViewController {
         suspendNotifications()
     }
     
-    override public func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         resumeNotifications()
         view.clipsToBounds = true
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         //initialize voice controller if it hasn't been overridden
@@ -383,7 +397,7 @@ public class NavigationViewController: UIViewController {
         }
     }
     
-    public override func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         UIApplication.shared.isIdleTimerDisabled = false
@@ -507,8 +521,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationViewControllerDidCancelFeedback?(self)
     }
     
-    func mapViewControllerDidCancelNavigation(_ mapViewController: RouteMapViewController) {
-        if delegate?.navigationViewControllerDidCancelNavigation?(self) != nil {
+    func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
+        if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: canceled) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)
@@ -525,6 +539,13 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
     
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
+    }
+    
+    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
+        guard let roadName = delegate?.navigationViewController?(self, roadNameAt: location) else {
+            return nil
+        }
+        return roadName
     }
 }
 

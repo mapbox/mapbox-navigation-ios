@@ -41,8 +41,4 @@ class MapboxVoiceControllerTests: XCTestCase {
 
         XCTAssertTrue(controller!.hasCachedSpokenInstructionForKey(cacheKey))
     }
-
-    func testControllerPrefersCachedData() {
-    }
-
 }

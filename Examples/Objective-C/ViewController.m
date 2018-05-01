@@ -132,7 +132,7 @@
     MBSimulatedLocationManager *locationManager = [[MBSimulatedLocationManager alloc] initWithRoute:route];
     MBNavigationViewController *controller = [[MBNavigationViewController alloc] initWithRoute:route
                                                                                     directions:[MBDirections sharedDirections]
-                                                                                         style:nil
+                                                                                        styles:nil
                                                                                locationManager:locationManager];
     [self presentViewController:controller animated:YES completion:nil];
     

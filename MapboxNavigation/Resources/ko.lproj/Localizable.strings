@@ -1,0 +1,84 @@
+/* Dismiss button title on the steps view */
+"DISMISS_STEPS_TITLE" = "종료";
+
+/* End Navigation Button Text */
+"END_NAVIGATION" = "네비게이션 종료";
+
+/* Title used for arrival */
+"END_OF_ROUTE_ARRIVED" = "도착하였습니다";
+
+/* Comment Placeholder Text */
+"END_OF_ROUTE_TITLE" = "어떻게 향상 시킬 수 있을까요?";
+
+/* Error message when the SDK is unable to read a spoken instruction. */
+"FAILED_INSTRUCTION" = "지시를 소리내어 읽을 수 없습니다.";
+
+/* Indicates a faster route was found */
+"FASTER_ROUTE_FOUND" = "더 빠른 경로를 찾았습니다";
+
+/* Feedback type for Bad Route */
+"FEEDBACK_BAD_ROUTE" = "잘못된 \n경로";
+
+/* Feedback type for Confusing Instruction */
+"FEEDBACK_CONFUSING_INSTRUCTION" = "혼동스러운\n지시";
+
+/* Feedback type for Other Map Issue Issue */
+"FEEDBACK_GENERAL_ISSUE" = "다른\n지도 문제";
+
+/* Feedback type for Missing Exit */
+"FEEDBACK_MISSING_EXIT" = "없어진\n출구";
+
+/* Feedback type for Missing Road */
+"FEEDBACK_MISSING_ROAD" = "없어진\n도로";
+
+/* Feedback type for a maneuver that is Not Allowed */
+"FEEDBACK_NOT_ALLOWED" = "허용\n불가";
+
+/* Feedback type for Report Traffic */
+"FEEDBACK_REPORT_TRAFFIC" = "교통\n보고";
+
+/* Feedback type for Road Closed */
+"FEEDBACK_ROAD_CLOSURE" = "통행\n금지";
+
+/* Message confirming that the user has successfully sent feedback */
+"FEEDBACK_THANK_YOU" = "당신의 보고에 감사드립니다!";
+
+/* Title of view controller for sending feedback */
+"FEEDBACK_TITLE" = "문제 리포트";
+
+/* Format for displaying the first two major ways */
+"LEG_MAJOR_WAYS_FORMAT" = "%1$@ 와 %2$@";
+
+/* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
+"LESS_THAN" = "<%@";
+
+/* Accessibility value of label indicating the absence of a rating */
+"NO_RATING" = "등급이 설정되지 않았습니다.";
+
+/* Rating Reset To Zero Accessability Hint */
+"RATING_ACCESSIBILITY_RESET" = "등급을 영점으로 리셋하기 위해 탭하세요.";
+
+/* Format for accessibility label of button for setting a rating; 1 = number of stars */
+"RATING_ACCESSIBILITY_SET" = "등급 %ld-별점평가";
+
+/* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
+"RATING_STARS_FORMAT" = "%ld 평가 설정.";
+
+/* Title on button that appears when a reroute occurs */
+"REROUTE_REPORT_TITLE" = "문제 리포트";
+
+/* Indicates that rerouting is in progress */
+"REROUTING" = "경로재탐색…";
+
+/* Button title for resume tracking */
+"RESUME" = "재시작";
+
+/* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
+"USER_IN_SIMULATION_MODE" = "네비게이션을 %d×에서 시뮬레이션합니다.";
+
+/* Format for displaying destination and intermediate waypoints; 1 = source ; 2 = destinations */
+"WAYPOINT_DESTINATION_VIA_WAYPOINTS_FORMAT" = "%1$@, 통한 %2$@";
+
+/* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
+"WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ 와 %2$@";
+
