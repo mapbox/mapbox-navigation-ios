@@ -82,7 +82,7 @@ class ImageDownloaderTests: XCTestCase {
         XCTAssertTrue(operation! === downloader.activeOperationWithURL(imageURL)!, "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
 
         runUntil(condition: {
-            return downloader.activeOperationWithURL(imageURL) == nil
+            return ImageLoadingURLProtocolSpy.hasActiveRequestForURL(imageURL) == false && downloader.activeOperationWithURL(imageURL) == nil
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         //These flags might seem redundant, but it's good to be explicit here
@@ -107,7 +107,7 @@ class ImageDownloaderTests: XCTestCase {
         
         // we are beholden to the URL loading system here... can't proceed until the URLProtocol has finished winding down its previous URL loading work
         runUntil(condition: {
-            return downloader.activeOperationWithURL(imageURL) == nil
+            return ImageLoadingURLProtocolSpy.hasActiveRequestForURL(imageURL) == false && downloader.activeOperationWithURL(imageURL) == nil
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         var secondCallbackCalled = false
