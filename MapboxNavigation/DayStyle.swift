@@ -5,8 +5,8 @@ extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
     class var defaultRouteLayer: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
     class var defaultAlternateLine: UIColor { get { return .gray } }
-    class var defaultArrowStroke: UIColor { get { return .defaultTint } }
-    class var defaultManeuverArrow: UIColor { get { return #colorLiteral(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0, alpha: 1) } }
+    class var defaultManeuverArrowStroke: UIColor { get { return .defaultRouteLayer } }
+    class var defaultManeuverArrow: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
     
     class var defaultTurnArrowPrimary: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var defaultTurnArrowSecondary: UIColor { get { return #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) } }
@@ -103,6 +103,7 @@ open class DayStyle: Style {
         ManeuverView.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).primaryColor = .defaultTurnArrowPrimary
         ManeuverView.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).secondaryColor = .defaultTurnArrowSecondary
         NavigationMapView.appearance().maneuverArrowColor       = .defaultManeuverArrow
+        NavigationMapView.appearance().maneuverArrowStrokeColor = .defaultManeuverArrowStroke
         NavigationMapView.appearance().routeAlternateColor      = .defaultAlternateLine
         NavigationMapView.appearance().routeCasingColor         = .defaultRouteCasing
         NavigationMapView.appearance().trafficHeavyColor        = .trafficHeavy

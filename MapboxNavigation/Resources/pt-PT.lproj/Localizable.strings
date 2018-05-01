@@ -44,7 +44,7 @@
 "FEEDBACK_THANK_YOU" = "Obrigado pelo seu relatório!";
 
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "Relatar Problema";
+"FEEDBACK_TITLE" = "Reportar Problema";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ e %2$@";
@@ -81,3 +81,4 @@
 
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ e %2$@";
+
