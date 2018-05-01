@@ -27,7 +27,7 @@ func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
 
 Turn instructions are announced in the user interface language when turn instructions are available in that language. Otherwise, if turn instructions are unavailable in that language, they are announced in English instead. To have instructions announced in a language other than the user interface language, set the `RouteOptions.locale` property when calculating the route with which to start navigation.
 
-Turn instructions are primarily designed to be announced by either the Mapbox Voice API (powered by [Amazon Polly](https://docs.aws.amazon.com/polly/latest/dg/SupportedLanguage.html)) or the [Speech Synthesis framework][iossynth] built into iOS (also known as `AVSpeechSynthesizer`). This SDK uses the Mapbox Voice API by default. If the Voice API lacks support for the turn instruction language, `AVSpeechSynthesizer` announces the instructions instead. The Voice API requires an Internet connection at various points along the route. To have `AVSpeechSynthesizer` announce the instructions regardless of the language, initialize a `RouteVoiceController`, then set `NavigationViewController.voiceController` to the `RouteVoiceController` before presenting the `NavigationViewController`. Neither the Voice API nor `AVSpeechSynthesizer` supports Catalan or Vietnamese; for these languages, you must create a subclass of `RouteVoiceController` that uses a third-party speech synthesizer.
+Turn instructions are primarily designed to be announced by either the Mapbox Voice API (powered by [Amazon Polly](https://docs.aws.amazon.com/polly/latest/dg/SupportedLanguage.html)) or [VoiceOver](https://support.apple.com/en-us/HT206175) (via the [Speech Synthesis framework](https://developer.apple.com/documentation/avfoundation/speech_synthesis) built into iOS). By default, this SDK uses the Mapbox Voice API, which requires an Internet connection at various points along the route. If the Voice API lacks support for the turn instruction language or there is no Internet connection, VoiceOver announces the instructions instead. To force VoiceOver to always announce the instructions instead of the Voice API, initialize a `RouteVoiceController`, then set `NavigationViewController.voiceController` to the `RouteVoiceController` before presenting the `NavigationViewController`. Neither the Voice API nor VoiceOver supports Catalan, Esperanto, Ukranian, or Vietnamese; for these languages, you must [create a subclass of `RouteVoiceController`](./custom-voice-controller.html) that uses a third-party speech synthesizer.
 
 By default, distances are given in the predominant measurement system of the system region, which may not necessarily be the same region in which the user is traveling. To override the measurement system used in spoken instructions, set the `RouteOptions.distanceMeasurementSystem` property when calculating the route with which to start navigation.
 
@@ -35,32 +35,36 @@ The upcoming road or ramp destination is named according to the local or nationa
 
 ## Supported languages
 
-| Language   | User interface | [Spoken instructions][osrmti] | Mapbox Voice API | [`AVSpeechSynthesizer`][iossynth]<br>(iOS 11)
-|------------|:--------------:|:-----------------------------:|:---------------------:|:--------------------------------:
-| Arabic    | ✅              | —                             | —                     | ✅
-| Catalan    | ✅              | —                             | —                     | —
-| Chinese    | ✅ Simplified   | ✅                             | —                     | ✅
-| Danish     | ✅              | ✅                             | ✅                     | ✅
-| Dutch      | ✅              | ✅                             | ✅                     | ✅
-| English    | ✅              | ✅                             | ✅                     | ✅
-| French     | ✅              | ✅                             | ✅                     | ✅
-| German     | ✅              | ✅                             | ✅                     | ✅
-| Hebrew     | ✅              | ✅                             | —                     | ✅
-| Hungarian  | ✅              | —                             | —                     | ✅
-| Italian    | ✅              | ✅                             | ✅                     | ✅
-| Korean    | ✅              | —                             | ✅                     | ✅
-| Portuguese | ✅             | ✅                             | ✅                     | ✅
-| Polish     | —              | ✅                             | ✅                     | ✅
-| Romanian   | —              | ✅                             | ✅                     | ✅
-| Russian    | ✅              | ✅                             | ✅                     | ✅
-| Spanish    | ✅              | ✅                             | ✅                     | ✅
-| Swedish    | ✅              | ✅                             | ✅                     | ✅
-| Turkish    | —              | ✅                             | ✅                     | ✅
-| Vietnamese | ✅              | ✅                             | —                     | —
+The table below lists the languages that are supported for user interface elements and for spoken instructions. If a language is marked as “manual”, the user will not automatically receive spoken instructions in that language, so you would need to set `RouteOptions.locale` in order to use it.
+
+| Language   | User interface | [Spoken instructions][osrmti] | Remarks
+|------------|:--------------:|:-----------------------------:|--------
+| Arabic     | ✅              | —
+| Catalan    | ✅              | —
+| Chinese    | ✅ Simplified   | ✅ Mandarin | Uses VoiceOver
+| Danish     | ✅              | ✅
+| Dutch      | ✅              | ✅
+| English    | ✅              | ✅
+| Esperanto  | —              | ✅ | Manual, requires third-party text-to-speech
+| French     | ✅              | ✅
+| German     | ✅              | ✅
+| Hebrew     | ✅              | ✅ | Uses VoiceOver
+| Hungarian  | ✅              | —
+| Indonesian | —              | ✅ | Manual, uses VoiceOver
+| Italian    | ✅              | ✅
+| Korean     | ✅              | —
+| Portuguese | ✅             | ✅
+| Polish     | —              | ✅ | Manual
+| Romanian   | —              | ✅ | Manual
+| Russian    | ✅              | ✅
+| Spanish    | ✅              | ✅
+| Swedish    | ✅              | ✅
+| Turkish    | —              | ✅ | Manual
+| Ukrainian  | —              | ✅ | Manual, requires third-party text-to-speech
+| Vietnamese | ✅              | ✅ | Requires third-party text-to-speech
 
 ## Contributing
 
 See the [contributing guide](https://github.com/mapbox/mapbox-navigation-ios/blob/master/CONTRIBUTING.md#adding-or-updating-a-localization) for instructions on adding a new localization or improving an existing localization.
 
-[osrmti]: https://github.com/Project-OSRM/osrm-text-instructions/
-[iossynth]: https://developer.apple.com/documentation/avfoundation/speech_synthesis
+[osrmti]: https://www.mapbox.com/api-documentation/#instructions-languages
