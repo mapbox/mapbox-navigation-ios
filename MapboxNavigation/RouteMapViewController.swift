@@ -4,6 +4,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxMobileEvents
 import Turf
+import AVFoundation
 
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
@@ -137,6 +138,7 @@ class RouteMapViewController: UIViewController {
         navigationView.rerouteReportButton.addTarget(self, action: Actions.rerouteFeedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
+        notifyUserAboutLowVolume()
     }
     
     deinit {
@@ -313,6 +315,16 @@ class RouteMapViewController: UIViewController {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
         statusView.show(title, showSpinner: true)
+    }
+    
+    func notifyUserAboutLowVolume() {
+        guard !(routeController.locationManager is SimulatedLocationManager) else { return }
+        guard !NavigationSettings.shared.voiceMuted else { return }
+        guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
+        
+        let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
+        statusView.show(title, showSpinner: false)
+        statusView.hide(delay: 3, animated: true)
     }
     
     @objc func didReroute(notification: NSNotification) {
