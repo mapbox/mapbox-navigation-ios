@@ -6,7 +6,7 @@
 "dEY-t6-Ect.text" = "انقر مطولا لاختيار مقصد";
 
 /* Class = "UIButton"; normalTitle = "Simulate Locations"; ObjectID = "iiq-Gf-SKY"; */
-"iiq-Gf-SKY.normalTitle" = "حاكِ الأماك";
+"iiq-Gf-SKY.normalTitle" = "حاكِ الأماكن";
 
 /* Class = "UIButton"; normalTitle = "Start Navigation"; ObjectID = "nMe-Tl-a1N"; */
 "nMe-Tl-a1N.normalTitle" = "ابدأ التنقل";
