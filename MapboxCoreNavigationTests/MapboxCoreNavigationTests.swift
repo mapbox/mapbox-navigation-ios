@@ -129,8 +129,8 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     func testFailToReroute() {
         route.accessToken = "foo"
-        let navigation = RouteController(along: route, directions: directions)
-        let invalidLocation = CLLocation(latitude: 200, longitude: 200)
+        let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
+        let navigation = RouteController(along: route, directions: directionsClientSpy)
         
         expectation(forNotification: .routeControllerWillReroute, object: navigation) { (notification) -> Bool in
             return true
@@ -140,7 +140,8 @@ class MapboxCoreNavigationTests: XCTestCase {
             return true
         }
         
-        navigation.reroute(from: invalidLocation)
+        navigation.reroute(from: CLLocation(latitude: 0, longitude: 0))
+        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: nil, error: NSError())
         
         waitForExpectations(timeout: 2) { (error) in
             XCTAssertNil(error)
