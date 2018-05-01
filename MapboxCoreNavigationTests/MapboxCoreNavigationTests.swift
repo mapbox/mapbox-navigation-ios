@@ -131,7 +131,6 @@ class MapboxCoreNavigationTests: XCTestCase {
         route.accessToken = "foo"
         let navigation = RouteController(along: route, directions: directions)
         let invalidLocation = CLLocation(latitude: 200, longitude: 200)
-        navigation.reroute(from: invalidLocation)
         
         expectation(forNotification: .routeControllerWillReroute, object: navigation) { (notification) -> Bool in
             return true
@@ -140,6 +139,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         expectation(forNotification: .routeControllerDidFailToReroute, object: navigation) { (notification) -> Bool in
             return true
         }
+        
+        navigation.reroute(from: invalidLocation)
         
         waitForExpectations(timeout: 2) { (error) in
             XCTAssertNil(error)
