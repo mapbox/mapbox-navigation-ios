@@ -922,7 +922,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let symbol = MGLSymbolStyleLayer(identifier: identifier, source: source)
         
         symbol.text = NSExpression(format: "CAST(name, 'NSString')")
-        symbol.textOpacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == false"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
+        symbol.textOpacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
         symbol.textFontSize = NSExpression(forConstantValue: 10)
         symbol.textHaloWidth = NSExpression(forConstantValue: 0.25)
         symbol.textHaloColor = NSExpression(forConstantValue: UIColor.black)
