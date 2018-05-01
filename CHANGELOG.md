@@ -8,9 +8,6 @@
 * `RouteController`’s `routeProgress` is now exposed to Objective-C. [#1323](https://github.com/mapbox/mapbox-navigation-ios/pull/1323)
 * Exit indications are now drawn accurately with a correct exit bearing. [#1288](https://github.com/mapbox/mapbox-navigation-ios/pull/1288)
 * Added a delegate method, `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)` which allows you to customize the contents of the road name label displayed towards the bottom of the map view. [#1309](https://github.com/mapbox/mapbox-navigation-ios/pull/1309)
-
-### User interface
-
 * If a reroute request fails, the `Rerouting...` status view update is dismissed. [#1357](https://github.com/mapbox/mapbox-navigation-ios/pull/1357)
 
 ## v0.16.2 (April 13, 2018)
