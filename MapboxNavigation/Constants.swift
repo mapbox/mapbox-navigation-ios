@@ -30,3 +30,8 @@ public let MBCurrentLegAttribute = "isCurrentLeg"
  Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
  */
 public let MBCongestionAttribute = "congestion"
+
+/**
+ The minimum volume for the device before a gentle warning is emitted when beginning navigation.
+ */
+public let NavigationViewMinimumVolumeForWarning: Float = 0.3
