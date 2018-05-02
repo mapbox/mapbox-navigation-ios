@@ -118,9 +118,9 @@ public protocol NavigationViewControllerDelegate {
     /**
      Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
      
-     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:)`.
+     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:legIndex:)`.
      */
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
      Called when the user taps on the route.
@@ -501,8 +501,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
+    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
     
     @objc public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
