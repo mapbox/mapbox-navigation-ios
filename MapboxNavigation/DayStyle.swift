@@ -1,6 +1,13 @@
 import Foundation
 import Mapbox
 
+extension MGLStyle {
+    // Returns the URL to the current version of the Mapbox Navigation Guidance Day style.
+    public class var navigationGuidanceDayStyleURL: URL { get { return URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")! } }
+    // Returns the URL to the current version of the Mapbox Navigation Guidance Night style.
+    public class var navigationGuidanceNightStyleURL: URL { get { return URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")! } }
+}
+
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
     class var defaultRouteLayer: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) } }
@@ -45,7 +52,7 @@ open class DayStyle: Style {
     
     public required init() {
         super.init()
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
+        mapStyleURL = MGLStyle.navigationGuidanceDayStyleURL
         styleType = .day
         statusBarStyle = .default
     }
@@ -160,7 +167,7 @@ open class NightStyle: DayStyle {
     
     public required init() {
         super.init()
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")!
+        mapStyleURL = MGLStyle.navigationGuidanceNightStyleURL
         styleType = .night
         statusBarStyle = .lightContent
     }
