@@ -72,6 +72,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let instructionCircle = "instructionCircle"
     let alternateSourceIdentifier = "alternateSource"
     let alternateLayerIdentifier = "alternateLayer"
+    let alternateCasingLayerIdentifier = "alternateCasingLayer"
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -80,6 +81,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
+    @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     
@@ -467,10 +469,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
             style.addSource(alternateSource)
             
-            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
+            let lineWidthExpressionFormat = "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)"
+            
+            let alternateLayerLineWidth = NSExpression(format: lineWidthExpressionFormat, MBRouteLineWidthByZoomLevel.multiplied(by: 0.80))
+            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, lineColor: routeAlternateColor, lineWidth: alternateLayerLineWidth, source: alternateSource)
             
             if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
                 style.insertLayer(alternateLayer, below: layer)
+            }
+            
+            let alternateCasingLayerLineWidth = NSExpression(format: lineWidthExpressionFormat, MBRouteLineWidthByZoomLevel)
+            let alternateCasingLayer = alternateRouteStyleLayer(identifier: alternateCasingLayerIdentifier, lineColor: routeAlternateCasingColor, lineWidth: alternateCasingLayerLineWidth, source: alternateSource)
+            
+            if let layer = style.layer(withIdentifier: alternateLayerIdentifier) {
+                style.insertLayer(alternateCasingLayer, below: layer)
             }
         }
     }
@@ -890,18 +902,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return MGLShapeCollectionFeature(shapes: features)
     }
     
-    func alternateRouteStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        
-        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
-        
-        // Take the default line width and make it wider for the casing
-        lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.85))
-        lineCasing.lineColor = NSExpression(forConstantValue: routeAlternateColor)
-        lineCasing.lineCap = NSExpression(forConstantValue: "round")
-        lineCasing.lineJoin = NSExpression(forConstantValue: "round")
-        lineCasing.lineOpacity = NSExpression(forConstantValue: 0.9)
-        
-        return lineCasing
+    func alternateRouteStyleLayer(identifier: String, lineColor: UIColor, lineWidth: NSExpression, source: MGLSource) -> MGLStyleLayer {
+        let line = MGLLineStyleLayer(identifier: identifier, source: source)
+        line.lineWidth = lineWidth
+        line.lineColor = NSExpression(forConstantValue: lineColor)
+        line.lineCap = NSExpression(forConstantValue: "round")
+        line.lineJoin = NSExpression(forConstantValue: "round")
+        return line
     }
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
