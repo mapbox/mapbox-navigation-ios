@@ -485,11 +485,11 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationMapView?(mapView, didTap: route)
     }
     
-    public func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
+    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
-    public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
+    @objc public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
@@ -501,15 +501,15 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
+    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
     
-    public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+    @objc public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return delegate?.navigationMapView?(mapView, imageFor: annotation)
     }
     
-    public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+    @objc public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return delegate?.navigationMapView?(mapView, viewFor: annotation)
     }
     
@@ -541,7 +541,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return annotatesSpokenInstructions
     }
     
-    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
         guard let roadName = delegate?.navigationViewController?(self, roadNameAt: location) else {
             return nil
         }
@@ -573,12 +573,12 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
-        if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
-            mapViewController?.labelCurrentRoad(at: location)
-        } else if let location = locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
-            mapViewController?.labelCurrentRoad(at: location)
+        if snapsUserLocationAnnotationToRoute, let snappedLocation = routeController.location ?? locations.last, let rawLocation = locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: snappedLocation, animated: true)
+            mapViewController?.labelCurrentRoad(at: rawLocation, for: snappedLocation)
+        } else if let rawlocation = locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: rawlocation, animated: true)
+            mapViewController?.labelCurrentRoad(at: rawlocation)
         }
     }
     
