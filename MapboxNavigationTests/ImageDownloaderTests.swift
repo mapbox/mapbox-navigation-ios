@@ -90,7 +90,7 @@ class ImageDownloaderTests: XCTestCase {
         XCTAssertTrue(secondCallbackCalled)
     }
 
-    func testDownloadingImageAgainAfterFirstDownloadCompletes() {
+    func disabled_testDownloadingImageAgainAfterFirstDownloadCompletes() {
         guard let downloader = downloader else {
             XCTFail()
             return

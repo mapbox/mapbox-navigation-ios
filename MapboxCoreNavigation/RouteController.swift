@@ -445,7 +445,7 @@ open class RouteController: NSObject {
     }
 
     /**
-     Discard a recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
+     Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
      */
     @objc public func cancelFeedback(feedbackId: String) {
         if let index = outstandingFeedbackEvents.index(where: {$0.id.uuidString == feedbackId}) {

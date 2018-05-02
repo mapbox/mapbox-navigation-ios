@@ -9,9 +9,12 @@ import Mapbox
 @objc(MBNavigationViewControllerDelegate)
 public protocol NavigationViewControllerDelegate {
     /**
-     Called when the user exits a route and dismisses the navigation view controller by tapping the Cancel button.
+     Called when the navigation view controller is dismissed, such as when the user ends a trip.
+     
+     - parameter navigationViewController: The navigation view controller that was dismissed.
+     - parameter canceled: True if the user dismissed the navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
-    @objc optional func navigationViewControllerDidEndNavigation(_ navigationViewController: NavigationViewController, cancelled: Bool)
+    @objc optional func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool)
     
     /**
      Called when the user arrives at the destination waypoint for a route leg.
@@ -115,9 +118,9 @@ public protocol NavigationViewControllerDelegate {
     /**
      Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
      
-     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:)`.
+     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:legIndex:)`.
      */
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
      Called when the user taps on the route.
@@ -498,8 +501,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
+    public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
     
     public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
@@ -518,8 +521,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationViewControllerDidCancelFeedback?(self)
     }
     
-    func mapViewControllerDidEndNavigation(_ mapViewController: RouteMapViewController, cancelled: Bool) {
-        if delegate?.navigationViewControllerDidEndNavigation?(self, cancelled: cancelled) != nil {
+    func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
+        if delegate?.navigationViewControllerDidDismiss?(self, byCanceling: canceled) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
             dismiss(animated: true, completion: nil)

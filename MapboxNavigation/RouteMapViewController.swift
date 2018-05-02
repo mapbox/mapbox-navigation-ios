@@ -4,6 +4,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxMobileEvents
 import Turf
+import AVFoundation
 
 class ArrowFillPolyline: MGLPolylineFeature {}
 class ArrowStrokePolyline: ArrowFillPolyline {}
@@ -137,6 +138,7 @@ class RouteMapViewController: UIViewController {
         navigationView.rerouteReportButton.addTarget(self, action: Actions.rerouteFeedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
+        notifyUserAboutLowVolume()
     }
     
     deinit {
@@ -320,6 +322,16 @@ class RouteMapViewController: UIViewController {
     @objc func rerouteDidFail(notification: NSNotification) {
         statusView.hide()
     }
+  
+    func notifyUserAboutLowVolume() {
+        guard !(routeController.locationManager is SimulatedLocationManager) else { return }
+        guard !NavigationSettings.shared.voiceMuted else { return }
+        guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
+        
+        let title = String.localizedStringWithFormat(NSLocalizedString("DEVICE_VOLUME_LOW", bundle: .mapboxNavigation, value: "%@ Volume Low", comment: "Format string for indicating the device volume is low; 1 = device model"), UIDevice.current.model)
+        statusView.show(title, showSpinner: false)
+        statusView.hide(delay: 3, animated: true)
+    }
     
     @objc func didReroute(notification: NSNotification) {
         guard self.isViewLoaded else { return }
@@ -465,7 +477,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
             self?.routeController.setEndOfRoute(rating: rating, comment: comment)
-            self?.delegate?.mapViewControllerDidEndNavigation(self!, cancelled: false)
+            self?.delegate?.mapViewControllerDidDismiss(self!, byCanceling: false)
         }
     }
     
@@ -563,7 +575,7 @@ extension RouteMapViewController {
 extension RouteMapViewController: NavigationViewDelegate {
     // MARK: NavigationViewDelegate
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
-        delegate?.mapViewControllerDidEndNavigation(self, cancelled: true)
+        delegate?.mapViewControllerDidDismiss(self, byCanceling: true)
     }
     
     // MARK: MGLMapViewDelegate
@@ -647,8 +659,8 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
@@ -928,7 +940,7 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
 
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
-    func mapViewControllerDidEndNavigation(_ mapViewController: RouteMapViewController, cancelled: Bool)
+    func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool)
     func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
     
