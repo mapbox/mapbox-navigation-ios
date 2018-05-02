@@ -79,15 +79,16 @@ class ImageDownloaderTests: XCTestCase {
             secondCallbackCalled = true
         }
 
-        XCTAssertTrue(operation! === downloader.activeOperationWithURL(imageURL)!, "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
+        XCTAssertTrue(operation! === downloader.activeOperationWithURL(imageURL)!,
+                      "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
 
+        var spinCount = 0
         runUntil(condition: {
-            return ImageLoadingURLProtocolSpy.hasActiveRequestForURL(imageURL) == false && downloader.activeOperationWithURL(imageURL) == nil
+            spinCount += 1
+            return firstCallbackCalled && secondCallbackCalled && ImageLoadingURLProtocolSpy.hasActiveRequestForURL(imageURL) == false && downloader.activeOperationWithURL(imageURL) == nil
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
-        //These flags might seem redundant, but it's good to be explicit here
-        XCTAssertTrue(firstCallbackCalled)
-        XCTAssertTrue(secondCallbackCalled)
+        print("Succeeded after evaluating condition \(spinCount) times.")
     }
 
     func disabled_testDownloadingImageAgainAfterFirstDownloadCompletes() {
