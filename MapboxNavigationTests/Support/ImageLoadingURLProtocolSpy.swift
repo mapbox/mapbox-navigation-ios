@@ -39,6 +39,11 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
             return
         }
 
+        defer {
+            ImageLoadingURLProtocolSpy.pastRequests[url] = ImageLoadingURLProtocolSpy.activeRequests[url]
+            ImageLoadingURLProtocolSpy.activeRequests[url] = nil
+        }
+
         // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
         if ImageLoadingURLProtocolSpy.hasActiveRequestForURL(url) {
             XCTFail("There should only be one request in flight at a time per resource")
@@ -54,8 +59,6 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     }
 
     override func stopLoading() {
-        ImageLoadingURLProtocolSpy.pastRequests[request.url!] = ImageLoadingURLProtocolSpy.activeRequests[request.url!]
-        ImageLoadingURLProtocolSpy.activeRequests[request.url!] = nil
     }
 
     /**
