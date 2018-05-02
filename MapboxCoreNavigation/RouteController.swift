@@ -1115,7 +1115,6 @@ extension RouteController: TunnelIntersectionManagerDelegate {
         tunnelIntersectionManager?.enableTunnelAnimation(for: manager,
                                              routeController: self,
                                                routeProgress: routeProgress,
-                                            distanceTraveled: routeProgress.currentLegProgress.currentStepProgress.distanceTraveled,
                                                     callback: callback)
     }
     

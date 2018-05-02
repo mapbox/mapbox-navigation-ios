@@ -104,7 +104,6 @@ open class TunnelIntersectionManager: NSObject {
     @objc public func enableTunnelAnimation(for manager: CLLocationManager,
                                         routeController: RouteController,
                                           routeProgress: RouteProgress,
-                                       distanceTraveled: CLLocationDistance,
                                                callback: RouteControllerSimulationCompletionBlock?) {
         guard !isAnimationEnabled else { return }
         
