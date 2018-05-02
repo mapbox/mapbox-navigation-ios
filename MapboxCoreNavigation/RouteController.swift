@@ -244,6 +244,13 @@ open class RouteController: NSObject {
     
     public var tunnelSimulationFeatureEnabled: Bool = false
     
+    private var tunnelAnimationEnabled: Bool {
+        guard tunnelSimulationFeatureEnabled else {
+            return false
+        }
+        return tunnelIntersectionManager?.isAnimationEnabled ?? false
+    }
+    
     /**
      Intializes a new `RouteController`.
 
@@ -612,7 +619,6 @@ extension RouteController: CLLocationManagerDelegate {
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
 
-        let tunnelAnimationEnabled = tunnelSimulationFeatureEnabled && (tunnelIntersectionManager?.isAnimationEnabled ?? false)
         guard tunnelAnimationEnabled || userIsOnRoute(location) || !(delegate?.routeController?(self, shouldRerouteFrom: location) ?? true) else {
             reroute(from: location)
             return
