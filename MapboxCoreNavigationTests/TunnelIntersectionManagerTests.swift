@@ -23,6 +23,8 @@ class TunnelIntersectionManagerTests: XCTestCase {
         let navigation = RouteController(along: tunnelRoute, directions: directions)
         let firstCoord = navigation.routeProgress.currentLegProgress.nearbyCoordinates.first!
         let tunnelIntersectionManager = TunnelIntersectionManager()
+        navigation.tunnelSimulationFeatureEnabled = true
+        
         return (tunnelIntersectionManager: tunnelIntersectionManager,
                           routeController: navigation,
                             firstLocation: CLLocation(coordinate: firstCoord,
