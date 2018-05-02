@@ -87,6 +87,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance = defaultAltitude
     var routes: [Route]?
+    var altRouteSourceIdentifiers: [String] = []
+    var altRouteLayerIdentifiers: [String] = []
     
     fileprivate var preferredFramesPerSecond: Int = 60 {
         didSet {
@@ -457,21 +459,29 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.routes = routes
         var tmpRoutes = routes
         tmpRoutes.removeFirst()
-        guard let alternateRoute = tmpRoutes.first else { return }
+        altRouteSourceIdentifiers.removeAll()
+        altRouteLayerIdentifiers.removeAll()
         
-        let alternatePolyline = MGLPolylineFeature(coordinates: alternateRoute.coordinates!, count: alternateRoute.coordinateCount)
-        
-        if let source = style.source(withIdentifier: alternateSourceIdentifier) as? MGLShapeSource {
-            source.shape = alternatePolyline
-        } else {
-            let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
-            style.addSource(alternateSource)
+        for (routeIndex, route) in tmpRoutes.enumerated() {
+            let alternatePolyline = MGLPolylineFeature(coordinates: route.coordinates!, count: route.coordinateCount)
+            let sourceIndentifier = "\(alternateSourceIdentifier)-\(routeIndex)"
+            let layerIdentifier = "\(alternateLayerIdentifier)-\(routeIndex)"
             
-            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
-            
-            if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
-                style.insertLayer(alternateLayer, below: layer)
+            if let source = style.source(withIdentifier: sourceIndentifier) as? MGLShapeSource {
+                source.shape = alternatePolyline
+            } else {
+                let alternateSource = MGLShapeSource(identifier: sourceIndentifier, shape: alternatePolyline, options: nil)
+                style.addSource(alternateSource)
+                
+                let alternateLayer = alternateRouteStyleLayer(identifier: layerIdentifier, source: alternateSource)
+                
+                if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
+                    style.insertLayer(alternateLayer, below: layer)
+                }
             }
+            
+            altRouteSourceIdentifiers.append(sourceIndentifier)
+            altRouteLayerIdentifiers.append(layerIdentifier)
         }
     }
     
@@ -506,12 +516,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
-            style.removeSource(altSource)
+        altRouteLayerIdentifiers.forEach {
+            if let altLayer = style.layer(withIdentifier: $0) {
+                style.removeLayer(altLayer)
+            }
         }
         
-        if let altLayer = style.layer(withIdentifier: alternateLayerIdentifier) {
-            style.removeLayer(altLayer)
+        altRouteSourceIdentifiers.forEach {
+            if let altSource = style.source(withIdentifier: $0) {
+                style.removeSource(altSource)
+            }
         }
     }
     
