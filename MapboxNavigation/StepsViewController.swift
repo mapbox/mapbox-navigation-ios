@@ -76,8 +76,8 @@ open class StepsViewController: UIViewController {
     }
     
     @objc func progressDidChange(_ notification: Notification) {
-        rebuildDataSource()
-        tableView.reloadData()
+        rebuildDataSource() // Rebuild if necessary
+        tableView.reloadData() // reload only visible cells
     }
     
     func setupViews() {
