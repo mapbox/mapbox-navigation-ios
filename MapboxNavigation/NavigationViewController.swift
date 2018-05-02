@@ -216,12 +216,6 @@ open class NavigationViewController: UIViewController {
         }
     }
     
-    /** 
-     An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
-    */
-    @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
-    @objc public var destination: MGLAnnotation!
-    
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
