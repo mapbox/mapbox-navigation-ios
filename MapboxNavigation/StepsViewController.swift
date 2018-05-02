@@ -29,6 +29,9 @@ open class StepsViewController: UIViewController {
     typealias StepSection = [RouteStep]
     var sections = [StepSection]()
     
+    var previousLegIndex: Int = NSNotFound
+    var previousStepIndex: Int = NSNotFound
+    
     /**
      Initializes StepsViewController with a RouteProgress object.
      
@@ -40,10 +43,16 @@ open class StepsViewController: UIViewController {
         self.routeProgress = routeProgress
     }
     
-    func rebuildDataSource() {
-        sections.removeAll()
+    @discardableResult
+    func rebuildDataSourceIfNecessary() -> Bool {
         
         let legIndex = routeProgress.legIndex
+        
+        guard previousLegIndex != legIndex,
+            previousStepIndex != routeProgress.currentLegProgress.stepIndex else { return false }
+        
+        sections.removeAll()
+        
         // Don't include the current step in the list
         let stepIndex = routeProgress.currentLegProgress.stepIndex + 1
         let legs = routeProgress.route.legs
@@ -61,12 +70,17 @@ open class StepsViewController: UIViewController {
                 sections.append(section)
             }
         }
+        
+        previousStepIndex = stepIndex
+        previousLegIndex = legIndex
+        
+        return true
     }
     
     override open func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        rebuildDataSource()
+        rebuildDataSourceIfNecessary()
         
         NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
@@ -76,8 +90,12 @@ open class StepsViewController: UIViewController {
     }
     
     @objc func progressDidChange(_ notification: Notification) {
-        rebuildDataSource() // Rebuild if necessary
-        tableView.reloadData() // reload only visible cells
+    
+        if rebuildDataSourceIfNecessary() {
+            if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
+                tableView.reloadRows(at: visibleIndexPaths, with: .automatic)
+            }
+        }
     }
     
     func setupViews() {
