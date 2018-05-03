@@ -28,13 +28,11 @@
 ### Other changes
 
 * `DistanceFormatter`, `ReplayLocationManager`, `SimulatedLocationManager`, `LanesView`, and `ManueverView` are now subclassable. ([#1345](https://github.com/mapbox/mapbox-navigation-ios/pull/1345]))
-* Renamed methods on `NavigationMapViewDelegate` ([#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364), [#1338](https://github.com/mapbox/mapbox-navigation-ios/pull/1338), [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318)):    
-    - `NavigationMapViewDelegate.navigationMapView(_:shapeDescribingRoute:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:shapeDescribing:)`.
-    - `NavigationMapViewDelegate.navigationMapView(_:shapeDescribingWaypoints:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeDescribingRoute:)`.
-    - `NavigationMapViewDelegate.navigationMapView(_:shapeDescribingWaypoints:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:shapeFor:legIndex:)`.
-    - `NavigationMapViewDelegate.navigationMapView(_:imageForAnnotation:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:imageFor:)`.
-    - `NavigationMapViewDelegate.navigationMapView(_:viewForAnnotation:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:viewFor:)`.
-    - `NavigationViewControllerDelegate.navigationViewControllerDidCancelNavigation(_:)` to `NavigationViewControllerDelegate.navigationViewControllerDidDismiss(_:byCanceling:)`
+* Renamed several  `NavigationMapViewDelegate` methods ([#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364), [#1338](https://github.com/mapbox/mapbox-navigation-ios/pull/1338), [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318), [#1378](https://github.com/mapbox/mapbox-navigation-ios/pull/1378)):
+    * `NavigationViewControllerDelegate.navigationViewControllerDidCancelNavigation(_:)` to `NavigationViewControllerDelegate.navigationViewControllerDidDismiss(_:byCanceling:)`
+    * `NavigationMapViewDelegate.navigationMapView(_:shapeDescribing:)` to `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)`.
+    * `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeDescribing:)` to `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)`.
+    * `-[MBNavigationMapViewDelegate navigationMapView:shapeDescribingWaypoints:legIndex:]` to `-[MBNavigationMapViewDelegate navigationMapView:shapeForWaypoints:legIndex:]` in Objective-C.
 
 ## v0.16.2 (April 13, 2018)
 

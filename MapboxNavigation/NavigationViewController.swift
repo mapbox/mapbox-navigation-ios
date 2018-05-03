@@ -92,14 +92,16 @@ public protocol NavigationViewControllerDelegate {
      
      If this method is unimplemented, the navigation map view represents the route line using an `MGLPolylineFeature` based on `route`’s `coordinates` property.
      */
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    @objc(navigationMapView:shapeForRoute:)
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor route: Route) -> MGLShape?
     
     /**
      Returns an `MGLShape` that represents the path of the route line’s casing.
      
-     If this method is unimplemented, the navigation map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationMapView(_:shapeDescribing:)`.
+     If this method is unimplemented, the navigation map view represents the route line’s casing using an `MGLPolylineFeature` identical to the one returned by `navigationMapView(_:shapeFor:)`.
      */
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    @objc(navigationMapView:simplifiedShapeForRoute:)
+    optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape?
     
     /*
      Returns an `MGLStyleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationMapView(_:waypointSymbolStyleLayerWithIdentifier:source:)`.
@@ -478,12 +480,12 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationMapView?(mapView, didTap: route)
     }
     
-    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeDescribing: route)
+    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeFor route: Route) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: route)
     }
     
-    @objc public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeDescribing: route)
+    @objc public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: route)
     }
     
     public func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
