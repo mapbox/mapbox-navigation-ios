@@ -47,9 +47,9 @@ open class StepsViewController: UIViewController {
     func rebuildDataSourceIfNecessary() -> Bool {
         
         let legIndex = routeProgress.legIndex
+        let didProcessCurrentStep = previousLegIndex != legIndex && previousStepIndex != routeProgress.currentLegProgress.stepIndex
         
-        guard previousLegIndex != legIndex,
-            previousStepIndex != routeProgress.currentLegProgress.stepIndex else { return false }
+        guard !didProcessCurrentStep else { return false }
         
         sections.removeAll()
         
