@@ -166,19 +166,14 @@ class TunnelIntersectionManagerTests: XCTestCase {
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
         
         // Disable the tunnel animation, which should disable the simulated location manager
-        let disableTunnelAnimationExpectation = expectation(description: "disableTunnelAnimation")
-        
-        // Assume the tunnel animation was previously enabled
+        // Assuming the tunnel animation was previously enabled
         routeController.tunnelIntersectionManager?.isAnimationEnabled = true
         
         let tunnelExitLocation = location(at: routeController.location!.coordinate, horizontalAccuracy: 20)
 
         routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation) { animationEnabled, _ in
-                disableTunnelAnimationExpectation.fulfill()
                 XCTAssertFalse(animationEnabled, "Animation through tunnel should be disabled.")
         }
-
-        self.wait(for: [disableTunnelAnimationExpectation], timeout: 1.0)
     }
     
 }
