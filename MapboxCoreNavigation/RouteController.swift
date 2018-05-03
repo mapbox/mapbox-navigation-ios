@@ -242,10 +242,13 @@ open class RouteController: NSObject {
     
     var tunnelIntersectionManagerCompletionHandler: RouteControllerSimulationCompletionBlock?
     
-    public var tunnelSimulationFeatureEnabled: Bool = false
+    /**
+     The flag that indicates that the simulated navigation through tunnel(s) is enabled.
+     */
+    public var tunnelSimulationEnabled: Bool = false
     
     private var tunnelAnimationEnabled: Bool {
-        guard tunnelSimulationFeatureEnabled else {
+        guard tunnelSimulationEnabled else {
             return false
         }
         return tunnelIntersectionManager?.isAnimationEnabled ?? false
@@ -277,13 +280,17 @@ open class RouteController: NSObject {
         checkForUpdates()
         checkForLocationUsageDescription()
         
+        setupTunnelIntersectionManager()
+
+        startEvents(accessToken: route.accessToken)
+    }
+    
+    private func setupTunnelIntersectionManager() {
         tunnelIntersectionManager = TunnelIntersectionManager()
         tunnelIntersectionManager?.delegate = self
         tunnelIntersectionManagerCompletionHandler = { enabled, _ in
             self.tunnelIntersectionManager?.isAnimationEnabled = enabled
         }
-
-        startEvents(accessToken: route.accessToken)
     }
 
     deinit {
@@ -636,7 +643,7 @@ extension RouteController: CLLocationManagerDelegate {
     }
     
     func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager) {
-        guard tunnelSimulationFeatureEnabled, let tunnelIntersectionManager = tunnelIntersectionManager else { return }
+        guard tunnelSimulationEnabled, let tunnelIntersectionManager = tunnelIntersectionManager else { return }
         
         let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
         if tunnelDetected {
