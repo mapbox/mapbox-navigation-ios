@@ -124,7 +124,7 @@ class InstructionPresenter {
     }
 
     func attributedString(forExitComponent exit: VisualInstructionComponent, maneuverDirection: ManeuverDirection, dataSource: DataSource) -> NSAttributedString? {
-        guard exit.type == .exitCode, let exitCode = exit.text else { return nil }
+        guard let exitCode = exit.text else { return nil }
         let exitSide: ExitSide = maneuverDirection == .left ? .left : .right
         guard let exitString = exitShield(side: exitSide, text: exitCode, dataSource: dataSource) else { return nil }
         return exitString
