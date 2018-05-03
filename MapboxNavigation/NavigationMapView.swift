@@ -506,12 +506,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
-            style.removeSource(altSource)
-        }
-        
         if let altLayer = style.layer(withIdentifier: alternateLayerIdentifier) {
             style.removeLayer(altLayer)
+        }
+        
+        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
+            style.removeSource(altSource)
         }
     }
     
