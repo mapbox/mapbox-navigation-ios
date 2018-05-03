@@ -124,11 +124,12 @@ open class TunnelIntersectionManager: NSObject {
         
         guard isAnimationEnabled else { return }
         
-        // Disable the tunnel animation after at least 3 bad location updates.
+        // Disable the tunnel animation after at least 3 good location updates.
         // Otherwise if we receive a valid location updates, disable the tunnel animation immediately.
-        guard tunnelExitLocations.count > 3 || location.isQualified else {
-            tunnelExitLocations.append(location)
-            tunnelExitLocations = tunnelExitLocations.filter { !$0.isQualified }
+        guard tunnelExitLocations.count > 3 else {
+            if location.isQualified && tunnelExitLocations.count < 3 {
+                tunnelExitLocations.append(location)
+            }
             return
         }
         
