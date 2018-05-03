@@ -70,8 +70,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let instructionSource = "instructionSource"
     let instructionLabel = "instructionLabel"
     let instructionCircle = "instructionCircle"
-    let alternateSourceIdentifier = "alternateSource"
-    let alternateLayerIdentifier = "alternateLayer"
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -424,17 +422,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     @objc public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
         guard let style = style else { return }
-        guard let activeRoute = routes.first else { return }
+        self.routes = routes
         
-        let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
-        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
+        let polylines = /*navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ??*/ shape(describing: routes, legIndex: legIndex)
+        let mainPolylineSimplified = /*navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ??*/ shape(describingCasing: routes, legIndex: legIndex)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
-            source.shape = mainPolyline
+            source.shape = polylines
             sourceSimplified.shape = mainPolylineSimplified
         } else {
-            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: mainPolyline, options: nil)
+            let lineSource = MGLShapeSource(identifier: sourceIdentifier, shape: polylines, options: nil)
             let lineCasingSource = MGLShapeSource(identifier: sourceCasingIdentifier, shape: mainPolylineSimplified, options: nil)
             style.addSource(lineSource)
             style.addSource(lineCasingSource)
@@ -450,38 +448,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                     break
                 }
             }
-        }
-        guard routes.count > 1 else {
-            removeAlternates()
-            return
-        }
-        
-        self.routes = routes
-        var tmpRoutes = routes
-        tmpRoutes.removeFirst()
-        altRouteSourceIdentifiers.removeAll()
-        altRouteLayerIdentifiers.removeAll()
-        
-        for (routeIndex, route) in tmpRoutes.enumerated() {
-            let alternatePolyline = MGLPolylineFeature(coordinates: route.coordinates!, count: route.coordinateCount)
-            let sourceIndentifier = "\(alternateSourceIdentifier)-\(routeIndex)"
-            let layerIdentifier = "\(alternateLayerIdentifier)-\(routeIndex)"
-            
-            if let source = style.source(withIdentifier: sourceIndentifier) as? MGLShapeSource {
-                source.shape = alternatePolyline
-            } else {
-                let alternateSource = MGLShapeSource(identifier: sourceIndentifier, shape: alternatePolyline, options: nil)
-                style.addSource(alternateSource)
-                
-                let alternateLayer = alternateRouteStyleLayer(identifier: layerIdentifier, source: alternateSource)
-                
-                if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
-                    style.insertLayer(alternateLayer, below: layer)
-                }
-            }
-            
-            altRouteSourceIdentifiers.append(sourceIndentifier)
-            altRouteLayerIdentifiers.append(layerIdentifier)
         }
     }
     
@@ -808,7 +774,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return candidates
     }
     
-    func shape(describing route: Route, legIndex: Int?) -> MGLShape? {
+    func shape(describing routes: [Route], legIndex: Int?) -> MGLShape? {
+        guard let firstRoute = routes.first else { return nil }
+        guard let congestedRoute = addCongestion(to: firstRoute, legIndex: legIndex) else { return nil }
+        
+        var altRoutes: [MGLPolylineFeature] = []
+        
+        for route in routes.suffix(from: 1) {
+            let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+            polyline.attributes["isAlternateRoute"] = true
+            altRoutes.append(polyline)
+        }
+        
+        return MGLShapeCollectionFeature(shapes: congestedRoute + altRoutes)
+    }
+    
+    func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
         guard let coordinates = route.coordinates else { return nil }
         
         var linesPerLeg: [[MGLPolylineFeature]] = []
@@ -816,18 +797,18 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         for (index, leg) in route.legs.enumerated() {
             // If there is no congestion, don't try and add it
             guard let legCongestion = leg.segmentCongestionLevels else {
-                return shape(describingCasing: route, legIndex: legIndex)
+                return [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
             }
             
             guard legCongestion.count + 1 <= coordinates.count else {
-                return shape(describingCasing: route, legIndex: legIndex)
+                return [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
             }
             
             // The last coord of the preceding step, is shared with the first coord of the next step.
             // We don't need both.
             var legCoordinates = Array(leg.steps.compactMap {
                 $0.coordinates?.suffix(from: 1)
-            }.joined())
+                }.joined())
             
             // We need to add the first coord of the route in.
             if let firstCoord = leg.steps.first?.coordinates?.first {
@@ -864,25 +845,26 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             linesPerLeg.append(lines)
         }
-        
-        return MGLShapeCollectionFeature(shapes: Array(linesPerLeg.joined()))
+        return Array(linesPerLeg.joined())
     }
     
-    func shape(describingCasing route: Route, legIndex: Int?) -> MGLShape? {
+    func shape(describingCasing routes: [Route], legIndex: Int?) -> MGLShape? {
         var linesPerLeg: [MGLPolylineFeature] = []
         
-        for (index, leg) in route.legs.enumerated() {
-            let legCoordinates = Array(leg.steps.compactMap {
-                $0.coordinates
-            }.joined())
-            
-            let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
-            if let legIndex = legIndex {
-                polyline.attributes[MBCurrentLegAttribute] = index == legIndex
-            } else {
-                polyline.attributes[MBCurrentLegAttribute] = index == 0
+        for (routeIndex, route) in routes.enumerated() {
+            for (index, leg) in route.legs.enumerated() {
+                let legCoordinates = Array(leg.steps.compactMap {
+                    $0.coordinates
+                }.joined())
+                
+                let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
+                if let legIndex = legIndex {
+                    polyline.attributes[MBCurrentLegAttribute] = index == legIndex && routeIndex == 0
+                } else {
+                    polyline.attributes[MBCurrentLegAttribute] = false
+                }
+                linesPerLeg.append(polyline)
             }
-            linesPerLeg.append(polyline)
         }
         
         return MGLShapeCollectionFeature(shapes: linesPerLeg)
@@ -904,18 +886,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return MGLShapeCollectionFeature(shapes: features)
     }
     
-    func alternateRouteStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
+    func shape(describingAlternate routes: [Route]) -> MGLShape {
+        var altRoutes: [MGLPolylineFeature] = []
         
-        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
+        for route in routes {
+            let polyline = MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+            polyline.attributes["isAlternateRoute"] = true
+            altRoutes.append(polyline)
+        }
         
-        // Take the default line width and make it wider for the casing
-        lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.85))
-        lineCasing.lineColor = NSExpression(forConstantValue: routeAlternateColor)
-        lineCasing.lineCap = NSExpression(forConstantValue: "round")
-        lineCasing.lineJoin = NSExpression(forConstantValue: "round")
-        lineCasing.lineOpacity = NSExpression(forConstantValue: 0.9)
-        
-        return lineCasing
+        return MGLShapeCollectionFeature(shapes: altRoutes)
     }
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
