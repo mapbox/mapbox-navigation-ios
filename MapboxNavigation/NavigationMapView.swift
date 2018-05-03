@@ -85,8 +85,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance = defaultAltitude
     var routes: [Route]?
-    var altRouteSourceIdentifiers: [String] = []
-    var altRouteLayerIdentifiers: [String] = []
     
     fileprivate var preferredFramesPerSecond: Int = 60 {
         didSet {
