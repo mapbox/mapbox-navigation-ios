@@ -3,9 +3,9 @@ import Mapbox
 
 extension MGLStyle {
     // Returns the URL to the current version of the Mapbox Navigation Guidance Day style.
-    public class var navigationGuidanceDayStyleURL: URL { get { return URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")! } }
+    public class var navigationGuidanceDayStyleURL: URL { get { return URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v3")! } }
     // Returns the URL to the current version of the Mapbox Navigation Guidance Night style.
-    public class var navigationGuidanceNightStyleURL: URL { get { return URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")! } }
+    public class var navigationGuidanceNightStyleURL: URL { get { return URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v3")! } }
 }
 
 extension UIColor {
