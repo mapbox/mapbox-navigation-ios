@@ -251,8 +251,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         
         let modifiedInstruction = voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: routeProgress!) ?? instruction
         
-        if #available(iOS 10.0, *), utterance?.voice == nil, let legProgress = routeProgress!.currentLegProgress {
-            utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: legProgress))
+        if #available(iOS 10.0, *), utterance?.voice == nil {
+            utterance = AVSpeechUtterance(attributedString: modifiedInstruction.attributedText(for: routeProgress!.currentLegProgress))
         } else {
             utterance = AVSpeechUtterance(string: modifiedInstruction.text)
         }

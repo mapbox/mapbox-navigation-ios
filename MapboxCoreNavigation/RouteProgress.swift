@@ -76,7 +76,7 @@ open class RouteProgress: NSObject {
     /**
      Returns the progress along the current `RouteLeg`.
      */
-    @objc public var currentLegProgress: RouteLegProgress!
+    @objc public var currentLegProgress: RouteLegProgress
     
     /**
      Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
@@ -102,8 +102,8 @@ open class RouteProgress: NSObject {
     @objc public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.route = route
         self.legIndex = legIndex
+        self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         super.init()
-        currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
