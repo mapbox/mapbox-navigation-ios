@@ -65,7 +65,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
      */
     @objc public init(route: Route) {
         super.init()
-        initializeSimulatedLocationManager(for: route)
+        initializeSimulatedLocationManager(for: route, currentDistance: 0, currentSpeed: 30)
     }
 
     /**
@@ -76,14 +76,16 @@ open class SimulatedLocationManager: NavigationLocationManager {
      */
     @objc public init(routeProgress: RouteProgress) {
         super.init()
-        currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled)
-        initializeSimulatedLocationManager(for: routeProgress.route, currentSpeed: 0)
-        currentSpeed = 0
+        let currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled)
+        initializeSimulatedLocationManager(for: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
     }
 
-    private func initializeSimulatedLocationManager(for route: Route, currentSpeed: CLLocationSpeed = 30) {
+    private func initializeSimulatedLocationManager(for route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
+        
         self.currentSpeed = currentSpeed
+        self.currentDistance = currentDistance
         self.route = route
+        
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
@@ -92,8 +94,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
         if let coordinates = route?.coordinates {
             routeLine = coordinates
             locations = coordinates.simulatedLocationsWithTurnPenalties()
-            
-            currentSpeed = 0
         }
     }
     
