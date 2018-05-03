@@ -70,8 +70,6 @@ class InstructionPresenter {
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
         
-        let exitInstructionIndex = components.index(where: {$0.type == .exit}) ?? NSNotFound
-        let isExitInstruction = 0...1 ~= exitInstructionIndex
         
         for (index, component) in components.enumerated() {
             let isFirst = index == 0
@@ -87,14 +85,11 @@ class InstructionPresenter {
             
             //Throw away exit components. We know this is safe because we know that if there is an exit component,
             //  there is an exit code component, and the latter contains the information we care about.
-
             guard component.type != .exit else { continue }
             
             //If we have a exit, in the first two components, lets handle that first.
-            if instruction.maneuverType == .takeOffRamp,
-                isExitInstruction, 0...1 ~= index,
+            if component.type == .exitCode, instruction.maneuverType == .takeOffRamp, 0...1 ~= index,
                 let exitString = attributedString(forExitComponent: component, maneuverDirection: instruction.maneuverDirection, dataSource: dataSource) {
-        
                 build(component, [exitString])
             }
                 
