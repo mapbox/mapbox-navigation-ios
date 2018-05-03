@@ -420,10 +420,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      */
     @objc public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
         guard let style = style else { return }
+        guard let mainRoute = routes.first else { return }
         self.routes = routes
         
         let polylines = /*navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ??*/ shape(describing: routes, legIndex: legIndex)
-        let mainPolylineSimplified = /*navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ??*/ shape(describingCasing: routes, legIndex: legIndex)
+        let mainPolylineSimplified = /*navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ??*/ shape(describingCasing: mainRoute, legIndex: legIndex)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
@@ -471,25 +472,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
-        }
-        removeAlternates()
-    }
-    
-    func removeAlternates() {
-        guard let style = style else {
-            return
-        }
-        
-        altRouteLayerIdentifiers.forEach {
-            if let altLayer = style.layer(withIdentifier: $0) {
-                style.removeLayer(altLayer)
-            }
-        }
-        
-        altRouteSourceIdentifiers.forEach {
-            if let altSource = style.source(withIdentifier: $0) {
-                style.removeSource(altSource)
-            }
         }
     }
     
@@ -847,23 +829,21 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return Array(linesPerLeg.joined())
     }
     
-    func shape(describingCasing routes: [Route], legIndex: Int?) -> MGLShape? {
+    func shape(describingCasing route: Route, legIndex: Int?) -> MGLShape? {
         var linesPerLeg: [MGLPolylineFeature] = []
         
-        for (routeIndex, route) in routes.enumerated() {
-            for (index, leg) in route.legs.enumerated() {
-                let legCoordinates = Array(leg.steps.compactMap {
-                    $0.coordinates
-                }.joined())
-                
-                let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
-                if let legIndex = legIndex {
-                    polyline.attributes[MBCurrentLegAttribute] = index == legIndex && routeIndex == 0
-                } else {
-                    polyline.attributes[MBCurrentLegAttribute] = false
-                }
-                linesPerLeg.append(polyline)
+        for (index, leg) in route.legs.enumerated() {
+            let legCoordinates = Array(leg.steps.compactMap {
+                $0.coordinates
+            }.joined())
+            
+            let polyline = MGLPolylineFeature(coordinates: legCoordinates, count: UInt(legCoordinates.count))
+            if let legIndex = legIndex {
+                polyline.attributes[MBCurrentLegAttribute] = index == legIndex
+            } else {
+                polyline.attributes[MBCurrentLegAttribute] = false
             }
+            linesPerLeg.append(polyline)
         }
         
         return MGLShapeCollectionFeature(shapes: linesPerLeg)
