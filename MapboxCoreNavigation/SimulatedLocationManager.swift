@@ -50,7 +50,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     var route: Route? {
         didSet {
             stopUpdatingLocation()
-            reset(currentDistance)
+            reset()
             startUpdatingLocation()
         }
     }
@@ -76,24 +76,29 @@ open class SimulatedLocationManager: NavigationLocationManager {
      */
     @objc public init(routeProgress: RouteProgress) {
         super.init()
-        self.currentDistance = routeProgress.distanceTraveled
-        initializeSimulatedLocationManager(for: routeProgress.route)
+        currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled)
+        initializeSimulatedLocationManager(for: routeProgress.route, currentSpeed: 0)
+        currentSpeed = 0
     }
 
-    private func initializeSimulatedLocationManager(for route: Route) {
+    private func initializeSimulatedLocationManager(for route: Route, currentSpeed: CLLocationSpeed = 30) {
+        self.currentSpeed = currentSpeed
         self.route = route
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
-    private func reset(_ distance: CLLocationDistance) {
+    private func reset() {
         if let coordinates = route?.coordinates {
             routeLine = coordinates
             locations = coordinates.simulatedLocationsWithTurnPenalties()
             
             currentSpeed = 0
-            currentDistance = distance + (currentSpeed * speedMultiplier)
         }
+    }
+    
+    private func calculateCurrentDistance(_ distance: CLLocationDistance) -> CLLocationDistance {
+        return distance + (currentSpeed * speedMultiplier)
     }
     
     @objc private func progressDidChange(_ notification: Notification) {
@@ -177,7 +182,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         lastKnownLocation = location
         
         delegate?.locationManager?(self, didUpdateLocations: [currentLocation])
-        currentDistance += currentSpeed * speedMultiplier
+        currentDistance = calculateCurrentDistance(currentDistance)
         perform(#selector(tick), with: nil, afterDelay: 1)
     }
 }
