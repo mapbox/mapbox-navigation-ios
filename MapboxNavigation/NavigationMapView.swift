@@ -838,6 +838,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 } else {
                     polyline.attributes[MBCurrentLegAttribute] = index == 0
                 }
+                polyline.attributes["isAlternateRoute"] = false
                 return polyline
             }
             
