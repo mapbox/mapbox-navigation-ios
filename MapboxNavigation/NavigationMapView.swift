@@ -841,7 +841,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             if let legIndex = legIndex {
                 polyline.attributes[MBCurrentLegAttribute] = index == legIndex
             } else {
-                polyline.attributes[MBCurrentLegAttribute] = false
+                polyline.attributes[MBCurrentLegAttribute] = index == 0
             }
             linesPerLeg.append(polyline)
         }
@@ -895,7 +895,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         line.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
-        line.lineOpacity = NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"), trueExpression: NSExpression(forConstantValue: 1), falseExpression: NSExpression(forConstantValue: 0.85))
+        line.lineOpacity = NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
+                                              trueExpression: NSExpression(forConstantValue: 1),
+                                              falseExpression: NSExpression(forConstantValue: 0))
         line.lineColor = NSExpression(format: "TERNARY(isAlternateRoute == true, %@, MGL_MATCH(congestion, 'low' , %@, 'moderate', %@, 'heavy', %@, 'severe', %@, %@))", routeAlternateColor, trafficLowColor, trafficModerateColor, trafficHeavyColor, trafficSevereColor, trafficUnknownColor)
         line.lineJoin = NSExpression(forConstantValue: "round")
         
