@@ -895,9 +895,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         let line = MGLLineStyleLayer(identifier: identifier, source: source)
         line.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
-        line.lineOpacity = NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
-                                              trueExpression: NSExpression(forConstantValue: 1),
-                                              falseExpression: NSExpression(forConstantValue: 0))
+        line.lineOpacity = NSExpression(forConditional:
+            NSPredicate(format: "isAlternateRoute == true"),
+                                        trueExpression: NSExpression(forConstantValue: 1),
+                                        falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"),
+                                                                      trueExpression: NSExpression(forConstantValue: 1),
+                                                                      falseExpression: NSExpression(forConstantValue: 0)))
         line.lineColor = NSExpression(format: "TERNARY(isAlternateRoute == true, %@, MGL_MATCH(congestion, 'low' , %@, 'moderate', %@, 'heavy', %@, 'severe', %@, %@))", routeAlternateColor, trafficLowColor, trafficModerateColor, trafficHeavyColor, trafficSevereColor, trafficUnknownColor)
         line.lineJoin = NSExpression(forConstantValue: "round")
         
