@@ -107,6 +107,9 @@ class RouteMapViewController: UIViewController {
         return UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: navigationView.bottomBannerView.bounds.height, right: 20)
     }
     
+    typealias LabelRoadNameCompletionHandler = (_ defaultRaodNameAssigned: Bool) -> Void
+    
+    var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
 
     convenience init(routeController: RouteController, delegate: RouteMapViewControllerDelegate? = nil) {
         self.init()
@@ -186,6 +189,7 @@ class RouteMapViewController: UIViewController {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(willReroute(notification:)), name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(rerouteDidFail(notification:)), name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground(notification:)), name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: .UIApplicationDidEnterBackground, object: nil)
         subscribeToKeyboardNotifications()
@@ -194,6 +198,7 @@ class RouteMapViewController: UIViewController {
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidFailToReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationWillEnterForeground, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIApplicationDidEnterBackground, object: nil)
         unsubscribeFromKeyboardNotifications()
@@ -317,6 +322,10 @@ class RouteMapViewController: UIViewController {
         statusView.show(title, showSpinner: true)
     }
     
+    @objc func rerouteDidFail(notification: NSNotification) {
+        statusView.hide()
+    }
+  
     func notifyUserAboutLowVolume() {
         guard !(routeController.locationManager is SimulatedLocationManager) else { return }
         guard !NavigationSettings.shared.voiceMuted else { return }
@@ -588,6 +597,11 @@ extension RouteMapViewController: NavigationViewDelegate {
         // (if the style is cached) preventing UIAppearance to apply the style.
         showRouteIfNeeded()
         self.mapView.localizeLabels()
+        delegate?.mapView?(mapView, didFinishLoading: style)
+    }
+    
+    func mapViewDidFinishLoadingMap(_ mapView: MGLMapView) {
+        delegate?.mapViewDidFinishLoadingMap?(mapView)
     }
     
     // MARK: NavigationMapViewCourseTrackingDelegate
@@ -653,8 +667,8 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
 
     func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
@@ -692,14 +706,13 @@ extension RouteMapViewController: NavigationViewDelegate {
      
      - parameter location: The user’s current location.
      */
-    func labelCurrentRoad(at location: CLLocation) {
-        guard let style = mapView.style,
-            let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates,
-            navigationView.resumeButton.isHidden else {
+    func labelCurrentRoad(at rawLocation: CLLocation, for snappedLoction: CLLocation? = nil) {
+        
+        guard navigationView.resumeButton.isHidden else {
                 return
         }
         
-        let roadName = delegate?.mapViewController(self, roadNameAt: location)
+        let roadName = delegate?.mapViewController(self, roadNameAt: rawLocation)
         guard roadName == nil else {
             if let roadName = roadName {
                 navigationView.wayNameView.text = roadName
@@ -713,6 +726,20 @@ extension RouteMapViewController: NavigationViewDelegate {
         guard let _ = MGLAccountManager.accessToken else {
             navigationView.wayNameView.isHidden = true
             return
+        }
+        
+        let location = snappedLoction ?? rawLocation
+        
+        labelCurrentRoadFeature(at: location)
+        
+        if let labelRoadNameCompletionHandler = labelRoadNameCompletionHandler {
+            labelRoadNameCompletionHandler(true)
+        }
+    }
+    
+    func labelCurrentRoadFeature(at location: CLLocation) {
+        guard let style = mapView.style, let stepCoordinates = routeController.routeProgress.currentLegProgress.currentStep.coordinates else {
+                return
         }
         
         let closestCoordinate = location.coordinate
@@ -930,7 +957,7 @@ fileprivate extension UIViewAnimationOptions {
         }
     }
 }
-protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate {
+@objc protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDelegate {
 
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
@@ -947,7 +974,7 @@ protocol RouteMapViewControllerDelegate: NavigationMapViewDelegate, MGLMapViewDe
      - parameter location: The user’s current location.
      - return: The road name to display in the label, or the empty string to hide the label, or nil to query the map’s vector tiles for the road name.
      */
-    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String?
 }
 
 

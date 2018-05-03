@@ -794,6 +794,7 @@ extension RouteController: CLLocationManagerDelegate {
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routingErrorKey: error
                 ])
+                return
             }
 
             guard let route = route else { return }
