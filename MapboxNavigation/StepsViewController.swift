@@ -92,9 +92,7 @@ open class StepsViewController: UIViewController {
     @objc func progressDidChange(_ notification: Notification) {
     
         if rebuildDataSourceIfNecessary() {
-            if let visibleIndexPaths = tableView.indexPathsForVisibleRows {
-                tableView.reloadRows(at: visibleIndexPaths, with: .automatic)
-            }
+            tableView.reloadData()
         }
     }
     
