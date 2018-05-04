@@ -85,11 +85,16 @@ class ExitView: StylableView {
     }
     
     func commonInit() {
+        translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
         //build view hierarchy
         [imageView, exitNumberLabel].forEach(addSubview(_:))
         buildConstraints()
+        
+        setNeedsLayout()
+        invalidateIntrinsicContentSize()
+        layoutIfNeeded()
     }
     
     func populateExitImage() {
