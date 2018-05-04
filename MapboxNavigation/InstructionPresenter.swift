@@ -105,11 +105,11 @@ class InstructionPresenter {
                     let componentBefore = components.component(before: component)
                     let componentAfter = components.component(after: component)
                     
-                    if let shieldKey = componentBefore?.shieldKey(),
+                    if let shieldKey = componentBefore?.cacheKey(),
                         imageRepository.cachedImageForKey(shieldKey) != nil {
                         continue
                     }
-                    if let shieldKey = componentAfter?.shieldKey(),
+                    if let shieldKey = componentAfter?.cacheKey(),
                         imageRepository.cachedImageForKey(shieldKey) != nil {
                         continue
                     }
@@ -123,15 +123,15 @@ class InstructionPresenter {
         return (components: processedComponents, attributedStrings: strings)
     }
 
-    func attributedString(forExitComponent exit: VisualInstructionComponent, maneuverDirection: ManeuverDirection, dataSource: DataSource) -> NSAttributedString? {
-        guard let exitCode = exit.text else { return nil }
-        let exitSide: ExitSide = maneuverDirection == .left ? .left : .right
-        guard let exitString = exitShield(side: exitSide, text: exitCode, dataSource: dataSource) else { return nil }
+    func attributedString(forExitComponent component: VisualInstructionComponent, maneuverDirection: ManeuverDirection, dataSource: DataSource) -> NSAttributedString? {
+        guard component.type == .exitCode, let exitCode = component.text else { return nil }
+        let side: ExitSide = maneuverDirection == .left ? .left : .right
+        guard let exitString = exitShield(side: side, text: exitCode, component: component, dataSource: dataSource) else { return nil }
         return exitString
     }
     
     func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        guard let shieldKey = shield.shieldKey() else { return nil }
+        guard let shieldKey = shield.cacheKey() else { return nil }
         
         //If we have the shield already cached, use that.
         if let cachedImage = repository.cachedImageForKey(shieldKey) {
@@ -151,7 +151,7 @@ class InstructionPresenter {
     }
     
     private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, height: CGFloat, completion: @escaping ImageDownloadCompletion) {
-        guard let imageURL = component.imageURL, let shieldKey = component.shieldKey() else {
+        guard let imageURL = component.imageURL, let shieldKey = component.cacheKey() else {
             return
         }
 
@@ -160,7 +160,7 @@ class InstructionPresenter {
 
     private func instructionHasDownloadedAllShields() -> Bool {
         for component in instruction.textComponents {
-            guard let key = component.shieldKey() else {
+            guard let key = component.cacheKey() else {
                 continue
             }
 
@@ -182,19 +182,24 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func exitShield(side: ExitSide = .right, text: String, dataSource: DataSource) -> NSAttributedString? {
-        let exit = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
-        exit.translatesAutoresizingMaskIntoConstraints = false
-        exit.invalidateIntrinsicContentSize()
-        exit.setNeedsLayout()
-        exit.layoutIfNeeded()
-        let exitAttachment = ExitAttachment()
-        guard let exitImage = takeSnapshot(on: exit) else { return nil }
-        exitAttachment.image = exitImage
-        exitAttachment.font = dataSource.font
+    private func exitShield(side: ExitSide = .right, text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         
-        let exitString = NSAttributedString(attachment: exitAttachment)
-        return exitString
+        let exit = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
+        let attachment = ExitAttachment()
+        
+        if let cacheKey = component.cacheKey(),
+            let image = imageRepository.cachedImageForKey(cacheKey) {
+            attachment.image = image
+        } else {
+            guard let image = takeSnapshot(on: exit),
+            let cacheKey = component.cacheKey() else { return nil }
+            imageRepository.storeImage(image, forKey: cacheKey, toDisk: false)
+            attachment.image = image
+        }
+        
+        attachment.font = dataSource.font
+        
+        return NSAttributedString(attachment: attachment)
     }
     
     private func completeShieldDownload(_ image: UIImage?) {
