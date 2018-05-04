@@ -423,8 +423,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let mainRoute = routes.first else { return }
         self.routes = routes
         
-        let polylines = /*navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ??*/ shape(describing: routes, legIndex: legIndex)
-        let mainPolylineSimplified = /*navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ??*/ shape(describingCasing: mainRoute, legIndex: legIndex)
+        let polylines = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: routes) ?? shape(describing: routes, legIndex: legIndex)
+        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: mainRoute) ?? shape(describingCasing: mainRoute, legIndex: legIndex)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
@@ -1105,14 +1105,14 @@ public protocol NavigationMapViewDelegate: class {
     optional func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint)
     
     /**
-     Asks the receiver to return an MGLShape that describes the geometry of the route.
-     - note: The returned value represents the route in full detail. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeDescribing:)`, which defines the overall route as a single feature.
+     Asks the receiver to return an MGLShape that describes the geometry of the routes.
+     - note: The returned value represents the route in full detail and also alternate routes. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeDescribing:)`, which defines the overall route as a single feature.
      - parameter mapView: The NavigationMapView.
-     - parameter route: The route that the sender is asking about.
+     - parameter routes: The routes that the sender is asking about. The first route will always be rendered as the main route, while all subsequent routes will be rendered as alternate routes.
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
      */
     @objc(navigationMapView:shapeDescribing:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing routes: [Route]) -> MGLShape?
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route at lower zoomlevels.
