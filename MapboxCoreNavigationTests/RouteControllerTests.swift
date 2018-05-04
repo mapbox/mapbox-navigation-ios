@@ -223,6 +223,9 @@ class RouteControllerTests: XCTestCase {
         // MARK: It queues and flushes a Depart event
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
+        
+        // MARK: Update to last step
+        routeController.advanceStepIndex(to: routeController.routeProgress.route.legs.first!.steps.count - 1)
 
         // MARK: When navigation continues with a location update to the last location
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
@@ -233,9 +236,6 @@ class RouteControllerTests: XCTestCase {
 
         // MARK: It tells the delegate that the user did arrive
         XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
-
-        // FIXME: event isn't logged unless the routecontroller receives yet another location update.
-        routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
