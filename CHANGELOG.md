@@ -19,6 +19,7 @@
     - `NavigationMapViewDelegate.navigationMapView(_:imageForAnnotation:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:imageFor:)`.
     - `NavigationMapViewDelegate.navigationMapView(_:viewForAnnotation:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:viewFor:)`.
     [#1338](https://github.com/mapbox/mapbox-navigation-ios/pull/1338)
+* Created the `TunnelIntersectionManager` class which enables simulated navigation through tunnels. To enable this feature, set `RouteController.tunnelSimulationEnabled` to `true`. [#1218](https://github.com/mapbox/mapbox-navigation-ios/pull/1218)
 
 ## v0.16.2 (April 13, 2018)
 
