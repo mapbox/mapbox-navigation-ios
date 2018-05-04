@@ -88,7 +88,8 @@ class InstructionPresenter {
             guard component.type != .exit else { continue }
             
             //If we have a exit, in the first two components, lets handle that first.
-            if component.type == .exitCode, instruction.maneuverType == .takeOffRamp, 0...1 ~= index,
+            let isExit = [.takeOffRamp, .reachFork, .merge].contains(instruction.maneuverType)
+            if isExit, component.type == .exitCode, 0...1 ~= index,
                 let exitString = attributedString(forExitComponent: component, maneuverDirection: instruction.maneuverDirection, dataSource: dataSource) {
                 build(component, [exitString])
             }
