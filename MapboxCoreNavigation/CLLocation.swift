@@ -100,7 +100,7 @@ extension CLLocation {
         return CLLocation(coordinate: userCoordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: userCourse, speed: speed, timestamp: timestamp)
     }
     
-    var projectedDistance: CLLocationSpeed {
+    var projectedDistance: CLLocationDistance {
         // Account speed being zero.
         return max(speed * RouteControllerDeadReckoningTimeInterval, 1)
     }
