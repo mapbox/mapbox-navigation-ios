@@ -237,7 +237,16 @@ open class RouteController: NSObject {
     }
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
-
+    
+    public var tunnelIntersectionManager: TunnelIntersectionManager?
+    
+    var tunnelIntersectionManagerCompletionHandler: RouteControllerSimulationCompletionBlock?
+    
+    /**
+     The flag that indicates that the simulated navigation through tunnel(s) is enabled.
+     */
+    public var tunnelSimulationEnabled: Bool = false
+    
     /**
      Intializes a new `RouteController`.
 
@@ -263,8 +272,18 @@ open class RouteController: NSObject {
 
         checkForUpdates()
         checkForLocationUsageDescription()
+        
+        setupTunnelIntersectionManager()
 
         startEvents(accessToken: route.accessToken)
+    }
+    
+    private func setupTunnelIntersectionManager() {
+        tunnelIntersectionManager = TunnelIntersectionManager()
+        tunnelIntersectionManager?.delegate = self
+        tunnelIntersectionManagerCompletionHandler = { enabled, _ in
+            self.tunnelIntersectionManager?.isAnimationEnabled = enabled
+        }
     }
 
     deinit {
@@ -538,6 +557,8 @@ extension RouteController: CLLocationManagerDelegate {
             hasFoundOneQualifiedLocation = true
         }
 
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        
         var potentialLocation: CLLocation?
 
         // `filteredLocations` contains qualified locations
@@ -546,8 +567,13 @@ extension RouteController: CLLocationManagerDelegate {
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
             if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
+                
                 // Allow the user puck to advance. A stationary puck is not great.
                 self.rawLocation = lastLocation
+                
+                // Check for a tunnel intersection at the current step we found the bad location update.
+                checkForTunnelIntersection(at: lastLocation, for: manager)
+                
                 return
             }
         // This case handles the first location.
@@ -570,13 +596,12 @@ extension RouteController: CLLocationManagerDelegate {
             perform(#selector(interpolateLocation), with: nil, afterDelay: 1.1)
         }
 
-        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
         updateIntersectionIndex(for: currentStepProgress)
 
         // Notify observers if the step’s remaining distance has changed.
+        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
             let distanceTraveled = currentStep.distance - remainingDistance
@@ -586,6 +611,8 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
+            // Check for a tunnel intersection whenever the current route step progresses.
+            checkForTunnelIntersection(at: location, for: manager)
         }
 
         updateDistanceToIntersection(from: location)
@@ -607,9 +634,20 @@ extension RouteController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
     }
-
+    
+    func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager) {
+        guard tunnelSimulationEnabled, let tunnelIntersectionManager = tunnelIntersectionManager else { return }
+        
+        let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
+        if tunnelDetected {
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, callback: tunnelIntersectionManagerCompletionHandler)
+        } else {
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, callback: tunnelIntersectionManagerCompletionHandler)
+        }
+    }
+    
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
-        let intersectionDistances = currentStepProgress.intersectionDistances
+        guard let intersectionDistances = currentStepProgress.intersectionDistances else { return }
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
         currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
     }
@@ -854,6 +892,11 @@ extension RouteController: CLLocationManagerDelegate {
         if let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
             routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = Polyline(currentStepProgress.step.coordinates!).distance(from: location.coordinate, to: upcomingIntersection.location)
         }
+        
+        if routeProgress.currentLegProgress.currentStepProgress.intersectionDistances == nil {
+            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = [CLLocationDistance]()
+            updateIntersectionDistances()
+        }
     }
 
     func updateRouteStepProgress(for location: CLLocation) {
@@ -1062,5 +1105,27 @@ extension RouteController {
 
     private func resetSession() {
         sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
+    }
+}
+
+extension RouteController: TunnelIntersectionManagerDelegate {
+    
+    public func tunnelIntersectionManager(_ manager: CLLocationManager,
+                     willEnableAnimationAt location: CLLocation,
+                                           callback: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.enableTunnelAnimation(for: manager,
+                                             routeController: self,
+                                               routeProgress: routeProgress,
+                                                    callback: callback)
+    }
+    
+    public func tunnelIntersectionManager(_ manager: CLLocationManager,
+                    willDisableAnimationAt location: CLLocation,
+                                           callback: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager,
+                                                           at: location,
+                                              routeController: self,
+                                                     callback: callback)
+        
     }
 }

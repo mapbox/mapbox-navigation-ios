@@ -417,14 +417,13 @@ open class NavigationViewController: UIViewController {
         let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-
-        if usesNightStyleInsideTunnels, let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
-            let classes = currentIntersection.outletRoadClasses {
-                if classes.contains(.tunnel) {
-                    styleManager.applyStyle(type: .night)
-                } else {
-                    styleManager.timeOfDayChanged()
-                }
+        
+        if usesNightStyleInsideTunnels, let tunnelIntersectionManager = routeController.tunnelIntersectionManager {
+            if tunnelIntersectionManager.isAnimationEnabled {
+                styleManager.applyStyle(type: .night)
+            } else  {
+                styleManager.timeOfDayChanged()
+            }
         }
     }
     

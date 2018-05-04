@@ -419,7 +419,7 @@ open class RouteStepProgress: NSObject {
     /**
      Returns an array of the calculated distances from the current intersection to the next intersection on the current step.
      */
-    @objc public var intersectionDistances = [CLLocationDistance]()
+    @objc public var intersectionDistances: Array<CLLocationDistance>?
     
     /**
      The distance in meters the user is to the next intersection they will pass through.
