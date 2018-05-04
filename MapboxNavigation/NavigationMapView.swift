@@ -506,12 +506,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
-            style.removeSource(altSource)
-        }
-        
         if let altLayer = style.layer(withIdentifier: alternateLayerIdentifier) {
             style.removeLayer(altLayer)
+        }
+        
+        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
+            style.removeSource(altSource)
         }
     }
     
@@ -523,9 +523,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        let remainingWaypoints = Array(route.legs.suffix(from: legIndex).map { $0.destination }.dropLast())
+        let waypoints = Array(route.legs.map { $0.destination }.dropLast())
         
-        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: remainingWaypoints) ?? shape(for: remainingWaypoints)
+        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: waypoints, legIndex: legIndex) ?? shape(for: waypoints, legIndex: legIndex)
         if route.routeOptions.waypoints.count > 2 { //are we on a multipoint route?
             
             routes = [route] //update the model
@@ -874,13 +874,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return MGLShapeCollectionFeature(shapes: linesPerLeg)
     }
     
-    func shape(for waypoints: [Waypoint]) -> MGLShape? {
+    func shape(for waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
         var features = [MGLPointFeature]()
         
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             let feature = MGLPointFeature()
             feature.coordinate = waypoint.coordinate
-            feature.attributes = [ "name": waypointIndex + 1 ]
+            feature.attributes = [
+                "waypointCompleted": waypointIndex < legIndex,
+                "name": waypointIndex + 1
+            ]
             features.append(feature)
         }
         
@@ -903,13 +906,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
+        let opacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
+        
         circles.circleColor = NSExpression(forConstantValue: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0))
-        circles.circleOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [
-            2: 0.5,
-            7: 1])
+        circles.circleOpacity = opacity
         circles.circleRadius = NSExpression(forConstantValue: 10)
         circles.circleStrokeColor = NSExpression(forConstantValue: UIColor.black)
         circles.circleStrokeWidth = NSExpression(forConstantValue: 1)
+        circles.circleStrokeOpacity = opacity
         
         return circles
     }
@@ -918,6 +922,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let symbol = MGLSymbolStyleLayer(identifier: identifier, source: source)
         
         symbol.text = NSExpression(format: "CAST(name, 'NSString')")
+        symbol.textOpacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
         symbol.textFontSize = NSExpression(forConstantValue: 10)
         symbol.textHaloWidth = NSExpression(forConstantValue: 0.25)
         symbol.textHaloColor = NSExpression(forConstantValue: UIColor.black)
@@ -1138,7 +1143,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeDescribingRoute:)
+    @objc(navigationMapView:shapeDescribing:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
     
     /**
@@ -1148,7 +1153,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route at lower zoomlevels, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:simplifiedShapeDescribingRoute:)
+    @objc(navigationMapView:simplifiedShapeDescribing:)
     optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
     
     /**
@@ -1157,8 +1162,8 @@ public protocol NavigationMapViewDelegate: class {
      - parameter waypoints: The waypoints to be displayed on the map.
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeDescribingWaypoints:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    @objc(navigationMapView:shapeFor:legIndex:)
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
      Asks the receiver to return an MGLAnnotationImage that describes the image used an annotation.
@@ -1166,7 +1171,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter annotation: The annotation to be styled.
      - returns: Optionally, a `MGLAnnotationImage` that defines the image used for the annotation.
      */
-    @objc(navigationMapView:imageForAnnotation:)
+    @objc(navigationMapView:imageFor:)
     optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     
     /**
@@ -1175,7 +1180,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter annotation: The annotation to be styled.
      - returns: Optionally, a `MGLAnnotationView` that defines the view used for the annotation.
      */
-    @objc(navigationMapView:viewForAnnotation:)
+    @objc(navigationMapView:viewFor:)
     optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
     
     /**

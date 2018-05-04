@@ -118,9 +118,9 @@ public protocol NavigationViewControllerDelegate {
     /**
      Returns an `MGLShape` that represents the destination waypoints along the route (that is, excluding the origin).
      
-     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:)`.
+     If this method is unimplemented, the navigation map view represents the route waypoints using `navigationMapView(_:shapeFor:legIndex:)`.
      */
-    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    @objc optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
      Called when the user taps on the route.
@@ -215,12 +215,6 @@ open class NavigationViewController: UIViewController {
             mapViewController?.notifyDidReroute(route: route)
         }
     }
-    
-    /** 
-     An instance of `MGLAnnotation` that will be shown on on the destination of your route. The last coordinate of the route will be used if no destination is given.
-    */
-    @available(*, deprecated, message: "Destination is no longer supported. A destination annotation will automatically be added to map given the route.")
-    @objc public var destination: MGLAnnotation!
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
@@ -485,11 +479,11 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationMapView?(mapView, didTap: route)
     }
     
-    public func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
+    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
-    public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
+    @objc public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
         return delegate?.navigationMapView?(mapView, shapeDescribing: route)
     }
     
@@ -501,15 +495,15 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return delegate?.navigationMapView?(mapView, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
     }
     
-    public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: waypoints)
+    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
     
-    public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+    @objc public func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
         return delegate?.navigationMapView?(mapView, imageFor: annotation)
     }
     
-    public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
+    @objc public func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView? {
         return delegate?.navigationMapView?(mapView, viewFor: annotation)
     }
     
@@ -541,7 +535,7 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         return annotatesSpokenInstructions
     }
     
-    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
+    @objc func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
         guard let roadName = delegate?.navigationViewController?(self, roadNameAt: location) else {
             return nil
         }
@@ -573,12 +567,12 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
-        if snapsUserLocationAnnotationToRoute, let location = routeController.location ?? locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
-            mapViewController?.labelCurrentRoad(at: location)
-        } else if let location = locations.last {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
-            mapViewController?.labelCurrentRoad(at: location)
+        if snapsUserLocationAnnotationToRoute, let snappedLocation = routeController.location ?? locations.last, let rawLocation = locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: snappedLocation, animated: true)
+            mapViewController?.labelCurrentRoad(at: rawLocation, for: snappedLocation)
+        } else if let rawlocation = locations.last {
+            mapViewController?.mapView.updateCourseTracking(location: rawlocation, animated: true)
+            mapViewController?.labelCurrentRoad(at: rawlocation)
         }
     }
     

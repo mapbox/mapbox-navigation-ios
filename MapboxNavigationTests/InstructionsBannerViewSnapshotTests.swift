@@ -17,8 +17,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let i280Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let us101Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
         
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.shieldKey()!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.shieldKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey()!, toDisk: false)
         
         NavigationSettings.shared.distanceUnit = .mile
     }

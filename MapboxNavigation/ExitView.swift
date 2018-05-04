@@ -85,6 +85,7 @@ class ExitView: StylableView {
     }
     
     func commonInit() {
+        translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
         //build view hierarchy

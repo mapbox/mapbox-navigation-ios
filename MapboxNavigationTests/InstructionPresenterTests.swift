@@ -27,14 +27,14 @@ class InstructionPresenterTests: XCTestCase {
     func testAbbreviationPerformance() {
         let route = Fixture.route(from: "route-with-banner-instructions", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
         
-        let allSteps = route.legs.flatMap { $0.steps }
-        let allInstructions = allSteps.flatMap { $0.instructionsDisplayedAlongStep?.first?.primaryInstruction }.filter { $0 != nil }
+        let steps = route.legs.flatMap { $0.steps }
+        let instructions = steps.compactMap { $0.instructionsDisplayedAlongStep?.first?.primaryInstruction }
         
-        let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 10, height: 50)))
-        label.availableBounds = { return CGRect(origin: .zero, size: CGSize.iPhoneX) }
+        let label = InstructionLabel(frame: CGRect(origin: .zero, size: CGSize.iPhone5))
+        label.availableBounds = { return CGRect(origin: .zero, size: CGSize.iPhone5) }
         
         self.measure {
-            for instruction in allInstructions {
+            for instruction in instructions {
                 let presenter = InstructionPresenter(instruction, dataSource: label, downloadCompletion: nil)
                 label.attributedText = presenter.attributedText()
             }

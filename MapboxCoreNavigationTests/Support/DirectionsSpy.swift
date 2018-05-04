@@ -19,7 +19,6 @@ class DirectionsSpy: Directions {
     override func calculateRoutes(matching options: MatchOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
         assert(false, "Not ready to handle \(#function)")
         return DummyURLSessionDataTask()
-
     }
     
     public func fireLastCalculateCompletion(with waypoints: [Waypoint]?, routes: [Route]?, error: NSError?) {
