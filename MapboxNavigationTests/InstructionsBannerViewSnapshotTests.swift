@@ -14,8 +14,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        let i280Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
-        let us101Instruction = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        let i280Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+        let us101Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
         
         imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey()!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey()!, toDisk: false)

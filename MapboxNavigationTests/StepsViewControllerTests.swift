@@ -3,8 +3,6 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-let response = Fixture.JSONFromFileNamed(name: "route-with-banner-instructions")
-
 class StepsViewControllerTests: XCTestCase {
     
     struct Constants {

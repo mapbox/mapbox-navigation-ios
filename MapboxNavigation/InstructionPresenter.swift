@@ -185,15 +185,14 @@ class InstructionPresenter {
     
     private func exitShield(side: ExitSide = .right, text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         
-        let exit = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
+        let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
         let attachment = ExitAttachment()
+        guard let cacheKey = component.cacheKey() else { return nil }
         
-        if let cacheKey = component.cacheKey(),
-            let image = imageRepository.cachedImageForKey(cacheKey) {
+        if let image = imageRepository.cachedImageForKey(cacheKey) {
             attachment.image = image
         } else {
-            guard let image = takeSnapshot(on: exit),
-            let cacheKey = component.cacheKey() else { return nil }
+            guard let image = takeSnapshot(on: view) else { return nil }
             imageRepository.storeImage(image, forKey: cacheKey, toDisk: false)
             attachment.image = image
         }

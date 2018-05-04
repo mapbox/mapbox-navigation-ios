@@ -91,6 +91,10 @@ class ExitView: StylableView {
         //build view hierarchy
         [imageView, exitNumberLabel].forEach(addSubview(_:))
         buildConstraints()
+        
+        setNeedsLayout()
+        invalidateIntrinsicContentSize()
+        layoutIfNeeded()
     }
     
     func populateExitImage() {
