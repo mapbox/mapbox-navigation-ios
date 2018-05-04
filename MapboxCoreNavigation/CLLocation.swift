@@ -88,10 +88,11 @@ extension CLLocation {
         }
         
         guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: coordinate) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: nearByCoordinates) else { return nil }
+        guard let projectedLocation = Polyline(nearByCoordinates).trimmed(from: closest.coordinate, distance: projectedDistance).coordinates.last else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: nearByCoordinates, alternateCoordinate: projectedLocation) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
-        let userCoordinate = closest.coordinate
+        let userCoordinate = projectedLocation
         guard let firstCoordinate = legProgress.leg.steps.first?.coordinates?.first else { return nil }
         
         guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep, distanceToFirstCoordinateOnLeg: self.coordinate.distance(to: firstCoordinate)) else { return nil }
@@ -99,14 +100,18 @@ extension CLLocation {
         return CLLocation(coordinate: userCoordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: userCourse, speed: speed, timestamp: timestamp)
     }
     
+    var projectedDistance: CLLocationSpeed {
+        // Account speed being zero.
+        return max(speed * RouteControllerDeadReckoningTimeInterval, 1)
+    }
     
     /**
      Given a location and a series of coordinates, compute what the course should be for a the location.
      */
-    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D]) -> CLLocationDirection? {
+    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D], alternateCoordinate: CLLocationCoordinate2D? = nil) -> CLLocationDirection? {
         let nearByPolyline = Polyline(coordinates)
         
-        guard let closest = nearByPolyline.closestCoordinate(to: coordinate) else { return nil }
+        guard let closest = nearByPolyline.closestCoordinate(to: alternateCoordinate ?? coordinate) else { return nil }
         
         let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
         let slicedLineInFront = nearByPolyline.sliced(from: closest.coordinate, to: coordinates.last)
