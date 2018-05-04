@@ -209,7 +209,7 @@ class InstructionPresenter {
         }
     }
     
-    private func takeSnapshot(on view: UIView) -> UIImage?{
+    private func takeSnapshot(on view: UIView) -> UIImage? {
         let window = UIApplication.shared.delegate!.window!!
         
         //We have to temporarily add the view to the view heirarchy in order for UIAppearance to work it's magic.
