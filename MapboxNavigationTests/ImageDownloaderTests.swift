@@ -85,7 +85,7 @@ class ImageDownloaderTests: XCTestCase {
         var spinCount = 0
         runUntil(condition: {
             spinCount += 1
-            return firstCallbackCalled && secondCallbackCalled && ImageLoadingURLProtocolSpy.hasActiveRequestForURL(imageURL) == false && downloader.activeOperationWithURL(imageURL) == nil
+            return firstCallbackCalled && secondCallbackCalled && downloader.activeOperationWithURL(imageURL) == nil
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         print("Succeeded after evaluating condition \(spinCount) times.")
@@ -105,7 +105,7 @@ class ImageDownloaderTests: XCTestCase {
 
         runUntil(condition: {
             spinCount += 1
-            return callbackCalled && ImageLoadingURLProtocolSpy.hasActiveRequestForURL(imageURL) == false && downloader.activeOperationWithURL(imageURL) == nil
+            return callbackCalled && downloader.activeOperationWithURL(imageURL) == nil
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         print("Succeeded after evaluating first condition \(spinCount) times.")
@@ -119,7 +119,7 @@ class ImageDownloaderTests: XCTestCase {
 
         runUntil(condition: {
             spinCount += 1
-            return callbackCalled && ImageLoadingURLProtocolSpy.hasActiveRequestForURL(imageURL) == false && downloader.activeOperationWithURL(imageURL) == nil
+            return callbackCalled && downloader.activeOperationWithURL(imageURL) == nil
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         print("Succeeded after evaluating second condition \(spinCount) times.")
