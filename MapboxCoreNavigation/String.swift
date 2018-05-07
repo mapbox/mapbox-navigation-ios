@@ -51,6 +51,13 @@ extension String {
         return self.rangeOfCharacter(from: CharacterSet.decimalDigits) != nil
     }
     
+    var isURL: Bool {
+        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        guard let detectorManager = detector else { return false }
+        let matches = detectorManager.matches(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count))
+        return !matches.isEmpty
+    }
+    
     // Adapted from https://github.com/raywenderlich/swift-algorithm-club/blob/master/Minimum%20Edit%20Distance/MinimumEditDistance.playground/Contents.swift
     func minimumEditDistance(to word: String) -> Int {
         let fromWordCount = count
