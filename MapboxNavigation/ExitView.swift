@@ -63,7 +63,8 @@ class ExitView: StylableView {
     
     override var hashValue: Int {
         get {
-             return [foregroundColor?.cgColor.hashValue ?? 0, backgroundColor?.cgColor.hashValue ?? 0, exitText?.hashValue ?? 0, pointSize.hashValue, side.hashValue].reduce(0, +)
+            let criticalProperties: [AnyHashable?] = [foregroundColor, backgroundColor, exitText, pointSize, side]
+            return criticalProperties.compactMap { $0?.hashValue }.reduce(0, ^)
         }
     }
     
