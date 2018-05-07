@@ -183,10 +183,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
     
     private func closestCoordinateIndex(from startIndex: Int, coordinates: [CLLocationCoordinate2D]) -> Int {
         let endIndex = coordinates.endIndex - 1
-
-        guard startIndex < endIndex else {
-            return endIndex
-        }
         
         // In case current coordinate and successive coordinate have identical latitude and longitude,
         // Advance to the next coordinate with an unidentical coordinate to the current coordinate.
