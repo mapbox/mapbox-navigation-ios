@@ -106,4 +106,8 @@ class DataCacheTests: XCTestCase {
 
         NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
+    
+    func testCacheKeyForKey() {
+        XCTAssertNotEqual(cache.fileCache.cacheKeyForKey("foo"), cache.fileCache.cacheKeyForKey("foo?nope"))
+    }
 }
