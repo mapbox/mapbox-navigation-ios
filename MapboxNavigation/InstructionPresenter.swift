@@ -188,7 +188,6 @@ class InstructionPresenter {
         let attachment = ExitAttachment()
         guard var cacheKey = component.cacheKey() else { return nil }
         
-        
         if let foregroundColor = view.foregroundColor {
             cacheKey = "\(cacheKey)-\(String(foregroundColor.cgColor.hashValue))"
         }
