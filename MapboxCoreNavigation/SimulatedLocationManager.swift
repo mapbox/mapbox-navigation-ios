@@ -145,24 +145,14 @@ open class SimulatedLocationManager: NavigationLocationManager {
         let distance = min(max(distanceToClosest, 10), safeDistance)
         let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100).coordinates
         
-        currentSpeed = CLLocationSpeed(NSNotFound)
-        
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
             let coordinates = routeProgress?.route.coordinates,
-            let closestCoordinateOnRoute = Polyline(routeProgress!.route.coordinates!).closestCoordinate(to: newCoordinate),
+            let closestCoordinateOnRoute = Polyline(routeProgress!.route.coordinates!).closestCoordinate(to: newCoordinate), let nextCoordinateOnRoute = coordinates.after(element: coordinates[closestCoordinateOnRoute.index]),
             let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRoute.index] {
-            
-            let closestCoordinateOnRouteIndex = closestCoordinateIndex(from: closestCoordinateOnRoute.index,
-                                                                coordinates: coordinates)
-            
-            if let nextCoordinateOnRoute = coordinates.after(element: coordinates[closestCoordinateOnRouteIndex]) {
-                let distance = coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
-                currentSpeed = distance / time
-            }
-        }
-        
-        if currentSpeed == CLLocationSpeed(NSNotFound) {
+            let distance = coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
+            currentSpeed =  max(distance / time, 2)
+        } else {
             currentSpeed = calculateCurrentSpeed(distance: distance, coordinatesNearby: coordinatesNearby, closestLocation: closestLocation)
         }
         
@@ -179,22 +169,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
         delegate?.locationManager?(self, didUpdateLocations: [currentLocation])
         currentDistance = calculateCurrentDistance(currentDistance)
         perform(#selector(tick), with: nil, afterDelay: 1)
-    }
-    
-    private func closestCoordinateIndex(from startIndex: Int, coordinates: [CLLocationCoordinate2D]) -> Int {
-        let endIndex = coordinates.endIndex - 1
-        
-        // In case current coordinate and successive coordinate have identical latitude and longitude,
-        // Advance to the next coordinate with an unidentical coordinate to the current coordinate.
-        for i in startIndex...endIndex {
-            let currentCoordinate = coordinates[i]
-            let nextCoordinate = coordinates.after(element: coordinates[i])
-            if let nextCoordinate = nextCoordinate, nextCoordinate != currentCoordinate {
-                return i
-            }
-        }
-
-        return endIndex
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
