@@ -53,10 +53,17 @@ class ExitView: StylableView {
             invalidateIntrinsicContentSize()
         }
     }
+    
     var pointSize: CGFloat {
         didSet {
             exitNumberLabel.font = exitNumberLabel.font.withSize(pointSize * ExitView.labelFontSizeScaleFactor)
             rebuildConstraints()
+        }
+    }
+    
+    override var hashValue: Int {
+        get {
+             return [foregroundColor?.cgColor.hashValue ?? 0, backgroundColor?.cgColor.hashValue ?? 0, exitText?.hashValue ?? 0, pointSize.hashValue, side.hashValue].reduce(0, +)
         }
     }
     

@@ -186,11 +186,7 @@ class InstructionPresenter {
         
         let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
         let attachment = ExitAttachment()
-        guard var cacheKey = component.cacheKey() else { return nil }
-        
-        if let foregroundColor = view.foregroundColor {
-            cacheKey = "\(cacheKey)-\(String(foregroundColor.cgColor.hashValue))"
-        }
+        guard let cacheKey = component.cacheKey() else { return nil }
         
         if let image = imageRepository.cachedImageForKey(cacheKey) {
             attachment.image = image
