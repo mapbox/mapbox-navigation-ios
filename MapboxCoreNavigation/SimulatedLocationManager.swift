@@ -51,7 +51,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
         didSet {
             stopUpdatingLocation()
             reset()
-            startUpdatingLocation()
         }
     }
     
@@ -147,28 +146,25 @@ open class SimulatedLocationManager: NavigationLocationManager {
         let distance = min(max(distanceToClosest, 10), safeDistance)
         let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100).coordinates
         
+        currentSpeed = CLLocationSpeed(NSNotFound)
+        
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
             let coordinates = routeProgress?.route.coordinates,
             let closestCoordinateOnRoute = Polyline(routeProgress!.route.coordinates!).closestCoordinate(to: newCoordinate),
-            let nextCoordinateOnRoute = coordinates.after(element: coordinates[closestCoordinateOnRoute.index]),
             let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRoute.index] {
             
-            let distance = coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
-            currentSpeed = distance / time
+            let closestCoordinateOnRouteIndex = closestCoordinateIndex(from: closestCoordinateOnRoute.index,
+                                                                coordinates: coordinates)
+            
+            if let nextCoordinateOnRoute = coordinates.after(element: coordinates[closestCoordinateOnRouteIndex]) {
+                let distance = coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
+                currentSpeed = distance / time
+            }
         }
-        // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
-        else if coordinatesNearby.count >= 10 {
-            currentSpeed = minimumSpeed
-        }
-        // Maximum speed if we are a safe distance from the closest coordinate
-        else if distance >= safeDistance {
-            currentSpeed = maximumSpeed
-        }
-        // Base speed on previous or upcoming turn penalty
-        else {
-            let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
-            currentSpeed = reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
+        
+        if currentSpeed == CLLocationSpeed(NSNotFound) {
+            currentSpeed = calculateCurrentSpeed(distance: distance, coordinatesNearby: coordinatesNearby, closestLocation: closestLocation)
         }
         
         let location = CLLocation(coordinate: newCoordinate,
@@ -184,6 +180,46 @@ open class SimulatedLocationManager: NavigationLocationManager {
         delegate?.locationManager?(self, didUpdateLocations: [currentLocation])
         currentDistance = calculateCurrentDistance(currentDistance)
         perform(#selector(tick), with: nil, afterDelay: 1)
+    }
+    
+    private func closestCoordinateIndex(from startIndex: Int, coordinates: [CLLocationCoordinate2D]) -> Int {
+        let endIndex = coordinates.endIndex - 1
+
+        guard startIndex < endIndex else {
+            return endIndex
+        }
+        
+        // In case current coordinate and successive coordinate have identical latitude and longitude,
+        // Advance to the next coordinate with an unidentical coordinate to the current coordinate.
+        for i in startIndex...endIndex {
+            let currentCoordinate = coordinates[i]
+            let nextCoordinate = coordinates.after(element: coordinates[i])
+            if let nextCoordinate = nextCoordinate, nextCoordinate != currentCoordinate {
+                return i
+            }
+        }
+
+        return endIndex
+    }
+    
+    private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation? = nil) -> CLLocationSpeed {
+
+        // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
+        if let coordinatesNearby = coordinatesNearby, coordinatesNearby.count >= 10 {
+            return minimumSpeed
+        }
+        // Maximum speed if we are a safe distance from the closest coordinate
+        else if distance >= safeDistance {
+            return maximumSpeed
+        }
+        // Base speed on previous or upcoming turn penalty
+        else if let closestLocation = closestLocation {
+            let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
+            return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
+        }
+        
+        // default speed
+        return 0.0
     }
 }
 
