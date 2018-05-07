@@ -10,6 +10,8 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     private static var activeRequests: [URL: URLRequest] = [:]
     private static var pastRequests: [URL: URLRequest] = [:]
 
+    private var stopped: Bool = false
+
     override class func canInit(with request: URLRequest) -> Bool {
         return responseData.keys.contains(request.url!)
     }
@@ -28,6 +30,8 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     }
 
     override func startLoading() {
+        let request = self.request
+        
         guard let url = request.url else {
             XCTFail("Somehow the request doesn't have a URL")
             return
@@ -39,26 +43,31 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
             return
         }
 
-        defer {
-            ImageLoadingURLProtocolSpy.pastRequests[url] = ImageLoadingURLProtocolSpy.activeRequests[url]
-            ImageLoadingURLProtocolSpy.activeRequests[url] = nil
-        }
+        let urlLoadingBlock = {
+            defer {
+                ImageLoadingURLProtocolSpy.pastRequests[url] = ImageLoadingURLProtocolSpy.activeRequests[url]
+                ImageLoadingURLProtocolSpy.activeRequests[url] = nil
+            }
 
-        // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
-        if ImageLoadingURLProtocolSpy.hasActiveRequestForURL(url) {
-            XCTFail("There should only be one request in flight at a time per resource")
-        } else {
+            XCTAssertFalse(self.stopped, "URL Loading was previously stopped")
+            
+            // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
+            XCTAssertFalse(ImageLoadingURLProtocolSpy.hasActiveRequestForURL(url), "There should only be one request in flight at a time per resource")
             ImageLoadingURLProtocolSpy.activeRequests[url] = request
+
+            // send an NSHTTPURLResponse to the client
+            let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+            client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
+            client.urlProtocol(self, didLoad: UIImagePNGRepresentation(image)!)
+            client.urlProtocolDidFinishLoading(self)
         }
 
-        // send an NSHTTPURLResponse to the client
-        let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-        client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
-        client.urlProtocol(self, didLoad: UIImagePNGRepresentation(image)!)
-        client.urlProtocolDidFinishLoading(self)
+        let defaultQueue = DispatchQueue.global(qos: .default)
+        defaultQueue.async(execute: urlLoadingBlock)
     }
 
     override func stopLoading() {
+        stopped = true
     }
 
     /**
