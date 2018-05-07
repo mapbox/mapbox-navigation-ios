@@ -121,11 +121,18 @@ internal class FileCache {
 
     func cacheKeyForKey(_ key: String) -> String {
         
-        if let keyAsURL = URL(string: key), key.isURL {
+        if let keyAsURL = URL(string: key), urlDetected(in: key) {
             return String.init(keyAsURL.lastPathComponent.hashValue)
         }
 
         return String.init(key.hashValue)
+    }
+    
+    private func urlDetected(in input: String) -> Bool {
+        let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        guard let detectorManager = detector else { return false }
+        let matches = detectorManager.matches(in: input, options: [], range: NSRange(location: 0, length: input.utf16.count))
+        return !matches.isEmpty
     }
 
     private func createCacheDirIfNeeded(_ url: URL, fileManager: FileManager) {
