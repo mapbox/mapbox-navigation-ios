@@ -49,7 +49,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
     
     var route: Route? {
         didSet {
-            stopUpdatingLocation()
             reset()
         }
     }
