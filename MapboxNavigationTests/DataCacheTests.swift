@@ -109,9 +109,5 @@ class DataCacheTests: XCTestCase {
     
     func testCacheKeyForKey() {
         XCTAssertNotEqual(cache.fileCache.cacheKeyForKey("foo"), cache.fileCache.cacheKeyForKey("foo?nope"))
-        
-        let voiceInstruction = "/<speak><mb%3Aeffect%20name%3D\"drc\"><prosody%20rate%3D\"1.08\">Continue%20on%20<say-as%20interpret-as%3D\"address\">3rd<%2Fprosody><%2Fmb%3Aeffect><%2Fspeak>"
-        
-        XCTAssertNotEqual(cache.fileCache.cacheKeyForKey(voiceInstruction), cache.fileCache.cacheKeyForKey("http://foo.com?nope"))
     }
 }
