@@ -68,7 +68,7 @@ class ImageDownloaderTests: XCTestCase {
         }
         var firstCallbackCalled = false
         var secondCallbackCalled = false
-        var operation: ImageDownload?
+        var operation: ImageDownload
 
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             firstCallbackCalled = true
@@ -79,16 +79,19 @@ class ImageDownloaderTests: XCTestCase {
             secondCallbackCalled = true
         }
 
-        XCTAssertTrue(operation! === downloader.activeOperationWithURL(imageURL)!,
+        XCTAssertTrue(operation === downloader.activeOperationWithURL(imageURL)!,
                       "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
 
         var spinCount = 0
         runUntil(condition: {
             spinCount += 1
-            return firstCallbackCalled && secondCallbackCalled && downloader.activeOperationWithURL(imageURL) == nil
+            return operation.isFinished
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         print("Succeeded after evaluating condition \(spinCount) times.")
+
+        XCTAssertTrue(firstCallbackCalled)
+        XCTAssertTrue(secondCallbackCalled)
     }
 
     func testDownloadingImageAgainAfterFirstDownloadCompletes() {
@@ -102,13 +105,15 @@ class ImageDownloaderTests: XCTestCase {
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             callbackCalled = true
         }
+        var operation = downloader.activeOperationWithURL(imageURL)!
 
         runUntil(condition: {
             spinCount += 1
-            return callbackCalled && downloader.activeOperationWithURL(imageURL) == nil
+            return operation.isFinished
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         print("Succeeded after evaluating first condition \(spinCount) times.")
+        XCTAssertTrue(callbackCalled)
 
         callbackCalled = false
         spinCount = 0
@@ -116,13 +121,15 @@ class ImageDownloaderTests: XCTestCase {
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             callbackCalled = true
         }
+        operation = downloader.activeOperationWithURL(imageURL)!
 
         runUntil(condition: {
             spinCount += 1
-            return callbackCalled && downloader.activeOperationWithURL(imageURL) == nil
+            return operation.isFinished
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
         print("Succeeded after evaluating second condition \(spinCount) times.")
+        XCTAssertTrue(callbackCalled)
     }
 
     private func runUntil(condition: () -> Bool, pollingInterval: TimeInterval, until timeout: DispatchTime) {
