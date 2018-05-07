@@ -212,7 +212,6 @@ extension StepsViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
-        updateCell(cell, at: indexPath)
         return cell
     }
     
@@ -222,7 +221,14 @@ extension StepsViewController: UITableViewDataSource {
         return instruction
     }
     
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        updateCell(cell as! StepTableViewCell, at: indexPath)
+    }
+    
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
+        cell.instructionsView.primaryLabel.viewForAvailableBoundsCalculation = cell
+        cell.instructionsView.secondaryLabel.viewForAvailableBoundsCalculation = cell
+        
         let step = sections[indexPath.section][indexPath.row]
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
