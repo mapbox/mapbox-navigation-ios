@@ -510,6 +510,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
         }
+        
         removeAlternates()
     }
     
@@ -520,6 +521,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         if let altLayer = style.layer(withIdentifier: alternateLayerIdentifier) {
             style.removeLayer(altLayer)
+        }
+        
+        if let altCasingLayer = style.layer(withIdentifier: alternateCasingLayerIdentifier) {
+            style.removeLayer(altCasingLayer)
         }
         
         if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
