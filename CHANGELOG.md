@@ -2,25 +2,37 @@
 
 ## master
 
-* `DistanceFormatter`, `ReplayLocationManager`, `SimulatedLocationManager`, `LanesView`, and `ManueverView` are now subclassable. ([#1345](https://github.com/mapbox/mapbox-navigation-ios/pull/1345]))
+### Packaging
+
 * Upgraded to the [Mapbox Maps SDK for iOS v4.0.0](https://github.com/mapbox/mapbox-gl-native/releases/tag/ios-v4.0.0). If you have customized the route map’s appearance, you may need to migrate your code to use expressions instead of style functions. ([#1076](https://github.com/mapbox/mapbox-navigation-ios/pull/1076))
 * Added a Korean localization. ([#1346](https://github.com/mapbox/mapbox-navigation-ios/pull/1346))
-* Renamed `NavigationViewControllerDelegate.navigationViewControllerDidCancelNavigation(_:)` to `NavigationViewControllerDelegate.navigationViewControllerDidDismiss(_:byCanceling:)`. [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318)
-* `RouteController`’s `routeProgress` is now exposed to Objective-C. [#1323](https://github.com/mapbox/mapbox-navigation-ios/pull/1323)
-* Exit indications are now drawn accurately with a correct exit bearing. [#1288](https://github.com/mapbox/mapbox-navigation-ios/pull/1288)
-* Added a delegate method, `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)` which allows you to customize the contents of the road name label displayed towards the bottom of the map view. [#1309](https://github.com/mapbox/mapbox-navigation-ios/pull/1309)
-* If a reroute request fails, the `Rerouting...` status view update is dismissed. [#1357](https://github.com/mapbox/mapbox-navigation-ios/pull/1357)
-* Completed waypoints now remain on the map but are slightly translucent. [#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364)
-* `navigationMapView(_:shapeFor:)` has been renamed to `navigationMapView(_:shapeFor:legIndex:)`. [#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364)
-* Renamed methods on `NavigationMapViewDelegate`:    
+
+### User interface
+
+* Exit indications are now drawn accurately with a correct exit heading. ([#1288](https://github.com/mapbox/mapbox-navigation-ios/pull/1288))
+* Added the `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)` method for customizing the contents of the road name label that appears towards the bottom of the map view. ([#1309](https://github.com/mapbox/mapbox-navigation-ios/pull/1309))
+* If the SDK tries but fails to reroute the user, the “Rerouting…” status view no longer stays visible permanently. ([#1357](https://github.com/mapbox/mapbox-navigation-ios/pull/1357))
+* Completed waypoints now remain on the map but are slightly translucent. ([#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364))
+
+### Spoken instructions
+
+* Fixed an issue causing the wrong instructions to be spoken. ([#1396](https://github.com/mapbox/mapbox-navigation-ios/pull/1396))
+
+### User location
+
+* The `RouteController.routeProgress` property is now available in Objective-C. ([#1323](https://github.com/mapbox/mapbox-navigation-ios/pull/1323))
+* Added a `RouteController.tunnelSimulationEnabled` option that keeps the user location indicator moving steadily while the user travels through a tunnel and GPS reception is unreliable. ([#1218](https://github.com/mapbox/mapbox-navigation-ios/pull/1218))
+
+### Other changes
+
+* `DistanceFormatter`, `ReplayLocationManager`, `SimulatedLocationManager`, `LanesView`, and `ManueverView` are now subclassable. ([#1345](https://github.com/mapbox/mapbox-navigation-ios/pull/1345]))
+* Renamed methods on `NavigationMapViewDelegate` ([#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364), [#1338](https://github.com/mapbox/mapbox-navigation-ios/pull/1338), [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318)):    
     - `NavigationMapViewDelegate.navigationMapView(_:shapeDescribingRoute:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:shapeDescribing:)`.
     - `NavigationMapViewDelegate.navigationMapView(_:shapeDescribingWaypoints:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeDescribingRoute:)`.
     - `NavigationMapViewDelegate.navigationMapView(_:shapeDescribingWaypoints:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:shapeFor:legIndex:)`.
     - `NavigationMapViewDelegate.navigationMapView(_:imageForAnnotation:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:imageFor:)`.
     - `NavigationMapViewDelegate.navigationMapView(_:viewForAnnotation:)` renamed to `NavigationMapViewDelegate.navigationMapView(_:viewFor:)`.
-    [#1338](https://github.com/mapbox/mapbox-navigation-ios/pull/1338)
-* Created the `TunnelIntersectionManager` class which enables simulated navigation through tunnels. To enable this feature, set `RouteController.tunnelSimulationEnabled` to `true`. [#1218](https://github.com/mapbox/mapbox-navigation-ios/pull/1218)
-* Fixed a caching bug where a user could get the incorrect voice instruction. [#1396](https://github.com/mapbox/mapbox-navigation-ios/pull/1396)
+    - `NavigationViewControllerDelegate.navigationViewControllerDidCancelNavigation(_:)` to `NavigationViewControllerDelegate.navigationViewControllerDidDismiss(_:byCanceling:)`
 
 ## v0.16.2 (April 13, 2018)
 
