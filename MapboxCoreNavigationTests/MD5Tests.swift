@@ -38,6 +38,8 @@ class Tests: XCTestCase {
                        "c89a2146cd3df34ecda86b6e0709b3fd")
         XCTAssertEqual("!%40%23%24%25%5E%26*()%2C.%3C%3E%5C'1234567890-%3D".md5(),
                        "09a1790760693160e74b9d6fcec7ef64")
+        XCTAssertEqual("🛡".md5(),
+                       "a11d9c95b5bcb5687f10bad109131f20")
     }
     
     func testMD5_Data() {
