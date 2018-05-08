@@ -120,10 +120,6 @@ internal class FileCache {
     }
 
     func cacheKeyForKey(_ key: String) -> String {
-        if let keyAsURL = URL(string: key) {
-            return MD5(keyAsURL.lastPathComponent)
-        }
-
         return MD5(key)
     }
 
