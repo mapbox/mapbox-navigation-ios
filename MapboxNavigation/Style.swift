@@ -34,7 +34,7 @@ open class Style: NSObject {
     /**
      Map style to be used for the style.
      */
-    @objc open var mapStyleURL: URL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v3")!
+    @objc open var mapStyleURL: URL = MGLStyle.navigationGuidanceDayStyleURL
     
     /**
      Applies the style for all changed properties.
