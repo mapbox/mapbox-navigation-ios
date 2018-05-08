@@ -60,6 +60,8 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
     lazy var speechSynth = AVSpeechSynthesizer()
     var audioPlayer: AVAudioPlayer?
     
+    let audioQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".audio")
+    
     /**
      A boolean value indicating whether instructions should be announced by voice or not.
      */
