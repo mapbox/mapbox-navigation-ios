@@ -27,10 +27,15 @@ extension BottomBannerView {
         addSubview(cancelButton)
         self.cancelButton = cancelButton
         
-        let dividerView = SeparatorView()
-        dividerView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(dividerView)
-        self.dividerView = dividerView
+        let verticalDivider = SeparatorView()
+        verticalDivider.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(verticalDivider)
+        self.verticalDividerView = verticalDivider
+        
+        let horizontalDividerView = SeparatorView()
+        horizontalDividerView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(horizontalDividerView)
+        self.horizontalDividerView = horizontalDividerView
         
         setupConstraints()
     }
@@ -54,12 +59,17 @@ extension BottomBannerView {
         c.append(distanceRemainingLabel.leadingAnchor.constraint(equalTo: timeRemainingLabel.trailingAnchor, constant: 10))
         c.append(distanceRemainingLabel.lastBaselineAnchor.constraint(equalTo: timeRemainingLabel.lastBaselineAnchor))
         
-        c.append(dividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(dividerView.heightAnchor.constraint(equalToConstant: 40))
-        c.append(dividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
-        c.append(dividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
+        c.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1))
+        c.append(verticalDividerView.heightAnchor.constraint(equalToConstant: 40))
+        c.append(verticalDividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
+        c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
         
-        c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: dividerView.leadingAnchor, constant: -10))
+        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1))
+        c.append(horizontalDividerView.topAnchor.constraint(equalTo: topAnchor))
+        c.append(horizontalDividerView.leadingAnchor.constraint(equalTo: leadingAnchor))
+        c.append(horizontalDividerView.trailingAnchor.constraint(equalTo: trailingAnchor))
+        
+        c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: verticalDividerView.leadingAnchor, constant: -10))
         c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor))
     }
     
@@ -77,13 +87,18 @@ extension BottomBannerView {
         c.append(cancelButton.trailingAnchor.constraint(equalTo: trailingAnchor))
         c.append(cancelButton.bottomAnchor.constraint(equalTo: bottomAnchor))
         
-        c.append(dividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(dividerView.heightAnchor.constraint(equalToConstant: 40))
-        c.append(dividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
-        c.append(dividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
+        c.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1))
+        c.append(verticalDividerView.heightAnchor.constraint(equalToConstant: 40))
+        c.append(verticalDividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
+        c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
+        
+        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1))
+        c.append(horizontalDividerView.topAnchor.constraint(equalTo: topAnchor))
+        c.append(horizontalDividerView.leadingAnchor.constraint(equalTo: leadingAnchor))
+        c.append(horizontalDividerView.trailingAnchor.constraint(equalTo: trailingAnchor))
         
         c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
-        c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: dividerView.leadingAnchor, constant: -10))
+        c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: verticalDividerView.leadingAnchor, constant: -10))
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
