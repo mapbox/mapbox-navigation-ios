@@ -64,7 +64,7 @@ extension BottomBannerView {
         c.append(verticalDividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
         c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
         
-        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1))
+        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
         c.append(horizontalDividerView.topAnchor.constraint(equalTo: topAnchor))
         c.append(horizontalDividerView.leadingAnchor.constraint(equalTo: leadingAnchor))
         c.append(horizontalDividerView.trailingAnchor.constraint(equalTo: trailingAnchor))
@@ -92,7 +92,7 @@ extension BottomBannerView {
         c.append(verticalDividerView.centerYAnchor.constraint(equalTo: centerYAnchor))
         c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
         
-        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1))
+        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
         c.append(horizontalDividerView.topAnchor.constraint(equalTo: topAnchor))
         c.append(horizontalDividerView.leadingAnchor.constraint(equalTo: leadingAnchor))
         c.append(horizontalDividerView.trailingAnchor.constraint(equalTo: trailingAnchor))

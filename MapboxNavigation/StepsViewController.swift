@@ -152,7 +152,7 @@ open class StepsViewController: UIViewController {
         separatorBottomView.topAnchor.constraint(equalTo: dismissButton.topAnchor).isActive = true
         separatorBottomView.leadingAnchor.constraint(equalTo: dismissButton.leadingAnchor).isActive = true
         separatorBottomView.trailingAnchor.constraint(equalTo: dismissButton.trailingAnchor).isActive = true
-        separatorBottomView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorBottomView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
