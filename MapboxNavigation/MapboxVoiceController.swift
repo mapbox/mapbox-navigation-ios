@@ -188,16 +188,17 @@ open class MapboxVoiceController: RouteVoiceController {
 
         super.speechSynth.stopSpeaking(at: .immediate)
         
-        DispatchQueue.global(qos: .userInitiated).async {
+        audioQueue.async { [weak self] in
+            guard let `self` = self else { return }
             do {
                 self.audioPlayer = try AVAudioPlayer(data: data)
                 self.audioPlayer?.prepareToPlay()
                 self.audioPlayer?.delegate = self
-                try super.duckAudio()
+                try self.duckAudio()
                 let played = self.audioPlayer?.play() ?? false
                 
                 guard played else {
-                    try super.unDuckAudio()
+                    try self.unDuckAudio()
                     self.speakWithDefaultSpeechSynthesizer(self.lastSpokenInstruction!, error: NSError(code: .spokenInstructionFailed, localizedFailureReason: self.localizedErrorMessage, spokenInstructionCode: .audioPlayerFailedToPlay))
                     return
                 }
