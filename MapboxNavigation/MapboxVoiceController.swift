@@ -188,7 +188,8 @@ open class MapboxVoiceController: RouteVoiceController {
 
         super.speechSynth.stopSpeaking(at: .immediate)
         
-        audioQueue.async { [unowned self] in
+        audioQueue.async { [weak self] in
+            guard let `self` = self else { return }
             do {
                 self.audioPlayer = try AVAudioPlayer(data: data)
                 self.audioPlayer?.prepareToPlay()
