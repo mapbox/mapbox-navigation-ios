@@ -16,10 +16,6 @@ extension NavigationView {
         instructionsBannerView.heightAnchor.constraint(equalToConstant: 96).isActive = true
         
         NSLayoutConstraint.activate(bannerShowConstraints)
-        separatorView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
-        separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        separatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
 
         informationStackView.topAnchor.constraint(equalTo: instructionsBannerView.bottomAnchor).isActive = true
         informationStackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
