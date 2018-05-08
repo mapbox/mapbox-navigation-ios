@@ -112,4 +112,15 @@ class DataCacheTests: XCTestCase {
         let sixMileInstruction = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Continue on <say-as interpret-as=\"address\">I-80</say-as> East for 6 miles</prosody></amazon:effect></speak>"
         XCTAssertNotEqual(cache.fileCache.cacheKeyForKey(threeMileInstruction), cache.fileCache.cacheKeyForKey(sixMileInstruction))
     }
+    
+    func testCacheKeyPerformance() {
+        let instructionTurn = "Turn left"
+        let instructionContinue = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Continue on <say-as interpret-as=\"address\">I-80</say-as> East for 3 miles</prosody></amazon:effect></speak>"
+        measure {
+            for _ in 0...1000 {
+                _ = cache.fileCache.cacheKeyForKey(instructionTurn)
+                _ = cache.fileCache.cacheKeyForKey(instructionContinue)
+            }
+        }
+    }
 }
