@@ -44,7 +44,7 @@ class MapboxVoiceControllerTests: XCTestCase {
     
     func testVoiceDeinit() {
         var voiceController: MockMapboxVoiceController? = MockMapboxVoiceController()
-        let deinitExpectation = self.expectation(description: "Voice Controller should deinitialize")
+        let deinitExpectation = expectation(description: "Voice Controller should deinitialize")
         voiceController?.deinitExpectation = deinitExpectation
         let bundle = Bundle(for: MapboxVoiceControllerTests.self)
         let filePath = bundle.path(forResource: "turn_left", ofType: "data")
@@ -54,7 +54,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         voiceController = nil
         XCTAssert(voiceController == nil)
         
-        wait(for: [deinitExpectation], timeout: 2)
+        wait(for: [deinitExpectation], timeout: 3)
     }
 }
 
