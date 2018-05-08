@@ -17,7 +17,7 @@ open class BottomBannerView: UIView {
     weak var cancelButton: CancelButton!
     // Vertical divider between cancel button and the labels
     weak var verticalDividerView: SeparatorView!
-    // Horizontal divider to a some distinction between the map view and the bottom banner
+    // Horizontal divider between the map view and the bottom banner
     weak var horizontalDividerView: SeparatorView!
     weak var routeController: RouteController!
     weak var delegate: BottomBannerViewDelegate?
