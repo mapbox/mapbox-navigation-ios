@@ -225,7 +225,7 @@ extension StepsViewController: UITableViewDataSource {
         
         let step = sections[indexPath.section][indexPath.row]
        
-        let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
+        let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0 
         
         if usePreviousLeg {
             let leg = routeProgress.route.legs[indexPath.section-1]
