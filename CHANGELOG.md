@@ -2,6 +2,8 @@
 
 ## master
 
+* New guidance navigation styles are provided through `MGLStyle`. ([#1366](https://github.com/mapbox/mapbox-navigation-ios/pull/1366))
+
 ### Packaging
 
 * Upgraded to the [Mapbox Maps SDK for iOS v4.0.0](https://github.com/mapbox/mapbox-gl-native/releases/tag/ios-v4.0.0). If you have customized the route map’s appearance, you may need to migrate your code to use expressions instead of style functions. ([#1076](https://github.com/mapbox/mapbox-navigation-ios/pull/1076))
