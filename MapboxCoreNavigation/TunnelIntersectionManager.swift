@@ -6,6 +6,10 @@ import CoreLocation
  */
 public typealias RouteControllerSimulationCompletionBlock = ((_ animationEnabled: Bool, _ manager: NavigationLocationManager)-> Void)
 
+
+/**
+ The `TunnelIntersectionManagerDelegate` protocol provides methods for responding to events where a user enters or exits a tunnel.
+ */
 @objc(MBTunnelIntersectionManagerDelegate)
 public protocol TunnelIntersectionManagerDelegate: class {
     
