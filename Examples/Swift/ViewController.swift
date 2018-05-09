@@ -154,9 +154,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             multipleStopsAction.isEnabled = false
         }
 
-        let destinationName = "Dropped Pin" // Note you can change this. This will be used in the top banner
+        let destinationNames = "Dropped Pin #\(waypoints.endIndex + 1)" // Note you can change this. This will be used in the top banner
         let coordinates = mapView.convert(tap.location(in: mapView), toCoordinateFrom: mapView)
-        let waypoint = Waypoint(coordinate: coordinates, name: destinationName)
+        let waypoint = Waypoint(coordinate: coordinates, name: destinationNames)
         waypoint.coordinateAccuracy = -1
         waypoints.append(waypoint)
 
