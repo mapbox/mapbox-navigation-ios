@@ -10,20 +10,23 @@ protocol ReentrantImageDownloader {
 
 class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegate {
     private var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default
-    private var operationType: ImageDownload.Type = ImageDownloadOperation.self
 
-    private var queue: OperationQueue
     lazy private var urlSession: URLSession = {
         return URLSession.init(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
     }()
 
-    private var headers: [String: String] = ["Accept": "image/*;q=0.8"]
+    private var downloadQueue: OperationQueue
+    private var accessQueue: DispatchQueue
 
+    private var operationType: ImageDownload.Type = ImageDownloadOperation.self
     private var operations: [URL: ImageDownload] = [:]
 
+    private var headers: [String: String] = ["Accept": "image/*;q=0.8"]
+
     override init() {
-        self.queue = OperationQueue()
-        self.queue.name = Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloader"
+        self.downloadQueue = OperationQueue()
+        self.downloadQueue.name = Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloader"
+        self.accessQueue = DispatchQueue.init(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloaderInternal")
     }
 
     convenience init(sessionConfiguration: URLSessionConfiguration? = nil, operationType: ImageDownload.Type? = nil) {
@@ -45,9 +48,11 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
             operation = activeOperation
         } else {
             operation = operationType.init(request: request, in: self.urlSession)
-            self.operations[url] = operation
+            accessQueue.async(flags: .barrier) {
+                self.operations[url] = operation
+            }
             if let operation = operation as? Operation {
-                self.queue.addOperation(operation)
+                self.downloadQueue.addOperation(operation)
             }
         }
         if let completion = completion {
@@ -56,10 +61,15 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     }
 
     func activeOperationWithURL(_ url: URL) -> ImageDownload? {
-        if let operation = operations[url], !operation.isFinished {
-            return operation
+        var activeOperation: ImageDownload?
+
+        accessQueue.sync {
+            if let operation = operations[url], !operation.isFinished {
+                activeOperation = operation
+            }
         }
-        return nil
+
+        return activeOperation
     }
 
     private func urlRequestWithURL(_ url: URL) -> URLRequest {
@@ -80,7 +90,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     // MARK: URLSessionDataDelegate
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        guard let response: HTTPURLResponse = response as? HTTPURLResponse, let url = response.url, let operation: ImageDownload = operations[url] else {
+        guard let response: HTTPURLResponse = response as? HTTPURLResponse, let url = response.url, let operation: ImageDownload = activeOperationWithURL(url) else {
             completionHandler(.cancel)
             return
         }
@@ -88,18 +98,20 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        guard let url = dataTask.originalRequest?.url, let operation: ImageDownload = operations[url] else {
+        guard let url = dataTask.originalRequest?.url, let operation: ImageDownload = activeOperationWithURL(url) else {
             return
         }
         operation.urlSession?(session, dataTask: dataTask, didReceive: data)
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard let url = task.originalRequest?.url, let operation: ImageDownload = operations[url] else {
+        guard let url = task.originalRequest?.url, let operation: ImageDownload = activeOperationWithURL(url) else {
             return
         }
         operation.urlSession?(session, task: task, didCompleteWithError: error)
-        operations[url] = nil
+        accessQueue.async {
+            self.operations[url] = nil
+        }
     }
 
 }
