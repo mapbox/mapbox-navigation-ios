@@ -117,7 +117,7 @@ extension BaseInstructionsBannerView {
         _separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         
         // Visible separator docked to the bottom
-        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true

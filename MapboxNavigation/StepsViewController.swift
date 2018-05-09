@@ -18,6 +18,7 @@ open class StepsViewController: UIViewController {
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
     weak var bottomView: UIView!
+    weak var separatorBottomView: SeparatorView!
     weak var dismissButton: DismissButton!
     weak var delegate: StepsViewControllerDelegate?
     
@@ -132,6 +133,11 @@ open class StepsViewController: UIViewController {
         bottomView.backgroundColor = DismissButton.appearance().backgroundColor
         view.addSubview(bottomView)
         self.bottomView = bottomView
+        
+        let separatorBottomView = SeparatorView()
+        separatorBottomView.translatesAutoresizingMaskIntoConstraints = false
+        dismissButton.addSubview(separatorBottomView)
+        self.separatorBottomView = separatorBottomView
 
         dismissButton.heightAnchor.constraint(equalToConstant: 54).isActive = true
         dismissButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -142,6 +148,11 @@ open class StepsViewController: UIViewController {
         bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        separatorBottomView.topAnchor.constraint(equalTo: dismissButton.topAnchor).isActive = true
+        separatorBottomView.leadingAnchor.constraint(equalTo: dismissButton.leadingAnchor).isActive = true
+        separatorBottomView.trailingAnchor.constraint(equalTo: dismissButton.trailingAnchor).isActive = true
+        separatorBottomView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
