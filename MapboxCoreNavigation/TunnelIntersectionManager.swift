@@ -1,8 +1,15 @@
 import Foundation
 import CoreLocation
 
+/**
+  A closure (block) to be called when a user enters or exits a tunnel.
+ */
 public typealias RouteControllerSimulationCompletionBlock = ((_ animationEnabled: Bool, _ manager: NavigationLocationManager)-> Void)
 
+
+/**
+ The `TunnelIntersectionManagerDelegate` protocol provides methods for responding to events where a user enters or exits a tunnel.
+ */
 @objc(MBTunnelIntersectionManagerDelegate)
 public protocol TunnelIntersectionManagerDelegate: class {
     

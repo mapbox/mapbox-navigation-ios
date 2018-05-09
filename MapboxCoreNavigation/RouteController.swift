@@ -179,6 +179,18 @@ open class RouteController: NSObject {
      When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
      */
     @objc public var delaysEventFlushing = true
+    
+    /**
+     A `TunnelIntersectionManager` used for animating the use user puck when and if a user enters a tunnel.
+     
+     Will only be enabled if `tunnelSimulationEnabled` is true.
+     */
+    public var tunnelIntersectionManager: TunnelIntersectionManager?
+    
+    /**
+     The flag that indicates that the simulated navigation through tunnel(s) is enabled.
+     */
+    public var tunnelSimulationEnabled: Bool = false
 
     var didFindFasterRoute = false
 
@@ -238,14 +250,7 @@ open class RouteController: NSObject {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    public var tunnelIntersectionManager: TunnelIntersectionManager?
-    
     var tunnelIntersectionManagerCompletionHandler: RouteControllerSimulationCompletionBlock?
-    
-    /**
-     The flag that indicates that the simulated navigation through tunnel(s) is enabled.
-     */
-    public var tunnelSimulationEnabled: Bool = false
     
     /**
      Intializes a new `RouteController`.
