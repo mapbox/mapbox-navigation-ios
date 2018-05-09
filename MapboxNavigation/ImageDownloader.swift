@@ -4,7 +4,7 @@ typealias ImageDownloadCompletionBlock = (UIImage?, Data?, Error?) -> Void
 
 protocol ReentrantImageDownloader {
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) -> Void
-    func activeOperationWithURL(_ url: URL) -> ImageDownload?
+    func activeOperation(with url: URL) -> ImageDownload?
     func setOperationType(_ operationType: ImageDownload.Type?)
 }
 
@@ -26,7 +26,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     override init() {
         self.downloadQueue = OperationQueue()
         self.downloadQueue.name = Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloader"
-        self.accessQueue = DispatchQueue.init(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloaderInternal")
+        self.accessQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloaderInternal")
     }
 
     convenience init(sessionConfiguration: URLSessionConfiguration? = nil, operationType: ImageDownload.Type? = nil) {
@@ -41,10 +41,14 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         }
     }
 
+    deinit {
+        self.downloadQueue.cancelAllOperations()
+    }
+
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {
-        let request: URLRequest = urlRequestWithURL(url)
+        let request: URLRequest = urlRequest(with: url)
         var operation: ImageDownload
-        if let activeOperation = activeOperationWithURL(url) {
+        if let activeOperation = activeOperation(with: url) {
             operation = activeOperation
         } else {
             operation = operationType.init(request: request, in: self.urlSession)
@@ -60,7 +64,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         }
     }
 
-    func activeOperationWithURL(_ url: URL) -> ImageDownload? {
+    func activeOperation(with url: URL) -> ImageDownload? {
         var activeOperation: ImageDownload?
 
         accessQueue.sync {
@@ -72,7 +76,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         return activeOperation
     }
 
-    private func urlRequestWithURL(_ url: URL) -> URLRequest {
+    private func urlRequest(with url: URL) -> URLRequest {
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = self.headers
         request.cachePolicy = .reloadIgnoringCacheData
@@ -90,7 +94,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     // MARK: URLSessionDataDelegate
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
-        guard let response: HTTPURLResponse = response as? HTTPURLResponse, let url = response.url, let operation: ImageDownload = activeOperationWithURL(url) else {
+        guard let response: HTTPURLResponse = response as? HTTPURLResponse, let url = response.url, let operation: ImageDownload = activeOperation(with: url) else {
             completionHandler(.cancel)
             return
         }
@@ -98,14 +102,14 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        guard let url = dataTask.originalRequest?.url, let operation: ImageDownload = activeOperationWithURL(url) else {
+        guard let url = dataTask.originalRequest?.url, let operation: ImageDownload = activeOperation(with: url) else {
             return
         }
         operation.urlSession?(session, dataTask: dataTask, didReceive: data)
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard let url = task.originalRequest?.url, let operation: ImageDownload = activeOperationWithURL(url) else {
+        guard let url = task.originalRequest?.url, let operation: ImageDownload = activeOperation(with: url) else {
             return
         }
         operation.urlSession?(session, task: task, didCompleteWithError: error)

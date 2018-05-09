@@ -73,14 +73,14 @@ class ImageDownloaderTests: XCTestCase {
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             firstCallbackCalled = true
         }
-        operation = downloader.activeOperationWithURL(imageURL)!
+        operation = downloader.activeOperation(with: imageURL)!
 
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             secondCallbackCalled = true
         }
 
-        XCTAssertTrue(operation === downloader.activeOperationWithURL(imageURL)!,
-                      "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
+        XCTAssertTrue(operation === downloader.activeOperation(with: imageURL)!,
+                      "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperation(with: imageURL)))")
 
         var spinCount = 0
         runUntil(condition: {
@@ -105,7 +105,7 @@ class ImageDownloaderTests: XCTestCase {
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             callbackCalled = true
         }
-        var operation = downloader.activeOperationWithURL(imageURL)!
+        var operation = downloader.activeOperation(with: imageURL)!
 
         runUntil(condition: {
             spinCount += 1
@@ -121,7 +121,7 @@ class ImageDownloaderTests: XCTestCase {
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             callbackCalled = true
         }
-        operation = downloader.activeOperationWithURL(imageURL)!
+        operation = downloader.activeOperation(with: imageURL)!
 
         runUntil(condition: {
             spinCount += 1
