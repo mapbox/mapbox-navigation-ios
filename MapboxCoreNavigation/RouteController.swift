@@ -378,6 +378,7 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+        locationManager.delegate = nil
     }
 
     /**
