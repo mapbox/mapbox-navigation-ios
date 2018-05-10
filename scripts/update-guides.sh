@@ -1,9 +1,15 @@
 set -eu
 
-if [ -d "navigation-ios-examples" ]; then rm -Rf navigation-ios-examples; fi
-git clone https://github.com/mapbox/navigation-ios-examples
+EXAMPLES_DIR=../navigation-ios-examples
 
-cp navigation-ios-examples/Navigation-Examples/Examples/*.swift docs/examples
+# If there isn't an existing examples clone, create a temporary one.
+if [ ! -d $EXAMPLES_DIR ]; then
+  EXAMPLES_DIR=navigation-ios-examples
+  if [ -d $EXAMPLES_DIR ]; then rm -Rf navigation-ios-examples; fi
+  git clone https://github.com/mapbox/navigation-ios-examples
+fi
+
+cp $EXAMPLES_DIR/Navigation-Examples/Examples/*.swift docs/examples
 
 for file in docs/examples/*.swift; do
     # Add markdown formatting
@@ -20,4 +26,5 @@ for file in docs/examples/*.md; do
   mv "$file" "${file//-/ }"
 done
 
+# Delete the temporary examples clone.
 rm -rf navigation-ios-examples
