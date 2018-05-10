@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## master
+## v0.17.0 (May 10, 2018)
 
 * New guidance navigation styles are provided through `MGLStyle`. ([#1366](https://github.com/mapbox/mapbox-navigation-ios/pull/1366))
 
