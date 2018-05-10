@@ -368,6 +368,7 @@ open class RouteController: NSObject {
      Will continue monitoring until `suspendLocationUpdates()` is called.
      */
     @objc public func resume() {
+        locationManager.delegate = self
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
     }
