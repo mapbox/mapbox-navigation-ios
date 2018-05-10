@@ -248,19 +248,31 @@ class RouteControllerTests: XCTestCase {
         var routeController: RouteControllerSpy? = RouteControllerSpy(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManagerSpy)
         let expectation = XCTestExpectation(description: "Deinit")
         routeController?.deinitCalled = expectation.fulfill
-        
-        
-        DispatchQueue.global(qos: .background).async {
-            routeController = nil
-        }
+        routeController = nil
+
         
         wait(for: [expectation], timeout: 5)
     }
+
+    func testRouteControllerNilsOutLocationDelegateOnDeinit() {
+        let locationManager = NavigationLocationManager()
+        var routeController: RouteControllerSpy? = RouteControllerSpy(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManagerSpy)
+        let expectation = XCTestExpectation(description: "Deinit")
+        routeController?.deinitCalled = expectation.fulfill
+        routeController = nil
+
+        wait(for: [expectation], timeout: 5)
+
+        XCTAssertNil(locationManager.delegate, "Location Manager Delegate should be nil")
+
+    }
 }
+
 
 class RouteControllerSpy: RouteController {
     var deinitCalled: (() -> Void)?
-    deinit {
-        deinitCalled?()
+    override func suspendLocationUpdates() {
+        super.suspendLocationUpdates()
+        deinitCalled?() //suspendLocationUpdates is the first thing called on deinit
     }
 }
