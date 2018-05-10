@@ -286,8 +286,8 @@ open class RouteController: NSObject {
     private func setupTunnelIntersectionManager() {
         tunnelIntersectionManager = TunnelIntersectionManager()
         tunnelIntersectionManager?.delegate = self
-        tunnelIntersectionManagerCompletionHandler = { enabled, _ in
-            self.tunnelIntersectionManager?.isAnimationEnabled = enabled
+        tunnelIntersectionManagerCompletionHandler = { [weak self] enabled, _ in
+            self?.tunnelIntersectionManager?.isAnimationEnabled = enabled
         }
     }
 
