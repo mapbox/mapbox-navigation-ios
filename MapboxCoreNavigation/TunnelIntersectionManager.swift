@@ -58,18 +58,6 @@ open class TunnelIntersectionManager: NSObject {
     @objc public var isAnimationEnabled: Bool = false
     
     /**
-     Given a user's current location and route progress,
-     returns a Boolean whether a tunnel has been detected on the current route step progress.
-     */
-    @objc public func didDetectTunnel(at routeProgress: RouteProgress) -> Bool {
-        if let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection,
-           let classes = currentIntersection.outletRoadClasses {
-            return classes.contains(.tunnel)
-        }
-        return false
-    }
-    
-    /**
      Given a user's current location, location manager and route progress,
      returns a Boolean whether a tunnel has been detected on the current route step progress.
      */
@@ -132,7 +120,6 @@ open class TunnelIntersectionManager: NSObject {
         guard isAnimationEnabled else { return }
         
         // Disable the tunnel animation after at least 3 good location updates.
-        // Otherwise if we receive a valid location updates, disable the tunnel animation immediately.
         guard tunnelExitLocations.count >= 3 else {
             if location.isQualified && tunnelExitLocations.count < 3 {
                 tunnelExitLocations.append(location)
