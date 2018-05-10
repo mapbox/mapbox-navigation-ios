@@ -217,7 +217,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             guard let routes = potentialRoutes else { return }
             return success(routes)
         }
-
+        
         _ = Directions.shared.calculate(options, completionHandler: handler)
     }
 

@@ -490,7 +490,7 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         endOfRoute.removeFromParentViewController()
     }
     
-    func showEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
+    func showEndOfRoute(duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil) {
         embedEndOfRoute()
         endOfRouteViewController.destination = destination
         navigationView.endOfRouteView?.isHidden = false
@@ -512,10 +512,22 @@ func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackV
         let noAnimation = { animate(); completion?(true) }
 
         guard duration > 0.0 else { return noAnimation() }
+        
+        navigationView.mapView.tracksUserCourse = false
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
         
-        // Prevent the user puck from floating around.
-        mapView.updateCourseTracking(location: routeController.location, animated: false)
+        guard let height = self.navigationView.endOfRouteHeightConstraint?.constant else { return }
+        let insets = UIEdgeInsets(top: navigationView.instructionsBannerView.bounds.height, left: 20, bottom: height + 20, right: 20)
+        
+        if let coordinates = routeController.routeProgress.route.coordinates, let userLocation = routeController.locationManager.location?.coordinate {
+            let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
+            let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
+            
+            let camera = navigationView.mapView.cameraThatFitsShape(line, direction: navigationView.mapView.camera.heading, edgePadding: insets)
+            camera.pitch = 0
+            camera.altitude = navigationView.mapView.camera.altitude
+            navigationView.mapView.setCamera(camera, animated: true)
+        }
     }
     
     func hideEndOfRoute(duration: TimeInterval = 0.3, completion: ((Bool) -> Void)? = nil) {
