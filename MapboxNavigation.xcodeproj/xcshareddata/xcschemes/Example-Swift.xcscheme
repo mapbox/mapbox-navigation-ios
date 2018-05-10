@@ -38,26 +38,6 @@
                ReferencedContainer = "container:MapboxNavigation.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "35B711CE1E5E7AD2001EDA8D"
-               BuildableName = "MapboxNavigationTests.xctest"
-               BlueprintName = "MapboxNavigationTests"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C5ADFBD11DDCC7840011824B"
-               BuildableName = "MapboxCoreNavigationTests.xctest"
-               BlueprintName = "MapboxCoreNavigationTests"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

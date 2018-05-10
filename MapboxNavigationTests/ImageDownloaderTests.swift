@@ -10,9 +10,7 @@ class ImageDownloaderTests: XCTestCase {
         return config
     }()
 
-    lazy var downloader: ReentrantImageDownloader = {
-        return ImageDownloader(sessionConfiguration: sessionConfig)
-    }()
+    var downloader: ReentrantImageDownloader?
 
     let imageURL = URL(string: "https://zombo.com/lulz/selfie.png")!
 
@@ -20,20 +18,25 @@ class ImageDownloaderTests: XCTestCase {
         super.setUp()
         self.continueAfterFailure = false
 
-        URLProtocol.registerClass(ImageLoadingURLProtocolSpy.self)
         ImageLoadingURLProtocolSpy.reset()
 
-        let originalImageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
-        ImageLoadingURLProtocolSpy.registerData(originalImageData, forURL: imageURL)
+        let imageData = UIImagePNGRepresentation(ShieldImage.i280.image)!
+        ImageLoadingURLProtocolSpy.registerData(imageData, forURL: imageURL)
+
+        downloader = ImageDownloader(sessionConfiguration: sessionConfig)
     }
 
     override func tearDown() {
-        URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
+        downloader = nil
 
         super.tearDown()
     }
 
     func testDownloadingAnImage() {
+        guard let downloader = downloader else {
+            XCTFail()
+            return
+        }
         var imageReturned: UIImage?
         var dataReturned: Data?
         var errorReturned: Error?
@@ -59,9 +62,13 @@ class ImageDownloaderTests: XCTestCase {
     }
 
     func testDownloadingSameImageWhileInProgressAddsCallbacksWithoutAddingAnotherRequest() {
+        guard let downloader = downloader else {
+            XCTFail()
+            return
+        }
         var firstCallbackCalled = false
         var secondCallbackCalled = false
-        var operation: ImageDownload?
+        var operation: ImageDownload
 
         downloader.downloadImage(with: imageURL) { (image, data, error) in
             firstCallbackCalled = true
@@ -72,45 +79,57 @@ class ImageDownloaderTests: XCTestCase {
             secondCallbackCalled = true
         }
 
-        XCTAssertTrue(operation! === downloader.activeOperationWithURL(imageURL)!, "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
+        XCTAssertTrue(operation === downloader.activeOperationWithURL(imageURL)!,
+                      "Expected \(String(describing: operation)) to be identical to \(String(describing: downloader.activeOperationWithURL(imageURL)))")
 
+        var spinCount = 0
         runUntil(condition: {
-            return downloader.activeOperationWithURL(imageURL) == nil
+            spinCount += 1
+            return operation.isFinished
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
-        //These flags might seem redundant, but it's good to be explicit here
+        print("Succeeded after evaluating condition \(spinCount) times.")
+
         XCTAssertTrue(firstCallbackCalled)
         XCTAssertTrue(secondCallbackCalled)
     }
 
     func testDownloadingImageAgainAfterFirstDownloadCompletes() {
-        let semaphore = DispatchSemaphore(value: 0)
-        var firstCallbackCalled = false
+        guard let downloader = downloader else {
+            XCTFail()
+            return
+        }
+        var callbackCalled = false
+        var spinCount = 0
 
         downloader.downloadImage(with: imageURL) { (image, data, error) in
-            firstCallbackCalled = true
-            semaphore.signal()
+            callbackCalled = true
         }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-        
-        // we are beholden to the URL loading system here... can't proceed until the URLProtocol has finished winding down its previous URL loading work
+        var operation = downloader.activeOperationWithURL(imageURL)!
+
         runUntil(condition: {
-            return downloader.activeOperationWithURL(imageURL) == nil
+            spinCount += 1
+            return operation.isFinished
         }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
 
-        var secondCallbackCalled = false
+        print("Succeeded after evaluating first condition \(spinCount) times.")
+        XCTAssertTrue(callbackCalled)
+
+        callbackCalled = false
+        spinCount = 0
 
         downloader.downloadImage(with: imageURL) { (image, data, error) in
-            secondCallbackCalled = true
-            semaphore.signal()
+            callbackCalled = true
         }
-        let secondSemaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(secondSemaphoreResult == .success, "Semaphore timed out")
-        
-        //These flags might seem redundant, but it's good to be explicit sometimes
-        XCTAssertTrue(firstCallbackCalled)
-        XCTAssertTrue(secondCallbackCalled)
+        operation = downloader.activeOperationWithURL(imageURL)!
+
+        runUntil(condition: {
+            spinCount += 1
+            return operation.isFinished
+        }, pollingInterval: 0.1, until: XCTestCase.NavigationTests.timeout)
+
+        print("Succeeded after evaluating second condition \(spinCount) times.")
+        XCTAssertTrue(callbackCalled)
     }
 
     private func runUntil(condition: () -> Bool, pollingInterval: TimeInterval, until timeout: DispatchTime) {

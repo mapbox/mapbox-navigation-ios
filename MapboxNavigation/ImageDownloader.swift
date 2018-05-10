@@ -23,7 +23,6 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
 
     override init() {
         self.queue = OperationQueue()
-        self.queue.maxConcurrentOperationCount = 6
         self.queue.name = Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloader"
     }
 

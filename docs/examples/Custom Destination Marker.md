@@ -8,7 +8,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 
-class CustomDestinationMarkerController: UIViewController, NavigationViewControllerDelegate {
+class CustomDestinationMarkerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,9 +35,11 @@ class CustomDestinationMarkerController: UIViewController, NavigationViewControl
             self.present(navigationController, animated: true, completion: nil)
         }
     }
-    
-    func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        var annotationImage = mapView.dequeueReusableAnnotationImage(withIdentifier: "marker")
+}
+
+extension CustomDestinationMarkerController: NavigationViewControllerDelegate {
+    func navigationViewController(_ navigationViewController: NavigationViewController, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
+        var annotationImage = navigationViewController.mapView!.dequeueReusableAnnotationImage(withIdentifier: "marker")
         
         if annotationImage == nil {
             // Leaning Tower of Pisa by Stefan Spieler from the Noun Project.

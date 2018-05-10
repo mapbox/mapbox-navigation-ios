@@ -179,6 +179,18 @@ open class RouteController: NSObject {
      When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
      */
     @objc public var delaysEventFlushing = true
+    
+    /**
+     A `TunnelIntersectionManager` used for animating the use user puck when and if a user enters a tunnel.
+     
+     Will only be enabled if `tunnelSimulationEnabled` is true.
+     */
+    public var tunnelIntersectionManager: TunnelIntersectionManager?
+    
+    /**
+     The flag that indicates that the simulated navigation through tunnel(s) is enabled.
+     */
+    public var tunnelSimulationEnabled: Bool = false
 
     var didFindFasterRoute = false
 
@@ -237,7 +249,9 @@ open class RouteController: NSObject {
     }
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
-
+    
+    var tunnelIntersectionManagerCompletionHandler: RouteControllerSimulationCompletionBlock?
+    
     /**
      Intializes a new `RouteController`.
 
@@ -263,8 +277,18 @@ open class RouteController: NSObject {
 
         checkForUpdates()
         checkForLocationUsageDescription()
+        
+        setupTunnelIntersectionManager()
 
         startEvents(accessToken: route.accessToken)
+    }
+    
+    private func setupTunnelIntersectionManager() {
+        tunnelIntersectionManager = TunnelIntersectionManager()
+        tunnelIntersectionManager?.delegate = self
+        tunnelIntersectionManagerCompletionHandler = { enabled, _ in
+            self.tunnelIntersectionManager?.isAnimationEnabled = enabled
+        }
     }
 
     deinit {
@@ -423,32 +447,32 @@ open class RouteController: NSObject {
 
      @param type A `FeedbackType` used to specify the type of feedback
      @param description A custom string used to describe the problem in detail.
-     @return Returns a UUID string used to identify the feedback event
+     @return Returns a UUID used to identify the feedback event
 
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
 
-     You can then call `updateFeedback(feedbackId:)` with the returned feedback ID string to attach any additional metadata to the feedback.
+     You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
-    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> String {
+    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID {
         return enqueueFeedbackEvent(type: type, description: description)
     }
 
     /**
-     Update the feedback event with a specific feedback ID. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
+     Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
 
      Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
      */
-    @objc public func updateFeedback(feedbackId: String, type: FeedbackType, source: FeedbackSource, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id.uuidString == feedbackId}) as? FeedbackEvent {
+    @objc public func updateFeedback(uuid: UUID, type: FeedbackType, source: FeedbackSource, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id == uuid}) as? FeedbackEvent {
             lastFeedback.update(type: type, source: source, description: description)
         }
     }
 
     /**
-     Discard a recorded feedback event, for example if you have a custom feedback UI and the user cancelled feedback.
+     Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
      */
-    @objc public func cancelFeedback(feedbackId: String) {
-        if let index = outstandingFeedbackEvents.index(where: {$0.id.uuidString == feedbackId}) {
+    @objc public func cancelFeedback(uuid: UUID) {
+        if let index = outstandingFeedbackEvents.index(where: {$0.id == uuid}) {
             outstandingFeedbackEvents.remove(at: index)
         }
     }
@@ -538,6 +562,8 @@ extension RouteController: CLLocationManagerDelegate {
             hasFoundOneQualifiedLocation = true
         }
 
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        
         var potentialLocation: CLLocation?
 
         // `filteredLocations` contains qualified locations
@@ -546,8 +572,13 @@ extension RouteController: CLLocationManagerDelegate {
         // `filteredLocations` does not contain good locations and we have found at least one good location previously.
         } else if hasFoundOneQualifiedLocation {
             if let lastLocation = locations.last, delegate?.routeController?(self, shouldDiscard: lastLocation) ?? true {
+                
                 // Allow the user puck to advance. A stationary puck is not great.
                 self.rawLocation = lastLocation
+                
+                // Check for a tunnel intersection at the current step we found the bad location update.
+                checkForTunnelIntersection(at: lastLocation, for: manager)
+                
                 return
             }
         // This case handles the first location.
@@ -570,13 +601,12 @@ extension RouteController: CLLocationManagerDelegate {
             perform(#selector(interpolateLocation), with: nil, afterDelay: 1.1)
         }
 
-        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
-        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         let currentStep = currentStepProgress.step
 
         updateIntersectionIndex(for: currentStepProgress)
 
         // Notify observers if the step’s remaining distance has changed.
+        let polyline = Polyline(routeProgress.currentLegProgress.currentStep.coordinates!)
         if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
             let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)
             let distanceTraveled = currentStep.distance - remainingDistance
@@ -586,6 +616,8 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
+            // Check for a tunnel intersection whenever the current route step progresses.
+            checkForTunnelIntersection(at: location, for: manager)
         }
 
         updateDistanceToIntersection(from: location)
@@ -607,9 +639,20 @@ extension RouteController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
     }
-
+    
+    func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager) {
+        guard tunnelSimulationEnabled, let tunnelIntersectionManager = tunnelIntersectionManager else { return }
+        
+        let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
+        if tunnelDetected {
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, completionHandler: tunnelIntersectionManagerCompletionHandler)
+        } else {
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, completionHandler: tunnelIntersectionManagerCompletionHandler)
+        }
+    }
+    
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
-        let intersectionDistances = currentStepProgress.intersectionDistances
+        guard let intersectionDistances = currentStepProgress.intersectionDistances else { return }
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
         currentStepProgress.intersectionIndex = upcomingIntersectionIndex > 0 ? intersectionDistances.index(before: upcomingIntersectionIndex) : 0
     }
@@ -756,6 +799,7 @@ extension RouteController: CLLocationManagerDelegate {
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     RouteControllerNotificationUserInfoKey.routingErrorKey: error
                 ])
+                return
             }
 
             guard let route = route else { return }
@@ -852,6 +896,11 @@ extension RouteController: CLLocationManagerDelegate {
 
         if let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection {
             routeProgress.currentLegProgress.currentStepProgress.userDistanceToUpcomingIntersection = Polyline(currentStepProgress.step.coordinates!).distance(from: location.coordinate, to: upcomingIntersection.location)
+        }
+        
+        if routeProgress.currentLegProgress.currentStepProgress.intersectionDistances == nil {
+            routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = [CLLocationDistance]()
+            updateIntersectionDistances()
         }
     }
 
@@ -1004,13 +1053,13 @@ extension RouteController {
 
     // MARK: Enqueue feedback
 
-    private func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
+    private func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID {
         let eventDictionary = eventsManager.navigationFeedbackEvent(routeController: self, type: type, description: description)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
         outstandingFeedbackEvents.append(event)
 
-        return event.id.uuidString
+        return event.id
     }
 
     private func enqueueRerouteEvent() -> String {
@@ -1061,5 +1110,17 @@ extension RouteController {
 
     private func resetSession() {
         sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
+    }
+}
+
+extension RouteController: TunnelIntersectionManagerDelegate {
+    
+    public func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.enableTunnelAnimation(for: manager, routeController: self, routeProgress: routeProgress, completionHandler: completionHandler)
+    }
+    
+    public func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager, at: location, routeController: self, completionHandler: completionHandler)
+        
     }
 }

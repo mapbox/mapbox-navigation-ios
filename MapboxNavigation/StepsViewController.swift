@@ -18,6 +18,7 @@ open class StepsViewController: UIViewController {
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
     weak var bottomView: UIView!
+    weak var separatorBottomView: SeparatorView!
     weak var dismissButton: DismissButton!
     weak var delegate: StepsViewControllerDelegate?
     
@@ -28,6 +29,9 @@ open class StepsViewController: UIViewController {
     
     typealias StepSection = [RouteStep]
     var sections = [StepSection]()
+    
+    var previousLegIndex: Int = NSNotFound
+    var previousStepIndex: Int = NSNotFound
     
     /**
      Initializes StepsViewController with a RouteProgress object.
@@ -40,12 +44,18 @@ open class StepsViewController: UIViewController {
         self.routeProgress = routeProgress
     }
     
-    func rebuildDataSource() {
-        sections.removeAll()
+    @discardableResult
+    func rebuildDataSourceIfNecessary() -> Bool {
         
         let legIndex = routeProgress.legIndex
         // Don't include the current step in the list
         let stepIndex = routeProgress.currentLegProgress.stepIndex + 1
+        let didProcessCurrentStep = previousLegIndex == legIndex && previousStepIndex == stepIndex
+        
+        guard !didProcessCurrentStep else { return false }
+        
+        sections.removeAll()
+        
         let legs = routeProgress.route.legs
         
         for (index, leg) in legs.enumerated() {
@@ -61,12 +71,17 @@ open class StepsViewController: UIViewController {
                 sections.append(section)
             }
         }
+        
+        previousStepIndex = stepIndex
+        previousLegIndex = legIndex
+        
+        return true
     }
     
     override open func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        rebuildDataSource()
+        rebuildDataSourceIfNecessary()
         
         NotificationCenter.default.addObserver(self, selector: #selector(StepsViewController.progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
@@ -76,8 +91,10 @@ open class StepsViewController: UIViewController {
     }
     
     @objc func progressDidChange(_ notification: Notification) {
-        rebuildDataSource()
-        tableView.reloadData()
+    
+        if rebuildDataSourceIfNecessary() {
+            tableView.reloadData()
+        }
     }
     
     func setupViews() {
@@ -116,6 +133,11 @@ open class StepsViewController: UIViewController {
         bottomView.backgroundColor = DismissButton.appearance().backgroundColor
         view.addSubview(bottomView)
         self.bottomView = bottomView
+        
+        let separatorBottomView = SeparatorView()
+        separatorBottomView.translatesAutoresizingMaskIntoConstraints = false
+        dismissButton.addSubview(separatorBottomView)
+        self.separatorBottomView = separatorBottomView
 
         dismissButton.heightAnchor.constraint(equalToConstant: 54).isActive = true
         dismissButton.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -126,6 +148,11 @@ open class StepsViewController: UIViewController {
         bottomView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         bottomView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         bottomView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        separatorBottomView.topAnchor.constraint(equalTo: dismissButton.topAnchor).isActive = true
+        separatorBottomView.leadingAnchor.constraint(equalTo: dismissButton.leadingAnchor).isActive = true
+        separatorBottomView.trailingAnchor.constraint(equalTo: dismissButton.trailingAnchor).isActive = true
+        separatorBottomView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         
         tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
@@ -196,7 +223,6 @@ extension StepsViewController: UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
-        updateCell(cell, at: indexPath)
         return cell
     }
     
@@ -206,7 +232,14 @@ extension StepsViewController: UITableViewDataSource {
         return instruction
     }
     
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        updateCell(cell as! StepTableViewCell, at: indexPath)
+    }
+    
     func updateCell(_ cell: StepTableViewCell, at indexPath: IndexPath) {
+        cell.instructionsView.primaryLabel.viewForAvailableBoundsCalculation = cell
+        cell.instructionsView.secondaryLabel.viewForAvailableBoundsCalculation = cell
+        
         let step = sections[indexPath.section][indexPath.row]
        
         let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0

@@ -72,6 +72,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     let instructionCircle = "instructionCircle"
     let alternateSourceIdentifier = "alternateSource"
     let alternateLayerIdentifier = "alternateLayer"
+    let alternateCasingLayerIdentifier = "alternateCasingLayer"
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -80,6 +81,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
+    @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
+    @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
+    @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     
     var userLocationForCourseTracking: CLLocation?
     var animatesUserLocation: Bool = false
@@ -422,8 +426,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let style = style else { return }
         guard let activeRoute = routes.first else { return }
         
-        let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: activeRoute) ?? shape(describing: activeRoute, legIndex: legIndex)
-        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: activeRoute) ?? shape(describingCasing: activeRoute, legIndex: legIndex)
+        let mainPolyline = navigationMapDelegate?.navigationMapView?(self, shapeFor: activeRoute) ?? shape(for: activeRoute, legIndex: legIndex)
+        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeFor: activeRoute) ?? shape(forCasingOf: activeRoute, legIndex: legIndex)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
@@ -465,10 +469,20 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let alternateSource = MGLShapeSource(identifier: alternateSourceIdentifier, shape: alternatePolyline, options: nil)
             style.addSource(alternateSource)
             
-            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, source: alternateSource)
+            let lineWidthExpressionFormat = "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)"
+            
+            let alternateLayerLineWidth = NSExpression(format: lineWidthExpressionFormat, MBRouteLineWidthByZoomLevel.multiplied(by: 0.80))
+            let alternateLayer = alternateRouteStyleLayer(identifier: alternateLayerIdentifier, lineColor: routeAlternateColor, lineWidth: alternateLayerLineWidth, source: alternateSource)
             
             if let layer = style.layer(withIdentifier: routeLayerCasingIdentifier) {
                 style.insertLayer(alternateLayer, below: layer)
+            }
+            
+            let alternateCasingLayerLineWidth = NSExpression(format: lineWidthExpressionFormat, MBRouteLineWidthByZoomLevel)
+            let alternateCasingLayer = alternateRouteStyleLayer(identifier: alternateCasingLayerIdentifier, lineColor: routeAlternateCasingColor, lineWidth: alternateCasingLayerLineWidth, source: alternateSource)
+            
+            if let layer = style.layer(withIdentifier: alternateLayerIdentifier) {
+                style.insertLayer(alternateCasingLayer, below: layer)
             }
         }
     }
@@ -496,6 +510,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         if let lineCasingSource = style.source(withIdentifier: sourceCasingIdentifier) {
             style.removeSource(lineCasingSource)
         }
+        
         removeAlternates()
     }
     
@@ -504,12 +519,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
-            style.removeSource(altSource)
-        }
-        
         if let altLayer = style.layer(withIdentifier: alternateLayerIdentifier) {
             style.removeLayer(altLayer)
+        }
+        
+        if let altCasingLayer = style.layer(withIdentifier: alternateCasingLayerIdentifier) {
+            style.removeLayer(altCasingLayer)
+        }
+        
+        if let altSource = style.source(withIdentifier: alternateSourceIdentifier) {
+            style.removeSource(altSource)
         }
     }
     
@@ -521,9 +540,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        let remainingWaypoints = Array(route.legs.suffix(from: legIndex).map { $0.destination }.dropLast())
+        let waypoints = Array(route.legs.map { $0.destination }.dropLast())
         
-        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: remainingWaypoints) ?? shape(for: remainingWaypoints)
+        let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: waypoints, legIndex: legIndex) ?? shape(for: waypoints, legIndex: legIndex)
         if route.routeOptions.waypoints.count > 2 { //are we on a multipoint route?
             
             routes = [route] //update the model
@@ -593,7 +612,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
+        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate).tinted(maneuverArrowColor) else { return }
+        
         style.setImage(triangleImage, forName: "triangle-tip-navigation")
         
         guard step.maneuverType != .arrive else { return }
@@ -627,7 +647,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrow.lineCap = NSExpression(forConstantValue: "butt")
                 arrow.lineJoin = NSExpression(forConstantValue: "round")
                 arrow.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.70))
-                arrow.lineColor = NSExpression(forConstantValue: UIColor.white)
+                arrow.lineColor = NSExpression(forConstantValue: maneuverArrowColor)
                 
                 style.addSource(arrowSource)
                 style.addLayer(arrow)
@@ -641,7 +661,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 arrowStroke.lineCap = arrow.lineCap
                 arrowStroke.lineJoin = arrow.lineJoin
                 arrowStroke.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.80))
-                arrowStroke.lineColor = NSExpression(forConstantValue: UIColor.defaultArrowStroke)
+                arrowStroke.lineColor = NSExpression(forConstantValue: maneuverArrowStrokeColor)
                 
                 style.addSource(arrowSourceStroke)
                 style.insertLayer(arrowStroke, below: arrow)
@@ -664,7 +684,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 let arrowSymbolLayer = MGLSymbolStyleLayer(identifier: arrowSymbolLayerIdentifier, source: arrowSymbolSource)
                 arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
                 arrowSymbolLayer.iconImageName = NSExpression(forConstantValue: "triangle-tip-navigation")
-                arrowSymbolLayer.iconColor = NSExpression(forConstantValue: UIColor.white)
+                arrowSymbolLayer.iconColor = NSExpression(forConstantValue: maneuverArrowColor)
                 arrowSymbolLayer.iconRotationAlignment = NSExpression(forConstantValue: "map")
                 arrowSymbolLayer.iconRotation = NSExpression(forConstantValue: shaftDirection as NSNumber)
                 arrowSymbolLayer.iconScale = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.12))
@@ -673,7 +693,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: arrowCasingSymbolLayerIdentifier, source: arrowSymbolSource)
                 arrowSymbolLayerCasing.minimumZoomLevel = arrowSymbolLayer.minimumZoomLevel
                 arrowSymbolLayerCasing.iconImageName = arrowSymbolLayer.iconImageName
-                arrowSymbolLayerCasing.iconColor = NSExpression(forConstantValue: UIColor.defaultArrowStroke)
+                arrowSymbolLayerCasing.iconColor = NSExpression(forConstantValue: maneuverArrowStrokeColor)
                 arrowSymbolLayerCasing.iconRotationAlignment = arrowSymbolLayer.iconRotationAlignment
                 arrowSymbolLayerCasing.iconRotation = arrowSymbolLayer.iconRotation
                 arrowSymbolLayerCasing.iconScale = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.14))
@@ -791,7 +811,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return candidates
     }
     
-    func shape(describing route: Route, legIndex: Int?) -> MGLShape? {
+    func shape(for route: Route, legIndex: Int?) -> MGLShape? {
         guard let coordinates = route.coordinates else { return nil }
         
         var linesPerLeg: [[MGLPolylineFeature]] = []
@@ -799,11 +819,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         for (index, leg) in route.legs.enumerated() {
             // If there is no congestion, don't try and add it
             guard let legCongestion = leg.segmentCongestionLevels else {
-                return shape(describingCasing: route, legIndex: legIndex)
+                return shape(forCasingOf: route, legIndex: legIndex)
             }
             
             guard legCongestion.count + 1 <= coordinates.count else {
-                return shape(describingCasing: route, legIndex: legIndex)
+                return shape(forCasingOf: route, legIndex: legIndex)
             }
             
             // The last coord of the preceding step, is shared with the first coord of the next step.
@@ -851,7 +871,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return MGLShapeCollectionFeature(shapes: Array(linesPerLeg.joined()))
     }
     
-    func shape(describingCasing route: Route, legIndex: Int?) -> MGLShape? {
+    func shape(forCasingOf route: Route, legIndex: Int?) -> MGLShape? {
         var linesPerLeg: [MGLPolylineFeature] = []
         
         for (index, leg) in route.legs.enumerated() {
@@ -871,42 +891,41 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return MGLShapeCollectionFeature(shapes: linesPerLeg)
     }
     
-    func shape(for waypoints: [Waypoint]) -> MGLShape? {
+    func shape(for waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
         var features = [MGLPointFeature]()
         
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             let feature = MGLPointFeature()
             feature.coordinate = waypoint.coordinate
-            feature.attributes = [ "name": waypointIndex + 1 ]
+            feature.attributes = [
+                "waypointCompleted": waypointIndex < legIndex,
+                "name": waypointIndex + 1
+            ]
             features.append(feature)
         }
         
         return MGLShapeCollectionFeature(shapes: features)
     }
     
-    func alternateRouteStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        
-        let lineCasing = MGLLineStyleLayer(identifier: identifier, source: source)
-        
-        // Take the default line width and make it wider for the casing
-        lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.85))
-        lineCasing.lineColor = NSExpression(forConstantValue: routeAlternateColor)
-        lineCasing.lineCap = NSExpression(forConstantValue: "round")
-        lineCasing.lineJoin = NSExpression(forConstantValue: "round")
-        lineCasing.lineOpacity = NSExpression(forConstantValue: 0.9)
-        
-        return lineCasing
+    func alternateRouteStyleLayer(identifier: String, lineColor: UIColor, lineWidth: NSExpression, source: MGLSource) -> MGLStyleLayer {
+        let line = MGLLineStyleLayer(identifier: identifier, source: source)
+        line.lineWidth = lineWidth
+        line.lineColor = NSExpression(forConstantValue: lineColor)
+        line.lineCap = NSExpression(forConstantValue: "round")
+        line.lineJoin = NSExpression(forConstantValue: "round")
+        return line
     }
     
     func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         let circles = MGLCircleStyleLayer(identifier: waypointCircleIdentifier, source: source)
+        let opacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
+        
         circles.circleColor = NSExpression(forConstantValue: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0))
-        circles.circleOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", [
-            2: 0.5,
-            7: 1])
+        circles.circleOpacity = opacity
         circles.circleRadius = NSExpression(forConstantValue: 10)
         circles.circleStrokeColor = NSExpression(forConstantValue: UIColor.black)
         circles.circleStrokeWidth = NSExpression(forConstantValue: 1)
+        circles.circleStrokeOpacity = opacity
         
         return circles
     }
@@ -914,7 +933,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func routeWaypointSymbolStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
         let symbol = MGLSymbolStyleLayer(identifier: identifier, source: source)
         
-        symbol.text = NSExpression(forKeyPath: "name")
+        symbol.text = NSExpression(format: "CAST(name, 'NSString')")
+        symbol.textOpacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
         symbol.textFontSize = NSExpression(forConstantValue: 10)
         symbol.textHaloWidth = NSExpression(forConstantValue: 0.25)
         symbol.textHaloColor = NSExpression(forConstantValue: UIColor.black)
@@ -1130,23 +1150,23 @@ public protocol NavigationMapViewDelegate: class {
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route.
-     - note: The returned value represents the route in full detail. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeDescribing:)`, which defines the overall route as a single feature.
+     - note: The returned value represents the route in full detail. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeFor:)`, which defines the overall route as a single feature.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeDescribingRoute:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing route: Route) -> MGLShape?
+    @objc(navigationMapView:shapeForRoute:)
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor route: Route) -> MGLShape?
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route at lower zoomlevels.
-     - note: The returned value represents the simplfied route. It is designed to be used with `navigationMapView(_:shapeDescribing:), and if used without its parent method, can cause unexpected behavior.
+     - note: The returned value represents the simplfied route. It is designed to be used with `navigationMapView(_:shapeFor:), and if used without its parent method, can cause unexpected behavior.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route at lower zoomlevels, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:simplifiedShapeDescribingRoute:)
-    optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    @objc(navigationMapView:simplifiedShapeForRoute:)
+    optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape?
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the waypoint.
@@ -1154,8 +1174,8 @@ public protocol NavigationMapViewDelegate: class {
      - parameter waypoints: The waypoints to be displayed on the map.
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeDescribingWaypoints:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint]) -> MGLShape?
+    @objc(navigationMapView:shapeForWaypoints:legIndex:)
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
      Asks the receiver to return an MGLAnnotationImage that describes the image used an annotation.
