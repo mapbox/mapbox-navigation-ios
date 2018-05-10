@@ -15,6 +15,7 @@
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:roadNameAt:)` method for customizing the contents of the road name label that appears towards the bottom of the map view. ([#1309](https://github.com/mapbox/mapbox-navigation-ios/pull/1309))
 * If the SDK tries but fails to reroute the user, the “Rerouting…” status view no longer stays visible permanently. ([#1357](https://github.com/mapbox/mapbox-navigation-ios/pull/1357))
 * Completed waypoints now remain on the map but are slightly translucent. ([#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364))
+* Fixed an issue preventing `NavigationViewController.navigationMapView(_:simplifiedShapeDescribing:)` (now `NavigationViewController.navigationMapView(_:simplifiedShapeFor:)`) from being called. ([#1413](https://github.com/mapbox/mapbox-navigation-ios/pull/1413))
 
 ### Spoken instructions
 
@@ -28,11 +29,27 @@
 ### Other changes
 
 * `DistanceFormatter`, `ReplayLocationManager`, `SimulatedLocationManager`, `LanesView`, and `ManueverView` are now subclassable. ([#1345](https://github.com/mapbox/mapbox-navigation-ios/pull/1345]))
-* Renamed several  `NavigationMapViewDelegate` methods ([#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364), [#1338](https://github.com/mapbox/mapbox-navigation-ios/pull/1338), [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318), [#1378](https://github.com/mapbox/mapbox-navigation-ios/pull/1378)):
+* Renamed many `NavigationViewController` and `NavigationMapViewDelegate` methods ([#1364](https://github.com/mapbox/mapbox-navigation-ios/pull/1364), [#1338](https://github.com/mapbox/mapbox-navigation-ios/pull/1338), [#1318](https://github.com/mapbox/mapbox-navigation-ios/pull/1318), [#1378](https://github.com/mapbox/mapbox-navigation-ios/pull/1378), [#1413](https://github.com/mapbox/mapbox-navigation-ios/pull/1413)):
     * `NavigationViewControllerDelegate.navigationViewControllerDidCancelNavigation(_:)` to `NavigationViewControllerDelegate.navigationViewControllerDidDismiss(_:byCanceling:)`
+    * `-[MBNavigationViewControllerDelegate navigationViewController:didArriveAt:]` to `-[MBNavigationViewControllerDelegate navigationViewController:didArriveAtWaypoint:]` in Objective-C
+    * `NavigationViewControllerDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` to `NavigationViewControllerDelegate.navigationViewController(_:routeStyleLayerWithIdentifier:source:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:routeCasingStyleLayerWithIdentifier:source:)` to `NavigationViewControllerDelegate.navigationViewController(_:routeCasingStyleLayerWithIdentifier:source:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:shapeFor:)` to `NavigationViewControllerDelegate.navigationViewController(_:shapeFor:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:simplifiedShapeFor:)` to `NavigationViewControllerDelegate.navigationViewController(_:simplifiedShapeFor:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:waypointStyleLayerWithIdentifier:source:)` to `NavigationViewControllerDelegate.navigationViewController(_:waypointStyleLayerWithIdentifier:source:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:waypointSymbolStyleLayerWithIdentifier:source:)` to `NavigationViewControllerDelegate.navigationViewController(_:waypointSymbolStyleLayerWithIdentifier:source:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:shapeFor:legIndex:)` to `NavigationViewControllerDelegate.navigationViewController(_:shapeFor:legIndex:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:didTap:)` to `NavigationViewControllerDelegate.navigationViewController(_:didSelect:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:imageFor:)` to `NavigationViewControllerDelegate.navigationViewController(_:imageFor:)`
+    * `NavigationViewControllerDelegate.navigationMapView(_:viewFor:)` to `NavigationViewControllerDelegate.navigationViewController(_:viewFor:)`
+    * `NavigationViewControllerDelegate.navigationViewController(_:didSend:feedbackType:)` to `NavigationViewControllerDelegate.navigationViewController(_:didSendFeedbackAssigned:feedbackType:)`
+    * `-[MBNavigationViewControllerDelegate navigationViewController:shouldDiscard:]` to `-[MBNavigationViewControllerDelegate navigationViewController:shouldDiscardLocation:]` in Objective-C
+    * `-[MBNavigationViewControllerDelegate navigationViewController:roadNameAt:]` to `-[MBNavigationViewControllerDelegate navigationViewController:roadNameAtLocation:]`
     * `NavigationMapViewDelegate.navigationMapView(_:shapeDescribing:)` to `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)`.
     * `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeDescribing:)` to `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)`.
-    * `-[MBNavigationMapViewDelegate navigationMapView:shapeDescribingWaypoints:legIndex:]` to `-[MBNavigationMapViewDelegate navigationMapView:shapeForWaypoints:legIndex:]` in Objective-C.
+    * `-[MBNavigationMapViewDelegate navigationMapView:shapeDescribingWaypoints:legIndex:]` to `-[MBNavigationMapViewDelegate navigationMapView:shapeForWaypoints:legIndex:]` in Objective-C
+* `RouteController.recordFeedback(type:description:)` now returns a `UUID` instead of a string. Some `RouteController` methods have been renamed to accept `UUID`s as arguments instead of strings. ([#1413](https://github.com/mapbox/mapbox-navigation-ios/pull/1413))
+* Renamed `TunnelIntersectionManagerDelegate.tunnelIntersectionManager(_:willEnableAnimationAt:callback:)` to `TunnelIntersectionManagerDelegate.tunnelIntersectionManager(_:willEnableAnimationAt:completionHandler:)` and `TunnelIntersectionManagerDelegate.tunnelIntersectionManager(_:willDisableAnimationAt:callback:)` to `TunnelIntersectionManagerDelegate.tunnelIntersectionManager(_:willDisableAnimationAt:completionHandler:)`. ([#1413](https://github.com/mapbox/mapbox-navigation-ios/pull/1413))
 
 ## v0.16.2 (April 13, 2018)
 

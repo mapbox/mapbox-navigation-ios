@@ -447,23 +447,23 @@ open class RouteController: NSObject {
 
      @param type A `FeedbackType` used to specify the type of feedback
      @param description A custom string used to describe the problem in detail.
-     @return Returns a UUID string used to identify the feedback event
+     @return Returns a UUID used to identify the feedback event
 
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
 
-     You can then call `updateFeedback(feedbackId:)` with the returned feedback ID string to attach any additional metadata to the feedback.
+     You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
-    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> String {
+    @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID {
         return enqueueFeedbackEvent(type: type, description: description)
     }
 
     /**
-     Update the feedback event with a specific feedback ID. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
+     Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
 
      Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
      */
-    @objc public func updateFeedback(feedbackId: String, type: FeedbackType, source: FeedbackSource, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id.uuidString == feedbackId}) as? FeedbackEvent {
+    @objc public func updateFeedback(uuid: UUID, type: FeedbackType, source: FeedbackSource, description: String?) {
+        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id == uuid}) as? FeedbackEvent {
             lastFeedback.update(type: type, source: source, description: description)
         }
     }
@@ -471,8 +471,8 @@ open class RouteController: NSObject {
     /**
      Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
      */
-    @objc public func cancelFeedback(feedbackId: String) {
-        if let index = outstandingFeedbackEvents.index(where: {$0.id.uuidString == feedbackId}) {
+    @objc public func cancelFeedback(uuid: UUID) {
+        if let index = outstandingFeedbackEvents.index(where: {$0.id == uuid}) {
             outstandingFeedbackEvents.remove(at: index)
         }
     }
@@ -645,9 +645,9 @@ extension RouteController: CLLocationManagerDelegate {
         
         let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
         if tunnelDetected {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, callback: tunnelIntersectionManagerCompletionHandler)
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, completionHandler: tunnelIntersectionManagerCompletionHandler)
         } else {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, callback: tunnelIntersectionManagerCompletionHandler)
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, completionHandler: tunnelIntersectionManagerCompletionHandler)
         }
     }
     
@@ -1053,13 +1053,13 @@ extension RouteController {
 
     // MARK: Enqueue feedback
 
-    private func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> String {
+    private func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID {
         let eventDictionary = eventsManager.navigationFeedbackEvent(routeController: self, type: type, description: description)
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
 
         outstandingFeedbackEvents.append(event)
 
-        return event.id.uuidString
+        return event.id
     }
 
     private func enqueueRerouteEvent() -> String {
@@ -1115,22 +1115,12 @@ extension RouteController {
 
 extension RouteController: TunnelIntersectionManagerDelegate {
     
-    public func tunnelIntersectionManager(_ manager: CLLocationManager,
-                     willEnableAnimationAt location: CLLocation,
-                                           callback: RouteControllerSimulationCompletionBlock?) {
-        tunnelIntersectionManager?.enableTunnelAnimation(for: manager,
-                                             routeController: self,
-                                               routeProgress: routeProgress,
-                                                    callback: callback)
+    public func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.enableTunnelAnimation(for: manager, routeController: self, routeProgress: routeProgress, completionHandler: completionHandler)
     }
     
-    public func tunnelIntersectionManager(_ manager: CLLocationManager,
-                    willDisableAnimationAt location: CLLocation,
-                                           callback: RouteControllerSimulationCompletionBlock?) {
-        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager,
-                                                           at: location,
-                                              routeController: self,
-                                                     callback: callback)
+    public func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?) {
+        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager, at: location, routeController: self, completionHandler: completionHandler)
         
     }
 }
