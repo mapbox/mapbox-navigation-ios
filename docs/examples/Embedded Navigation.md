@@ -7,7 +7,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 
-class EmbeddedExampleViewController: UIViewController, NavigationViewControllerDelegate  {
+class EmbeddedExampleViewController: UIViewController {
  
     @IBOutlet weak var reroutedLabel: UILabel!
     @IBOutlet weak var enableReroutes: UISwitch!
@@ -75,9 +75,9 @@ class EmbeddedExampleViewController: UIViewController, NavigationViewControllerD
             ])
         self.didMove(toParentViewController: self)
     }
+}
 
-    //MARK: - NavigationViewControllerDelegate
-    
+extension EmbeddedExampleViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         return enableReroutes.isOn
     }
