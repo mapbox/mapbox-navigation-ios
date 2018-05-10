@@ -242,5 +242,25 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
+    
+    func testRouteControllerDoesNotHaveRetainCycle() {
+        let locationManager = NavigationLocationManager()
+        var routeController: RouteControllerSpy? = RouteControllerSpy(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManagerSpy)
+        let expectation = XCTestExpectation(description: "Deinit")
+        routeController?.deinitCalled = expectation.fulfill
+        
+        
+        DispatchQueue.global(qos: .background).async {
+            routeController = nil
+        }
+        
+        wait(for: [expectation], timeout: 5)
+    }
+}
 
+class RouteControllerSpy: RouteController {
+    var deinitCalled: (() -> Void)?
+    deinit {
+        deinitCalled?()
+    }
 }
