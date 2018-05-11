@@ -170,12 +170,16 @@ class TunnelIntersectionManagerTests: XCTestCase {
         
         let tunnelExitLocation = location(at: routeController.location!.coordinate, horizontalAccuracy: 20)
 
-        routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation)
-        XCTAssertTrue(routeController.tunnelIntersectionManager?.isAnimationEnabled ?? false, "Animation through tunnel should remain enabled after 1 location update.")
-        routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation)
-        XCTAssertTrue(routeController.tunnelIntersectionManager?.isAnimationEnabled ?? false, "Animation through tunnel should remain enabled after 2 location updates.")
-        routeController.tunnelIntersectionManager?.delegate?.tunnelIntersectionManager?(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation)
-        XCTAssertFalse(routeController.tunnelIntersectionManager?.isAnimationEnabled ?? true, "Animation through tunnel should be disabled after 3 location updates.")
+        XCTAssertEqual(routeController.tunnelIntersectionManager?.delegate as? NSObject, routeController)
+        routeController.tunnelIntersectionManager(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation)
+        XCTAssertNotNil(routeController.tunnelIntersectionManager)
+        if let tunnelIntersectionManager = routeController.tunnelIntersectionManager {
+            XCTAssertTrue(tunnelIntersectionManager.isAnimationEnabled, "Animation through tunnel should remain enabled after 1 location update.")
+            routeController.tunnelIntersectionManager(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation)
+            XCTAssertTrue(tunnelIntersectionManager.isAnimationEnabled, "Animation through tunnel should remain enabled after 2 location updates.")
+            routeController.tunnelIntersectionManager(routeController.locationManager, willDisableAnimationAt: tunnelExitLocation)
+            XCTAssertFalse(tunnelIntersectionManager.isAnimationEnabled, "Animation through tunnel should be disabled after 3 location updates.")
+        }
     }
     
 }
