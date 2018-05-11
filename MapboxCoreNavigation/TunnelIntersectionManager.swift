@@ -89,12 +89,13 @@ open class TunnelIntersectionManager: NSObject {
     @objc public func enableTunnelAnimation(for manager: CLLocationManager, routeController: RouteController, routeProgress: RouteProgress) {
         guard !isAnimationEnabled else { return }
         
-        isAnimationEnabled = true
-        
         self.animatedLocationManager = SimulatedLocationManager(routeProgress: routeProgress)
         self.animatedLocationManager?.delegate = routeController
         self.animatedLocationManager?.routeProgress = routeProgress
+        self.animatedLocationManager?.startUpdatingLocation()
         self.animatedLocationManager?.startUpdatingHeading()
+        
+        isAnimationEnabled = true
     }
     
     @objc public func suspendTunnelAnimation(for manager: CLLocationManager, at location: CLLocation, routeController: RouteController) {
