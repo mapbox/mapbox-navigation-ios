@@ -72,10 +72,10 @@ extension CLLocation {
     //MARK: - Route Snapping
     
     func snapped(to legProgress: RouteLegProgress) -> CLLocation? {
-        let coordinates = coordinates(for: legProgress)
+        let coords = coordinates(for: legProgress)
         
-        guard let closest = Polyline(coordinates).closestCoordinate(to: coordinate) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coordinates) else { return nil }
+        guard let closest = Polyline(coords).closestCoordinate(to: coordinate) else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = closest.coordinate
