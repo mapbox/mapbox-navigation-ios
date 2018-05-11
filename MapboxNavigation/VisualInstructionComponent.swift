@@ -10,10 +10,10 @@ extension VisualInstructionComponent {
         case .exit, .exitCode:
             guard let exitCode = self.text else { return nil}
             return "exit-" + exitCode + "-\(VisualInstructionComponent.scale)-\(hashValue)"
-        case .image, .text:
-            guard let imageURL = imageURL else { return nil }
+        case .icon:
+            guard let imageURL = imageURL else { return "generic-" + (text ?? "nil") }
             return "\(imageURL.absoluteString)-\(VisualInstructionComponent.scale)"
-        case .delimiter:
+        default:
             return nil
         }
     }

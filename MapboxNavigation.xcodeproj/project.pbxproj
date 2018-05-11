@@ -184,6 +184,7 @@
 		8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D54F149206ECF720038736D /* InstructionPresenterTests.swift */; };
 		8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5DFFF0207C04840093765A /* NSAttributedString.swift */; };
 		8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */; };
+		8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9ADEA620A0C61A0067E845 /* GenericRouteShield.swift */; };
 		8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */; };
 		8DB45E90201698EB001EA6A3 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB45E8F201698EB001EA6A3 /* UIStackView.swift */; };
 		8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DB63A391FBBCA2200928389 /* RatingControl.swift */; };
@@ -584,6 +585,7 @@
 		8D54F149206ECF720038736D /* InstructionPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionPresenterTests.swift; sourceTree = "<group>"; };
 		8D5DFFF0207C04840093765A /* NSAttributedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedString.swift; sourceTree = "<group>"; };
 		8D8EA9BB20575CD80077F478 /* FeedbackCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackCollectionViewCell.swift; sourceTree = "<group>"; };
+		8D9ADEA620A0C61A0067E845 /* GenericRouteShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericRouteShield.swift; sourceTree = "<group>"; };
 		8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestCase.swift; sourceTree = "<group>"; };
 		8DB45E8F201698EB001EA6A3 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
 		8DB63A391FBBCA2200928389 /* RatingControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingControl.swift; sourceTree = "<group>"; };
@@ -1124,6 +1126,7 @@
 			children = (
 				351BEC091E5BCC72006FE110 /* DashedLineView.swift */,
 				8D53136A20653FA20044891E /* ExitView.swift */,
+				8D9ADEA620A0C61A0067E845 /* GenericRouteShield.swift */,
 				351BEC031E5BCC6C006FE110 /* LaneView.swift */,
 				359A8AEE1FA7B25800BDB486 /* LanesStyleKit.swift */,
 				351BEBED1E5BCC63006FE110 /* ManeuversStyleKit.swift */,
@@ -1833,6 +1836,7 @@
 				8D391CE21FD71E78006BB91F /* Waypoint.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
+				8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,

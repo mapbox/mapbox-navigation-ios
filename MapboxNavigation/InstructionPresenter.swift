@@ -83,37 +83,44 @@ class InstructionPresenter {
                 strings.append(attributedStrings.reduce(initial, +))
             }
             
+            switch component.type {
             //Throw away exit components. We know this is safe because we know that if there is an exit component,
             //  there is an exit code component, and the latter contains the information we care about.
-            guard component.type != .exit else { continue }
-            
-            //If we have a exit, in the first two components, lets handle that first.
-            if component.type == .exitCode, 0...1 ~= index,
-                let exitString = attributedString(forExitComponent: component, maneuverDirection: instruction.maneuverDirection, dataSource: dataSource) {
-                build(component, [exitString])
-            }
+            case .exit:
+                continue
                 
-            //If we have a shield, lets include those
-            else if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, dataSource: dataSource, onImageDownload: onImageDownload) {
-                build(component, [joinString, shieldString])
-            }
-            
-            else {
-                //if it's a delimiter, skip it if it's between two shields. Otherwise, process the regular text component.
-                if component.type == .delimiter {
-                    
-                    let componentBefore = components.component(before: component)
-                    let componentAfter = components.component(after: component)
-                    
-                    if let shieldKey = componentBefore?.cacheKey(),
-                        imageRepository.cachedImageForKey(shieldKey) != nil {
-                        continue
-                    }
-                    if let shieldKey = componentAfter?.cacheKey(),
-                        imageRepository.cachedImageForKey(shieldKey) != nil {
-                        continue
-                    }
+            //If we have a exit, in the first two components, lets handle that.
+            case .exitCode where 0...1 ~= index:
+                guard let exitString = self.attributedString(forExitComponent: component, maneuverDirection: instruction.maneuverDirection, dataSource: dataSource) else { fallthrough }
+                build(component, [exitString])
+                
+            //If we have an icon component, lets turn it into a shield.
+            case .icon:
+                if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, dataSource: dataSource, onImageDownload: onImageDownload) {
+                    build(component, [joinString, shieldString])
+                } else if let genericShieldString = attributedString(forGenericShield: component, dataSource: dataSource) {
+                    build(component, [joinString, genericShieldString])
+                } else {
+                    fallthrough
                 }
+                
+            //if it's a delimiter, skip it if it's between two shields.
+            case .delimiter:
+                let componentBefore = components.component(before: component)
+                let componentAfter = components.component(after: component)
+                
+                if let shieldKey = componentBefore?.cacheKey(),
+                    imageRepository.cachedImageForKey(shieldKey) != nil {
+                    continue
+                }
+                if let shieldKey = componentAfter?.cacheKey(),
+                    imageRepository.cachedImageForKey(shieldKey) != nil {
+                    continue
+                }
+                fallthrough
+                
+            //Otherwise, process as text component.
+            default:
                 guard let componentString = attributedString(forTextComponent: component, dataSource: dataSource) else { continue }
                 build(component, [joinString, componentString])
             }
@@ -130,8 +137,14 @@ class InstructionPresenter {
         return exitString
     }
     
+    func attributedString(forGenericShield component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
+        guard component.type == .icon, let text = component.text, let key = component.cacheKey() else { return nil }
+        
+        return genericShield(text: text, cacheKey: key, dataSource: dataSource)
+    }
+    
     func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        guard let shieldKey = shield.cacheKey() else { return nil }
+        guard shield.imageURL != nil, let shieldKey = shield.cacheKey() else { return nil }
         
         //If we have the shield already cached, use that.
         if let cachedImage = repository.cachedImageForKey(shieldKey) {
@@ -141,8 +154,8 @@ class InstructionPresenter {
         // Let's download the shield
         shieldImageForComponent(shield, in: repository, height: dataSource.shieldHeight, completion: onImageDownload)
         
-        //and return the shield's code for usage in the meantime until download is complete.
-        return attributedString(forTextComponent: shield, dataSource: dataSource)
+        //Return nothing in the meantime, triggering downstream behavior (generic shield or text)
+        return nil
     }
     
     func attributedString(forTextComponent component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
@@ -179,6 +192,24 @@ class InstructionPresenter {
         let attachment = ShieldAttachment()
         attachment.font = font
         attachment.image = shieldImage
+        return NSAttributedString(attachment: attachment)
+    }
+    
+    private func genericShield(text: String, cacheKey: String, dataSource: DataSource) -> NSAttributedString? {
+        let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
+        
+        let attachment = ExitAttachment()
+        
+        if let image = imageRepository.cachedImageForKey(cacheKey) {
+            attachment.image = image
+        } else {
+            guard let image = takeSnapshot(on: view) else { return nil }
+            imageRepository.storeImage(image, forKey: cacheKey, toDisk: false)
+            attachment.image = image
+        }
+        
+        attachment.font = dataSource.font
+        
         return NSAttributedString(attachment: attachment)
     }
     
