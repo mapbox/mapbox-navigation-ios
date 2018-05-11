@@ -56,19 +56,28 @@ open class StepsViewController: UIViewController {
         
         sections.removeAll()
         
-        let legs = routeProgress.route.legs
+        let currentLeg = routeProgress.currentLeg
         
-        for (index, leg) in legs.enumerated() {
-            guard index >= legIndex else { continue }
-            
-            var section = [RouteStep]()
-            for (index, step) in leg.steps.enumerated() {
-                guard index > stepIndex else { continue }
-                section.append(step)
-            }
-            
-            if !section.isEmpty {
-                sections.append(section)
+        // Add remaining steps for current leg
+        var section = [RouteStep]()
+        for (index, step) in currentLeg.steps.enumerated() {
+            guard index > stepIndex else { continue }
+            // Don't include the last step, it includes nothing
+            guard index < currentLeg.steps.count - 1 else { continue }
+            section.append(step)
+        }
+        
+        if !section.isEmpty {
+            sections.append(section)
+        }
+        
+        // Include all steps on any future legs
+        if !routeProgress.isFinalLeg {
+            routeProgress.route.legs.suffix(from: routeProgress.legIndex + 1).forEach {
+                var steps = $0.steps
+                // Don't include the last step, it includes nothing
+                steps.removeLast()
+                sections.append(steps)
             }
         }
         
@@ -242,35 +251,15 @@ extension StepsViewController: UITableViewDataSource {
         
         let step = sections[indexPath.section][indexPath.row]
        
-        let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0
         let leg = routeProgress.route.legs[indexPath.section]
         let arrivalSecondaryInstruction = leg.destination.name
         
-        if usePreviousLeg {
-            let leg = routeProgress.route.legs[indexPath.section-1]
-            let stepBefore = leg.steps[leg.steps.count-1]
-            if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
-                cell.instructionsView.set(instructions)
-                cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? instructionForArrivalInstruction(text: arrivalSecondaryInstruction) : instructions.secondaryInstruction
-            }
-            cell.instructionsView.distance = stepBefore.distance
-        } else {
-            let leg = routeProgress.route.legs[indexPath.section]
-            if let stepBefore = leg.steps.stepBefore(step) {
-                if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
-                    cell.instructionsView.set(instructions)
-                    cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? instructionForArrivalInstruction(text: arrivalSecondaryInstruction) : instructions.secondaryInstruction
-                }
-                cell.instructionsView.distance = stepBefore.distance
-            } else {
-                if let instructions = step.instructionsDisplayedAlongStep?.last {
-                    cell.instructionsView.set(instructions)
-                    cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? instructionForArrivalInstruction(text: arrivalSecondaryInstruction) : instructions.secondaryInstruction
-                }
-                cell.instructionsView.distance = nil
-            }
+        if let instructions = step.instructionsDisplayedAlongStep?.last {
+            cell.instructionsView.set(instructions)
+            cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? instructionForArrivalInstruction(text: arrivalSecondaryInstruction) : instructions.secondaryInstruction
         }
-
+        cell.instructionsView.distance = step.distance
+        
         cell.instructionsView.stepListIndicatorView.isHidden = true
     }
     
