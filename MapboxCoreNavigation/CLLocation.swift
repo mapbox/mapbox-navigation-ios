@@ -88,7 +88,7 @@ extension CLLocation {
         }
         
         guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: coordinate) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: nearByCoordinates) else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: legProgress.currentStep.coordinates!) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = closest.coordinate
