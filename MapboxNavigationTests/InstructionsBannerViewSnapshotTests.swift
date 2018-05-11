@@ -14,8 +14,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         super.setUp()
         recordMode = false
         
-        let i280Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
-        let us101Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        let i280Instruction = VisualInstructionComponent(type: .icon, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+        let us101Instruction = VisualInstructionComponent(type: .icon, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
         
         imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey()!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey()!, toDisk: false)
@@ -111,7 +111,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
-        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
+        let primary = [VisualInstructionComponent(type: .icon, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .text, text: "Drive", imageURL: nil, abbreviation: "Dr", abbreviationPriority: 0),
                        VisualInstructionComponent(type: .text, text: "Avenue", imageURL: nil, abbreviation: "Ave", abbreviationPriority: 5),
                        VisualInstructionComponent(type: .text, text: "West", imageURL: nil, abbreviation: "W", abbreviationPriority: 4),
@@ -131,7 +131,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
-        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
+        let primary = [VisualInstructionComponent(type: .icon, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .text, text: "10", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
