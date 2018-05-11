@@ -260,7 +260,7 @@ class RouteMapViewController: UIViewController {
         guard let parent = parent else { return }
     
         let controller = feedbackViewController
-        let defaults = defaultFeedbackHandlers() //this is done every time to refresh the feedbackId
+        let defaults = defaultFeedbackHandlers() //this is done every time to refresh the feedback UUID
         controller.sendFeedbackHandler = defaults.send
         controller.dismissFeedbackHandler = defaults.dismiss
         
@@ -434,30 +434,30 @@ class RouteMapViewController: UIViewController {
     }
     
 func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
-        let identifier = routeController.recordFeedback()
-        let send = defaultSendFeedbackHandler(feedbackId: identifier)
-        let dismiss = defaultDismissFeedbackHandler(feedbackId: identifier)
+        let uuid = routeController.recordFeedback()
+        let send = defaultSendFeedbackHandler(uuid: uuid)
+        let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
         
         return (send, dismiss)
     }
     
-    func defaultSendFeedbackHandler(source: FeedbackSource = .user, feedbackId identifier: String) -> FeedbackViewController.SendFeedbackHandler {
+    func defaultSendFeedbackHandler(source: FeedbackSource = .user, uuid: UUID) -> FeedbackViewController.SendFeedbackHandler {
         return { [weak self] (item) in
             guard let strongSelf = self, let parent = strongSelf.parent else { return }
         
-            strongSelf.delegate?.mapViewController(strongSelf, didSend: identifier, feedbackType: item.feedbackType)
-            strongSelf.routeController.updateFeedback(feedbackId: identifier, type: item.feedbackType, source: source, description: nil)
+            strongSelf.delegate?.mapViewController(strongSelf, didSendFeedbackAssigned: uuid, feedbackType: item.feedbackType)
+            strongSelf.routeController.updateFeedback(uuid: uuid, type: item.feedbackType, source: source, description: nil)
             strongSelf.dismiss(animated: true) {
                 DialogViewController().present(on: parent)
             }
         }
     }
     
-    func defaultDismissFeedbackHandler(feedbackId identifier: String) -> (() -> Void) {
+    func defaultDismissFeedbackHandler(uuid: UUID) -> (() -> Void) {
         return { [weak self ] in
             guard let strongSelf = self else { return }
             strongSelf.delegate?.mapViewControllerDidCancelFeedback(strongSelf)
-            strongSelf.routeController.cancelFeedback(feedbackId: identifier)
+            strongSelf.routeController.cancelFeedback(uuid: uuid)
             strongSelf.dismiss(animated: true, completion: nil)
         }
     }
@@ -671,16 +671,16 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
 
-    func navigationMapView(_ mapView: NavigationMapView, shapeDescribing routes: [Route]) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeDescribing: routes)
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: routes)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         delegate?.navigationMapView?(mapView, didSelect: route)
     }
 
-    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, simplifiedShapeDescribing: route)
+    func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, simplifiedShapeFor: route)
     }
     
     func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage? {
@@ -962,7 +962,7 @@ fileprivate extension UIViewAnimationOptions {
     func mapViewControllerDidOpenFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidCancelFeedback(_ mapViewController: RouteMapViewController)
     func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool)
-    func mapViewController(_ mapViewController: RouteMapViewController, didSend feedbackId: String, feedbackType: FeedbackType)
+    func mapViewController(_ mapViewController: RouteMapViewController, didSendFeedbackAssigned uuid: UUID, feedbackType: FeedbackType)
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool
     
     /**

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,6 +19,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="unQ-4I-UPo" customClass="MBSeparatorView">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="JsN-yF-tXj"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4jh-bR-wXL" userLabel="Arrival Labels Container">
                                 <rect key="frame" x="0.0" y="16" width="375" height="60"/>
                                 <subviews>
@@ -147,6 +153,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="unQ-4I-UPo" secondAttribute="trailing" id="1BB-nP-SYc"/>
                             <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="evE-dd-pMr" secondAttribute="trailing" id="3Da-jA-RLx"/>
                             <constraint firstItem="TEs-GQ-xWN" firstAttribute="top" secondItem="evE-dd-pMr" secondAttribute="bottom" constant="65" id="6IH-iM-ln5"/>
                             <constraint firstItem="evE-dd-pMr" firstAttribute="top" secondItem="P8U-kf-mkb" secondAttribute="top" constant="10" id="GFJ-yQ-Cye"/>
@@ -155,7 +162,9 @@
                             <constraint firstItem="ekW-06-trL" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="TeT-ls-Ns4"/>
                             <constraint firstItem="ekW-06-trL" firstAttribute="trailing" secondItem="P8U-kf-mkb" secondAttribute="trailing" id="UUM-FL-FrV"/>
                             <constraint firstItem="P8U-kf-mkb" firstAttribute="trailing" secondItem="TEs-GQ-xWN" secondAttribute="trailing" id="Vg9-Xi-JtV"/>
+                            <constraint firstItem="unQ-4I-UPo" firstAttribute="leading" secondItem="IDF-XF-2Ta" secondAttribute="leading" id="WJ9-OZ-x1y"/>
                             <constraint firstAttribute="bottom" secondItem="ekW-06-trL" secondAttribute="bottom" id="f1v-ju-qen"/>
+                            <constraint firstItem="unQ-4I-UPo" firstAttribute="top" secondItem="P8U-kf-mkb" secondAttribute="top" id="gVo-YH-zU7"/>
                             <constraint firstItem="evE-dd-pMr" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="k0v-jB-TbO"/>
                             <constraint firstItem="TEs-GQ-xWN" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="lxR-dT-lxi"/>
                             <constraint firstItem="4jh-bR-wXL" firstAttribute="leading" secondItem="P8U-kf-mkb" secondAttribute="leading" id="muP-uc-2iF"/>

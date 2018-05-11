@@ -1,10 +1,12 @@
 import Foundation
 import Mapbox
 
+
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
-    class var defaultRouteLayer: UIColor { get { return #colorLiteral(red:0.00, green:0.70, blue:0.99, alpha:1.0) } }
-    class var defaultAlternateLine: UIColor { get { return .gray } }
+    class var defaultRouteLayer: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) } }
+    class var defaultAlternateLine: UIColor { get { return #colorLiteral(red: 0.6, green: 0.6, blue: 0.6, alpha: 1) } }
+    class var defaultAlternateLineCasing: UIColor { get { return #colorLiteral(red: 0.5019607843, green: 0.4980392157, blue: 0.5019607843, alpha: 1) } }
     class var defaultManeuverArrowStroke: UIColor { get { return .defaultRouteLayer } }
     class var defaultManeuverArrow: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
     
@@ -16,16 +18,16 @@ extension UIColor {
     
     class var trafficUnknown: UIColor { get { return defaultRouteLayer } }
     class var trafficLow: UIColor { get { return defaultRouteLayer } }
-    class var trafficModerate: UIColor { get { return #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0) } }
-    class var trafficHeavy: UIColor { get { return #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0) } }
-    class var trafficSevere: UIColor { get { return #colorLiteral(red:0.54, green:0.06, blue:0.22, alpha:1.0) } }
+    class var trafficModerate: UIColor { get { return #colorLiteral(red: 0.9529411765, green: 0.6509803922, blue: 0.3098039216, alpha: 1) } }
+    class var trafficHeavy: UIColor { get { return #colorLiteral(red: 0.9137254902, green: 0.2, blue: 0.2509803922, alpha: 1) } }
+    class var trafficSevere: UIColor { get { return #colorLiteral(red: 0.5411764706, green: 0.05882352941, blue: 0.2196078431, alpha: 1) } }
     class var trafficAlternateLow: UIColor { get { return #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1) } }
 }
 
 extension UIColor {
     // General styling
-    fileprivate class var defaultTint: UIColor { get { return #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) } }
-    fileprivate class var defaultTintStroke: UIColor { get { return #colorLiteral(red:0.18, green:0.49, blue:0.78, alpha:1.0) } }
+    fileprivate class var defaultTint: UIColor { get { return #colorLiteral(red: 0.1843137255, green: 0.4784313725, blue: 0.7764705882, alpha: 1) } }
+    fileprivate class var defaultTintStroke: UIColor { get { return #colorLiteral(red: 0.1843137255, green: 0.4784313725, blue: 0.7764705882, alpha: 1) } }
     fileprivate class var defaultPrimaryText: UIColor { get { return #colorLiteral(red: 45.0/255.0, green: 45.0/255.0, blue: 45.0/255.0, alpha: 1) } }
     fileprivate class var defaultSecondaryText: UIColor { get { return #colorLiteral(red: 0.4509803922, green: 0.4509803922, blue: 0.4509803922, alpha: 1) } }
 }
@@ -44,7 +46,7 @@ open class DayStyle: Style {
     
     public required init() {
         super.init()
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-day-v2")!
+        mapStyleURL = MGLStyle.navigationGuidanceDayStyleURL
         styleType = .day
         statusBarStyle = .default
     }
@@ -128,7 +130,7 @@ open class DayStyle: Style {
         SecondaryLabel.appearance().normalFont = UIFont.systemFont(ofSize: 26, weight: .medium).adjustedFont
         SecondaryLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
         SecondaryLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
-        SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
+        SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
         StatusView.appearance().backgroundColor = UIColor.black.withAlphaComponent(2.0/3.0)
         StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         StepListIndicatorView.appearance().gradientColors = [#colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1), #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1), #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)]
@@ -159,7 +161,7 @@ open class NightStyle: DayStyle {
     
     public required init() {
         super.init()
-        mapStyleURL = URL(string: "mapbox://styles/mapbox/navigation-guidance-night-v2")!
+        mapStyleURL = MGLStyle.navigationGuidanceNightStyleURL
         styleType = .night
         statusBarStyle = .lightContent
     }
@@ -216,6 +218,7 @@ open class NightStyle: DayStyle {
         ResumeButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         SecondaryLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
         SecondaryLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
+        SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)
         StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)

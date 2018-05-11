@@ -78,6 +78,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
+    @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     
@@ -423,8 +424,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         guard let mainRoute = routes.first else { return }
         self.routes = routes
         
-        let polylines = navigationMapDelegate?.navigationMapView?(self, shapeDescribing: routes) ?? shape(describing: routes, legIndex: legIndex)
-        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeDescribing: mainRoute) ?? shape(describingCasing: mainRoute, legIndex: legIndex)
+        let polylines = navigationMapDelegate?.navigationMapView?(self, shapeFor: routes) ?? shape(for: routes, legIndex: legIndex)
+        let mainPolylineSimplified = navigationMapDelegate?.navigationMapView?(self, simplifiedShapeFor: mainRoute) ?? shape(forCasingOf: mainRoute, legIndex: legIndex)
         
         if let source = style.source(withIdentifier: sourceIdentifier) as? MGLShapeSource,
             let sourceSimplified = style.source(withIdentifier: sourceCasingIdentifier) as? MGLShapeSource {
@@ -753,8 +754,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         return candidates
     }
-    
-    func shape(describing routes: [Route], legIndex: Int?) -> MGLShape? {
+
+    func shape(for routes: [Route], legIndex: Int?) -> MGLShape? {
         guard let firstRoute = routes.first else { return nil }
         guard let congestedRoute = addCongestion(to: firstRoute, legIndex: legIndex) else { return nil }
         
@@ -829,7 +830,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return Array(linesPerLeg.joined())
     }
     
-    func shape(describingCasing route: Route, legIndex: Int?) -> MGLShape? {
+    func shape(forCasingOf route: Route, legIndex: Int?) -> MGLShape? {
         var linesPerLeg: [MGLPolylineFeature] = []
         
         for (index, leg) in route.legs.enumerated() {
@@ -1105,24 +1106,24 @@ public protocol NavigationMapViewDelegate: class {
     optional func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint)
     
     /**
-     Asks the receiver to return an MGLShape that describes the geometry of the routes.
-     - note: The returned value represents the route in full detail and also alternate routes. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeDescribing:)`, which defines the overall route as a single feature.
+     Asks the receiver to return an MGLShape that describes the geometry of the route.
+     - note: The returned value represents the route in full detail. For example, individual `MGLPolyline` objects in an `MGLShapeCollectionFeature` object can represent traffic congestion segments. For improved performance, you should also implement `navigationMapView(_:simplifiedShapeFor:)`, which defines the overall route as a single feature.
      - parameter mapView: The NavigationMapView.
      - parameter routes: The routes that the sender is asking about. The first route will always be rendered as the main route, while all subsequent routes will be rendered as alternate routes.
      - returns: Optionally, a `MGLShape` that defines the shape of the route, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeDescribing:)
-    optional func navigationMapView(_ mapView: NavigationMapView, shapeDescribing routes: [Route]) -> MGLShape?
+    @objc(navigationMapView:shapeForRoutes:)
+    optional func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape?
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the route at lower zoomlevels.
-     - note: The returned value represents the simplfied route. It is designed to be used with `navigationMapView(_:shapeDescribing:), and if used without its parent method, can cause unexpected behavior.
+     - note: The returned value represents the simplfied route. It is designed to be used with `navigationMapView(_:shapeFor:), and if used without its parent method, can cause unexpected behavior.
      - parameter mapView: The NavigationMapView.
      - parameter route: The route that the sender is asking about.
      - returns: Optionally, a `MGLShape` that defines the shape of the route at lower zoomlevels, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:simplifiedShapeDescribing:)
-    optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeDescribing route: Route) -> MGLShape?
+    @objc(navigationMapView:simplifiedShapeForRoute:)
+    optional func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape?
     
     /**
      Asks the receiver to return an MGLShape that describes the geometry of the waypoint.
@@ -1130,7 +1131,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter waypoints: The waypoints to be displayed on the map.
      - returns: Optionally, a `MGLShape` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
-    @objc(navigationMapView:shapeFor:legIndex:)
+    @objc(navigationMapView:shapeForWaypoints:legIndex:)
     optional func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape?
     
     /**
@@ -1139,7 +1140,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter annotation: The annotation to be styled.
      - returns: Optionally, a `MGLAnnotationImage` that defines the image used for the annotation.
      */
-    @objc(navigationMapView:imageFor:)
+    @objc(navigationMapView:imageForAnnotation:)
     optional func navigationMapView(_ mapView: MGLMapView, imageFor annotation: MGLAnnotation) -> MGLAnnotationImage?
     
     /**
@@ -1148,7 +1149,7 @@ public protocol NavigationMapViewDelegate: class {
      - parameter annotation: The annotation to be styled.
      - returns: Optionally, a `MGLAnnotationView` that defines the view used for the annotation.
      */
-    @objc(navigationMapView:viewFor:)
+    @objc(navigationMapView:viewForAnnotation:)
     optional func navigationMapView(_ mapView: MGLMapView, viewFor annotation: MGLAnnotation) -> MGLAnnotationView?
     
     /**

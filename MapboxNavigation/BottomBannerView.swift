@@ -15,7 +15,10 @@ open class BottomBannerView: UIView {
     weak var distanceRemainingLabel: DistanceRemainingLabel!
     weak var arrivalTimeLabel: ArrivalTimeLabel!
     weak var cancelButton: CancelButton!
-    weak var dividerView: SeparatorView!
+    // Vertical divider between cancel button and the labels
+    weak var verticalDividerView: SeparatorView!
+    // Horizontal divider between the map view and the bottom banner
+    weak var horizontalDividerView: SeparatorView!
     weak var routeController: RouteController!
     weak var delegate: BottomBannerViewDelegate?
     
