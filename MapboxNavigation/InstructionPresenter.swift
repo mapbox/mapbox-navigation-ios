@@ -82,6 +82,12 @@ class InstructionPresenter {
                 processedComponents.append(component)
                 strings.append(attributedStrings.reduce(initial, +))
             }
+            let isShield: (_: VisualInstructionComponent?) -> Bool = { (component) in
+                guard let key = component?.cacheKey() else { return false }
+                return imageRepository.cachedImageForKey(key) != nil
+            }
+            let componentBefore = components.component(before: component)
+            let componentAfter  = components.component(after: component)
             
             switch component.type {
             //Throw away exit components. We know this is safe because we know that if there is an exit component,
@@ -94,6 +100,10 @@ class InstructionPresenter {
                 guard let exitString = self.attributedString(forExitComponent: component, maneuverDirection: instruction.maneuverDirection, dataSource: dataSource) else { fallthrough }
                 build(component, [exitString])
                 
+            //if it's a delimiter, skip it if it's between two shields.
+            case .delimiter where isShield(componentBefore) || isShield(componentAfter):
+                continue
+                
             //If we have an icon component, lets turn it into a shield.
             case .icon:
                 if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, dataSource: dataSource, onImageDownload: onImageDownload) {
@@ -103,21 +113,6 @@ class InstructionPresenter {
                 } else {
                     fallthrough
                 }
-                
-            //if it's a delimiter, skip it if it's between two shields.
-            case .delimiter:
-                let componentBefore = components.component(before: component)
-                let componentAfter = components.component(after: component)
-                
-                if let shieldKey = componentBefore?.cacheKey(),
-                    imageRepository.cachedImageForKey(shieldKey) != nil {
-                    continue
-                }
-                if let shieldKey = componentAfter?.cacheKey(),
-                    imageRepository.cachedImageForKey(shieldKey) != nil {
-                    continue
-                }
-                fallthrough
                 
             //Otherwise, process as text component.
             default:
