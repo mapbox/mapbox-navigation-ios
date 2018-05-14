@@ -286,8 +286,8 @@ open class RouteController: NSObject {
     private func setupTunnelIntersectionManager() {
         tunnelIntersectionManager = TunnelIntersectionManager()
         tunnelIntersectionManager?.delegate = self
-        tunnelIntersectionManagerCompletionHandler = { enabled, _ in
-            self.tunnelIntersectionManager?.isAnimationEnabled = enabled
+        tunnelIntersectionManagerCompletionHandler = { [weak self] enabled, _ in
+            self?.tunnelIntersectionManager?.isAnimationEnabled = enabled
         }
     }
 
@@ -368,6 +368,7 @@ open class RouteController: NSObject {
      Will continue monitoring until `suspendLocationUpdates()` is called.
      */
     @objc public func resume() {
+        locationManager.delegate = self
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
     }
@@ -378,6 +379,7 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+        locationManager.delegate = nil
     }
 
     /**
@@ -659,9 +661,9 @@ extension RouteController: CLLocationManagerDelegate {
 
     func updateRouteLegProgress(for location: CLLocation) {
         let currentDestination = routeProgress.currentLeg.destination
-        let legDurationRemaining = routeProgress.currentLegProgress.durationRemaining
+        guard let remainingVoiceInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
 
-        if legDurationRemaining < RouteControllerDurationRemainingWaypointArrival, currentDestination != previousArrivalWaypoint {
+        if routeProgress.currentLegProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count == 0 && currentDestination != previousArrivalWaypoint {
             previousArrivalWaypoint = currentDestination
 
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
