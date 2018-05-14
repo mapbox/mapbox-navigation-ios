@@ -661,9 +661,9 @@ extension RouteController: CLLocationManagerDelegate {
 
     func updateRouteLegProgress(for location: CLLocation) {
         let currentDestination = routeProgress.currentLeg.destination
-        let legDurationRemaining = routeProgress.currentLegProgress.durationRemaining
+        guard let remainingVoiceInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
 
-        if legDurationRemaining < RouteControllerDurationRemainingWaypointArrival, currentDestination != previousArrivalWaypoint {
+        if routeProgress.currentLegProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count == 0 && currentDestination != previousArrivalWaypoint {
             previousArrivalWaypoint = currentDestination
 
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
