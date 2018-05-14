@@ -75,7 +75,7 @@ open class StepsViewController: UIViewController {
             routeProgress.route.legs.suffix(from: routeProgress.legIndex + 1).forEach {
                 var steps = $0.steps
                 // Don't include the last step, it includes nothing
-                steps.removeLast()
+                _ = steps.popLast()
                 sections.append(steps)
             }
         }
