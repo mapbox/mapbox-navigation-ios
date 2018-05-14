@@ -63,8 +63,10 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
     
     var draggableHeight: CGFloat {
         // V:|-0-recordingAudioLabel.height-collectionView.height-progressBar.height-0-|
-        let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(collectionView.numberOfRows)
-        let collectionViewHeight = flowLayout.itemSize.height * CGFloat(collectionView.numberOfRows) + padding + view.safeArea.bottom
+        let numberOfRows = collectionView.numberOfRows(using: self)
+        let padding = (flowLayout.sectionInset.top + flowLayout.sectionInset.bottom) * CGFloat(numberOfRows)
+        let indexPath = IndexPath(row: 0, section: 0)
+        let collectionViewHeight = collectionView(collectionView, layout: collectionView.collectionViewLayout, sizeForItemAt: indexPath).height * CGFloat(numberOfRows) + padding + view.safeArea.bottom
         let fullHeight = reportIssueLabel.bounds.height+collectionViewHeight+progressBar.bounds.height
         return fullHeight
     }
@@ -74,14 +76,11 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         setupViews()
         setupConstraints()
         view.layoutIfNeeded()
-        //FIXME: This is a workaround to ensure that the FVC looks good on non 375pt width screens, as the dynamic sizing logic isn't currently working properly.
-        flowLayout.itemSize = collectionView(collectionView, layout: flowLayout, sizeForItemAt: IndexPath(item: 0, section: 0))
         transitioningDelegate = self
         view.backgroundColor = .white
         progressBar.barColor = #colorLiteral(red: 0.9347146749, green: 0.5047877431, blue: 0.1419634521, alpha: 1)
         enableDraggableDismiss()
     }
-
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -96,6 +95,15 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         }
         
         enableAutoDismiss()
+    }
+    
+    override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.willTransition(to: newCollection, with: coordinator)
+        
+        // Dismiss the feedback view when switching between landscape and portrait mode.
+        if traitCollection.verticalSizeClass != newCollection.verticalSizeClass {
+            dismissFeedback()
+        }
     }
     
     func enableAutoDismiss() {
@@ -146,16 +154,16 @@ class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecog
         let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: progressBar.topAnchor)
-        let barHeight = progressBar.heightAnchor.constraint(equalToConstant: 6.0)
-        let barLeading = progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        let barTrailing = progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        let barBottom = progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
         
         let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
-                           collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing,
-                           barHeight, barLeading, barTrailing, barBottom]
-      
+                           collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing]
+        
         NSLayoutConstraint.activate(constraints)
+        
+        progressBar.heightAnchor.constraint(equalToConstant: 6.0).isActive = true
+        progressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        progressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        progressBar.bottomAnchor.constraint(equalTo: view.safeBottomAnchor).isActive = true
     }
 }
 
@@ -193,8 +201,21 @@ extension FeedbackViewController: UICollectionViewDelegate {
 }
 
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = floor(collectionView.bounds.width / 3)
-        return CGSize(width: width, height: width + FeedbackViewController.verticalCellPadding)
+        let availableWidth = collectionView.bounds.width
+        // 3 columns and 2 rows in portrait mode.
+        // 6 columns and 1 row in landscape mode.
+        let items = sections[indexPath.section]
+        let width = traitCollection.verticalSizeClass == .compact
+            ? floor(availableWidth / CGFloat(items.count))
+            : floor(availableWidth / CGFloat(items.count / 2))
+        let item = sections[indexPath.section][indexPath.row]
+        let titleHeight = item.title.height(constrainedTo: width, font: FeedbackCollectionViewCell.Constants.titleFont)
+        let cellHeight: CGFloat = FeedbackCollectionViewCell.Constants.imageSize.height
+                                  + FeedbackCollectionViewCell.Constants.padding
+                                  + titleHeight
+                                  + FeedbackViewController.verticalCellPadding
+        return CGSize(width: width, height: cellHeight )
     }
 }
