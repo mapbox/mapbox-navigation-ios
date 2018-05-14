@@ -272,6 +272,10 @@ extension StepsViewController: UITableViewDataSource {
         }
 
         cell.instructionsView.stepListIndicatorView.isHidden = true
+        
+        // Hide cell separator if it’s the last row in a section
+        let isLastRowInSection = indexPath.row == sections[indexPath.section].count - 1
+        cell.separatorView.isHidden = isLastRowInSection
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -336,7 +340,7 @@ open class StepTableViewCell: UITableViewCell {
         addSubview(separatorView)
         self.separatorView = separatorView
         
-        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         separatorView.leadingAnchor.constraint(equalTo: instructionsView.primaryLabel.leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: instructionsView.bottomAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
