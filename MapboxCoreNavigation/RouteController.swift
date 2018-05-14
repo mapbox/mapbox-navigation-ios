@@ -286,8 +286,8 @@ open class RouteController: NSObject {
     private func setupTunnelIntersectionManager() {
         tunnelIntersectionManager = TunnelIntersectionManager()
         tunnelIntersectionManager?.delegate = self
-        tunnelIntersectionManagerCompletionHandler = { enabled, _ in
-            self.tunnelIntersectionManager?.isAnimationEnabled = enabled
+        tunnelIntersectionManagerCompletionHandler = { [weak self] enabled, _ in
+            self?.tunnelIntersectionManager?.isAnimationEnabled = enabled
         }
     }
 
@@ -368,6 +368,7 @@ open class RouteController: NSObject {
      Will continue monitoring until `suspendLocationUpdates()` is called.
      */
     @objc public func resume() {
+        locationManager.delegate = self
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
     }
@@ -378,6 +379,7 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+        locationManager.delegate = nil
     }
 
     /**
