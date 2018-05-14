@@ -48,8 +48,7 @@ open class StepsViewController: UIViewController {
     func rebuildDataSourceIfNecessary() -> Bool {
         
         let legIndex = routeProgress.legIndex
-        // Don't include the current step in the list
-        let stepIndex = routeProgress.currentLegProgress.stepIndex + 1
+        let stepIndex = routeProgress.currentLegProgress.stepIndex
         let didProcessCurrentStep = previousLegIndex == legIndex && previousStepIndex == stepIndex
         
         guard !didProcessCurrentStep else { return false }
