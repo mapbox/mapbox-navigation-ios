@@ -48,27 +48,35 @@ open class StepsViewController: UIViewController {
     func rebuildDataSourceIfNecessary() -> Bool {
         
         let legIndex = routeProgress.legIndex
-        // Don't include the current step in the list
-        let stepIndex = routeProgress.currentLegProgress.stepIndex + 1
+        let stepIndex = routeProgress.currentLegProgress.stepIndex
         let didProcessCurrentStep = previousLegIndex == legIndex && previousStepIndex == stepIndex
         
         guard !didProcessCurrentStep else { return false }
         
         sections.removeAll()
         
-        let legs = routeProgress.route.legs
+        let currentLeg = routeProgress.currentLeg
         
-        for (index, leg) in legs.enumerated() {
-            guard index >= legIndex else { continue }
-            
-            var section = [RouteStep]()
-            for (index, step) in leg.steps.enumerated() {
-                guard index > stepIndex else { continue }
-                section.append(step)
-            }
-            
-            if !section.isEmpty {
-                sections.append(section)
+        // Add remaining steps for current leg
+        var section = [RouteStep]()
+        for (index, step) in currentLeg.steps.enumerated() {
+            guard index > stepIndex else { continue }
+            // Don't include the last step, it includes nothing
+            guard index < currentLeg.steps.count - 1 else { continue }
+            section.append(step)
+        }
+        
+        if !section.isEmpty {
+            sections.append(section)
+        }
+        
+        // Include all steps on any future legs
+        if !routeProgress.isFinalLeg {
+            routeProgress.route.legs.suffix(from: routeProgress.legIndex + 1).forEach {
+                var steps = $0.steps
+                // Don't include the last step, it includes nothing
+                _ = steps.popLast()
+                sections.append(steps)
             }
         }
         
@@ -235,35 +243,18 @@ extension StepsViewController: UITableViewDataSource {
         cell.instructionsView.secondaryLabel.viewForAvailableBoundsCalculation = cell
         
         let step = sections[indexPath.section][indexPath.row]
-       
-        let usePreviousLeg = indexPath.section != 0 && indexPath.row == 0 
         
-        if usePreviousLeg {
-            let leg = routeProgress.route.legs[indexPath.section-1]
-            let stepBefore = leg.steps[leg.steps.count-1]
-            if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
-                cell.instructionsView.set(instructions)
-                cell.instructionsView.secondaryLabel.instruction = instructions.secondaryInstruction
-            }
-            cell.instructionsView.distance = stepBefore.distance
-        } else {
-            let leg = routeProgress.route.legs[indexPath.section]
-            if let stepBefore = leg.steps.stepBefore(step) {
-                if let instructions = stepBefore.instructionsDisplayedAlongStep?.last {
-                    cell.instructionsView.set(instructions)
-                    cell.instructionsView.secondaryLabel.instruction = instructions.secondaryInstruction
-                }
-                cell.instructionsView.distance = stepBefore.distance
-            } else {
-                if let instructions = step.instructionsDisplayedAlongStep?.last {
-                    cell.instructionsView.set(instructions)
-                    cell.instructionsView.secondaryLabel.instruction = instructions.secondaryInstruction
-                }
-                cell.instructionsView.distance = nil
-            }
+        if let instructions = step.instructionsDisplayedAlongStep?.last {
+            cell.instructionsView.set(instructions)
+            cell.instructionsView.secondaryLabel.instruction = instructions.secondaryInstruction
         }
-
+        cell.instructionsView.distance = step.distance
+        
         cell.instructionsView.stepListIndicatorView.isHidden = true
+        
+        // Hide cell separator if it’s the last row in a section
+        let isLastRowInSection = indexPath.row == sections[indexPath.section].count - 1
+        cell.separatorView.isHidden = isLastRowInSection
     }
     
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -328,7 +319,7 @@ open class StepTableViewCell: UITableViewCell {
         addSubview(separatorView)
         self.separatorView = separatorView
         
-        separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         separatorView.leadingAnchor.constraint(equalTo: instructionsView.primaryLabel.leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: instructionsView.bottomAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true

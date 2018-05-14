@@ -9,7 +9,7 @@ import MapboxDirections
 import Mapbox
 
 
-class AdvancedViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, VoiceControllerDelegate, NavigationMapViewDelegate, NavigationViewControllerDelegate {
+class AdvancedViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, NavigationMapViewDelegate, NavigationViewControllerDelegate {
     
     var mapView: NavigationMapView?
     var currentRoute: Route? {

@@ -16,7 +16,7 @@ enum ExampleMode {
     case multipleWaypoints
 }
 
-class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate, VoiceControllerDelegate {
+class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
 
     // MARK: - Class Constants
     static let mapInsets = UIEdgeInsets(top: 25, left: 25, bottom: 25, right: 25)
@@ -354,16 +354,16 @@ extension ViewController: NavigationMapViewDelegate {
         guard let routeOptions = currentRoute?.routeOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
 
-        let destroyWaypoint: (UIAlertAction) -> Void = {_ in self.requestRoute(with:modifiedOptions, success: self.defaultSuccess, failure: self.defaultFailure) }
-
-        presentWaypointRemovalActionSheet(callback: destroyWaypoint)
+        presentWaypointRemovalActionSheet { _ in
+            self.requestRoute(with:modifiedOptions, success: self.defaultSuccess, failure: self.defaultFailure)
+        }
     }
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
         currentRoute = route
     }
 
-    private func presentWaypointRemovalActionSheet(callback approve: @escaping ((UIAlertAction) -> Void)) {
+    private func presentWaypointRemovalActionSheet(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
         let title = NSLocalizedString("Remove Waypoint?", comment: "Waypoint Removal Action Sheet Title")
         let message = NSLocalizedString("Would you like to remove this waypoint?", comment: "Waypoint Removal Action Sheet Message")
         let removeTitle = NSLocalizedString("Remove Waypoint", comment: "Waypoint Removal Action Item Title")
@@ -376,9 +376,11 @@ extension ViewController: NavigationMapViewDelegate {
 
         self.present(actionSheet, animated: true, completion: nil)
     }
+}
 
-    // To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
-    //
+// MARK: VoiceControllerDelegate methods
+// To use these delegate methods, set the `VoiceControllerDelegate` on your `VoiceController`.
+extension ViewController: VoiceControllerDelegate {
     // Called when there is an error with speaking a voice instruction.
     func voiceController(_ voiceController: RouteVoiceController, spokenInstructionsDidFailWith error: Error) {
         print(error.localizedDescription)
