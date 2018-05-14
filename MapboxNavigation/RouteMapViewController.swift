@@ -915,7 +915,7 @@ extension RouteMapViewController {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     @objc fileprivate func keyboardWillShow(notification: NSNotification) {
-        guard let _ = navigationView.endOfRouteView else { return }
+        guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
         let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
         let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
@@ -933,7 +933,7 @@ extension RouteMapViewController {
     }
     
     @objc fileprivate func keyboardWillHide(notification: NSNotification) {
-        guard let _ = navigationView.endOfRouteView else { return }
+        guard navigationView.endOfRouteView != nil else { return }
         guard let userInfo = notification.userInfo else { return }
         let curve = UIViewAnimationCurve(rawValue: userInfo[UIKeyboardAnimationCurveUserInfoKey] as! Int)
         let options = (duration: userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double,
