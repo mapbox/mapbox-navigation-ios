@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 @testable import MapboxNavigation
-@testable import MapboxDirections
+import MapboxDirections
 
 class InstructionPresenterTests: XCTestCase {
     

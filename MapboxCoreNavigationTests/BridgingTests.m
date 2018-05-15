@@ -21,7 +21,7 @@
     MBWaypoint *wp2 = [[MBWaypoint alloc] initWithCoordinate:CLLocationCoordinate2DMake(37.7727, -122.433378) coordinateAccuracy:0 name:@"wp2"];
     NSArray<MBWaypoint *> *waypoints = @[wp1, wp2];
     MBNavigationRouteOptions *options = [[MBNavigationRouteOptions alloc] initWithWaypoints:waypoints profileIdentifier:MBDirectionsProfileIdentifierAutomobileAvoidingTraffic];
-    MBRoute *route = [[MBRoute alloc] initWithJson:routeDict waypoints:waypoints routeOptions:options];
+    MBRoute *route = [[MBRoute alloc] initWithJSON:routeDict waypoints:waypoints routeOptions:options];
     route.accessToken = @"garbage";
     XCTAssertNotNil(route);
     MBEventsManagerSpy *eventsManager = [[MBEventsManagerSpy alloc] init];

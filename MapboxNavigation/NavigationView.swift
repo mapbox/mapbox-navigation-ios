@@ -104,7 +104,6 @@ open class NavigationView: UIView {
     lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
     
-    lazy var separatorView: SeparatorView = .forAutoLayout()
     lazy var lanesView: LanesView = .forAutoLayout(hidden: true)
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
     lazy var statusView: StatusView = {
@@ -211,7 +210,6 @@ open class NavigationView: UIView {
             mapView,
             informationStackView,
             floatingStackView,
-            separatorView,
             resumeButton,
             wayNameView,
             rerouteReportButton,
