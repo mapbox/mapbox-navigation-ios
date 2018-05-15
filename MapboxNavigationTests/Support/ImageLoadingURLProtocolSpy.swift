@@ -9,8 +9,9 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     private static var responseData: [URL: Data] = [:]
     private static var activeRequests: [URL: URLRequest] = [:]
     private static var pastRequests: [URL: URLRequest] = [:]
+    private static let imageLoadingSemaphore = DispatchSemaphore(value: 1)
 
-    private var stopped: Bool = false
+    private var loadingStopped: Bool = false
 
     override class func canInit(with request: URLRequest) -> Bool {
         return responseData.keys.contains(request.url!)
@@ -37,7 +38,6 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
             return
         }
 
-        // retrieve fake response (image) for request; ensure it is an image
         guard let data = ImageLoadingURLProtocolSpy.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
             XCTFail("No valid image data found for url: \(url)")
             return
@@ -49,8 +49,8 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
                 ImageLoadingURLProtocolSpy.activeRequests[url] = nil
             }
 
-            XCTAssertFalse(self.stopped, "URL Loading was previously stopped")
-            
+            XCTAssertFalse(self.loadingStopped, "URL Loading was previously stopped")
+
             // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
             XCTAssertFalse(ImageLoadingURLProtocolSpy.hasActiveRequestForURL(url), "There should only be one request in flight at a time per resource")
             ImageLoadingURLProtocolSpy.activeRequests[url] = request
@@ -58,8 +58,13 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
             // send an NSHTTPURLResponse to the client
             let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
             client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
+
+            ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
+
             client.urlProtocol(self, didLoad: UIImagePNGRepresentation(image)!)
             client.urlProtocolDidFinishLoading(self)
+
+            ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
         }
 
         let defaultQueue = DispatchQueue.global(qos: .default)
@@ -67,7 +72,7 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     }
 
     override func stopLoading() {
-        stopped = true
+        loadingStopped = true
     }
 
     /**
@@ -99,4 +104,19 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     class func pastRequestForURL(_ url: URL) -> URLRequest? {
         return pastRequests[url]
     }
+
+    /**
+     * Pauses image loading once a request receives a response. Useful for testing re-entrant resource requests.
+     */
+    class func delayImageLoading() {
+        ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
+    }
+
+    /**
+     * Resumes image loading which was previously delayed due to `delayImageLoading()` having been called.
+     */
+    class func resumeImageLoading() {
+        ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
+    }
+
 }

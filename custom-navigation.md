@@ -31,7 +31,7 @@ Alternatively, to install Mapbox Core Navigation using [Carthage](https://github
 
 1. Specify the following dependency in your Cartfile:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" ~> v0.17
+   github "mapbox/mapbox-navigation-ios" ~> 0.17
    ```
 
 1. Run `carthage update --platform iOS` to build just the iOS dependencies.

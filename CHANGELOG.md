@@ -1,6 +1,12 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v0.17.0 (May 10, 2018)
+## master
+
+* `TunnelIntersectionManagerDelegate` methods no longer take a completion handler argument. ([#1414](https://github.com/mapbox/mapbox-navigation-ios/pull/1414))
+* Added the ability to render more than 1 alternate route. [#1372](https://github.com/mapbox/mapbox-navigation-ios/pull/1372/)
+* `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` Now expects an array of `Route`. The first route will be rendered as the main route, all subsequent routes will be rendered as alternate routes.
+
+## v0.17.0 (May 14, 2018)
 
 ### Packaging
 

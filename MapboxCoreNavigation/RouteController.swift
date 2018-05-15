@@ -250,8 +250,6 @@ open class RouteController: NSObject {
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    var tunnelIntersectionManagerCompletionHandler: RouteControllerSimulationCompletionBlock?
-    
     /**
      Intializes a new `RouteController`.
 
@@ -286,9 +284,6 @@ open class RouteController: NSObject {
     private func setupTunnelIntersectionManager() {
         tunnelIntersectionManager = TunnelIntersectionManager()
         tunnelIntersectionManager?.delegate = self
-        tunnelIntersectionManagerCompletionHandler = { enabled, _ in
-            self.tunnelIntersectionManager?.isAnimationEnabled = enabled
-        }
     }
 
     deinit {
@@ -368,6 +363,7 @@ open class RouteController: NSObject {
      Will continue monitoring until `suspendLocationUpdates()` is called.
      */
     @objc public func resume() {
+        locationManager.delegate = self
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
     }
@@ -378,6 +374,7 @@ open class RouteController: NSObject {
     @objc public func suspendLocationUpdates() {
         locationManager.stopUpdatingLocation()
         locationManager.stopUpdatingHeading()
+        locationManager.delegate = nil
     }
 
     /**
@@ -645,9 +642,9 @@ extension RouteController: CLLocationManagerDelegate {
         
         let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
         if tunnelDetected {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location, completionHandler: tunnelIntersectionManagerCompletionHandler)
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location)
         } else {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location, completionHandler: tunnelIntersectionManagerCompletionHandler)
+            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location)
         }
     }
     
@@ -659,9 +656,9 @@ extension RouteController: CLLocationManagerDelegate {
 
     func updateRouteLegProgress(for location: CLLocation) {
         let currentDestination = routeProgress.currentLeg.destination
-        let legDurationRemaining = routeProgress.currentLegProgress.durationRemaining
+        guard let remainingVoiceInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingSpokenInstructions else { return }
 
-        if legDurationRemaining < RouteControllerDurationRemainingWaypointArrival, currentDestination != previousArrivalWaypoint {
+        if routeProgress.currentLegProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count == 0 && currentDestination != previousArrivalWaypoint {
             previousArrivalWaypoint = currentDestination
 
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint = true
@@ -1114,13 +1111,11 @@ extension RouteController {
 }
 
 extension RouteController: TunnelIntersectionManagerDelegate {
-    
-    public func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?) {
-        tunnelIntersectionManager?.enableTunnelAnimation(for: manager, routeController: self, routeProgress: routeProgress, completionHandler: completionHandler)
+    public func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation) {
+        tunnelIntersectionManager?.enableTunnelAnimation(for: manager, routeController: self, routeProgress: routeProgress)
     }
     
-    public func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?) {
-        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager, at: location, routeController: self, completionHandler: completionHandler)
-        
+    public func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation) {
+        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager, at: location, routeController: self)
     }
 }
