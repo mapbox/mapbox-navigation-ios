@@ -102,7 +102,7 @@ extension CLLocation {
     
     var projectedDistance: CLLocationDistance {
         // Account speed being zero.
-        return max(speed * RouteControllerDeadReckoningTimeInterval, 1)
+        return max(speed * 10, 1)
     }
     
     /**

@@ -306,6 +306,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         } else {
             preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         }
+        
+        rawLocations.append(notification.userInfo![RouteControllerNotificationUserInfoKey.rawLocationKey] as! CLLocation)
+        snappedLocations.append(notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation)
     }
     
     
@@ -416,6 +419,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Adds or updates both the route line and the route line casing
      */
     @objc public func showRoutes(_ routes: [Route], legIndex: Int = 0) {
+        return
         guard let style = style else { return }
         guard let mainRoute = routes.first else { return }
         self.routes = routes
@@ -1019,6 +1023,59 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             style.addLayer(circle)
             style.addLayer(symbol)
+        }
+    }
+    
+    var rawLocations: [CLLocation] = []
+    var snappedLocations: [CLLocation] = []
+    
+    @objc public func showRawLocation() {
+        guard let style = style else {
+            return
+        }
+        
+        var snappedFeatures = [MGLPointFeature()]
+        for location in snappedLocations {
+            let feature = MGLPointFeature()
+            feature.coordinate = location.coordinate
+            snappedFeatures.append(feature)
+        }
+        
+        let snappedLocationSource = MGLShapeCollectionFeature(shapes: snappedFeatures)
+        let snappedLocationIdentifier = "snappedLocation"
+        if let instructionSource = style.source(withIdentifier: snappedLocationIdentifier) as? MGLShapeSource {
+            instructionSource.shape = snappedLocationSource
+        } else {
+            let sourceShape = MGLShapeSource(identifier: snappedLocationIdentifier, shape: snappedLocationSource, options: nil)
+            style.addSource(sourceShape)
+            
+            let circle = MGLCircleStyleLayer(identifier: "snappedLocationLayer", source: sourceShape)
+            circle.circleRadius = NSExpression(forConstantValue: 14)
+            circle.circleColor = NSExpression(forConstantValue: UIColor.green)
+            
+            style.addLayer(circle)
+        }
+        
+        var rawFeatures = [MGLPointFeature()]
+        for location in rawLocations {
+            let feature = MGLPointFeature()
+            feature.coordinate = location.coordinate
+            rawFeatures.append(feature)
+        }
+        
+        let rawLocationSource = MGLShapeCollectionFeature(shapes: rawFeatures)
+        let rawLocationIdentifier = "rawLocation"
+        if let instructionSource = style.source(withIdentifier: rawLocationIdentifier) as? MGLShapeSource {
+            instructionSource.shape = rawLocationSource
+        } else {
+            let sourceShape = MGLShapeSource(identifier: rawLocationIdentifier, shape: rawLocationSource, options: nil)
+            style.addSource(sourceShape)
+            
+            let circle = MGLCircleStyleLayer(identifier: "rawLocationLayer", source: sourceShape)
+            circle.circleRadius = NSExpression(forConstantValue: 7)
+            circle.circleColor = NSExpression(forConstantValue: UIColor.red)
+            
+            style.addLayer(circle)
         }
     }
     

@@ -290,6 +290,7 @@ class RouteMapViewController: UIViewController {
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        mapView.showRawLocation()
         
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
@@ -431,6 +432,8 @@ class RouteMapViewController: UIViewController {
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
+        
+        mapView.showRawLocation()
     }
     
 func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
@@ -843,6 +846,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         guard !mapView.showsRoute else { return }
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
         mapView.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
+        mapView.showRawLocation()
         
         if routeController.routeProgress.currentLegProgress.stepIndex + 1 <= routeController.routeProgress.currentLegProgress.leg.steps.count {
             mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
