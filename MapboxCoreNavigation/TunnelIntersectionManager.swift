@@ -2,15 +2,6 @@ import Foundation
 import CoreLocation
 
 /**
- A closure called when a user enters or exits a tunnel.
- 
- - parameter animationEnabled: Whether animation was enabled.
- - parameter manager: The active navigation location manager.
- */
-public typealias RouteControllerSimulationCompletionBlock = ((_ animationEnabled: Bool, _ manager: NavigationLocationManager)-> Void)
-
-
-/**
  The `TunnelIntersectionManagerDelegate` protocol provides methods for responding to events where a user enters or exits a tunnel.
  */
 @objc(MBTunnelIntersectionManagerDelegate)
@@ -21,20 +12,18 @@ public protocol TunnelIntersectionManagerDelegate: class {
      
      - parameter manager: The location manager that currently sends the location updates.
      - parameter location: The user’s current location where the tunnel was detected.
-     - parameter completionHandler: Called when the animation finishes.
      */
-    @objc(tunnelIntersectionManager:willEnableAnimationAtLocation:completionHandler:)
-    optional func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?)
+    @objc(tunnelIntersectionManager:willEnableAnimationAtLocation:)
+    optional func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation)
     
     /**
      Called immediately when the location manager detects the user's current location is no longer within a tunnel.
      
      - parameter manager: The location manager that currently sends the location updates.
      - parameter location: The user’s current location where the tunnel was detected.
-     - parameter completionHandler: Called when the animation finishes.
      */
-    @objc(tunnelIntersectionManager:willDisableAnimationAtLocation:completionHandler:)
-    optional func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation, completionHandler: RouteControllerSimulationCompletionBlock?)
+    @objc(tunnelIntersectionManager:willDisableAnimationAtLocation:)
+    optional func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation)
 }
 
 @objc(MBTunnelIntersectionManager)
@@ -97,34 +86,27 @@ open class TunnelIntersectionManager: NSObject {
         return distanceToTunnelEntrance < RouteControllerMinimumDistanceToTunnelEntrance
     }
     
-    @objc public func enableTunnelAnimation(for manager: CLLocationManager,
-                                        routeController: RouteController,
-                                          routeProgress: RouteProgress,
-                                               completionHandler: RouteControllerSimulationCompletionBlock?) {
+    @objc public func enableTunnelAnimation(for manager: CLLocationManager, routeController: RouteController, routeProgress: RouteProgress) {
         guard !isAnimationEnabled else { return }
-        
-        isAnimationEnabled = true
         
         self.animatedLocationManager = SimulatedLocationManager(routeProgress: routeProgress)
         self.animatedLocationManager?.delegate = routeController
         self.animatedLocationManager?.routeProgress = routeProgress
+        self.animatedLocationManager?.startUpdatingLocation()
         self.animatedLocationManager?.startUpdatingHeading()
         
-        completionHandler?(isAnimationEnabled, self.animatedLocationManager!)
+        isAnimationEnabled = true
     }
     
-    @objc public func suspendTunnelAnimation(for manager: CLLocationManager,
-                                             at location: CLLocation,
-                                         routeController: RouteController,
-                                                completionHandler: RouteControllerSimulationCompletionBlock?) {
+    @objc public func suspendTunnelAnimation(for manager: CLLocationManager, at location: CLLocation, routeController: RouteController) {
         
         guard isAnimationEnabled else { return }
         
         // Disable the tunnel animation after at least 3 good location updates.
+        if location.isQualified {
+            tunnelExitLocations.append(location)
+        }
         guard tunnelExitLocations.count >= 3 else {
-            if location.isQualified && tunnelExitLocations.count < 3 {
-                tunnelExitLocations.append(location)
-            }
             return
         }
         
@@ -136,7 +118,5 @@ open class TunnelIntersectionManager: NSObject {
         tunnelExitLocations.removeAll()
         
         routeController.rawLocation = location
-        
-        completionHandler?(isAnimationEnabled, routeController.locationManager)
     }
 }
