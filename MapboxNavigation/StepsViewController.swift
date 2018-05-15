@@ -234,12 +234,6 @@ extension StepsViewController: UITableViewDataSource {
         return cell
     }
     
-    func instructionForArrivalInstruction(text: String?) -> VisualInstruction {
-        let component = VisualInstructionComponent(type: .text, text: text, imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
-        let instruction = VisualInstruction(text: nil, maneuverType: .arrive, maneuverDirection: .none, textComponents: [component])
-        return instruction
-    }
-    
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         updateCell(cell as! StepTableViewCell, at: indexPath)
     }
@@ -249,13 +243,10 @@ extension StepsViewController: UITableViewDataSource {
         cell.instructionsView.secondaryLabel.viewForAvailableBoundsCalculation = cell
         
         let step = sections[indexPath.section][indexPath.row]
-       
-        let leg = routeProgress.route.legs[indexPath.section]
-        let arrivalSecondaryInstruction = leg.destination.name
         
         if let instructions = step.instructionsDisplayedAlongStep?.last {
             cell.instructionsView.set(instructions)
-            cell.instructionsView.secondaryLabel.instruction = step.maneuverType == .arrive && arrivalSecondaryInstruction != nil ? instructionForArrivalInstruction(text: arrivalSecondaryInstruction) : instructions.secondaryInstruction
+            cell.instructionsView.secondaryLabel.instruction = instructions.secondaryInstruction
         }
         cell.instructionsView.distance = step.distance
         
