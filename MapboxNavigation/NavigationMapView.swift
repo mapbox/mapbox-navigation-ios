@@ -911,12 +911,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         // Take the default line width and make it wider for the casing
         lineCasing.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
         
-        lineCasing.lineColor = NSExpression(forConstantValue: routeCasingColor)
+        lineCasing.lineColor = NSExpression(forConditional: NSPredicate(format: "isAlternateRoute == true"),
+                     trueExpression: NSExpression(forConstantValue: routeAlternateCasingColor),
+                     falseExpression: NSExpression(forConstantValue: routeCasingColor))
+        
         lineCasing.lineCap = NSExpression(forConstantValue: "round")
         lineCasing.lineJoin = NSExpression(forConstantValue: "round")
         
         lineCasing.lineOpacity = NSExpression(forConditional: NSPredicate(format: "isAlternateRoute == true"),
-                                            trueExpression: NSExpression(forConstantValue: 0),
+                                            trueExpression: NSExpression(forConstantValue: 1),
                                             falseExpression: NSExpression(forConditional: NSPredicate(format: "isCurrentLeg == true"), trueExpression: NSExpression(forConstantValue: 1), falseExpression: NSExpression(forConstantValue: 0.85)))
         
         return lineCasing
