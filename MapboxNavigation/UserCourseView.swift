@@ -101,13 +101,13 @@ public class UserPuckCourseView: UIView, UserCourseView {
 
 class UserPuckStyleKitView: UIView {
     
-    var fillColor: UIColor = UIColor.clear {
+    var fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000) {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    var puckColor: UIColor = UIColor.clear {
+    var puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000) {
         didSet {
             setNeedsDisplay()
         }
