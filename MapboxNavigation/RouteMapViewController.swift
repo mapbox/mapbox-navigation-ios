@@ -683,8 +683,8 @@ extension RouteMapViewController: NavigationViewDelegate {
         return delegate?.navigationMapView?(mapView, shapeFor: waypoints, legIndex: legIndex)
     }
 
-    func navigationMapView(_ mapView: NavigationMapView, shapeFor route: Route) -> MGLShape? {
-        return delegate?.navigationMapView?(mapView, shapeFor: route)
+    func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape? {
+        return delegate?.navigationMapView?(mapView, shapeFor: routes)
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
