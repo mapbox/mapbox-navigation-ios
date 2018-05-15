@@ -93,8 +93,8 @@ public protocol NavigationViewControllerDelegate {
      
      If this method is unimplemented, the navigation view controller’s map view represents the route line using an `MGLPolylineFeature` based on `route`’s `coordinates` property.
      */
-    @objc(navigationViewController:shapeForRoute:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor route: Route) -> MGLShape?
+    @objc(navigationViewController:shapeForRoutes:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor routes: [Route]) -> MGLShape?
     
     /**
      Returns an `MGLShape` that represents the path of the route line’s casing.
@@ -488,8 +488,8 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         delegate?.navigationViewController?(self, didSelect: route)
     }
     
-    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeFor route: Route) -> MGLShape? {
-        return delegate?.navigationViewController?(self, shapeFor: route)
+    @objc public func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape? {
+        return delegate?.navigationViewController?(self, shapeFor: routes)
     }
     
     @objc public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape? {
