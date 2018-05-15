@@ -544,30 +544,33 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     
     @objc public func showAlternateRoutePopup(for routeProgress: RouteProgress) {
         guard self.selectedAnnotations.count == 0 else { return }
-        guard let altRoute = routeProgress.alternateRoute else { return }
         guard let userCoordinate = self.userLocationForCourseTracking?.coordinate else { return }
-        let route = routeProgress.route
+        guard let route = routes?.first else { return }
+        guard let altRoutes = routes?.suffix(from: 1) else { return }
         let currentPolyline = Polyline(route.coordinates!).sliced(from: userCoordinate)
-        let altPolyline = Polyline(altRoute.coordinates!).sliced(from: userCoordinate)
         
-        let dateComponentsFormatter = DateComponentsFormatter()
-        dateComponentsFormatter.allowedUnits = [.hour, .minute]
-        dateComponentsFormatter.unitsStyle = .short
-        
-        let ETADifference = route.expectedTravelTime - altRoute.expectedTravelTime
-        
-        guard let maxCoord = maxScreenDistanceBetween(fromLine: altPolyline, toLine: currentPolyline) else { return }
-        
-        let altRoutePopup = MGLPointAnnotation()
-        altRoutePopup.coordinate = maxCoord
-        if ETADifference <= 60 {
-            altRoutePopup.title = "Similar ETA"
-        } else {
-            altRoutePopup.title = dateComponentsFormatter.string(from: abs(ETADifference))
-            altRoutePopup.subtitle = ETADifference > 0 ? "Faster" : "Slower"
+        for altRoute in altRoutes {
+            let altPolyline = Polyline(altRoute.coordinates!).sliced(from: userCoordinate)
+            
+            let dateComponentsFormatter = DateComponentsFormatter()
+            dateComponentsFormatter.allowedUnits = [.hour, .minute]
+            dateComponentsFormatter.unitsStyle = .short
+            
+            let ETADifference = route.expectedTravelTime - altRoute.expectedTravelTime
+            
+            guard let maxCoord = maxScreenDistanceBetween(fromLine: altPolyline, toLine: currentPolyline) else { return }
+            
+            let altRoutePopup = MGLPointAnnotation()
+            altRoutePopup.coordinate = maxCoord
+            if ETADifference <= 60 {
+                altRoutePopup.title = "Similar ETA"
+            } else {
+                altRoutePopup.title = dateComponentsFormatter.string(from: abs(ETADifference))
+                altRoutePopup.subtitle = ETADifference > 0 ? "Faster" : "Slower"
+            }
+            self.addAnnotation(altRoutePopup)
+            self.selectAnnotation(altRoutePopup, animated: false)
         }
-        self.addAnnotation(altRoutePopup)
-        self.selectAnnotation(altRoutePopup, animated: false)
     }
     
     func maxScreenDistanceBetween(fromLine: Polyline, toLine: Polyline) -> CLLocationCoordinate2D? {
@@ -582,13 +585,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             guard currentIndex % 200 == 0 else { continue }
             guard let coord = fromLine.coordinateFromStart(distance: CLLocationDistance(currentIndex)) else { continue }
             let slicedLine = fromLine.sliced(from: userCoordinate, to: coord)
-            print(slicedLine.distance())
             guard let newCoord = toLine.coordinateFromStart(distance: Double(currentIndex)) else { continue }
             guard let closestCoordBetweenLines = slicedLine.closestCoordinate(to: newCoord) else { continue }
             guard closestCoordBetweenLines.distance > currentMax.0 && closestCoordBetweenLines.distance > 1 else { continue }
-            guard MGLPolyline(coordinates: slicedLine.coordinates, count: UInt(slicedLine.coordinates.count)).intersects(self.visibleCoordinateBounds) else { continue }
+            let padding: CGFloat = 20.0
+            let newBounds = CGRect(x: bounds.minX + padding, y: bounds.minY + padding, width: bounds.width - padding, height: bounds.height - padding)
+            let mapBounds = convert(newBounds, toCoordinateBoundsFrom: self)
+            
+            // TODO: this does not account for pitch 😕
+            guard MGLPolyline(coordinates: slicedLine.coordinates, count: UInt(slicedLine.coordinates.count)).intersects(mapBounds) else { continue }
             
             currentMax = (closestCoordBetweenLines.distance, closestCoordBetweenLines.coordinate)
+            
+            // 500 is enough to just break early
+            if closestCoordBetweenLines.distance > 500 {
+                break
+            }
         }
         return currentMax.1
     }
