@@ -87,8 +87,8 @@ extension CLLocation {
             }
         }
         
-        guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: coordinate) else { return nil }
-        guard let projectedLocation = Polyline(nearByCoordinates).trimmed(from: closest.coordinate, distance: projectedDistance).coordinates.last else { return nil }
+        let sliced = Polyline(nearByCoordinates).sliced(from: coordinate)
+        guard let projectedLocation = sliced.coordinateFromStart(distance: projectedDistance) else { return nil }
         guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: nearByCoordinates, alternateCoordinate: projectedLocation) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
@@ -102,7 +102,7 @@ extension CLLocation {
     
     var projectedDistance: CLLocationDistance {
         // Account speed being zero.
-        return max(speed * 10, 1)
+        return max(speed * RouteControllerDeadReckoningTimeInterval, 1)
     }
     
     /**
