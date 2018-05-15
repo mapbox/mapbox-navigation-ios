@@ -106,4 +106,27 @@ class DataCacheTests: XCTestCase {
 
         NotificationCenter.default.post(name: .UIApplicationDidReceiveMemoryWarning, object: nil)
     }
+    
+    func testCacheKeyForKey() {
+        let threeMileInstruction = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Continue on <say-as interpret-as=\"address\">I-80</say-as> East for 3 miles</prosody></amazon:effect></speak>"
+        let sixMileInstruction = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Continue on <say-as interpret-as=\"address\">I-80</say-as> East for 6 miles</prosody></amazon:effect></speak>"
+        XCTAssertNotEqual(cache.fileCache.cacheKeyForKey(threeMileInstruction), cache.fileCache.cacheKeyForKey(sixMileInstruction))
+        XCTAssertNotEqual(cache.fileCache.cacheKeyForKey(""), cache.fileCache.cacheKeyForKey("  "))
+        XCTAssertNotEqual(cache.fileCache.cacheKeyForKey("i"), cache.fileCache.cacheKeyForKey("I"))
+        XCTAssertNotEqual(cache.fileCache.cacheKeyForKey("{"), cache.fileCache.cacheKeyForKey("}"))
+        XCTAssertEqual(cache.fileCache.cacheKeyForKey("hello"), cache.fileCache.cacheKeyForKey("hello"))
+        XCTAssertEqual(cache.fileCache.cacheKeyForKey("https://cool.com/neat"), cache.fileCache.cacheKeyForKey("https://cool.com/neat"))
+        XCTAssertEqual(cache.fileCache.cacheKeyForKey("-"), cache.fileCache.cacheKeyForKey("-"))
+    }
+    
+    func testCacheKeyPerformance() {
+        let instructionTurn = "Turn left"
+        let instructionContinue = "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Continue on <say-as interpret-as=\"address\">I-80</say-as> East for 3 miles</prosody></amazon:effect></speak>"
+        measure {
+            for _ in 0...1000 {
+                _ = cache.fileCache.cacheKeyForKey(instructionTurn)
+                _ = cache.fileCache.cacheKeyForKey(instructionContinue)
+            }
+        }
+    }
 }

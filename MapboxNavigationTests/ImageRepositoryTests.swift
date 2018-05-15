@@ -16,7 +16,6 @@ class ImageRepositoryTests: XCTestCase {
         super.setUp()
         self.continueAfterFailure = false
 
-        URLProtocol.registerClass(ImageLoadingURLProtocolSpy.self)
         ImageLoadingURLProtocolSpy.reset()
 
         let semaphore = DispatchSemaphore(value: 0)
@@ -28,7 +27,6 @@ class ImageRepositoryTests: XCTestCase {
     }
 
     override func tearDown() {
-        URLProtocol.unregisterClass(ImageLoadingURLProtocolSpy.self)
 
         super.tearDown()
     }

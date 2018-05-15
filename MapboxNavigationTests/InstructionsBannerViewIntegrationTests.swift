@@ -80,8 +80,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
 
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.shieldKey()!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.shieldKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.cacheKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.cacheKey()!, toDisk: false)
 
         let view = instructionsView()
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
@@ -161,7 +161,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(component.imageURL!)!
         operation.fireAllCompletions(ShieldImage.i280.image, data: UIImagePNGRepresentation(ShieldImage.i280.image), error: nil)
 
-        XCTAssertNotNil(imageRepository.cachedImageForKey(component.shieldKey()!))
+        XCTAssertNotNil(imageRepository.cachedImageForKey(component.cacheKey()!))
     }
 
 }

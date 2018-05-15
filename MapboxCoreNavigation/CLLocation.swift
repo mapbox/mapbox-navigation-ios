@@ -60,7 +60,7 @@ extension CLLocation {
     }
     
     /**
-     Returns a Boolean value indicating whether the receiver is within a given distance of a route step, inclusive.
+     Returns a Boolean value indicating whether the receiver is within a given distance of a route step.
      */
     func isWithin(_ maximumDistance: CLLocationDistance, of routeStep: RouteStep) -> Bool {
         guard let closestCoordinate = Polyline(routeStep.coordinates!).closestCoordinate(to: coordinate) else {

@@ -53,10 +53,18 @@ class ExitView: StylableView {
             invalidateIntrinsicContentSize()
         }
     }
+    
     var pointSize: CGFloat {
         didSet {
             exitNumberLabel.font = exitNumberLabel.font.withSize(pointSize * ExitView.labelFontSizeScaleFactor)
             rebuildConstraints()
+        }
+    }
+    
+    override var hashValue: Int {
+        get {
+            let criticalProperties: [AnyHashable?] = [foregroundColor, backgroundColor, exitText, pointSize, side]
+            return criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)})
         }
     }
     
@@ -85,11 +93,16 @@ class ExitView: StylableView {
     }
     
     func commonInit() {
+        translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
         //build view hierarchy
         [imageView, exitNumberLabel].forEach(addSubview(_:))
         buildConstraints()
+        
+        setNeedsLayout()
+        invalidateIntrinsicContentSize()
+        layoutIfNeeded()
     }
     
     func populateExitImage() {

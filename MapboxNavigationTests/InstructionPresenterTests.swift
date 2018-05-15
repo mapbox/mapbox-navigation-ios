@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 @testable import MapboxNavigation
-@testable import MapboxDirections
+import MapboxDirections
 
 class InstructionPresenterTests: XCTestCase {
     
@@ -22,5 +22,22 @@ class InstructionPresenterTests: XCTestCase {
         let attachment = attributed.attribute(.attachment, at: 0, effectiveRange: nil)
 
         XCTAssert(attachment is ExitAttachment, "Attachment for exit shield should be of type ExitAttachment")
+    }
+    
+    func testAbbreviationPerformance() {
+        let route = Fixture.route(from: "route-with-banner-instructions", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
+        
+        let steps = route.legs.flatMap { $0.steps }
+        let instructions = steps.compactMap { $0.instructionsDisplayedAlongStep?.first?.primaryInstruction }
+        
+        let label = InstructionLabel(frame: CGRect(origin: .zero, size: CGSize.iPhone5))
+        label.availableBounds = { return CGRect(origin: .zero, size: CGSize.iPhone5) }
+        
+        self.measure {
+            for instruction in instructions {
+                let presenter = InstructionPresenter(instruction, dataSource: label, downloadCompletion: nil)
+                label.attributedText = presenter.attributedText()
+            }
+        }
     }
 }

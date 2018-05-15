@@ -81,7 +81,7 @@ open class RouteProgress: NSObject {
     /**
      Returns the progress along the current `RouteLeg`.
      */
-    @objc public var currentLegProgress: RouteLegProgress!
+    @objc public var currentLegProgress: RouteLegProgress
     
     /**
      Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
@@ -108,8 +108,8 @@ open class RouteProgress: NSObject {
         self.route = route
         self.legIndex = legIndex
         self.alternateRoute = nil
+        self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         super.init()
-        currentLegProgress = RouteLegProgress(leg: currentLeg, stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
@@ -425,7 +425,7 @@ open class RouteStepProgress: NSObject {
     /**
      Returns an array of the calculated distances from the current intersection to the next intersection on the current step.
      */
-    @objc public var intersectionDistances = [CLLocationDistance]()
+    @objc public var intersectionDistances: Array<CLLocationDistance>?
     
     /**
      The distance in meters the user is to the next intersection they will pass through.

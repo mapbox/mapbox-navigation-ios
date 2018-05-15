@@ -8,7 +8,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 
-class WaypointArrivalScreenViewController: UIViewController, NavigationViewControllerDelegate {
+class WaypointArrivalScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,7 +38,9 @@ class WaypointArrivalScreenViewController: UIViewController, NavigationViewContr
             self.present(navigationController, animated: true, completion: nil)
         }
     }
-    
+}
+
+extension WaypointArrivalScreenViewController: NavigationViewControllerDelegate {
     // Show an alert when arriving at the waypoint and wait until the user to start next leg.
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         let alert = UIAlertController(title: "Arrived at \(String(describing: waypoint.name))", message: "Would you like to continue?", preferredStyle: .alert)
