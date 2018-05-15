@@ -105,7 +105,7 @@ class InstructionPresenter {
                 continue
                 
             //If we have an icon component, lets turn it into a shield.
-            case .icon:
+            case .image:
                 if let shieldString = attributedString(forShieldComponent: component, repository: imageRepository, dataSource: dataSource, onImageDownload: onImageDownload) {
                     build(component, [joinString, shieldString])
                 } else if let genericShieldString = attributedString(forGenericShield: component, dataSource: dataSource) {
@@ -133,7 +133,7 @@ class InstructionPresenter {
     }
     
     func attributedString(forGenericShield component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
-        guard component.type == .icon, let text = component.text, let key = component.cacheKey() else { return nil }
+        guard component.type == .image, let text = component.text, let key = component.cacheKey() else { return nil }
         
         return genericShield(text: text, cacheKey: key, dataSource: dataSource)
     }
