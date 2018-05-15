@@ -582,7 +582,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var currentMax: (CLLocationDistance, CLLocationCoordinate2D?) = (0, nil)
         
         for currentIndex in 1...Int(remainingDistance) - 1 {
-            guard currentIndex % 200 == 0 else { continue }
+            guard currentIndex % 50 == 0 else { continue }
             guard let coord = fromLine.coordinateFromStart(distance: CLLocationDistance(currentIndex)) else { continue }
             let slicedLine = fromLine.sliced(from: userCoordinate, to: coord)
             guard let newCoord = toLine.coordinateFromStart(distance: Double(currentIndex)) else { continue }
@@ -604,7 +604,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         return currentMax.1
     }
-    
+
     /**
      Shows the step arrow given the current `RouteProgress`.
      */
