@@ -37,7 +37,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
          let components =  [
             VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
         return components
     }()
@@ -77,11 +77,11 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
         //prime the cache to simulate images having already been loaded
-        let instruction1 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
-        let instruction2 = VisualInstructionComponent(type: .text, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        let instruction1 = VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+        let instruction2 = VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.cacheKey()!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction2.cacheKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction2.cacheKey()!, toDisk: false)
 
         let view = instructionsView()
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))

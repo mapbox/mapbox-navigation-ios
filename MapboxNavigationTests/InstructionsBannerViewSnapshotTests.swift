@@ -60,7 +60,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let instructions = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         ]
         
@@ -77,7 +77,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "South", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
@@ -95,7 +95,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "Mountain View Test", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
@@ -168,9 +168,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-            VisualInstructionComponent(type: .text, text: "US-101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: NSNotFound)
+            VisualInstructionComponent(type: .image, text: "US-101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: NSNotFound)
         ]
         
         view.set(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
@@ -193,14 +193,14 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
         instructionsBannerView.set(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         
         let primaryThen = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
         let primaryThenInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: primaryThen)
         
