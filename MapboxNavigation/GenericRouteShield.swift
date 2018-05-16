@@ -1,7 +1,7 @@
 import Foundation
 import UIKit
 
-class GenericRouteShield: StylableView {
+public class GenericRouteShield: StylableView {
     static let labelFontSizeScaleFactor: CGFloat = 2.0/3.0
     
     @objc dynamic var foregroundColor: UIColor? {
@@ -46,7 +46,7 @@ class GenericRouteShield: StylableView {
         super.init(frame: frame)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         pointSize = 0.0
         super.init(coder: aDecoder)
         commonInit()
