@@ -101,7 +101,7 @@ class InstructionPresenter {
                 build(component, [exitString])
                 
             //if it's a delimiter, skip it if it's between two shields.
-            case .delimiter where isShield(componentBefore) || isShield(componentAfter):
+            case .delimiter where isShield(componentBefore) && isShield(componentAfter):
                 continue
                 
             //If we have an icon component, lets turn it into a shield.
