@@ -1,4 +1,4 @@
-import UIKit
+import Foundation
 
 extension String {
     var ISO8601Date: Date? {
@@ -86,11 +86,5 @@ extension String {
             }
         }
         return matrix[fromWordCount][toWordCount]
-    }
-    
-    func height(constrainedTo width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
-        return ceil(boundingBox.height)
     }
 }
