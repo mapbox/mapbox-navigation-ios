@@ -76,8 +76,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     var alertController: UIAlertController!
 
     lazy var multipleStopsAction: UIAlertAction = {
-        return UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
-            self.startMultipleWaypoints()
+        return UIAlertAction(title: "Multiple Stops", style: .default, handler: { [weak self] (action) in
+            self?.startMultipleWaypoints()
         })
     }()
 
@@ -95,20 +95,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         startButton.isEnabled = false
         
         alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { (action) in
-            self.startBasicNavigation()
+        alertController.addAction(UIAlertAction(title: "Default UI", style: .default, handler: { [weak self] (action) in
+            self?.startBasicNavigation()
         }))
-        alertController.addAction(UIAlertAction(title: "DayStyle UI", style: .default, handler: { (action) in
-            self.startNavigation(styles: [DayStyle()])
+        alertController.addAction(UIAlertAction(title: "DayStyle UI", style: .default, handler: { [weak self] (action) in
+            self?.startNavigation(styles: [DayStyle()])
         }))
-        alertController.addAction(UIAlertAction(title: "NightStyle UI", style: .default, handler: { (action) in
-            self.startNavigation(styles: [NightStyle()])
+        alertController.addAction(UIAlertAction(title: "NightStyle UI", style: .default, handler: { [weak self] (action) in
+            self?.startNavigation(styles: [NightStyle()])
         }))
-        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { (action) in
-            self.startCustomNavigation()
+        alertController.addAction(UIAlertAction(title: "Custom UI", style: .default, handler: { [weak self] (action) in
+            self?.startCustomNavigation()
         }))
-        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { (action) in
-            self.startStyledNavigation()
+        alertController.addAction(UIAlertAction(title: "Styled UI", style: .default, handler: { [weak self] (action) in
+            self?.startStyledNavigation()
         }))
 
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
