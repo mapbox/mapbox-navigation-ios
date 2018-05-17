@@ -73,12 +73,14 @@ extension CLLocation {
     
     func snapped(to legProgress: RouteLegProgress) -> CLLocation? {
         let coords = coordinates(for: legProgress)
+        let distanceRemaining = legProgress.currentStepProgress.distanceRemaining
         
-        guard let closest = Polyline(coords).closestCoordinate(to: coordinate) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords) else { return nil }
+        let lineSlicedFromUser = Polyline(coords).sliced(from: coordinate)
+        guard let projectedLocation = lineSlicedFromUser.coordinateFromStart(distance: projectedDistance(for: distanceRemaining)) else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords, alternateCoordinate: projectedLocation) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
-        let userCoordinate = closest.coordinate
+        let userCoordinate = projectedLocation
         guard let firstCoordinate = legProgress.leg.steps.first?.coordinates?.first else { return nil }
         
         guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep, distanceToFirstCoordinateOnLeg: self.coordinate.distance(to: firstCoordinate)) else { return nil }
@@ -90,7 +92,6 @@ extension CLLocation {
      Calculates the proper coordinates to use when calculating a snapped location.
      */
     func coordinates(for legProgress: RouteLegProgress) -> [CLLocationCoordinate2D] {
-        var coordinates = legProgress.nearbyCoordinates
         let stepCoordinates = legProgress.currentStep.coordinates!
         
         // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
@@ -101,25 +102,33 @@ extension CLLocation {
             
             // The max here is 180. The closer it is to 180, the sharper the turn.
             if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteSnappingMaxManipulatedCourseAngle {
-                coordinates = stepCoordinates
+                return stepCoordinates
             }
         }
         
-        if speed < RouteControllerMaximumSpeedForUsingCurrentStep {
-            coordinates = stepCoordinates
+        guard speed > RouteControllerMaximumSpeedForUsingCurrentStep else {
+            return stepCoordinates
         }
         
-        return coordinates
+        return legProgress.nearbyCoordinates
     }
     
+    func projectedDistance(for distanceRemaining: CLLocationDistance) -> CLLocationDistance {
+        // If the user is near the end of the route, do not project the puck forward.
+        // Otherwise, this can cause strange wrapping at maneuvers.
+        guard distanceRemaining > RouteControllerManeuverZoneRadius else {
+            return 0
+        }
+        return speed * RouteControllerDeadReckoningTimeInterval
+    }
     
     /**
      Given a location and a series of coordinates, compute what the course should be for a the location.
      */
-    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D]) -> CLLocationDirection? {
+    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D], alternateCoordinate: CLLocationCoordinate2D? = nil) -> CLLocationDirection? {
         let nearByPolyline = Polyline(coordinates)
         
-        guard let closest = nearByPolyline.closestCoordinate(to: coordinate) else { return nil }
+        guard let closest = nearByPolyline.closestCoordinate(to: alternateCoordinate ?? coordinate) else { return nil }
         
         let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
         let slicedLineInFront = nearByPolyline.sliced(from: closest.coordinate, to: coordinates.last)
