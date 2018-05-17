@@ -10,6 +10,8 @@ class NavigationViewControllerTests: XCTestCase {
     
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
+    var updatedStyleNumberOfTimes = 0
+    
     lazy var dependencies: (navigationViewController: NavigationViewController, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation) = {
        
         let navigationViewController = NavigationViewController(for: initialRoute,
@@ -72,6 +74,40 @@ class NavigationViewControllerTests: XCTestCase {
         XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
     }
     
+    func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()])
+        navigationViewController.usesNightStyleInsideTunnels = true
+        navigationViewController.routeController.tunnelSimulationEnabled = true
+        let routeController = navigationViewController.routeController!
+        navigationViewController.styleManager.delegate = self
+        
+        let someLocation = dependencies.poi.first!
+        
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        
+        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        updatedStyleNumberOfTimes = 0
+    }
+    
+    func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()])
+        navigationViewController.usesNightStyleInsideTunnels = true
+        navigationViewController.routeController.tunnelSimulationEnabled = true
+        let routeController = navigationViewController.routeController!
+        navigationViewController.styleManager.delegate = self
+        
+        let someLocation = dependencies.poi.first!
+        
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        
+        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        updatedStyleNumberOfTimes = 0
+    }
+    
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a blank road name (empty string) provided and wayNameView label is hidden.
     func testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
@@ -115,7 +151,14 @@ class NavigationViewControllerTests: XCTestCase {
     }
 }
 
-extension NavigationViewControllerTests: NavigationViewControllerDelegate {
+extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
+    func locationFor(styleManager: StyleManager) -> CLLocation {
+        return dependencies.poi.first!
+    }
+    
+    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+        updatedStyleNumberOfTimes += 1
+    }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
         return customRoadName[location.coordinate] ?? nil
