@@ -72,23 +72,10 @@ extension CLLocation {
     //MARK: - Route Snapping
     
     func snapped(to legProgress: RouteLegProgress) -> CLLocation? {
-        var nearByCoordinates = legProgress.nearbyCoordinates
+        let coords = coordinates(for: legProgress)
         
-        // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
-        // Otherwise, we may get false positives from nearby step coordinates
-        if let upcomingStep = legProgress.upComingStep,
-            let initialHeading = upcomingStep.initialHeading,
-            let finalHeading = upcomingStep.finalHeading,
-            let coordinates = legProgress.currentStep.coordinates {
-            
-            // The max here is 180. The closer it is to 180, the sharper the turn.
-            if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteSnappingMaxManipulatedCourseAngle {
-                nearByCoordinates = coordinates
-            }
-        }
-        
-        guard let closest = Polyline(nearByCoordinates).closestCoordinate(to: coordinate) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: nearByCoordinates) else { return nil }
+        guard let closest = Polyline(coords).closestCoordinate(to: coordinate) else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = closest.coordinate
@@ -97,6 +84,32 @@ extension CLLocation {
         guard shouldSnap(toRouteWith: calculatedCourseForLocationOnStep, distanceToFirstCoordinateOnLeg: self.coordinate.distance(to: firstCoordinate)) else { return nil }
         
         return CLLocation(coordinate: userCoordinate, altitude: altitude, horizontalAccuracy: horizontalAccuracy, verticalAccuracy: verticalAccuracy, course: userCourse, speed: speed, timestamp: timestamp)
+    }
+    
+    /**
+     Calculates the proper coordinates to use when calculating a snapped location.
+     */
+    func coordinates(for legProgress: RouteLegProgress) -> [CLLocationCoordinate2D] {
+        var coordinates = legProgress.nearbyCoordinates
+        let stepCoordinates = legProgress.currentStep.coordinates!
+        
+        // If the upcoming maneuver a sharp turn, only look at the current step for snapping.
+        // Otherwise, we may get false positives from nearby step coordinates
+        if let upcomingStep = legProgress.upComingStep,
+            let initialHeading = upcomingStep.initialHeading,
+            let finalHeading = upcomingStep.finalHeading {
+            
+            // The max here is 180. The closer it is to 180, the sharper the turn.
+            if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteSnappingMaxManipulatedCourseAngle {
+                coordinates = stepCoordinates
+            }
+        }
+        
+        if speed < RouteControllerMaximumSpeedForUsingCurrentStep {
+            coordinates = stepCoordinates
+        }
+        
+        return coordinates
     }
     
     

@@ -117,3 +117,8 @@ public var RouteControllerMinimumDistanceToTunnelEntrance: CLLocationDistance = 
  Minimum speed (mps) as the user enters the minimum radius of the tunnel entrance on the route.
  */
 public var RouteControllerMinimumSpeedAtTunnelEntranceRadius: CLLocationSpeed = 5
+
+/**
+ When calculating the user's snapped location, this constant will be used for deciding upon which step coordinates to include in the calculation.
+ */
+public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
