@@ -142,14 +142,14 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate, AVAudioP
         NotificationCenter.default.addObserver(self, selector: #selector(pauseSpeechAndPlayReroutingDing(notification:)), name: .routeControllerWillReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didReroute(notification:)), name: .routeControllerDidReroute, object: nil)
         
-        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { (settings, change) in
-            self.audioPlayer?.volume = settings.voiceVolume
+        volumeToken = NavigationSettings.shared.observe(\.voiceVolume) { [weak self] (settings, change) in
+            self?.audioPlayer?.volume = settings.voiceVolume
         }
         
-        muteToken = NavigationSettings.shared.observe(\.voiceMuted) { (settings, change) in
+        muteToken = NavigationSettings.shared.observe(\.voiceMuted) { [weak self] (settings, change) in
             if settings.voiceMuted {
-                self.audioPlayer?.stop()
-                self.speechSynth.stopSpeaking(at: .immediate)
+                self?.audioPlayer?.stop()
+                self?.speechSynth.stopSpeaking(at: .immediate)
             }
         }
     }
