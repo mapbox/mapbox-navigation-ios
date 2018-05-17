@@ -127,6 +127,8 @@
 		359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359D283B1F9DC14F00FDE9C9 /* UICollectionView.swift */; };
 		35A262B92050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */; };
 		35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A5413A1EFC052700E49846 /* RouteOptions.swift */; };
+		35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */; };
+		35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1AEBD20AD9C7800C8544E /* LeakTest.swift */; };
 		35B1E2951F1FF8EC00A13D32 /* UserCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */; };
 		35B5A47E1FFFDCE5000A3C8D /* NavigationViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B5A47D1FFFDCE5000A3C8D /* NavigationViewLayout.swift */; };
 		35B711D41E5E7AD2001EDA8D /* MapboxNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 351BEBD71E5BCC28006FE110 /* MapboxNavigation.framework */; };
@@ -527,6 +529,8 @@
 		35A5413A1EFC052700E49846 /* RouteOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteOptions.swift; sourceTree = "<group>"; };
 		35B1AEB920AD9AE600C8544E /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		35B1AEBA20AD9AEC00C8544E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaksSpec.swift; sourceTree = "<group>"; };
+		35B1AEBD20AD9C7800C8544E /* LeakTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeakTest.swift; sourceTree = "<group>"; };
 		35B1E2941F1FF8EC00A13D32 /* UserCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCourseView.swift; sourceTree = "<group>"; };
 		35B5A47D1FFFDCE5000A3C8D /* NavigationViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewLayout.swift; sourceTree = "<group>"; };
 		35B711CF1E5E7AD2001EDA8D /* MapboxNavigationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1066,6 +1070,8 @@
 				16E4F97E205B05FE00531791 /* MapboxVoiceControllerTests.swift */,
 				AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */,
 				AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */,
+				35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */,
+				35B1AEBD20AD9C7800C8544E /* LeakTest.swift */,
 			);
 			path = MapboxNavigationTests;
 			sourceTree = "<group>";
@@ -1955,10 +1961,12 @@
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
 				AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */,
 				16435E06206EE37800AF48B6 /* DummyURLSessionDataTask.swift in Sources */,
+				35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */,
 				16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */,
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
+				35B1AEBE20AD9C7800C8544E /* LeakTest.swift in Sources */,
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
