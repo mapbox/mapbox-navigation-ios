@@ -115,7 +115,8 @@ open class StyleManager: NSObject {
     func applyStyle() {
         guard let location = delegate?.locationFor(styleManager: self) else {
             // We can't calculate sunset or sunrise w/o a location so just apply the first style
-            if let style = styles.first {
+            if let style = styles.first, currentStyleType != style.styleType {
+                currentStyleType = style.styleType
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }
@@ -124,7 +125,8 @@ open class StyleManager: NSObject {
         
         // Single style usage
         guard styles.count > 1 else {
-            if let style = styles.first {
+            if let style = styles.first, currentStyleType != style.styleType {
+                currentStyleType = style.styleType
                 style.apply()
                 delegate?.styleManager?(self, didApply: style)
             }
