@@ -8,8 +8,8 @@ extension VisualInstructionComponent {
     var cacheKey: String? {
         switch type {
         case .exit, .exitCode:
-            guard let exitCode = self.text else { return nil}
-            return "exit-" + exitCode + "-\(VisualInstructionComponent.scale)-\(hashValue)"
+            guard let exitCode = self.text else { return nil }
+            return "exit-" + exitCode + "-\(VisualInstructionComponent.scale)"
         case .image:
             guard let imageURL = imageURL else { return genericCacheKey }
             return "\(imageURL.absoluteString)-\(VisualInstructionComponent.scale)"

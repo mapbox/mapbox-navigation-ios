@@ -189,19 +189,20 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func genericShield(text: String, cacheKey: String?, dataSource: DataSource) -> NSAttributedString? {
-        let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
-        
+    private func genericShield(text: String, cacheKey: String, dataSource: DataSource) -> NSAttributedString? {
+        let proxy = GenericRouteShield.appearance()
+        let criticalProperties: [AnyHashable?] = [dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
+
         let attachment = GenericShieldAttachment()
         
-        
-        if let key = cacheKey, let image = imageRepository.cachedImageForKey(key) {
+        let key = [cacheKey, additionalKey].joined(separator: "-")
+        if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
+            let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
             guard let image = takeSnapshot(on: view) else { return nil }
-            if let key = cacheKey {
-                imageRepository.storeImage(image, forKey: key, toDisk: false)
-            }
+            imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
         }
         
@@ -212,15 +213,18 @@ class InstructionPresenter {
     
     private func exitShield(side: ExitSide = .right, text: String, component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         
-        let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
+        let proxy = ExitView.appearance()
+        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
         let attachment = ExitAttachment()
         guard let cacheKey = component.cacheKey else { return nil }
         
         if let image = imageRepository.cachedImageForKey(cacheKey) {
             attachment.image = image
         } else {
+            let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
             guard let image = takeSnapshot(on: view) else { return nil }
-            imageRepository.storeImage(image, forKey: cacheKey, toDisk: false)
+            imageRepository.storeImage(image, forKey: [cacheKey, additionalKey].joined(separator: "-"), toDisk: false)
             attachment.image = image
         }
         

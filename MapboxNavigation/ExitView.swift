@@ -61,13 +61,6 @@ class ExitView: StylableView {
         }
     }
     
-    override var hashValue: Int {
-        get {
-            let criticalProperties: [AnyHashable?] = [foregroundColor, backgroundColor, exitText, pointSize, side]
-            return criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)})
-        }
-    }
-    
     convenience init(pointSize: CGFloat, side: ExitSide = .right, text: String) {
         self.init(frame: .zero)
         self.pointSize = pointSize
