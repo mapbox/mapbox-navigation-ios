@@ -301,9 +301,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
 
 extension InstructionsBannerViewSnapshotTests {
     
-    func verifyView(_ view: UIView, size: CGSize) {
+    func verifyView(_ view: UIView, size: CGSize, tolerance: CGFloat = 0.01) {
         view.frame.size = size
-        FBSnapshotVerifyView(view, suffixes: ["_64"], tolerance: 0.01)
+        FBSnapshotVerifyView(view, suffixes: ["_64"], tolerance: tolerance)
     }
     
     // UIAppearance proxy do not work in unit test environment so we have to style manually
