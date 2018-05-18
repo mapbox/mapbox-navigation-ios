@@ -5,6 +5,7 @@
 * `TunnelIntersectionManagerDelegate` methods no longer take a completion handler argument. ([#1414](https://github.com/mapbox/mapbox-navigation-ios/pull/1414))
 * Added the ability to render more than 1 alternate route. [#1372](https://github.com/mapbox/mapbox-navigation-ios/pull/1372/)
 * `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` Now expects an array of `Route`. The first route will be rendered as the main route, all subsequent routes will be rendered as alternate routes.
+* Added support for generic route shields. Image-backed route shields also now display as generic (instead of plain text) while the SDK loads the image. [#1190](https://github.com/mapbox/mapbox-navigation-ios/issues/1190), [#1417](https://github.com/mapbox/mapbox-navigation-ios/pull/1417)
 
 ## v0.17.0 (May 14, 2018)
 
