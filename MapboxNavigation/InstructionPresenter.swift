@@ -133,13 +133,12 @@ class InstructionPresenter {
     }
     
     func attributedString(forGenericShield component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
-        guard component.type == .image, let text = component.text, let key = component.cacheKey() else { return nil }
-        
-        return genericShield(text: text, cacheKey: key, dataSource: dataSource)
+        guard component.type == .image, let text = component.text else { return nil }
+        return genericShield(text: text, cacheKey: component.genericCacheKey(), dataSource: dataSource)
     }
     
     func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        guard shield.imageURL != nil, let shieldKey = shield.cacheKey() else { return nil }
+        guard shield.imageURL != nil, let shieldKey = shield.cacheKey(), let text = shield.text else { return nil }
         
         //If we have the shield already cached, use that.
         if let cachedImage = repository.cachedImageForKey(shieldKey) {
@@ -190,16 +189,19 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func genericShield(text: String, cacheKey: String, dataSource: DataSource) -> NSAttributedString? {
+    private func genericShield(text: String, cacheKey: String?, dataSource: DataSource) -> NSAttributedString? {
         let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
         
         let attachment = GenericShieldAttachment()
         
-        if let image = imageRepository.cachedImageForKey(cacheKey) {
+        
+        if let key = cacheKey, let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
             guard let image = takeSnapshot(on: view) else { return nil }
-            imageRepository.storeImage(image, forKey: cacheKey, toDisk: false)
+            if let key = cacheKey {
+                imageRepository.storeImage(image, forKey: key, toDisk: false)
+            }
             attachment.image = image
         }
         

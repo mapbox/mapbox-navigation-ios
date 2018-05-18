@@ -168,9 +168,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
             firstRunHasAttachments.fulfill()
             
             if attachment is GenericShieldAttachment {
-                if range == NSRange(location: 0, length: 1) {
+                if range == firstAttachmentRange {
                     return firstGeneric.fulfill()
-                } else if range == NSRange(location: 4, length: 1) {
+                } else if range == secondAttachmentRange {
                     return secondGeneric.fulfill()
                 }
             }

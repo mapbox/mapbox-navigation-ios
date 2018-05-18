@@ -11,10 +11,14 @@ extension VisualInstructionComponent {
             guard let exitCode = self.text else { return nil}
             return "exit-" + exitCode + "-\(VisualInstructionComponent.scale)-\(hashValue)"
         case .image:
-            guard let imageURL = imageURL else { return "generic-" + (text ?? "nil") }
+            guard let imageURL = imageURL else { return genericCacheKey() }
             return "\(imageURL.absoluteString)-\(VisualInstructionComponent.scale)"
         default:
             return nil
         }
+    }
+    
+    func genericCacheKey() -> String {
+        return "generic-" + (text ?? "nil")
     }
 }
