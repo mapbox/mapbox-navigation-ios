@@ -43,7 +43,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }()
     
     lazy var genericInstructions: [VisualInstructionComponent] = [
-        VisualInstructionComponent(type: .image, text: "AKH 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
+        VisualInstructionComponent(type: .image, text: "ANK 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
         VisualInstructionComponent(type: .text, text: "Ankh-Morpork Highway 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
     ]
  

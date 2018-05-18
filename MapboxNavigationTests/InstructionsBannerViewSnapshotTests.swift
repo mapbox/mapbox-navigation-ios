@@ -276,6 +276,27 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.set(makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
         verifyView(view, size: view.bounds.size)
     }
+    
+    func testGenericShields() {
+        let window = UIApplication.shared.delegate!.window!!
+        let view = instructionsView()
+        styleInstructionsView(view)
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let primary = [
+            VisualInstructionComponent(type: .image, text: "ANK 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .text, text: "Ankh-Morpork 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
+        ]
+        
+        let secondary = [VisualInstructionComponent(type: .text, text: "Vetinari Way", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        
+        window.addSubview(view)
+        DayStyle().apply()
+        
+        view.set(makeVisualInstruction(.reachFork, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        verifyView(view, size: view.bounds.size)
+    }
 }
 
 extension InstructionsBannerViewSnapshotTests {
