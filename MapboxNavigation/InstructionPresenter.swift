@@ -83,7 +83,7 @@ class InstructionPresenter {
                 strings.append(attributedStrings.reduce(initial, +))
             }
             let isShield: (_: VisualInstructionComponent?) -> Bool = { (component) in
-                guard let key = component?.cacheKey() else { return false }
+                guard let key = component?.cacheKey else { return false }
                 return imageRepository.cachedImageForKey(key) != nil
             }
             let componentBefore = components.component(before: component)
@@ -134,11 +134,11 @@ class InstructionPresenter {
     
     func attributedString(forGenericShield component: VisualInstructionComponent, dataSource: DataSource) -> NSAttributedString? {
         guard component.type == .image, let text = component.text else { return nil }
-        return genericShield(text: text, cacheKey: component.genericCacheKey(), dataSource: dataSource)
+        return genericShield(text: text, cacheKey: component.genericCacheKey, dataSource: dataSource)
     }
     
     func attributedString(forShieldComponent shield: VisualInstructionComponent, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        guard shield.imageURL != nil, let shieldKey = shield.cacheKey(), let text = shield.text else { return nil }
+        guard shield.imageURL != nil, let shieldKey = shield.cacheKey else { return nil }
         
         //If we have the shield already cached, use that.
         if let cachedImage = repository.cachedImageForKey(shieldKey) {
@@ -158,7 +158,7 @@ class InstructionPresenter {
     }
     
     private func shieldImageForComponent(_ component: VisualInstructionComponent, in repository: ImageRepository, height: CGFloat, completion: @escaping ImageDownloadCompletion) {
-        guard let imageURL = component.imageURL, let shieldKey = component.cacheKey() else {
+        guard let imageURL = component.imageURL, let shieldKey = component.cacheKey else {
             return
         }
 
@@ -167,7 +167,7 @@ class InstructionPresenter {
 
     private func instructionHasDownloadedAllShields() -> Bool {
         for component in instruction.textComponents {
-            guard let key = component.cacheKey() else {
+            guard let key = component.cacheKey else {
                 continue
             }
 
@@ -214,7 +214,7 @@ class InstructionPresenter {
         
         let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
         let attachment = ExitAttachment()
-        guard let cacheKey = component.cacheKey() else { return nil }
+        guard let cacheKey = component.cacheKey else { return nil }
         
         if let image = imageRepository.cachedImageForKey(cacheKey) {
             attachment.image = image

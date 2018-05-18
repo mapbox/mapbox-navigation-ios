@@ -17,8 +17,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let i280Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let us101Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
         
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey()!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false)
         
         NavigationSettings.shared.distanceUnit = .mile
     }
@@ -139,7 +139,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .text, text: "20 West", imageURL: nil, abbreviation: "20 W", abbreviationPriority: 1)]
         
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey()!)
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey!)
         view.set(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
