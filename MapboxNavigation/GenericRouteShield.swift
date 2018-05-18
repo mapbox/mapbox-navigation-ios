@@ -1,9 +1,13 @@
 import Foundation
 import UIKit
 
+/**
+ `GenericRouteShield` is a class to render routes that do not have route-shields.
+ */
 public class GenericRouteShield: StylableView {
     static let labelFontSizeScaleFactor: CGFloat = 2.0/3.0
     
+    //The color to use for the text and border.
     @objc dynamic var foregroundColor: UIColor? {
         didSet {
             layer.borderColor = foregroundColor?.cgColor
@@ -12,6 +16,7 @@ public class GenericRouteShield: StylableView {
         }
     }
      
+    //The label that contains the route code.
     lazy var routeLabel: UILabel = {
         let label: UILabel = .forAutoLayout()
         label.text = routeText
@@ -21,12 +26,15 @@ public class GenericRouteShield: StylableView {
         return label
     }()
     
+    //The text to put in the label
     var routeText: String? {
         didSet {
             routeLabel.text = routeText
             invalidateIntrinsicContentSize()
         }
     }
+    
+    //The size of the text the view attachment is contained within.
     var pointSize: CGFloat {
         didSet {
             routeLabel.font = routeLabel.font.withSize(pointSize * ExitView.labelFontSizeScaleFactor)
