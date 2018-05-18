@@ -17,8 +17,8 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let i280Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let us101Instruction = VisualInstructionComponent(type: .image, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
         
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey()!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey()!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false)
         
         NavigationSettings.shared.distanceUnit = .mile
     }
@@ -60,7 +60,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let instructions = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "US 45 / Chicago / US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         ]
         
@@ -77,7 +77,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "South", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
@@ -95,7 +95,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "Mountain View Test", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
@@ -131,7 +131,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.maneuverView.isStart = true
         view.distance = 482
         
-        let primary = [VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
+        let primary = [VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .text, text: "10", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
@@ -139,6 +139,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
                        VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
                        VisualInstructionComponent(type: .text, text: "20 West", imageURL: nil, abbreviation: "20 W", abbreviationPriority: 1)]
         
+        imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey!)
         view.set(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
         
         verifyView(view, size: view.bounds.size)
@@ -168,9 +169,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .image, text: "I-280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
-            VisualInstructionComponent(type: .text, text: "US-101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: NSNotFound)
+            VisualInstructionComponent(type: .image, text: "US-101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: NSNotFound)
         ]
         
         view.set(makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
@@ -193,14 +194,14 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         instructionsBannerView.distance = 482
         
         let primary = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
         instructionsBannerView.set(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
         
         let primaryThen = [
-            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
         let primaryThenInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: primaryThen)
         
@@ -275,13 +276,34 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         view.set(makeVisualInstruction(.takeOffRamp, .right, primaryInstruction: primary, secondaryInstruction: [secondary]))
         verifyView(view, size: view.bounds.size)
     }
+    
+    func testGenericShields() {
+        let window = UIApplication.shared.delegate!.window!!
+        let view = instructionsView()
+        styleInstructionsView(view)
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let primary = [
+            VisualInstructionComponent(type: .image, text: "ANK 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
+            VisualInstructionComponent(type: .text, text: "Ankh-Morpork 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
+        ]
+        
+        let secondary = [VisualInstructionComponent(type: .text, text: "Vetinari Way", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        
+        window.addSubview(view)
+        DayStyle().apply()
+        
+        view.set(makeVisualInstruction(.reachFork, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        verifyView(view, size: view.bounds.size)
+    }
 }
 
 extension InstructionsBannerViewSnapshotTests {
     
-    func verifyView(_ view: UIView, size: CGSize) {
+    func verifyView(_ view: UIView, size: CGSize, tolerance: CGFloat = 0.01) {
         view.frame.size = size
-        FBSnapshotVerifyView(view, tolerance: 0.01)
+        FBSnapshotVerifyView(view, suffixes: ["_64"], tolerance: tolerance)
     }
     
     // UIAppearance proxy do not work in unit test environment so we have to style manually

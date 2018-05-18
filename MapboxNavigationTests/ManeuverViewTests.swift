@@ -59,7 +59,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
             views.addSubview(view)
         }
         
-        FBSnapshotVerifyLayer(views.layer)
+        FBSnapshotVerifyLayer(views.layer, suffixes: ["_64"])
     }
     
     // TODO: Figure out why the flip transformation do not render in a snapshot so we can test left turns and left side rule of the road.
