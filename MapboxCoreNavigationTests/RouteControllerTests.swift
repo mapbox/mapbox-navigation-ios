@@ -106,7 +106,7 @@ class RouteControllerTests: XCTestCase {
     
     func testSnappedAtEndOfStepLocation() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
