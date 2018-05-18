@@ -41,7 +41,12 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         ]
         return components
     }()
-
+    
+    lazy var genericInstructions: [VisualInstructionComponent] = [
+        VisualInstructionComponent(type: .image, text: "AKH 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound),
+        VisualInstructionComponent(type: .text, text: "Ankh-Morpork Highway 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
+    ]
+ 
     private func resetImageCache() {
         let semaphore = DispatchSemaphore(value: 0)
         imageRepository.resetImageCache {
@@ -129,6 +134,26 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
  
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
+    }
+    
+    func testGenericRouteShieldInstructionsArePresentedProperly() {
+        let view = instructionsView()
+        let instruction = makeVisualInstruction(primaryInstruction: genericInstructions, secondaryInstruction: nil)
+        //set the instruction, triggering the generic shield generation
+        view.set(instruction)
+        
+        guard let attributed = view.primaryLabel.attributedText else { return XCTFail("No attributed string") }
+        let stringRange = NSRange(location: 0, length: attributed.length)
+        let foundAttachment = XCTestExpectation(description: "Attachment found")
+        attributed.enumerateAttribute(.attachment, in: stringRange, options: [],
+        using: { (value, range, stop) in
+            guard let attachment = value else { return }
+            foundAttachment.fulfill()
+            XCTAssert(range == NSRange(location: 0, length: 1), "Unexpected Range:" + String(describing: range))
+            XCTAssert(type(of: attachment) == GenericShieldAttachment.self, "Unexpected Attachment type:" + String(describing: attachment))
+        })
+        wait(for: [foundAttachment], timeout: 0)
+        
     }
     
     func testRouteShieldsAreGenericUntilTheyLoad() {
