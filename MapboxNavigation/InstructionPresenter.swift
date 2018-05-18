@@ -193,7 +193,7 @@ class InstructionPresenter {
     private func genericShield(text: String, cacheKey: String, dataSource: DataSource) -> NSAttributedString? {
         let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
         
-        let attachment = ExitAttachment()
+        let attachment = GenericShieldAttachment()
         
         if let image = imageRepository.cachedImageForKey(cacheKey) {
             attachment.image = image
@@ -265,6 +265,7 @@ class ImageInstruction: NSTextAttachment, ImagePresenter {
 }
 
 class ShieldAttachment: ImageInstruction {}
+class GenericShieldAttachment: ShieldAttachment {}
 class ExitAttachment: ImageInstruction {}
 
 extension CGSize {
