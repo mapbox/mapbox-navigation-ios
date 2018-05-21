@@ -14,7 +14,8 @@ func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
 func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                            _ maneuverDirection: ManeuverDirection = .left,
                            primaryInstruction: [VisualInstructionComponent],
-                           secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstructionBanner {
+                           secondaryInstruction: [VisualInstructionComponent]?,
+                           tertiaryInstruction: [VisualInstructionComponent]?) -> VisualInstructionBanner {
     
     let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: primaryInstruction)
     var secondary: VisualInstruction? = nil
@@ -22,7 +23,12 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
         secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: secondaryInstruction)
     }
     
-    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, drivingSide: .right)
+    var tertiary: VisualInstruction? = nil
+    if let tertiaryInstruction = tertiaryInstruction {
+        tertiary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: tertiaryInstruction)
+    }
+    
+    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, tertiaryInstruction: tertiary, drivingSide: .right)
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
@@ -34,10 +40,16 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }()
 
     lazy var instructions: [VisualInstructionComponent] = {
-         let components =  [
+        
+        let tertiaryInstructionComponent = VisualInstructionComponent(type: .lane, text: "", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound)
+        tertiaryInstructionComponent.isActiveLane = true
+        tertiaryInstructionComponent.indications = [.right, .straightAhead]
+        
+        let components =  [
             VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
+            VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
+            tertiaryInstructionComponent
         ]
         return components
     }()
@@ -75,7 +87,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     func testDelimiterIsShownWhenShieldsNotLoaded() {
         let view = instructionsView()
 
-        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil, tertiaryInstruction: nil))
 
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
     }
@@ -84,12 +96,16 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         //prime the cache to simulate images having already been loaded
         let instruction1 = VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let instruction2 = VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        let instruction3 = VisualInstructionComponent(type: .lane, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        instruction3.isActiveLane = true
+        instruction3.indications = [.left, .straightAhead]
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.cacheKey!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false)
+        imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction3.cacheKey!, toDisk: false)
 
         let view = instructionsView()
-        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil, tertiaryInstruction: nil))
 
         //the delimiter should NOT be present since both shields are already in the cache
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
@@ -103,6 +119,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         
         let firstExpectation = XCTestExpectation(description: "First Component Callback")
         let secondExpectation = XCTestExpectation(description: "Second Component Callback")
+        let thirdExpectation = XCTestExpectation(description: "Third Component Callback")
 
         view.primaryLabel.imageDownloadCompletion = firstExpectation.fulfill
         
@@ -111,7 +128,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
         
         //set visual instructions on the view, which triggers the instruction image fetch
-        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil, tertiaryInstruction: nil))
 
         //Slash should be present until an adjacent shield is downloaded
         XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
@@ -131,14 +148,20 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
         //ensure that second callback fires
         wait(for: [secondExpectation], timeout: 1)
- 
+        
+        let thirdDestinationComponent: VisualInstructionComponent = instructions[3]
+        simulateDownloadingShieldForComponent(thirdDestinationComponent)
+        
+        //ensure that second callback fires
+        wait(for: [thirdExpectation], timeout: 1)
+        
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
     }
     
     func testGenericRouteShieldInstructionsArePresentedProperly() {
         let view = instructionsView()
-        let instruction = makeVisualInstruction(primaryInstruction: genericInstructions, secondaryInstruction: nil)
+        let instruction = makeVisualInstruction(primaryInstruction: genericInstructions, secondaryInstruction: nil, tertiaryInstruction: nil)
         //set the instruction, triggering the generic shield generation
         view.set(instruction)
         
@@ -178,7 +201,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
         
         //set visual instructions on the view, which triggers the instruction image fetch
-        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil, tertiaryInstruction: nil))
         
         let firstAttachmentRange = NSRange(location: 0, length: 1)
         let secondAttachmentRange = NSRange(location: 4, length: 1)
