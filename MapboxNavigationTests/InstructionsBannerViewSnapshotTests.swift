@@ -82,7 +82,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
-        let sub = [VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound, indications: [.left, .straightAhead], isLaneActive: true)]
+        let sub = [VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        sub[0].isActiveLane = true
+        sub[0].indications = [.left, .straightAhead]
         
         view.set(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary, subInstruction: sub))
         
@@ -103,8 +105,10 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
             VisualInstructionComponent(type: .text, text: "Mountain View Test", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         ]
         let sub = [
-            VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound, indications: [.left, .straightAhead], isLaneActive: true)
+            VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
         ]
+        sub[0].isActiveLane = true
+        sub[0].indications = [.left, .straightAhead]
         
         view.set(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary, subInstruction: sub))
         
@@ -205,7 +209,9 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
-        let sub = [VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound, indications: [.right], isLaneActive: true)]
+        let sub = [VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        sub[0].isActiveLane = true
+        sub[0].indications = [.left, .straightAhead]
         
         instructionsBannerView.set(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary, subInstruction: sub))
         
@@ -240,13 +246,18 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         ]
         let secondary = [VisualInstructionComponent(type: .text, text: "US 45 / Chicago", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)]
         
-        let sub = [VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound, indications: [.left, .straightAhead], isLaneActive: true)]
+        let sub = [VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)]
+        sub[0].isActiveLane = true
+        sub[0].indications = [.left, .straightAhead]
         
         instructionsBannerView.set(makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary, subInstruction: sub))
         
         let subLaneComponent = [
-            VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound, indications: [.left, .left], isLaneActive: true)
+            VisualInstructionComponent(type: .lane, text: "", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
         ]
+        subLaneComponent[0].isActiveLane = true
+        subLaneComponent[0].indications = [.left, .straightAhead]
+        
         let subLaneInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: subLaneComponent)
         
         nextBannerView.instructionLabel.instruction = subLaneInstruction

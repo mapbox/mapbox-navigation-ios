@@ -40,11 +40,16 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
     }()
 
     lazy var instructions: [VisualInstructionComponent] = {
-         let components =  [
+        
+        let subInstructionComponent = VisualInstructionComponent(type: .lane, text: "", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: NSNotFound)
+        subInstructionComponent.isActiveLane = true
+        subInstructionComponent.indications = [.right, .straightAhead]
+        
+        let components =  [
             VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .delimiter, text: "/", imageURL: nil, abbreviation: nil, abbreviationPriority: 0),
             VisualInstructionComponent(type: .text, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0),
-            VisualInstructionComponent(type: .lane, text: nil, imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound, indications: [.left, .straightAhead], isLaneActive: true)
+            subInstructionComponent
         ]
         return components
     }()
@@ -91,7 +96,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         //prime the cache to simulate images having already been loaded
         let instruction1 = VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         let instruction2 = VisualInstructionComponent(type: .image, text: "US 101", imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
-        let instruction3 = VisualInstructionComponent(type: .lane, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0, indications: [.left, .straightAhead], isLaneActive: true)
+        let instruction3 = VisualInstructionComponent(type: .lane, text: nil, imageURL: ShieldImage.us101.url, abbreviation: nil, abbreviationPriority: 0)
+        instruction3.isActiveLane = true
+        instruction3.indications = [.left, .straightAhead]
 
         imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.cacheKey!, toDisk: false)
         imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false)
@@ -100,7 +107,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let view = instructionsView()
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil, subInstruction: nil))
 
-        //the delimiter should NOT be present since both shields are already niin the cache
+        //the delimiter should NOT be present since both shields are already in the cache
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
 
         //explicitly reset the cache
