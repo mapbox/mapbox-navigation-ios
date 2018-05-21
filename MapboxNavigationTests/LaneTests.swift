@@ -51,6 +51,6 @@ class LaneTests: FBSnapshotTestCase {
         view.lane = Lane(indications: [.slightRight])
         view.maneuverDirection = .slightRight
         view.isValid = true
-        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyView(view, suffixes: ["_64"])
     }
 }
