@@ -82,9 +82,9 @@ class InstructionPresenter {
                 processedComponents.append(component)
                 strings.append(attributedStrings.reduce(initial, +))
             }
-            let isShield: (_: VisualInstructionComponent?) -> Bool = { (component) in
-                guard let key = component?.cacheKey else { return false }
-                return imageRepository.cachedImageForKey(key) != nil
+            let isShield: (_: VisualInstructionComponent?) -> Bool = { (component: VisualInstructionComponent?) in
+                guard let component = component else { return false }
+                return component.type == .image
             }
             let componentBefore = components.component(before: component)
             let componentAfter  = components.component(after: component)
