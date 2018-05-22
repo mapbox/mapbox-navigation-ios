@@ -91,6 +91,24 @@ class NavigationViewControllerTests: XCTestCase {
         updatedStyleNumberOfTimes = 0
     }
     
+    // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
+    func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
+        let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()])
+        navigationViewController.usesNightStyleInsideTunnels = true
+        navigationViewController.routeController.tunnelSimulationEnabled = true
+        let routeController = navigationViewController.routeController!
+        navigationViewController.styleManager.delegate = self
+        
+        let someLocation = dependencies.poi.first!
+        
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [someLocation])
+        
+        XCTAssertEqual(updatedStyleNumberOfTimes, 0, "The style should not be updated.")
+        updatedStyleNumberOfTimes = 0
+    }
+    
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
         let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()])
         navigationViewController.usesNightStyleInsideTunnels = true

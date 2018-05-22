@@ -150,7 +150,13 @@ open class StyleManager: NSObject {
     func forceRefreshAppearanceIfNeeded() {
         guard let location = delegate?.locationFor(styleManager: self) else { return }
         
-        guard currentStyleType != styleType(for: location) else {
+        let styleTypeForLocation = styleType(for: location)
+        
+        // If `styles` does not contain at least one style for the selected location, don't try and apply it.
+        let availableStyleTypesForLocation = styles.filter { $0.styleType == styleTypeForLocation }
+        guard availableStyleTypesForLocation.count > 0 else { return }
+        
+        guard currentStyleType != styleTypeForLocation else {
             return
         }
         
