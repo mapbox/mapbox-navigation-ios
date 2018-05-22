@@ -165,13 +165,12 @@ class NavigationViewControllerTests: XCTestCase {
     func testDestinationAnnotationUpdatesUponReroute() {
         let styleLoaded = XCTestExpectation(description: "Style Loaded")
         let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [DayStyle()], styleLoaded: styleLoaded)
-        let routeController = navigationViewController.routeController!
         
         //wait for the style to load -- routes won't show without it.
         wait(for: [styleLoaded], timeout: 5)
         navigationViewController.route = initialRoute
         
-        let firstDestination = routeController.routeProgress.remainingWaypoints.last!.coordinate
+        let firstDestination = initialRoute.routeOptions.waypoints.last!.coordinate
         guard let annotations = navigationViewController.mapView?.annotations else { return XCTFail("Annotations not found.")}
 
         let destinations = annotations.filter(annotationFilter(matching: firstDestination))
@@ -181,7 +180,7 @@ class NavigationViewControllerTests: XCTestCase {
         navigationViewController.route = newRoute
         
         guard let newAnnotations = navigationViewController.mapView?.annotations else { return XCTFail("New annotations not found.")}
-        let secondDestination = routeController.routeProgress.remainingWaypoints.last!.coordinate
+        let secondDestination = newRoute.routeOptions.waypoints.last!.coordinate
 
         //do we have a destination on the second route?
         let newDestinations = newAnnotations.filter(annotationFilter(matching: secondDestination))
