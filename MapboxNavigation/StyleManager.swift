@@ -153,8 +153,8 @@ open class StyleManager: NSObject {
         let styleTypeForLocation = styleType(for: location)
         
         // If `styles` does not contain at least one style for the selected location, don't try and apply it.
-        let avilableStyleTypesForLocation = styles.filter { $0.styleType == styleTypeForLocation }
-        guard avilableStyleTypesForLocation.count > 0 else { return }
+        let availableStyleTypesForLocation = styles.filter { $0.styleType == styleTypeForLocation }
+        guard availableStyleTypesForLocation.count > 0 else { return }
         
         guard currentStyleType != styleTypeForLocation else {
             return
