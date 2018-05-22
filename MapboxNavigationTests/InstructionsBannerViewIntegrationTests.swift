@@ -72,12 +72,12 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         super.tearDown()
     }
 
-    func testDelimiterIsShownWhenShieldsNotLoaded() {
+    func testDelimiterIsNotShownWhenShieldsNotLoaded() {
         let view = instructionsView()
 
-        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil, tertiaryInstruction: nil))
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
-        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+        XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
     }
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
@@ -111,10 +111,10 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         }
         
         //set visual instructions on the view, which triggers the instruction image fetch
-        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil, tertiaryInstruction: nil))
+        view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
-        //Slash should be present until an adjacent shield is downloaded
-        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+        //Slash should not be present until an adjacent shield is downloaded
+        XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
 
         //simulate the downloads
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
