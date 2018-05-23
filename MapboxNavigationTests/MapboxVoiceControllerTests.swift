@@ -52,7 +52,7 @@ class MapboxVoiceControllerTests: XCTestCase {
         let data = try! Data(contentsOf: filePathURL)
         voiceController?.play(data)
         voiceController = nil
-        XCTAssert(voiceController == nil)
+        XCTAssertNil(voiceController, "voiceController should be nil after nilling it.")
         
         wait(for: [deinitExpectation], timeout: 3)
     }
