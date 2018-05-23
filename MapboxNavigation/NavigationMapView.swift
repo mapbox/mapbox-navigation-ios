@@ -170,13 +170,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
+                if let location = userLocationForCourseTracking {
+                    updateCourseTracking(location: location, animated: true)
+                }
             } else {
                 courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
             
-            if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
-            }
         }
     }
 
@@ -342,10 +342,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
-        } else {
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-            }, completion: nil)
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
