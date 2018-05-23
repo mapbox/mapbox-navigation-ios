@@ -104,9 +104,13 @@ extension CLLocation {
             if initialHeading.clockwiseDifference(from: finalHeading) > 180 - RouteSnappingMaxManipulatedCourseAngle {
                 return stepCoordinates
             }
+
+            if finalHeading.difference(from: course) > RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion {
+                return stepCoordinates
+            }
         }
         
-        guard speed > RouteControllerMaximumSpeedForUsingCurrentStep else {
+        if speed <= RouteControllerMaximumSpeedForUsingCurrentStep {
             return stepCoordinates
         }
         
