@@ -190,7 +190,7 @@ open class RouteController: NSObject {
     /**
      The flag that indicates that the simulated navigation through tunnel(s) is enabled.
      */
-    public var tunnelSimulationEnabled: Bool = false
+    public var tunnelSimulationEnabled: Bool = true
 
     var didFindFasterRoute = false
 
