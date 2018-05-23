@@ -290,7 +290,8 @@ class RouteMapViewController: UIViewController {
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
-        
+        mapView.showWaypoints(routeController.routeProgress.route)
+
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }
