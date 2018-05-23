@@ -96,7 +96,7 @@ public var RouteSnappingMaxManipulatedCourseAngle: CLLocationDirection = 45
 /**
  Minimum Accuracy (maximum deviation, in meters) that the route snapping engine will accept before it stops snapping.
  */
-public var RouteSnappingMinimumHorizontalAccuracy: CLLocationAccuracy = 20.0
+public var RouteSnappingMinimumHorizontalAccuracy: CLLocationAccuracy = 35.0
 
 /**
  Minimum number of consecutive incorrect course updates before rerouting occurs.
