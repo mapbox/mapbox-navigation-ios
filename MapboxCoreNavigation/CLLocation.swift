@@ -119,7 +119,8 @@ extension CLLocation {
         guard distanceRemaining > RouteControllerManeuverZoneRadius else {
             return 0
         }
-        return speed * RouteControllerDeadReckoningTimeInterval
+        
+        return max(speed * RouteControllerDeadReckoningTimeInterval, 0)
     }
     
     /**
