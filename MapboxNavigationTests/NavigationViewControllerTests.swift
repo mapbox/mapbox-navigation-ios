@@ -164,7 +164,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testDestinationAnnotationUpdatesUponReroute() {
         let styleLoaded = XCTestExpectation(description: "Style Loaded")
-        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [DayStyle()], styleLoaded: styleLoaded)
+        let navigationViewController = NavigationViewControllerTestable(for: initialRoute, styles: [TestableDayStyle()], styleLoaded: styleLoaded)
         
         //wait for the style to load -- routes won't show without it.
         wait(for: [styleLoaded], timeout: 5)
@@ -256,5 +256,12 @@ class NavigationViewControllerTestable: NavigationViewController {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("This initalizer is not supported in this testing subclass.")
+    }
+}
+
+class TestableDayStyle: DayStyle {
+    required init() {
+        super.init()
+        mapStyleURL = Fixture.blankStyle
     }
 }
