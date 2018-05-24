@@ -712,7 +712,7 @@ extension RouteController: CLLocationManagerDelegate {
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint  || !(delegate?.routeController?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? true) else {
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint  && !(delegate?.routeController?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? true) else {
             return true
         }
 
