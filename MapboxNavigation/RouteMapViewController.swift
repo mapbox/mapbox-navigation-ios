@@ -29,8 +29,7 @@ class RouteMapViewController: UIViewController {
         let controller = FeedbackViewController()
         
         controller.sections = [
-            [.turnNotAllowed, .closure, .reportTraffic],
-            [.confusingInstructions, .generalMapError, .badRoute]
+            [.turnNotAllowed, .closure, .reportTraffic, .confusingInstructions, .generalMapError, .badRoute]
         ]
         
         controller.modalPresentationStyle = .custom
@@ -62,6 +61,7 @@ class RouteMapViewController: UIViewController {
         }
         return parent.pendingCamera
     }
+    
     var tiltedCamera: MGLMapCamera {
         get {
             let camera = mapView.camera
