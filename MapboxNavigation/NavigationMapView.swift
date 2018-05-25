@@ -170,13 +170,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
+                if let location = userLocationForCourseTracking {
+                    updateCourseTracking(location: location, animated: true)
+                }
             } else {
                 courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
             
-            if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
-            }
         }
     }
 
@@ -552,7 +552,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate).tinted(maneuverArrowColor) else { return }
+        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
         style.setImage(triangleImage, forName: "triangle-tip-navigation")
         
