@@ -292,12 +292,16 @@ class RouteMapViewController: UIViewController {
         }
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
+        
         var routes = [routeController.routeProgress.route]
         if let altRoute = routeController.routeProgress.alternateRoute {
             routes.append(altRoute)
         }
         mapView.showRoutes(routes, legIndex: routeController.routeProgress.legIndex)
         
+        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        mapView.showWaypoints(routeController.routeProgress.route)
+
         if annotatesSpokenInstructions {
             mapView.showVoiceInstructionsOnMap(route: routeController.routeProgress.route)
         }

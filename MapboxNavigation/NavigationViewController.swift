@@ -325,7 +325,7 @@ open class NavigationViewController: UIViewController {
     /**
      A Boolean value that indicates whether the dark style should apply when a route controller enters a tunnel.
      */
-    @objc public var usesNightStyleInsideTunnels: Bool = false
+    @objc public var usesNightStyleInsideTunnels: Bool = true
     
     var styleManager: StyleManager!
     
