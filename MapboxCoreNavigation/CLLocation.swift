@@ -118,12 +118,6 @@ extension CLLocation {
     }
     
     func projectedDistance(for distanceRemaining: CLLocationDistance) -> CLLocationDistance {
-        // If the user is near the end of the route, do not project the puck forward.
-        // Otherwise, this can cause strange wrapping at maneuvers.
-        guard distanceRemaining > RouteControllerManeuverZoneRadius else {
-            return 0
-        }
-        
         return max(speed * RouteControllerDeadReckoningTimeInterval, 0)
     }
     
