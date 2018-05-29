@@ -42,7 +42,6 @@ class RouteMapViewController: UIViewController {
         static let overview: Selector = #selector(RouteMapViewController.toggleOverview(_:))
         static let mute: Selector = #selector(RouteMapViewController.toggleMute(_:))
         static let feedback: Selector = #selector(RouteMapViewController.feedback(_:))
-        static let rerouteFeedback: Selector = #selector(RouteMapViewController.rerouteFeedback(_:))
         static let recenter: Selector = #selector(RouteMapViewController.recenter(_:))
     }
 
@@ -138,7 +137,6 @@ class RouteMapViewController: UIViewController {
         navigationView.overviewButton.addTarget(self, action: Actions.overview, for: .touchUpInside)
         navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
-        navigationView.rerouteReportButton.addTarget(self, action: Actions.rerouteFeedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
         notifyUserAboutLowVolume()
@@ -245,12 +243,6 @@ class RouteMapViewController: UIViewController {
         NavigationSettings.shared.voiceMuted = muted
     }
     
-    @objc func rerouteFeedback(_ sender: Any) {
-        showFeedback(source: .reroute)
-        navigationView.rerouteReportButton.slideUp(constraint: navigationView.rerouteFeedbackTopConstraint)
-        delegate?.mapViewControllerDidOpenFeedback(self)
-    }
-    
     @objc func feedback(_ sender: Any) {
         showFeedback()
         delegate?.mapViewControllerDidOpenFeedback(self)
@@ -342,12 +334,6 @@ class RouteMapViewController: UIViewController {
         
         if !(routeController.locationManager is SimulatedLocationManager) {
             statusView.hide(delay: 2, animated: true)
-            
-            if !navigationView.reportButton.isHidden {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: {
-                    self.navigationView.rerouteReportButton.slideDown(constraint: self.navigationView.rerouteFeedbackTopConstraint, interval: 5)
-                })
-            }
         }
         
         if notification.userInfo![RouteControllerNotificationUserInfoKey.isProactiveKey] as! Bool {
