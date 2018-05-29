@@ -61,6 +61,14 @@ class ExitView: StylableView {
         }
     }
     
+    
+    func spacing(for side: ExitSide, direction: UIUserInterfaceLayoutDirection = UIApplication.shared.userInterfaceLayoutDirection) -> CGFloat {
+        let space: (less: CGFloat, more: CGFloat) = (4.0, 6.0)
+        let lessSide: ExitSide = (direction == .rightToLeft) ? .left : .right
+        return side == lessSide ? space.less : space.more
+    }
+    
+    
     convenience init(pointSize: CGFloat, side: ExitSide = .right, text: String) {
         self.init(frame: .zero)
         self.pointSize = pointSize
@@ -120,14 +128,16 @@ class ExitView: StylableView {
     }
     func rightExitConstraints() -> [NSLayoutConstraint] {
         let labelLeading = exitNumberLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
-        let imageLabelSpacing = exitNumberLabel.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -8)
+        let spacing = self.spacing(for: .right)
+        let imageLabelSpacing = exitNumberLabel.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -1 * spacing)
         let imageTrailing = trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 8)
         return [labelLeading, imageLabelSpacing, imageTrailing]
     }
     
     func leftExitConstraints() -> [NSLayoutConstraint] {
         let imageLeading = imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
-        let imageLabelSpacing = imageView.trailingAnchor.constraint(equalTo: exitNumberLabel.leadingAnchor, constant: -8)
+        let spacing = self.spacing(for: .left)
+        let imageLabelSpacing = imageView.trailingAnchor.constraint(equalTo: exitNumberLabel.leadingAnchor, constant: -1 * spacing)
         let labelTrailing = trailingAnchor.constraint(equalTo: exitNumberLabel.trailingAnchor, constant: 8)
         return [imageLeading, imageLabelSpacing, labelTrailing]
     }
