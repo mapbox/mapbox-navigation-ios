@@ -170,13 +170,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
-                if let location = userLocationForCourseTracking {
-                    updateCourseTracking(location: location, animated: true)
-                }
             } else {
                 courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
-            
+            if let location = userLocationForCourseTracking {
+                updateCourseTracking(location: location, animated: true)
+            }
         }
     }
 
