@@ -1032,7 +1032,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         tracksUserCourse = false
         
         // If the user has a short distance left on the route, prevent the camera from zooming all the way.
-        // `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` will go beyond what is convient for the driver.
+        // `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` will go beyond what is convenient for the driver.
         guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else {
             let camera = self.camera
             camera.pitch = 0
