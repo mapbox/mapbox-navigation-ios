@@ -104,7 +104,7 @@ class RouteControllerTests: XCTestCase {
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
     }
     
-    func testSnappedAtEndOfStepLocation() {
+    func testSnappedAtEndOfStepLocationWhenMovingSlowly() {
         let navigation = dependencies.routeController
         let firstLocation = dependencies.routeLocations.firstLocation
         
@@ -120,6 +120,26 @@ class RouteControllerTests: XCTestCase {
         let firstLocationOnNextStepWithSpeed = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 10, verticalAccuracy: 10, course: 10, speed: 5, timestamp: Date())
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
         XCTAssertEqual(navigation.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when moving")
+    }
+    
+    func testSnappedAtEndOfStepLocationWhenCourseIsSimilar() {
+        let navigation = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
+        XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
+        
+        let firstCoordinateOnUpcomingStep = navigation.routeProgress.currentLegProgress.upComingStep!.coordinates!.first!
+        
+        let finalHeading = navigation.routeProgress.currentLegProgress.upComingStep!.finalHeading!
+        let firstLocationOnNextStepWithDifferentCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: -finalHeading, speed: 5, timestamp: Date())
+        
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
+        XCTAssertEqual(navigation.location!.coordinate, navigation.routeProgress.currentLegProgress.currentStep.coordinates!.last!, "When user's course is dissimilar from the finalHeading, they should not snap to upcoming step")
+        
+        let firstLocationOnNextStepWithCorrectCourse = CLLocation(coordinate: firstCoordinateOnUpcomingStep, altitude: 0, horizontalAccuracy: 30, verticalAccuracy: 10, course: finalHeading, speed: 5, timestamp: Date())
+        navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithCorrectCourse])
+        XCTAssertEqual(navigation.location!.coordinate, firstCoordinateOnUpcomingStep, "User is snapped to upcoming step when their course is similar to the final heading")
     }
 
     func testSnappedLocationForUnqualifiedLocation() {
@@ -266,6 +286,47 @@ class RouteControllerTests: XCTestCase {
         // MARK: It tells the delegate that the user did arrive
         XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
 
+        // MARK: It enqueues and flushes an arrival event
+        let expectedEventName = MMEEventTypeNavigationArrive
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+    }
+    
+    func testNoReroutesAfterArriving() {
+        let routeController = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
+        let lastLocation = dependencies.lastLocation
+        
+        // MARK: When navigation begins with a location update
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [firstLocation])
+        
+        // MARK: It queues and flushes a Depart event
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        // TODO: should there be a delegate message here as well?
+        
+        // MARK: Update to last step
+        routeController.advanceStepIndex(to: routeController.routeProgress.route.legs.first!.steps.count - 1)
+        
+        // MARK: When navigation continues with a location update to the last location
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
+        
+        // MARK: And then navigation continues with another location update at the last location
+        let currentLocation = routeController.location!
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
+        
+        // MARK: It tells the delegate that the user did arrive
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
+        
+        // Find a location that is very far off route
+        let locationBeyondRoute = routeController.location!.coordinate.coordinate(at: 2000, facing: 0)
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [CLLocation(latitude: locationBeyondRoute.latitude, longitude: locationBeyondRoute.latitude)])
+        
+        // Make sure configurable delegate is called
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:shouldPreventReroutesWhenArrivingAt:)"))
+        
+        // We should not reroute here because the user has arrived.
+        XCTAssertFalse(delegate.recentMessages.contains("routeController(_:didRerouteAlong:)"))
+        
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
         XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))

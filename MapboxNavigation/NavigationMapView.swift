@@ -173,7 +173,6 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             } else {
                 courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
             }
-            
             if let location = userLocationForCourseTracking {
                 updateCourseTracking(location: location, animated: true)
             }
@@ -552,7 +551,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate).tinted(maneuverArrowColor) else { return }
+        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
         style.setImage(triangleImage, forName: "triangle-tip-navigation")
         
@@ -1030,13 +1029,24 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
         tracksUserCourse = false
+        
+        // If the user has a short distance left on the route, prevent the camera from zooming all the way.
+        // `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` will go beyond what is convenient for the driver.
+        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else {
+            let camera = self.camera
+            camera.pitch = 0
+            camera.heading = 0
+            camera.centerCoordinate = userLocation
+            camera.altitude = NavigationMapView.defaultAltitude
+            setCamera(camera, animated: true)
+            return
+        }
+        
+        // Sadly, `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` uses the current pitch and direction of the mapview. Ideally, we'd be able to pass in zero.
         let camera = self.camera
         camera.pitch = 0
         camera.heading = 0
         self.camera = camera
-        
-        // Don't keep zooming in
-        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else { return }
         
         setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
     }

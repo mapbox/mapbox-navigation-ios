@@ -325,7 +325,7 @@ open class NavigationViewController: UIViewController {
     /**
      A Boolean value that indicates whether the dark style should apply when a route controller enters a tunnel.
      */
-    @objc public var usesNightStyleInsideTunnels: Bool = false
+    @objc public var usesNightStyleInsideTunnels: Bool = true
     
     var styleManager: StyleManager!
     
@@ -576,7 +576,17 @@ extension NavigationViewController: RouteControllerDelegate {
     }
     
     @objc public func routeController(_ routeController: RouteController, didUpdate locations: [CLLocation]) {
-        if snapsUserLocationAnnotationToRoute, let snappedLocation = routeController.location ?? locations.last, let rawLocation = locations.last {
+        
+        // If the user has arrived, don't snap the user puck.
+        // In the case the user drives beyond the waypoint,
+        // we should accurately depict this.
+        let shouldPreventReroutesWhenArrivingAtWaypoint = routeController.delegate?.routeController?(routeController, shouldPreventReroutesWhenArrivingAt: routeController.routeProgress.currentLeg.destination) ?? true
+        let userHasArrivedAndShouldPreventRerouting = shouldPreventReroutesWhenArrivingAtWaypoint && !routeController.routeProgress.currentLegProgress.userHasArrivedAtWaypoint
+        
+        if snapsUserLocationAnnotationToRoute,
+            let snappedLocation = routeController.location ?? locations.last,
+            let rawLocation = locations.last,
+            userHasArrivedAndShouldPreventRerouting {
             mapViewController?.mapView.updateCourseTracking(location: snappedLocation, animated: true)
             mapViewController?.labelCurrentRoad(at: rawLocation, for: snappedLocation)
         } else if let rawlocation = locations.last {
