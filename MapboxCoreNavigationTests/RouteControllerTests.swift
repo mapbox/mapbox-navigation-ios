@@ -281,6 +281,47 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
     
+    func testNoReroutesAfterArriving() {
+        let routeController = dependencies.routeController
+        let firstLocation = dependencies.firstLocation
+        let lastLocation = dependencies.lastLocation
+        
+        // MARK: When navigation begins with a location update
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [firstLocation])
+        
+        // MARK: It queues and flushes a Depart event
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        // TODO: should there be a delegate message here as well?
+        
+        // MARK: Update to last step
+        routeController.advanceStepIndex(to: routeController.routeProgress.route.legs.first!.steps.count - 1)
+        
+        // MARK: When navigation continues with a location update to the last location
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
+        
+        // MARK: And then navigation continues with another location update at the last location
+        let currentLocation = routeController.location!
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [currentLocation])
+        
+        // MARK: It tells the delegate that the user did arrive
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:didArriveAt:)"))
+        
+        // Find a location that is very far off route
+        let locationBeyondRoute = routeController.location!.coordinate.coordinate(at: 2000, facing: 0)
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [CLLocation(latitude: locationBeyondRoute.latitude, longitude: locationBeyondRoute.latitude)])
+        
+        // Make sure configurable delegate is called
+        XCTAssertTrue(delegate.recentMessages.contains("routeController(_:shouldPreventReroutesWhenArrivingAt:)"))
+        
+        // We should not reroute here because the user has arrived.
+        XCTAssertFalse(delegate.recentMessages.contains("routeController(_:didRerouteAlong:)"))
+        
+        // MARK: It enqueues and flushes an arrival event
+        let expectedEventName = MMEEventTypeNavigationArrive
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+    }
+    
     func testRouteControllerDoesNotHaveRetainCycle() {
         let locationManager = NavigationLocationManager()
         var routeController: RouteControllerSpy? = RouteControllerSpy(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManagerSpy)
