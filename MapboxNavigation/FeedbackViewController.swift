@@ -189,6 +189,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         abortAutodismiss()
+        progressBar.progress = 1
     }
 }
 
