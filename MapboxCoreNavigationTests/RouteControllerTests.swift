@@ -124,7 +124,7 @@ class RouteControllerTests: XCTestCase {
     
     func testSnappedAtEndOfStepLocationWhenCourseIsSimilar() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
@@ -273,7 +273,7 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
 
-        // MARK: When at a valid location just before the last location (should this be necessary?)
+        // MARK: When at a valid location just before the last location (should this really be necessary?)
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [penultimateLocation])
 
         // MARK: When navigation continues with a location update to the last location
@@ -294,9 +294,10 @@ class RouteControllerTests: XCTestCase {
     
     func testNoReroutesAfterArriving() {
         let routeController = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
-        let lastLocation = dependencies.lastLocation
-        
+        let firstLocation = dependencies.routeLocations.firstLocation
+        let penultimateLocation = dependencies.routeLocations.penultimateLocation
+        let lastLocation = dependencies.routeLocations.lastLocation
+
         // MARK: When navigation begins with a location update
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [firstLocation])
         
@@ -304,9 +305,9 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
         
-        // MARK: Update to last step
-        routeController.advanceStepIndex(to: routeController.routeProgress.route.legs.first!.steps.count - 1)
-        
+        // MARK: When at a valid location just before the last location (should this really be necessary?)
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [penultimateLocation])
+
         // MARK: When navigation continues with a location update to the last location
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
         
