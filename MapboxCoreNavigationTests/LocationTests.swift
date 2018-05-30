@@ -47,7 +47,7 @@ class LocationTests: XCTestCase {
         let initialHeadingOnFirstStep = progress.currentLegProgress.currentStep.finalHeading!
         let coordinateAlongFirstStep = Polyline(progress.currentLegProgress.nearbyCoordinates).coordinateFromStart(distance: 100)!
         let locationAlongFirstStep = CLLocation(coordinate: coordinateAlongFirstStep, altitude: 0, horizontalAccuracy: 1, verticalAccuracy: 0, course: initialHeadingOnFirstStep, speed: 10, timestamp: Date())
-        guard let snapped = locationAlongFirstStep.snapped(to: progress.currentLegProgress) else {
+        guard let snapped = locationAlongFirstStep.snapped(to: progress.currentLegProgress, previousSpeeds: []) else {
             return XCTFail("Location should have snapped to route")
         }
         
