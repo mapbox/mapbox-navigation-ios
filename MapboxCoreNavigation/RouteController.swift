@@ -400,10 +400,12 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        return rawLocation?.snapped(to: routeProgress.currentLegProgress)
+        return rawLocation?.snapped(to: routeProgress.currentLegProgress, previousSpeeds: speeds)
     }
 
     var heading: CLHeading?
+    
+    var speeds: [CLLocationSpeed] = []
 
     /**
      The most recently received user location.
@@ -586,6 +588,14 @@ extension RouteController: CLLocationManagerDelegate {
 
         guard let location = potentialLocation else {
             return
+        }
+        
+        if let raw = rawLocation {
+            let speedDelta = location.speed - raw.speed
+            speeds.append(speedDelta)
+            if speeds.count >= 5 {
+                speeds.removeFirst()
+            }
         }
 
         self.rawLocation = location
