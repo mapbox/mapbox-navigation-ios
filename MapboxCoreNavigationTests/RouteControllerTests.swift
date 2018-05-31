@@ -17,17 +17,27 @@ class RouteControllerTests: XCTestCase {
     let directionsClientSpy = DirectionsSpy(accessToken: "garbage", host: nil)
     let delegate = RouteControllerDelegateSpy()
 
-    lazy var dependencies: (routeController: RouteController, firstLocation: CLLocation, lastLocation: CLLocation) = {
+    typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
+
+    lazy var dependencies: (routeController: RouteController, routeLocations: RouteLocations) = {
         let routeController = RouteController(along: initialRoute, directions: directionsClientSpy, locationManager: NavigationLocationManager(), eventsManager: eventsManagerSpy)
         routeController.delegate = delegate
 
-        let firstCoord = routeController.routeProgress.currentLegProgress.nearbyCoordinates.first!
+        let legProgress: RouteLegProgress = routeController.routeProgress.currentLegProgress
+
+        let firstCoord = legProgress.nearbyCoordinates.first!
         let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
-        let lastCoord = routeController.routeProgress.currentLegProgress.remainingSteps.last!.coordinates!.first!
+        let remainingStepCount = legProgress.remainingSteps.count
+        let penultimateCoord = legProgress.remainingSteps[remainingStepCount - 2].coordinates!.first!
+        let penultimateLocation = CLLocation(coordinate: penultimateCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
+
+        let lastCoord = legProgress.remainingSteps.last!.coordinates!.first!
         let lastLocation = CLLocation(coordinate: lastCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
-        return (routeController: routeController, firstLocation: firstLocation, lastLocation: lastLocation)
+        let routeLocations = RouteLocations(firstLocation, penultimateLocation, lastLocation)
+
+        return (routeController: routeController, routeLocations: routeLocations)
     }()
 
     lazy var initialRoute: Route = {
@@ -56,7 +66,7 @@ class RouteControllerTests: XCTestCase {
 
     func testUserIsOnRoute() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
 
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertTrue(navigation.userIsOnRoute(firstLocation), "User should be on route")
@@ -64,7 +74,7 @@ class RouteControllerTests: XCTestCase {
 
     func testUserIsOffRoute() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
 
         let coordinateOffRoute = firstLocation.coordinate.coordinate(at: 100, facing: 90)
         let locationOffRoute = CLLocation(latitude: coordinateOffRoute.latitude, longitude: coordinateOffRoute.longitude)
@@ -74,7 +84,7 @@ class RouteControllerTests: XCTestCase {
 
     func testAdvancingToFutureStepAndNotRerouting() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertTrue(navigation.userIsOnRoute(firstLocation), "User should be on route")
         XCTAssertEqual(navigation.routeProgress.currentLegProgress.stepIndex, 0, "User is on first step")
@@ -89,14 +99,14 @@ class RouteControllerTests: XCTestCase {
 
     func testSnappedLocation() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
     }
     
     func testSnappedAtEndOfStepLocationWhenMovingSlowly() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
@@ -114,7 +124,7 @@ class RouteControllerTests: XCTestCase {
     
     func testSnappedAtEndOfStepLocationWhenCourseIsSimilar() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
@@ -134,7 +144,7 @@ class RouteControllerTests: XCTestCase {
 
     func testSnappedLocationForUnqualifiedLocation() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
         XCTAssertEqual(navigation.location!.coordinate, firstLocation.coordinate, "Check snapped location is working")
 
@@ -176,7 +186,7 @@ class RouteControllerTests: XCTestCase {
 
     func testLocationShouldUseHeading() {
         let navigation = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [firstLocation])
 
         XCTAssertEqual(navigation.location!.course, firstLocation.course, "Course should be using course")
@@ -202,7 +212,7 @@ class RouteControllerTests: XCTestCase {
 
     func testReroutingFromALocationSendsEvents() {
         let routeController = dependencies.routeController
-        let testLocation = dependencies.firstLocation
+        let testLocation = dependencies.routeLocations.firstLocation
 
         routeController.delaysEventFlushing = false
 
@@ -252,8 +262,9 @@ class RouteControllerTests: XCTestCase {
 
     func testGeneratingAnArrivalEvent() {
         let routeController = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
-        let lastLocation = dependencies.lastLocation
+        let firstLocation = dependencies.routeLocations.firstLocation
+        let penultimateLocation = dependencies.routeLocations.penultimateLocation
+        let lastLocation = dependencies.routeLocations.lastLocation
 
         // MARK: When navigation begins with a location update
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [firstLocation])
@@ -261,9 +272,9 @@ class RouteControllerTests: XCTestCase {
         // MARK: It queues and flushes a Depart event
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
-        
-        // MARK: Update to last step
-        routeController.advanceStepIndex(to: routeController.routeProgress.route.legs.first!.steps.count - 1)
+
+        // MARK: When at a valid location just before the last location (should this really be necessary?)
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [penultimateLocation])
 
         // MARK: When navigation continues with a location update to the last location
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
@@ -283,9 +294,10 @@ class RouteControllerTests: XCTestCase {
     
     func testNoReroutesAfterArriving() {
         let routeController = dependencies.routeController
-        let firstLocation = dependencies.firstLocation
-        let lastLocation = dependencies.lastLocation
-        
+        let firstLocation = dependencies.routeLocations.firstLocation
+        let penultimateLocation = dependencies.routeLocations.penultimateLocation
+        let lastLocation = dependencies.routeLocations.lastLocation
+
         // MARK: When navigation begins with a location update
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [firstLocation])
         
@@ -293,9 +305,9 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
         // TODO: should there be a delegate message here as well?
         
-        // MARK: Update to last step
-        routeController.advanceStepIndex(to: routeController.routeProgress.route.legs.first!.steps.count - 1)
-        
+        // MARK: When at a valid location just before the last location (should this really be necessary?)
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [penultimateLocation])
+
         // MARK: When navigation continues with a location update to the last location
         routeController.locationManager(routeController.locationManager, didUpdateLocations: [lastLocation])
         

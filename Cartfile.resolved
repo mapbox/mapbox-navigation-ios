@@ -1,4 +1,4 @@
-binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "4.0.1"
+binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" "4.0.2"
 github "Quick/Nimble" "v7.1.1"
 github "Quick/Quick" "v1.3.0"
 github "ceeK/Solar" "2.1.0"
