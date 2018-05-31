@@ -77,7 +77,7 @@ extension CLLocation {
         
         let lineSlicedFromUser = Polyline(coords).sliced(from: coordinate)
         guard let projectedLocation = lineSlicedFromUser.coordinateFromStart(distance: projectedDistance(for: distanceRemaining)) else { return nil }
-        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords, alternateCoordinate: projectedLocation) else { return nil }
+        guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords, customClosestCoordinate: projectedLocation) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
         let userCoordinate = projectedLocation
@@ -124,10 +124,10 @@ extension CLLocation {
     /**
      Given a location and a series of coordinates, compute what the course should be for a the location.
      */
-    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D], alternateCoordinate: CLLocationCoordinate2D? = nil) -> CLLocationDirection? {
+    func interpolatedCourse(along coordinates: [CLLocationCoordinate2D], customClosestCoordinate: CLLocationCoordinate2D? = nil) -> CLLocationDirection? {
         let nearByPolyline = Polyline(coordinates)
         
-        guard let closest = nearByPolyline.closestCoordinate(to: alternateCoordinate ?? coordinate) else { return nil }
+        guard let closest = nearByPolyline.closestCoordinate(to: customClosestCoordinate ?? coordinate) else { return nil }
         
         let slicedLineBehind = Polyline(coordinates.reversed()).sliced(from: closest.coordinate, to: coordinates.reversed().last)
         let slicedLineInFront = nearByPolyline.sliced(from: closest.coordinate, to: coordinates.last)
