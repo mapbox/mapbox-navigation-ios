@@ -188,8 +188,10 @@ extension FeedbackViewController: UICollectionViewDataSource {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        // In case the view is scrolled, dismiss the feedback window immediately
+        // and reset the `progressBar` back to a full progress.
         abortAutodismiss()
-        progressBar.progress = 1
+        progressBar.progress = 1.0
     }
 }
 
