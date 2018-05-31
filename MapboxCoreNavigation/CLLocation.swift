@@ -71,12 +71,12 @@ extension CLLocation {
     
     //MARK: - Route Snapping
     
-    func snapped(to legProgress: RouteLegProgress, previousSpeeds: [CLLocationSpeed]) -> CLLocation? {
+    func snapped(to legProgress: RouteLegProgress) -> CLLocation? {
         let coords = coordinates(for: legProgress)
         let distanceRemaining = legProgress.currentStepProgress.distanceRemaining
         
         let lineSlicedFromUser = Polyline(coords).sliced(from: coordinate)
-        guard let projectedLocation = lineSlicedFromUser.coordinateFromStart(distance: projectedDistance(for: distanceRemaining, previousSpeeds: previousSpeeds)) else { return nil }
+        guard let projectedLocation = lineSlicedFromUser.coordinateFromStart(distance: projectedDistance(for: distanceRemaining)) else { return nil }
         guard let calculatedCourseForLocationOnStep = interpolatedCourse(along: coords, alternateCoordinate: projectedLocation) else { return nil }
         
         let userCourse = calculatedCourseForLocationOnStep
@@ -117,15 +117,8 @@ extension CLLocation {
         return legProgress.nearbyCoordinates
     }
     
-    func projectedDistance(for distanceRemaining: CLLocationDistance, previousSpeeds: [CLLocationSpeed]) -> CLLocationDistance {
-        var defaultDeadReckonDistance = speed * RouteControllerDeadReckoningTimeInterval
-        
-        // If the user is reducing in speed, start to dead reckon less
-        let averageDelta = previousSpeeds.reduce(0, +) / Double(previousSpeeds.count)
-        if averageDelta < 0 {
-            defaultDeadReckonDistance = defaultDeadReckonDistance + averageDelta
-        }
-        return max(defaultDeadReckonDistance, 0)
+    func projectedDistance(for distanceRemaining: CLLocationDistance) -> CLLocationDistance {
+        return max(speed * RouteControllerDeadReckoningTimeInterval, 0)
     }
     
     /**
