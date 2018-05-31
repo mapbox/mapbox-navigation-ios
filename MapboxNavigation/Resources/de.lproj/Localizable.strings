@@ -1,3 +1,6 @@
+/* Format string for indicating the device volume is low; 1 = device model */
+"DEVICE_VOLUME_LOW" = "%@ Lautstärke leiser";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Schließen";
 
@@ -59,10 +62,10 @@
 "RATING_ACCESSIBILITY_RESET" = "Klicke, um Bewertung auf 0 zurückzusetzen.";
 
 /* Format for accessibility label of button for setting a rating; 1 = number of stars */
-"RATING_ACCESSIBILITY_SET" = "Set %ld-star rating";
+"RATING_ACCESSIBILITY_SET" = "Setze %ld-Sterne Bewertung";
 
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
-"RATING_STARS_FORMAT" = "%ld star(s) set.";
+"RATING_STARS_FORMAT" = "%ld Stern(e) gesetzt.";
 
 /* Title on button that appears when a reroute occurs */
 "REROUTE_REPORT_TITLE" = "Problem melden";
@@ -81,3 +84,4 @@
 
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ und %2$@";
+
