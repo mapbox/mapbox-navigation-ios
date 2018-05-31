@@ -67,9 +67,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "%ld stjerne(r)";
 
-/* Title on button that appears when a reroute occurs */
-"REROUTE_REPORT_TITLE" = "Raporter et problem";
-
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Beregner ny rute…";
 

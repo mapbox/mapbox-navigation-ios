@@ -67,9 +67,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Ha calificado %li estrella(s).";
 
-/* Title on button that appears when a reroute occurs */
-"REROUTE_REPORT_TITLE" = "Reportar un problema";
-
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Reenrutando…";
 
