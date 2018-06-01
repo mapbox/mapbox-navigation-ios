@@ -13,7 +13,7 @@ extension VisualInstructionComponent {
         case .image:
             guard let imageURL = imageURL else { return genericCacheKey }
             return "\(imageURL.absoluteString)-\(VisualInstructionComponent.scale)"
-        case .text, .delimiter, .lane:
+        case .text, .delimiter:
             return nil
         }
     }

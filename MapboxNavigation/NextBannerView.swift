@@ -60,7 +60,7 @@ open class NextBannerView: UIView {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
         let component = VisualInstructionComponent(type: .text, text: "Next step", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
-        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: [component])
+        let instruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: [component])
         instructionLabel.instruction = instruction
     }
     
