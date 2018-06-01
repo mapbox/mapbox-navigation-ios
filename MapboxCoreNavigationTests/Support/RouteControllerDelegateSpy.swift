@@ -39,4 +39,9 @@ class RouteControllerDelegateSpy: RouteControllerDelegate {
         recentMessages.append(#function)
         return true
     }
+    
+    internal func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
+        recentMessages.append(#function)
+        return true
+    }
 }

@@ -4,6 +4,3 @@
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "أبلِغ عن مشكلة";
 
-/* Title on button that appears when a reroute occurs */
-"REROUTE_REPORT_TITLE" = "أبلِغ عن مشكلة";
-
