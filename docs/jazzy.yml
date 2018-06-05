@@ -17,6 +17,7 @@ custom_categories:
       - Localization and Internationalization
       - Using Map Matching
       - Reduce Memory Usage
+      - Simulating Routes
   - name: Examples
     children:
       - Basic
