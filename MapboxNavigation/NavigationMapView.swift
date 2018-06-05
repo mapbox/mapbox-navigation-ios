@@ -1051,6 +1051,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
     }
     
+    /**
+     Recenters the camera and begins tracking the user's location.
+     */
     @objc public func recenterMap() {
         tracksUserCourse = true
         enableFrameByFrameCourseViewTracking(for: 3)
