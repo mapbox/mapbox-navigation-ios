@@ -163,7 +163,21 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Determines whether the map should follow the user location and rotate when the course changes.
      - seealso: NavigationMapViewCourseTrackingDelegate
      */
-    open var tracksUserCourse: Bool = false
+    open var tracksUserCourse: Bool = false {
+        didSet {
+            if tracksUserCourse {
+                enableFrameByFrameCourseViewTracking(for: 2)
+                altitude = NavigationMapView.defaultAltitude
+                showsUserLocation = true
+                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
+            } else {
+                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
+            }
+            if let location = userLocationForCourseTracking {
+                updateCourseTracking(location: location, animated: true)
+            }
+        }
+    }
 
     /**
      A `UIView` used to indicate the user’s location and course on the map.

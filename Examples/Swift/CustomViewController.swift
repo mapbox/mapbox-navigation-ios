@@ -7,7 +7,7 @@ import AVFoundation
 import MapboxDirections
 import Turf
 
-class CustomViewController: UIViewController {
+class CustomViewController: UIViewController, MGLMapViewDelegate {
 
     var destination: MGLPointAnnotation!
     let directions = Directions.shared
@@ -26,6 +26,8 @@ class CustomViewController: UIViewController {
         super.viewDidLoad()
 
         routeController = RouteController(along: userRoute!)
+        
+        mapView.delegate = self
 
         resumeNotifications()
 
