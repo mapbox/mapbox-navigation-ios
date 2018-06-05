@@ -57,7 +57,7 @@ class ImageDownloadOperation: Operation, ImageDownload {
     }
 
     func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock) {
-        barrierQueue.async {
+        barrierQueue.async(flags: .barrier) {
             self.completionBlocks.append(completion)
         }
     }
