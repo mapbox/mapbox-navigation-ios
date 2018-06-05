@@ -52,6 +52,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
             mapView?.showRoutes(routes)
             mapView?.showWaypoints(current)
+            mapView?.showAlternateRoutePopup(for: routes)
         }
     }
 
@@ -178,7 +179,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         let locationManager = ReplayLocationManager(locations: Array<CLLocation>.locations(from: filePath))
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: locationManager)
+        let navigationViewController = NavigationViewController(for: [route], locationManager: locationManager)
 
         present(navigationViewController, animated: true, completion: nil)
     }
@@ -228,22 +229,22 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: Basic Navigation
 
     func startBasicNavigation() {
-        guard let route = currentRoute else { return }
+        guard let routes = routes else { return }
 
         exampleMode = .default
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: routes, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)
     }
     
     func startNavigation(styles: [Style]) {
-        guard let route = currentRoute else { return }
+        guard let routes = routes else { return }
         
         exampleMode = .default
         
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: routes, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
         
         presentAndRemoveMapview(navigationViewController)
@@ -259,7 +260,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         exampleMode = .custom
 
         customViewController.simulateLocation = simulationButton.isSelected
-        customViewController.userRoute = route
+        customViewController.routes = routes
 
         let destination = MGLPointAnnotation()
         destination.coordinate = route.coordinates!.last!
@@ -271,13 +272,13 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: Styling the default UI
 
     func startStyledNavigation() {
-        guard let route = self.currentRoute else { return }
+        guard let routes = routes else { return }
 
         exampleMode = .styled
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
 
-        let navigationViewController = NavigationViewController(for: route, styles: styles, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: routes, styles: styles, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)
@@ -291,11 +292,11 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     // MARK: Navigation with multiple waypoints
 
     func startMultipleWaypoints() {
-        guard let route = self.currentRoute else { return }
+        guard let routes = routes else { return }
 
         exampleMode = .multipleWaypoints
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: routes, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)
@@ -344,6 +345,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             mapView.setVisibleCoordinateBounds(MGLPolygon(coordinates: coords, count: coordCounts).overlayBounds, animated: false)
             self.mapView?.showRoutes(routes)
             self.mapView?.showWaypoints(currentRoute!)
+            self.mapView?.showAlternateRoutePopup(for: routes)
         }
     }
 }

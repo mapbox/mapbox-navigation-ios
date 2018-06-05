@@ -10,12 +10,13 @@ open class RouteProgress: NSObject {
     /**
      Returns the current `Route`.
      */
-    @objc public let route: Route
+    @objc public var route: Route {
+        return routes[routeIndex]
+    }
     
-    /**
-     An optional alternate route the user could use for navigation.
-     */
-    @objc public var alternateRoute: Route?
+    @objc public let routes: [Route]
+    
+    @objc public let routeIndex: Int
 
     /**
      Index representing current `RouteLeg`.
@@ -104,11 +105,11 @@ open class RouteProgress: NSObject {
      - parameter route: The route to follow.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    @objc public init(route: Route, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
-        self.route = route
+    @objc public init(routes: [Route], legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+        self.routes = routes
         self.legIndex = legIndex
-        self.alternateRoute = nil
-        self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+        self.routeIndex = 0
+        self.currentLegProgress = RouteLegProgress(leg: routes[routeIndex].legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
         super.init()
         
         for (legIndex, leg) in route.legs.enumerated() {

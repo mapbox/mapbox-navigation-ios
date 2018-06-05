@@ -8,7 +8,7 @@ import Turf
  `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
  */
 @objc(MBNavigationMapView)
-open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
+open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate, MGLMapViewDelegate {
     
     // MARK: Class Constants
     
@@ -477,6 +477,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
+    public func mapView(_ mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+        return true
+    }
+    
     /**
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      */
@@ -542,15 +546,17 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    @objc public func showAlternateRoutePopup(for routeProgress: RouteProgress) {
+    @objc public func showAlternateRoutePopup(for routes: [Route]) {
         guard self.selectedAnnotations.count == 0 else { return }
-        guard let userCoordinate = self.userLocationForCourseTracking?.coordinate else { return }
-        guard let route = routes?.first else { return }
-        guard let altRoutes = routes?.suffix(from: 1) else { return }
-        let currentPolyline = Polyline(route.coordinates!).sliced(from: userCoordinate)
+        guard let route = routes.first else { return }
+        
+        let userCoordinate = self.userLocationForCourseTracking?.coordinate
+        
+        let altRoutes = routes.suffix(from: 1)
+        let currentPolyline = userCoordinate == nil ? Polyline(route.coordinates!).sliced(from: userCoordinate) : Polyline(route.coordinates!)
         
         for altRoute in altRoutes {
-            let altPolyline = Polyline(altRoute.coordinates!).sliced(from: userCoordinate)
+            let altPolyline = userCoordinate == nil ? Polyline(altRoute.coordinates!).sliced(from: userCoordinate) : Polyline(altRoute.coordinates!)
             
             let dateComponentsFormatter = DateComponentsFormatter()
             dateComponentsFormatter.allowedUnits = [.hour, .minute]

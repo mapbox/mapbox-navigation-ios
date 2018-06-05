@@ -270,7 +270,7 @@ class RouteMapViewController: UIViewController {
         mapView.setNeedsUpdateConstraints()
     }
 
-    func notifyDidReroute(route: Route) {
+    func notifyDidReroute(routes: [Route]) {
         updateETA()
         currentStepIndexMapped = 0
         if let annotation = mapView.annotations?.first {
@@ -285,13 +285,8 @@ class RouteMapViewController: UIViewController {
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         
-        var routes = [routeController.routeProgress.route]
-        if let altRoute = routeController.routeProgress.alternateRoute {
-            routes.append(altRoute)
-        }
-        mapView.showRoutes(routes, legIndex: routeController.routeProgress.legIndex)
-        
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        mapView.showRoutes(routeController.routeProgress.routes, legIndex: routeController.routeProgress.legIndex)
+        mapView.showAlternateRoutePopup(for: routeController.routeProgress.routes)
         mapView.showWaypoints(routeController.routeProgress.route)
 
         if annotatesSpokenInstructions {
@@ -413,14 +408,16 @@ class RouteMapViewController: UIViewController {
             nextBannerView.update(for: routeProgress)
         }
         
-        mapView.showAlternateRoutePopup(for: routeProgress)
+        mapView.showAlternateRoutePopup(for: routeProgress.routes)
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
-            mapView.showRoutes([routeProgress.route], legIndex: routeProgress.legIndex)
+            mapView.showRoutes(routeProgress.routes, legIndex: routeProgress.legIndex)
             
             currentLegIndexMapped = routeProgress.legIndex
         }
+        
+        mapView.showAlternateRoutePopup(for: routeController.routeProgress.routes)
         
         if currentStepIndexMapped != routeProgress.currentLegProgress.stepIndex {
             updateMapOverlays(for: routeProgress)
@@ -433,9 +430,9 @@ class RouteMapViewController: UIViewController {
     }
     
     func mapView(_ mapView: MGLMapView, tapOnCalloutFor annotation: MGLAnnotation) {
-        if let parent = parent as? NavigationViewController {
-            parent.route = self.routeController.routeProgress.alternateRoute
-        }
+//        if let parent = parent as? NavigationViewController {
+//            parent.route = self.routeController.routeProgress.alternateRoute
+//        }
     }
     
     func mapViewRegionIsChanging(_ mapView: MGLMapView) {
@@ -708,9 +705,9 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        if let parent = parent as? NavigationViewController {
-            parent.route = route
-        }
+//        if let parent = parent as? NavigationViewController {
+//            parent.routes = route
+//        }
         delegate?.navigationMapView?(mapView, didSelect: route)
     }
 
@@ -864,7 +861,8 @@ extension RouteMapViewController: NavigationViewDelegate {
     func showRouteIfNeeded() {
         guard isViewLoaded && view.window != nil else { return }
         guard !mapView.showsRoute else { return }
-        mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
+        mapView.showRoutes(routeController.routeProgress.routes, legIndex: routeController.routeProgress.legIndex)
+        mapView.showAlternateRoutePopup(for: routeController.routeProgress.routes)
         mapView.showWaypoints(routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex)
         
         if routeController.routeProgress.currentLegProgress.stepIndex + 1 <= routeController.routeProgress.currentLegProgress.leg.steps.count {

@@ -96,8 +96,8 @@ public protocol RouteControllerDelegate: class {
      - parameter routeController: The route controller that has calculated a new route.
      - parameter route: The new route.
      */
-    @objc(routeController:didRerouteAlongRoute:)
-    optional func routeController(_ routeController: RouteController, didRerouteAlong route: Route)
+    @objc(routeController:didRerouteAlongRoutes:)
+    optional func routeController(_ routeController: RouteController, didRerouteAlong routes: [Route])
 
     /**
      Called when the route controller fails to receive a new route.
@@ -270,12 +270,12 @@ open class RouteController: NSObject {
      - parameter locationManager: The associated location manager.
      */
     @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: MMEEventsManager = MMEEventsManager.shared()) {
-        self.sessionState = SessionState(currentRoute: route, originalRoute: route)
+    public init(along routes: [Route], directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: MMEEventsManager = MMEEventsManager.shared()) {
+        self.routeProgress = RouteProgress(routes: routes)
+        self.sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
         self.directions = directions
-        self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
-        self.locationManager.activityType = route.routeOptions.activityType
+        self.locationManager.activityType = routeProgress.route.routeOptions.activityType
         self.eventsManager = eventsManager
         UIDevice.current.isBatteryMonitoringEnabled = true
 
@@ -290,7 +290,7 @@ open class RouteController: NSObject {
         
         setupTunnelIntersectionManager()
 
-        startEvents(accessToken: route.accessToken)
+        startEvents(accessToken: routeProgress.route.accessToken)
     }
     
     private func setupTunnelIntersectionManager() {
@@ -755,7 +755,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         getDirections(from: location) { [weak self] (routes, error) in
             guard let strongSelf = self else { return }
-            guard let route = routes?.first else { return }
+            guard let routes = routes, let route = routes.first else { return }
 
             strongSelf.lastLocationDate = nil
 
@@ -769,8 +769,8 @@ extension RouteController: CLLocationManagerDelegate {
             if routeIsFaster {
                 strongSelf.didFindFasterRoute = true
                 // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don't announce it
-                strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
-                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+                strongSelf.routeProgress = RouteProgress(routes: routes, legIndex: 0, spokenInstructionIndex: strongSelf.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex)
+                strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: routes)
                 strongSelf.didReroute(notification: NSNotification(name: .routeControllerDidReroute, object: nil, userInfo: [
                     RouteControllerNotificationUserInfoKey.isProactiveKey: true]))
                 strongSelf.didFindFasterRoute = false
@@ -811,13 +811,10 @@ extension RouteController: CLLocationManagerDelegate {
                 return
             }
 
-            guard let route = routes?.first else { return }
+            guard let routes = routes else { return }
 
-            strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0)
-            if let altRoute = routes?.last {
-                strongSelf.routeProgress.alternateRoute = altRoute
-            }
-            strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: route)
+            strongSelf.routeProgress = RouteProgress(routes: routes, legIndex: 0)
+            strongSelf.delegate?.routeController?(strongSelf, didRerouteAlong: routes)
         }
     }
 

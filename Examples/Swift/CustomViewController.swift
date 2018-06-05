@@ -13,7 +13,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
     var routeController: RouteController!
 
     let textDistanceFormatter = DistanceFormatter(approximate: true)
-    var userRoute: Route?
+    var routes: [Route]?
     var simulateLocation = false
 
     // Start voice instructions
@@ -30,9 +30,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
 
         textDistanceFormatter.numberFormatter.maximumFractionDigits = 0
 
-        let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
+//        let locationManager = simulateLocation ? SimulatedLocationManager(route: routes.fir) : NavigationLocationManager()
 
-        routeController = RouteController(along: userRoute!, directions: directions, locationManager: locationManager)
+        routeController = RouteController(along: routes!, directions: directions)
 
         mapView.userLocationVerticalAlignment = .center
         mapView.userTrackingMode = .followWithCourse
@@ -92,7 +92,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
              When rerouting, you need to give the RouteController a new route.
              Otherwise, it will continue to compare the user to the old route and continually reroute the user.
              */
-            let routeProgress = RouteProgress(route: self.userRoute!)
+            let routeProgress = RouteProgress(routes: self.routes!)
             self.routeController.routeProgress = routeProgress
         }
     }
@@ -109,11 +109,9 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
                 return
             }
 
-            guard let route = routes?.first else {
-                return
-            }
+            guard let routes = routes else { return }
 
-            self?.userRoute = route
+            self?.routes = routes
 
             completion?()
             self?.addRouteToMap()
@@ -122,7 +120,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate, AVSpeechSynthe
 
     func addRouteToMap() {
         guard let style = mapView.style else { return }
-        guard let userRoute = userRoute else { return }
+        guard let userRoute = routes?.first else { return }
 
         if let annotations = mapView.annotations {
             mapView.removeAnnotations(annotations)

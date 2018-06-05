@@ -60,8 +60,8 @@ public protocol NavigationViewControllerDelegate {
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter route: The new route.
      */
-    @objc(navigationViewController:didRerouteAlongRoute:)
-    optional func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
+    @objc(navigationViewController:didRerouteAlongRoutes:)
+    optional func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong routes: [Route])
     
     /**
      Called when the navigation view controller fails to receive a new route.
@@ -213,16 +213,16 @@ open class NavigationViewController: UIViewController {
      
      In cases where you need to update the route after navigation has started you can set a new `route` here and `NavigationViewController` will update its UI accordingly.
      */
-    @objc public var route: Route! {
+    @objc public var routes: [Route]! {
         didSet {
             if routeController == nil {
-                routeController = RouteController(along: route, directions: directions, locationManager: NavigationLocationManager())
+                routeController = RouteController(along: routes, directions: directions, locationManager: NavigationLocationManager())
                 routeController.delegate = self
             } else {
-                routeController.routeProgress = RouteProgress(route: route)
+                routeController.routeProgress = RouteProgress(routes: routes)
             }
-            NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
-            mapViewController?.notifyDidReroute(route: route)
+            NavigationSettings.shared.distanceUnit = routeController.routeProgress.route.routeOptions.locale.usesMetric ? .kilometer : .mile
+            mapViewController?.notifyDidReroute(routes: routes)
         }
     }
     
@@ -339,24 +339,24 @@ open class NavigationViewController: UIViewController {
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
     @objc(initWithRoute:directions:styles:locationManager:)
-    required public init(for route: Route,
+    required public init(for routes: [Route],
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
                          locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
+        self.routeController = RouteController(along: routes, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         
         self.directions = directions
-        self.route = route
-        NavigationSettings.shared.distanceUnit = route.routeOptions.locale.usesMetric ? .kilometer : .mile
+        self.routes = routes
+        NavigationSettings.shared.distanceUnit = routeController.routeProgress.route.routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let mapViewController = RouteMapViewController(routeController: self.routeController, delegate: self)
         self.mapViewController = mapViewController
-        mapViewController.destination = route.legs.last?.destination
+        mapViewController.destination = routeController.routeProgress.route.legs.last?.destination
         mapViewController.willMove(toParentViewController: self)
         addChildViewController(mapViewController)
         mapViewController.didMove(toParentViewController: self)
@@ -370,7 +370,7 @@ open class NavigationViewController: UIViewController {
         self.styleManager = StyleManager(self)
         self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         
-        if !(route.routeOptions is NavigationRouteOptions) {
+        if !(routeController.routeProgress.route.routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
     }
@@ -562,9 +562,9 @@ extension NavigationViewController: RouteControllerDelegate {
         delegate?.navigationViewController?(self, willRerouteFrom: location)
     }
     
-    @objc public func routeController(_ routeController: RouteController, didRerouteAlong route: Route) {
-        mapViewController?.notifyDidReroute(route: route)
-        delegate?.navigationViewController?(self, didRerouteAlong: route)
+    @objc public func routeController(_ routeController: RouteController, didRerouteAlong routes: [Route]) {
+        mapViewController?.notifyDidReroute(routes: routes)
+        delegate?.navigationViewController?(self, didRerouteAlong: routes)
     }
     
     @objc public func routeController(_ routeController: RouteController, didFailToRerouteWith error: Error) {
