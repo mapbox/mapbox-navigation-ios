@@ -70,7 +70,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         // Update the top banner with progress updates
         instructionsBannerView.update(for: routeProgress.currentLegProgress)
         instructionsBannerView.isHidden = false
-        instructionsBannerView.backgroundColor = .white
         
         // This location coming from routeController is the snapped location
         if let snappedLocation = routeController?.location {

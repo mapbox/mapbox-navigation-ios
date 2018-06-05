@@ -311,7 +311,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
-    public func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
+    func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(disableFrameByFramePositioning), object: nil)
         perform(#selector(disableFrameByFramePositioning), with: nil, afterDelay: duration)
         shouldPositionCourseViewFrameByFrame = true
