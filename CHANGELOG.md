@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v0.18.0 (June 1, 2018)
+## v0.18.0 (June 5, 2018)
 
 ### User Interface
 
