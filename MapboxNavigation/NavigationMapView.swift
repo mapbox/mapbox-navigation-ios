@@ -163,21 +163,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Determines whether the map should follow the user location and rotate when the course changes.
      - seealso: NavigationMapViewCourseTrackingDelegate
      */
-    open var tracksUserCourse: Bool = false {
-        didSet {
-            if tracksUserCourse {
-                enableFrameByFrameCourseViewTracking(for: 2)
-                altitude = NavigationMapView.defaultAltitude
-                showsUserLocation = true
-                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
-            } else {
-                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse?(self)
-            }
-            if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
-            }
-        }
-    }
+    open var tracksUserCourse: Bool = false
 
     /**
      A `UIView` used to indicate the user’s location and course on the map.
@@ -311,7 +297,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
 
     
     // Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
-    func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
+    public func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(disableFrameByFramePositioning), object: nil)
         perform(#selector(disableFrameByFramePositioning), with: nil, afterDelay: duration)
         shouldPositionCourseViewFrameByFrame = true
@@ -1049,6 +1035,11 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.camera = camera
         
         setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+    }
+    
+    @objc public func recenterMap() {
+        tracksUserCourse = true
+        enableFrameByFrameCourseViewTracking(for: 3)
     }
 }
 

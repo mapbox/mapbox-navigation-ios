@@ -258,7 +258,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         exampleMode = .custom
 
-        customViewController.simulateLocation = simulationButton.isSelected
         customViewController.userRoute = route
 
         let destination = MGLPointAnnotation()
