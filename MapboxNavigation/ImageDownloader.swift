@@ -26,7 +26,7 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     override init() {
         self.downloadQueue = OperationQueue()
         self.downloadQueue.name = Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloader"
-        self.accessQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloaderInternal")
+        self.accessQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloaderInternal", attributes: .concurrent)
     }
 
     convenience init(sessionConfiguration: URLSessionConfiguration? = nil, operationType: ImageDownload.Type? = nil) {
@@ -46,36 +46,34 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
     }
 
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {
-        let request: URLRequest = urlRequest(with: url)
-        var operation: ImageDownload
-        if let activeOperation = activeOperation(with: url) {
-            operation = activeOperation
-        } else {
-            operation = operationType.init(request: request, in: self.urlSession)
-            accessQueue.async(flags: .barrier) {
+        accessQueue.sync(flags: .barrier) {
+            let request: URLRequest = self.urlRequest(with: url)
+            var operation: ImageDownload
+            if let activeOperation = self.activeOperation(with: url) {
+                operation = activeOperation
+            } else {
+                operation = self.operationType.init(request: request, in: self.urlSession)
                 self.operations[url] = operation
+                if let operation = operation as? Operation {
+                    self.downloadQueue.addOperation(operation)
+                }
             }
-            if let operation = operation as? Operation {
-                self.downloadQueue.addOperation(operation)
+            if let completion = completion {
+                operation.addCompletion(completion)
             }
-        }
-        if let completion = completion {
-            operation.addCompletion(completion)
         }
     }
 
     func activeOperation(with url: URL) -> ImageDownload? {
         var activeOperation: ImageDownload?
 
-        accessQueue.sync {
-            if let operation = operations[url], !operation.isFinished {
-                activeOperation = operation
-            }
+        if let operation = operations[url], !operation.isFinished {
+            activeOperation = operation
         }
 
         return activeOperation
     }
-
+    
     private func urlRequest(with url: URL) -> URLRequest {
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = self.headers
