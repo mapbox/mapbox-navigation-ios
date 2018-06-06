@@ -12,6 +12,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     var destination: MGLPointAnnotation!
     let directions = Directions.shared
     var routeController: RouteController!
+    var simulateLocation = false
 
     var userRoute: Route?
 
@@ -24,17 +25,22 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        routeController = RouteController(along: userRoute!)
+        
+        let locationManager = simulateLocation ? SimulatedLocationManager(route: userRoute!) : NavigationLocationManager()
+        routeController = RouteController(along: userRoute!, locationManager: locationManager)
         
         mapView.delegate = self
+        mapView.compassView.isHidden = true
+        instructionsBannerView.backgroundColor = .white
 
+        // Add listeners for progress updates
         resumeNotifications()
 
         // Start navigation
         routeController.resume()
-        mapView.tracksUserCourse = true
-        mapView.showsUserLocation = true
+        
+        // Center map on user
+        mapView.recenterMap()
     }
 
     deinit {
@@ -71,12 +77,8 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         instructionsBannerView.update(for: routeProgress.currentLegProgress)
         instructionsBannerView.isHidden = false
         
-        // This location coming from routeController is the snapped location
-        if let snappedLocation = routeController?.location {
-            mapView.updateCourseTracking(location: snappedLocation, animated: true)
-        } else {
-            mapView.updateCourseTracking(location: location, animated: true)
-        }
+        // Update the user puck
+        mapView.updateCourseTracking(location: location, animated: true)
     }
 
     // Fired when the user is no longer on the route.
