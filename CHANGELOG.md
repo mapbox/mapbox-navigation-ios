@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Added `NavigationMapView.recenterMap()`. A helpful function for recenter the camera if it becomes uncentered.
+
 ## v0.18.0 (June 5, 2018)
 
 ### User Interface
