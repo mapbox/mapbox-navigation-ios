@@ -138,9 +138,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bFk-po-evo" customClass="MBNavigationMapView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xEg-9E-ca4" userLabel="Recenter">
-                                        <rect key="frame" x="0.0" y="556" width="62" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xEg-9E-ca4" userLabel="Recenter">
+                                        <rect key="frame" x="8" y="599" width="62" height="30"/>
                                         <state key="normal" title="Recenter"/>
                                         <connections>
                                             <action selector="recenterMap:" destination="j9p-fX-jo4" eventType="touchUpInside" id="xjV-KY-kRg"/>
@@ -148,6 +147,10 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="xEg-9E-ca4" secondAttribute="bottom" constant="38" id="Gfp-3Z-jIH"/>
+                                    <constraint firstItem="xEg-9E-ca4" firstAttribute="leading" secondItem="bFk-po-evo" secondAttribute="leading" constant="8" id="fYI-VM-58k"/>
+                                </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="68P-Cf-VxO">
                                 <rect key="frame" x="157.5" y="587" width="60" height="60"/>
