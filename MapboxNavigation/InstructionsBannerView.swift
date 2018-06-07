@@ -62,18 +62,21 @@ open class BaseInstructionsBannerView: UIControl {
         setupLayout()
         centerYAlignInstructions()
         setupAvailableBounds()
+        stepListIndicatorView.isHidden = delegate != nil
     }
     
     @objc func draggedInstructionsBanner(_ sender: Any) {
-        if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended {
+        if let gestureRecognizer = sender as? UIPanGestureRecognizer, gestureRecognizer.state == .ended, let delegate = delegate {
             stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
-            delegate?.didDragInstructionsBanner?(self)
+            delegate.didDragInstructionsBanner?(self)
         }
     }
     
     @objc func tappedInstructionsBanner(_ sender: Any) {
-        stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
-        delegate?.didTapInstructionsBanner?(self)
+        if let delegate = delegate {
+            stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
+            delegate.didTapInstructionsBanner?(self)
+        }
     }
     
     func set(_ instruction: VisualInstructionBanner?) {
