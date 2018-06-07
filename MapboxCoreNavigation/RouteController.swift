@@ -207,7 +207,7 @@ open class RouteController: NSObject {
     /**
      By default, `RouteContoller` will enable `UIDevice.isBatteryMonitoringEnabled`.
      
-     If your app requires custom battery monitor, disable this property.
+     If your app requires custom battery monitoring, disable this property.
      */
     public var isBatteryMonitoringEnabled = true
 
