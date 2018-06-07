@@ -203,6 +203,13 @@ open class RouteController: NSObject {
      The flag that indicates that the simulated navigation through tunnel(s) is enabled.
      */
     public var tunnelSimulationEnabled: Bool = true
+    
+    /**
+     By default, `RouteContoller` will enable `UIDevice.isBatteryMonitoringEnabled`.
+     
+     If your app requires custom battery monitor, disable this property.
+     */
+    public var isBatteryMonitoringEnabled = true
 
     var didFindFasterRoute = false
 
@@ -277,9 +284,12 @@ open class RouteController: NSObject {
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
         self.eventsManager = eventsManager
-        UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
+        
+        if isBatteryMonitoringEnabled {
+            UIDevice.current.isBatteryMonitoringEnabled = true
+        }
 
         self.locationManager.delegate = self
         resumeNotifications()
@@ -303,7 +313,10 @@ open class RouteController: NSObject {
         sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
         sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
-        UIDevice.current.isBatteryMonitoringEnabled = false
+        
+        if isBatteryMonitoringEnabled {
+            UIDevice.current.isBatteryMonitoringEnabled = false
+        }
     }
 
     func startEvents(accessToken: String?) {
