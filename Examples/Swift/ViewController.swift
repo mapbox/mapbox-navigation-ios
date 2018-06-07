@@ -265,6 +265,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let destination = MGLPointAnnotation()
         destination.coordinate = route.coordinates!.last!
         customViewController.destination = destination
+        customViewController.simulateLocation = simulationButton.isSelected
 
         present(customViewController, animated: true, completion: nil)
     }
