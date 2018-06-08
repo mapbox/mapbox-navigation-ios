@@ -146,6 +146,19 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:shouldPreventReroutesWhenArrivingAtWaypoint:)
     optional func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
+    
+    
+    /**
+     Called when the route controller will change how battery monitoring is handled.
+     
+     You can implement this method to override the value that is used for setting `UIDevice.isBatteryMonitoringEnabled`. This method is called when the `RouteController` is initialized and deinitialized.
+     
+     - parameter routeController: The route controller that will change the state of battery monitoring.
+     - parameter to: A bool representing the new upcoming value of `UIDevice.isBatteryMonitoringEnabled`.
+     - returns: A bool representing the value you would like `UIDevice.isBatteryMonitoringEnabled` set to.
+     */
+    @objc(routeController:willChangeBatteryMonitoringStateTo:)
+    optional func routeController(_ routeController: RouteController, willChangeBatteryMonitoringState to: Bool) -> Bool
 }
 
 /**
@@ -203,13 +216,6 @@ open class RouteController: NSObject {
      The flag that indicates that the simulated navigation through tunnel(s) is enabled.
      */
     public var tunnelSimulationEnabled: Bool = true
-    
-    /**
-     By default, `RouteContoller` will enable `UIDevice.isBatteryMonitoringEnabled`.
-     
-     If your app requires custom battery monitoring, disable this property.
-     */
-    public var isBatteryMonitoringEnabled = true
 
     var didFindFasterRoute = false
 
@@ -287,9 +293,8 @@ open class RouteController: NSObject {
 
         super.init()
         
-        if isBatteryMonitoringEnabled {
-            UIDevice.current.isBatteryMonitoringEnabled = true
-        }
+        let monitorBatteryValue = delegate?.routeController?(self, willChangeBatteryMonitoringState: true) ?? true
+        UIDevice.current.isBatteryMonitoringEnabled = monitorBatteryValue
 
         self.locationManager.delegate = self
         resumeNotifications()
@@ -314,9 +319,8 @@ open class RouteController: NSObject {
         sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         
-        if isBatteryMonitoringEnabled {
-            UIDevice.current.isBatteryMonitoringEnabled = false
-        }
+        let monitorBatteryValue = delegate?.routeController?(self, willChangeBatteryMonitoringState: false) ?? false
+        UIDevice.current.isBatteryMonitoringEnabled = monitorBatteryValue
     }
 
     func startEvents(accessToken: String?) {
