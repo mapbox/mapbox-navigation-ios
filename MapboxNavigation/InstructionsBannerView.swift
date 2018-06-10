@@ -86,7 +86,9 @@ open class BaseInstructionsBannerView: UIControl {
             baselineAlignInstructions()
         }
         
-        primaryLabel.instruction = instruction?.primaryInstruction
+        if instruction?.primaryInstruction != primaryLabel.instruction {
+            primaryLabel.instruction = instruction?.primaryInstruction
+        }
         secondaryLabel.instruction = secondaryInstruction
         maneuverView.visualInstruction = instruction
     }
