@@ -2,7 +2,7 @@ import Foundation
 
 extension String {
     var ISO8601Date: Date? {
-        return ISO8601Formatter.date(from: self)
+        return Date.ISO8601Formatter.date(from: self)
     }
     
     /**
