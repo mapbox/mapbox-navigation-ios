@@ -78,6 +78,9 @@ open class BaseInstructionsBannerView: UIControl {
     
     func set(_ instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
+        
+        guard instruction?.primaryInstruction != primaryLabel.instruction, secondaryLabel.instruction != secondaryInstruction, maneuverView.visualInstruction != instruction else { return }
+        
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
         if secondaryInstruction == nil {
@@ -86,9 +89,7 @@ open class BaseInstructionsBannerView: UIControl {
             baselineAlignInstructions()
         }
         
-        if instruction?.primaryInstruction != primaryLabel.instruction {
-            primaryLabel.instruction = instruction?.primaryInstruction
-        }
+        primaryLabel.instruction = instruction?.primaryInstruction
         secondaryLabel.instruction = secondaryInstruction
         maneuverView.visualInstruction = instruction
     }
