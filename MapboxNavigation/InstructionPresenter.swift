@@ -38,12 +38,12 @@ class InstructionPresenter {
         guard let source = self.dataSource else { return [] }
         var attributedPairs = self.attributedPairs(for: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload)
         let availableBounds = source.availableBounds()
-        let totalWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
+        let totalWidth: CGFloat = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
         
         guard !stringFits else { return attributedPairs.attributedStrings }
         
-        let indexedComponents = attributedPairs.components.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
+        let indexedComponents: [IndexedVisualInstructionComponent] = attributedPairs.components.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
         let filtered = indexedComponents.filter { $0.component.abbreviation != nil }
         let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority }
         for component in sorted {
@@ -53,7 +53,7 @@ class InstructionPresenter {
             guard let abbreviation = component.component.abbreviation else { continue }
             
             attributedPairs.attributedStrings[component.index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributes(for: source))
-            let newWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
+            let newWidth: CGFloat = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
             
             if newWidth <= availableBounds.width {
                 break
