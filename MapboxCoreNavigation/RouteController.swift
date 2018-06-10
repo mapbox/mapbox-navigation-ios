@@ -292,9 +292,6 @@ open class RouteController: NSObject {
         self.eventsManager = eventsManager
 
         super.init()
-        
-        let monitorBatteryValue = delegate?.routeController?(self, willChangeBatteryMonitoringState: true) ?? true
-        UIDevice.current.isBatteryMonitoringEnabled = monitorBatteryValue
 
         self.locationManager.delegate = self
         resumeNotifications()
@@ -395,6 +392,9 @@ open class RouteController: NSObject {
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
+        
+        let monitorBatteryValue = delegate?.routeController?(self, willChangeBatteryMonitoringState: true) ?? true
+        UIDevice.current.isBatteryMonitoringEnabled = monitorBatteryValue
     }
 
     /**
