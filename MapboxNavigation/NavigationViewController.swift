@@ -349,7 +349,7 @@ open class NavigationViewController: UIViewController {
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
-        self.routeController.tunnelIntersectionManager?.delegate = self
+        self.routeController.tunnelIntersectionManager.delegate = self
         
         self.directions = directions
         self.route = route
@@ -599,13 +599,15 @@ extension NavigationViewController: RouteControllerDelegate {
 }
 
 extension NavigationViewController: TunnelIntersectionManagerDelegate {
-    public func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation) {
+    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
         guard usesNightStyleInsideTunnels else { return }
+        routeController.tunnelIntersectionManager(manager, willEnableAnimationAt: location)
         styleManager.applyStyle(type: .night)
     }
     
-    public func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation) {
+    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
         guard usesNightStyleInsideTunnels else { return }
+        routeController.tunnelIntersectionManager(manager, willDisableAnimationAt: location)
         styleManager.timeOfDayChanged()
     }
 }

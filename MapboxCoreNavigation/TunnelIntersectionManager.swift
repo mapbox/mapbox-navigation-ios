@@ -14,7 +14,7 @@ public protocol TunnelIntersectionManagerDelegate: class {
      - parameter location: The user’s current location where the tunnel was detected.
      */
     @objc(tunnelIntersectionManager:willEnableAnimationAtLocation:)
-    optional func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation)
+    optional func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation)
     
     /**
      Called immediately when the location manager detects the user's current location is no longer within a tunnel.
@@ -23,7 +23,7 @@ public protocol TunnelIntersectionManagerDelegate: class {
      - parameter location: The user’s current location where the tunnel was detected.
      */
     @objc(tunnelIntersectionManager:willDisableAnimationAtLocation:)
-    optional func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation)
+    optional func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation)
 }
 
 @objc(MBTunnelIntersectionManager)
@@ -49,12 +49,22 @@ open class TunnelIntersectionManager: NSObject {
      */
     @objc public var isAnimationEnabled: Bool = false
     
-    /**
-     Given a user's current location, location manager and route progress,
-     returns a Boolean whether a tunnel has been detected on the current route step progress.
-     */
-    @objc public func didDetectTunnel(at location: CLLocation, for manager: CLLocationManager, routeProgress: RouteProgress) -> Bool {
+    func checkForTunnelIntersection(at location: CLLocation, routeProgress: RouteProgress) {
+        let tunnelDetected = userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
         
+        if tunnelDetected {
+            delegate?.tunnelIntersectionManager?(self, willEnableAnimationAt: location)
+        } else if isAnimationEnabled {
+            delegate?.tunnelIntersectionManager?(self, willDisableAnimationAt: location)
+        }
+    }
+
+    /**
+     Given a user's current location and the route progress,
+     detects whether the upcoming intersection contains a tunnel road class, and
+     returns a Boolean whether they are within the minimum radius of a tunnel entrance.
+     */
+    @objc public func userWithinTunnelEntranceRadius(at location: CLLocation, routeProgress: RouteProgress) -> Bool {
         guard let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else {
             return false
         }
@@ -63,15 +73,6 @@ open class TunnelIntersectionManager: NSObject {
             return true
         }
         
-        return userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
-    }
-    
-    /**
-     Given a user's current location and the route progress,
-     detects whether the upcoming intersection contains a tunnel road class, and
-     returns a Boolean whether they are within the minimum radius of a tunnel entrance.
-     */
-    @objc public func userWithinTunnelEntranceRadius(at location: CLLocation, routeProgress: RouteProgress) -> Bool {
         // Ensure the upcoming intersection is a tunnel intersection
         // OR the location speed is either at least 5 m/s or is considered a bad location update
         guard let upcomingIntersection = routeProgress.currentLegProgress.currentStepProgress.upcomingIntersection,
@@ -86,7 +87,7 @@ open class TunnelIntersectionManager: NSObject {
         return distanceToTunnelEntrance < RouteControllerMinimumDistanceToTunnelEntrance
     }
     
-    @objc public func enableTunnelAnimation(for manager: CLLocationManager, routeController: RouteController, routeProgress: RouteProgress) {
+    @objc public func enableTunnelAnimation(routeController: RouteController, routeProgress: RouteProgress) {
         guard !isAnimationEnabled else { return }
         
         self.animatedLocationManager = SimulatedLocationManager(routeProgress: routeProgress)
@@ -98,7 +99,7 @@ open class TunnelIntersectionManager: NSObject {
         isAnimationEnabled = true
     }
     
-    @objc public func suspendTunnelAnimation(for manager: CLLocationManager, at location: CLLocation, routeController: RouteController) {
+    @objc public func suspendTunnelAnimation(at location: CLLocation, routeController: RouteController) {
         
         guard isAnimationEnabled else { return }
         
