@@ -156,8 +156,8 @@ public protocol RouteControllerDelegate: class {
      - parameter routeController: The route controller that will change the state of battery monitoring.
      - returns: A bool representing the value you would like `UIDevice.isBatteryMonitoringEnabled` set to.
      */
-    @objc(routeControllerWillDisableBatteryMonitoring:)
-    optional func routeControllerWillDisableBatteryMonitoring(_ routeController: RouteController) -> Bool
+    @objc(routeControllerShouldDisableBatteryMonitoring:)
+    optional func routeControllerShouldDisableBatteryMonitoring(_ routeController: RouteController) -> Bool
 }
 
 /**
@@ -316,7 +316,7 @@ open class RouteController: NSObject {
         sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         
-        let monitorBatteryValue = delegate?.routeControllerWillDisableBatteryMonitoring?(self) ?? false
+        let monitorBatteryValue = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) ?? false
         UIDevice.current.isBatteryMonitoringEnabled = monitorBatteryValue
     }
 
