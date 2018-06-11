@@ -68,7 +68,10 @@ open class TunnelIntersectionManager: NSObject {
         guard let currentIntersection = routeProgress.currentLegProgress.currentStepProgress.currentIntersection else {
             return false
         }
-        
+       
+        // `currentIntersection` is basically the intersection that you have last passed through.
+        // While the upcoming intersection is the one you will be approaching next.
+        // The user is essentially always between the current and upcoming intersection.
         if let classes = currentIntersection.outletRoadClasses, classes.contains(.tunnel) {
             return true
         }
