@@ -149,16 +149,15 @@ public protocol RouteControllerDelegate: class {
     
     
     /**
-     Called when the route controller will change how battery monitoring is handled.
+     Called when the route controller will disable battery monitoring.
      
-     You can implement this method to override the value that is used for setting `UIDevice.isBatteryMonitoringEnabled`. This method is called when the `RouteController` is initialized and deinitialized.
+     Implementing this method will allow developers to change whether battery monitoring is disabled when `RouteController` is deinited.
      
      - parameter routeController: The route controller that will change the state of battery monitoring.
-     - parameter to: A bool representing the new upcoming value of `UIDevice.isBatteryMonitoringEnabled`.
      - returns: A bool representing the value you would like `UIDevice.isBatteryMonitoringEnabled` set to.
      */
-    @objc(routeController:willChangeBatteryMonitoringStateTo:)
-    optional func routeController(_ routeController: RouteController, willChangeBatteryMonitoringState to: Bool) -> Bool
+    @objc(routeControllerWillDisableBatteryMonitoring:)
+    optional func routeControllerWillDisableBatteryMonitoring(_ routeController: RouteController) -> Bool
 }
 
 /**
@@ -290,6 +289,7 @@ open class RouteController: NSObject {
         self.locationManager = locationManager
         self.locationManager.activityType = route.routeOptions.activityType
         self.eventsManager = eventsManager
+        UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
 
@@ -316,7 +316,7 @@ open class RouteController: NSObject {
         sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         
-        let monitorBatteryValue = delegate?.routeController?(self, willChangeBatteryMonitoringState: false) ?? false
+        let monitorBatteryValue = delegate?.routeControllerWillDisableBatteryMonitoring?(self) ?? false
         UIDevice.current.isBatteryMonitoringEnabled = monitorBatteryValue
     }
 
@@ -392,9 +392,6 @@ open class RouteController: NSObject {
         locationManager.delegate = self
         locationManager.startUpdatingLocation()
         locationManager.startUpdatingHeading()
-        
-        let monitorBatteryValue = delegate?.routeController?(self, willChangeBatteryMonitoringState: true) ?? true
-        UIDevice.current.isBatteryMonitoringEnabled = monitorBatteryValue
     }
 
     /**
