@@ -8,18 +8,18 @@ import CoreLocation
 public protocol TunnelIntersectionManagerDelegate: class {
     
     /**
-     Called immediately when the location manager detects a tunnel on a route.
+     Called immediately when the location manager detects a user will enter a tunnel.
      
-     - parameter manager: The location manager that currently sends the location updates.
+     - parameter manager: The `TunnelIntersectionManager` that currently sends the location updates.
      - parameter location: The user’s current location where the tunnel was detected.
      */
     @objc(tunnelIntersectionManager:willEnableAnimationAtLocation:)
     optional func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation)
     
     /**
-     Called immediately when the location manager detects the user's current location is no longer within a tunnel.
+     Called immediately when the location manager detects the user will exit a tunnel.
      
-     - parameter manager: The location manager that currently sends the location updates.
+     - parameter manager: The `TunnelIntersectionManager` that currently sends the location updates.
      - parameter location: The user’s current location where the tunnel was detected.
      */
     @objc(tunnelIntersectionManager:willDisableAnimationAtLocation:)
