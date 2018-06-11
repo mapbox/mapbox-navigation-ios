@@ -62,7 +62,6 @@ open class BaseInstructionsBannerView: UIControl {
         setupLayout()
         centerYAlignInstructions()
         setupAvailableBounds()
-        stepListIndicatorView.isHidden = delegate != nil
     }
     
     @objc func draggedInstructionsBanner(_ sender: Any) {
@@ -80,6 +79,7 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     func set(_ instruction: VisualInstructionBanner?) {
+        stepListIndicatorView.isHidden = delegate == nil
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
