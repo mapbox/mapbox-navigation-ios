@@ -47,9 +47,16 @@ open class TunnelIntersectionManager: NSObject {
     /**
      The flag that indicates whether simulated location manager is initialized.
      */
-    @objc public var isAnimationEnabled: Bool = false
+    @objc private var isAnimationEnabled: Bool = false
+    
+    /**
+     Flag indicating whether the user is animated through tunnels.
+     */
+    @objc public var tunnelSimulationEnabled: Bool = true
     
     func checkForTunnelIntersection(at location: CLLocation, routeProgress: RouteProgress) {
+        guard tunnelSimulationEnabled else { return }
+        
         let tunnelDetected = userWithinTunnelEntranceRadius(at: location, routeProgress: routeProgress)
         
         if tunnelDetected {

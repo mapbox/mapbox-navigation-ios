@@ -198,11 +198,6 @@ open class RouteController: NSObject {
      Will only be enabled if `tunnelSimulationEnabled` is true.
      */
     public var tunnelIntersectionManager: TunnelIntersectionManager = TunnelIntersectionManager()
-    
-    /**
-     The flag that indicates that the simulated navigation through tunnel(s) is enabled.
-     */
-    public var tunnelSimulationEnabled: Bool = true
 
     var didFindFasterRoute = false
 
@@ -581,9 +576,7 @@ extension RouteController: CLLocationManagerDelegate {
                 self.rawLocation = lastLocation
                 
                 // Check for a tunnel intersection at the current step we found the bad location update.
-                if tunnelSimulationEnabled {
-                    tunnelIntersectionManager.checkForTunnelIntersection(at: lastLocation, routeProgress: routeProgress)
-                }
+                tunnelIntersectionManager.checkForTunnelIntersection(at: lastLocation, routeProgress: routeProgress)
                 
                 return
             }
@@ -622,10 +615,9 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
+            
             // Check for a tunnel intersection whenever the current route step progresses.
-            if tunnelSimulationEnabled {
-                tunnelIntersectionManager.checkForTunnelIntersection(at: location, routeProgress: routeProgress)
-            }
+            tunnelIntersectionManager.checkForTunnelIntersection(at: location, routeProgress: routeProgress)
         }
 
         updateDistanceToIntersection(from: location)

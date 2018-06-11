@@ -322,11 +322,6 @@ open class NavigationViewController: UIViewController {
      */
     @objc public var annotatesSpokenInstructions = false
     
-    /**
-     A Boolean value that indicates whether the dark style should apply when a route controller enters a tunnel.
-     */
-    @objc public var usesNightStyleInsideTunnels: Bool = true
-    
     var styleManager: StyleManager!
     
     required public init?(coder aDecoder: NSCoder) {
@@ -600,13 +595,11 @@ extension NavigationViewController: RouteControllerDelegate {
 
 extension NavigationViewController: TunnelIntersectionManagerDelegate {
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
-        guard usesNightStyleInsideTunnels else { return }
         routeController.tunnelIntersectionManager(manager, willEnableAnimationAt: location)
         styleManager.applyStyle(type: .night)
     }
     
     public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
-        guard usesNightStyleInsideTunnels else { return }
         routeController.tunnelIntersectionManager(manager, willDisableAnimationAt: location)
         styleManager.timeOfDayChanged()
     }
