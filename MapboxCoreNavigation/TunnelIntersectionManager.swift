@@ -47,7 +47,7 @@ open class TunnelIntersectionManager: NSObject {
     /**
      The flag that indicates whether simulated location manager is initialized.
      */
-    @objc private var isAnimationEnabled: Bool = false
+    @objc var isAnimationEnabled: Bool = false
     
     /**
      Flag indicating whether the user is animated through tunnels.
