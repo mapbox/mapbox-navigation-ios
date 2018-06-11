@@ -28,7 +28,11 @@ open class BaseInstructionsBannerView: UIControl {
     weak var _separatorView: UIView!
     weak var separatorView: SeparatorView!
     weak var stepListIndicatorView: StepListIndicatorView!
-    weak var delegate: InstructionsBannerViewDelegate?
+    weak var delegate: InstructionsBannerViewDelegate? {
+        didSet {
+            stepListIndicatorView.isHidden = false
+        }
+    }
     
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
@@ -62,6 +66,7 @@ open class BaseInstructionsBannerView: UIControl {
         setupLayout()
         centerYAlignInstructions()
         setupAvailableBounds()
+        stepListIndicatorView.isHidden = true
     }
     
     @objc func draggedInstructionsBanner(_ sender: Any) {
@@ -79,7 +84,6 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     func set(_ instruction: VisualInstructionBanner?) {
-        stepListIndicatorView.isHidden = delegate == nil
         let secondaryInstruction = instruction?.secondaryInstruction
         primaryLabel.numberOfLines = secondaryInstruction == nil ? 2 : 1
         
