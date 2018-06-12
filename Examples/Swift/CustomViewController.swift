@@ -31,7 +31,6 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         mapView.delegate = self
         mapView.compassView.isHidden = true
-        instructionsBannerView.backgroundColor = .white
 
         // Add listeners for progress updates
         resumeNotifications()
@@ -41,6 +40,12 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         
         // Center map on user
         mapView.recenterMap()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // This applies a default style to the top banner.
+        DayStyle().apply()
     }
 
     deinit {
