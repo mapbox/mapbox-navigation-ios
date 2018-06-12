@@ -316,9 +316,12 @@ open class RouteController: NSObject {
         sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         
-        if let delegate = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) {
-            UIDevice.current.isBatteryMonitoringEnabled = !delegate
-        } else {
+        guard let shouldDisable = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) else {
+            UIDevice.current.isBatteryMonitoringEnabled = false
+            return
+        }
+        
+        if shouldDisable {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }
     }
