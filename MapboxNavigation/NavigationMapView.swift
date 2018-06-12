@@ -768,7 +768,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
         guard let coordinates = route.coordinates else { return nil }
         
-        var linesPerLeg: [[MGLPolylineFeature]] = []
+        var linesPerLeg: [MGLPolylineFeature] = []
         
         for (index, leg) in route.legs.enumerated() {
             // If there is no congestion, don't try and add it
@@ -818,10 +818,10 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 return polyline
             }
             
-            linesPerLeg.append(lines)
+            linesPerLeg.append(contentsOf: lines)
         }
         
-        return Array(linesPerLeg.joined())
+        return linesPerLeg
     }
     
     func shape(forCasingOf route: Route, legIndex: Int?) -> MGLShape? {
