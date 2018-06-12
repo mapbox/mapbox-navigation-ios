@@ -787,10 +787,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             let mergedCongestionSegments: [CongestionSegment] = legCoordinates.enumerated().reduce([]) { (accumulate, current) in
+                
                 let coordinate = current.element
                 let index = current.offset
                 
-                let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinate, legCoordinates[index + 1]], legCongestion[index])
+                let congestionValue = index < legCongestion.count - 1 ? legCongestion[index] : legCongestion[index - 1]
+                let nextCoordinateValue = index < legCoordinates.count - 1 ? legCoordinates[index + 1] : legCoordinates[index]
+                
+                let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinate, nextCoordinateValue], congestionValue)
                 let coordinates = congestionSegment.0
                 let congestionLevel = congestionSegment.1
                 
