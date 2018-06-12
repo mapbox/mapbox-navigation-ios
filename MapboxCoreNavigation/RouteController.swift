@@ -134,6 +134,18 @@ public protocol RouteControllerDelegate: class {
     */
     @objc(routeController:didArriveAtWaypoint:)
     optional func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool
+    
+    /**
+     Called when the route controller arrives at a waypoint.
+     
+     You can implement this method to allow the route controller to continue check and reroute the user if needed. By default, the user will not be rerouted when arriving at a waypoint.
+     
+     - parameter routeController: The route controller that has arrived at a waypoint.
+     - parameter waypoint: The waypoint that the controller has arrived at.
+     - returns: True to prevent the route controller from checking if the user should be rerouted.
+     */
+    @objc(routeController:shouldPreventReroutesWhenArrivingAtWaypoint:)
+    optional func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
 }
 
 /**
@@ -508,7 +520,7 @@ extension RouteController {
             _ = enqueueFoundFasterRouteEvent()
         }
 
-        if let lastReroute = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
+        if let lastReroute: RerouteEvent? = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
 
@@ -698,6 +710,11 @@ extension RouteController: CLLocationManagerDelegate {
      If the user is not on the route, they should be rerouted.
      */
     @objc public func userIsOnRoute(_ location: CLLocation) -> Bool {
+        
+        // If the user has arrived, do not continue monitor reroutes, step progress, etc
+        guard !routeProgress.currentLegProgress.userHasArrivedAtWaypoint && (delegate?.routeController?(self, shouldPreventReroutesWhenArrivingAt: routeProgress.currentLeg.destination) ?? true) else {
+            return true
+        }
 
         let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
         let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
@@ -975,7 +992,7 @@ extension RouteController: CLLocationManagerDelegate {
     func updateIntersectionDistances() {
         if let coordinates = routeProgress.currentLegProgress.currentStep.coordinates, let intersections = routeProgress.currentLegProgress.currentStep.intersections {
             let polyline = Polyline(coordinates)
-            let distances = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
+            let distances: [CLLocationDistance] = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
             routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
     }

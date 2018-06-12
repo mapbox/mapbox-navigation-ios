@@ -1,3 +1,6 @@
+/* Format string for indicating the device volume is low; 1 = device model */
+"DEVICE_VOLUME_LOW" = "Volumen de %@ está bajo";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Cerrar";
 
@@ -64,9 +67,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "Ha calificado %li estrella(s).";
 
-/* Title on button that appears when a reroute occurs */
-"REROUTE_REPORT_TITLE" = "Reportar un problema";
-
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Reenrutando…";
 
@@ -81,3 +81,4 @@
 
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ y %2$@";
+

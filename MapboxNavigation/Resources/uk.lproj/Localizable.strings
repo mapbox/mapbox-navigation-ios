@@ -1,3 +1,6 @@
+/* Format string for indicating the device volume is low; 1 = device model */
+"DEVICE_VOLUME_LOW" = "%@ Низька гучність";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Закрити";
 
@@ -41,10 +44,10 @@
 "FEEDBACK_ROAD_CLOSURE" = "Дорогу\nзакрито";
 
 /* Message confirming that the user has successfully sent feedback */
-"FEEDBACK_THANK_YOU" = "Дякуємо за ваш звіт!";
+"FEEDBACK_THANK_YOU" = "Дякуємо за повідомлення!";
 
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "Сповістити про проблему";
+"FEEDBACK_TITLE" = "Повідомлення про проблему";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ та %2$@";
@@ -64,9 +67,6 @@
 /* Format for accessibility value of label indicating the existing rating; 1 = number of stars */
 "RATING_STARS_FORMAT" = "%ld зірка(ок).";
 
-/* Title on button that appears when a reroute occurs */
-"REROUTE_REPORT_TITLE" = "Сповістити про проблему";
-
 /* Indicates that rerouting is in progress */
 "REROUTING" = "Зміна маршруту…";
 
@@ -81,3 +81,4 @@
 
 /* Format for displaying start and endpoint for leg; 1 = source ; 2 = destination */
 "WAYPOINT_SOURCE_DESTINATION_FORMAT" = "%1$@ та %2$@";
+

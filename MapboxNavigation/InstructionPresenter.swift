@@ -38,13 +38,13 @@ class InstructionPresenter {
         guard let source = self.dataSource else { return [] }
         var attributedPairs = self.attributedPairs(for: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload)
         let availableBounds = source.availableBounds()
-        let totalWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
+        let totalWidth: CGFloat = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
         let stringFits = totalWidth <= availableBounds.width
         
         guard !stringFits else { return attributedPairs.attributedStrings }
         
-        let filteredComponents = attributedPairs.components.compactMap { $0 as? VisualInstructionComponent}
-        let visuals = filteredComponents.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
+        let filteredComponents: [VisualInstructionComponent] = attributedPairs.components.compactMap { $0 as? VisualInstructionComponent}
+        let visuals: [IndexedVisualInstructionComponent] = filteredComponents.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
         let filtered = visuals.filter { $0.component.abbreviation != nil}
         let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority}
         
@@ -55,7 +55,7 @@ class InstructionPresenter {
             guard let abbreviation = component.component.abbreviation else { continue }
             
             attributedPairs.attributedStrings[index] = NSAttributedString(string: joinChar + abbreviation, attributes: attributes(for: source))
-            let newWidth = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
+            let newWidth: CGFloat = attributedPairs.attributedStrings.map { $0.size() }.reduce(.zero, +).width
             
             if newWidth <= availableBounds.width {
                 break
@@ -65,12 +65,12 @@ class InstructionPresenter {
         return attributedPairs.attributedStrings
     }
     
-    typealias AttributedInstructionComponents = (components: [MBComponentRepresentable], attributedStrings: [NSAttributedString])
+    typealias AttributedInstructionComponents = (components: [ComponentRepresentable], attributedStrings: [NSAttributedString])
     
     func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> AttributedInstructionComponents {
         let components = instruction.components.compactMap { $0 as? VisualInstructionComponent }
         var strings: [NSAttributedString] = []
-        var processedComponents: [MBComponentRepresentable] = []
+        var processedComponents: [ComponentRepresentable] = []
         
         
         for (index, component) in components.enumerated() {
@@ -80,11 +80,11 @@ class InstructionPresenter {
             let initial = NSAttributedString()
             
             //This is the closure that builds the string.
-            let build: (_: MBComponentRepresentable, _: [NSAttributedString]) -> Void = { (component, attributedStrings) in
+            let build: (_: ComponentRepresentable, _: [NSAttributedString]) -> Void = { (component, attributedStrings) in
                 processedComponents.append(component)
                 strings.append(attributedStrings.reduce(initial, +))
             }
-            let isShield: (_: MBComponentRepresentable?) -> Bool = { (component: MBComponentRepresentable?) in
+            let isShield: (_: ComponentRepresentable?) -> Bool = { (component: ComponentRepresentable?) in
                 guard let component = component as? VisualInstructionComponent else { return false }
                 return component.type == .image
             }
@@ -127,19 +127,19 @@ class InstructionPresenter {
         return (components: processedComponents, attributedStrings: strings)
     }
 
-    func attributedString(forExitComponent component: MBComponentRepresentable, maneuverDirection: ManeuverDirection, dataSource: DataSource) -> NSAttributedString? {
+    func attributedString(forExitComponent component: ComponentRepresentable, maneuverDirection: ManeuverDirection, dataSource: DataSource) -> NSAttributedString? {
         guard let component = component as? VisualInstructionComponent, component.type == .exitCode, let exitCode = component.text else { return nil }
         let side: ExitSide = maneuverDirection == .left ? .left : .right
         guard let exitString = exitShield(side: side, text: exitCode, component: component, dataSource: dataSource) else { return nil }
         return exitString
     }
     
-    func attributedString(forGenericShield component: MBComponentRepresentable, dataSource: DataSource) -> NSAttributedString? {
+    func attributedString(forGenericShield component: ComponentRepresentable, dataSource: DataSource) -> NSAttributedString? {
         guard let component = component as? VisualInstructionComponent, component.type == .image, let text = component.text else { return nil }
         return genericShield(text: text, cacheKey: component.genericCacheKey, dataSource: dataSource)
     }
     
-    func attributedString(forShieldComponent shield: MBComponentRepresentable, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
+    func attributedString(forShieldComponent shield: ComponentRepresentable, repository:ImageRepository, dataSource: DataSource, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
         guard let shield = shield as? VisualInstructionComponent, shield.imageURL != nil, let shieldKey = shield.cacheKey else { return nil }
         
         //If we have the shield already cached, use that.
@@ -154,12 +154,12 @@ class InstructionPresenter {
         return nil
     }
     
-    func attributedString(forTextComponent component: MBComponentRepresentable, dataSource: DataSource) -> NSAttributedString? {
+    func attributedString(forTextComponent component: ComponentRepresentable, dataSource: DataSource) -> NSAttributedString? {
         guard let component = component as? VisualInstructionComponent, let text = component.text else { return nil }
         return NSAttributedString(string: text, attributes: attributes(for: dataSource))
     }
     
-    private func shieldImageForComponent(_ component: MBComponentRepresentable, in repository: ImageRepository, height: CGFloat, completion: @escaping ImageDownloadCompletion) {
+    private func shieldImageForComponent(_ component: ComponentRepresentable, in repository: ImageRepository, height: CGFloat, completion: @escaping ImageDownloadCompletion) {
         guard let component = component as? VisualInstructionComponent, let imageURL = component.imageURL, let shieldKey = component.cacheKey else {
             return
         }
@@ -226,7 +226,7 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func exitShield(side: ExitSide = .right, text: String, component: MBComponentRepresentable, dataSource: DataSource) -> NSAttributedString? {
+    private func exitShield(side: ExitSide = .right, text: String, component: ComponentRepresentable, dataSource: DataSource) -> NSAttributedString? {
         
         let proxy = ExitView.appearance()
         let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
@@ -264,8 +264,8 @@ class InstructionPresenter {
         view.removeFromSuperview()
         return image
     }
-
 }
+    
 
 protocol ImagePresenter {
     var image: UIImage? { get }
