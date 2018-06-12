@@ -43,7 +43,13 @@ class InstructionPresenter {
         
         guard !stringFits else { return attributedPairs.attributedStrings }
         
-        let filteredComponents: [VisualInstructionComponent] = attributedPairs.components.compactMap { $0 as? VisualInstructionComponent}
+        var filteredComponents: [VisualInstructionComponent] = []
+        for component in attributedPairs.components {
+            if let visualComponent = component as? VisualInstructionComponent {
+                filteredComponents.append(visualComponent)
+            }
+        }
+        
         let visuals: [IndexedVisualInstructionComponent] = filteredComponents.enumerated().map { IndexedVisualInstructionComponent(component: $1, index: $0) }
         let filtered = visuals.filter { $0.component.abbreviation != nil}
         let sorted = filtered.sorted { $0.component.abbreviationPriority < $1.component.abbreviationPriority}
