@@ -74,7 +74,13 @@ class InstructionPresenter {
     typealias AttributedInstructionComponents = (components: [ComponentRepresentable], attributedStrings: [NSAttributedString])
     
     func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> AttributedInstructionComponents {
-        let components = instruction.components.compactMap { $0 as? VisualInstructionComponent }
+        var components: [VisualInstructionComponent] = []
+        for component in instruction.components {
+            if let visualComponent = component as? VisualInstructionComponent {
+                components.append(visualComponent)
+            }
+        }
+        
         var strings: [NSAttributedString] = []
         var processedComponents: [ComponentRepresentable] = []
         
@@ -174,11 +180,9 @@ class InstructionPresenter {
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
-        guard let components = instruction.components as? [VisualInstructionComponent] else {
+        guard let instructionComponents = instruction.components as? [VisualInstructionComponent] else {
             return false
         }
-        
-        let instructionComponents = components.compactMap { $0 as VisualInstructionComponent }
 
         for component in instructionComponents {
             guard let key = component.cacheKey else {
@@ -193,10 +197,13 @@ class InstructionPresenter {
     }
 
     private func allShieldsAreDownloaded(in components: [VisualInstructionComponent], respository: ImageRepository) -> Bool {
-        let cached = components.compactMap({ $0.cacheKey }).compactMap(respository.cachedImageForKey(_:))
+        
+        let cached = components.filter { component in
+            guard let key = component.cacheKey else { return false }
+            return respository.cachedImageForKey(key) != nil
+        }
         
         return cached.count == components.count
-        
     }
 
     private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedStringKey: Any] {

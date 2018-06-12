@@ -116,21 +116,21 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         //Slash should not be present until an adjacent shield is downloaded
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
 
-//        //simulate the downloads
-//        let firstDestinationComponent: VisualInstructionComponent = instructions[0]
-//        simulateDownloadingShieldForComponent(firstDestinationComponent)
-//
-//        //ensure that first callback fires
-//        wait(for: [firstExpectation], timeout: 1)
-//
-//        //change the callback to track the second shield component
-//        view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
-//
-//        let secondDestinationComponent = instructions[2]
-//        simulateDownloadingShieldForComponent(secondDestinationComponent)
-//
-//        //ensure that second callback fires
-//        wait(for: [secondExpectation], timeout: 1)
+        //simulate the downloads
+        let firstDestinationComponent: VisualInstructionComponent = instructions[0]
+        simulateDownloadingShieldForComponent(firstDestinationComponent)
+
+        //ensure that first callback fires
+        wait(for: [firstExpectation], timeout: 1)
+
+        //change the callback to track the second shield component
+        view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
+
+        let secondDestinationComponent = instructions[2]
+        simulateDownloadingShieldForComponent(secondDestinationComponent)
+
+        //ensure that second callback fires
+        wait(for: [secondExpectation], timeout: 1)
  
         //Slash should no longer be present
         XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
@@ -156,7 +156,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         
     }
     
-    /**
     func testRouteShieldsAreGenericUntilTheyLoad() {
         let view = instructionsView()
         
@@ -259,7 +258,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
                             thirdRunHasAttachments, firstStillLoaded, secondNowLoaded]
         wait(for: expectations, timeout: 0)
     }
-     **/
     
     func testExitBannerIntegration() {
         let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil,  abbreviation: nil, abbreviationPriority: 0)
