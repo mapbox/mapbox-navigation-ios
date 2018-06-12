@@ -772,56 +772,51 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         for (index, leg) in route.legs.enumerated() {
             // If there is no congestion, don't try and add it
-            guard let legCongestion = leg.segmentCongestionLevels else {
+            guard let legCongestion = leg.segmentCongestionLevels, legCongestion.count + 1 <= coordinates.count else {
                 return [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
             }
             
-            guard legCongestion.count + 1 <= coordinates.count else {
-                return [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
+            // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
+            var legCoordinates: [CLLocationCoordinate2D] = leg.steps.reduce([]) { allCoordinates, step in
+                return allCoordinates + step.coordinates!.suffix(from: 1)
             }
-            
-            // The last coord of the preceding step, is shared with the first coord of the next step.
-            // We don't need both.
-            var legCoordinates: [CLLocationCoordinate2D] = Array(leg.steps.compactMap {
-                $0.coordinates?.suffix(from: 1)
-                }.joined())
-            
+
             // We need to add the first coord of the route in.
             if let firstCoord = leg.steps.first?.coordinates?.first {
                 legCoordinates.insert(firstCoord, at: 0)
             }
             
-            // We're trying to create a sequence that conforms to `((segmentStartCoordinate, segmentEndCoordinate), segmentCongestionLevel)`.
-            // This is represents a segment on the route and it's associated congestion level.
-            let segments: [[CLLocationCoordinate2D]] = zip(legCoordinates, legCoordinates.suffix(from: 1)).map { [$0.0, $0.1] }
-            let congestionSegments: [([CLLocationCoordinate2D], CongestionLevel)] = Array(zip(segments, legCongestion))
-            
-            // Merge adjacent segments with the same congestion level
-            var mergedCongestionSegments = [CongestionSegment]()
-            for seg in congestionSegments {
-                let coordinates = seg.0
-                let congestionLevel = seg.1
-                if let last = mergedCongestionSegments.last, last.1 == congestionLevel {
-                    mergedCongestionSegments[mergedCongestionSegments.count - 1].0 += coordinates
+            let mergedCongestionSegments: [CongestionSegment] = legCoordinates.enumerated().reduce([]) { (accumulate, current) in
+                let coordinate = current.element
+                let index = current.offset
+                
+                let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinate, legCoordinates[index + 1]], legCongestion[index])
+                let coordinates = congestionSegment.0
+                let congestionLevel = congestionSegment.1
+                
+                if var last = accumulate.last, last.1 == congestionLevel {
+                    last.0 += coordinates
+                    return accumulate + [last]
                 } else {
-                    mergedCongestionSegments.append(seg)
+                    return accumulate + [congestionSegment]
                 }
             }
             
             let lines: [MGLPolylineFeature] = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
                 polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
+                polyline.attributes["isAlternateRoute"] = false
                 if let legIndex = legIndex {
                     polyline.attributes[MBCurrentLegAttribute] = index == legIndex
                 } else {
                     polyline.attributes[MBCurrentLegAttribute] = index == 0
                 }
-                polyline.attributes["isAlternateRoute"] = false
                 return polyline
             }
             
             linesPerLeg.append(lines)
         }
+        
         return Array(linesPerLeg.joined())
     }
     
