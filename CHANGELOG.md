@@ -3,6 +3,7 @@
 ## master
 
 * Added `NavigationMapView.recenterMap()`. A helpful function for recenter the camera if it becomes uncentered.
+* Increases the minimum deployment target to iOS 9. [#1494](https://github.com/mapbox/mapbox-navigation-ios/pull/1494)
 
 ## v0.18.0 (June 5, 2018)
 
