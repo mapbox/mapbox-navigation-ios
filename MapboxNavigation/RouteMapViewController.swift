@@ -743,7 +743,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         
         let closestCoordinate = location.coordinate
         let roadLabelLayerIdentifier = "roadLabelLayer"
-        var streetsSources = style.sources.compactMap {
+        var streetsSources: [MGLVectorTileSource] = style.sources.compactMap {
             $0 as? MGLVectorTileSource
             }.filter {
                 $0.isMapboxStreets
