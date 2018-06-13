@@ -479,7 +479,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
 
-        let waypoints = Array(route.legs.map { $0.destination }.dropLast())
+        let waypoints: [Waypoint] = Array(route.legs.map { $0.destination }.dropLast())
         
         let source = navigationMapDelegate?.navigationMapView?(self, shapeFor: waypoints, legIndex: legIndex) ?? shape(for: waypoints, legIndex: legIndex)
         if route.routeOptions.waypoints.count > 2 { //are we on a multipoint route?
@@ -782,7 +782,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             // The last coord of the preceding step, is shared with the first coord of the next step.
             // We don't need both.
-            var legCoordinates = Array(leg.steps.compactMap {
+            var legCoordinates: [CLLocationCoordinate2D] = Array(leg.steps.compactMap {
                 $0.coordinates?.suffix(from: 1)
                 }.joined())
             
@@ -793,8 +793,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             // We're trying to create a sequence that conforms to `((segmentStartCoordinate, segmentEndCoordinate), segmentCongestionLevel)`.
             // This is represents a segment on the route and it's associated congestion level.
-            let segments = zip(legCoordinates, legCoordinates.suffix(from: 1)).map { [$0.0, $0.1] }
-            let congestionSegments = Array(zip(segments, legCongestion))
+            let segments: [[CLLocationCoordinate2D]] = zip(legCoordinates, legCoordinates.suffix(from: 1)).map { [$0.0, $0.1] }
+            let congestionSegments: [([CLLocationCoordinate2D], CongestionLevel)] = Array(zip(segments, legCongestion))
             
             // Merge adjacent segments with the same congestion level
             var mergedCongestionSegments = [CongestionSegment]()
@@ -808,7 +808,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
                 }
             }
             
-            let lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
+            let lines: [MGLPolylineFeature] = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
                 polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
                 if let legIndex = legIndex {
@@ -829,7 +829,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         var linesPerLeg: [MGLPolylineFeature] = []
         
         for (index, leg) in route.legs.enumerated() {
-            let legCoordinates = Array(leg.steps.compactMap {
+            let legCoordinates: [CLLocationCoordinate2D] = Array(leg.steps.compactMap {
                 $0.coordinates
             }.joined())
             
@@ -949,7 +949,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        let streetsSourceIdentifiers = style.sources.compactMap {
+        let streetsSourceIdentifiers: [String] = style.sources.compactMap {
             $0 as? MGLVectorTileSource
         }.filter {
             $0.isMapboxStreets

@@ -133,14 +133,14 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xEg-9E-ca4" userLabel="Recenter">
-                                <rect key="frame" x="8" y="600" width="62" height="30"/>
+                                <rect key="frame" x="8" y="577" width="62" height="30"/>
                                 <state key="normal" title="Recenter"/>
                                 <connections>
                                     <action selector="recenterMap:" destination="j9p-fX-jo4" eventType="touchUpInside" id="xjV-KY-kRg"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="68P-Cf-VxO">
-                                <rect key="frame" x="157.5" y="587" width="60" height="60"/>
+                                <rect key="frame" x="157.5" y="1254" width="60" height="60"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="LOt-aV-LJs"/>
@@ -168,28 +168,33 @@
                                     <action selector="cancelButtonPressed:" destination="j9p-fX-jo4" eventType="touchUpInside" id="A6l-sc-bG9"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Zwg-TF-wCY" userLabel="Background">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zeb-q8-C2a" customClass="MBInstructionsBannerView">
-                                <rect key="frame" x="0.0" y="35" width="375" height="125"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="125"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="125" id="WPM-Ea-3JU"/>
-                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="KG0-bP-EJe" firstAttribute="bottom" secondItem="68P-Cf-VxO" secondAttribute="bottom" constant="20" id="27M-O0-dTb"/>
                             <constraint firstItem="bFk-po-evo" firstAttribute="leading" secondItem="gqy-oH-EyZ" secondAttribute="leading" id="4uf-RU-JlZ"/>
+                            <constraint firstItem="Zwg-TF-wCY" firstAttribute="top" secondItem="gqy-oH-EyZ" secondAttribute="top" id="Gay-FU-c00"/>
                             <constraint firstAttribute="trailing" secondItem="bFk-po-evo" secondAttribute="trailing" id="Hez-Lc-Zos"/>
                             <constraint firstItem="68P-Cf-VxO" firstAttribute="centerX" secondItem="KG0-bP-EJe" secondAttribute="centerX" id="LWc-VG-K7s"/>
                             <constraint firstAttribute="bottom" secondItem="bFk-po-evo" secondAttribute="bottom" id="a3I-5l-ygF"/>
-                            <constraint firstAttribute="trailing" secondItem="Zeb-q8-C2a" secondAttribute="trailing" id="dSH-d3-G8i"/>
-                            <constraint firstItem="xEg-9E-ca4" firstAttribute="leading" secondItem="gqy-oH-EyZ" secondAttribute="leading" constant="8" id="gq5-Gh-Zua"/>
+                            <constraint firstItem="KG0-bP-EJe" firstAttribute="trailing" secondItem="Zeb-q8-C2a" secondAttribute="trailing" id="dSH-d3-G8i"/>
+                            <constraint firstItem="Zwg-TF-wCY" firstAttribute="height" secondItem="Zeb-q8-C2a" secondAttribute="height" id="e6Y-wR-0Dg"/>
+                            <constraint firstItem="xEg-9E-ca4" firstAttribute="leading" secondItem="KG0-bP-EJe" secondAttribute="leading" constant="8" id="gq5-Gh-Zua"/>
                             <constraint firstItem="68P-Cf-VxO" firstAttribute="top" secondItem="KG0-bP-EJe" secondAttribute="bottom" constant="587" id="hfu-zi-W4E"/>
                             <constraint firstItem="bFk-po-evo" firstAttribute="top" secondItem="gqy-oH-EyZ" secondAttribute="top" id="hxJ-UQ-HfU"/>
+                            <constraint firstItem="Zwg-TF-wCY" firstAttribute="leading" secondItem="gqy-oH-EyZ" secondAttribute="leading" id="kRO-Vm-eoS"/>
                             <constraint firstItem="Zeb-q8-C2a" firstAttribute="top" secondItem="KG0-bP-EJe" secondAttribute="top" id="nSS-iv-xNg"/>
                             <constraint firstAttribute="bottom" secondItem="xEg-9E-ca4" secondAttribute="bottom" constant="60" id="qmg-Mz-8ml"/>
-                            <constraint firstItem="Zeb-q8-C2a" firstAttribute="leading" secondItem="gqy-oH-EyZ" secondAttribute="leading" id="zYT-mW-YMn"/>
+                            <constraint firstItem="Zwg-TF-wCY" firstAttribute="trailing" secondItem="gqy-oH-EyZ" secondAttribute="trailing" id="tkQ-Hu-vZV"/>
+                            <constraint firstItem="Zeb-q8-C2a" firstAttribute="leading" secondItem="KG0-bP-EJe" secondAttribute="leading" id="zYT-mW-YMn"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="KG0-bP-EJe"/>
                         <userDefinedRuntimeAttributes>

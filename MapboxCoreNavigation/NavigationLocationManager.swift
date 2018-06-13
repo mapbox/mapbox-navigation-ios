@@ -23,10 +23,8 @@ open class NavigationLocationManager: CLLocationManager {
         
         desiredAccuracy = kCLLocationAccuracyBest
         
-        if #available(iOS 9.0, *) {
-            if Bundle.main.backgroundModes.contains("location") {
-                allowsBackgroundLocationUpdates = true
-            }
+        if Bundle.main.backgroundModes.contains("location") {
+            allowsBackgroundLocationUpdates = true
         }
     }
 }
