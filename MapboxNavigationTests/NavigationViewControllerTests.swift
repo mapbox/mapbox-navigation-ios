@@ -88,8 +88,6 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
         let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle()])
-        navigationViewController.usesNightStyleInsideTunnels = true
-        navigationViewController.routeController.tunnelSimulationEnabled = true
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -106,8 +104,6 @@ class NavigationViewControllerTests: XCTestCase {
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
         let navigationViewController = NavigationViewController(for: initialRoute, styles: [NightStyle()])
-        navigationViewController.usesNightStyleInsideTunnels = true
-        navigationViewController.routeController.tunnelSimulationEnabled = true
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
@@ -123,8 +119,6 @@ class NavigationViewControllerTests: XCTestCase {
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
         let navigationViewController = NavigationViewController(for: initialRoute, styles: [DayStyle(), NightStyle()])
-        navigationViewController.usesNightStyleInsideTunnels = true
-        navigationViewController.routeController.tunnelSimulationEnabled = true
         let routeController = navigationViewController.routeController!
         navigationViewController.styleManager.delegate = self
         
