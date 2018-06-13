@@ -204,7 +204,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         
         //simulate the downloads
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
-        // simulateDownloadingShieldForComponent(firstDestinationComponent) // TODO: Involes the method during single test suite
+        simulateDownloadingShieldForComponent(firstDestinationComponent)
         
         //ensure that first callback fires
         wait(for: [firstExpectation], timeout: 1)
@@ -230,7 +230,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
         
         let secondDestinationComponent = instructions[2]
-        // simulateDownloadingShieldForComponent(secondDestinationComponent) // TODO: Involes the method during single test suite
+        simulateDownloadingShieldForComponent(secondDestinationComponent)
         
         //ensure that second callback fires
         wait(for: [secondExpectation], timeout: 1)
