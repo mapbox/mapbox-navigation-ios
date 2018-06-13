@@ -1,6 +1,8 @@
 #import "MBRouteController.h"
 #import <CommonCrypto/CommonCrypto.h>
 
+#import <navigator/navigator-ios.h>
+
 const NSNotificationName MBRouteControllerProgressDidChangeNotification             = @"RouteControllerProgressDidChange";
 const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNotification = @"RouteControllerDidPassSpokenInstructionPoint";
 const NSNotificationName MBRouteControllerWillRerouteNotification                   = @"RouteControllerWillReroute";

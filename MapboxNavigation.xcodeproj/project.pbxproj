@@ -57,6 +57,7 @@
 		352BBC581E5E78EA00703DF1 /* Example_Objective_CTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 352BBC571E5E78EA00703DF1 /* Example_Objective_CTests.m */; };
 		3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */; };
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
+		353581F620D177FF00FCC6BA /* navigator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 353581F520D177FE00FCC6BA /* navigator.framework */; };
 		353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */; };
 		353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353AA55F1FCEF583009F0384 /* StyleManager.swift */; };
 		353E3C8F20A3501C00FD1789 /* MGLStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E3C8E20A3501C00FD1789 /* MGLStyle.swift */; };
@@ -485,6 +486,7 @@
 		3531C26B1F9DDC6F00D92F9A /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerView.swift; sourceTree = "<group>"; };
 		353280A01FA72871005175F3 /* InstructionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionLabel.swift; sourceTree = "<group>"; };
+		353581F520D177FE00FCC6BA /* navigator.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = navigator.framework; sourceTree = "<group>"; };
 		353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerView.swift; sourceTree = "<group>"; };
 		35375EC01F31FA86004CE727 /* NavigationSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationSettings.swift; sourceTree = "<group>"; };
 		353AA55F1FCEF583009F0384 /* StyleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManager.swift; sourceTree = "<group>"; };
@@ -832,6 +834,7 @@
 			files = (
 				C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */,
+				353581F620D177FF00FCC6BA /* navigator.framework in Frameworks */,
 				359D00CF1E732D7100C2E770 /* Polyline.framework in Frameworks */,
 				35CC14151F7994B0009E872A /* Turf.framework in Frameworks */,
 			);
@@ -1096,6 +1099,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				353581F520D177FE00FCC6BA /* navigator.framework */,
 				35B1AEBA20AD9AEC00C8544E /* Nimble.framework */,
 				35B1AEB920AD9AE600C8544E /* Quick.framework */,
 				C5A9DDBD202E12EE007D52DA /* MapboxSpeech.framework */,
@@ -2684,6 +2688,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MapboxCoreNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2711,6 +2716,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MapboxCoreNavigation/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
