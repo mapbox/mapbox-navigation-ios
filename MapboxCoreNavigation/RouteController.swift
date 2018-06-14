@@ -154,7 +154,7 @@ public protocol RouteControllerDelegate: class {
      Implementing this method will allow developers to change whether battery monitoring is disabled when `RouteController` is deinited.
      
      - parameter routeController: The route controller that will change the state of battery monitoring.
-     - returns: A bool representing the value you would like `UIDevice.isBatteryMonitoringEnabled` set to.
+     - returns: A bool indicating whether to disable battery monitoring when the RouteController is deinited.
      */
     @objc(routeControllerShouldDisableBatteryMonitoring:)
     optional func routeControllerShouldDisableBatteryMonitoring(_ routeController: RouteController) -> Bool
