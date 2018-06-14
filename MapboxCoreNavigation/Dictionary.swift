@@ -11,7 +11,7 @@ import Foundation
 extension Dictionary {
     func asString() -> String? {
         do {
-            let data = try JSONSerialization.data(withJSONObject: self, options: .prettyPrinted)
+            let data = try JSONSerialization.data(withJSONObject: self, options: [])
             return String(data: data, encoding: .utf8)
         } catch {
             print(error.localizedDescription)

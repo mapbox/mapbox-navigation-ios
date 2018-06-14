@@ -43,7 +43,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             self.routes = [selected] + routes.filter { $0 != selected }
         }
     }
-
+    var routesAsJSON: [String: Any]?
     var routes: [Route]? {
         didSet {
             startButton.isEnabled = (routes?.count ?? 0 > 0)
@@ -61,6 +61,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         guard let current = routes.first else { return }
         self?.mapView?.removeWaypoints()
         self?.routes = routes
+        self?.routesAsJSON = routesAsJSON.first
         self?.waypoints = current.routeOptions.waypoints
     }
 
@@ -232,7 +233,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         exampleMode = .default
 
-        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
+        let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager(), routeJSON: routesAsJSON)
         navigationViewController.delegate = self
 
         presentAndRemoveMapview(navigationViewController)
