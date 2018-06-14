@@ -772,7 +772,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         for (index, leg) in route.legs.enumerated() {
             // If there is no congestion, don't try and add it
-            guard let legCongestion = leg.segmentCongestionLevels, legCongestion.count + 1 <= coordinates.count else {
+            guard let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count else {
                 return [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
             }
             
