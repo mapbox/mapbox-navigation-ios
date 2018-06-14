@@ -13,6 +13,7 @@
 
 * Added support for generic route shields. Image-backed route shields also now display as generic (instead of plain text) while the SDK loads the image. [#1190](https://github.com/mapbox/mapbox-navigation-ios/issues/1190), [#1417](https://github.com/mapbox/mapbox-navigation-ios/pull/1417)
 * Fixed an issue when going into overhead mode with a short route. [#1456](https://github.com/mapbox/mapbox-navigation-ios/pull/1456/)
+* Adds support for Xcode 10 Beta 1. [#1499](https://github.com/mapbox/mapbox-navigation-ios/pull/1499), [#1478](https://github.com/mapbox/mapbox-navigation-ios/pull/1478)
 
 ### Core Navigation
 
