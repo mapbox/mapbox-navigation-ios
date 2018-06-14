@@ -335,12 +335,10 @@ extension UIDevice {
             var systemInfo = utsname()
             uname(&systemInfo)
             let machineMirror = Mirror(reflecting: systemInfo.machine)
-            let identifier = machineMirror.children.reduce("") { identifier, element in
+            return machineMirror.children.reduce("") { (identifier: String, element: Mirror.Child) in
                 guard let value = element.value as? Int8, value != 0 else { return identifier }
                 return identifier + String(UnicodeScalar(UInt8(value)))
             }
-            
-            return identifier
         }
     }
 }

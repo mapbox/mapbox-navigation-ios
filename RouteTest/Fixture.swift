@@ -44,7 +44,7 @@ class Fixture {
         let jsonRoute = (response["routes"] as! [AnyObject]).first as! [String: Any]
         let jsonWaypoints = response["waypoints"] as! [[String: Any]]
         
-        let waypoints = jsonWaypoints.map { (waypointDict) -> Waypoint in
+        let waypoints: [Waypoint] = jsonWaypoints.map { (waypointDict) -> Waypoint in
             let locationDict = waypointDict["location"] as! [CLLocationDegrees]
             let coord = CLLocationCoordinate2D(latitude: locationDict[1], longitude: locationDict[0])
             return Waypoint(coordinate: coord)
