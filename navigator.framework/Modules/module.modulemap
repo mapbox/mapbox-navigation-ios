@@ -1,6 +1,0 @@
-framework module navigator {
-  umbrella header "navigator-ios.h"
-  export *
-  module * { export * }
-  link "c++"
-}

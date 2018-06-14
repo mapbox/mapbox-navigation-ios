@@ -1,7 +1,7 @@
 #import "MBRouteController.h"
 #import <CommonCrypto/CommonCrypto.h>
 
-#import <navigator/navigator-ios.h>
+#import <MapboxNavigationNative/MapboxNavigationNative.h>
 
 const NSNotificationName MBRouteControllerProgressDidChangeNotification             = @"RouteControllerProgressDidChange";
 const NSNotificationName MBRouteControllerDidPassSpokenInstructionPointNotification = @"RouteControllerDidPassSpokenInstructionPoint";
@@ -30,4 +30,10 @@ NSString *const MBErrorDomain = @"ErrorDomain";
     
     return  output;
 }
+
+- (void)test {
+    MBNavigator *navigator = [[MBNavigator alloc] init];
+    
+}
+
 @end

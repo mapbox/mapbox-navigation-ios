@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <MapboxCoreNavigation/MapboxCoreNavigation.h>
 
 /**
  Posted when `MBRouteController` receives a user location update representing movement along the expected route.
