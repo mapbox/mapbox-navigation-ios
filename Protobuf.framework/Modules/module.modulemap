@@ -1,0 +1,8 @@
+framework module Protobuf {
+  #umbrella header "MapboxNavigationNative.h"
+  export *
+  module * { export * }
+  link "c++"
+  link "sqlite3"
+  link "z"
+}

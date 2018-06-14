@@ -1,12 +1,24 @@
 import CoreLocation
 import MapboxDirections
 import Turf
+import MapboxNavigationNative
 
 extension CLLocation {
     
     var isQualified: Bool {
         return
             0...100 ~= horizontalAccuracy
+    }
+    
+    var asFixedLocation: MBFixLocation {
+        return MBFixLocation(lat: Float(coordinate.latitude),
+                             lon: Float(coordinate.longitude),
+                             time: NSNumber(value: timestamp.timeIntervalSince1970),
+                             speed: NSNumber(value: speed),
+                             bearing: NSNumber(value: course),
+                             altitude: NSNumber(value: altitude),
+                             accuracyHorizontal: NSNumber(value: horizontalAccuracy),
+                             provider: "mapbox-navigation-ios-route-controller")
     }
     
     /// Returns a dictionary representation of the location.

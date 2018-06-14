@@ -333,15 +333,16 @@ open class NavigationViewController: UIViewController {
 
      See [Mapbox Directions](https://mapbox.github.io/mapbox-navigation-ios/directions/) for further information.
      */
-    @objc(initWithRoute:directions:styles:locationManager:)
+//    @objc(initWithRoute:directions:styles:locationManager:)
     required public init(for route: Route,
                          directions: Directions = Directions.shared,
                          styles: [Style]? = [DayStyle(), NightStyle()],
-                         locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+                         locationManager: NavigationLocationManager? = NavigationLocationManager(),
+                         routeJSON: [String: Any]? = nil) {
         
         super.init(nibName: nil, bundle: nil)
         
-        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
+        self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager(), routeJSON: routeJSON)
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
         self.routeController.tunnelIntersectionManager.delegate = self

@@ -4,6 +4,7 @@ import MapboxDirections
 import Polyline
 import MapboxMobileEvents
 import Turf
+import MapboxNavigationNative
 
 /**
  Keys in the user info dictionaries of various notifications posted by instances
@@ -210,8 +211,12 @@ open class RouteController: NSObject {
      Will only be enabled if `tunnelSimulationEnabled` is true.
      */
     public var tunnelIntersectionManager: TunnelIntersectionManager = TunnelIntersectionManager()
+    
+    var navigator: MBNavigator
 
     var didFindFasterRoute = false
+    
+    var mbNavigatorStatus: MBNavigationStatus?
 
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -276,8 +281,8 @@ open class RouteController: NSObject {
      - parameter directions: The Directions object that created `route`.
      - parameter locationManager: The associated location manager.
      */
-    @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: MMEEventsManager = MMEEventsManager.shared()) {
+//    @objc(initWithRoute:directions:locationManager:eventsManager:)
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: MMEEventsManager = MMEEventsManager.shared(), routeJSON: [String: Any]? = nil) {
         self.sessionState = SessionState(currentRoute: route, originalRoute: route)
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
@@ -285,6 +290,11 @@ open class RouteController: NSObject {
         self.locationManager.activityType = route.routeOptions.activityType
         self.eventsManager = eventsManager
         UIDevice.current.isBatteryMonitoringEnabled = true
+        
+        self.navigator = MBNavigator()
+        if let routeJSON = routeJSON?.asString() {
+            mbNavigatorStatus = navigator.setDirectionsForDirections(routeJSON)
+        }
 
         super.init()
 
@@ -434,6 +444,9 @@ open class RouteController: NSObject {
     var rawLocation: CLLocation? {
         didSet {
             updateDistanceToManeuver()
+            if let rawLocation = rawLocation{
+                mbNavigatorStatus = navigator.onLocationChanged(for: rawLocation.asFixedLocation)
+            }
         }
     }
 
@@ -716,10 +729,7 @@ extension RouteController: CLLocationManagerDelegate {
             return true
         }
 
-        let radius = max(reroutingTolerance, RouteControllerManeuverZoneRadius)
-        let isCloseToCurrentStep = location.isWithin(radius, of: routeProgress.currentLegProgress.currentStep)
-
-        guard !isCloseToCurrentStep || !userCourseIsOnRoute(location) else { return true }
+        guard mbNavigatorStatus?.routeState == .offRoute || !userCourseIsOnRoute(location) else { return true }
 
         // Check and see if the user is near a future step.
         guard let nearestStep = routeProgress.currentLegProgress.closestStep(to: location.coordinate) else {
@@ -753,14 +763,16 @@ extension RouteController: CLLocationManagerDelegate {
         }
         let durationRemaining = routeProgress.durationRemaining
 
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location) { [weak self] (route, routeAsJSON, error) in
             guard let strongSelf = self else {
                 return
             }
 
-            guard let route = route else {
+            guard let route = route, let routeAsJSON = routeAsJSON?.asString() else {
                 return
             }
+            
+            strongSelf.navigator.setDirectionsForDirections(routeAsJSON)
 
             strongSelf.lastLocationDate = nil
 
@@ -803,7 +815,7 @@ extension RouteController: CLLocationManagerDelegate {
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location) { [weak self] (route, error) in
+        getDirections(from: location) { [weak self] (route, routeAsJSON, error) in
             guard let strongSelf = self else {
                 return
             }
@@ -817,6 +829,10 @@ extension RouteController: CLLocationManagerDelegate {
             }
 
             guard let route = route else { return }
+            
+            if let jsonRoute = routeAsJSON?.asString() {
+                self?.navigator.setDirectionsForDirections(jsonRoute)
+            }
 
             strongSelf.routeProgress = RouteProgress(route: route, legIndex: 0)
             strongSelf.routeProgress.currentLegProgress.stepIndex = 0
@@ -851,7 +867,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
     }
 
-    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ error: Error?)->Void) {
+    func getDirections(from location: CLLocation, completion: @escaping (_ route: Route?, _ routeAsJSON: [String: Any]?, _ error: Error?)->Void) {
         routeTask?.cancel()
 
         let options = routeProgress.route.routeOptions
@@ -867,24 +883,24 @@ extension RouteController: CLLocationManagerDelegate {
             directions = Directions(accessToken: accessToken, host: host)
         }
 
-        routeTask = directions.calculate(options) { [weak self] (waypoints, routes, error) in
+        routeTask = directions.calculate(options) { [weak self] (waypoints, routes, routesAsJSON, error) in
             defer {
                 self?.isRerouting = false
             }
             if let error = error {
-                return completion(nil, error)
+                return completion(nil, nil, error)
             }
 
-            guard let routes = routes else {
-                return completion(nil, nil)
+            guard let routes = routes, let routesAsJSON = routesAsJSON else {
+                return completion(nil, nil, nil)
             }
 
-            if let route = self?.mostSimilarRoute(in: routes) {
-                return completion(route, error)
-            } else if let route = routes.first {
-                return completion(route, error)
+            if let route = self?.mostSimilarRoute(in: routes), let index = routes.index(where: { $0 == route }) {
+                return completion(route, routesAsJSON[index], error)
+            } else if let route = routes.first, let routeAsJSON = routesAsJSON.first {
+                return completion(route, routeAsJSON, error)
             } else {
-                return completion(nil, nil)
+                return completion(nil, nil, nil)
             }
         }
     }
