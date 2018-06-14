@@ -777,38 +777,19 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
             
             // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
-            var legCoordinates: [CLLocationCoordinate2D] = leg.steps.reduce([]) { allCoordinates, step in
-                return allCoordinates + step.coordinates!.suffix(from: 1)
-            }
-
-            // We need to add the first coord of the route in.
-            if let firstCoord = leg.steps.first?.coordinates?.first {
-                legCoordinates.insert(firstCoord, at: 0)
-            }
-            
-            let mergedCongestionSegments: [CongestionSegment] = legCoordinates.enumerated().reduce([]) { (accumulate, current) in
-                
-                let coordinate = current.element
+            let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
                 let index = current.offset
+                let step = current.element
+                let stepCoordinates = step.coordinates!
                 
-                let congestionValue = index < legCongestion.count - 1 ? legCongestion[index] : legCongestion[index - 1]
-                let nextCoordinateValue = index < legCoordinates.count - 1 ? legCoordinates[index + 1] : legCoordinates[index]
-                
-                let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinate, nextCoordinateValue], congestionValue)
-                let coordinates = congestionSegment.0
-                let congestionLevel = congestionSegment.1
-                
-                if var last = accumulate.last, last.1 == congestionLevel {
-                    last.0 += coordinates
-                    return accumulate + [last]
-                } else {
-                    return accumulate + [congestionSegment]
-                }
+                return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
             }
             
-            let lines: [MGLPolylineFeature] = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
-                let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-                polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
+            let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
+            
+            let lines: [MGLPolylineFeature] = mergedCongestionSegments.map { (congestionSegment: CongestionSegment?) -> MGLPolylineFeature in
+                let polyline = MGLPolylineFeature(coordinates: congestionSegment!.0, count: UInt(congestionSegment!.0.count))
+                polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment!.1)
                 polyline.attributes["isAlternateRoute"] = false
                 if let legIndex = legIndex {
                     polyline.attributes[MBCurrentLegAttribute] = index == legIndex
@@ -822,6 +803,24 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
         
         return linesPerLeg
+    }
+    
+    func combine(_ coordinates: [CLLocationCoordinate2D], with congestions: [CongestionLevel]) -> [CongestionSegment] {
+        var segments: [CongestionSegment] = []
+        segments.reserveCapacity(congestions.count)
+        for (index, congestion) in congestions.enumerated() {
+            
+            let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinates[index], coordinates[index + 1]], congestion)
+            let coordinates = congestionSegment.0
+            let congestionLevel = congestionSegment.1
+            
+            if segments.last?.1 == congestionLevel {
+                segments[segments.count - 1].0 += coordinates
+            } else {
+                segments.append(congestionSegment)
+            }
+        }
+        return segments
     }
     
     func shape(forCasingOf route: Route, legIndex: Int?) -> MGLShape? {
