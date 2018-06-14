@@ -787,9 +787,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
             
-            let lines: [MGLPolylineFeature] = mergedCongestionSegments.map { (congestionSegment: CongestionSegment?) -> MGLPolylineFeature in
-                let polyline = MGLPolylineFeature(coordinates: congestionSegment!.0, count: UInt(congestionSegment!.0.count))
-                polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment!.1)
+            let lines: [MGLPolylineFeature] = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
+                let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
+                polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
                 polyline.attributes["isAlternateRoute"] = false
                 if let legIndex = legIndex {
                     polyline.attributes[MBCurrentLegAttribute] = index == legIndex
