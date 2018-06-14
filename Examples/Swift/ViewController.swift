@@ -6,7 +6,7 @@ import Mapbox
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
-private typealias RouteRequestSuccess = (([Route]) -> Void)
+private typealias RouteRequestSuccess = (([Route], [[String: Any]]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
 
 enum ExampleMode {
@@ -57,7 +57,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     // MARK: Directions Request Handlers
 
-    fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
+    fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes, routesAsJSON) in
         guard let current = routes.first else { return }
         self?.mapView?.removeWaypoints()
         self?.routes = routes
@@ -216,10 +216,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
 
-        let handler: Directions.RouteCompletionHandler = {(waypoints, potentialRoutes, potentialError) in
+        let handler: Directions.RouteCompletionHandler = {(waypoints, potentialRoutes, routesAsJSON, potentialError) in
             if let error = potentialError, let fail = failure { return fail(error) }
-            guard let routes = potentialRoutes else { return }
-            return success(routes)
+            guard let routes = potentialRoutes, let routesAsJSON = routesAsJSON else { return }
+            return success(routes, routesAsJSON)
         }
 
         _ = Directions.shared.calculate(options, completionHandler: handler)
