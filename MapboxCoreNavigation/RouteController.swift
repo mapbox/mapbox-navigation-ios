@@ -146,6 +146,18 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:shouldPreventReroutesWhenArrivingAtWaypoint:)
     optional func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
+    
+    
+    /**
+     Called when the route controller will disable battery monitoring.
+     
+     Implementing this method will allow developers to change whether battery monitoring is disabled when `RouteController` is deinited.
+     
+     - parameter routeController: The route controller that will change the state of battery monitoring.
+     - returns: A bool indicating whether to disable battery monitoring when the RouteController is deinited.
+     */
+    @objc(routeControllerShouldDisableBatteryMonitoring:)
+    optional func routeControllerShouldDisableBatteryMonitoring(_ routeController: RouteController) -> Bool
 }
 
 /**
@@ -293,7 +305,15 @@ open class RouteController: NSObject {
         sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
         sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
-        UIDevice.current.isBatteryMonitoringEnabled = false
+        
+        guard let shouldDisable = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) else {
+            UIDevice.current.isBatteryMonitoringEnabled = false
+            return
+        }
+        
+        if shouldDisable {
+            UIDevice.current.isBatteryMonitoringEnabled = false
+        }
     }
 
     func startEvents(accessToken: String?) {
