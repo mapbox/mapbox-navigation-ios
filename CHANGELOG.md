@@ -6,6 +6,7 @@
 * Moved `RouteController.tunnelSimulationEnabled` to `RouteController.tunnelIntersectionManager.tunnelSimulationEnabled`. [#1489](https://github.com/mapbox/mapbox-navigation-ios/pull/1489/)
 * Deprecated `NavigationViewController.usesNightStyleInsideTunnels`. Style switching in now enabled as long as `RouteController.tunnelIntersectionManager.tunnelSimulationEnabled` is true.
 * Increases the minimum deployment target to iOS 9. [#1494](https://github.com/mapbox/mapbox-navigation-ios/pull/1494)
+* Setting `NavigationLocationManager` to a custom value now works again. [#1481](https://github.com/mapbox/mapbox-navigation-ios/pull/1481)
 
 ## v0.18.0 (June 5, 2018)
 
