@@ -217,6 +217,7 @@
 		C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C54C655220336F2600D338E0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54C655120336F2600D338E0 /* Constants.swift */; };
 		C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */; };
+		C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */; };
 		C561735B1F182113005954F6 /* RouteStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = C561735A1F182113005954F6 /* RouteStep.swift */; };
 		C565168B1FE1E23E00A0AD18 /* MapboxVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C565168A1FE1E23E00A0AD18 /* MapboxVoiceController.swift */; };
 		C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57491DE1FACC42F006F97BC /* CGPoint.swift */; };
@@ -627,6 +628,7 @@
 		C549F8311F17F2C5001A0A2D /* MapboxMobileEvents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxMobileEvents.framework; path = Carthage/Build/iOS/MapboxMobileEvents.framework; sourceTree = "<group>"; };
 		C54C655120336F2600D338E0 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapViewTests.swift; sourceTree = "<group>"; };
+		C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManagerTests.swift; sourceTree = "<group>"; };
 		C561735A1F182113005954F6 /* RouteStep.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteStep.swift; sourceTree = "<group>"; };
 		C565168A1FE1E23E00A0AD18 /* MapboxVoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxVoiceController.swift; sourceTree = "<group>"; };
 		C57491DE1FACC42F006F97BC /* CGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGPoint.swift; path = ../MapboxNavigation/CGPoint.swift; sourceTree = "<group>"; };
@@ -1285,6 +1287,7 @@
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
 				35C57D69208DD4A200BDD2A6 /* BridgingTests.m */,
 				C5A60EC820A2417200C21178 /* MD5Tests.swift */,
+				C551B0E520D42222009A986F /* NavigationLocationManagerTests.swift */,
 			);
 			path = MapboxCoreNavigationTests;
 			sourceTree = "<group>";
@@ -2000,6 +2003,7 @@
 				16435E05206EE37800AF48B6 /* DummyURLSessionDataTask.swift in Sources */,
 				C5ADFBD81DDCC7840011824B /* MapboxCoreNavigationTests.swift in Sources */,
 				16120A4D20645D6E007EA21D /* EventsManagerSpy.swift in Sources */,
+				C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
 				AE8B1B97207D2B2B003050F6 /* TunnelIntersectionManagerTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
