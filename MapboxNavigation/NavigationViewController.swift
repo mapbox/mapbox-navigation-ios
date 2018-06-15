@@ -322,11 +322,6 @@ open class NavigationViewController: UIViewController {
      */
     @objc public var annotatesSpokenInstructions = false
     
-    /**
-     A Boolean value that indicates whether the dark style should apply when a route controller enters a tunnel.
-     */
-    @objc public var usesNightStyleInsideTunnels: Bool = true
-    
     var styleManager: StyleManager!
     
     required public init?(coder aDecoder: NSCoder) {
@@ -349,6 +344,7 @@ open class NavigationViewController: UIViewController {
         self.routeController = RouteController(along: route, directions: directions, locationManager: locationManager ?? NavigationLocationManager())
         self.routeController.usesDefaultUserInterface = true
         self.routeController.delegate = self
+        self.routeController.tunnelIntersectionManager.delegate = self
         
         self.directions = directions
         self.route = route
@@ -427,14 +423,6 @@ open class NavigationViewController: UIViewController {
         let secondsRemaining = routeProgress.currentLegProgress.currentStepProgress.durationRemaining
 
         mapViewController?.notifyDidChange(routeProgress: routeProgress, location: location, secondsRemaining: secondsRemaining)
-        
-        if usesNightStyleInsideTunnels, let tunnelIntersectionManager = routeController.tunnelIntersectionManager {
-            if tunnelIntersectionManager.isAnimationEnabled {
-                styleManager.applyStyle(type: .night)
-            } else  {
-                styleManager.timeOfDayChanged()
-            }
-        }
     }
     
     @objc func didPassInstructionPoint(notification: NSNotification) {
@@ -602,6 +590,18 @@ extension NavigationViewController: RouteControllerDelegate {
             self.mapViewController?.showEndOfRoute { _ in }
         }
         return advancesToNextLeg
+    }
+}
+
+extension NavigationViewController: TunnelIntersectionManagerDelegate {
+    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
+        routeController.tunnelIntersectionManager(manager, willEnableAnimationAt: location)
+        styleManager.applyStyle(type: .night)
+    }
+    
+    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
+        routeController.tunnelIntersectionManager(manager, willDisableAnimationAt: location)
+        styleManager.timeOfDayChanged()
     }
 }
 

@@ -21,10 +21,8 @@ open class NavigationLocationManager: CLLocationManager {
         
         requestWhenInUseAuthorization()
         
-        if #available(iOS 9.0, *) {
-            if Bundle.main.backgroundModes.contains("location") {
-                allowsBackgroundLocationUpdates = true
-            }
+        if Bundle.main.backgroundModes.contains("location") {
+            allowsBackgroundLocationUpdates = true
         }
     }
 }
