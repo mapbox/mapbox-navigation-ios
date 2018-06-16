@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
+import CarPlay
 
 public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
     
@@ -16,14 +17,17 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     let voiceController = MapboxVoiceController()
     
+    var session: CPNavigationSession
+    
     var mapHasLoaded = false {
         didSet {
 //            resumeNotifications()
         }
     }
     
-    public init(for route: Route) {
+    public init(for route: Route, session: CPNavigationSession) {
         self.route = route
+        self.session = session
         super.init(nibName: nil, bundle: nil)
         
 //        routeController.resume()
@@ -77,11 +81,19 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         // Update the user puck
         mapView?.updateCourseTracking(location: location, animated: true)
+        let maneuver = CPManeuver()
+        if let upcoming = routeProgress.currentLegProgress.upComingStep {
+            maneuver.instructionVariants = [upcoming.instructions]
+        }
+        let distanceRemaining = Measurement(value: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, unit: UnitLength.nauticalMiles)
+        let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining, timeRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
+        
+        session.updateEstimates(estimates, for: maneuver)
+        
+        CPAlert(titleVariants: <#T##[String]#>, style: <#T##CPAlert.Style#>, actions: <#T##[CPAlertAction]#>)
     }
     
     @objc func rerouted(_ notification: NSNotification) {
         self.mapView?.showRoutes([routeController.routeProgress.route])
     }
-    
 }
-
