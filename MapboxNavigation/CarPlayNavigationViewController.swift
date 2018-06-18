@@ -15,9 +15,11 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     var mapView: NavigationMapView?
     
-    let voiceController = MapboxVoiceController()
+//    let voiceController = MapboxVoiceController()
     
-    var session: CPNavigationSession
+    var carSession: CPNavigationSession
+    
+    var carMaptemplate: CPMapTemplate
     
     var mapHasLoaded = false {
         didSet {
@@ -25,12 +27,13 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         }
     }
     
-    public init(for route: Route, session: CPNavigationSession) {
+    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate) {
         self.route = route
-        self.session = session
+        self.carSession = session
+        self.carMaptemplate = template
         super.init(nibName: nil, bundle: nil)
         
-//        routeController.resume()
+        createMapTemplateUI()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -58,6 +61,19 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         mapView?.recenterMap()
     }
     
+    func createMapTemplateUI() {
+        let overviewButton = CPMapButton { (button) in
+            guard let userLocation = self.routeController.location?.coordinate else { return }
+            self.mapView?.setOverheadCameraView(from: userLocation, along: self.routeController.routeProgress.route.coordinates!, for: UIEdgeInsets(floatLiteral: 0))
+            button.isHidden = true
+        }
+        
+        overviewButton.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        carMaptemplate.mapButtons = [overviewButton]
+//        carMaptemplate.trailingNavigationBarButtons = []
+//        carMaptemplate.leadingNavigationBarButtons = []
+    }
+    
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: nil)
@@ -81,16 +97,15 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         // Update the user puck
         mapView?.updateCourseTracking(location: location, animated: true)
-        let maneuver = CPManeuver()
-        if let upcoming = routeProgress.currentLegProgress.upComingStep {
-            maneuver.instructionVariants = [upcoming.instructions]
+    
+        if let instruction = routeProgress.currentLegProgress.upComingStep?.instructions {
+            let maneuver = CPManeuver()
+            let distanceRemaining = Measurement(value: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, unit: UnitLength.nauticalMiles)
+            let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining, timeRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
+            
+            carSession.updateEstimates(estimates, for: maneuver)
         }
-        let distanceRemaining = Measurement(value: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, unit: UnitLength.nauticalMiles)
-        let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining, timeRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
-        
-        session.updateEstimates(estimates, for: maneuver)
-        
-        CPAlert(titleVariants: <#T##[String]#>, style: <#T##CPAlert.Style#>, actions: <#T##[CPAlertAction]#>)
+//        session.upcomingManeuvers = [maneuver]
     }
     
     @objc func rerouted(_ notification: NSNotification) {
