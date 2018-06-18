@@ -139,7 +139,7 @@ extension UIView {
     
     var imageRepresentation: UIImage? {
         let size = CGSize(width: frame.size.width, height: frame.size.height)
-        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale / 2)
         guard let currentContext = UIGraphicsGetCurrentContext() else { return nil }
         layer.render(in:currentContext)
         let image = UIGraphicsGetImageFromCurrentImageContext()
