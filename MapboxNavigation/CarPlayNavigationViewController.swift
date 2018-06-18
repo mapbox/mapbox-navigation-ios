@@ -17,15 +17,21 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     let voiceController: MapboxVoiceController
     
+    
     var carSession: CPNavigationSession
     var carMaptemplate: CPMapTemplate
+    var carFeedbackTemplate: CPGridTemplate!
+    var carInterfaceController: CPInterfaceController
+    var carFeedbackUIIsShown = false
     
-    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate) {
+    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController) {
         self.route = route
         self.carSession = session
         self.carMaptemplate = template
         self.voiceController = MapboxVoiceController()
+        self.carInterfaceController = interfaceController
         super.init(nibName: nil, bundle: nil)
+        self.carFeedbackTemplate = self.createFeedbackUI()
         
         createMapTemplateUI()
     }
@@ -41,6 +47,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView?.compassView.isHidden = true
         mapView?.attributionButton.isHidden = true
+        mapView?.logoView.isHidden = true
         mapView?.delegate = self
         
         self.routeController = RouteController(along: route, directions: Directions.shared, locationManager: NavigationLocationManager())
@@ -54,6 +61,15 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     func createMapTemplateUI() {
         var recenter: CPMapButton!
+        
+        let showFeedbackButton = CPMapButton { (button) in
+            guard !self.carFeedbackUIIsShown else { return }
+            self.carFeedbackUIIsShown = true
+            self.carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
+        }
+        
+        showFeedbackButton.image = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        
         let overviewButton = CPMapButton { (button) in
             guard let userLocation = self.routeController.location?.coordinate else { return }
             self.mapView?.setOverheadCameraView(from: userLocation, along: self.routeController.routeProgress.route.coordinates!, for: UIEdgeInsets(floatLiteral: 0))
@@ -90,21 +106,25 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         exitButton.title = "Exit"
         
-        carMaptemplate.mapButtons = [overviewButton, recenter]
+        carMaptemplate.mapButtons = [overviewButton, recenter, showFeedbackButton]
         carMaptemplate.trailingNavigationBarButtons = [exitButton]
         carMaptemplate.leadingNavigationBarButtons = [muteButton]
     }
     
     func createFeedbackUI() -> CPGridTemplate {
+        let buttonHandler: (CPGridButton) -> Void = { _ in
+            self.carInterfaceController.popTemplate(animated: true)
+            self.carFeedbackUIIsShown = false
+        }
         let buttons: [CPGridButton] = [
-            CPGridButton(titleVariants: [FeedbackItem.closure.title], image: FeedbackItem.closure.image, handler: nil),
-            CPGridButton(titleVariants: [FeedbackItem.turnNotAllowed.title], image: FeedbackItem.turnNotAllowed.image, handler: nil),
-            CPGridButton(titleVariants: [FeedbackItem.reportTraffic.title], image: FeedbackItem.reportTraffic.image, handler: nil),
-            CPGridButton(titleVariants: [FeedbackItem.confusingInstructions.title], image: FeedbackItem.confusingInstructions.image, handler: nil),
-            CPGridButton(titleVariants: [FeedbackItem.badRoute.title], image: FeedbackItem.badRoute.image, handler: nil),
-            CPGridButton(titleVariants: [FeedbackItem.missingRoad.title], image: FeedbackItem.missingRoad.image, handler: nil),
-            CPGridButton(titleVariants: [FeedbackItem.missingExit.title], image: FeedbackItem.missingExit.image, handler: nil),
-            CPGridButton(titleVariants: [FeedbackItem.generalMapError.title], image: FeedbackItem.generalMapError.image, handler: nil)
+            CPGridButton(titleVariants: [FeedbackItem.closure.title], image: FeedbackItem.closure.image, handler: buttonHandler),
+            CPGridButton(titleVariants: [FeedbackItem.turnNotAllowed.title], image: FeedbackItem.turnNotAllowed.image, handler: buttonHandler),
+            CPGridButton(titleVariants: [FeedbackItem.reportTraffic.title], image: FeedbackItem.reportTraffic.image, handler: buttonHandler),
+            CPGridButton(titleVariants: [FeedbackItem.confusingInstructions.title], image: FeedbackItem.confusingInstructions.image, handler: buttonHandler),
+            CPGridButton(titleVariants: [FeedbackItem.badRoute.title], image: FeedbackItem.badRoute.image, handler: buttonHandler),
+            CPGridButton(titleVariants: [FeedbackItem.missingRoad.title], image: FeedbackItem.missingRoad.image, handler: buttonHandler),
+            CPGridButton(titleVariants: [FeedbackItem.missingExit.title], image: FeedbackItem.missingExit.image, handler: buttonHandler),
+            CPGridButton(titleVariants: [FeedbackItem.generalMapError.title], image: FeedbackItem.generalMapError.image, handler: buttonHandler)
         ]
         
         return CPGridTemplate(title: "Feedback", gridButtons: buttons)
