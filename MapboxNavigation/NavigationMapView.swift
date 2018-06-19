@@ -86,6 +86,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance = defaultAltitude
     var routes: [Route]?
+    var isAnimatingToOverheadMode = false
     
     fileprivate var preferredFramesPerSecond: Int = 60 {
         didSet {
@@ -343,7 +344,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         } else {
-            UIView.animate(withDuration: 0, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+            // While animating to overhead mode, don't animate the puck.
+            UIView.animate(withDuration: isAnimatingToOverheadMode ? 0 : duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
             })
         }
@@ -1024,6 +1026,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Sets the camera directly over a series of coordinates.
      */
     @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+        isAnimatingToOverheadMode = true
         let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
@@ -1037,7 +1040,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             camera.heading = 0
             camera.centerCoordinate = userLocation
             camera.altitude = NavigationMapView.defaultAltitude
-            setCamera(camera, animated: true)
+            setCamera(camera, withDuration: 1, animationTimingFunction: nil) {
+                self.isAnimatingToOverheadMode = false
+            }
             return
         }
         
@@ -1048,7 +1053,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         self.camera = camera
         
         let cameraForLine = cameraThatFitsShape(line, direction: 0, edgePadding: bounds)
-        setCamera(cameraForLine, animated: true)
+        setCamera(cameraForLine, withDuration: 1, animationTimingFunction: nil) {
+            self.isAnimatingToOverheadMode = false
+        }
     }
     
     /**
