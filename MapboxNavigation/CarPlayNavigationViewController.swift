@@ -17,6 +17,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     let voiceController: MapboxVoiceController
     
+    public weak var navigationCarPlayDelegate: NavigationCarPlayDelegate?
     
     var carSession: CPNavigationSession
     var carMaptemplate: CPMapTemplate
@@ -31,6 +32,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.voiceController = MapboxVoiceController()
         self.carInterfaceController = interfaceController
         super.init(nibName: nil, bundle: nil)
+        self.styleManager = StyleManager(self)
         self.carFeedbackTemplate = self.createFeedbackUI()
         
         createMapTemplateUI()
@@ -89,7 +91,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         let exitButton = CPBarButton(type: .text) { (button) in
             self.dismiss(animated: true, completion: {
-                self.carSession.finishTrip()
+                self.carSession.cancelTrip()
+                self.navigationCarPlayDelegate?.carPlayNavigationViewControllerDidExit?(self)
             })
         }
         
@@ -103,7 +106,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             }
         }
         muteButton.title = "Disable Voice"
-        
         exitButton.title = "Exit"
         
         carMaptemplate.mapButtons = [overviewButton, recenter, showFeedbackButton]
@@ -126,6 +128,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             CPGridButton(titleVariants: [FeedbackItem.missingExit.title], image: FeedbackItem.missingExit.image, handler: buttonHandler),
             CPGridButton(titleVariants: [FeedbackItem.generalMapError.title], image: FeedbackItem.generalMapError.image, handler: buttonHandler)
         ]
+        
         
         return CPGridTemplate(title: "Feedback", gridButtons: buttons)
     }
@@ -173,7 +176,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let action = CPAlertAction(title: "You Have Arrived", style: .default, handler: {_ in
             self.dismiss(animated: true, completion: nil)
         })
-        let alert = CPNavigationAlert(titleVariants: ["Exit"], subtitleVariants: nil, image: nil, priority: .high, primaryAction: action, secondaryAction: nil, duration: 0)
+        let alert = CPNavigationAlert(titleVariants: ["Exit"], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 0)
         carMaptemplate.present(navigationAlert: alert, animated: true)
     }
     
@@ -181,11 +184,27 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let index = routeController.routeProgress.currentLegProgress.stepIndex
         let maneuvers = routeController.routeProgress.currentLeg.steps.suffix(from: index).map { (step) -> CPManeuver in
             let maneuver = CPManeuver()
-            let visual = step.instructionsDisplayedAlongStep?.first?.primaryInstruction.text ?? step.instructions
-            maneuver.instructionVariants = [visual]
+            let backupText = step.instructionsDisplayedAlongStep?.first?.primaryInstruction.text ?? step.instructions
             
-            let distanceRemaining = Measurement(value: step.distance, unit: UnitLength.meters)
-            maneuver.distanceFromPreviousManeuver = distanceRemaining
+            maneuver.instructionVariants = [backupText]
+
+// todo get this to work and not crash
+//            if let visual = step.instructionsDisplayedAlongStep?.last {
+//                let instructionLabel = InstructionLabel()
+//                instructionLabel.availableBounds = {
+//                    return CGRect(x: 0, y: 0, width: 70, height: 30)
+//                }
+//                instructionLabel.instruction = visual.primaryInstruction
+//                if let attributed = instructionLabel.attributedText {
+//                    maneuver.attributedInstructionVariants = [attributed]
+//                } else {
+//                    maneuver.instructionVariants = [backupText]
+//                }
+//            } else {
+//                maneuver.instructionVariants = [backupText]
+//            }
+            
+            maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
             
             if let visual = step.instructionsDisplayedAlongStep?.first {
                 let mv = ManeuverView()
@@ -193,8 +212,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                 mv.primaryColor = .white
                 mv.backgroundColor = .clear
                 mv.visualInstruction = visual
-                let imageView = mv.imageRepresentation
-                maneuver.symbol = imageView
+                if let imageView = mv.imageRepresentation {
+                    maneuver.symbolSet = CPImageSet(lightContentImage: imageView, darkContentImage: imageView)
+                }
             }
             return maneuver
         }
@@ -206,4 +226,18 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.mapView?.recenterMap()
         self.mapView?.showRoutes([routeController.routeProgress.route])
     }
+}
+
+
+extension CarPlayNavigationViewController: StyleManagerDelegate {
+    public func locationFor(styleManager: StyleManager) -> CLLocation? {
+        return routeController.location
+    }
+}
+
+
+@objc(MBNavigationCarPlayDelegate)
+public protocol NavigationCarPlayDelegate {
+    @objc(carPlayNavigationViewControllerDidExit:)
+    optional func carPlayNavigationViewControllerDidExit(_ carPlayNavigationViewController: CarPlayNavigationViewController)
 }
