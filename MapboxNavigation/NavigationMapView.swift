@@ -343,7 +343,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         } else {
-            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+            UIView.animate(withDuration: 0, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
+                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
+            })
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
