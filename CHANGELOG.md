@@ -10,6 +10,7 @@
 
 * Added `NavigationMapView.recenterMap()` for recentering the map if a user gesture causes it to stop following the user. ([#1471](https://github.com/mapbox/mapbox-navigation-ios/pull/1471))
 * Deprecated `NavigationViewController.usesNightStyleInsideTunnels`. Style switching is enabled as a side effect of `TunnelIntersectionManager.tunnelSimulationEnabled`, which is set to `true` by default. ([#1489]
+* Fixed an issue where the user location view slid around after the user pressed the Overview button. [#1506](https://github.com/mapbox/mapbox-navigation-ios/pull/1506)
 
 ### Core Navigation
 
@@ -17,7 +18,6 @@
 (https://github.com/mapbox/mapbox-navigation-ios/pull/1489))
 * Added `RouteControllerDelegate.routeControllerWillDisableBatteryMonitoring(_:)` which allows developers control whether battery monitoring is disabled when `RouteController.deinit()` is called. [#1476](https://github.com/mapbox/mapbox-navigation-ios/pull/1476)
 * Fixed an issue where setting `NavigationLocationManager.desiredAccuracy` had no effect. [#1481](https://github.com/mapbox/mapbox-navigation-ios/pull/1481)
-* Fixed an issue where the user location view slid around after the user pressed the Overview button. [#1506](https://github.com/mapbox/mapbox-navigation-ios/pull/1506)
 
 ## v0.18.0 (June 5, 2018)
 
