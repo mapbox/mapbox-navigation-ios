@@ -1047,8 +1047,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         camera.pitch = 0
         self.camera = camera
         
-        let camerForLine = cameraThatFitsShape(line, direction: 0, edgePadding: bounds)
-        setCamera(camerForLine, animated: true)
+        let cameraForLine = cameraThatFitsShape(line, direction: 0, edgePadding: bounds)
+        setCamera(cameraForLine, animated: true)
     }
     
     /**
