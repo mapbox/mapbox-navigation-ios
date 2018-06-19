@@ -324,6 +324,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc private func disableUserCourseTracking() {
+        guard tracksUserCourse else { return }
         tracksUserCourse = false
     }
     
@@ -342,9 +343,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         } else {
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
-                self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-            }, completion: nil)
+            self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
@@ -1040,13 +1039,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        // Sadly, `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` uses the current pitch and direction of the mapview. Ideally, we'd be able to pass in zero.
+        // Sadly, `MGLMapView.cameraThatFitsShape(_:direction:edgePadding:)` uses the current pitch of the mapview.
+        // Because of this, we need to set it before or it will create a camera for the current pitch instead of 0.
         let camera = self.camera
         camera.pitch = 0
-        camera.heading = 0
         self.camera = camera
         
-        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+        let camerForLine = cameraThatFitsShape(line, direction: 0, edgePadding: bounds)
+        setCamera(camerForLine, animated: true)
     }
     
     /**
