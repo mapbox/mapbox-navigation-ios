@@ -874,12 +874,12 @@ extension RouteMapViewController: StepsViewControllerDelegate {
         let instructionsView = StepInstructionsView(frame: navigationView.instructionsBannerView.frame)
         instructionsView.backgroundColor = StepInstructionsView.appearance().backgroundColor
         instructionsView.delegate = self
-        instructionsView.set(instructions)
         instructionsView.distance = distance
         
         navigationView.instructionsBannerContentView.backgroundColor = instructionsView.backgroundColor
         
         view.addSubview(instructionsView)
+        instructionsView.set(instructions)
         previewInstructionsView = instructionsView
     }
     

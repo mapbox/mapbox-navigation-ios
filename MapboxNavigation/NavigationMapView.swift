@@ -86,6 +86,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance = defaultAltitude
     var routes: [Route]?
+    var isAnimatingToOverheadMode = false
     
     fileprivate var preferredFramesPerSecond: Int = 60 {
         didSet {
@@ -324,11 +325,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc private func disableUserCourseTracking() {
+        guard tracksUserCourse else { return }
         tracksUserCourse = false
     }
     
-    public func updateCourseTracking(location: CLLocation?, animated: Bool, customPaddingLeft: CGFloat? = 0) {
-        let duration: TimeInterval = animated ? 1 : 0
+
+    @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
+        // While animating to overhead mode, don't animate the puck.
+        let duration: TimeInterval = animated && !isAnimatingToOverheadMode ? 1 : 0
         animatesUserLocation = animated
         userLocationForCourseTracking = location
         guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
@@ -345,7 +349,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         } else {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-            }, completion: nil)
+            })
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
@@ -1024,6 +1028,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Sets the camera directly over a series of coordinates.
      */
     @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+        isAnimatingToOverheadMode = true
         let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
@@ -1037,17 +1042,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             camera.heading = 0
             camera.centerCoordinate = userLocation
             camera.altitude = NavigationMapView.defaultAltitude
-            setCamera(camera, animated: true)
+            setCamera(camera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
+                self?.isAnimatingToOverheadMode = false
+            }
             return
         }
         
-        // Sadly, `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` uses the current pitch and direction of the mapview. Ideally, we'd be able to pass in zero.
+        // Sadly, `MGLMapView.cameraThatFitsShape(_:direction:edgePadding:)` uses the current pitch of the mapview.
+        // Because of this, we need to set it before or it will create a camera for the current pitch instead of 0.
         let camera = self.camera
         camera.pitch = 0
-        camera.heading = 0
         self.camera = camera
         
-        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+        let cameraForLine = cameraThatFitsShape(line, direction: 0, edgePadding: bounds)
+        setCamera(cameraForLine, withDuration: 1, animationTimingFunction: nil) { [weak self] in
+            self?.isAnimatingToOverheadMode = false
+        }
     }
     
     /**

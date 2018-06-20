@@ -120,16 +120,20 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             self.carFeedbackUIIsShown = false
         }
         
-        let buttons: [CPGridButton] = [
-            CPGridButton(titleVariants: [FeedbackItem.closure.title], image: FeedbackItem.closure.image, handler: buttonHandler),
-            CPGridButton(titleVariants: [FeedbackItem.turnNotAllowed.title], image: FeedbackItem.turnNotAllowed.image, handler: buttonHandler),
-            CPGridButton(titleVariants: [FeedbackItem.reportTraffic.title], image: FeedbackItem.reportTraffic.image, handler: buttonHandler),
-            CPGridButton(titleVariants: [FeedbackItem.confusingInstructions.title], image: FeedbackItem.confusingInstructions.image, handler: buttonHandler),
-            CPGridButton(titleVariants: [FeedbackItem.badRoute.title], image: FeedbackItem.badRoute.image, handler: buttonHandler),
-            CPGridButton(titleVariants: [FeedbackItem.missingRoad.title], image: FeedbackItem.missingRoad.image, handler: buttonHandler),
-            CPGridButton(titleVariants: [FeedbackItem.missingExit.title], image: FeedbackItem.missingExit.image, handler: buttonHandler),
-            CPGridButton(titleVariants: [FeedbackItem.generalMapError.title], image: FeedbackItem.generalMapError.image, handler: buttonHandler)
+        let feedbackItems: [FeedbackItem] = [
+            FeedbackItem.closure,
+            FeedbackItem.turnNotAllowed,
+            FeedbackItem.reportTraffic,
+            FeedbackItem.confusingInstructions,
+            FeedbackItem.badRoute,
+            FeedbackItem.missingRoad,
+            FeedbackItem.missingExit,
+            FeedbackItem.generalMapError
         ]
+        
+        let buttons: [CPGridButton] = feedbackItems.map {
+            return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")], image: $0.image, handler: buttonHandler)
+        }
         
         return CPGridTemplate(title: "Feedback", gridButtons: buttons)
     }
@@ -169,7 +173,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         let tripDistanceRemaining = Measurement(value: routeProgress.currentLegProgress.distanceRemaining, unit: UnitLength.meters)
         let estimate = CPTravelEstimates(distanceRemaining: tripDistanceRemaining, timeRemaining: routeProgress.currentLegProgress.durationRemaining)
-        carMaptemplate.update(estimate, for: carSession.trip, with: .green)
+        carMaptemplate.update(estimate, for: carSession.trip, with: .default)
         
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             presentArrivalUI()
