@@ -25,7 +25,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     var carInterfaceController: CPInterfaceController
     var carFeedbackUIIsShown = false
     
-    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController) {
+    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]? = [DayStyle(), NightStyle()]) {
         self.route = route
         self.carSession = session
         self.carMaptemplate = template
@@ -33,6 +33,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.carInterfaceController = interfaceController
         super.init(nibName: nil, bundle: nil)
         self.styleManager = StyleManager(self)
+        self.styleManager.styles = styles ?? [DayStyle(), NightStyle()]
         self.carFeedbackTemplate = self.createFeedbackUI()
         
         createMapTemplateUI()
@@ -118,6 +119,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             self.carInterfaceController.popTemplate(animated: true)
             self.carFeedbackUIIsShown = false
         }
+        
         let buttons: [CPGridButton] = [
             CPGridButton(titleVariants: [FeedbackItem.closure.title], image: FeedbackItem.closure.image, handler: buttonHandler),
             CPGridButton(titleVariants: [FeedbackItem.turnNotAllowed.title], image: FeedbackItem.turnNotAllowed.image, handler: buttonHandler),
@@ -128,7 +130,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             CPGridButton(titleVariants: [FeedbackItem.missingExit.title], image: FeedbackItem.missingExit.image, handler: buttonHandler),
             CPGridButton(titleVariants: [FeedbackItem.generalMapError.title], image: FeedbackItem.generalMapError.image, handler: buttonHandler)
         ]
-        
         
         return CPGridTemplate(title: "Feedback", gridButtons: buttons)
     }
@@ -164,8 +165,11 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
         let distanceRemaining = Measurement(value: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, unit: UnitLength.meters)
         let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining, timeRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
-        
         carSession.updateEstimates(estimates, for: carSession.upcomingManeuvers[routeController.routeProgress.currentLegProgress.stepIndex])
+        
+        let tripDistanceRemaining = Measurement(value: routeProgress.currentLegProgress.distanceRemaining, unit: UnitLength.meters)
+        let estimate = CPTravelEstimates(distanceRemaining: tripDistanceRemaining, timeRemaining: routeProgress.currentLegProgress.durationRemaining)
+        carMaptemplate.update(estimate, for: carSession.trip, with: .green)
         
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
             presentArrivalUI()
@@ -231,7 +235,11 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
 
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func locationFor(styleManager: StyleManager) -> CLLocation? {
-        return routeController.location
+        if routeController != nil {
+            return routeController.location
+        } else {
+            return nil
+        }
     }
 }
 
