@@ -169,15 +169,15 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
         let distanceRemaining = Measurement(value: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, unit: UnitLength.meters)
         let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining, timeRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
-        carSession.updateEstimates(estimates, for: carSession.upcomingManeuvers[routeController.routeProgress.currentLegProgress.stepIndex])
+        carSession.updateEstimates(estimates, for: carSession.upcomingManeuvers.first!)
         
         let tripDistanceRemaining = Measurement(value: routeProgress.currentLegProgress.distanceRemaining, unit: UnitLength.meters)
         let estimate = CPTravelEstimates(distanceRemaining: tripDistanceRemaining, timeRemaining: routeProgress.currentLegProgress.durationRemaining)
         carMaptemplate.update(estimate, for: carSession.trip, with: .default)
-        
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            presentArrivalUI()
-        }
+//
+//        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
+//            presentArrivalUI()
+//        }
     }
     
     func presentArrivalUI() {
