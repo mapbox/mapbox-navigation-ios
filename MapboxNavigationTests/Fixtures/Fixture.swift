@@ -43,7 +43,7 @@ internal class Fixture {
         options.routeShapeResolution = .full
         let filePath = (NSTemporaryDirectory() as NSString).appendingPathComponent(fileName)
         
-        _ = directions.calculate(options, completionHandler: { (waypoints, routes, error) in
+        _ = directions.calculate(options, completionHandler: { (waypoints, routes, response, error) in
             guard let route = routes?.first else { return }
             
             NSKeyedArchiver.archiveRootObject(route, toFile: filePath)

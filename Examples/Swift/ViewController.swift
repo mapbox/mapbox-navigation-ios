@@ -216,9 +216,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     fileprivate func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
 
-        let handler: Directions.RouteCompletionHandler = {(waypoints, potentialRoutes, potentialError) in
-            if let error = potentialError, let fail = failure { return fail(error) }
-            guard let routes = potentialRoutes else { return }
+        let handler: Directions.RouteCompletionHandler = {(waypoints, routes, response, error) in
+            if let error = error, let fail = failure { return fail(error) }
+            guard let routes = routes else { return }
             return success(routes)
         }
 

@@ -27,7 +27,7 @@ class DirectionsSpy: Directions {
             return
         }
 
-        lastCalculateOptionsCompletion(waypoints, routes, error)
+        lastCalculateOptionsCompletion(waypoints, routes, nil, error)
     }
     
     public func reset() {

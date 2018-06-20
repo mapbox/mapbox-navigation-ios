@@ -4,6 +4,7 @@ import MapboxDirections
 import Polyline
 import MapboxMobileEvents
 import Turf
+import MapboxNavigationNative
 
 /**
  Keys in the user info dictionaries of various notifications posted by instances
@@ -188,6 +189,8 @@ open class RouteController: NSObject {
             locationManager.delegate = self
         }
     }
+    
+    var navigator = MBNavigator()
 
     /**
      If true, location updates will be simulated when driving through tunnels or other areas where there is none or bad GPS reception.
@@ -867,7 +870,7 @@ extension RouteController: CLLocationManagerDelegate {
             directions = Directions(accessToken: accessToken, host: host)
         }
 
-        routeTask = directions.calculate(options) { [weak self] (waypoints, routes, error) in
+        routeTask = directions.calculate(options) { [weak self] (waypoints, routes, response, error) in
             defer {
                 self?.isRerouting = false
             }

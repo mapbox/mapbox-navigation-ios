@@ -88,7 +88,7 @@
     options.includesSteps = YES;
     options.routeShapeResolution = MBRouteShapeResolutionFull;
     
-    NSURLSessionDataTask *task = [[MBDirections sharedDirections] calculateDirectionsWithOptions:options completionHandler:^(NSArray<MBWaypoint *> * _Nullable waypoints, NSArray<MBRoute *> * _Nullable routes, NSError * _Nullable error) {
+    NSURLSessionDataTask *task = [[MBDirections sharedDirections] calculateDirectionsWithOptions:options completionHandler:^(NSArray<MBWaypoint *> * _Nullable waypoints, NSArray<MBRoute *> * _Nullable routes, NSData * _Nullable response, NSError * _Nullable error) {
         
         if (!routes.firstObject) {
             return;
