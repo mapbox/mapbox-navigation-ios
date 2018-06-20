@@ -179,7 +179,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
         
         let firstAttachmentRange = NSRange(location: 0, length: 1)
-        let secondAttachmentRange = NSRange(location: 4, length: 1)
+        let secondAttachmentRange = NSRange(location: 2, length: 1)
         
         //instructions should contain generic shields
         
