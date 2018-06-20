@@ -86,6 +86,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var animatesUserLocation: Bool = false
     var altitude: CLLocationDistance = defaultAltitude
     var routes: [Route]?
+    var isAnimatingToOverheadMode = false
     
     fileprivate var preferredFramesPerSecond: Int = 60 {
         didSet {
@@ -166,7 +167,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     open var tracksUserCourse: Bool = false {
         didSet {
             if tracksUserCourse {
-                enableFrameByFrameCourseViewTracking(for: 2)
+                enableFrameByFrameCourseViewTracking(for: 3)
                 altitude = NavigationMapView.defaultAltitude
                 showsUserLocation = true
                 courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse?(self)
@@ -324,11 +325,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     @objc private func disableUserCourseTracking() {
+        guard tracksUserCourse else { return }
         tracksUserCourse = false
     }
     
     @objc public func updateCourseTracking(location: CLLocation?, animated: Bool) {
-        let duration: TimeInterval = animated ? 1 : 0
+        // While animating to overhead mode, don't animate the puck.
+        let duration: TimeInterval = animated && !isAnimatingToOverheadMode ? 1 : 0
         animatesUserLocation = animated
         userLocationForCourseTracking = location
         guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
@@ -344,7 +347,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         } else {
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear, .beginFromCurrentState], animations: {
                 self.userCourseView?.center = self.convert(location.coordinate, toPointTo: self)
-            }, completion: nil)
+            })
         }
         
         if let userCourseView = userCourseView as? UserCourseView {
@@ -768,61 +771,59 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
         guard let coordinates = route.coordinates else { return nil }
         
-        var linesPerLeg: [[MGLPolylineFeature]] = []
+        var linesPerLeg: [MGLPolylineFeature] = []
         
         for (index, leg) in route.legs.enumerated() {
             // If there is no congestion, don't try and add it
-            guard let legCongestion = leg.segmentCongestionLevels else {
+            guard let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count else {
                 return [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
             }
             
-            guard legCongestion.count + 1 <= coordinates.count else {
-                return [MGLPolylineFeature(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))]
+            // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
+            let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
+                let index = current.offset
+                let step = current.element
+                let stepCoordinates = step.coordinates!
+                
+                return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
             }
             
-            // The last coord of the preceding step, is shared with the first coord of the next step.
-            // We don't need both.
-            var legCoordinates: [CLLocationCoordinate2D] = Array(leg.steps.compactMap {
-                $0.coordinates?.suffix(from: 1)
-                }.joined())
-            
-            // We need to add the first coord of the route in.
-            if let firstCoord = leg.steps.first?.coordinates?.first {
-                legCoordinates.insert(firstCoord, at: 0)
-            }
-            
-            // We're trying to create a sequence that conforms to `((segmentStartCoordinate, segmentEndCoordinate), segmentCongestionLevel)`.
-            // This is represents a segment on the route and it's associated congestion level.
-            let segments: [[CLLocationCoordinate2D]] = zip(legCoordinates, legCoordinates.suffix(from: 1)).map { [$0.0, $0.1] }
-            let congestionSegments: [([CLLocationCoordinate2D], CongestionLevel)] = Array(zip(segments, legCongestion))
-            
-            // Merge adjacent segments with the same congestion level
-            var mergedCongestionSegments = [CongestionSegment]()
-            for seg in congestionSegments {
-                let coordinates = seg.0
-                let congestionLevel = seg.1
-                if let last = mergedCongestionSegments.last, last.1 == congestionLevel {
-                    mergedCongestionSegments[mergedCongestionSegments.count - 1].0 += coordinates
-                } else {
-                    mergedCongestionSegments.append(seg)
-                }
-            }
+            let mergedCongestionSegments = combine(legCoordinates, with: legCongestion)
             
             let lines: [MGLPolylineFeature] = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
                 let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
                 polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
+                polyline.attributes["isAlternateRoute"] = false
                 if let legIndex = legIndex {
                     polyline.attributes[MBCurrentLegAttribute] = index == legIndex
                 } else {
                     polyline.attributes[MBCurrentLegAttribute] = index == 0
                 }
-                polyline.attributes["isAlternateRoute"] = false
                 return polyline
             }
             
-            linesPerLeg.append(lines)
+            linesPerLeg.append(contentsOf: lines)
         }
-        return Array(linesPerLeg.joined())
+        
+        return linesPerLeg
+    }
+    
+    func combine(_ coordinates: [CLLocationCoordinate2D], with congestions: [CongestionLevel]) -> [CongestionSegment] {
+        var segments: [CongestionSegment] = []
+        segments.reserveCapacity(congestions.count)
+        for (index, congestion) in congestions.enumerated() {
+            
+            let congestionSegment: ([CLLocationCoordinate2D], CongestionLevel) = ([coordinates[index], coordinates[index + 1]], congestion)
+            let coordinates = congestionSegment.0
+            let congestionLevel = congestionSegment.1
+            
+            if segments.last?.1 == congestionLevel {
+                segments[segments.count - 1].0 += coordinates
+            } else {
+                segments.append(congestionSegment)
+            }
+        }
+        return segments
     }
     
     func shape(forCasingOf route: Route, legIndex: Int?) -> MGLShape? {
@@ -1025,6 +1026,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Sets the camera directly over a series of coordinates.
      */
     @objc public func setOverheadCameraView(from userLocation: CLLocationCoordinate2D, along coordinates: [CLLocationCoordinate2D], for bounds: UIEdgeInsets) {
+        isAnimatingToOverheadMode = true
         let slicedLine = Polyline(coordinates).sliced(from: userLocation).coordinates
         let line = MGLPolyline(coordinates: slicedLine, count: UInt(slicedLine.count))
         
@@ -1038,17 +1040,22 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             camera.heading = 0
             camera.centerCoordinate = userLocation
             camera.altitude = NavigationMapView.defaultAltitude
-            setCamera(camera, animated: true)
+            setCamera(camera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
+                self?.isAnimatingToOverheadMode = false
+            }
             return
         }
         
-        // Sadly, `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` uses the current pitch and direction of the mapview. Ideally, we'd be able to pass in zero.
+        // Sadly, `MGLMapView.cameraThatFitsShape(_:direction:edgePadding:)` uses the current pitch of the mapview.
+        // Because of this, we need to set it before or it will create a camera for the current pitch instead of 0.
         let camera = self.camera
         camera.pitch = 0
-        camera.heading = 0
         self.camera = camera
         
-        setVisibleCoordinateBounds(line.overlayBounds, edgePadding: bounds, animated: true)
+        let cameraForLine = cameraThatFitsShape(line, direction: 0, edgePadding: bounds)
+        setCamera(cameraForLine, withDuration: 1, animationTimingFunction: nil) { [weak self] in
+            self?.isAnimatingToOverheadMode = false
+        }
     }
     
     /**
