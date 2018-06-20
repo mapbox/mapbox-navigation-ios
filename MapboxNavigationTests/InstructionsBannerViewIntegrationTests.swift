@@ -14,13 +14,13 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                            primaryInstruction: [VisualInstructionComponent],
                            secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstructionBanner {
     
-    let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: primaryInstruction)
+    let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: primaryInstruction)
     var secondary: VisualInstruction? = nil
     if let secondaryInstruction = secondaryInstruction {
-        secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: secondaryInstruction)
+        secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: secondaryInstruction)
     }
     
-    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, drivingSide: .right)
+    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, tertiaryInstruction: nil, drivingSide: .right)
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
@@ -70,12 +70,12 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         super.tearDown()
     }
 
-    func testDelimiterIsShownWhenShieldsNotLoaded() {
+    func testDelimiterIsNotShownWhenShieldsNotLoaded() {
         let view = instructionsView()
 
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
-        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+        XCTAssertNil(view.primaryLabel.text!.index(of: "/"))
     }
 
     func testDelimiterIsHiddenWhenAllShieldsAreAlreadyLoaded() {
@@ -111,8 +111,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         //set visual instructions on the view, which triggers the instruction image fetch
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
-        //Slash should be present until an adjacent shield is downloaded
-        XCTAssertNotNil(view.primaryLabel.text!.index(of: "/"))
+        //Slash should not be present until an adjacent shield is downloaded
+        XCTAssertNil(view.primaryLabel.text!.index(of: "/"), "Expected instruction text not to contain a slash: \(view.primaryLabel.text!)")
 
         //simulate the downloads
         let firstDestinationComponent: VisualInstructionComponent = instructions[0]
@@ -123,7 +123,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
 
         //change the callback to track the second shield component
         view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
-        
+
         let secondDestinationComponent = instructions[2]
         simulateDownloadingShieldForComponent(secondDestinationComponent)
 
@@ -179,7 +179,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         view.set(makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
         
         let firstAttachmentRange = NSRange(location: 0, length: 1)
-        let secondAttachmentRange = NSRange(location: 4, length: 1)
+        let secondAttachmentRange = NSRange(location: 2, length: 1)
         
         //instructions should contain generic shields
         
@@ -261,7 +261,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil,  abbreviation: nil, abbreviationPriority: 0)
         let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         let mainStreetString = VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)
-        let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, textComponents: [exitAttribute, exitCodeAttribute, mainStreetString])
+        let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, components: [exitAttribute, exitCodeAttribute, mainStreetString])
         
         let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 375, height: 100)))
         

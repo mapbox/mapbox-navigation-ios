@@ -203,7 +203,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
         let primaryThen = [
             VisualInstructionComponent(type: .image, text: "I 280", imageURL: ShieldImage.i280.url, abbreviation: nil, abbreviationPriority: 0)
         ]
-        let primaryThenInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, textComponents: primaryThen)
+        let primaryThenInstruction = VisualInstruction(text: nil, maneuverType: .none, maneuverDirection: .none, components: primaryThen)
         
         nextBannerView.instructionLabel.instruction = primaryThenInstruction
         nextBannerView.maneuverView.backgroundColor = .clear
