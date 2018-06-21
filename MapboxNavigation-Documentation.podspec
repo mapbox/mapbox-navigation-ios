@@ -44,10 +44,10 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxDirections.swift", "~> 0.21.0"
-  s.dependency "Mapbox-iOS-SDK", "~> 4.0"
+  s.dependency "Mapbox-iOS-SDK", "~> 4.1"
   s.dependency "MapboxMobileEvents", "~> 0.4"
   s.dependency "Solar", "~> 2.1"
-  s.dependency "Turf", "~> 0.1"
+  s.dependency "Turf", "~> 0.2"
   s.dependency "MapboxSpeech", "~> 0.0.1"
 
   # `swift_version` was introduced in CocoaPods 1.4.0. Without this check, if a user were to
