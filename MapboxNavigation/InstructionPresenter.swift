@@ -179,7 +179,7 @@ class InstructionPresenter {
     }
 
     private func attributes(for dataSource: InstructionPresenterDataSource) -> [NSAttributedStringKey: Any] {
-        return [.font: dataSource.font, .foregroundColor: dataSource.textColor]
+        return [.font: dataSource.font as Any, .foregroundColor: dataSource.textColor as Any]
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
