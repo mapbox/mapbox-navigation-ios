@@ -41,10 +41,11 @@ class LaneTests: FBSnapshotTestCase {
     }
     
     func testStraightRight() {
-        // These lanes have 2 different states:
-        // - straight lane is inactive
-        // - right lane is active
         assertLanes(stepIndex: 0)
+    }
+    
+    func testRightRight() {
+        assertLanes(stepIndex: 1)
     }
     
     func testSlightRight() {
