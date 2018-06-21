@@ -195,7 +195,7 @@ struct EventDetails {
 }
 
 extension MMEEventsManager {
-    open static var unrated: Int { return -1 }
+    public static var unrated: Int { return -1 }
     
     func addDefaultEvents(routeController: RouteController) -> [String: Any] {
         return EventDetails(routeController: routeController, session: routeController.sessionState).eventDictionary
