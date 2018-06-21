@@ -10,7 +10,7 @@ let directions = Directions(accessToken: bogusToken)
 
 class LaneTests: FBSnapshotTestCase {
 
-    let route = Fixture.route(from: "route-for-lane-testing", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))])
+    let route = Fixture.route(from: "route-for-lane-testing", waypoints: [Waypoint(coordinate: CLLocationCoordinate2D(latitude: 39.132063, longitude: -84.531074)), Waypoint(coordinate: CLLocationCoordinate2D(latitude: 39.138953, longitude: -84.532934))])
     
     var steps: [RouteStep]!
     var routeProgress: RouteProgress!
@@ -27,22 +27,24 @@ class LaneTests: FBSnapshotTestCase {
         routeProgress = routeController.routeProgress
     }
     
-    func assertLanes(step: RouteStep) {
+    func assertLanes(stepIndex: Array<RouteStep>.Index) {
         let rect = CGRect(origin: .zero, size: .iPhone6Plus)
         let navigationView = NavigationView(frame: rect)
         
-        navigationView.lanesView.update(for: routeProgress.currentLegProgress)
+        let routeController = RouteController(along: route, directions: directions)
+        routeController.advanceStepIndex(to: stepIndex)
+        
+        navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress)
         navigationView.lanesView.show(animated: false)
         
         FBSnapshotVerifyView(navigationView.lanesView)
     }
     
-    func testRightRight() {
-        assertLanes(step: steps[0])
-    }
-    
-    func testRightNone() {
-        assertLanes(step: steps[1])
+    func testStraightRight() {
+        // These lanes have 2 different states:
+        // - straight lane is inactive
+        // - right lane is active
+        assertLanes(stepIndex: 0)
     }
     
     func testSlightRight() {

@@ -167,6 +167,8 @@ class InstructionPresenter {
 
     private func instructionHasDownloadedAllShields() -> Bool {
         let textComponents = instruction.components.compactMap { $0 as? VisualInstructionComponent }
+        guard !textComponents.isEmpty else { return false }
+        
         for component in textComponents {
             guard let key = component.cacheKey else {
                 continue

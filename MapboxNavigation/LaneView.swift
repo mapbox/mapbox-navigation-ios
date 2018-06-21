@@ -32,6 +32,16 @@ open class LaneView: UIView {
         return isValid ? primaryColor : secondaryColor
     }
     
+    static let defaultFrame: CGRect = CGRect(origin: .zero, size: 30.0)
+    
+    convenience init(component: LaneIndicationComponent, direction: ManeuverDirection) {
+        self.init(frame: LaneView.defaultFrame)
+        backgroundColor = .clear
+        lane = Lane(indications: component.indications)
+        maneuverDirection = direction
+        isValid = component.isUsable
+    }
+    
     override open func draw(_ rect: CGRect) {
         super.draw(rect)
         if let lane = lane {

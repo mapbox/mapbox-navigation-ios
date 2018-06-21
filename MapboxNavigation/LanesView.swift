@@ -67,30 +67,27 @@ open class LanesView: UIView {
     }
     
     func update(for currentLegProgress: RouteLegProgress) {
-        guard let step = currentLegProgress.upComingStep else { return }
-        guard !currentLegProgress.userHasArrivedAtWaypoint else { return }
         let durationRemaining = currentLegProgress.currentStepProgress.durationRemaining
-        
         clearLaneViews()
         
-        if let allLanes = step.intersections?.first?.approachLanes,
-            let usableLanes = step.intersections?.first?.usableApproachLanes,
-            durationRemaining < RouteControllerMediumAlertInterval {
-            
-            for (i, lane) in allLanes.enumerated() {
-                let laneView = laneArrowView()
-                laneView.lane = lane
-                laneView.maneuverDirection = step.maneuverDirection
-                laneView.isValid = usableLanes.contains(i as Int)
-                stackView.addArrangedSubview(laneView)
-            }
+        let step = currentLegProgress.currentStep
+
+        guard durationRemaining < RouteControllerMediumAlertInterval,
+            !currentLegProgress.userHasArrivedAtWaypoint,
+            let firstInstruction = step.instructionsDisplayedAlongStep?.first,
+            let lanes: [LaneIndicationComponent] = firstInstruction.tertiaryInstruction?.components.compactMap({ component in
+                guard let lane = component as? LaneIndicationComponent else { return nil }
+                return lane
+            }),
+            !lanes.isEmpty
+            else {
+                hide()
+                return
         }
         
-        if stackView.arrangedSubviews.count > 0 {
-            show()
-        } else {
-            hide()
-        }
+        let subviews = lanes.map { LaneView(component: $0, direction: step.maneuverDirection) }
+        stackView.addArrangedSubviews(subviews)
+        show()
     }
     
     public func show(animated: Bool = true) {
