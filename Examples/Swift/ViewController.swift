@@ -6,7 +6,7 @@ import Mapbox
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
-private typealias RouteRequestSuccess = (([Route]) -> Void)
+private typealias RouteRequestSuccess = ((_ routes: [Route], _ response: Data) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
 
 enum ExampleMode {
@@ -54,14 +54,17 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             mapView?.showWaypoints(current)
         }
     }
+    
+    var routeResponse: Data?
 
     // MARK: Directions Request Handlers
 
-    fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes) in
+    fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (routes, response) in
         guard let current = routes.first else { return }
         self?.mapView?.removeWaypoints()
         self?.routes = routes
         self?.waypoints = current.routeOptions.waypoints
+        self?.routeResponse = response
     }
 
     fileprivate lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
@@ -219,7 +222,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         let handler: Directions.RouteCompletionHandler = {(waypoints, routes, response, error) in
             if let error = error, let fail = failure { return fail(error) }
             guard let routes = routes else { return }
-            return success(routes)
+            return success(routes, response!)
         }
 
         _ = Directions.shared.calculate(options, completionHandler: handler)
@@ -234,7 +237,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
         let navigationViewController = NavigationViewController(for: route, locationManager: navigationLocationManager())
         navigationViewController.delegate = self
-
+        if let response = routeResponse {
+            navigationViewController.routeController.setRouteResponse(response)
+        }
         presentAndRemoveMapview(navigationViewController)
     }
     

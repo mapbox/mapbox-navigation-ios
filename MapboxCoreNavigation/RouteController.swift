@@ -240,6 +240,13 @@ open class RouteController: NSObject {
             NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         }
     }
+    
+    // NOTE: Temporary setter method until `Route` supports encoding to JSON or navigation-native provides a native route type
+    public func setRouteResponse(_ data: Data) {
+        let string = String(data: data, encoding: .utf8)
+        assert(string != nil, "Unable to convert route response to string")
+        navigator.setDirectionsForDirections(string!)
+    }
 
     var endOfRouteStarRating: Int?
     var endOfRouteComment: String?
@@ -615,6 +622,9 @@ extension RouteController: CLLocationManagerDelegate {
 
         self.rawLocation = location
 
+        let fixLocation = location.asMBFixLocation()
+        let status = navigator.onLocationChanged(for: fixLocation)
+        
         delegate?.routeController?(self, didUpdate: [location])
 
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(interpolateLocation), object: nil)
@@ -880,6 +890,10 @@ extension RouteController: CLLocationManagerDelegate {
 
             guard let routes = routes else {
                 return completion(nil, nil)
+            }
+            
+            if let response = response {
+                self?.setRouteResponse(response)
             }
 
             if let route = self?.mostSimilarRoute(in: routes) {
