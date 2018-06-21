@@ -141,6 +141,42 @@ open class RouteProgress: NSObject {
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
     }
+    
+    public var averageCongestionLevelRemainingOnLeg: CongestionLevel? {
+        let coordinatesLeftOnStepCount = Int(floor((Double(currentLegProgress.currentStepProgress.step.coordinateCount)) * currentLegProgress.currentStepProgress.fractionTraveled))
+        
+        guard coordinatesLeftOnStepCount >= 0 else { return .unknown }
+        
+        guard legIndex < congestionTravelTimesSegmentsByStep.count,
+            currentLegProgress.stepIndex < congestionTravelTimesSegmentsByStep[legIndex].count else { return .unknown }
+        
+        let congestionTimesForStep = congestionTravelTimesSegmentsByStep[legIndex][currentLegProgress.stepIndex]
+        guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return .unknown }
+        
+        let remainingCongestionTimesForStep = congestionTimesForStep.suffix(from: coordinatesLeftOnStepCount)
+        let remainingCongestionTimesForRoute = congestionTimesPerStep[legIndex].suffix(from: currentLegProgress.stepIndex + 1)
+        
+        var remainingStepCongestionTotals: [CongestionLevel: TimeInterval] = [:]
+        for stepValues in remainingCongestionTimesForRoute {
+            for (key, value) in stepValues {
+                remainingStepCongestionTotals[key] = (remainingStepCongestionTotals[key] ?? 0) + value
+            }
+        }
+        
+        for (segmentCongestion, segmentTime) in remainingCongestionTimesForStep {
+            remainingStepCongestionTotals[segmentCongestion] = (remainingStepCongestionTotals[segmentCongestion] ?? 0) + segmentTime
+        }
+        
+        if durationRemaining < 60 {
+            return .unknown
+        } else {
+            if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
+                return max.key
+            } else {
+                return .unknown
+            }
+        }
+    }
 }
 
 /**
