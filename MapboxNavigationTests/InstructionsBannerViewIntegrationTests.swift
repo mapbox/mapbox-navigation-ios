@@ -14,13 +14,13 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                            primaryInstruction: [VisualInstructionComponent],
                            secondaryInstruction: [VisualInstructionComponent]?) -> VisualInstructionBanner {
     
-    let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: primaryInstruction)
+    let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: primaryInstruction)
     var secondary: VisualInstruction? = nil
     if let secondaryInstruction = secondaryInstruction {
-        secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, textComponents: secondaryInstruction)
+        secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: secondaryInstruction)
     }
     
-    return VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, drivingSide: .right)
+    return  VisualInstructionBanner(distanceAlongStep: 482.803, primaryInstruction: primary, secondaryInstruction: secondary, tertiaryInstruction: nil, drivingSide: .right)
 }
 
 class InstructionsBannerViewIntegrationTests: XCTestCase {
@@ -261,7 +261,7 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let exitAttribute = VisualInstructionComponent(type: .exit, text: "Exit", imageURL: nil,  abbreviation: nil, abbreviationPriority: 0)
         let exitCodeAttribute = VisualInstructionComponent(type: .exitCode, text: "123A", imageURL: nil, abbreviation: nil, abbreviationPriority: 0)
         let mainStreetString = VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)
-        let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, textComponents: [exitAttribute, exitCodeAttribute, mainStreetString])
+        let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, components: [exitAttribute, exitCodeAttribute, mainStreetString])
         
         let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 375, height: 100)))
         
