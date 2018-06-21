@@ -177,17 +177,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             currentStepIndex = index
         }
         
-    
-        let distanceRemaining = Measurement(value: routeProgress.currentLegProgress.currentStepProgress.distanceRemaining, unit: UnitLength.meters)
-        let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining, timeRemaining: routeProgress.currentLegProgress.currentStepProgress.durationRemaining)
-        carSession.updateEstimates(estimates, for: carSession.upcomingManeuvers.first!)
-        
-        let tripDistanceRemaining = Measurement(value: routeProgress.currentLegProgress.distanceRemaining, unit: UnitLength.meters)
-        let estimate = CPTravelEstimates(distanceRemaining: tripDistanceRemaining, timeRemaining: routeProgress.currentLegProgress.durationRemaining)
-        
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
-        
-        carMaptemplate.update(estimate, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
+        carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: carSession.upcomingManeuvers.first!)
+        carMaptemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
     }
     
     func presentArrivalUI() {

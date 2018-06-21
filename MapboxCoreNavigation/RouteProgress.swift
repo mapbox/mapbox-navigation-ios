@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 import Turf
+import CarPlay
 
 /**
  `RouteProgress` stores the user’s progress along a route.
@@ -365,6 +366,11 @@ open class RouteLegProgress: NSObject {
         
         return currentClosest
     }
+    
+    @objc public var travelEstimates: CPTravelEstimates {
+        let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
+        return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)
+    }
 }
 
 /**
@@ -408,6 +414,16 @@ open class RouteStepProgress: NSObject {
      */
     @objc public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
+    }
+    
+    /**
+     Specific to CarPlay.
+     
+     Returns the `CPTravelEstimates` for the current step progress.
+    */
+    @objc public var travelEstimates: CPTravelEstimates {
+        let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
+        return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)
     }
 
     /**
