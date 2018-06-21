@@ -60,6 +60,7 @@
 		3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3531C26F1F9E095400D92F9A /* InstructionsBannerView.swift */; };
 		353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353280A01FA72871005175F3 /* InstructionLabel.swift */; };
 		353610CE1FAB6A8F00FB1746 /* BottomBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */; };
+		3538421820DBEF4C00921CAB /* MBFixLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3538421720DBEF4C00921CAB /* MBFixLocation.swift */; };
 		353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353AA55F1FCEF583009F0384 /* StyleManager.swift */; };
 		353E3C8F20A3501C00FD1789 /* MGLStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E3C8E20A3501C00FD1789 /* MGLStyle.swift */; };
 		353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */; };
@@ -492,6 +493,7 @@
 		353280A01FA72871005175F3 /* InstructionLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionLabel.swift; sourceTree = "<group>"; };
 		353610CD1FAB6A8F00FB1746 /* BottomBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerView.swift; sourceTree = "<group>"; };
 		35375EC01F31FA86004CE727 /* NavigationSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationSettings.swift; sourceTree = "<group>"; };
+		3538421720DBEF4C00921CAB /* MBFixLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MBFixLocation.swift; sourceTree = "<group>"; };
 		353AA55F1FCEF583009F0384 /* StyleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManager.swift; sourceTree = "<group>"; };
 		353E3C8E20A3501C00FD1789 /* MGLStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MGLStyle.swift; sourceTree = "<group>"; };
 		353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationManager.swift; sourceTree = "<group>"; };
@@ -1214,6 +1216,7 @@
 				C582FD5E203626E900A9086E /* CLLocationDirection.swift */,
 				C5381F01204E03B600A5493E /* UIDevice.swift */,
 				C5F2DC9F206DBF5E002F99F6 /* Sequence.swift */,
+				3538421720DBEF4C00921CAB /* MBFixLocation.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -1989,6 +1992,7 @@
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
 				AE8B1B95207BFAEF003050F6 /* TunnelIntersectionManager.swift in Sources */,
+				3538421820DBEF4C00921CAB /* MBFixLocation.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
