@@ -66,7 +66,7 @@ class InstructionPresenter {
     typealias AttributedInstructionComponents = (components: [VisualInstructionComponent], attributedStrings: [NSAttributedString])
     
     func attributedPairs(for instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> AttributedInstructionComponents {
-        let components = instruction.textComponents
+        let components = instruction.components.compactMap { $0 as? VisualInstructionComponent }
         var strings: [NSAttributedString] = []
         var processedComponents: [VisualInstructionComponent] = []
         
@@ -166,7 +166,8 @@ class InstructionPresenter {
     }
 
     private func instructionHasDownloadedAllShields() -> Bool {
-        for component in instruction.textComponents {
+        let textComponents = instruction.components.compactMap { $0 as? VisualInstructionComponent }
+        for component in textComponents {
             guard let key = component.cacheKey else {
                 continue
             }
