@@ -344,7 +344,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let paddingLeftRight: CGFloat = 50
             let padding = UIEdgeInsets(top: point.y, left: point.x + paddingLeftRight, bottom: bounds.height - point.y - 50, right: bounds.width - point.x - paddingLeftRight)
             // course is modified because of the offset.
-            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course - 5)
+            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 60se, heading: location.course - 5)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         } else {

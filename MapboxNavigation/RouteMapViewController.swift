@@ -420,7 +420,7 @@ class RouteMapViewController: UIViewController {
         }
     }
     
-func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
+    func defaultFeedbackHandlers(source: FeedbackSource = .user) -> (send: FeedbackViewController.SendFeedbackHandler, dismiss: () -> Void) {
         let uuid = routeController.recordFeedback()
         let send = defaultSendFeedbackHandler(uuid: uuid)
         let dismiss = defaultDismissFeedbackHandler(uuid: uuid)
