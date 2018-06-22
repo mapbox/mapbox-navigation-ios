@@ -67,19 +67,14 @@ open class LanesView: UIView {
     }
     
     func update(for currentLegProgress: RouteLegProgress) {
-        let durationRemaining = currentLegProgress.currentStepProgress.durationRemaining
         clearLaneViews()
         
         let step = currentLegProgress.currentStep
-
-        guard durationRemaining < RouteControllerMediumAlertInterval,
-            !currentLegProgress.userHasArrivedAtWaypoint,
-            let firstInstruction = step.instructionsDisplayedAlongStep?.first,
-            let lanes: [LaneIndicationComponent] = firstInstruction.tertiaryInstruction?.components.compactMap({ component in
+        guard let firstInstruction = step.instructionsDisplayedAlongStep?.first,
+              let lanes: [LaneIndicationComponent] = firstInstruction.tertiaryInstruction?.components.compactMap({ component in
                 guard let lane = component as? LaneIndicationComponent else { return nil }
                 return lane
-            }),
-            !lanes.isEmpty
+              }), !lanes.isEmpty
             else {
                 hide()
                 return

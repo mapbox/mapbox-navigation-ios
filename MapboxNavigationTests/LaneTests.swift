@@ -14,6 +14,7 @@ class LaneTests: FBSnapshotTestCase {
     
     var steps: [RouteStep]!
     var routeProgress: RouteProgress!
+    var routeController: RouteController!
     
     override func setUp() {
         super.setUp()
@@ -21,7 +22,7 @@ class LaneTests: FBSnapshotTestCase {
         isDeviceAgnostic = true
 
         route.accessToken = bogusToken
-        let routeController = RouteController(along: route, directions: directions)
+        routeController = RouteController(along: route, directions: directions)
 
         steps = routeController.routeProgress.currentLeg.steps
         routeProgress = routeController.routeProgress
@@ -31,7 +32,6 @@ class LaneTests: FBSnapshotTestCase {
         let rect = CGRect(origin: .zero, size: .iPhone6Plus)
         let navigationView = NavigationView(frame: rect)
         
-        let routeController = RouteController(along: route, directions: directions)
         routeController.advanceStepIndex(to: stepIndex)
         
         navigationView.lanesView.update(for: routeController.routeProgress.currentLegProgress)
