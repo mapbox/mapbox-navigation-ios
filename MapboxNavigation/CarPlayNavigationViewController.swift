@@ -5,20 +5,21 @@ import CarPlay
 
 public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
     
+    public weak var navigationCarPlayDelegate: NavigationCarPlayDelegate?
+    
+    public var drivingSide: DrivingSide = .right
+    
     var route: Route
     var routeController: RouteController!
     var styleManager: StyleManager!
     var mapView: NavigationMapView?
     var styles: [Style]
     var voiceController: MapboxVoiceController?
-
-    public weak var navigationCarPlayDelegate: NavigationCarPlayDelegate?
     
     var carSession: CPNavigationSession
     var carMaptemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    var carFeedbackUIIsShown = false
     var currentStepIndex: Int?
     
     public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]?, locationManager: NavigationLocationManager? = NavigationLocationManager()) {
@@ -81,8 +82,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         let showFeedbackButton = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else { return }
-            guard !strongSelf.carFeedbackUIIsShown else { return }
-            strongSelf.carFeedbackUIIsShown = true
             strongSelf.carInterfaceController.pushTemplate(strongSelf.carFeedbackTemplate, animated: true)
         }
         
@@ -91,7 +90,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let overviewButton = CPMapButton {  [weak self] (button) in
             guard let strongSelf = self else { return }
             guard let userLocation = self?.routeController.location?.coordinate else { return }
-            strongSelf.mapView?.setOverheadCameraView(from: userLocation, along: strongSelf.routeController.routeProgress.route.coordinates!, for: UIEdgeInsets(floatLiteral: 0))
+            strongSelf.mapView?.setOverheadCameraView(from: userLocation, along: strongSelf.routeController.routeProgress.route.coordinates!, for: UIEdgeInsets().carPlayInsets(for: .right))
             button.isHidden = true
             recenter.isHidden = false
         }
@@ -127,21 +126,27 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     func createFeedbackUI() -> CPGridTemplate {
-        let buttonHandler: (CPGridButton) -> Void = { [weak self] _ in
-            self?.carInterfaceController.popTemplate(animated: true)
-            self?.carFeedbackUIIsShown = false
-        }
         
         let feedbackItems: [FeedbackItem] = [
-            FeedbackItem.closure,
-            FeedbackItem.turnNotAllowed,
-            FeedbackItem.reportTraffic,
-            FeedbackItem.confusingInstructions,
-            FeedbackItem.badRoute,
-            FeedbackItem.missingRoad,
-            FeedbackItem.missingExit,
-            FeedbackItem.generalMapError
+            .turnNotAllowed,
+            .closure,
+            .reportTraffic,
+            .confusingInstructions,
+            .generalMapError,
+            .badRoute,
         ]
+        
+        let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
+            self?.carInterfaceController.popTemplate(animated: true)
+            guard let uuid = self?.routeController.recordFeedback() else { return }
+            let foundItem = feedbackItems.filter { $0.image == button.image }
+            guard let feedbackItem = foundItem.first else { return }
+            self?.routeController.updateFeedback(uuid: uuid, type: feedbackItem.feedbackType, source: .user, description: nil)
+            
+            let action = CPAlertAction(title: "Dismiss", style: .default, handler: {_ in })
+            let alert = CPNavigationAlert(titleVariants: ["Submitted"], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 2.5)
+            self?.carMaptemplate.present(navigationAlert: alert, animated: true)
+        }
         
         let buttons: [CPGridButton] = feedbackItems.map {
             return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")], image: $0.image, handler: buttonHandler)
@@ -149,7 +154,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         return CPGridTemplate(title: "Feedback", gridButtons: buttons)
     }
-    
+
     
     public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         self.mapView?.showRoutes([routeController.routeProgress.route])
@@ -159,13 +164,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     @objc func progressDidChange(_ notification: NSNotification) {
         let routeProgress = notification.userInfo![RouteControllerNotificationUserInfoKey.routeProgressKey] as! RouteProgress
         let location = notification.userInfo![RouteControllerNotificationUserInfoKey.locationKey] as! CLLocation
-        
-        // Add maneuver arrow
-        if routeProgress.currentLegProgress.followOnStep != nil {
-            mapView?.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
-        } else {
-            mapView?.removeArrow()
-        }
         
         // Update the user puck
         mapView?.updateCourseTracking(location: location, animated: true)
@@ -223,7 +221,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                 let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
                     let mv = ManeuverView()
                     mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
-                    mv.scale = 1.0
                     mv.primaryColor = color
                     mv.backgroundColor = .clear
                     mv.visualInstruction = visual

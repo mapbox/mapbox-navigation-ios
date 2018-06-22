@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import MapboxDirections
 
 public extension UIEdgeInsets {
     public static func +(left: UIEdgeInsets, right: UIEdgeInsets) -> UIEdgeInsets {
@@ -7,6 +8,15 @@ public extension UIEdgeInsets {
                             left: left.left + right.left,
                             bottom: left.bottom + right.bottom,
                             right: left.right + right.right )
+    }
+    
+    public func carPlayInsets(for sideOfRoad: DrivingSide) -> UIEdgeInsets {
+        let paddingTop: CGFloat = 10, paddingBottom: CGFloat = 10
+        if sideOfRoad == .right {
+            return UIEdgeInsets(top: paddingTop, left: 140, bottom: paddingBottom, right: 10)
+        } else {
+            return UIEdgeInsets(top: paddingTop, left: 10, bottom: paddingBottom, right: 140)
+        }
     }
 }
 
