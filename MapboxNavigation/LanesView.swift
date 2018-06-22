@@ -70,14 +70,22 @@ open class LanesView: UIView {
         clearLaneViews()
         
         let step = currentLegProgress.currentStep
-        guard let firstInstruction = step.instructionsDisplayedAlongStep?.first,
-              let lanes: [LaneIndicationComponent] = firstInstruction.tertiaryInstruction?.components.compactMap({ component in
-                guard let lane = component as? LaneIndicationComponent else { return nil }
-                return lane
-              }), !lanes.isEmpty
-            else {
-                hide()
-                return
+        guard let instructionsDisplayedAlongStep = step.instructionsDisplayedAlongStep else {
+            hide()
+            return
+        }
+        
+        let components: [ComponentRepresentable] = instructionsDisplayedAlongStep
+            .compactMap({ $0.tertiaryInstruction?.components })
+            .flatMap({ $0 })
+        let lanes: [LaneIndicationComponent] = components.compactMap({ component in
+            guard let lane = component as? LaneIndicationComponent else { return nil }
+            return lane
+        })
+        
+        guard !lanes.isEmpty else {
+            hide()
+            return
         }
         
         let subviews = lanes.map { LaneView(component: $0, direction: step.maneuverDirection) }
