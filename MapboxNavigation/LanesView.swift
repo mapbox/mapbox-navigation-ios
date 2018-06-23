@@ -70,17 +70,19 @@ open class LanesView: UIView {
         clearLaneViews()
         
         let step = currentLegProgress.currentStep
-        let spokenInstructionIndex = currentLegProgress.currentStepProgress.spokenInstructionIndex
-        guard let visualInstructions = step.instructionsDisplayedAlongStep, spokenInstructionIndex < visualInstructions.count else {
+        let visualInstructionIndex = currentLegProgress.currentStepProgress.visualInstructionIndex
+        guard let visualInstructions = step.instructionsDisplayedAlongStep, visualInstructionIndex < visualInstructions.count else {
             hide()
             return
         }
         
-        let currentInstruction = visualInstructions[spokenInstructionIndex]
-        guard let lanes: [LaneIndicationComponent] = currentInstruction.tertiaryInstruction?.components.compactMap({ component in
-                guard let lane = component as? LaneIndicationComponent else { return nil }
-                return lane
-            }), !lanes.isEmpty
+        let currentInstruction = visualInstructions[visualInstructionIndex]
+        let laneIndications: [LaneIndicationComponent]? = currentInstruction.tertiaryInstruction?.components.compactMap({ component in
+            guard let lane = component as? LaneIndicationComponent else { return nil }
+            return lane
+        })
+        
+        guard let lanes = laneIndications, !lanes.isEmpty
             else {
                 hide()
                 return
