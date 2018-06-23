@@ -3,7 +3,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import CarPlay
 
-public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
+public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate, CPMapTemplateDelegate {
     
     public weak var navigationCarPlayDelegate: NavigationCarPlayDelegate?
     
