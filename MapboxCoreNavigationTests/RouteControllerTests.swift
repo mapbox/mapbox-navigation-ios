@@ -334,6 +334,23 @@ class RouteControllerTests: XCTestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
     
+    func testUserSubmittedFeedbackEvent() {
+        
+        let routeController = dependencies.routeController
+        let firstLocation = dependencies.routeLocations.firstLocation
+        
+        // MARK: When navigation begins with a location update
+        routeController.locationManager(routeController.locationManager, didUpdateLocations: [firstLocation])
+        
+        let expectedEventName = MMEEventTypeNavigationFeedback
+        let uuid = routeController.recordFeedback()
+        routeController.updateFeedback(uuid: uuid, type: .general, source: .user, description: "Test user submitted feedback event")
+        
+        // MARK: It enqueues and flushes a feedback submitted event
+        XCTAssertTrue(eventsManagerSpy.hasEnqueuedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+    }
+    
     func testRouteControllerDoesNotHaveRetainCycle() {
         let locationManager = NavigationLocationManager()
         var routeController: RouteControllerSpy? = RouteControllerSpy(along: initialRoute, directions: directionsClientSpy, locationManager: locationManager, eventsManager: eventsManagerSpy)
