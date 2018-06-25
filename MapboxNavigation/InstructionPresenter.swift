@@ -222,12 +222,13 @@ class InstructionPresenter {
         let attachment = ExitAttachment()
         guard let cacheKey = component.cacheKey else { return nil }
         
-        if let image = imageRepository.cachedImageForKey(cacheKey) {
+        let key = [cacheKey, additionalKey].joined(separator: "-")
+        if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
             let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
             guard let image = takeSnapshot(on: view) else { return nil }
-            imageRepository.storeImage(image, forKey: [cacheKey, additionalKey].joined(separator: "-"), toDisk: false)
+            imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
         }
         
