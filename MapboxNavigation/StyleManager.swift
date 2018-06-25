@@ -9,7 +9,7 @@ public protocol StyleManagerDelegate: NSObjectProtocol {
     /**
      Asks the delegate for a location to use when calculating sunset and sunrise.
      */
-    @objc func locationFor(styleManager: StyleManager) -> CLLocation
+    @objc func locationFor(styleManager: StyleManager) -> CLLocation?
     
     /**
      Informs the delegate that a style was applied.

@@ -210,7 +210,7 @@ class NavigationViewControllerTests: XCTestCase {
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
-    func locationFor(styleManager: StyleManager) -> CLLocation {
+    func locationFor(styleManager: StyleManager) -> CLLocation? {
         return dependencies.poi.first!
     }
     
