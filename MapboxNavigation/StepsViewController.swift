@@ -7,7 +7,7 @@ import Turf
 open class StepsBackgroundView: UIView { }
 
 protocol StepsViewControllerDelegate: class {
-    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell)
+    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
     func didDismissStepsViewController(_ viewController: StepsViewController)
 }
 
@@ -209,9 +209,17 @@ open class StepsViewController: UIViewController {
 extension StepsViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let step = sections[indexPath.section][indexPath.row]
         let cell = tableView.cellForRow(at: indexPath) as! StepTableViewCell
-        delegate?.stepsViewController(self, didSelect: step, cell: cell)
+        // Since as we progress, steps are removed from the list, we need to map the row the user tapped to the actual step on the leg.
+        // If the user selects a step on future leg, all steps are going to be there.
+        var stepIndex: Int
+        if indexPath.section > 0 {
+            stepIndex = indexPath.row
+        } else {
+            stepIndex = indexPath.row + routeProgress.currentLegProgress.stepIndex
+            stepIndex += indexPath.row + 1 > sections[indexPath.section].count ? 0 : 1
+        }
+        delegate?.stepsViewController(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
     }
 }
 
