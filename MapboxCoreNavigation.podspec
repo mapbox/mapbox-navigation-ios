@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxCoreNavigation"
 
-  s.dependency "MapboxDirections.swift", :git => "https://github.com/mapbox/MapboxDirections.swift.git", :branch => "then"
+  s.dependency "MapboxDirections.swift", "branch: then"
   s.dependency "MapboxMobileEvents", "~> 0.4"
   s.dependency "Turf", "~> 0.2"
 
