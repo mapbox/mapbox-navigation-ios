@@ -5,20 +5,14 @@ import CoreLocation
 extension MBFixLocation {
     
     func asCLLocation() -> CLLocation {
-        let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        let altitude: CLLocationDistance = self.altitude?.doubleValue ?? 0
-        let horizontalAccuracy: CLLocationAccuracy = self.accuracyHorizontal?.doubleValue ?? 0
-        let course: CLLocationDirection = self.bearing?.doubleValue ?? 0
-        let speed: CLLocationSpeed = self.speed?.doubleValue ?? 0
-        let timestamp: TimeInterval = self.time?.doubleValue ?? Date().timeIntervalSince1970
-        let date = Date(timeIntervalSince1970: timestamp)
+        let timestamp: TimeInterval = time?.doubleValue ?? Date().timeIntervalSince1970
         
-        return CLLocation(coordinate: coordinate,
-                          altitude: altitude,
-                          horizontalAccuracy: horizontalAccuracy,
+        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(lat), longitude: CLLocationDegrees(lon)),
+                          altitude: altitude?.doubleValue ?? 0,
+                          horizontalAccuracy: accuracyHorizontal?.doubleValue ?? 0,
                           verticalAccuracy: 0,
-                          course: course,
-                          speed: speed,
-                          timestamp: date)
+                          course: bearing?.doubleValue ?? 0,
+                          speed: speed?.doubleValue ?? 0,
+                          timestamp: Date(timeIntervalSince1970: timestamp))
     }
 }
