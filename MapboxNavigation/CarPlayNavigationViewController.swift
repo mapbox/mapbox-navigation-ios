@@ -3,7 +3,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import CarPlay
 
-public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate, CPMapTemplateDelegate {
+public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
     
     public weak var navigationCarPlayDelegate: NavigationCarPlayDelegate?
     
@@ -15,12 +15,12 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     var mapView: NavigationMapView?
     var styles: [Style]
     var voiceController: MapboxVoiceController?
+    var currentStepIndex: Int?
     
     var carSession: CPNavigationSession
     var carMaptemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    var currentStepIndex: Int?
     
     public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]?, locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         self.route = route
@@ -77,6 +77,13 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
     }
     
+    func exitNavigation() {
+        dismiss(animated: true, completion: {
+            self.carSession.finishTrip()
+            self.navigationCarPlayDelegate?.carPlayNavigationViewControllerDidExit?(self)
+        })
+    }
+    
     func createMapTemplateUI() {
         var recenter: CPMapButton!
         
@@ -84,7 +91,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             guard let strongSelf = self else { return }
             strongSelf.carInterfaceController.pushTemplate(strongSelf.carFeedbackTemplate, animated: true)
         }
-        
         showFeedbackButton.image = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
         
         let overviewButton = CPMapButton {  [weak self] (button) in
@@ -94,31 +100,27 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             button.isHidden = true
             recenter.isHidden = false
         }
+        overviewButton.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
         
         recenter = CPMapButton { [weak self] (button) in
             button.isHidden = true
             overviewButton.isHidden = false
             self?.mapView?.recenterMap()
         }
-        
         recenter.isHidden = true
-        recenter.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
-        overviewButton.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+        recenter.image = UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
         
         let exitButton = CPBarButton(type: .text) { [weak self] (button) in
             guard let strongSelf = self else { return }
-            strongSelf.dismiss(animated: true, completion: {
-                strongSelf.carSession.cancelTrip()
-                strongSelf.navigationCarPlayDelegate?.carPlayNavigationViewControllerDidExit?(strongSelf)
-            })
+            strongSelf.exitNavigation()
         }
+        exitButton.title = "Exit"
         
         let muteButton = CPBarButton(type: .text) { (button) in
             NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
             button.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
         }
         muteButton.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
-        exitButton.title = "Exit"
         
         carMaptemplate.mapButtons = [overviewButton, recenter, showFeedbackButton]
         carMaptemplate.trailingNavigationBarButtons = [exitButton]
@@ -126,7 +128,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     func createFeedbackUI() -> CPGridTemplate {
-        
         let feedbackItems: [FeedbackItem] = [
             .turnNotAllowed,
             .closure,
@@ -134,9 +135,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             .confusingInstructions,
             .generalMapError,
             .badRoute,
-        ]
+            ]
         
-        let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
+        let feedbackButtonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.carInterfaceController.popTemplate(animated: true)
             guard let uuid = self?.routeController.recordFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
@@ -149,15 +150,43 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         }
         
         let buttons: [CPGridButton] = feedbackItems.map {
-            return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")], image: $0.image, handler: buttonHandler)
+            return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")], image: $0.image, handler: feedbackButtonHandler)
         }
         
         return CPGridTemplate(title: "Feedback", gridButtons: buttons)
     }
-
+    
+    func createEndOfRouteFeedbackUI() -> CPGridTemplate {
+        let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
+            self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
+            self?.exitNavigation()
+            self?.carInterfaceController.popTemplate(animated: true)
+        }
+        
+        var buttons: [CPGridButton] = []
+        let starImage = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)!
+        for i in 1...5 {
+            let button = CPGridButton(titleVariants: ["\(i) star\(i == 1 ? "" : "s")"], image: starImage, handler: buttonHandler)
+            buttons.append(button)
+        }
+        
+        return CPGridTemplate(title: "Rate your ride", gridButtons: buttons)
+    }
+    
+    func presentArrivalUI() {
+        let exitAction = CPAlertAction(title: "Exit navigation", style: .cancel) { (action) in
+            self.dismiss(animated: true, completion: nil)
+        }
+        let rateAction = CPAlertAction(title: "Rate your trip", style: .default) { (action) in
+            self.carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
+        }
+        let alert = CPAlert(titleVariants: ["You have arrived"], message: nil, style: .actionSheet, actions: [rateAction, exitAction])
+        carInterfaceController.present(alert)
+    }
     
     public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
         self.mapView?.showRoutes([routeController.routeProgress.route])
+        self.mapView?.showWaypoints(route)
         self.mapView?.recenterMap()
     }
     
@@ -172,20 +201,24 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         if index != currentStepIndex {
             updateManeuvers()
+            mapView?.showWaypoints(route)
             currentStepIndex = index
         }
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: carSession.upcomingManeuvers.first!)
         carMaptemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
+        
+        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
+            presentArrivalUI()
+        }
     }
     
-    func presentArrivalUI() {
-        let action = CPAlertAction(title: "You Have Arrived", style: .default, handler: { [weak self] _ in
-            self?.dismiss(animated: true, completion: nil)
-        })
-        let alert = CPNavigationAlert(titleVariants: ["Exit"], subtitleVariants: nil, imageSet: nil, primaryAction: action, secondaryAction: nil, duration: 0)
-        carMaptemplate.present(navigationAlert: alert, animated: true)
+    @objc func rerouted(_ notification: NSNotification) {
+        updateManeuvers()
+        self.mapView?.recenterMap()
+        self.mapView?.showRoutes([routeController.routeProgress.route])
+        self.mapView?.showWaypoints(route)
     }
     
     func updateManeuvers() {
@@ -197,21 +230,21 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             
             maneuver.instructionVariants = [backupText]
 
-// todo get this to work and not crash
-//            if let visual = step.instructionsDisplayedAlongStep?.last {
-//                let instructionLabel = InstructionLabel()
-//                instructionLabel.availableBounds = {
-//                    return CGRect(x: 0, y: 0, width: 70, height: 30)
-//                }
-//                instructionLabel.instruction = visual.primaryInstruction
-//                if let attributed = instructionLabel.attributedText {
-//                    maneuver.attributedInstructionVariants = [attributed]
-//                } else {
-//                    maneuver.instructionVariants = [backupText]
-//                }
-//            } else {
-//                maneuver.instructionVariants = [backupText]
-//            }
+            // todo get this to work and not crash
+            //if let visual = step.instructionsDisplayedAlongStep?.last {
+            //    let instructionLabel = InstructionLabel()
+            //    instructionLabel.availableBounds = {
+            //        return CGRect(x: 0, y: 0, width: 70, height: 30)
+            //    }
+            //    instructionLabel.instruction = visual.primaryInstruction
+            //    if let attributed = instructionLabel.attributedText {
+            //        maneuver.attributedInstructionVariants = [attributed]
+            //    } else {
+            //        maneuver.instructionVariants = [backupText]
+            //    }
+            //} else {
+            //    maneuver.instructionVariants = [backupText]
+            //}
             
             maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
             
@@ -233,12 +266,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             return maneuver
         }
         carSession.upcomingManeuvers = maneuvers
-    }
-    
-    @objc func rerouted(_ notification: NSNotification) {
-        updateManeuvers()
-        self.mapView?.recenterMap()
-        self.mapView?.showRoutes([routeController.routeProgress.route])
     }
 }
 
