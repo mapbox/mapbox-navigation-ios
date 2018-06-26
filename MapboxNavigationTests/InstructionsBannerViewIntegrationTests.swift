@@ -270,9 +270,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let presenter = InstructionPresenter(exitInstruction, dataSource: label, downloadCompletion: nil)
         let attributed = presenter.attributedText()
         
-        let key = cacheKeyForExitLabel(dataSource: label, cacheKey: exitCodeAttribute.cacheKey!)!
-        XCTAssertNotNil(imageRepository.cachedImageForKey(key), "Expected cached image")
-        
         let spaceRange = NSMakeRange(1, 1)
         let space = attributed.attributedSubstring(from: spaceRange)
         //Do we have spacing between the attachment and the road name?
@@ -284,13 +281,6 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let roadNameRange = NSMakeRange(2, 11)
         let roadName = attributed.attributedSubstring(from: roadNameRange)
         XCTAssert(roadName.string == "Main Street", "Banner not populating road name correctly")
-    }
-    
-    private func cacheKeyForExitLabel(side: ExitSide = .right, dataSource: InstructionPresenter.DataSource, cacheKey: String) -> String? {
-        let proxy = ExitView.appearance()
-        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
-        let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
-        return [cacheKey, additionalKey].joined(separator: "-")
     }
 
     private func simulateDownloadingShieldForComponent(_ component: VisualInstructionComponent) {
