@@ -845,25 +845,23 @@ extension RouteMapViewController: NavigationViewDelegate {
 
 extension RouteMapViewController: StepsViewControllerDelegate {
     
-    func stepsViewController(_ viewController: StepsViewController, didSelect step: RouteStep, cell: StepTableViewCell) {
+    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
+        
+        let legProgress = RouteLegProgress(leg: routeController.routeProgress.route.legs[legIndex], stepIndex: stepIndex)
+        let step = legProgress.currentStep
+        guard let upcomingStep = legProgress.upComingStep else { return }
         
         viewController.dismiss {
-            guard let stepBefore = self.routeController.routeProgress.currentLegProgress.stepBefore(step) else { return }
-            self.addPreviewInstructions(step: stepBefore, maneuverStep: step, distance: cell.instructionsView.distance)
+            self.addPreviewInstructions(step: step, maneuverStep: upcomingStep, distance: cell.instructionsView.distance)
             self.stepsViewController = nil
         }
         
         mapView.enableFrameByFrameCourseViewTracking(for: 1)
         mapView.tracksUserCourse = false
-        mapView.setCenter(step.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: step.initialHeading!, animated: true, completionHandler: nil)
+        mapView.setCenter(upcomingStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: upcomingStep.initialHeading!, animated: true, completionHandler: nil)
         
         guard isViewLoaded && view.window != nil else { return }
-        if let legIndex = routeController.routeProgress.route.legs.index(where: { !$0.steps.filter { $0 == step }.isEmpty }) {
-            let leg = routeController.routeProgress.route.legs[legIndex]
-            if let stepIndex = leg.steps.index(where: { $0 == step }), leg.steps.last != step {
-               mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
-            }
-        }
+        mapView.addArrow(route: routeController.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex + 1)
     }
     
     func addPreviewInstructions(step: RouteStep, maneuverStep: RouteStep, distance: CLLocationDistance?) {

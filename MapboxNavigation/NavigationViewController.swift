@@ -609,15 +609,13 @@ extension NavigationViewController: TunnelIntersectionManagerDelegate {
 extension NavigationViewController: StyleManagerDelegate {
     
     public func locationFor(styleManager: StyleManager) -> CLLocation? {
-        guard let location = routeController.location else {
-            if let coordinate = routeController.routeProgress.route.coordinates?.first {
-                return CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-            } else {
-                return CLLocation()
-            }
+        if let location = routeController.location {
+            return location
+        } else if let firstCoord = routeController.routeProgress.route.coordinates?.first {
+            return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
+        } else {
+            return nil
         }
-        
-        return location
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
