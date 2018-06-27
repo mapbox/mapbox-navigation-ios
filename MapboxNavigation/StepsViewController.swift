@@ -217,6 +217,7 @@ extension StepsViewController: UITableViewDelegate {
             stepIndex = indexPath.row
         } else {
             stepIndex = indexPath.row + routeProgress.currentLegProgress.stepIndex
+            // For the current leg, we need to know the upcoming step.
             stepIndex += indexPath.row + 1 > sections[indexPath.section].count ? 0 : 1
         }
         delegate?.stepsViewController(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
