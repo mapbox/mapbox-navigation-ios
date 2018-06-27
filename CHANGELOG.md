@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## master
+
+* Fixed an issue when selecting a step from the steps list, you could be brought to the wrong step. [#1524](https://github.com/mapbox/mapbox-navigation-ios/pull/1524/)
+
 ## v0.18.1 (June 19, 2018)
 
 ### Packaging
