@@ -21,13 +21,4 @@ extension VisualInstructionComponent {
     var genericCacheKey: String {
         return "generic-" + (text ?? "nil")
     }
-    
-    /**
-    #error WIP
-    private var criticalHash: UInt {
-        let proxy = GenericRouteShield.appearance()
-        let criticalProperties: [AnyHashable?] = [proxy.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
-        let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
-    }
-   **/
 }

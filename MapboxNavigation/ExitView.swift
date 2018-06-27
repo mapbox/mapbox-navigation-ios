@@ -141,4 +141,10 @@ class ExitView: StylableView {
         let labelTrailing = trailingAnchor.constraint(equalTo: exitNumberLabel.trailingAnchor, constant: 8)
         return [imageLeading, imageLabelSpacing, labelTrailing]
     }
+    
+    static func criticalHash(side: ExitSide, dataSource: DataSource) -> String {
+        let proxy = ExitView.appearance()
+        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
+    }
 }

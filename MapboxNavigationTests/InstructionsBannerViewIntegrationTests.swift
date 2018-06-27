@@ -270,6 +270,9 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         let presenter = InstructionPresenter(exitInstruction, dataSource: label, downloadCompletion: nil)
         let attributed = presenter.attributedText()
         
+        let key = [exitCodeAttribute.cacheKey!, ExitView.criticalHash(side: .right, dataSource: label)].joined(separator: "-")
+        XCTAssertNotNil(imageRepository.cachedImageForKey(key), "Expected cached image")
+        
         let spaceRange = NSMakeRange(1, 1)
         let space = attributed.attributedSubstring(from: spaceRange)
         //Do we have spacing between the attachment and the road name?
