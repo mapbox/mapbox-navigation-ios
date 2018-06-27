@@ -10,11 +10,11 @@ import Foundation
 import MapboxDirections
 import CarPlay
 
-
 extension Array where Element: Route {
     /**
      Creates a CPTrip from an array of routes.
      */
+    @available(iOS 12.0, *)
     public func tripFor(for addressDictionary: [String : Any]) -> CPTrip? {
         guard let origin = first?.legs.first?.source.coordinate else { return nil }
         guard let destination = last?.legs.last?.destination.coordinate else { return nil }

@@ -367,6 +367,7 @@ open class RouteLegProgress: NSObject {
         return currentClosest
     }
     
+    @available(iOS 12.0, *)
     @objc public var travelEstimates: CPTravelEstimates {
         let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
         return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)
@@ -421,6 +422,7 @@ open class RouteStepProgress: NSObject {
      
      Returns the `CPTravelEstimates` for the current step progress.
     */
+    @available(iOS 12.0, *)
     @objc public var travelEstimates: CPTravelEstimates {
         let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
         return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)

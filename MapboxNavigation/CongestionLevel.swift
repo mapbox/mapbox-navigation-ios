@@ -14,6 +14,7 @@ extension CongestionLevel {
     /**
      Converts a CongestionLevel to a CPTimeRemainingColor.
      */
+    @available(iOS 12.0, *)
     public var asCPTimeRemainingColor: CPTimeRemainingColor {
         switch self {
         case .unknown:

@@ -3,6 +3,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import CarPlay
 
+@available(iOS 12.0, *)
 public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
     
     public weak var navigationCarPlayDelegate: NavigationCarPlayDelegate?
@@ -268,7 +269,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
 }
 
-
+@available(iOS 12.0, *)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func locationFor(styleManager: StyleManager) -> CLLocation? {
         if routeController != nil {
@@ -290,7 +291,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
 }
 
-
+@available(iOS 12.0, *)
 @objc(MBNavigationCarPlayDelegate)
 public protocol NavigationCarPlayDelegate {
     @objc(carPlayNavigationViewControllerDidExit:)
