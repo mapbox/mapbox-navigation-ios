@@ -147,16 +147,16 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
         let courseViewWidth = userCourseView?.frame.width ?? 0
         let courseViewHeight = userCourseView?.frame.height ?? 0
-        let edgePadding = UIEdgeInsets(top: 50 + courseViewHeight / 2,
-                                       left: 50 + courseViewWidth / 2,
-                                       bottom: 50 + courseViewHeight / 2,
-                                       right: 50 + courseViewWidth / 2)
+        let edgePadding = UIEdgeInsets(top: (50 + courseViewHeight / 2),
+                                       left: (50 + courseViewWidth / 2) ,
+                                       bottom: (50 + courseViewHeight / 2) ,
+                                       right: (50 + courseViewWidth / 2))
         return CGPoint(x: max(min(contentFrame.midX,
-                                  contentFrame.maxX - edgePadding.right),
-                              contentFrame.minX + edgePadding.left),
-                       y: max(max(min(contentFrame.minY + contentFrame.height * 0.8,
-                                      contentFrame.maxY - edgePadding.bottom),
-                                  contentFrame.minY + edgePadding.top),
+                                  contentFrame.maxX - edgePadding.right - safeArea.right),
+                              contentFrame.minX + edgePadding.left + safeArea.left),
+                       y: max(max(min(  contentFrame.minY + contentFrame.height * 0.8,
+                                      contentFrame.maxY - edgePadding.bottom - safeArea.bottom),
+                                  contentFrame.minY + edgePadding.top + safeArea.top),
                               contentFrame.minY + contentFrame.height * 0.5))
     }
     
@@ -341,10 +341,8 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         
         if tracksUserCourse {
             let point = userAnchorPoint
-            let paddingLeftRight: CGFloat = 50
-            let padding = UIEdgeInsets(top: point.y, left: point.x + paddingLeftRight, bottom: bounds.height - point.y - 50, right: bounds.width - point.x - paddingLeftRight)
-            // course is modified because of the offset.
-            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 60, heading: location.course - 5)
+            let padding = UIEdgeInsets(top: point.y, left: point.x, bottom: bounds.height - point.y, right: bounds.width - point.x)
+            let newCamera = MGLMapCamera(lookingAtCenter: location.coordinate, fromDistance: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, edgePadding: padding, completionHandler: nil)
         } else {

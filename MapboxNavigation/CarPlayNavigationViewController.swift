@@ -206,7 +206,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         }
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
-        carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: carSession.upcomingManeuvers.first!)
+        guard let maneuver = carSession.upcomingManeuvers.first else { return }
+        carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: maneuver)
         carMaptemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
         
         if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
@@ -222,50 +223,48 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     func updateManeuvers() {
-        let index = routeController.routeProgress.currentLegProgress.stepIndex
+        let step = routeController.routeProgress.currentLegProgress.currentStep
         
-        let maneuvers = routeController.routeProgress.currentLeg.steps.suffix(from: index).map { (step) -> CPManeuver in
-            let maneuver = CPManeuver()
-            let backupText = step.instructionsDisplayedAlongStep?.first?.primaryInstruction.text ?? step.instructions
-            
-            maneuver.instructionVariants = [backupText]
+        let maneuver = CPManeuver()
+        let backupText = step.instructionsDisplayedAlongStep?.first?.primaryInstruction.text ?? step.instructions
+        
+        maneuver.instructionVariants = [backupText]
 
-            // todo get this to work and not crash
-            //if let visual = step.instructionsDisplayedAlongStep?.last {
-            //    let instructionLabel = InstructionLabel()
-            //    instructionLabel.availableBounds = {
-            //        return CGRect(x: 0, y: 0, width: 70, height: 30)
-            //    }
-            //    instructionLabel.instruction = visual.primaryInstruction
-            //    if let attributed = instructionLabel.attributedText {
-            //        maneuver.attributedInstructionVariants = [attributed]
-            //    } else {
-            //        maneuver.instructionVariants = [backupText]
-            //    }
-            //} else {
-            //    maneuver.instructionVariants = [backupText]
-            //}
-            
-            maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
-            
-            let primaryColors: [UIColor] = [.black, .white]
-            
-            if let visual = step.instructionsDisplayedAlongStep?.last {
-                let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
-                    let mv = ManeuverView()
-                    mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
-                    mv.primaryColor = color
-                    mv.backgroundColor = .clear
-                    mv.visualInstruction = visual
-                    return mv.imageRepresentation
-                }
-                if blackAndWhiteManeuverIcons.count == 2 {
-                    maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
-                }
+        // todo get this to work and not crash
+        //if let visual = step.instructionsDisplayedAlongStep?.last {
+        //    let instructionLabel = InstructionLabel()
+        //    instructionLabel.availableBounds = {
+        //        return CGRect(x: 0, y: 0, width: 70, height: 30)
+        //    }
+        //    instructionLabel.instruction = visual.primaryInstruction
+        //    if let attributed = instructionLabel.attributedText {
+        //        maneuver.attributedInstructionVariants = [attributed]
+        //    } else {
+        //        maneuver.instructionVariants = [backupText]
+        //    }
+        //} else {
+        //    maneuver.instructionVariants = [backupText]
+        //}
+        
+        maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
+        
+        let primaryColors: [UIColor] = [.black, .white]
+        
+        if let visual = step.instructionsDisplayedAlongStep?.last {
+            let blackAndWhiteManeuverIcons: [UIImage] = primaryColors.compactMap { (color) in
+                let mv = ManeuverView()
+                mv.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
+                mv.primaryColor = color
+                mv.backgroundColor = .clear
+                mv.visualInstruction = visual
+                return mv.imageRepresentation
             }
-            return maneuver
+            if blackAndWhiteManeuverIcons.count == 2 {
+                maneuver.symbolSet = CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
+            }
         }
-        carSession.upcomingManeuvers = maneuvers
+        
+        carSession.upcomingManeuvers = [maneuver]
     }
 }
 
