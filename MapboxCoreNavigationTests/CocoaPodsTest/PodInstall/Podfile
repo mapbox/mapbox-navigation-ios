@@ -5,10 +5,7 @@ target 'PodInstall' do
   # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
   pod 'MapboxNavigation', :git => 'GIT_REPO_URL', :branch => 'BRANCH_NAME'
   pod 'MapboxCoreNavigation', :git => 'GIT_REPO_URL', :branch => 'BRANCH_NAME'
-  pod 'MapboxNavigationNative', '0.0.1-pr236-SNAPSHOT'
+  pod 'MapboxDirections.swift', :git => 'git@github.com:mapbox/MapboxDirections.swift.git', :branch => 'return-response'
+  pod 'MapboxNavigationNative', :podspec => 'https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/MapboxNavigationNative.podspec'
 end
 
-pre_install do |installer|
-    # workaround for https://github.com/CocoaPods/CocoaPods/issues/3289
-    def installer.verify_no_static_framework_transitive_dependencies; end
-end
