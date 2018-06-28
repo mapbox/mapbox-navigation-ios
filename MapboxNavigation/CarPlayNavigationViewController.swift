@@ -10,7 +10,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     
     public var drivingSide: DrivingSide = .right
     
-    var route: Route
     var routeController: RouteController!
     var styleManager: StyleManager!
     var mapView: NavigationMapView?
@@ -24,7 +23,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     var carInterfaceController: CPInterfaceController
     
     public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]?, locationManager: NavigationLocationManager? = NavigationLocationManager()) {
-        self.route = route
         self.carSession = session
         self.carMaptemplate = template
         self.voiceController = MapboxVoiceController()
@@ -187,15 +185,16 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             self.dismiss(animated: true, completion: nil)
         }
         let rateAction = CPAlertAction(title: "Rate your trip", style: .default) { (action) in
-            self.carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
+            self.carInterfaceController.pushTemplate(self.createEndOfRouteFeedbackUI(), animated: true)
         }
         let alert = CPAlert(titleVariants: ["You have arrived"], message: nil, style: .actionSheet, actions: [rateAction, exitAction])
         carInterfaceController.present(alert)
     }
     
     public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
+        self.mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         self.mapView?.showRoutes([routeController.routeProgress.route])
-        self.mapView?.showWaypoints(route)
+        self.mapView?.showWaypoints(routeController.routeProgress.route)
         self.mapView?.recenterMap()
     }
     
@@ -210,25 +209,23 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         
         if index != currentStepIndex {
             updateManeuvers()
-            mapView?.showWaypoints(route)
+            mapView?.showWaypoints(routeController.routeProgress.route)
             currentStepIndex = index
+            mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex)
         }
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
         carSession.updateEstimates(routeProgress.currentLegProgress.currentStepProgress.travelEstimates, for: maneuver)
         carMaptemplate.update(routeProgress.currentLegProgress.travelEstimates, for: carSession.trip, with: congestionLevel.asCPTimeRemainingColor)
-        
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            presentArrivalUI()
-        }
     }
     
     @objc func rerouted(_ notification: NSNotification) {
         updateManeuvers()
         self.mapView?.recenterMap()
+        self.mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         self.mapView?.showRoutes([routeController.routeProgress.route])
-        self.mapView?.showWaypoints(route)
+        self.mapView?.showWaypoints(routeController.routeProgress.route)
     }
     
     func updateManeuvers() {
@@ -292,6 +289,17 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         mapView?.reloadStyle(self)
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: RouteControllerDelegate {
+    public func routeController(_ routeController: RouteController, didArriveAt waypoint: Waypoint) -> Bool {
+        if routeController.routeProgress.isFinalLeg {
+            presentArrivalUI()
+        }
+        
+        return true
     }
 }
 
