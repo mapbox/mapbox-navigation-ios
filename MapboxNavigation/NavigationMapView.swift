@@ -144,13 +144,13 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return anchorPoint
         }
         
-        let contentFrame = UIEdgeInsetsInsetRect(bounds, contentInset)
+        let contentFrame = UIEdgeInsetsInsetRect(bounds, safeArea)
         let courseViewWidth = userCourseView?.frame.width ?? 0
         let courseViewHeight = userCourseView?.frame.height ?? 0
-        let edgePadding = UIEdgeInsets(top: (50 + courseViewHeight / 2) + safeArea.top,
-                                       left: (50 + courseViewWidth / 2) + safeArea.left,
-                                       bottom: (50 + courseViewHeight / 2) + safeArea.bottom,
-                                       right: (50 + courseViewWidth / 2) + safeArea.right)
+        let edgePadding = UIEdgeInsets(top: (50 + courseViewHeight / 2),
+                                       left: (50 + courseViewWidth / 2),
+                                       bottom: (50 + courseViewHeight / 2),
+                                       right: (50 + courseViewWidth / 2))
         return CGPoint(x: max(min(contentFrame.midX,
                                   contentFrame.maxX - edgePadding.right),
                               contentFrame.minX + edgePadding.left),

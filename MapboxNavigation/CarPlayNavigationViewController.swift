@@ -29,7 +29,15 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         self.carMaptemplate = template
         self.voiceController = MapboxVoiceController()
         self.carInterfaceController = interfaceController
-        self.styles = styles ?? [DayStyle(), NightStyle()]
+        var carStyles = styles ?? [DayStyle(), NightStyle()]
+        carStyles = carStyles.map {
+            $0.overrideStyleForCarPlay = true
+            return $0
+        }
+        self.styles = carStyles
+        if let locationManager = locationManager as? SimulatedLocationManager {
+            locationManager.speedMultiplier = 10.0
+        }
         self.routeController = RouteController(along: route, locationManager: locationManager ?? NavigationLocationManager())
         super.init(nibName: nil, bundle: nil)
         self.styleManager = StyleManager(self)
@@ -97,7 +105,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let overviewButton = CPMapButton {  [weak self] (button) in
             guard let strongSelf = self else { return }
             guard let userLocation = self?.routeController.location?.coordinate else { return }
-            strongSelf.mapView?.setOverheadCameraView(from: userLocation, along: strongSelf.routeController.routeProgress.route.coordinates!, for: UIEdgeInsets().carPlayInsets(for: .right))
+            strongSelf.mapView?.setOverheadCameraView(from: userLocation, along: strongSelf.routeController.routeProgress.route.coordinates!, for: strongSelf.view.safeArea)
             button.isHidden = true
             recenter.isHidden = false
         }
@@ -232,20 +240,16 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         maneuver.instructionVariants = [backupText]
 
         // todo get this to work and not crash
-        //if let visual = step.instructionsDisplayedAlongStep?.last {
-        //    let instructionLabel = InstructionLabel()
-        //    instructionLabel.availableBounds = {
-        //        return CGRect(x: 0, y: 0, width: 70, height: 30)
-        //    }
-        //    instructionLabel.instruction = visual.primaryInstruction
-        //    if let attributed = instructionLabel.attributedText {
-        //        maneuver.attributedInstructionVariants = [attributed]
-        //    } else {
-        //        maneuver.instructionVariants = [backupText]
-        //    }
-        //} else {
-        //    maneuver.instructionVariants = [backupText]
-        //}
+        if let visual = step.instructionsDisplayedAlongStep?.last {
+            let instructionLabel = InstructionLabel()
+            instructionLabel.availableBounds = {
+                return CGRect(x: 0, y: 0, width: 300, height: 70)
+            }
+            instructionLabel.instruction = visual.primaryInstruction
+            if let attributed = instructionLabel.attributedText {
+                maneuver.attributedInstructionVariants = [attributed]
+            }
+        }
         
         maneuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: Measurement(value: step.distance, unit: UnitLength.meters), timeRemaining: step.expectedTravelTime)
         

@@ -94,7 +94,7 @@ open class DayStyle: Style {
         GenericRouteShield.appearance().backgroundColor = .clear
         GenericRouteShield.appearance().borderWidth = 1.0
         GenericRouteShield.appearance().cornerRadius = 5.0
-        GenericRouteShield.appearance().foregroundColor = .black
+        GenericRouteShield.appearance().foregroundColor = overrideStyleForCarPlay ? .white : .black 
         InstructionsBannerContentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         LaneView.appearance().primaryColor = .defaultLaneArrowPrimary
