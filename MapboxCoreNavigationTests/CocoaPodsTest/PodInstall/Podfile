@@ -1,5 +1,12 @@
 platform :ios, '9.0'
+
+inhibit_all_warnings!
 use_frameworks!
+
+pre_install do |installer|
+# workaround for #3289
+Pod::Installer::Xcode::TargetValidator.send(:define_method, :verify_no_static_framework_transitive_dependencies) {}
+end
 
 target 'PodInstall' do
   # The branch of MapboxNavigation and MapboxNavigation will be replaced by Bitrise to use the current branch.
