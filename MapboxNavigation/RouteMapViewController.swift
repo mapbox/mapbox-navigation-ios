@@ -402,7 +402,9 @@ class RouteMapViewController: UIViewController {
             } else {
                 nextBannerView.update(for: routeProgress)
             }
-        } else if currentStepIndexMapped != routeProgress.currentLegProgress.stepIndex {
+        }
+        // Brief: This ensures that the lane view remains visible until we advance to a new step.
+        else if currentStepIndexMapped != routeProgress.currentLegProgress.stepIndex {
             lanesView.update(for: routeProgress.currentLegProgress)
             
             if lanesView.isHidden {
