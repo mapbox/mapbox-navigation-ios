@@ -623,7 +623,7 @@ extension RouteController: CLLocationManagerDelegate {
         self.rawLocation = location
 
         let fixLocation = location.asMBFixLocation()
-        let status = navigator.onLocationChanged(for: fixLocation)
+        navigator.updateLocation(for: fixLocation)
         
         delegate?.routeController?(self, didUpdate: [location])
 

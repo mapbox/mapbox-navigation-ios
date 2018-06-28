@@ -180,9 +180,8 @@ extension CLLocation {
     }
     
     func asMBFixLocation() -> MBFixLocation {
-        return MBFixLocation(lat: Float(coordinate.latitude),
-                             lon: Float(coordinate.longitude),
-                             time: NSNumber(value: timestamp.timeIntervalSince1970),
+        return MBFixLocation(location: coordinate,
+                             time: timestamp,
                              speed: NSNumber(value: speed),
                              bearing: NSNumber(value: course),
                              altitude: NSNumber(value: altitude),

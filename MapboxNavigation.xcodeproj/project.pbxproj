@@ -31,11 +31,12 @@
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
 		350D084D20DA4414007C6D6D /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 350D084B20DA43F8007C6D6D /* MapboxNavigationNative.framework */; };
-		350D084E20DA441F007C6D6D /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 350D084B20DA43F8007C6D6D /* MapboxNavigationNative.framework */; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
 		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
 		351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351174F31EF1C0530065E248 /* ReplayLocationManager.swift */; };
 		3512C7C81FB0A0C100CDD2A3 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3512C7C71FB0A0C100CDD2A3 /* UIViewController.swift */; };
+		3513E90520E53E30006ED523 /* MapboxNavigationNative.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 350D084B20DA43F8007C6D6D /* MapboxNavigationNative.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3513E90820E53E9A006ED523 /* MapboxNavigationNative.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 350D084B20DA43F8007C6D6D /* MapboxNavigationNative.framework */; };
 		351927361F0FA072003A702D /* ScreenCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351927351F0FA072003A702D /* ScreenCapture.swift */; };
 		351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBDF1E5BCC63006FE110 /* MGLMapView.swift */; };
 		351BEBF21E5BCC63006FE110 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEBE01E5BCC63006FE110 /* Style.swift */; };
@@ -394,6 +395,7 @@
 			files = (
 				C549F8331F17F2C5001A0A2D /* MapboxMobileEvents.framework in Embed Frameworks */,
 				35CC14181F79A434009E872A /* Turf.framework in Embed Frameworks */,
+				3513E90520E53E30006ED523 /* MapboxNavigationNative.framework in Embed Frameworks */,
 				354A01D51E6626AC00D765C2 /* MapboxCoreNavigation.framework in Embed Frameworks */,
 				C57607B21F4CC9E800C27423 /* Solar.framework in Embed Frameworks */,
 				354A01D01E66266100D765C2 /* MapboxDirections.framework in Embed Frameworks */,
@@ -808,8 +810,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3513E90820E53E9A006ED523 /* MapboxNavigationNative.framework in Frameworks */,
 				35E9B0AD1F9E0F8F00BF84AB /* MapboxNavigation.framework in Frameworks */,
-				350D084E20DA441F007C6D6D /* MapboxNavigationNative.framework in Frameworks */,
 				354A01CF1E66266100D765C2 /* MapboxDirections.framework in Frameworks */,
 				C57607B11F4CC9E800C27423 /* Solar.framework in Frameworks */,
 				C549F8321F17F2C5001A0A2D /* MapboxMobileEvents.framework in Frameworks */,

@@ -1,5 +1,5 @@
 binary "https://www.mapbox.com/ios-sdk/Mapbox-iOS-SDK.json" ~> 4.0
-binary "https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/Mapbox-iOS-Navigation-Native.json"
+binary "https://s3.amazonaws.com/mapbox/mapbox-navigation-native/ios/builds/Mapbox-iOS-Navigation-Native-static.json"
 github "mapbox/MapboxDirections.swift" "return-response"
 github "mapbox/turf-swift" ~> 0.1
 github "mapbox/mapbox-events-ios" ~> 0.4

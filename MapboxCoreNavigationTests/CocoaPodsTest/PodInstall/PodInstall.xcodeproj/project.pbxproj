@@ -132,7 +132,6 @@
 				352544D91E66623D004C8F1C /* Frameworks */,
 				352544DA1E66623D004C8F1C /* Resources */,
 				2C42AC3C47F2A0A83F753C88 /* [CP] Embed Pods Frameworks */,
-				8B85E922DD5249648BAA8445 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -236,9 +235,9 @@
 				"${BUILT_PRODUCTS_DIR}/MapboxDirections.swift/MapboxDirections.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxMobileEvents/MapboxMobileEvents.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxNavigation/MapboxNavigation.framework",
+				"${PODS_ROOT}/MapboxNavigationNative/MapboxNavigationNative.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
 				"${BUILT_PRODUCTS_DIR}/Solar/Solar.framework",
 				"${BUILT_PRODUCTS_DIR}/Turf/Turf.framework",
 			);
@@ -250,30 +249,15 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxDirections.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxMobileEvents.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxNavigationNative.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MapboxSpeech.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Polyline.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Solar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Turf.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PodInstall/Pods-PodInstall-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		8B85E922DD5249648BAA8445 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PodInstall/Pods-PodInstall-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FCAEDB6CF8C116409B047EA1 /* [CP] Check Pods Manifest.lock */ = {
