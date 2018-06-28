@@ -16,11 +16,22 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     var styles: [Style]
     var voiceController: MapboxVoiceController?
     var currentStepIndex: Int?
+    let decelerationRate:CGFloat = 0.9
     
     var carSession: CPNavigationSession
     var carMaptemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
+    var overviewButton: CPMapButton!
+    var recenterButton: CPMapButton!
+    
+    var edgePadding: UIEdgeInsets {
+        let padding:CGFloat = 15
+        return UIEdgeInsets(top: view.safeAreaInsets.top + padding,
+                            left: view.safeAreaInsets.left + padding,
+                            bottom: view.safeAreaInsets.bottom + padding,
+                            right: view.safeAreaInsets.right + padding)
+    }
     
     public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]?, locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         self.carSession = session
@@ -38,8 +49,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         }
         self.routeController = RouteController(along: route, locationManager: locationManager ?? NavigationLocationManager())
         super.init(nibName: nil, bundle: nil)
+        self.carMaptemplate.mapDelegate = self
         self.styleManager = StyleManager(self)
-        self.carFeedbackTemplate = self.createFeedbackUI()
+        self.carFeedbackTemplate = createFeedbackUI()
         
         createMapTemplateUI()
     }
@@ -92,30 +104,29 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     }
     
     func createMapTemplateUI() {
-        var recenter: CPMapButton!
-        
         let showFeedbackButton = CPMapButton { [weak self] (button) in
             guard let strongSelf = self else { return }
             strongSelf.carInterfaceController.pushTemplate(strongSelf.carFeedbackTemplate, animated: true)
         }
         showFeedbackButton.image = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
         
-        let overviewButton = CPMapButton {  [weak self] (button) in
+        overviewButton = CPMapButton {  [weak self] (button) in
             guard let strongSelf = self else { return }
             guard let userLocation = self?.routeController.location?.coordinate else { return }
-            strongSelf.mapView?.setOverheadCameraView(from: userLocation, along: strongSelf.routeController.routeProgress.route.coordinates!, for: strongSelf.view.safeArea)
+            strongSelf.mapView?.enableFrameByFrameCourseViewTracking(for: 3)
+            strongSelf.mapView?.setOverheadCameraView(from: userLocation, along: strongSelf.routeController.routeProgress.route.coordinates!, for: strongSelf.edgePadding)
             button.isHidden = true
-            recenter.isHidden = false
+            strongSelf.recenterButton.isHidden = false
         }
         overviewButton.image = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
         
-        recenter = CPMapButton { [weak self] (button) in
+        recenterButton = CPMapButton { [weak self] (button) in
             button.isHidden = true
-            overviewButton.isHidden = false
+            self?.overviewButton.isHidden = false
             self?.mapView?.recenterMap()
         }
-        recenter.isHidden = true
-        recenter.image = UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
+        recenterButton.isHidden = true
+        recenterButton.image = UIImage(named: "location", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate).roundedWithBorder(width: 6, color: .white)
         
         let exitButton = CPBarButton(type: .text) { [weak self] (button) in
             guard let strongSelf = self else { return }
@@ -129,7 +140,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         }
         muteButton.title = NavigationSettings.shared.voiceMuted ? "Enable Voice" : "Disable Voice"
         
-        carMaptemplate.mapButtons = [overviewButton, recenter, showFeedbackButton]
+        carMaptemplate.mapButtons = [overviewButton, recenterButton, showFeedbackButton]
         carMaptemplate.trailingNavigationBarButtons = [exitButton]
         carMaptemplate.leadingNavigationBarButtons = [muteButton]
     }
@@ -211,8 +222,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             updateManeuvers()
             mapView?.showWaypoints(routeController.routeProgress.route)
             currentStepIndex = index
-            mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex)
         }
+        
+        mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }
@@ -241,7 +253,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             let instructionLabel = InstructionLabel()
             instructionLabel.availableBounds = {
                 // Estimating the width of Apple's maneuver view
-                let widthOfManeuverView = self.view.bounds.width - (self.view.safeArea.left + self.view.safeArea.right)
+                let widthOfManeuverView = max(self.view.safeArea.left, self.view.safeArea.right)
                 return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
             }
             instructionLabel.instruction = visual.primaryInstruction
@@ -302,6 +314,38 @@ extension CarPlayNavigationViewController: RouteControllerDelegate {
         }
         
         return true
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: CPMapTemplateDelegate {
+    
+    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
+        mapView?.tracksUserCourse = false
+        overviewButton.isHidden = true
+        recenterButton.isHidden = false
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithDelta delta: CGPoint, velocity: CGPoint) {
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
+        // Not enough velocity to overcome friction
+        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else { return }
+        
+        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
+        guard let toCamera = camera(whenPanningTo: offset) else { return }
+        mapView?.setCamera(toCamera, animated: true)
+    }
+    
+    func camera(whenPanningTo endPoint: CGPoint) -> MGLMapCamera? {
+        guard let mapView = mapView else { return nil }
+        let camera = mapView.camera
+        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
+        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
+        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
+        
+        return camera
     }
 }
 
