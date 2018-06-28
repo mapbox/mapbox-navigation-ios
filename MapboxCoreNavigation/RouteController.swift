@@ -175,7 +175,7 @@ public protocol RouteControllerDelegate: class {
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
  */
 @objc(MBRouteController)
-open class RouteController: NSObject {
+open class RouteController: NSObject, Routable {
 
     /**
      The route controller’s delegate.
