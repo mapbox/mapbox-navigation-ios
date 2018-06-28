@@ -85,30 +85,22 @@ open class NextBannerView: UIView {
         bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
     }
     
-    func shouldShowNextBanner(for routeProgress: RouteProgress) -> Bool {
-        guard let upcomingStep = routeProgress.currentLegProgress.upComingStep else { return false }
-        
-        let durationForNext = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
-
-        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= durationForNext, upcomingStep.expectedTravelTime <= durationForNext else {
-            return false
+    public func update(for routeProgress: RouteProgress) {
+        let visualInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex
+        guard let visualInstructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep,
+                  visualInstructionIndex < visualInstructions.count else {
+                    hide()
+                    return
         }
         
-        guard let _ = upcomingStep.instructionsDisplayedAlongStep?.last else { return false }
-        
-        return true
-    }
-    
-    public func update(for routeProgress: RouteProgress) {
-        guard shouldShowNextBanner(for: routeProgress) else {
+        let visualInstruction = visualInstructions[visualInstructionIndex]
+        guard let tertiaryInstruction = visualInstruction.tertiaryInstruction else {
             hide()
             return
         }
         
-        guard let instruction = routeProgress.currentLegProgress.upComingStep?.instructionsDisplayedAlongStep?.last else { return }
-        
-        maneuverView.visualInstruction = instruction
-        instructionLabel.instruction = instruction.primaryInstruction
+        maneuverView.visualInstruction = visualInstruction
+        instructionLabel.instruction = tertiaryInstruction
         show()
     }
     

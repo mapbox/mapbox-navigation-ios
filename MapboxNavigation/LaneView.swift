@@ -34,11 +34,11 @@ open class LaneView: UIView {
     
     static let defaultFrame: CGRect = CGRect(origin: .zero, size: 30.0)
     
-    convenience init(component: LaneIndicationComponent, direction: ManeuverDirection) {
+    convenience init(component: LaneIndicationComponent) {
         self.init(frame: LaneView.defaultFrame)
         backgroundColor = .clear
         lane = Lane(indications: component.indications)
-        maneuverDirection = direction
+        maneuverDirection = ManeuverDirection(description: component.indications.description)
         isValid = component.isUsable
     }
     

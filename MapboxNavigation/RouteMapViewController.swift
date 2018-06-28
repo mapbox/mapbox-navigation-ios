@@ -275,10 +275,7 @@ class RouteMapViewController: UIViewController {
         currentStepIndexMapped = 0
         
         instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress)
-        lanesView.update(for: routeController.routeProgress.currentLegProgress)
-        if lanesView.isHidden {
-            nextBannerView.update(for: routeController.routeProgress)
-        }
+        subInstructionsBannerView(for: routeController.routeProgress)
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -392,16 +389,34 @@ class RouteMapViewController: UIViewController {
         return navigationMapView(mapView, viewFor: annotation)
     }
 
+    func subInstructionsBannerView(for routeProgress: RouteProgress) {
+        let visualInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex
+        
+        if let visualInstructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep,
+               visualInstructionIndex < visualInstructions.count,
+           let tertiaryInstruction = visualInstructions[visualInstructionIndex].tertiaryInstruction {
+            
+            if tertiaryInstruction.components.contains(where: { $0 is LaneIndicationComponent }) {
+                nextBannerView.hide()
+                lanesView.update(for: routeProgress.currentLegProgress)
+            } else {
+                nextBannerView.update(for: routeProgress)
+            }
+        } else if currentStepIndexMapped != routeProgress.currentLegProgress.stepIndex {
+            lanesView.update(for: routeProgress.currentLegProgress)
+            
+            if lanesView.isHidden {
+                nextBannerView.update(for: routeProgress)
+            }
+        }
+    }
+    
     func notifyDidChange(routeProgress: RouteProgress, location: CLLocation, secondsRemaining: TimeInterval) {
         resetETATimer()
-        
         updateETA()
         
-        lanesView.update(for: routeProgress.currentLegProgress)
+        subInstructionsBannerView(for: routeProgress)
         instructionsBannerView.update(for: routeProgress.currentLegProgress)
-        if lanesView.isHidden {
-            nextBannerView.update(for: routeProgress)
-        }
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)

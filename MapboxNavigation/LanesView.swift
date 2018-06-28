@@ -88,7 +88,7 @@ open class LanesView: UIView {
                 return
         }
         
-        let subviews = lanes.map { LaneView(component: $0, direction: step.maneuverDirection) }
+        let subviews = lanes.map { LaneView(component: $0) }
         stackView.addArrangedSubviews(subviews)
         show()
     }
