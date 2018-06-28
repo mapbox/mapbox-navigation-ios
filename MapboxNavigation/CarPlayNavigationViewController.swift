@@ -240,7 +240,9 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         if let visual = step.instructionsDisplayedAlongStep?.last {
             let instructionLabel = InstructionLabel()
             instructionLabel.availableBounds = {
-                return CGRect(x: 0, y: 0, width: 300, height: 70)
+                // Estimating the width of Apple's maneuver view
+                let widthOfManeuverView = self.view.bounds.width - (self.view.safeArea.left + self.view.safeArea.right)
+                return CGRect(x: 0, y: 0, width: widthOfManeuverView, height: 30)
             }
             instructionLabel.instruction = visual.primaryInstruction
             if let attributed = instructionLabel.attributedText {
