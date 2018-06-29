@@ -1,10 +1,10 @@
 # Styling the UI
 
-If you're using [`NavigationMapViewController`](https://www.mapbox.com/mapbox-navigation-ios/navigation/0.18.1/Classes/NavigationViewController.html), it's possible to apply custom fonts and colors to various parts of the UI.
+If you're using `NavigationMapViewController`, it's possible to apply custom fonts and colors to various parts of the UI.
 
 ### Create a new Style class
 
-Simply subclass `DayStyle`, and make the necessary changes.
+Subclass `DayStyle`, and make the necessary changes:
 
 ```swift
 class CustomDayStyle: DayStyle {
@@ -57,18 +57,18 @@ let navigation = NavigationViewController(for: route, directions: Directions, st
 
 ### Finding elements to style
 
-The easiest way to find elements and their class name to style is to use the Debug View Hierarchy.
+The easiest way to find elements and their class name to style is to use the Debug View Hierarchy feature in Xcode.
 
-![](https://user-images.githubusercontent.com/1058624/42105575-a401f4b6-7b85-11e8-822c-d95cf88b084c.png)
+<img src="img/view-hierarchy.png" />
 
 
-1. While running your app, selecte the Debug View Hierarchy button.
+1. While running your app, select the Debug View Hierarchy button.
 2. Select the view you wish to style.
-3. On the right side of your screen, not the class name.
+3. On the right side of your screen, seenote the class name.
 4. Apply your styling:
 
 ```swift
 DistanceLabel.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).unitTextColor = .red
 ```
 
-It is also helpful to view the default styling applied by the [`DayStyle`](https://github.com/mapbox/mapbox-navigation-ios/blob/master/MapboxNavigation/DayStyle.swift) class.
+It is also helpful to view the default styling applied by the `DayStyle`.
