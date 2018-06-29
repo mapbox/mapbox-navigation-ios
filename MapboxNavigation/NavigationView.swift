@@ -1,5 +1,6 @@
 import UIKit
 import MapboxDirections
+import MapboxCoreNavigation
 
 /**
  A view that represents the root view of the MapboxNavigation drop-in UI.
@@ -226,6 +227,35 @@ open class NavigationView: UIView {
         mapView.courseTrackingDelegate = delegate
         instructionsBannerView.delegate = delegate
         statusView.delegate = delegate
+    }
+    
+    /**
+     Updates the instructions banner for a given `RouteProgress`.
+     */
+    public func update(for routeProgress: RouteProgress) {
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let distanceRemaining = stepProgress.distanceRemaining
+        
+        guard let visualInstructions = stepProgress.remainingVisualInstructions else { return }
+        
+        for visualInstruction in visualInstructions {
+            if stepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || stepProgress.visualInstructionIndex == 0 {
+                
+                nextBannerView.hide()
+                lanesView.update(for: visualInstruction, currentStepProgress: routeProgress.currentLegProgress.currentStepProgress)
+                
+                if lanesView.isHidden {
+                    nextBannerView.update(for: routeProgress)
+                }
+                
+                instructionsBannerView.set(visualInstruction)
+                
+                stepProgress.visualInstructionIndex += 1
+                break
+            }
+        }
+        
+        instructionsBannerView.distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
 }
 
