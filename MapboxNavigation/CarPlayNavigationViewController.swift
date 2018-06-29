@@ -6,7 +6,7 @@ import CarPlay
 @available(iOS 12.0, *)
 public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelegate {
     
-    public weak var navigationCarPlayDelegate: NavigationCarPlayDelegate?
+    public weak var carPlayNavigationDelegate: CarPlayNavigationDelegate?
     
     public var drivingSide: DrivingSide = .right
     
@@ -49,7 +49,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         }
         self.routeController = RouteController(along: route, locationManager: locationManager ?? NavigationLocationManager())
         super.init(nibName: nil, bundle: nil)
-        self.carMaptemplate.mapDelegate = self
         self.styleManager = StyleManager(self)
         self.carFeedbackTemplate = createFeedbackUI()
         
@@ -69,6 +68,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         mapView?.attributionButton.isHidden = true
         mapView?.logoView.isHidden = true
         mapView?.delegate = self
+        self.mapView?.mapTemplateDelegate = self
         self.styleManager.styles = self.styles
         
         view.addSubview(mapView!)
@@ -99,7 +99,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     func exitNavigation() {
         dismiss(animated: true, completion: {
             self.carSession.finishTrip()
-            self.navigationCarPlayDelegate?.carPlayNavigationViewControllerDidExit?(self)
+            self.carPlayNavigationDelegate?.carPlaynavigationViewControllerDidDismiss(self, byCanceling: true)
         })
     }
     
@@ -318,40 +318,21 @@ extension CarPlayNavigationViewController: RouteControllerDelegate {
 }
 
 @available(iOS 12.0, *)
-extension CarPlayNavigationViewController: CPMapTemplateDelegate {
-    
-    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
-        mapView?.tracksUserCourse = false
-        overviewButton.isHidden = true
-        recenterButton.isHidden = false
-    }
-    
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithDelta delta: CGPoint, velocity: CGPoint) {
-    }
-    
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        // Not enough velocity to overcome friction
-        guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else { return }
-        
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
-        guard let toCamera = camera(whenPanningTo: offset) else { return }
-        mapView?.setCamera(toCamera, animated: true)
-    }
-    
-    func camera(whenPanningTo endPoint: CGPoint) -> MGLMapCamera? {
-        guard let mapView = mapView else { return nil }
-        let camera = mapView.camera
-        let centerPoint = CGPoint(x: mapView.bounds.midX, y: mapView.bounds.midY)
-        let endCameraPoint = CGPoint(x: centerPoint.x - endPoint.x, y: centerPoint.y - endPoint.y)
-        camera.centerCoordinate = mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
-        
-        return camera
-    }
+@objc(MBNavigationCarPlayDelegate)
+public protocol CarPlayNavigationDelegate {
+    /**
+     Called when the CarPlay navigation view controller is dismissed, such as when the user ends a trip.
+     
+     - parameter carPlayNavigationViewController: The CarPlay navigation view controller that was dismissed.
+     - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
+     */
+    @objc func carPlaynavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
 }
 
 @available(iOS 12.0, *)
-@objc(MBNavigationCarPlayDelegate)
-public protocol NavigationCarPlayDelegate {
-    @objc(carPlayNavigationViewControllerDidExit:)
-    optional func carPlayNavigationViewControllerDidExit(_ carPlayNavigationViewController: CarPlayNavigationViewController)
+extension CarPlayNavigationViewController: CPMapTemplateDelegate {
+    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
+        overviewButton.isHidden = true
+        recenterButton.isHidden = false
+    }
 }
