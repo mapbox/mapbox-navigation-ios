@@ -46,7 +46,7 @@ struct EventDetails {
     var legCount: Int
     var totalStepCount: Int
     
-    init(routeController: RouteController, session: SessionState) {
+    init(routeController: Routable, session: SessionState) {
         created = Date()
         if let start = session.departureTimestamp {
             startTimestamp =  start
@@ -95,10 +95,9 @@ struct EventDetails {
         batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
         batteryLevel = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
         applicationState = UIApplication.shared.applicationState
-        if let manager = routeController.locationManager {
-            locationEngine = type(of: manager)
-            locationManagerDesiredAccuracy = manager.desiredAccuracy
-        }
+        
+        locationEngine = type(of: routeController.locationManager)
+        locationManagerDesiredAccuracy = routeController.locationManager.desiredAccuracy
         
         var totalTimeInPortrait = session.timeSpentInPortrait
         var totalTimeInLandscape = session.timeSpentInLandscape
@@ -197,24 +196,24 @@ struct EventDetails {
 extension MMEEventsManager {
     public static var unrated: Int { return -1 }
     
-    func addDefaultEvents(routeController: RouteController) -> [String: Any] {
+    func addDefaultEvents(routeController: Routable) -> [String: Any] {
         return EventDetails(routeController: routeController, session: routeController.sessionState).eventDictionary
     }
     
-    func navigationDepartEvent(routeController: RouteController) -> [String: Any] {
+    func navigationDepartEvent(routeController: Routable) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationDepart
         return eventDictionary
     }
     
-    func navigationArriveEvent(routeController: RouteController) -> [String: Any] {
+    func navigationArriveEvent(routeController: Routable) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationArrive
         return eventDictionary
     }
     
     //TODO: Change event semantic to `.exit`
-    func navigationCancelEvent(routeController: RouteController, rating potentialRating: Int? = nil, comment: String? = nil) -> [String: Any] {
+    func navigationCancelEvent(routeController: Routable, rating potentialRating: Int? = nil, comment: String? = nil) -> [String: Any] {
         let rating = potentialRating ?? MMEEventsManager.unrated
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationCancel
@@ -231,7 +230,7 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(routeController: RouteController, type: FeedbackType, description: String?) -> [String: Any] {
+    func navigationFeedbackEvent(routeController: Routable, type: FeedbackType, description: String?) -> [String: Any] {
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
         eventDictionary["event"] = MMEEventTypeNavigationFeedback
         
@@ -245,7 +244,7 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationRerouteEvent(routeController: RouteController, eventType: String = MMEEventTypeNavigationReroute) -> [String: Any] {
+    func navigationRerouteEvent(routeController: Routable, eventType: String = MMEEventTypeNavigationReroute) -> [String: Any] {
         let timestamp = Date()
         
         var eventDictionary = self.addDefaultEvents(routeController: routeController)
@@ -263,7 +262,7 @@ extension MMEEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent, routeController: RouteController) -> [String: Any] {
+    func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent, routeController: Routable) -> [String: Any] {
         var eventDictionary = event.eventDictionary
         eventDictionary["feedbackId"] = event.id.uuidString
         eventDictionary["locationsBefore"] = routeController.sessionState.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
