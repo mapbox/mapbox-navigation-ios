@@ -7,7 +7,7 @@ import Mapbox
  The `NavigationViewControllerDelegate` provides methods for configuring the map view shown by a `NavigationViewController` and responding to the cancellation of a navigation session.
  */
 @objc(MBNavigationViewControllerDelegate)
-public protocol NavigationViewControllerDelegate {
+public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -537,6 +537,10 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
             return nil
         }
         return roadName
+    }
+    
+    @objc public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return delegate?.label?(label, willPresent: instruction, as: presented)
     }
 }
 
