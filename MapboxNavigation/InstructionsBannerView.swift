@@ -114,19 +114,12 @@ open class BaseInstructionsBannerView: UIControl {
     public func update(for currentLegProgress: RouteLegProgress) {
         let stepProgress = currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
+        let visualInstructionIndex = stepProgress.visualInstructionIndex
         
-        guard let visualInstructions = stepProgress.remainingVisualInstructions else { return }
+        guard let visualInstructions = stepProgress.remainingVisualInstructions, stepProgress.visualInstructionIndex < visualInstructions.count else { return }
         
-        for visualInstruction in visualInstructions {
-            if stepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || stepProgress.visualInstructionIndex == 0 {
-                
-                set(visualInstruction)
-                
-                stepProgress.visualInstructionIndex += 1
-                break
-            }
-        }
-        
+        let visualInstruction = visualInstructions[visualInstructionIndex]
+        set(visualInstruction)
         distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
 }

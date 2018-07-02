@@ -650,6 +650,7 @@ extension RouteController: CLLocationManagerDelegate {
         }
 
         updateSpokenInstructionProgress(for: location)
+        updateVisualInstructionProgress(for: location)
 
         // Check for faster route given users current location
         guard reroutesProactively else { return }
@@ -973,6 +974,18 @@ extension RouteController: CLLocationManagerDelegate {
 
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
                 return
+            }
+        }
+    }
+    
+    func updateVisualInstructionProgress(for location: CLLocation) {
+        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        guard let visualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
+        
+        for (index, visualInstruction) in visualInstructions.enumerated() {
+            if currentStepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || currentStepProgress.visualInstructionIndex == 0 {
+                currentStepProgress.visualInstructionIndex = index
+                break
             }
         }
     }
