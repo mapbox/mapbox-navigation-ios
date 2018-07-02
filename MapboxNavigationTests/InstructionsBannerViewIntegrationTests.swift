@@ -1,9 +1,7 @@
 import XCTest
-import FBSnapshotTestCase
 import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
-
 
 
 func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {

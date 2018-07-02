@@ -146,6 +146,18 @@ public protocol RouteControllerDelegate: class {
      */
     @objc(routeController:shouldPreventReroutesWhenArrivingAtWaypoint:)
     optional func routeController(_ routeController: RouteController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
+    
+    
+    /**
+     Called when the route controller will disable battery monitoring.
+     
+     Implementing this method will allow developers to change whether battery monitoring is disabled when `RouteController` is deinited.
+     
+     - parameter routeController: The route controller that will change the state of battery monitoring.
+     - returns: A bool indicating whether to disable battery monitoring when the RouteController is deinited.
+     */
+    @objc(routeControllerShouldDisableBatteryMonitoring:)
+    optional func routeControllerShouldDisableBatteryMonitoring(_ routeController: RouteController) -> Bool
 }
 
 /**
@@ -197,12 +209,7 @@ open class RouteController: NSObject {
      
      Will only be enabled if `tunnelSimulationEnabled` is true.
      */
-    public var tunnelIntersectionManager: TunnelIntersectionManager?
-    
-    /**
-     The flag that indicates that the simulated navigation through tunnel(s) is enabled.
-     */
-    public var tunnelSimulationEnabled: Bool = true
+    public var tunnelIntersectionManager: TunnelIntersectionManager = TunnelIntersectionManager()
 
     var didFindFasterRoute = false
 
@@ -288,14 +295,9 @@ open class RouteController: NSObject {
         checkForUpdates()
         checkForLocationUsageDescription()
         
-        setupTunnelIntersectionManager()
+        tunnelIntersectionManager.delegate = self
 
         startEvents(accessToken: route.accessToken)
-    }
-    
-    private func setupTunnelIntersectionManager() {
-        tunnelIntersectionManager = TunnelIntersectionManager()
-        tunnelIntersectionManager?.delegate = self
     }
 
     deinit {
@@ -303,7 +305,15 @@ open class RouteController: NSObject {
         sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
         sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
-        UIDevice.current.isBatteryMonitoringEnabled = false
+        
+        guard let shouldDisable = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) else {
+            UIDevice.current.isBatteryMonitoringEnabled = false
+            return
+        }
+        
+        if shouldDisable {
+            UIDevice.current.isBatteryMonitoringEnabled = false
+        }
     }
 
     func startEvents(accessToken: String?) {
@@ -586,7 +596,7 @@ extension RouteController: CLLocationManagerDelegate {
                 self.rawLocation = lastLocation
                 
                 // Check for a tunnel intersection at the current step we found the bad location update.
-                checkForTunnelIntersection(at: lastLocation, for: manager)
+                tunnelIntersectionManager.checkForTunnelIntersection(at: lastLocation, routeProgress: routeProgress)
                 
                 return
             }
@@ -625,8 +635,9 @@ extension RouteController: CLLocationManagerDelegate {
                 RouteControllerNotificationUserInfoKey.locationKey: self.location!, //guaranteed value
                 RouteControllerNotificationUserInfoKey.rawLocationKey: location //raw
                 ])
+            
             // Check for a tunnel intersection whenever the current route step progresses.
-            checkForTunnelIntersection(at: location, for: manager)
+            tunnelIntersectionManager.checkForTunnelIntersection(at: location, routeProgress: routeProgress)
         }
 
         updateDistanceToIntersection(from: location)
@@ -648,18 +659,7 @@ extension RouteController: CLLocationManagerDelegate {
         guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining > RouteControllerMediumAlertInterval else { return }
         checkForFasterRoute(from: location)
     }
-    
-    func checkForTunnelIntersection(at location: CLLocation, for manager: CLLocationManager) {
-        guard tunnelSimulationEnabled, let tunnelIntersectionManager = tunnelIntersectionManager else { return }
         
-        let tunnelDetected = tunnelIntersectionManager.didDetectTunnel(at: location, for: manager, routeProgress: routeProgress)
-        if tunnelDetected {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willEnableAnimationAt: location)
-        } else {
-            tunnelIntersectionManager.delegate?.tunnelIntersectionManager?(manager, willDisableAnimationAt: location)
-        }
-    }
-    
     func updateIntersectionIndex(for currentStepProgress: RouteStepProgress) {
         guard let intersectionDistances = currentStepProgress.intersectionDistances else { return }
         let upcomingIntersectionIndex = intersectionDistances.index { $0 > currentStepProgress.distanceTraveled } ?? intersectionDistances.endIndex
@@ -1128,11 +1128,11 @@ extension RouteController {
 }
 
 extension RouteController: TunnelIntersectionManagerDelegate {
-    public func tunnelIntersectionManager(_ manager: CLLocationManager, willEnableAnimationAt location: CLLocation) {
-        tunnelIntersectionManager?.enableTunnelAnimation(for: manager, routeController: self, routeProgress: routeProgress)
+    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willEnableAnimationAt location: CLLocation) {
+        tunnelIntersectionManager.enableTunnelAnimation(routeController: self, routeProgress: routeProgress)
     }
     
-    public func tunnelIntersectionManager(_ manager: CLLocationManager, willDisableAnimationAt location: CLLocation) {
-        tunnelIntersectionManager?.suspendTunnelAnimation(for: manager, at: location, routeController: self)
+    public func tunnelIntersectionManager(_ manager: TunnelIntersectionManager, willDisableAnimationAt location: CLLocation) {
+        tunnelIntersectionManager.suspendTunnelAnimation(at: location, routeController: self)
     }
 }
