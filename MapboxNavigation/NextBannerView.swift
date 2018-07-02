@@ -85,18 +85,13 @@ open class NextBannerView: UIView {
         bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
     }
     
-    public func update(for routeProgress: RouteProgress) {
-        let visualInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex
-        guard let visualInstructions = routeProgress.currentLegProgress.currentStep.instructionsDisplayedAlongStep,
-                  visualInstructionIndex < visualInstructions.count else {
+    public func update(for visualInstruction: VisualInstructionBanner, currentStepProgress: RouteStepProgress) {
+        let distanceTraveled = currentStepProgress.distanceTraveled
+        guard let tertiaryInstruction = visualInstruction.tertiaryInstruction,
+                  distanceTraveled <= visualInstruction.distanceAlongStep,
+                  !tertiaryInstruction.containsLaneIndications else {
                     hide()
                     return
-        }
-        
-        let visualInstruction = visualInstructions[visualInstructionIndex]
-        guard let tertiaryInstruction = visualInstruction.tertiaryInstruction else {
-            hide()
-            return
         }
         
         maneuverView.visualInstruction = visualInstruction
