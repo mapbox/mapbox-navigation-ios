@@ -64,7 +64,7 @@ The easiest way to find elements and their class name to style is to use the Deb
 
 1. While running your app, select the Debug View Hierarchy button.
 2. Select the view you wish to style.
-3. On the right side of your screen, seenote the class name.
+3. On the right side of your screen, note the class name.
 4. Apply your styling:
 
 ```swift
