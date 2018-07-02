@@ -52,5 +52,6 @@ public protocol VisualInstructionDelegate: class {
      - parameter presented: the formatted string that is provided by the instruction presenter
      - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
      */
-    @objc optional func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
+    @objc(label:willPresentVisualInstruction:asAttributedString:)
+    optional func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
 }
