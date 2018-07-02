@@ -45,6 +45,8 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         VisualInstructionComponent(type: .text, text: "Ankh-Morpork Highway 1", imageURL: nil, abbreviation: nil, abbreviationPriority: NSNotFound)
     ]
  
+    lazy var typicalInstruction: VisualInstructionBanner = makeVisualInstruction(primaryInstruction: [VisualInstructionComponent(type: .text, text: "Main Street", imageURL: nil, abbreviation: "Main St", abbreviationPriority: 0)], secondaryInstruction: nil)
+    
     private func resetImageCache() {
         let semaphore = DispatchSemaphore(value: 0)
         imageRepository.resetImageCache {
@@ -68,6 +70,16 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         imageRepository.imageDownloader.setOperationType(nil)
 
         super.tearDown()
+    }
+    
+    func testCustomVisualInstructionDelegate() {
+        let view = instructionsView()
+        view.instructionDelegate = TextReversingDelegate()
+        
+        view.set(typicalInstruction)
+        
+        XCTAssert(view.primaryLabel.attributedText?.string == "teertS niaM")
+        
     }
 
     func testDelimiterIsShownWhenShieldsNotLoaded() {
@@ -290,4 +302,14 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssertNotNil(imageRepository.cachedImageForKey(component.cacheKey!))
     }
 
+}
+
+private class TextReversingDelegate: VisualInstructionDelegate {
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        let forwards = Array(presented.string)
+        let reverse = String(forwards.reversed())
+        var range = NSRange(location: 0, length: presented.string.count)
+        let attributes = presented.attributes(at: 0, effectiveRange: &range)
+        return NSAttributedString(string: reverse, attributes: attributes)
+    }
 }
