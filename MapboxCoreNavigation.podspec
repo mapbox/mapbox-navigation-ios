@@ -24,11 +24,7 @@ Pod::Spec.new do |s|
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-<<<<<<< HEAD
-  s.ios.deployment_target = "12.0"
-=======
   s.ios.deployment_target = "9.0"
->>>>>>> master
 
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
