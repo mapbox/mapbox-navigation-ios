@@ -33,7 +33,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                             right: view.safeAreaInsets.right + padding)
     }
     
-    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]?, locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]? = nil, locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         self.carSession = session
         self.carMaptemplate = template
         self.voiceController = MapboxVoiceController()
@@ -51,6 +51,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         super.init(nibName: nil, bundle: nil)
         self.styleManager = StyleManager(self)
         self.carFeedbackTemplate = createFeedbackUI()
+        self.routeController.delegate = self
         
         createMapTemplateUI()
     }
@@ -65,7 +66,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         mapView = NavigationMapView(frame: view.bounds)
         mapView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         mapView?.compassView.isHidden = true
-        mapView?.attributionButton.isHidden = true
         mapView?.logoView.isHidden = true
         mapView?.delegate = self
         self.mapView?.mapTemplateDelegate = self
@@ -99,6 +99,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
     func exitNavigation() {
         dismiss(animated: true, completion: {
             self.carSession.finishTrip()
+            self.carInterfaceController.popTemplate(animated: true)
             self.carPlayNavigationDelegate?.carPlaynavigationViewControllerDidDismiss(self, byCanceling: true)
         })
     }
@@ -132,7 +133,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             guard let strongSelf = self else { return }
             strongSelf.exitNavigation()
         }
-        exitButton.title = "Exit"
+        exitButton.title = "End"
         
         let muteButton = CPBarButton(type: .text) { (button) in
             NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
@@ -178,7 +179,6 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
             self?.routeController.setEndOfRoute(rating: Int(button.titleVariants.first!.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())!, comment: nil)
             self?.exitNavigation()
-            self?.carInterfaceController.popTemplate(animated: true)
         }
         
         var buttons: [CPGridButton] = []
@@ -198,7 +198,7 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let rateAction = CPAlertAction(title: "Rate your trip", style: .default) { (action) in
             self.carInterfaceController.pushTemplate(self.createEndOfRouteFeedbackUI(), animated: true)
         }
-        let alert = CPAlert(titleVariants: ["You have arrived"], message: nil, style: .actionSheet, actions: [rateAction, exitAction])
+        let alert = CPAlert(titleVariants: ["You have arrived"], message: nil, style: .fullScreen, actions: [rateAction, exitAction])
         carInterfaceController.present(alert)
     }
     
@@ -222,9 +222,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
             updateManeuvers()
             mapView?.showWaypoints(routeController.routeProgress.route)
             currentStepIndex = index
+            mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         }
-        
-        mapView?.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         
         let congestionLevel = routeProgress.averageCongestionLevelRemainingOnLeg ?? .unknown
         guard let maneuver = carSession.upcomingManeuvers.first else { return }

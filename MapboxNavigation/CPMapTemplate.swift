@@ -1,0 +1,34 @@
+//
+//  CPMapTemplate.swift
+//  MapboxNavigation
+//
+//  Created by Bobby Sudekum on 7/2/18.
+//  Copyright © 2018 Mapbox. All rights reserved.
+//
+
+import Foundation
+import CarPlay
+import MapboxDirections
+
+@available(iOS 12.0, *)
+extension CPMapTemplate {
+    public func showTripPreviews(_ routes: [Route], textConfiguration: CPTripPreviewTextConfiguration?) {
+        guard let origin = routes.first?.legs.first?.source else { return }
+        guard let destination = routes.last?.legs.last?.destination else { return }
+        
+        let routeChoices: [CPRouteChoice] = routes.map {
+            let summary = $0.description.components(separatedBy: ", ")
+            return CPRouteChoice(summaryVariants: [summary.first ?? ""],
+                                 additionalInformationVariants: [summary.last ?? ""],
+                                 selectionSummaryVariants: [])
+        }
+        
+        let trip = CPTrip(origin: MKMapItem(placemark: MKPlacemark(coordinate: origin.coordinate)),
+                      destination: MKMapItem(placemark: MKPlacemark(coordinate: destination.coordinate, addressDictionary: [
+                        "street": destination.name ?? ""
+                        ])),
+                      routeChoices: routeChoices)
+        
+        self.showTripPreviews([trip], textConfiguration: textConfiguration)
+    }
+}

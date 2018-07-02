@@ -3,6 +3,7 @@ import MapboxCoreNavigation
 import MapboxNavigation
 import MapboxDirections
 import Mapbox
+import CarPlay
 
 let sourceIdentifier = "sourceIdentifier"
 let layerIdentifier = "layerIdentifier"
@@ -49,6 +50,16 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             startButton.isEnabled = (routes?.count ?? 0 > 0)
             guard let routes = routes,
                   let current = routes.first else { mapView?.removeRoutes(); return }
+            
+            if let carViewController = carViewController {
+                carViewController.mapView?.showRoutes(routes)
+                carViewController.mapView?.showWaypoints(current)
+                guard let route = routes.first else { return }
+                mapTemplate?.showTripPreviews(routes, textConfiguration: nil)
+                let line = MGLPolyline(coordinates: route.coordinates!, count: UInt(route.coordinates!.count))
+                carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: carViewController.view.safeAreaInsets, animated: true)
+                carViewController.routes = routes
+            }
 
             mapView?.showRoutes(routes)
             mapView?.showWaypoints(current)
@@ -74,7 +85,19 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     var locationManager = CLLocationManager()
 
     var alertController: UIAlertController!
-
+    
+    var interfaceController: CPInterfaceController? {
+        return (UIApplication.shared.delegate as? AppDelegate)?.interfaceController
+    }
+    
+    var mapTemplate: CPMapTemplate? {
+        return interfaceController?.rootTemplate as? CPMapTemplate
+    }
+    
+    var carViewController: ViewController? {
+        return (UIApplication.shared.delegate as? AppDelegate)?.carWindow?.rootViewController as? ViewController
+    }
+    
     lazy var multipleStopsAction: UIAlertAction = {
         return UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
             self.startMultipleWaypoints()
@@ -116,6 +139,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
         }
+        
+        buildCarPlayUI()
+        mapTemplate?.mapDelegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -167,6 +193,25 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         }
 
         requestRoute()
+    }
+    
+    func buildCarPlayUI() {
+        guard let mapTemplate = mapTemplate else { return }
+        bottomBar.isHidden = true
+        
+        let barbutton = CPBarButton(type: .text) { (button) in
+            if mapTemplate.isPanningInterfaceVisible {
+                button.title = "Pan map"
+                self.mapView?.userTrackingMode = .follow
+                mapTemplate.dismissPanningInterface(animated: true)
+            } else {
+                button.title = "Dismiss"
+                mapTemplate.showPanningInterface(animated: true)
+            }
+        }
+        barbutton.title = "Pan map"
+        
+        mapTemplate.trailingNavigationBarButtons = [barbutton]
     }
 
     // MARK: - IBActions
@@ -439,6 +484,22 @@ extension ViewController: NavigationViewControllerDelegate {
     // If implemented, you are responsible for also dismissing the UI.
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         navigationViewController.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ViewController: CPMapTemplateDelegate {
+    func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
+        guard let routes = routes, let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}) else { return }
+        let route = routes[routeIndex]
+        let session = mapTemplate.startNavigationSession(for: trip)
+        
+        let distance = Measurement(value: route.distance, unit: UnitLength.meters)
+        let estimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: route.expectedTravelTime)
+        mapTemplate.update(estimates, for: trip, with: .default)
+        mapTemplate.hideTripPreviews()
+        
+        let carPlayViewController = CarPlayNavigationViewController(for: route, session: session, template: mapTemplate, interfaceController: interfaceController!)
+        present(carPlayViewController, animated: true, completion: nil)
     }
 }
 

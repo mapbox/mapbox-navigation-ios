@@ -1,9 +1,31 @@
 import UIKit
 import Mapbox
 import UserNotifications
+import CarPlay
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
+    
+    var carWindow: CPMapContentWindow?
+    var interfaceController: CPInterfaceController?
+    
+    @available(iOS 12.0, *)
+    func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPMapContentWindow) {
+        let mapTemplate = CPMapTemplate()
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
+
+        self.interfaceController = interfaceController
+        self.carWindow = window
+        
+        interfaceController.setRootTemplate(mapTemplate, animated: false)
+        window.rootViewController = viewController
+    }
+    
+    @available(iOS 12.0, *)
+    func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPMapContentWindow) {
+        print("Disconnected")
+    }
+    
 
     var window: UIWindow?
 
