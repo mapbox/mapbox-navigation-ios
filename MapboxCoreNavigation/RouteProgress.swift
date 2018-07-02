@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 import Turf
+import CarPlay
 
 /**
  `RouteProgress` stores the user’s progress along a route.
@@ -141,6 +142,42 @@ open class RouteProgress: NSObject {
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
     }
+    
+    public var averageCongestionLevelRemainingOnLeg: CongestionLevel? {
+        let coordinatesLeftOnStepCount = Int(floor((Double(currentLegProgress.currentStepProgress.step.coordinateCount)) * currentLegProgress.currentStepProgress.fractionTraveled))
+        
+        guard coordinatesLeftOnStepCount >= 0 else { return .unknown }
+        
+        guard legIndex < congestionTravelTimesSegmentsByStep.count,
+            currentLegProgress.stepIndex < congestionTravelTimesSegmentsByStep[legIndex].count else { return .unknown }
+        
+        let congestionTimesForStep = congestionTravelTimesSegmentsByStep[legIndex][currentLegProgress.stepIndex]
+        guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return .unknown }
+        
+        let remainingCongestionTimesForStep = congestionTimesForStep.suffix(from: coordinatesLeftOnStepCount)
+        let remainingCongestionTimesForRoute = congestionTimesPerStep[legIndex].suffix(from: currentLegProgress.stepIndex + 1)
+        
+        var remainingStepCongestionTotals: [CongestionLevel: TimeInterval] = [:]
+        for stepValues in remainingCongestionTimesForRoute {
+            for (key, value) in stepValues {
+                remainingStepCongestionTotals[key] = (remainingStepCongestionTotals[key] ?? 0) + value
+            }
+        }
+        
+        for (segmentCongestion, segmentTime) in remainingCongestionTimesForStep {
+            remainingStepCongestionTotals[segmentCongestion] = (remainingStepCongestionTotals[segmentCongestion] ?? 0) + segmentTime
+        }
+        
+        if durationRemaining < 60 {
+            return .unknown
+        } else {
+            if let max = remainingStepCongestionTotals.max(by: { a, b in a.value < b.value }) {
+                return max.key
+            } else {
+                return .unknown
+            }
+        }
+    }
 }
 
 /**
@@ -182,6 +219,13 @@ open class RouteLegProgress: NSObject {
      */
     @objc public var durationRemaining: TimeInterval {
         return remainingSteps.map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
+    }
+    
+    /**
+     Distance remaining on the current leg.
+     */
+    @objc public var distanceRemaining: CLLocationDistance {
+        return remainingSteps.map { $0.distance }.reduce(0, +) + currentStepProgress.distanceRemaining
     }
 
     /**
@@ -322,6 +366,12 @@ open class RouteLegProgress: NSObject {
         
         return currentClosest
     }
+    
+    @available(iOS 12.0, *)
+    @objc public var travelEstimates: CPTravelEstimates {
+        let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
+        return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)
+    }
 }
 
 /**
@@ -365,6 +415,17 @@ open class RouteStepProgress: NSObject {
      */
     @objc public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
+    }
+    
+    /**
+     Specific to CarPlay.
+     
+     Returns the `CPTravelEstimates` for the current step progress.
+    */
+    @available(iOS 12.0, *)
+    @objc public var travelEstimates: CPTravelEstimates {
+        let distRemaining = Measurement(value: distanceRemaining, unit: UnitLength.meters)
+        return CPTravelEstimates(distanceRemaining: distRemaining, timeRemaining: durationRemaining)
     }
 
     /**

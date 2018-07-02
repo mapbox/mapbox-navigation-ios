@@ -183,8 +183,8 @@ class InstructionPresenter {
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
-        let attachment = ShieldAttachment()
-        attachment.font = font
+        let attachment = NSTextAttachment()
+//        attachment.font = font
         attachment.image = shieldImage
         return NSAttributedString(attachment: attachment)
     }
@@ -194,7 +194,7 @@ class InstructionPresenter {
         let criticalProperties: [AnyHashable?] = [dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
         let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
 
-        let attachment = GenericShieldAttachment()
+        let attachment = NSTextAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
         if let image = imageRepository.cachedImageForKey(key) {
@@ -206,7 +206,7 @@ class InstructionPresenter {
             attachment.image = image
         }
         
-        attachment.font = dataSource.font
+//        attachment.font = dataSource.font
         
         return NSAttributedString(attachment: attachment)
     }
@@ -216,7 +216,7 @@ class InstructionPresenter {
         let proxy = ExitView.appearance()
         let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, proxy.backgroundColor, proxy.foregroundColor, proxy.borderWidth, proxy.cornerRadius]
         let additionalKey = String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
-        let attachment = ExitAttachment()
+        let attachment = NSTextAttachment()
         guard let cacheKey = component.cacheKey else { return nil }
         
         if let image = imageRepository.cachedImageForKey(cacheKey) {
@@ -228,7 +228,7 @@ class InstructionPresenter {
             attachment.image = image
         }
         
-        attachment.font = dataSource.font
+//        attachment.font = dataSource.font
         
         return NSAttributedString(attachment: attachment)
     }
