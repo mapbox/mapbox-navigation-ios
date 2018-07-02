@@ -274,7 +274,7 @@ class RouteMapViewController: UIViewController {
         updateETA()
         currentStepIndexMapped = 0
         
-        navigationView.update(for: routeController.routeProgress)
+        instructionsBannerView.update(for: routeController.routeProgress.currentLegProgress, navigationView: navigationView)
         
         mapView.addArrow(route: routeController.routeProgress.route, legIndex: routeController.routeProgress.legIndex, stepIndex: routeController.routeProgress.currentLegProgress.stepIndex + 1)
         mapView.showRoutes([routeController.routeProgress.route], legIndex: routeController.routeProgress.legIndex)
@@ -392,7 +392,7 @@ class RouteMapViewController: UIViewController {
         resetETATimer()
         updateETA()
         
-        navigationView.update(for: routeProgress)
+        instructionsBannerView.update(for: routeProgress.currentLegProgress, navigationView: navigationView)
         
         if currentLegIndexMapped != routeProgress.legIndex {
             mapView.showWaypoints(routeProgress.route, legIndex: routeProgress.legIndex)
