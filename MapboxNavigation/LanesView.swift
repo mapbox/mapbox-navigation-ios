@@ -70,9 +70,12 @@ open class LanesView: UIView {
         clearLaneViews()
         
         let distanceTraveled = currentStepProgress.distanceTraveled
-        guard distanceTraveled <= visualInstruction.distanceAlongStep else {
-            hide()
-            return
+        guard let tertiaryInstruction = visualInstruction.tertiaryInstruction,
+                  distanceTraveled <= visualInstruction.distanceAlongStep,
+                  tertiaryInstruction.containsLaneIndications
+                else {
+                    hide()
+                    return
         }
         
         let laneIndications: [LaneIndicationComponent]? = visualInstruction.tertiaryInstruction?.components.compactMap({ component in
