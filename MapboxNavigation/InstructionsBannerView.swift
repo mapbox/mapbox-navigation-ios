@@ -109,9 +109,11 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     /**
-     Updates the instructions banner for a given `RouteProgress`.
+     Updates the instructions banner for a given `RouteProgress` and an optional `NavigationView`.
+     
+     - Note: Provide a navigation view to set the lanes and next banner views for tertiary visual instructions.
      */
-    public func update(for currentLegProgress: RouteLegProgress) {
+    public func update(for currentLegProgress: RouteLegProgress,  navigationView: NavigationView? = nil) {
         let stepProgress = currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
@@ -119,6 +121,9 @@ open class BaseInstructionsBannerView: UIControl {
         
         for visualInstruction in visualInstructions {
             if stepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || stepProgress.visualInstructionIndex == 0 {
+                
+                navigationView?.lanesView.update(for: visualInstruction, currentStepProgress: stepProgress)
+                navigationView?.nextBannerView.update(for: visualInstruction, currentStepProgress: stepProgress)
                 
                 set(visualInstruction)
                 
