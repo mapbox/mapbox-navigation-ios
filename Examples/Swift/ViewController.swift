@@ -99,12 +99,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         
         typealias ActionHandler = (UIAlertAction) -> Void
         
-        var basic: ActionHandler = {_ in self.startBasicNavigation() }
-        var day: ActionHandler = {_ in self.startNavigation(styles: [DayStyle()]) }
-        var night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
-        var custom: ActionHandler = {_ in self.startCustomNavigation() }
-        var customInstruction: ActionHandler = {_ in self.startCustomInstructionNavigation() }
-        var styled: ActionHandler = {_ in self.startStyledNavigation() }
+        let basic: ActionHandler = {_ in self.startBasicNavigation() }
+        let day: ActionHandler = {_ in self.startNavigation(styles: [DayStyle()]) }
+        let night: ActionHandler = {_ in self.startNavigation(styles: [NightStyle()]) }
+        let custom: ActionHandler = {_ in self.startCustomNavigation() }
+        let customInstruction: ActionHandler = {_ in self.startCustomInstructionNavigation() }
+        let styled: ActionHandler = {_ in self.startStyledNavigation() }
         
         let actionPayloads: [(String, UIAlertActionStyle, ActionHandler?)] = [("Default UI", .default, basic),
                                                 ("DayStyle UI", .default, day),
