@@ -5,27 +5,6 @@ import CarPlay
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
-    
-    var carWindow: CPMapContentWindow?
-    var interfaceController: CPInterfaceController?
-    
-    @available(iOS 12.0, *)
-    func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPMapContentWindow) {
-        let mapTemplate = CPMapTemplate()
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
-
-        self.interfaceController = interfaceController
-        self.carWindow = window
-        
-        interfaceController.setRootTemplate(mapTemplate, animated: false)
-        window.rootViewController = viewController
-    }
-    
-    @available(iOS 12.0, *)
-    func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPMapContentWindow) {
-        print("Disconnected")
-    }
-    
 
     var window: UIWindow?
 
@@ -56,5 +35,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CPApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
+    
+    var _carWindow: UIWindow?
+    var _interfaceController: NSObject?
+    
+    @available(iOS 12.0, *)
+    var interfaceController: CPInterfaceController? {
+        return _interfaceController as? CPInterfaceController
+    }
+    
+    @available(iOS 12.0, *)
+    var carWindow: CPMapContentWindow? {
+        return _carWindow as? CPMapContentWindow
+    }
+    
+    @available(iOS 12.0, *)
+    func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPMapContentWindow) {
+        let mapTemplate = CPMapTemplate()
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainMap") as! ViewController
+        
+        self._interfaceController = interfaceController
+        self._carWindow = window
+        
+        interfaceController.setRootTemplate(mapTemplate, animated: false)
+        window.rootViewController = viewController
+    }
+    
+    @available(iOS 12.0, *)
+    func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPMapContentWindow) {
+        print("Disconnected")
+    }
 }

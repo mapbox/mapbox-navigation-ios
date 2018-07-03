@@ -5,8 +5,6 @@ import MapboxDirections
 import Mapbox
 import CarPlay
 
-let sourceIdentifier = "sourceIdentifier"
-let layerIdentifier = "layerIdentifier"
 private typealias RouteRequestSuccess = (([Route]) -> Void)
 private typealias RouteRequestFailure = ((NSError) -> Void)
 
@@ -50,8 +48,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             startButton.isEnabled = (routes?.count ?? 0 > 0)
             guard let routes = routes,
                   let current = routes.first else { mapView?.removeRoutes(); return }
+
+            mapView?.showRoutes(routes)
+            mapView?.showWaypoints(current)
             
-            if let carViewController = carViewController {
+            if #available(iOS 12.0, *) {
+                guard let carViewController = carViewController else { return }
                 carViewController.mapView?.showRoutes(routes)
                 carViewController.mapView?.showWaypoints(current)
                 guard let route = routes.first else { return }
@@ -60,9 +62,6 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
                 carViewController.mapView?.setVisibleCoordinateBounds(line.overlayBounds, edgePadding: carViewController.view.safeAreaInsets, animated: true)
                 carViewController.routes = routes
             }
-
-            mapView?.showRoutes(routes)
-            mapView?.showWaypoints(current)
         }
     }
 
@@ -86,23 +85,28 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
 
     var alertController: UIAlertController!
     
-    var interfaceController: CPInterfaceController? {
-        return (UIApplication.shared.delegate as? AppDelegate)?.interfaceController
-    }
-    
-    var mapTemplate: CPMapTemplate? {
-        return interfaceController?.rootTemplate as? CPMapTemplate
-    }
-    
-    var carViewController: ViewController? {
-        return (UIApplication.shared.delegate as? AppDelegate)?.carWindow?.rootViewController as? ViewController
-    }
-    
     lazy var multipleStopsAction: UIAlertAction = {
         return UIAlertAction(title: "Multiple Stops", style: .default, handler: { (action) in
             self.startMultipleWaypoints()
         })
     }()
+    
+    // MARK: - CarPlay Properties
+    
+    @available(iOS 12.0, *)
+    var interfaceController: CPInterfaceController? {
+        return (UIApplication.shared.delegate as? AppDelegate)?.interfaceController
+    }
+    
+    @available(iOS 12.0, *)
+    var mapTemplate: CPMapTemplate? {
+        return interfaceController?.rootTemplate as? CPMapTemplate
+    }
+    
+    @available(iOS 12.0, *)
+    var carViewController: ViewController? {
+        return (UIApplication.shared.delegate as? AppDelegate)?.carWindow?.rootViewController as? ViewController
+    }
 
     // MARK: - Lifecycle Methods
 
@@ -140,8 +144,10 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
             popoverController.sourceView = self.startButton
         }
         
-        buildCarPlayUI()
-        mapTemplate?.mapDelegate = self
+        if #available(iOS 12.0, *) {
+            buildCarPlayUI()
+            mapTemplate?.mapDelegate = self
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -195,6 +201,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         requestRoute()
     }
     
+    @available(iOS 12.0, *)
     func buildCarPlayUI() {
         guard let mapTemplate = mapTemplate else { return }
         bottomBar.isHidden = true
@@ -487,6 +494,8 @@ extension ViewController: NavigationViewControllerDelegate {
     }
 }
 
+// MARK: CPMapTemplateDelegate
+@available(iOS 12.0, *)
 extension ViewController: CPMapTemplateDelegate {
     func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         guard let routes = routes, let routeIndex = trip.routeChoices.lastIndex(where: {$0 == routeChoice}) else { return }
