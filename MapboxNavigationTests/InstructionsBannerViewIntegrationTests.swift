@@ -81,6 +81,17 @@ class InstructionsBannerViewIntegrationTests: XCTestCase {
         XCTAssert(view.primaryLabel.attributedText?.string == "teertS niaM")
         
     }
+    
+    func testCustomDelegateReturningNilTriggersDefaultBehavior() {
+        let view = instructionsView()
+        view.instructionDelegate = DefaultBehaviorDelegate()
+        
+        view.set(typicalInstruction)
+        
+        XCTAssert(view.primaryLabel.attributedText?.string == "Main Street")
+        
+    }
+    
 
     func testDelimiterIsShownWhenShieldsNotLoaded() {
         let view = instructionsView()
@@ -311,5 +322,11 @@ private class TextReversingDelegate: VisualInstructionDelegate {
         var range = NSRange(location: 0, length: presented.string.count)
         let attributes = presented.attributes(at: 0, effectiveRange: &range)
         return NSAttributedString(string: reverse, attributes: attributes)
+    }
+}
+
+private class DefaultBehaviorDelegate: VisualInstructionDelegate {
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return nil
     }
 }
