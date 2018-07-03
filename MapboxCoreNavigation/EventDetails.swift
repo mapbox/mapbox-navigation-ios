@@ -5,54 +5,51 @@ import UIKit
 import AVFoundation
 
 struct EventDetails {
-    var originalRequestIdentifier: String?
-    var requestIdentifier: String?
-    var coordinate: CLLocationCoordinate2D?
-    var originalGeometry: Polyline?
-    var originalDistance: CLLocationDistance?
-    var originalEstimatedDuration: TimeInterval?
-    var originalStepCount: Int?
-    var geometry: Polyline?
-    var distance: CLLocationDistance?
-    var estimatedDuration: TimeInterval?
-    var created: Date
-    var startTimestamp: Date?
-    var sdkIdentifier: String
-    var sdkVersion: String
-    var profile: String
-    var simulation: Bool
-    var sessionIdentifier: String
-    var distanceCompleted: CLLocationDistance
-    var distanceRemaining: TimeInterval
-    var durationRemaining: TimeInterval
-    var rerouteCount: Int
-    var volumeLevel: Int
-    var audioType: String
-    var screenBrightness: Int
-    var batteryPluggedIn: Bool
-    var batteryLevel: Int
-    var applicationState: UIApplicationState
-    var userAbsoluteDistanceToDestination: CLLocationDistance?
-    var locationEngine: CLLocationManager.Type?
-    var percentTimeInPortrait: Int
-    var percentTimeInForeground: Int
-    var locationManagerDesiredAccuracy: CLLocationAccuracy?
     
-    var stepIndex: Int
-    var stepCount: Int
-    var legIndex: Int
-    var legCount: Int
-    var totalStepCount: Int
+    let originalRequestIdentifier: String?
+    let requestIdentifier: String?
+    let coordinate: CLLocationCoordinate2D?
+    let originalGeometry: Polyline?
+    let originalDistance: CLLocationDistance?
+    let originalEstimatedDuration: TimeInterval?
+    let originalStepCount: Int?
+    let geometry: Polyline?
+    let distance: CLLocationDistance?
+    let estimatedDuration: TimeInterval?
+    let created: Date = Date()
+    let startTimestamp: Date?
+    let sdkIdentifier: String
+    let sdkVersion: String = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
+    let profile: String
+    let simulation: Bool
+    let sessionIdentifier: String
+    let distanceCompleted: CLLocationDistance
+    let distanceRemaining: TimeInterval
+    let durationRemaining: TimeInterval
+    let rerouteCount: Int
+    let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
+    let audioType: String = AVAudioSession.sharedInstance().audioType
+    let screenBrightness: Int = Int(UIScreen.main.brightness * 100)
+    let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
+    let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
+    let applicationState: UIApplicationState = UIApplication.shared.applicationState
+    let userAbsoluteDistanceToDestination: CLLocationDistance?
+    let locationEngine: CLLocationManager.Type?
+    let percentTimeInPortrait: Int
+    let percentTimeInForeground: Int
+    let locationManagerDesiredAccuracy: CLLocationAccuracy?
+    
+    let stepIndex: Int
+    let stepCount: Int
+    let legIndex: Int
+    let legCount: Int
+    let totalStepCount: Int
     
     init(routeController: RouteController, session: SessionState) {
-        created = Date()
-        if let start = session.departureTimestamp {
-            startTimestamp =  start
-        }
         
+        
+        startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = routeController.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        sdkVersion = String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
-        
         profile = routeController.routeProgress.route.routeOptions.profileIdentifier.rawValue
         simulation = routeController.locationManager is ReplayLocationManager || routeController.locationManager is SimulatedLocationManager ? true : false
         
@@ -60,12 +57,13 @@ struct EventDetails {
         originalRequestIdentifier = session.originalRoute.routeIdentifier
         requestIdentifier = routeController.routeProgress.route.routeIdentifier
         
-        if let location = routeController.locationManager.location {
-            coordinate = location.coordinate
-            
-            if let coordinates = routeController.routeProgress.route.coordinates, let lastCoord = coordinates.last {
-                userAbsoluteDistanceToDestination = location.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude))
-            }
+        let location = routeController.locationManager.location
+        coordinate = location?.coordinate ?? nil
+        
+        if let coordinates = routeController.routeProgress.route.coordinates, let lastCoord = coordinates.last {
+            userAbsoluteDistanceToDestination = location?.distance(from: CLLocation(latitude: lastCoord.latitude, longitude: lastCoord.longitude)) ?? nil
+        } else {
+            userAbsoluteDistanceToDestination = nil
         }
         
         if let geometry = session.originalRoute.coordinates {
@@ -73,11 +71,21 @@ struct EventDetails {
             originalDistance = round(session.originalRoute.distance)
             originalEstimatedDuration = round(session.originalRoute.expectedTravelTime)
             originalStepCount = session.originalRoute.legs.map({$0.steps.count}).reduce(0, +)
+        } else {
+            originalGeometry = nil
+            originalDistance = nil
+            originalEstimatedDuration = nil
+            originalStepCount = nil
         }
+        
         if let geometry = session.currentRoute.coordinates {
             self.geometry = Polyline(coordinates: geometry)
             distance = round(session.currentRoute.distance)
             estimatedDuration = round(session.currentRoute.expectedTravelTime)
+        } else {
+            self.geometry = nil
+            distance = nil
+            estimatedDuration = nil
         }
         
         distanceCompleted = round(session.totalDistanceCompleted + routeController.routeProgress.distanceTraveled)
@@ -86,16 +94,13 @@ struct EventDetails {
         
         rerouteCount = session.numberOfReroutes
         
-        volumeLevel = Int(AVAudioSession.sharedInstance().outputVolume * 100)
-        audioType = AVAudioSession.sharedInstance().audioType
-        screenBrightness = Int(UIScreen.main.brightness * 100)
         
-        batteryPluggedIn = UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full
-        batteryLevel = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
-        applicationState = UIApplication.shared.applicationState
         if let manager = routeController.locationManager {
             locationEngine = type(of: manager)
             locationManagerDesiredAccuracy = manager.desiredAccuracy
+        } else {
+            locationEngine = nil
+            locationManagerDesiredAccuracy = nil
         }
         
         var totalTimeInPortrait = session.timeSpentInPortrait
