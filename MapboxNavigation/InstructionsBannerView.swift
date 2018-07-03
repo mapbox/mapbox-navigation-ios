@@ -37,6 +37,8 @@ open class BaseInstructionsBannerView: UIControl {
     var centerYConstraints = [NSLayoutConstraint]()
     var baselineConstraints = [NSLayoutConstraint]()
     
+    private var currentStepIndex: Int = -1
+    
     let distanceFormatter = DistanceFormatter(approximate: true)
     
     var distance: CLLocationDistance? {
@@ -115,9 +117,11 @@ open class BaseInstructionsBannerView: UIControl {
         let stepProgress = currentLegProgress.currentStepProgress
         let distanceRemaining = stepProgress.distanceRemaining
         
-        guard let visualInstruction = currentLegProgress.currentStepProgress.currentVisualInstruction else { return }
-
+        guard let visualInstruction = currentLegProgress.currentStepProgress.currentVisualInstruction,
+                  currentStepIndex != currentLegProgress.stepIndex else { return }
+        
         set(visualInstruction)
         distance = distanceRemaining > 5 ? distanceRemaining : 0
+        currentStepIndex = currentLegProgress.stepIndex
     }
 }
