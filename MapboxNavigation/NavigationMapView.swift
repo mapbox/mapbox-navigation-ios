@@ -1230,9 +1230,9 @@ extension NavigationMapView: CPMapTemplateDelegate {
         mapTemplateDelegate?.mapTemplateDidBeginPanGesture?(mapTemplate)
     }
     
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithDelta delta: CGPoint, velocity: CGPoint) {
-        mapTemplateDelegate?.mapTemplate?(mapTemplate, didUpdatePanGestureWithDelta: delta, velocity: velocity)
-    }
+//    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithDelta delta: CGPoint, velocity: CGPoint) {
+//        mapTemplateDelegate?.mapTemplate?(mapTemplate, didUpdatePanGestureWithDelta: delta, velocity: velocity)
+//    }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
         mapTemplateDelegate?.mapTemplate?(mapTemplate, didEndPanGestureWithVelocity: velocity)

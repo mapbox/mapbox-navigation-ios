@@ -29,6 +29,9 @@ extension CPMapTemplate {
                         ])),
                       routeChoices: routeChoices)
         
-        self.showTripPreviews([trip], textConfiguration: textConfiguration)
+        let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: "Go", additionalRoutesButtonTitle: "Addition Routes", overviewButtonTitle: "Overview")
+        
+        // This function crashes without the optional `textConfiguration` provided.
+        showTripPreviews([trip], textConfiguration: textConfiguration ?? defaultPreviewText)
     }
 }

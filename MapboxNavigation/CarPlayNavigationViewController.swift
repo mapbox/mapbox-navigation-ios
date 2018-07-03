@@ -33,7 +33,13 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
                             right: view.safeAreaInsets.right + padding)
     }
     
-    public init(for route: Route, session: CPNavigationSession, template: CPMapTemplate, interfaceController: CPInterfaceController, styles: [Style]? = nil, locationManager: NavigationLocationManager? = NavigationLocationManager()) {
+    public init(for route: Route,
+                directions: Directions = Directions.shared,
+                styles: [Style]? = [DayStyle(), NightStyle()],
+                session: CPNavigationSession,
+                template: CPMapTemplate,
+                interfaceController: CPInterfaceController,
+                locationManager: NavigationLocationManager? = NavigationLocationManager()) {
         self.carSession = session
         self.carMaptemplate = template
         self.voiceController = MapboxVoiceController()
@@ -198,8 +204,8 @@ public class CarPlayNavigationViewController: UIViewController, MGLMapViewDelega
         let rateAction = CPAlertAction(title: "Rate your trip", style: .default) { (action) in
             self.carInterfaceController.pushTemplate(self.createEndOfRouteFeedbackUI(), animated: true)
         }
-        let alert = CPAlert(titleVariants: ["You have arrived"], message: nil, style: .fullScreen, actions: [rateAction, exitAction])
-        carInterfaceController.present(alert)
+        let alert = CPActionSheetTemplate(title: "You have arrived", message: "What would you like to do?", actions: [rateAction, exitAction])
+        carInterfaceController.presentTemplate(alert, animated: true)
     }
     
     public func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
