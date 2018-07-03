@@ -93,19 +93,23 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     // MARK: - CarPlay Properties
     
+    var appDelegate: AppDelegate? {
+        return UIApplication.shared.delegate as? AppDelegate
+    }
+    
+    @available(iOS 12.0, *)
+    var carViewController: ViewController? {
+        return appDelegate?.carWindow?.rootViewController as? ViewController
+    }
+    
     @available(iOS 12.0, *)
     var interfaceController: CPInterfaceController? {
-        return (UIApplication.shared.delegate as? AppDelegate)?.interfaceController
+        return appDelegate?.interfaceController
     }
     
     @available(iOS 12.0, *)
     var mapTemplate: CPMapTemplate? {
         return interfaceController?.rootTemplate as? CPMapTemplate
-    }
-    
-    @available(iOS 12.0, *)
-    var carViewController: ViewController? {
-        return (UIApplication.shared.delegate as? AppDelegate)?.carWindow?.rootViewController as? ViewController
     }
 
     // MARK: - Lifecycle Methods
