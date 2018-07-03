@@ -200,11 +200,6 @@ open class RouteController: NSObject {
     @objc public var reroutesProactively = false
 
     /**
-     When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
-     */
-    @objc public var delaysEventFlushing = true
-    
-    /**
      A `TunnelIntersectionManager` used for animating the use user puck when and if a user enters a tunnel.
      
      Will only be enabled if `tunnelSimulationEnabled` is true.
@@ -219,14 +214,14 @@ open class RouteController: NSObject {
     @objc public var routeProgress: RouteProgress {
         willSet {
             // Save any progress completed up until now
-            sessionState.totalDistanceCompleted += routeProgress.distanceTraveled
+            eventsManager.sessionState.totalDistanceCompleted += routeProgress.distanceTraveled
         }
         didSet {
             // if the user has already arrived and a new route has been set, restart the navigation session
-            if sessionState.arrivalTimestamp != nil {
-                resetSession()
+            if eventsManager.sessionState.arrivalTimestamp != nil {
+                eventsManager.resetSession()
             } else {
-                sessionState.currentRoute = routeProgress.route
+                eventsManager.sessionState.currentRoute = routeProgress.route
             }
 
             var userInfo = [RouteControllerNotificationUserInfoKey: Any]()
@@ -248,11 +243,13 @@ open class RouteController: NSObject {
     var lastLocationDate: Date?
 
     /// :nodoc: This is used internally when the navigation UI is being used
-    public var usesDefaultUserInterface = false
-
-    var eventsManager: MMEEventsManager
-    var sessionState: SessionState
-    var outstandingFeedbackEvents = [CoreFeedbackEvent]()
+    public var usesDefaultUserInterface = false {
+        didSet {
+            eventsManager.usesDefaultUserInterface = usesDefaultUserInterface
+        }
+    }
+    
+    var eventsManager: EventsManager
 
     var hasFoundOneQualifiedLocation = false
 
@@ -261,8 +258,8 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: Waypoint? {
         didSet {
             if oldValue != previousArrivalWaypoint {
-                sessionState.arrivalTimestamp = nil
-                sessionState.departureTimestamp = nil
+                eventsManager.sessionState.arrivalTimestamp = nil
+                eventsManager.sessionState.departureTimestamp = nil
             }
         }
     }
@@ -277,8 +274,7 @@ open class RouteController: NSObject {
      - parameter locationManager: The associated location manager.
      */
     @objc(initWithRoute:directions:locationManager:eventsManager:)
-    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: MMEEventsManager = MMEEventsManager.shared()) {
-        self.sessionState = SessionState(currentRoute: route, originalRoute: route)
+    public init(along route: Route, directions: Directions = Directions.shared, locationManager: NavigationLocationManager = NavigationLocationManager(), eventsManager: EventsManager = EventsManager()) {
         self.directions = directions
         self.routeProgress = RouteProgress(route: route)
         self.locationManager = locationManager
@@ -287,23 +283,25 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
+        eventsManager.routeController = self
+        eventsManager.resetSession()
 
         self.locationManager.delegate = self
         resumeNotifications()
-        resetSession()
+        eventsManager.resetSession()
 
         checkForUpdates()
         checkForLocationUsageDescription()
         
         tunnelIntersectionManager.delegate = self
 
-        startEvents(accessToken: route.accessToken)
+        eventsManager.startEvents(accessToken: route.accessToken)
     }
 
     deinit {
+        eventsManager.sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
         suspendLocationUpdates()
-        sendCancelEvent(rating: endOfRouteStarRating, comment: endOfRouteComment)
-        sendOutstandingFeedbackEvents(forceAll: true)
+        eventsManager.sendOutstandingFeedbackEvents(forceAll: true)
         suspendNotifications()
         
         guard let shouldDisable = delegate?.routeControllerShouldDisableBatteryMonitoring?(self) else {
@@ -313,32 +311,6 @@ open class RouteController: NSObject {
         
         if shouldDisable {
             UIDevice.current.isBatteryMonitoringEnabled = false
-        }
-    }
-
-    func startEvents(accessToken: String?) {
-        let eventLoggingEnabled = UserDefaults.standard.bool(forKey: NavigationMetricsDebugLoggingEnabled)
-
-        var mapboxAccessToken: String? = nil
-
-        if let accessToken = accessToken {
-            mapboxAccessToken = accessToken
-        } else if let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
-            let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-            let token = dict["MGLMapboxAccessToken"] as? String {
-            mapboxAccessToken = token
-        }
-
-        if let mapboxAccessToken = mapboxAccessToken {
-            eventsManager.isDebugLoggingEnabled = eventLoggingEnabled
-            eventsManager.isMetricsEnabledInSimulator = true
-            eventsManager.isMetricsEnabledForInUsePermissions = true
-            let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-            eventsManager.initialize(withAccessToken: mapboxAccessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
-            eventsManager.disableLocationMetrics()
-            eventsManager.sendTurnstileEvent()
-        } else {
-            assert(false, "`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `RouteController` must have the `accessToken` property set.")
         }
     }
 
@@ -357,25 +329,25 @@ open class RouteController: NSObject {
 
     @objc func didChangeOrientation() {
         if UIDevice.current.orientation.isPortrait {
-            sessionState.timeSpentInLandscape += abs(sessionState.lastTimeInPortrait.timeIntervalSinceNow)
+            eventsManager.sessionState.timeSpentInLandscape += abs(eventsManager.sessionState.lastTimeInPortrait.timeIntervalSinceNow)
 
-            sessionState.lastTimeInPortrait = Date()
+            eventsManager.sessionState.lastTimeInPortrait = Date()
         } else if UIDevice.current.orientation.isLandscape {
-            sessionState.timeSpentInPortrait += abs(sessionState.lastTimeInLandscape.timeIntervalSinceNow)
+            eventsManager.sessionState.timeSpentInPortrait += abs(eventsManager.sessionState.lastTimeInLandscape.timeIntervalSinceNow)
 
-            sessionState.lastTimeInLandscape = Date()
+            eventsManager.sessionState.lastTimeInLandscape = Date()
         }
     }
 
     @objc func didChangeApplicationState() {
         if UIApplication.shared.applicationState == .active {
-            sessionState.timeSpentInForeground += abs(sessionState.lastTimeInBackground.timeIntervalSinceNow)
+            eventsManager.sessionState.timeSpentInForeground += abs(eventsManager.sessionState.lastTimeInBackground.timeIntervalSinceNow)
 
-            sessionState.lastTimeInForeground = Date()
+            eventsManager.sessionState.lastTimeInForeground = Date()
         } else if UIApplication.shared.applicationState == .background {
-            sessionState.timeSpentInBackground += abs(sessionState.lastTimeInForeground.timeIntervalSinceNow)
+            eventsManager.sessionState.timeSpentInBackground += abs(eventsManager.sessionState.lastTimeInForeground.timeIntervalSinceNow)
 
-            sessionState.lastTimeInBackground = Date()
+            eventsManager.sessionState.lastTimeInBackground = Date()
         }
     }
 
@@ -473,7 +445,7 @@ open class RouteController: NSObject {
      You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
     @objc public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID {
-        return enqueueFeedbackEvent(type: type, description: description)
+        return eventsManager.enqueueFeedbackEvent(type: type, description: description)
     }
 
     /**
@@ -482,7 +454,7 @@ open class RouteController: NSObject {
      Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
      */
     @objc public func updateFeedback(uuid: UUID, type: FeedbackType, source: FeedbackSource, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id == uuid}) as? FeedbackEvent {
+        if let lastFeedback = eventsManager.outstandingFeedbackEvents.first(where: { $0.id == uuid}) as? FeedbackEvent {
             lastFeedback.update(type: type, source: source, description: description)
         }
     }
@@ -491,8 +463,8 @@ open class RouteController: NSObject {
      Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
      */
     @objc public func cancelFeedback(uuid: UUID) {
-        if let index = outstandingFeedbackEvents.index(where: {$0.id == uuid}) {
-            outstandingFeedbackEvents.remove(at: index)
+        if let index = eventsManager.outstandingFeedbackEvents.index(where: {$0.id == uuid}) {
+            eventsManager.outstandingFeedbackEvents.remove(at: index)
         }
     }
 
@@ -507,30 +479,30 @@ open class RouteController: NSObject {
 
 extension RouteController {
     @objc func progressDidChange(notification: NSNotification) {
-        if sessionState.departureTimestamp == nil {
-            sessionState.departureTimestamp = Date()
-            sendDepartEvent()
+        if eventsManager.sessionState.departureTimestamp == nil {
+            eventsManager.sessionState.departureTimestamp = Date()
+            eventsManager.sendDepartEvent()
         }
 
-        if sessionState.arrivalTimestamp == nil,
+        if eventsManager.sessionState.arrivalTimestamp == nil,
             routeProgress.currentLegProgress.userHasArrivedAtWaypoint {
-            sessionState.arrivalTimestamp = Date()
-            sendArriveEvent()
+            eventsManager.sessionState.arrivalTimestamp = Date()
+            eventsManager.sendArriveEvent()
         }
 
-        sendOutstandingFeedbackEvents(forceAll: false)
+        eventsManager.sendOutstandingFeedbackEvents(forceAll: false)
     }
 
     @objc func willReroute(notification: NSNotification) {
-        _ = enqueueRerouteEvent()
+        _ = eventsManager.enqueueRerouteEvent()
     }
 
     @objc func didReroute(notification: NSNotification) {
         if let didFindFasterRoute = notification.userInfo?[RouteControllerNotificationUserInfoKey.isProactiveKey] as? Bool, didFindFasterRoute {
-            _ = enqueueFoundFasterRouteEvent()
+            _ = eventsManager.enqueueFoundFasterRouteEvent()
         }
 
-        if let lastReroute: RerouteEvent? = outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
+        if let lastReroute: RerouteEvent? = eventsManager.outstandingFeedbackEvents.map({$0 as? RerouteEvent }).last {
             lastReroute?.update(newRoute: routeProgress.route)
         }
 
@@ -573,7 +545,7 @@ extension RouteController: CLLocationManagerDelegate {
 
     @objc public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let filteredLocations = locations.filter {
-            sessionState.pastLocations.push($0)
+            eventsManager.sessionState.pastLocations.push($0)
             return $0.isQualified
         }
 
@@ -995,102 +967,6 @@ extension RouteController: CLLocationManagerDelegate {
             let distances: [CLLocationDistance] = intersections.map { polyline.distance(from: coordinates.first, to: $0.location) }
             routeProgress.currentLegProgress.currentStepProgress.intersectionDistances = distances
         }
-    }
-}
-
-// MARK: - Telemetry
-extension RouteController {
-    // MARK: Sending events
-    func sendDepartEvent() {
-        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: eventsManager.navigationDepartEvent(routeController: self))
-        eventsManager.flush()
-    }
-
-    func sendArriveEvent() {
-        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: eventsManager.navigationArriveEvent(routeController: self))
-        eventsManager.flush()
-    }
-
-    private func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
-        let attributes = eventsManager.navigationCancelEvent(routeController: self, rating: rating, comment: comment)
-        eventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
-        eventsManager.flush()
-    }
-
-    private func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
-        events.forEach { event in
-            // remove from outstanding event queue
-            if let index = outstandingFeedbackEvents.index(of: event) {
-                outstandingFeedbackEvents.remove(at: index)
-            }
-            
-            let eventName = event.eventDictionary["event"] as! String
-            let eventDictionary = eventsManager.navigationFeedbackEventWithLocationsAdded(event: event, routeController: self)
-            
-            eventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
-        }
-        eventsManager.flush()
-    }
-
-    // MARK: Enqueue feedback
-
-    private func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID {
-        let eventDictionary = eventsManager.navigationFeedbackEvent(routeController: self, type: type, description: description)
-        let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary)
-
-        outstandingFeedbackEvents.append(event)
-
-        return event.id
-    }
-
-    private func enqueueRerouteEvent() -> String {
-        let timestamp = Date()
-        let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self)
-
-        sessionState.lastRerouteDate = timestamp
-        sessionState.numberOfReroutes += 1
-
-        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
-
-        outstandingFeedbackEvents.append(event)
-
-        return event.id.uuidString
-    }
-
-    private func enqueueFoundFasterRouteEvent() -> String {
-        let timestamp = Date()
-        let eventDictionary = eventsManager.navigationRerouteEvent(routeController: self, eventType: FasterRouteFoundEvent)
-
-        sessionState.lastRerouteDate = timestamp
-
-        let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary)
-
-        outstandingFeedbackEvents.append(event)
-
-        return event.id.uuidString
-    }
-
-    private func shouldDelayEvents() -> Bool {
-        return delaysEventFlushing
-    }
-
-    private func sendOutstandingFeedbackEvents(forceAll: Bool) {
-        let flushAll = forceAll || !shouldDelayEvents()
-        let eventsToPush = eventsToFlush(flushAll: flushAll)
-
-        sendFeedbackEvents(eventsToPush)
-    }
-
-    private func eventsToFlush(flushAll: Bool) -> [CoreFeedbackEvent] {
-        let now = Date()
-        let eventsToPush = flushAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
-            now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
-        }
-        return eventsToPush
-    }
-
-    private func resetSession() {
-        sessionState = SessionState(currentRoute: routeProgress.route, originalRoute: routeProgress.route)
     }
 }
 

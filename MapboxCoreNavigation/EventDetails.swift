@@ -191,3 +191,10 @@ struct EventDetails {
         return modifiedEventDictionary
     }
 }
+
+extension EventDetails {
+    
+    static func defaultEvents(routeController: RouteController) -> [String: Any] {
+        return EventDetails(routeController: routeController, session: routeController.eventsManager.sessionState).eventDictionary
+    }
+}
