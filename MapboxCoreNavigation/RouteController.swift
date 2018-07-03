@@ -980,14 +980,11 @@ extension RouteController: CLLocationManagerDelegate {
     
     func updateVisualInstructionProgress(for location: CLLocation) {
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
-        guard let visualInstructions = routeProgress.currentLegProgress.currentStepProgress.remainingVisualInstructions else { return }
+        guard let visualInstructions = currentStepProgress.remainingVisualInstructions else { return }
         
-        for (index, visualInstruction) in visualInstructions.enumerated() {
-            if currentStepProgress.distanceRemaining <= visualInstruction.distanceAlongStep || currentStepProgress.visualInstructionIndex == 0 {
-                currentStepProgress.visualInstructionIndex = index
-                break
-            }
-        }
+        let visualInstructionDistances = visualInstructions.map { $0.distanceAlongStep }
+        currentStepProgress.visualInstructionIndex = visualInstructionDistances.index { currentStepProgress.distanceRemaining <= $0 } ?? visualInstructions.startIndex
+
     }
 
     func advanceStepIndex(to: Array<RouteStep>.Index? = nil) {
