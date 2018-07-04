@@ -324,6 +324,14 @@ open class NavigationViewController: UIViewController {
     
     var styleManager: StyleManager!
     
+    var currentStatusBarStyle: UIStatusBarStyle = .default
+    
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        get {
+            return currentStatusBarStyle
+        }
+    }
+    
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -623,6 +631,9 @@ extension NavigationViewController: StyleManagerDelegate {
             mapView?.style?.transition = MGLTransition(duration: 0.5, delay: 0)
             mapView?.styleURL = style.mapStyleURL
         }
+        
+        currentStatusBarStyle = style.statusBarStyle ?? .default
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
