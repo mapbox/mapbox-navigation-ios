@@ -1,3 +1,6 @@
+/* Format string for indicating the device volume is low; 1 = device model */
+"DEVICE_VOLUME_LOW" = "%@ Volume Low";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "关闭";
 
